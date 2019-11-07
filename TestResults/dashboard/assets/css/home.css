@@ -1,0 +1,28 @@
+#page-redirect-options {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: 55px;
+}
+
+.large-btn {
+    display: inline-block;
+    width: 375px;
+    height: 175px;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px;
+    font-size: x-large;
+    color: #888;
+    font-family: -webkit-body;
+}
+
+.large-btn:hover {
+    color: #880;
+}
+
+.btn-lnk {
+    text-decoration: none;
+    color: #888;
+    font-size: x-large;
+}

@@ -1,0 +1,2 @@
+class ConfigClass:
+    policy = 'Policy'
