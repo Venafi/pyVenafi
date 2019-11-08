@@ -4,7 +4,7 @@ from features.bases.feature_base import FeatureBase, FeatureError
 
 class UsernamePasswordCredential(FeatureBase):
     def __init__(self, auth_obj):
-        FeatureBase.__init__(self, auth_obj)
+        super().__init__(auth_obj)
 
     def load(self):
         pass

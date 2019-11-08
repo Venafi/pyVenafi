@@ -5,7 +5,7 @@ from enum_types.config_classes import ConfigClass
 
 class Folder(FeatureBase):
     def __init__(self, auth_obj, name=None, container=None, attributes=None):
-        FeatureBase.__init__(self, auth_obj)
+        super().__init__(auth_obj)
 
         self.absolute_guid = None
         self.dn = None

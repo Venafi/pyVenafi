@@ -2,3 +2,4 @@
 venv/
 *.pyc
 testfile.py
+/Automation/tools/logger/logs/

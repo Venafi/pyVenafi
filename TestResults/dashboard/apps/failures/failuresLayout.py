@@ -1,5 +1,5 @@
 import json
-from failuresTK import *
+from dashboard.apps.failures.failuresTK import *
 from dashboard.apps.components.modal import Modal
 
 

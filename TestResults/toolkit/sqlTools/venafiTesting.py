@@ -1,4 +1,4 @@
-from sqlHelper import SQLCommandExecutor, SQLColumn, SQLCommandBuilder, quote
+from toolkit.sqlTools.sqlHelper import SQLCommandExecutor, SQLColumn, SQLCommandBuilder, quote
 
 
 class VenafiTesting(SQLCommandExecutor, SQLCommandBuilder):

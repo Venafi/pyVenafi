@@ -60,7 +60,7 @@ class _Credentials:
                 exp_date = expiration
             else:
                 # Expire in 10 years.
-                exp_date = long((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
+                exp_date = int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
 
             payload.update({'Expiration': r'/Date(%s)/' % exp_date})
             if contact:

@@ -3,7 +3,7 @@ import sys
 import traceback
 import inspect
 from config.settings import LOG_LEVEL
-from log_resources import LogColors, LogLevels
+from tools.logger.log_resources import LogColors, LogLevels
 from config.settings import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH
 import webbrowser
 import json
@@ -30,7 +30,7 @@ class Logger:
         """
         :type exc_obj: Exception
         """
-        tb = sys.exc_traceback
+        tb = sys.exc_info()[2]
         while True:
             if tb.tb_next is None:
                 break
@@ -172,7 +172,6 @@ def log_to_html():
                     width: 90%;
                     margin: 0 auto;
                     font-size: medium;
-                    font-family: cursive;
                 }}
 
                 .log-item-row-1 {{
@@ -186,7 +185,6 @@ def log_to_html():
                 .log-item-row-2 {{
                     margin: 0px 2px 0px 2px;
                     white-space: pre-wrap;
-                    font-family: cursive;
                     display: flex;
                     justify-content: center;
                     border: solid lightgrey;
@@ -269,7 +267,6 @@ def log_to_html():
                     text-align: center;
                     margin-left: 6px;
                     font-size: medium; 
-                    font-family: cursive; 
                 }}
                 
                 .checkbox-label {{

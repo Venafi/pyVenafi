@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from toolkit.sqlTools import venafiTesting as VT
 from toolkit.sqlTools.sqlHelper import SQLCommandBuilder as Ops
 import time
-from BeautifulSoup import BeautifulSoup as bs
+from bs4 import BeautifulSoup as bs
 import requests
 import json
 from dashboard import config

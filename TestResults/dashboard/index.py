@@ -2,11 +2,11 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-from app import app
-from layouts import *       # Layouts
-import callbacks            # Callbacks -> Do NOT remove this import!
-import endpoints            # APIs -> Do NOT remove this import!
-import config
+from dashboard.app import app
+from dashboard.layouts import *       # Layouts
+import dashboard.callbacks            # Callbacks -> Do NOT remove this import!
+import dashboard.endpoints            # APIs -> Do NOT remove this import!
+from dashboard import config
 
 
 app.layout = html.Div(

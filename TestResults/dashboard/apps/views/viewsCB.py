@@ -7,7 +7,7 @@ from dash.dependencies import Output, Input, State
 from dash.exceptions import PreventUpdate
 
 # Import custom dependencies
-import viewsTK as vtk
+import dashboard.apps.views.viewsTK as vtk
 from dashboard.apps.shared import sharedTK as stk
 from dashboard import config
 
@@ -103,7 +103,7 @@ def register_views_callbacks(app):
         ]
     )
     def show_select_range_modal(generate, go, close, test_info_filter, test_history_filter, job_info_filter, job_history_filter):
-        max_val = max(generate, go, close)
+        max_val = max([btn for btn in [generate, go, close] if btn is not None])
 
         if not max_val:
             raise PreventUpdate()
@@ -170,7 +170,7 @@ def register_views_callbacks(app):
     def create_view(generate, go, test_info, test_history, job_info,
                     job_history, frameworks, start_date, end_date, range_type):
 
-        btn_timestamp = max(generate, go)
+        btn_timestamp = max([btn for btn in [generate, go] if btn is not None])
 
         if not btn_timestamp:
             raise PreventUpdate()

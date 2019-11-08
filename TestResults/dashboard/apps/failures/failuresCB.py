@@ -56,7 +56,7 @@ def register_failures_callbacks(app):
         ]
     )
     def hide_or_show_update_resolution_modal(update_resolution, submit_resolution, close_modal, selected_rows):
-        max_val = max([update_resolution, submit_resolution, close_modal]) if selected_rows else None
+        max_val = max([btn for btn in [update_resolution, submit_resolution, close_modal] if btn is not None]) if selected_rows else None
         return {'display': 'block' if max_val and max_val == update_resolution else 'none'}
 
     @app.callback(
@@ -74,7 +74,7 @@ def register_failures_callbacks(app):
         if not (update_resolution_btn or submit_resolution_btn):
             raise PreventUpdate()
 
-        max_val = max([update_resolution_btn, submit_resolution_btn])
+        max_val = max([btn for btn in [update_resolution_btn, submit_resolution_btn] if btn is not None])
 
         if update_resolution_btn == max_val and not selected_rows:
             return html.P("Must select tests to update!", style={'display': 'inline-block', 'color': 'red'})
@@ -119,7 +119,7 @@ def register_failures_callbacks(app):
         if not (close_modal_btn or submit_resolution_btn):
             raise PreventUpdate()
 
-        max_val = max([close_modal_btn, submit_resolution_btn])
+        max_val = max([btn for btn in [close_modal_btn, submit_resolution_btn] if btn is not None])
         state = json.loads(state)
 
         if max_val == submit_resolution_btn:
@@ -197,7 +197,7 @@ def register_failures_callbacks(app):
         state = json.loads(state)
         resolution_state = state.get(States.Resolution.name)
         if resolution_state is None or resolution_state != States.Resolution.successful or not selected_rows:
-            select_all = max(select_all_btn, unselect_all_btn)
+            select_all = max([btn for btn in [select_all_btn, unselect_all_btn] if btn is not None])
             if not select_all:
                 raise PreventUpdate()
             if select_all_btn and int(select_all) == int(select_all_btn):

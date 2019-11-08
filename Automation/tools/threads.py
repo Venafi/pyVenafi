@@ -1,6 +1,7 @@
-from Queue import Queue
+from queue import Queue
 import threading
-from tools.logger.logger import LogLevels, Logger
+from tools.logger.logger import Logger
+from tools.logger.log_resources import LogLevels
 
 
 class _LogThread(threading.Thread):

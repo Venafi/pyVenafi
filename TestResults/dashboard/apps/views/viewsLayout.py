@@ -1,4 +1,4 @@
-from viewsTK import *
+from dashboard.apps.views.viewsTK import *
 from datetime import datetime
 from dashboard.apps.components.modal import Modal
 

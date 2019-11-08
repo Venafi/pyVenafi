@@ -1,5 +1,6 @@
 import requests
-from tools.logger.logger import Logger, LogLevels
+from tools.logger.logger import Logger
+from tools.logger.log_resources import LogLevels
 from config import settings as s
 
 
