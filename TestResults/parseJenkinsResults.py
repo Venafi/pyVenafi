@@ -17,7 +17,7 @@ class JobTypes:
     integration = 'TPP_Integration'
 
 
-CURRENT_RELEASE = '19.3'
+CURRENT_RELEASE = '19.4'
 NOW = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 JOBS = [
     # {'url': 'https://jenkins.eng.venafi.com/job/TPP_Auto_Prod/view/Server%20Cert', 'type': JobTypes.tpp_auto_prod},
