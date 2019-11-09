@@ -1,6 +1,5 @@
-from enum_types.misc import ApiPreferences
-from features.bases.feature_base import FeatureBase, FeatureError
-from enum_types.config_classes import ConfigClass
+from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
+from enums.config import ConfigClass
 
 
 class Folder(FeatureBase):

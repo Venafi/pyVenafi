@@ -1,4 +1,4 @@
-from apilibs.websdk.resultcodes import ResultCodes
+from enums.resultcodes import ResultCodes
 
 
 class Credentials:
