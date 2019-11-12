@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from tools.logger.logger import Logger
 from tools.logger.log_resources import LogLevels
-from apilibs.authenticator import Authenticate
+from apilibs.authenticate import Authenticate
 
 
 class FeatureBase:
@@ -17,7 +17,6 @@ class FeatureBase:
         pass
 
 
-
 class FeatureError(Exception):
     @classmethod
     def invalid_api_preference(cls, api_ref):
@@ -26,3 +25,8 @@ class FeatureError(Exception):
     @classmethod
     def not_implemented(cls, api_type):
         return cls('No implementation defined for this method using %s.' % api_type)
+
+
+class ApiPreferences:
+    websdk = 'websdk'
+    aperture = 'aperture'

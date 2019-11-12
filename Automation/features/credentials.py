@@ -1,5 +1,4 @@
-from enum_types.misc import ApiPreferences
-from features.bases.feature_base import FeatureBase, FeatureError
+from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
 
 
 class UsernamePasswordCredential(FeatureBase):
