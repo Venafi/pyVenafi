@@ -5,7 +5,7 @@ class Config:
     class Result:
         def __init__(self, code):
             self.code = code
-            self.config_result = ResultCodes.Config.get(code, {})
+            self.config_result = ResultCodes.Config.get(code, 'Unknown')
 
     class Object:
         def __init__(self, object_dict, api_type):
