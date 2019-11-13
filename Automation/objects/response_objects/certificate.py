@@ -15,48 +15,31 @@ class _SANS:
 
 
 class _Link:
-    def __init__(self, links_dict: dict, api_type: str):
+    def __init__(self, links_dict: dict):
         if not isinstance(links_dict, dict):
             links_dict = {}
 
-        if api_type.lower() == 'websdk':
-            self.details = links_dict.get('Details')
-            self.next = links_dict.get('Next')
-            self.previous = links_dict.get('Previous')
-
-        elif api_type.lower() == 'aperture':
-            self.details = None
-            self.next = None
-            self.previous = None
+        self.details = links_dict.get('Details')
+        self.next = links_dict.get('Next')
+        self.previous = links_dict.get('Previous')
 
 
 class _X509:
-    def __init__(self, x509_dict: dict, api_type: str):
+    def __init__(self, x509_dict: dict):
         if not isinstance(x509_dict, dict):
             x509_dict = {}
-        if api_type.lower() == 'websdk':
-            self.cn = x509_dict.get('CN')
-            self.issuer = x509_dict.get('Issuer')
-            self.key_algorithm = x509_dict.get('KeyAlgorithm')
-            self.key_size = x509_dict.get('KeySize')
-            self.sans = x509_dict.get('SANS')
-            self.serial = x509_dict.get('Serial')
-            self.subject = x509_dict.get('Subject')
-            self.thumbprint = x509_dict.get('Thumbprint')
-            self.valid_from = x509_dict.get('ValidFrom')
-            self.valid_to = x509_dict.get('ValidTo')
 
-        elif api_type.lower() == 'aperture':
-            self.cn = None
-            self.issuer = None
-            self.key_algorithm = None
-            self.key_size = None
-            self.sans = None
-            self.serial = None
-            self.subject = None
-            self.thumbprint = None
-            self.valid_from = None
-            self.valid_to = None
+        self.cn = x509_dict.get('CN')
+        self.issuer = x509_dict.get('Issuer')
+        self.key_algorithm = x509_dict.get('KeyAlgorithm')
+        self.key_size = x509_dict.get('KeySize')
+        self.sans = x509_dict.get('SANS')
+        self.serial = x509_dict.get('Serial')
+        self.subject = x509_dict.get('Subject')
+        self.thumbprint = x509_dict.get('Thumbprint')
+        self.valid_from = x509_dict.get('ValidFrom')
+        self.valid_to = x509_dict.get('ValidTo')
+
 
 
 class _Compliant:
@@ -154,66 +137,95 @@ class _CSRDetails:
 
 class Certificate:
     class Certificate:
-        def __init__(self, certificate_dict: dict, api_type: str):
+        def __init__(self, certificate_dict: dict):
             if not isinstance(certificate_dict, dict):
                 certificate_dict = {}
 
-            if api_type.lower() == 'websdk':
-                self.created_on = certificate_dict.get('CreatedOn')
-                self.dn = certificate_dict.get('DN')
-                self.guid = certificate_dict.get('Guid')
-                self.name = certificate_dict.get('Name')
-                self.parent_dn = certificate_dict.get('ParentDn')
-                self.schema_class = certificate_dict.get('SchemaClass')
-                self.x509 = _X509(certificate_dict.get('X509'), api_type)
-                self.links = [_Link(link, api_type) for link in certificate_dict.get('_links', [])]
-
-            elif api_type.lower() == 'aperture':
-                # Not implemented yet.
-                pass
+            self.created_on = certificate_dict.get('CreatedOn')
+            self.dn = certificate_dict.get('DN')
+            self.guid = certificate_dict.get('Guid')
+            self.name = certificate_dict.get('Name')
+            self.parent_dn = certificate_dict.get('ParentDn')
+            self.schema_class = certificate_dict.get('SchemaClass')
+            self.x509 = _X509(certificate_dict.get('X509'))
+            self.links = [_Link(link) for link in certificate_dict.get('_links', [])]
 
     class Link(_Link):
-        def __init__(self, links_dict: dict, api_type: str):
+        def __init__(self, links_dict: dict):
             if not isinstance(links_dict, dict):
                 links_dict = {}
 
-            super().__init__(links_dict, api_type)
+            super().__init__(links_dict)
 
     class CSR:
-        def __init__(self, csr_dict: dict, api_type: str):
+        def __init__(self, csr_dict: dict):
             if not isinstance(csr_dict, dict):
                 csr_dict = {}
 
-            if api_type.lower() == 'websdk':
-                self.details = _CSRDetails(csr_dict.get('Details'))
-                self.enrollable = csr_dict.get('Enrollable')
-
-            elif api_type.lower() == 'aperture':
-                # Not implemented yet.
-                pass
+            self.details = _CSRDetails(csr_dict.get('Details'))
+            self.enrollable = csr_dict.get('Enrollable')
 
     class Policy:
-        def __init__(self, policy_dict: dict, api_type: str):
+        def __init__(self, policy_dict: dict):
             if not isinstance(policy_dict, dict):
                 policy_dict = {}
 
-            if api_type.lower() == 'websdk':
-                self.certificate_authority = _LockedSingleValue(policy_dict.get('CertificateAuthority'))
-                self.csr_generation = _LockedSingleValue(policy_dict.get('CsrGeneration'))
-                self.key_generation = _LockedSingleValue(policy_dict.get('KeyGeneration'))
-                self.key_pair = _LockedKeyPair(policy_dict.get('KeyPair'))
-                self.management_type = _LockedSingleValue(policy_dict.get('ManagementType'))
-                self.private_key_reuse_allowed = policy_dict.get('PrivateKeyReuseAllowed')
-                self.subj_alt_name_dns_allowed = policy_dict.get('SubjAltNameDnsAllowed')
-                self.subj_alt_name_email_allowed = policy_dict.get('SubjAltNameEmailAllowed')
-                self.subj_alt_name_ip_allowed = policy_dict.get('SubjAltNameIpAllowed')
-                self.subj_alt_name_upn_allowed = policy_dict.get('SubjAltNameUpnAllowed')
-                self.subj_alt_name_uri_allowed = policy_dict.get('SubjAltNameUriAllowed')
-                self.subject = _LockedSubject(policy_dict.get('Subject'))
-                self.unique_subject_enforced = policy_dict.get('UniqueSubjectEnforced')
-                self.whitelisted_domains = policy_dict.get('WhitelistedDomains')
-                self.wildcards_allowed = policy_dict.get('WildcardsAllowed')
+            self.certificate_authority = _LockedSingleValue(policy_dict.get('CertificateAuthority'))
+            self.csr_generation = _LockedSingleValue(policy_dict.get('CsrGeneration'))
+            self.key_generation = _LockedSingleValue(policy_dict.get('KeyGeneration'))
+            self.key_pair = _LockedKeyPair(policy_dict.get('KeyPair'))
+            self.management_type = _LockedSingleValue(policy_dict.get('ManagementType'))
+            self.private_key_reuse_allowed = policy_dict.get('PrivateKeyReuseAllowed')
+            self.subj_alt_name_dns_allowed = policy_dict.get('SubjAltNameDnsAllowed')
+            self.subj_alt_name_email_allowed = policy_dict.get('SubjAltNameEmailAllowed')
+            self.subj_alt_name_ip_allowed = policy_dict.get('SubjAltNameIpAllowed')
+            self.subj_alt_name_upn_allowed = policy_dict.get('SubjAltNameUpnAllowed')
+            self.subj_alt_name_uri_allowed = policy_dict.get('SubjAltNameUriAllowed')
+            self.subject = _LockedSubject(policy_dict.get('Subject'))
+            self.unique_subject_enforced = policy_dict.get('UniqueSubjectEnforced')
+            self.whitelisted_domains = policy_dict.get('WhitelistedDomains')
+            self.wildcards_allowed = policy_dict.get('WildcardsAllowed')
 
-            elif api_type.lower() == 'aperture':
-                # Not implemented yet.
-                pass
+    class CertificateDetails:
+        def __init__(self, certificate_dict: dict):
+            if not isinstance(certificate_dict, dict):
+                certificate_dict = {}
+
+            self.cn = certificate_dict.get('CN')
+            self.enhanced_key_usage = certificate_dict.get('EnhancedKeyUsage')
+            self.issuer = certificate_dict.get('Issuer')
+            self.key_algorithm = certificate_dict.get('KeyAlgorithm')
+            self.key_size = certificate_dict.get('KeySize')
+            self.public_key_hash = certificate_dict.get('PublicKeyHash')
+            self.serial = certificate_dict.get('Serial')
+            self.signature_algorithm = certificate_dict.get('SignatureAlgorithm')
+            self.signature_algorithm_oid = certificate_dict.get('SignatureAlgorithmOID')
+            self.store_added = certificate_dict.get('StoreAdded')
+            self.subject = certificate_dict.get('Subject')
+            self.thumbprint = certificate_dict.get('Thumbprint')
+            self.valid_from = certificate_dict.get('ValidFrom')
+            self.valid_to = certificate_dict.get('ValidTo')
+
+    class ProcessingDetails:
+        def __init__(self, proc_details_dict: dict):
+            if not isinstance(proc_details_dict, dict):
+                proc_details_dict = {}
+
+            self.in_error = proc_details_dict.get('InError')
+            self.stage = proc_details_dict.get('Stage')
+            self.status = proc_details_dict.get('Status')
+
+    class RenewalDetails:
+        def __init__(self, renewal_dict: dict):
+            if not isinstance(renewal_dict, dict):
+                renewal_dict = {}
+
+            self.subject = renewal_dict.get('Subject')
+
+    class ValidationDetails:
+        def __init__(self, validation_dict: dict):
+            if not isinstance(validation_dict, dict):
+                validation_dict = {}
+
+            self.last_validation_state_update = validation_dict.get('LastValidationStateUpdate')
+            self.validation_state = validation_dict.get('ValidationState')

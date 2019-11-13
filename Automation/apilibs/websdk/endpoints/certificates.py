@@ -17,6 +17,9 @@ class _Certificates(API):
         self.Associate = self._Associate(session, api_type)
         self.CheckPolicy = self._CheckPolicy(session, api_type)
 
+    def Guid(self, guid):
+        return self._Guid(guid=guid, session=self._session, api_type=self._api_type)
+
     @property
     @response_property()
     def links(self):
@@ -169,3 +172,148 @@ class _Certificates(API):
 
             self.response = self._session.post(url=self._url, data=body)
             return self
+
+    class _Guid(API):
+        def __init__(self, guid: str, session, api_type):
+            self._cert_guid = guid
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/{guid}'.format(guid=self._cert_guid),
+                valid_return_codes=[200]
+            )
+            self.PreviousVersions = self._PreviousVersions(self._cert_guid, session, api_type)
+            self.ValidationResults = self._ValidationResults(self._cert_guid, session, api_type)
+
+        @property
+        @response_property()
+        def success(self):
+            result = self.response.json()['Success']
+            if result is False:
+                raise ValueError('Dissociating certificate failed.')
+            return result
+
+        @property
+        @response_property()
+        def approver(self):
+            apps = self.response.json()['Approver']
+            self.logger.log('Certificate Approvers: %s' % apps)
+            return apps
+
+        @property
+        @response_property()
+        def certificate_details(self):
+            details = self.response.json()['CertificateDetails']
+            result = Certificate.CertificateDetails(details)
+            self.logger.log('Certificate Details object created successfully')
+            return result
+
+        @property
+        @response_property()
+        def contact(self):
+            conts = self.response.json()['Contact']
+            self.logger.log('Certificate Contacts: %s' % conts)
+            return conts
+
+        @property
+        @response_property()
+        def created_on(self):
+            created = self.response.json()['CreatedOn']
+            self.logger.log('Certificate CreatedOn: %s' % created)
+            return created
+
+        @property
+        @response_property()
+        def dn(self):
+            cert_dn = self.response.json()['DN']
+            self.logger.log('Certificate DN: %s' % cert_dn)
+            return cert_dn
+
+        @property
+        @response_property()
+        def guid(self):
+            cert_guid = self.response.json()['Guid']
+            self.logger.log('Certificate GUID: %s' % cert_guid)
+            return cert_guid
+
+        @property
+        @response_property()
+        def name(self):
+            cert_name = self.response.json()['Name']
+            self.logger.log('Certificate Name: %s' % cert_name)
+            return cert_name
+
+        @property
+        @response_property()
+        def parent_dn(self):
+            pdn = self.response.json()['ParentDn']
+            self.logger.log('Certificate Parent DN: %s' % pdn)
+            return pdn
+
+        @property
+        @response_property()
+        def processing_details(self):
+            details = self.response.json()['ProcessingDetails']
+            result = Certificate.ProcessingDetails(details)
+            self.logger.log('Certificate Processing Details object created successfully.')
+            return result
+
+        @property
+        @response_property()
+        def renewal_details(self):
+            details = self.response.json()['RenewalDetails']
+            result = Certificate.RenewalDetails(details)
+            self.logger.log('Certificate Renewal Details object created successfully.')
+            return result
+
+        @property
+        @response_property()
+        def schema_class(self):
+            schema = self.response.json()['SchemaClass']
+            self.logger.log('Certificate Schema Class: %s' % schema)
+            return schema
+
+        @property
+        @response_property()
+        def validation_details(self):
+            details = self.response.json()['ValidationDetails']
+            result = Certificate.ValidationDetails(details)
+            self.logger.log('Certificate Validation Details object created successfully.')
+            return result
+
+        def delete(self):
+            self.response = self._session.delete(url=self._url)
+            return self
+
+        def get(self):
+            self.response = self._session.get(url=self._url)
+            return self
+
+        def put(self):
+            pass
+
+        class _PreviousVersions(API):
+            def __init__(self, guid, session, api_type):
+                self._cert_guid = guid
+                super().__init__(
+                    session=session,
+                    api_type=api_type,
+                    url=WEBSDK_URL + '/Certificates/{guid}/PreviousVersions'.format(guid=self._cert_guid),
+                    valid_return_codes=[200]
+                )
+
+            def get(self):
+                pass
+
+        class _ValidationResults(API):
+            def __init__(self, guid, session, api_type):
+                self._cert_guid = guid
+                super().__init__(
+                    session=session,
+                    api_type=api_type,
+                    url=WEBSDK_URL + '/Certificates/{guid}/ValidationResults'.format(guid=self._cert_guid),
+                    valid_return_codes=[200]
+                )
+
+            def get(self):
+                pass
