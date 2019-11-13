@@ -5,7 +5,7 @@ class Config:
     class Result:
         def __init__(self, code):
             self.code = code
-            self.config_result = ResultCodes.Config.get(code, {})
+            self.config_result = ResultCodes.Config.get(code, 'Unknown')
 
     class Object:
         def __init__(self, object_dict, api_type):
@@ -13,9 +13,6 @@ class Config:
             :type api_type: str
             :type object_dict: dict
             """
-            if not isinstance(object_dict, dict):
-                object_dict = {}
-
             if api_type.lower() == 'websdk':
                 self.absolute_guid = object_dict.get('AbsoluteGUID')
                 self.dn = object_dict.get('DN')

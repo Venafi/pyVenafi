@@ -15,16 +15,13 @@ def response_property():
 
 
 class API:
-    def __init__(self, session, api_type, url, valid_return_codes):
-        """
-        :type session: Session
-        """
+    def __init__(self, session: Session, api_type, url, valid_return_codes):
         self._session = session
         self._api_type = api_type
         self._url = url
         self._valid_return_codes = valid_return_codes
 
-        self._response = None
+        self._response = Response()
         self._validated = False
         self.logger = Logger(LogLevels.api)
 

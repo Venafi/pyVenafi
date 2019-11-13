@@ -10,8 +10,7 @@ class _ConfigObjects:
 
     class _Policies(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=APERTURE_URL + '/configobjects/policies',

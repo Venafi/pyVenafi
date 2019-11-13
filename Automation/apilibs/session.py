@@ -1,7 +1,7 @@
 import requests
 from tools.logger.logger import Logger
 from tools.logger.log_resources import LogLevels
-from config import settings as s
+from config import settings_example as s
 
 
 WEBSDK_URL = 'https://{host}/vedsdk'.format(host=s.TPP_HOST)
@@ -24,3 +24,11 @@ class Session:
         else:
             self._logger.log(url)
         return requests.get(url=url, params=params, headers=self.headers, verify=verify)
+
+    def delete(self, url, verify=False):
+        self._logger.log(url)
+        return requests.delete(url, headers=self.headers, verify=verify)
+
+    def put(self, url, data, verify=False):
+        self._logger.log('%s: %s' % (url, data))
+        return requests.put(url=url, data=data, headers=self.headers, verify=verify)

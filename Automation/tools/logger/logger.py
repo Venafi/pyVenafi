@@ -2,9 +2,9 @@ import os
 import sys
 import traceback
 import inspect
-from config.settings import LOG_LEVEL
+from config.settings_example import LOG_LEVEL
 from tools.logger.log_resources import LogColors, LogLevels
-from config.settings import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH
+from config.settings_example import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH
 import webbrowser
 import json
 
@@ -407,4 +407,4 @@ def log_to_html():
     f.close()
 
     if OPEN_HTML_ON_FINISH is True:
-        webbrowser.open_new_tab('%s.html' % LOG_FILE_WITHOUT_EXT)
+        webbrowser.open_new_tab('file://%s.html' % LOG_FILE_WITHOUT_EXT)
