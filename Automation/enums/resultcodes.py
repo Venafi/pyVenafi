@@ -174,3 +174,65 @@ class ResultCodes:
         300: 'IdentifierDoesNotExist',
         301: 'IdentifierAlreadyExists'
     }
+
+    ChainValidation = {
+          0: 'None',
+          2: 'Success',
+          4: 'NoChain',
+          8: 'InvalidChain',
+         16: 'ExpiringChain',
+         32: 'IncompleteChain',
+         64: 'BlacklistedChain',
+        128: 'MismatchedChain',
+        512: 'MismatchedCertificate'
+    }
+
+    EndEntityValidation = {
+        -2147483648: 'UnexpectedError',
+          0: 'None',
+          2: 'Success',
+          4: 'HostResolutionFailed',
+          8: 'SettingError',
+         16: 'ConnectionFailure',
+         32: 'NoCertificateFound',
+         64: 'MismatchWithPrevious',
+        128: 'MismatchWithKnown',
+        256: 'MismatchWithUnknown',
+        512: 'NoLocalCertificate',
+        536870912: 'NotSupported',
+        1073741824: 'RetryLater'
+    }
+
+    ValidationProtocols = {
+          12: "SSL 2.0",
+          48: "SSL 3.0",
+          60: "SSL 2.0, SSL 3.0",
+         192: "TLS 1.0",
+         204: "SSL 2.0, TLS 1.0",
+         240: "SSL 3.0, TLS 1.0",
+         252: "SSL 2.0, SSL 3.0, TLS 1.0",
+         768: "TLS 1.1",
+         780: "SSL 2.0, TLS 1.1",
+         816: "SSL 3.0, TLS 1.1",
+         960: "TLS 1.0, TLS 1.1",
+         828: "SSL 2.0, SSL 3.0, TLS 1.1",
+         972: "SSL 2.0, TLS 1.0, TLS 1.1",
+        1008: "SSL 3.0, TLS 1.0, TLS 1.1",
+        1020: "SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1",
+        3072: "TLS 1.2",
+        3084: "SSL 2.0, TLS 1.2",
+        3120: "SSL 3.0, TLS 1.2",
+        3264: "TLS 1.0, TLS 1.2",
+        3840: "TLS 1.1, TLS 1.2",
+        3132: "SSL 2.0, SSL 3.0, TLS 1.2",
+        3276: "SSL 2.0, TLS 1.0, TLS 1.2",
+        3852: "SSL 2.0, TLS 1.1, TLS 1.2",
+        3312: "SSL 3.0, TLS 1.0, TLS 1.2",
+        3888: "SSL 3.0, TLS 1.1, TLS 1.2",
+        4032: "TLS 1.0, TLS 1.1, TLS 1.2",
+        3324: "SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.2",
+        3900: "SSL 2.0, SSL 3.0, TLS 1.1, TLS 1.2",
+        4044: "SSL 2.0, TLS 1.0, TLS 1.1, TLS 1.2",
+        4080: "SSL 3.0, TLS 1.0, TLS 1.1, TLS 1.2",
+        4092: "SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1, TLS 1.2"
+    }

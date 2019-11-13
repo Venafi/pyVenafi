@@ -24,7 +24,7 @@ class _Certificates(API):
     @response_property()
     def links(self):
         lnks = self.response.json()['_links']
-        lnks = [Certificate.Link(lnk, self._api_type) for lnk in lnks]
+        lnks = [Certificate.Link(lnk) for lnk in lnks]
         self.logger.log('_links object created.')
         return lnks
 
@@ -39,7 +39,7 @@ class _Certificates(API):
     @response_property()
     def certificates(self):
         certs = self.response.json()['Certificates']
-        certs = [Certificate.Certificate(cert, self._api_type) for cert in certs]
+        certs = [Certificate.Certificate(cert) for cert in certs]
         self.logger.log('Certificate objects created.')
         return certs
 
@@ -125,14 +125,14 @@ class _Certificates(API):
         @property
         @response_property()
         def csr(self):
-            c = Certificate.CSR(self.response.json()['CSR'], self._api_type)
+            c = Certificate.CSR(self.response.json()['CSR'])
             self.logger.log('CSR object created successfully.')
             return c
 
         @property
         @response_property()
         def policy(self):
-            p = Certificate.Policy(self.response.json()['Policy'], self._api_type)
+            p = Certificate.Policy(self.response.json()['Policy'])
             self.logger.log('Certificate Policy object created successfully.')
             return p
 
@@ -289,8 +289,13 @@ class _Certificates(API):
             self.response = self._session.get(url=self._url)
             return self
 
-        def put(self):
-            pass
+        def put(self, attribute_data: [dict]):
+            body = json.dumps({
+                "AttributeData": attribute_data
+            })
+
+            self.response = self._session.put(url=self._url, data=body)
+            return self
 
         class _PreviousVersions(API):
             def __init__(self, guid, session, api_type):
@@ -302,8 +307,21 @@ class _Certificates(API):
                     valid_return_codes=[200]
                 )
 
-            def get(self):
-                pass
+            @property
+            @response_property()
+            def previous_versions(self):
+                versions = self.response.json()['PreviousVersions']
+                results = [Certificate.PreviousVersions(version) for version in versions]
+                self.logger.log('Certificate Previous Versions created successfully.')
+                return results
+
+            def get(self, exclude_expired: bool = False, exclude_revoked: bool = False):
+                params = {
+                    'ExcludeExpired': exclude_expired,
+                    'ExcludeRevoked': exclude_revoked
+                }
+                self.response = self._session.get(url=self._url, params=params)
+                return self
 
         class _ValidationResults(API):
             def __init__(self, guid, session, api_type):
@@ -315,5 +333,22 @@ class _Certificates(API):
                     valid_return_codes=[200]
                 )
 
+            @property
+            @response_property()
+            def file(self):
+                files = self.response.json()['File']
+                result = [Certificate.File(f) for f in files]
+                self.logger.log('Certificate File Validation Results object created successfully.')
+                return result
+
+            @property
+            @response_property()
+            def ssltls(self):
+                ssl = self.response.json()['SslTls']
+                result = [Certificate.SslTls(s) for s in ssl]
+                self.logger.log('Certificate SslTls Validation Results object created successfully.')
+                return result
+
             def get(self):
-                pass
+                self.response = self._session.get(url=self._url)
+                return self

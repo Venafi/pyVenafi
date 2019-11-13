@@ -28,3 +28,7 @@ class Session:
     def delete(self, url, verify=False):
         self._logger.log(url)
         return requests.delete(url, headers=self.headers, verify=verify)
+
+    def put(self, url, data, verify=False):
+        self._logger.log('%s: %s' % (url, data))
+        return requests.put(url=url, data=data, headers=self.headers, verify=verify)
