@@ -1,7 +1,7 @@
 import requests
 from tools.logger.logger import Logger
 from tools.logger.log_resources import LogLevels
-from config import settings as s
+from config import settings_example as s
 
 
 WEBSDK_URL = 'https://{host}/vedsdk'.format(host=s.TPP_HOST)

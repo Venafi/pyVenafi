@@ -13,9 +13,6 @@ class Config:
             :type api_type: str
             :type object_dict: dict
             """
-            if not isinstance(object_dict, dict):
-                object_dict = {}
-
             if api_type.lower() == 'websdk':
                 self.absolute_guid = object_dict.get('AbsoluteGUID')
                 self.dn = object_dict.get('DN')
