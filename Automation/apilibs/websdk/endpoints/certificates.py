@@ -20,6 +20,11 @@ class _Certificates(API):
         self.Import = self._Import(session, api_type)
         self.Renew = self._Renew(session, api_type)
         self.Request = self._Request(session, api_type)
+        self.Reset = self._Reset(session, api_type)
+        self.Retrieve = self._Retrieve(session, api_type)
+        self.Retry = self._Retry(session, api_type)
+        self.Revoke = self._Revoke(session, api_type)
+        self.Validate = self._Validate(session, api_type)
 
     def Guid(self, guid):
         return self._Guid(guid=guid, session=self._session, api_type=self._api_type)
