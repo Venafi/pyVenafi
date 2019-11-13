@@ -16,6 +16,10 @@ class _Certificates(API):
         )
         self.Associate = self._Associate(session, api_type)
         self.CheckPolicy = self._CheckPolicy(session, api_type)
+        self.Dissociate = self._Dissociate(session, api_type)
+        self.Import = self._Import(session, api_type)
+        self.Renew = self._Renew(session, api_type)
+        self.Request = self._Request(session, api_type)
 
     def Guid(self, guid):
         return self._Guid(guid=guid, session=self._session, api_type=self._api_type)
@@ -330,7 +334,7 @@ class _Certificates(API):
                     session=session,
                     api_type=api_type,
                     url=WEBSDK_URL + '/Certificates/{guid}/ValidationResults'.format(guid=self._cert_guid),
-                    valid_return_codes=[200]
+                    valid_return_codes=[200, 204]
                 )
 
             @property
@@ -352,3 +356,391 @@ class _Certificates(API):
             def get(self):
                 self.response = self._session.get(url=self._url)
                 return self
+
+    class _Import(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Import',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def certificate_dn(self):
+            cdn = self.response.json()['CertificateDN']
+            self.logger.log('Certificate DN: %s' % cdn)
+            return cdn
+
+        @property
+        @response_property()
+        def certificate_vault_id(self):
+            cvid = self.response.json()['CertificateVaultID']
+            self.logger.log('Certificate Vault Id: %s' % cvid)
+            return cvid
+
+        @property
+        @response_property()
+        def guid(self):
+            g = self.response.json()['Guid']
+            self.logger.log('Certificate Guid: %s' % g)
+            return g
+
+        @property
+        @response_property()
+        def private_key_vault_id(self):
+            pkvid = self.response.json()['PrivateKeyVaultId']
+            self.logger.log('Certificate Private Key Vault Id: %s' % pkvid)
+            return pkvid
+
+        def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
+                 password: str = None, private_key_data: str = None, reconcile: bool = False):
+            body = json.dumps({
+                'CertificateData': certificate_data,
+                'PolicyDN': policy_dn,
+                'CASpecificAttributes': ca_specific_attributes,
+                'ObjectName': object_name,
+                'Password': password,
+                'PrivateKeyData': private_key_data,
+                'Reconcile': reconcile
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+    class _Renew(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Renew',
+                valid_return_codes=[200]
+            )
+
+        def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False):
+            body = json.dumps({
+                'CertificateDN': certificate_dn,
+                'PKCS10': pkcs10,
+                'Reenable': reenable
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+    class _Request(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Request',
+                valid_return_codes=[200]
+            )
+
+        def post(self, policy_dn: str, approvers: [dict] = None, cadn: str = None, ca_specific_attributes: [dict] = None,
+                 certificate_type: str = None, city: str = None, contacts: [dict] = None, country: str=None,
+                 custom_fields: [dict] = None, created_by: str = None, devices: [dict] = None,
+                 disable_automatic_renewal: bool = False, elliptic_curve: str = None, key_algorithm: str = None,
+                 key_bit_size: int = None, management_type: str = None, object_name: str = None, organization: str = None,
+                 organizational_unit: str = None, pkcs10: str = None, reenable: bool = False, set_work_todo: bool = True,
+                 state: str = None, subject: str = None, subject_alt_names: [dict] = None):
+
+            if not(object_name or subject):
+                raise ValueError('Cannot request the certificate without either and ObjectName or Subject.')
+
+            body = json.dumps({
+                'Approvers': approvers,
+                'CADN': cadn,
+                'CASpecificAttributes': ca_specific_attributes,
+                'CertificateType': certificate_type,
+                'City': city,
+                'Contacts': contacts,
+                'Country': country,
+                'CustomFields': custom_fields,
+                'CreatedBy': created_by,
+                'Devices': devices,
+                'DisableAutomaticRenewal': disable_automatic_renewal,
+                'EllipticCurve': elliptic_curve,
+                'KeyAlgorithm': key_algorithm,
+                'KeyBitSize': key_bit_size,
+                'ManagementType': management_type,
+                'ObjectName': object_name,
+                'Organization': organization,
+                'OrganizationalUnit': organizational_unit,
+                'PKCS10': pkcs10,
+                'PolicyDN': policy_dn,
+                'Reenable': reenable,
+                'SetWorkToDo': set_work_todo,
+                'State': state,
+                'Subject': subject,
+                'SubjectAltNames': subject_alt_names
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+    class _Reset(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Reset',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def private_key_mismatch_reset_completed(self):
+            result = self.response.json()['PrivateKeyMismatchResetCompleted']
+            self.logger.log('PrivateKeyMismatchResetCompleted: %s' % result)
+            return result
+
+        @property
+        @response_property()
+        def processing_reset_completed(self):
+            result = self.response.json()['ProcessingResetCompleted']
+            self.logger.log('ProcessingResetCompleted: %s' % result)
+            return result
+
+        @property
+        @response_property()
+        def restart_completed(self):
+            result = self.response.json()['RestartCompleted']
+            self.logger.log('RestartCompleted: %s' % result)
+            return result
+
+        @property
+        @response_property()
+        def revocation_reset_completed(self):
+            result = self.response.json()['RevocationResetCompleted']
+            self.logger.log('RevocationResetCompleted: %s' % result)
+            return result
+
+        def post(self, certificate_dn: str, restart: bool = False):
+            body = json.dumps({
+                'CertificateDN': certificate_dn,
+                'Restart': restart
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+    class _Retrieve(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Retrieve',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def certificate_data(self):
+            cd = self.response.json()['CertificateData']
+            self.logger.log('Certificate Data: %s' % cd)
+            return cd
+
+        @property
+        @response_property()
+        def filename(self):
+            f = self.response.json()['Filename']
+            self.logger.log('Certificate Filename: %s' % f)
+            return f
+
+        @property
+        @response_property()
+        def format(self):
+            f = self.response.json()['Format']
+            self.logger.log('Certificate Format: %s' % f)
+            return f
+
+        def get(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
+                include_private_key: bool = False, keystore_password: str = None, password: str = None,
+                root_first_order: bool = False):
+            params = {
+                'CertificateDN': certificate_dn,
+                'Format': format,
+                'FriendlyName': friendly_name,
+                'IncludeChain': include_chain,
+                'IncludePrivateKey': include_private_key,
+                'KeystorePassword': keystore_password,
+                'Password': password,
+                'RootFirstOrder': root_first_order
+            }
+
+            self.response = self._session.get(url=self._url, params=params)
+            return self
+
+        def post(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
+                include_private_key: bool = False, keystore_password: str = None, password: str = None,
+                root_first_order: bool = False):
+            body = json.dumps({
+                'CertificateDN': certificate_dn,
+                'Format': format,
+                'FriendlyName': friendly_name,
+                'IncludeChain': include_chain,
+                'IncludePrivateKey': include_private_key,
+                'KeystorePassword': keystore_password,
+                'Password': password,
+                'RootFirstOrder': root_first_order
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+        def VaultId(self, vault_id: int):
+            return self._VaultId(vault_id, self._session, self._api_type)
+
+        class _VaultId(API):
+            def __init__(self, vault_id, session, api_type):
+                super().__init__(
+                    session=session,
+                    api_type=api_type,
+                    url=WEBSDK_URL + '/Certificates/Retrieve/{vault_id}'.format(vault_id=vault_id),
+                    valid_return_codes=[200]
+                )
+                self._vault_id = vault_id
+
+            @property
+            @response_property()
+            def certificate_data(self):
+                cd = self.response.json()['CertificateData']
+                self.logger.log('Certificate Data: %s' % cd)
+                return cd
+
+            @property
+            @response_property()
+            def filename(self):
+                f = self.response.json()['Filename']
+                self.logger.log('Certificate Filename: %s' % f)
+                return f
+
+            @property
+            @response_property()
+            def format(self):
+                f = self.response.json()['Format']
+                self.logger.log('Certificate Format: %s' % f)
+                return f
+
+            def get(self, format: str, friendly_name: str, include_chain: bool = False,
+                include_private_key: bool = False, keystore_password: str = None, password: str = None,
+                root_first_order: bool = False):
+
+                params = {
+                    'Format': format,
+                    'FriendlyName': friendly_name,
+                    'IncludeChain': include_chain,
+                    'IncludePrivateKey': include_private_key,
+                    'KeystorePassword': keystore_password,
+                    'Password': password,
+                    'RootFirstOrder': root_first_order
+                }
+
+                self.response = self._session.get(url=self._url, params=params)
+                return self
+
+            def post(self, format: str, friendly_name: str, include_chain: bool = False,
+                include_private_key: bool = False, keystore_password: str = None, password: str = None,
+                root_first_order: bool = False):
+
+                body = json.dumps({
+                    'Format': format,
+                    'FriendlyName': friendly_name,
+                    'IncludeChain': include_chain,
+                    'IncludePrivateKey': include_private_key,
+                    'KeystorePassword': keystore_password,
+                    'Password': password,
+                    'RootFirstOrder': root_first_order
+                })
+
+                self.response = self._session.post(url=self._url, data=body)
+                return self
+
+    class _Retry(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Retry',
+                valid_return_codes=[200]
+            )
+
+        def post(self, certificate_dn: str):
+            body = json.dumps({
+                'CertificateDN': certificate_dn
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+    class _Revoke(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Revoke',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def requested(self):
+            req = self.response.json()['Requested']
+            self.logger.log('Requested: %s' % req)
+            return req
+
+        def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
+                 disable: bool = False):
+            body = json.dumps({
+                'CertificateDN': certificate_dn,
+                'Thumbprint': thumbprint,
+                'Reason': reason,
+                'Comments': comments,
+                'Disable': disable
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
+
+    class _Validate(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Certificates/Validate',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def validated_certificate_dns(self):
+            dns = self.response.json()['ValidatedCertificateDNs']
+            self.logger.log('Validated Certificate DNs: %s' % dns)
+            return dns
+
+        @property
+        @response_property()
+        def validated_certificate_guids(self):
+            guids = self.response.json()['ValidatedCertificateGUIDs']
+            self.logger.log('Validated Certificate GUIDs: %s' % guids)
+            return guids
+
+        @property
+        @response_property()
+        def warnings(self):
+            w = self.response.json()['Warnings']
+            self.logger.log('Validation Warnings: %s' % w)
+            return w
+
+        def post(self, certificate_dns: [str] = None, certificate_guids: [str] = None):
+            if not(certificate_dns or certificate_guids):
+                raise ValueError('Must supply either a list of Certificate DNs or Certificate GUIDs to validate.')
+
+            body = json.dumps({
+                'CertificateDNs': certificate_dns,
+                'CertificateGUIDs': certificate_guids
+            })
+
+            self.response = self._session.post(url=self._url, data=body)
+            return self
