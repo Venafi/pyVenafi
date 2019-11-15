@@ -2,9 +2,9 @@ import os
 import sys
 import traceback
 import inspect
-from config.settings_example import LOG_LEVEL
+from config.settings import LOG_LEVEL
 from tools.logger.log_resources import LogColors, LogLevels
-from config.settings_example import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH
+from config.settings import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH
 import webbrowser
 import json
 
