@@ -87,28 +87,33 @@ def log_to_html():
         LogLevels.critical: 'red'
     }
 
+    def add_legend_item(id, value, text, fgcolor, bgcolor, checked='checked'):
+        return """
+        <div class='legend-item'>    
+            <label class='checkbox-label'>
+                <input id='{id}' class='filter' value={value} type='checkbox' {checked} onchange='filterLogs()'>
+                <span class='checkbox-custom rectangular'></span>
+            </label>
+            <div class='input-title' style='background-color: {bgcolor}; color: {fgcolor}; cursor: default'>{text}</div>
+        </div>    
+        """.format(id=id, value=value, text=text, fgcolor=fgcolor, bgcolor=bgcolor, checked=checked)
+
     legend = ''
     for level, value in sorted(LogLevels.__dict__.items()):
         legend_item_color = file_text_colors.get(value)
         if not legend_item_color:
             continue
-        legend += """
-        <div class='legend-item'>    
-            <label class='checkbox-label'>
-                <input id='log-level-{level}-cb' type='checkbox' checked onchange='filterLogLevel(this.id, {value})'>
-                <span class='checkbox-custom rectangular'></span>
-            </label>
-            <div class='input-title' style='background-color: {color}; cursor: default'>{level}</div>
-        </div>    
-        """.format(level=level, value=value, color=legend_item_color)
+        legend += add_legend_item(id='log-level-{level}-cb'.format(level=level), value=value, text=level, fgcolor='black', bgcolor=legend_item_color)
+    legend += add_legend_item(id='pin-cb', value='-1', text='Pin Only', fgcolor='white', bgcolor='#0077FF', checked='')
 
     rows = ''
     for output in json_output:
         file_text_color = file_text_colors.get(output['log_level'], 'orange')
         rows += """
-        <div class='log-item-container log-level-{log_level}'>
+        <div class='log-item-container log-level-{log_level}' value='{log_level}'>
             <div id='log-{counter}' class='log-item-row-1'>
                 <span id='exp-{counter}' class='log-item exp' onClick=togglePlusMinus({counter})>+</span>
+                <span id='pin-{counter}' class='pin unpinned' onClick='toggleMark(this.id, {counter})'>Pin</span>
                 <span class='log-item line-info' style='background-color: {ftc};'>{filename}: {lineno}</span>
                 <span id='log-text-{counter}' class='log-item log-text' style='white-space: nowrap'>{text}</span>
             </div>
@@ -152,13 +157,51 @@ def log_to_html():
                     }}                    
                 }}
                 
-                function filterLogLevel(id, level) {{
-                    checkbox = document.getElementById(id);
-                    logs = document.querySelectorAll('.log-level-' + level);
-                    display = checkbox.checked ? 'block' : 'none';
-                    for(var i=0; i < logs.length; i++) {{
-                        logs[i].style.display = display;
-                    }} 
+                function filterLogs() {{
+                    let filters = document.querySelectorAll('.filter');
+                    let all_logs = document.querySelectorAll('.log-item-container');
+                    let display_filters = []
+                    for(var i=0; i < filters.length; i++) {{
+                        if(filters[i].checked) {{
+                            display_filters.push(filters[i].value);
+                        }}
+                    }}
+                    
+                    // Pinned filter overrides all other filters.
+                    if(display_filters.includes('-1')) {{
+                        // Disable other filters.
+                        legend_items = document.querySelectorAll('.legend-item');
+                        for(var i=0; i < legend_items.length; i++) {{
+                            if(legend_items[i].querySelector('.filter').value != -1) {{
+                                legend_items[i].style.opacity = 0.5;
+                                legend_items[i].style.pointerEvents = 'none';
+                            }}
+                        }}
+                        
+                        // Filter logs.
+                        for(var i=0; i < all_logs.length; i++) {{
+                            display = all_logs[i].querySelectorAll('.unpinned').length == 0 ? 'block' : 'none';
+                            all_logs[i].style.display = display;
+                        }}
+                    }} else {{ // All other filters.
+                        // Enable all filters.
+                        legend_items = document.querySelectorAll('.legend-item');
+                        for(var i=0; i < legend_items.length; i++) {{
+                            legend_items[i].style.opacity = 1;
+                            legend_items[i].style.pointerEvents = 'all';
+                        }}
+                        
+                        // Filter logs.
+                        for(var i=0; i < all_logs.length; i++) {{
+                            display = (display_filters.includes(all_logs[i].getAttribute('value'))) ? 'block' : 'none';
+                            all_logs[i].style.display = display;
+                        }}
+                    }}
+                }}
+                
+                function toggleMark(id, counter) {{
+                    h = document.getElementById(id);
+                    h.classList.toggle('unpinned')
                 }}
             </script>
             <style>
@@ -209,6 +252,22 @@ def log_to_html():
                     cursor: pointer;
                 }}
 
+                .pin {{
+                    min-width: 40px !important;
+                    border-right: solid lightgrey 2px;
+                    text-align: center;
+                    cursor: pointer;
+                    background-color: #0077FF;
+                    opacity: 1;
+                    color: white;
+                }}
+                
+                .unpinned {{
+                    background-color: inherit;
+                    opacity: 0.5;
+                    color: black;
+                }}
+                
                 .line-info {{
                     text-align: center;
                     padding-left: 10px;
@@ -252,7 +311,7 @@ def log_to_html():
                     margin: 30px auto;
                     border: solid lightgrey 2px;
                     padding: 10px;
-                    background-color: mediumaquamarine;
+                    background-color: "#EFEFEF";
                 }}
                 
                 .legend-item {{
