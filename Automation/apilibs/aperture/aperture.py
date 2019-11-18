@@ -16,6 +16,6 @@ class Aperture:
         elif certificate:
             raise NotImplementedError('Certificate authentication not available.')
 
-        api_type = self.__class__.__name__
+        api_type = self.__class__.__name__.lower()
         self.Users.__init__(self.session)
         self.ConfigObjects = _ConfigObjects(session=self.session, api_type=api_type)

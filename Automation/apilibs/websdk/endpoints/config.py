@@ -14,8 +14,7 @@ class _Config:
 
     class _AddDnValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/AddDnValue',
@@ -45,8 +44,7 @@ class _Config:
 
     class _AddPolicyValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/AddPolicyValue',
@@ -67,8 +65,7 @@ class _Config:
 
     class _Create(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/Create',
@@ -105,8 +102,7 @@ class _Config:
 
     class _Delete(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/Delete',
@@ -134,8 +130,7 @@ class _Config:
 
     class _FindObjectsOfClass(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/FindObjectsOfClass',

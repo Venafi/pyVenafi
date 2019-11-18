@@ -17,8 +17,7 @@ class _Identity:
 
     class _Browse(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/Browse',
@@ -47,8 +46,7 @@ class _Identity:
 
     class _GetAssociatedEntries(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/GetAssociatedEntries',
@@ -84,8 +82,7 @@ class _Identity:
 
     class _Self(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/Self',
@@ -107,8 +104,7 @@ class _Identity:
 
     class _GetMembers(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/GetMembers',
@@ -144,8 +140,7 @@ class _Identity:
 
     class _GetMemberships(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/GetMemberships',
@@ -180,8 +175,7 @@ class _Identity:
 
     class _ReadAttribute(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/ReadAttribute',
@@ -199,8 +193,7 @@ class _Identity:
 
     class _SetPassword(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/SetPassword',
@@ -218,8 +211,7 @@ class _Identity:
 
     class _Validate(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Identity/Validate',

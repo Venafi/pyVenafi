@@ -3,6 +3,7 @@ from apilibs.websdk.endpoints.authorize import _Authorize
 from apilibs.websdk.endpoints.identity import _Identity
 from apilibs.websdk.endpoints.config import _Config
 from apilibs.websdk.endpoints.credentials import _Credentials
+from apilibs.websdk.endpoints.certificates import _Certificates
 
 
 class WebSDK:
@@ -17,7 +18,8 @@ class WebSDK:
         elif certificate:
             raise NotImplementedError('Certificate authentication not available.')
 
-        api_type = self.__class__.__name__
+        api_type = self.__class__.__name__.lower()
         self.Identity = _Identity(self.session, api_type)
         self.Config = _Config(self.session, api_type)
         self.Credentials = _Credentials(self.session, api_type)
+        self.Certificates = _Certificates(self.session, api_type)

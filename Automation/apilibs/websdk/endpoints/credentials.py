@@ -11,8 +11,7 @@ class _Credentials:
 
     class _Create(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Credentials/Create',
