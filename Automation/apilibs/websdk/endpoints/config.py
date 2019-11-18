@@ -14,8 +14,7 @@ class _Config:
 
     class _AddDnValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/AddDnValue',
@@ -33,11 +32,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name, value):
-            """
-            :param object_dn: the dn of the object to add a value
-            :param attribute_name: the name of the attribute that needs the value
-            :param value: the value to be added
-            """
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
@@ -50,8 +44,7 @@ class _Config:
 
     class _AddPolicyValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/AddPolicyValue',
@@ -68,13 +61,6 @@ class _Config:
             self.logger.log('Successfully added Policy value.')
 
         def post(self, object_dn, attribute_name, class_name, value, locked):
-            """
-            :param object_dn: the dn of the object
-            :param attribute_name: the name of the attribute to add the value
-            :param class_name: the class name of the policy attribute
-            :param value: the value to add
-            :param locked:  true or false (indicates if the attributed should be locked)
-            """
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
@@ -89,8 +75,7 @@ class _Config:
 
     class _AddValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/AddValue',
@@ -107,11 +92,6 @@ class _Config:
             self.logger.log('Successfully added Value.')
 
         def post(self, object_dn, attribute_name, value):
-            """
-            :param object_dn: the dn of the object
-            :param attribute_name: the name of the attribute
-            :param value: the value to add
-            """
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
@@ -124,8 +104,7 @@ class _Config:
 
     class _ClearAttribute(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ClearAttribute',
@@ -142,10 +121,6 @@ class _Config:
             self.logger.log('Successfully cleared Attribute.')
 
         def post(self, object_dn, attribute_name):
-            """
-            :param object_dn: the name of the object
-            :param attribute_name: the name of the attribute
-            """
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name
@@ -157,8 +132,7 @@ class _Config:
 
     class _ClearPolicyAttribute(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ClearPolicyAttribute',
@@ -175,11 +149,6 @@ class _Config:
             self.logger.log('Successfully cleared Policy Attribute.')
 
         def post(self, object_dn, class_name, attribute_name):
-            """
-            :param object_dn: the name of the object to remove values from
-            :param class_name: the class name of the policy attribute
-            :param attribute_name:  the name of the attribute to clear
-            """
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'Class': class_name,
@@ -191,8 +160,7 @@ class _Config:
 
     class _ContainableClasses(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ContainableClasses',
@@ -217,9 +185,6 @@ class _Config:
             self.logger.log('Successfully retrieved containing classes.')
 
         def post(self, object_dn):
-            """
-            :param object_dn:  the name of the object to examine for possible subordinate classes
-            """
             body = json.dumps({
                 'ObjectDN': object_dn
             })
@@ -228,8 +193,7 @@ class _Config:
 
     class _CountObjects(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/CountObjects',
@@ -254,16 +218,6 @@ class _Config:
             self.logger.log('Successfully counted the objects.')
 
         def post(self, object_dn, type, recursive, pattern):
-            """
-            :param object_dn: begin counting subordinate objects at this DN (object)
-            :param type: the class name of the object to count
-            :param recursive: True or False : recursively count or omit the subordinate objects from the count
-            :param pattern: an expression for filtering DN matches
-                    To count DNs that include an asterisk (*) or question mark (?), prepend two backslashes (\\). For example, \\*.MyCompany.net treats the asterisk as a literal character and returns only certificates with DNs that match *.MyCompany.net.
-                    To count DNs with a wild card character, append a question mark (?). For example, "test_?.mycompany.net" counts test_1.MyCompany.net and test_2.MyCompany.net but not test12.MyCompany.net.
-                    To count DNs with similar names, prepend an asterisk. For example, *est.MyCompany.net, counts Test.MyCompany.net and West.MyCompany.net.
-                    You can use both literals and wild cards in a pattern.
-            """
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'Type': type,
@@ -277,8 +231,7 @@ class _Config:
 
     class _Create(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/Create',
@@ -303,11 +256,6 @@ class _Config:
             return result
 
         def post(self, object_dn, class_name, name_attribute_list):
-            """
-            :param object_dn: the name for the new object ot create
-            :param class_name: a class name (i.e., Device or CAPI Trust Store
-            :param name_attribute_list: The initial values for the new object
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name,
@@ -320,8 +268,7 @@ class _Config:
 
     class _DefaultDN(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/DefaultDN',
@@ -346,9 +293,6 @@ class _Config:
             self.logger.log('Successfully retrieved the Default DN.')
 
         def post(self, default_dn):
-            """
-            :param default_dn:  the default DN for all config objects
-            """
             body = json.dumps({
                 'DefaultDN': default_dn
             })
@@ -358,8 +302,7 @@ class _Config:
 
     class _Delete(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/Delete',
@@ -386,8 +329,7 @@ class _Config:
 
     class _FindObjectsOfClass(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/FindObjectsOfClass',
@@ -412,16 +354,6 @@ class _Config:
             return result
 
         def post(self, classes=None, class_name=None, object_dn=None, pattern=None, recursive=None):
-            """
-            :param classes: The list of class names to search on
-            :param class_name: the specific class name to search on
-            :param object_dn: the starting DN of the object to search for subordinates.  ObjectDN and Recursive is only supported if Class is provided
-            :param pattern: A search pattern to filter objects
-                To list DNs that include an asterisk (*) or question mark (?), prepend two backslashes (\\). For example, \\*.MyCompany.net treats the asterisk as a literal character and returns only certificates with DNs that match *.MyCompany.net.
-                To list DNs with a wildcard character, append a question mark (?). For example, "test_?.mycompany.net" counts test_1.MyCompany.net and test_2.MyCompany.net but not test12.MyCompany.net.
-                To list DNs with similar names, prepend an asterisk. For example, *est.MyCompany.net, counts Test.MyCompany.net and West.MyCompany.net.
-            :param recursive: when set to 1, searches the subordinates of the object specified
-            """
             if not (classes or class_name):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = json.dumps({
@@ -441,8 +373,7 @@ class _Config:
 
     class _FindPolicy(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/FindPolicy',
@@ -483,11 +414,6 @@ class _Config:
             return result
 
         def post(self, object_dn, class_name, attribute_name):
-            """
-            :param object_dn: the name of the policy object
-            :param class_name: the name fo the object's class
-            :param attribute_name: the attribute name for which values are to be returned
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name,
@@ -500,8 +426,7 @@ class _Config:
 
     class _GetHighestRevision(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/GetHighestRevision',
@@ -526,10 +451,6 @@ class _Config:
             return result
 
         def post(self, object_dn, classes=None):
-            """
-            :param object_dn: the name of the policy object
-            :param classes: (optional) the list of classes to consider when looking for revisions
-            """
             body = json.dumps({
                 "ObjectDN": object_dn
             })
@@ -542,8 +463,7 @@ class _Config:
 
     class _GetRevision(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/GetRevision',
@@ -568,9 +488,6 @@ class _Config:
             return result
 
         def post(self, object_dn):
-            """
-            :param object_dn: the name of the policy object
-            """
             body = json.dumps({
                 "ObjectDN": object_dn
             })
@@ -581,8 +498,7 @@ class _Config:
 
     class _GuidToDn(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/GuidToDn',
@@ -631,9 +547,6 @@ class _Config:
             return result
 
         def post(self, object_guid):
-            """
-            :param object_guid: the GUID of an object to be translated
-            """
             body = json.dumps({
                 "ObjectGUID": object_guid
             })
@@ -644,8 +557,7 @@ class _Config:
 
     class _IdInfo(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/IdInfo',
@@ -694,9 +606,6 @@ class _Config:
             return result
 
         def post(self, object_id):
-            """
-            :param object_id: Trust Protection Platform object identifier
-            """
             body = json.dumps({
                 "ObjectID": object_id
             })
@@ -707,8 +616,7 @@ class _Config:
 
     class _IsValid(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/IsValid',
@@ -733,11 +641,6 @@ class _Config:
             return result
 
         def post(self, object_dn, object_guid):
-            """
-            :param object_dn: the object name
-            :param object_guid: the unique object GUID enclosed in curly braces
-                    For example {112adf57-07b7-41fe-9d3a-5f342e421c68}
-            """
             if not (object_dn or object_guid):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = json.dumps({
@@ -749,11 +652,9 @@ class _Config:
 
             return self
 
-
     class _MutateObject(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/MutateObject',
@@ -770,10 +671,6 @@ class _Config:
             return result
 
         def post(self, object_dn, class_name):
-            """
-            :param object_dn: the name of the object
-            :param class_name:  the new class name to assign to the object being sent
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name
@@ -785,8 +682,7 @@ class _Config:
 
     class _Read(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/Read',
@@ -827,10 +723,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name):
-            """
-            :param object_dn: the name of the object to return
-            :param attribute_name: the name of the attribute you want the values of
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name
@@ -842,8 +734,7 @@ class _Config:
 
     class _ReadAll(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ReadAll',
@@ -868,9 +759,6 @@ class _Config:
             return result
 
         def post(self, object_dn):
-            """
-            :param object_dn: the name of the object
-            """
             body = json.dumps({
                 "ObjectDN": object_dn
             })
@@ -881,8 +769,7 @@ class _Config:
 
     class _ReadDn(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ReadDn',
@@ -907,10 +794,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name):
-            """
-            :param object_dn: the name of the object to return
-            :param attribute_name: the name of the attribute to read
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name
@@ -922,8 +805,7 @@ class _Config:
 
     class _ReadDnReferences(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ReadDnReferences',
@@ -948,11 +830,6 @@ class _Config:
             return result
 
         def post(self, object_dn, reference_attribute_name, attribute_name):
-            """
-            :param object_dn: the name of the object
-            :param reference_attribute_name: the name of the attribute to read for DN references
-            :param attribute_name: the name of the attribute to be read from each referenced DN
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "ReferenceAttributeName": reference_attribute_name,
@@ -965,8 +842,7 @@ class _Config:
 
     class _ReadEffectivePolicy(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ReadEffectivePolicy',
@@ -1017,11 +893,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name):
-            """
-            :param object_dn: the name of the object
-            :param attribute_name: the name of the attributes to be read from each referenced DN
-            :return:
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name
@@ -1033,8 +904,7 @@ class _Config:
 
     class _ReadPolicy(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/ReadPolicy',
@@ -1075,11 +945,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name, class_name):
-            """
-            :param object_dn: the name of the object
-            :param attribute_name: the name of the attribute to be read from each referenced DN
-            :param class_name: the class the policy item is for
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1092,8 +957,7 @@ class _Config:
 
     class _RemoveDnValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/RemoveDnValue',
@@ -1110,11 +974,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name, value):
-            """
-            :param object_dn: the name of the object
-            :param attribute_name: the name of the attribute to remove
-            :param value:  the value to remove from the attribute
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1126,8 +985,7 @@ class _Config:
 
     class _RemovePolicyValue(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/RemovePolicyValue',
@@ -1144,12 +1002,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name, class_name, value):
-            """
-            :param object_dn: the name of the object
-            :param attribute_name: the name of the attribute to update
-            :param class_name: a class name
-            :param value:  the corresponding class attribute
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1162,8 +1014,7 @@ class _Config:
 
     class _RenameObject(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/RenameObject',
@@ -1180,10 +1031,6 @@ class _Config:
             return result
 
         def post(self, object_dn, new_object_dn):
-            """
-            :param object_dn: the name of the object to be renamed or moved
-            :param new_object_dn: the new DN to assign to the object (the new location or name of the object)
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "NewObjectDN": new_object_dn
@@ -1194,8 +1041,7 @@ class _Config:
 
     class _Write(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/Write',
@@ -1212,14 +1058,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_data):
-            """
-            :param object_dn: the name of the object
-            :param attribute_data:
-                To make multiple attribute changes, specify an AttributeData array and each Name/Value array element. Otherwise,,omiy AttributeData [] and just use Name and Value.
-                To clear all values of an attribute, specify null. For example: {"Name": "X509 SubjectAltName RFC822", "Value": ["null"]}.
-                    Name : The Attribute name that appears on WebAdmin object Support tab. Use the Add button to find attributes that are not currently set.
-                    Value: An array of one value to apply to the Name.
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeData": attribute_data
@@ -1230,8 +1068,7 @@ class _Config:
 
     class _WriteDn(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/WriteDn',
@@ -1248,11 +1085,6 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name, values):
-            """
-            :param object_dn: the name of the object
-            :param attribute_name: the name of the attribute to write values
-            :param values:  the values to write to the attribute
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1264,8 +1096,7 @@ class _Config:
 
     class _WritePolicy(API):
         def __init__(self, session, api_type):
-            API.__init__(
-                self,
+            super().__init__(
                 session=session,
                 api_type=api_type,
                 url=WEBSDK_URL + '/Config/WritePolicy',
@@ -1282,13 +1113,6 @@ class _Config:
             return result
 
         def post(self, object_dn, class_name, attribute_name, locked, values):
-            """
-            :param object_dn: the name of the object that will store the attribute values
-            :param class_name: the name of the policy attribute class
-            :param attribute_name: the name of the attribute
-            :param locked: True of False : lock the attribute or keep the attribute unlocked
-            :param values: the array of values to write to the attribute
-            """
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name,
