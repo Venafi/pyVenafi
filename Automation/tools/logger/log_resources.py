@@ -1,3 +1,6 @@
+from config.settings import LOG_API_COLOR, LOG_CRITICAL_COLOR, LOG_FEATURE_COLOR, LOG_TEST_COLOR
+
+
 class LogLevels:
     api = 0
     feature = 1
@@ -5,7 +8,7 @@ class LogLevels:
     critical = 9
 
 
-def log_color(s, fg, bg): return "\033[;{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
+def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
 
 
 class ForegroundColors:
@@ -34,17 +37,17 @@ class BackgroundColors:
 class TextStyle:
     no_style = 0
     bold = 1
-    underline = 2
-    negative1 = 3
-    negative2 = 5
+    italics = 3
+    underline = 4
+    cross_through = 9
 
 
 class LogColors:
     level_color = {
-        LogLevels.api: log_color(TextStyle.bold, ForegroundColors.yellow, BackgroundColors.transparent),
-        LogLevels.feature: log_color(TextStyle.bold, ForegroundColors.blue, BackgroundColors.transparent),
-        LogLevels.test: log_color(TextStyle.bold, ForegroundColors.purple, BackgroundColors.transparent),
-        LogLevels.critical: log_color(TextStyle.bold, ForegroundColors.red, BackgroundColors.transparent)
+        LogLevels.api: log_color(*LOG_API_COLOR),
+        LogLevels.feature: log_color(*LOG_FEATURE_COLOR),
+        LogLevels.test: log_color(*LOG_TEST_COLOR),
+        LogLevels.critical: log_color(*LOG_CRITICAL_COLOR)
     }
 
     end = log_color(TextStyle.no_style, 0, 0)
