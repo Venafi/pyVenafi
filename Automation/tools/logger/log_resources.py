@@ -5,9 +5,6 @@ class LogLevels:
     critical = 9
 
 
-def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
-
-
 class ForegroundColors:
     black = 30
     red = 31
@@ -28,22 +25,12 @@ class BackgroundColors:
     purple = 45
     cyan = 46
     white = 47
+    transparent = 48
 
 
 class TextStyle:
     no_style = 0
     bold = 1
-    underline = 2
-    negative1 = 3
-    negative2 = 5
-
-
-class LogColors:
-    level_color = {
-        LogLevels.api: log_color(TextStyle.bold, ForegroundColors.yellow, 0),
-        LogLevels.feature: log_color(TextStyle.bold, ForegroundColors.blue, 0),
-        LogLevels.test: log_color(TextStyle.bold, ForegroundColors.purple, 0),
-        LogLevels.critical: log_color(TextStyle.bold, ForegroundColors.red, 0)
-    }
-
-    end = log_color(TextStyle.no_style, 0, 0)
+    italics = 3
+    underline = 4
+    cross_through = 9
