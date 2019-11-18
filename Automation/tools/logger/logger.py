@@ -2,9 +2,9 @@ import os
 import sys
 import traceback
 import inspect
-from config.settings import LOG_LEVEL
-from tools.logger.log_resources import LogColors, LogLevels
-from config.settings import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH
+from config.settings import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
+    LOG_CRITICAL_COLOR, LOG_TEST_COLOR, LOG_FEATURE_COLOR, LOG_API_COLOR, LOG_LEVEL
+from tools.logger.log_resources import LogLevels
 import webbrowser
 import json
 
@@ -14,55 +14,6 @@ if not os.path.exists(LOG_DIR):
     os.mkdir(LOG_DIR)
 
 LOG_FILE_WITHOUT_EXT = '%s/logfile_%s' % (LOG_DIR, LOG_TIMESTAMP)
-
-class Logger:
-    def __init__(self, level):
-        self._log_to_console_method = (lambda *args, **kwargs: None) if level < LOG_LEVEL else self._log_to_console
-        self.level = level
-        self.text_color = 0
-
-    def log(self, msg, critical=False):
-        frame = inspect.currentframe()
-        outerframes = inspect.getouterframes(frame)[1]
-        self._log(msg=msg, outerframes=outerframes, critical=critical)
-
-    def log_exception(self, skip_console=True):
-        """
-        :type exc_obj: Exception
-        """
-        tb = sys.exc_info()[2]
-        while True:
-            if tb.tb_next is None:
-                break
-            tb = tb.tb_next
-        frame = tb.tb_frame
-        outerframes = inspect.getouterframes(frame)[0]
-        msg = traceback.format_exc()
-        html_msg = '<span style="white-space: pre-wrap; color: red">%s</span>' % msg
-        self._log(msg=msg, outerframes=outerframes, critical=True, skip_console=skip_console, html_formatted_msg=html_msg)
-
-    def _log(self, msg, outerframes, critical=False, skip_console=False, html_formatted_msg=None):
-        path, lineno = outerframes[1], str(outerframes[2])
-        filepath, filename = os.path.split(path)
-        source, startlineno = inspect.getsourcelines(outerframes[0])
-        if not skip_console:
-            self._log_to_console_method(filename=path, lineno=lineno, msg=msg, critical=critical)
-        if LOG_TO_JSON is True:
-            json_msg = html_formatted_msg or msg
-            source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
-            self._log_to_json(path=filepath, filename=filename, lineno=lineno, msg=json_msg, source=''.join(source), critical=critical)
-
-    def _log_to_console(self, filename, lineno, msg, critical):
-        level = LogLevels.critical if critical else self.level
-        file_text_color = LogColors.level_color.get(level)
-        file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
-        print(file_text + str(msg))
-
-    def _log_to_json(self, path, filename, lineno, msg, source, critical):
-        level = LogLevels.critical if critical else self.level
-        with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
-            json.dump({"path": path, "filename": filename, "lineno": lineno, "text": str(msg), "source": source, "log_level": level}, f)
-            f.write('\n')
 
 
 def log_to_html():
@@ -156,7 +107,7 @@ def log_to_html():
                         exp_el.style.background = 'none';
                     }}                    
                 }}
-                
+
                 function filterLogs() {{
                     let filters = document.querySelectorAll('.filter');
                     let all_logs = document.querySelectorAll('.log-item-container');
@@ -166,7 +117,7 @@ def log_to_html():
                             display_filters.push(filters[i].value);
                         }}
                     }}
-                    
+
                     // Pinned filter overrides all other filters.
                     if(display_filters.includes('-1')) {{
                         // Disable other filters.
@@ -177,7 +128,7 @@ def log_to_html():
                                 legend_items[i].style.pointerEvents = 'none';
                             }}
                         }}
-                        
+
                         // Filter logs.
                         for(var i=0; i < all_logs.length; i++) {{
                             display = all_logs[i].querySelectorAll('.unpinned').length == 0 ? 'block' : 'none';
@@ -190,7 +141,7 @@ def log_to_html():
                             legend_items[i].style.opacity = 1;
                             legend_items[i].style.pointerEvents = 'all';
                         }}
-                        
+
                         // Filter logs.
                         for(var i=0; i < all_logs.length; i++) {{
                             display = (display_filters.includes(all_logs[i].getAttribute('value'))) ? 'block' : 'none';
@@ -198,7 +149,7 @@ def log_to_html():
                         }}
                     }}
                 }}
-                
+
                 function toggleMark(id, counter) {{
                     h = document.getElementById(id);
                     h.classList.toggle('unpinned')
@@ -261,13 +212,13 @@ def log_to_html():
                     opacity: 1;
                     color: white;
                 }}
-                
+
                 .unpinned {{
                     background-color: inherit;
                     opacity: 0.5;
                     color: black;
                 }}
-                
+
                 .line-info {{
                     text-align: center;
                     padding-left: 10px;
@@ -286,7 +237,7 @@ def log_to_html():
                 .source-code {{
                     width: 100%;
                 }}
-                
+
                 /* Styling Checkbox Starts */
                 #legend-title {{
                     text-align: center;
@@ -295,12 +246,12 @@ def log_to_html():
                     margin-bottom: 10px;
                     color: #444;
                 }}
-            
+
                 #legend-container {{
                     width: 90%;
                     margin: 0 auto;
                 }}
-                
+
                 #legend {{
                     border-radius: 5px;
                     display: flex;
@@ -313,13 +264,13 @@ def log_to_html():
                     padding: 10px;
                     background-color: "#EFEFEF";
                 }}
-                
+
                 .legend-item {{
                     height: 45px;
                     width: 120px;
                     display: block;
                 }}
-                
+
                 .input-title {{
                     display: inline-block;
                     width: 50%;
@@ -327,7 +278,7 @@ def log_to_html():
                     margin-left: 6px;
                     font-size: medium; 
                 }}
-                
+
                 .checkbox-label {{
                     display: inline-block;
                     position: relative;
@@ -337,13 +288,13 @@ def log_to_html():
                     clear: both;
                     top: 4px;
                 }}
-                
+
                 .checkbox-label input {{
                     position: absolute;
                     opacity: 0;
                     cursor: pointer;
                 }}
-                
+
                 .checkbox-label .checkbox-custom {{
                     position: absolute;
                     top: 0px;
@@ -359,8 +310,8 @@ def log_to_html():
                     -o-transition: all 0.3s ease-out;
                     border: 2px solid #888;
                 }}
-                
-                
+
+
                 .checkbox-label input:checked ~ .checkbox-custom {{
                     background-color: #FFFFFF;
                     border-radius: 5px;
@@ -370,8 +321,8 @@ def log_to_html():
                     opacity:1;
                     border: 2px solid #888;
                 }}
-                
-                
+
+
                 .checkbox-label .checkbox-custom::after {{
                     position: absolute;
                     content: '';
@@ -392,8 +343,8 @@ def log_to_html():
                     -ms-transition: all 0.3s ease-out;
                     -o-transition: all 0.3s ease-out;
                 }}
-                
-                
+
+
                 .checkbox-label input:checked ~ .checkbox-custom::after {{
                   -webkit-transform: rotate(45deg) scale(1);
                   -ms-transform: rotate(45deg) scale(1);
@@ -408,9 +359,9 @@ def log_to_html():
                   background-color: transparent;
                   border-radius: 0;
                 }}
-                
-                
-                
+
+
+
                 /* For Ripple Effect */
                 .checkbox-label .checkbox-custom::before {{
                     position: absolute;
@@ -425,7 +376,7 @@ def log_to_html():
                     -ms-transform: scale(0);
                     transform: scale(0);    
                 }}
-                
+
                 .checkbox-label input:checked ~ .checkbox-custom::before {{
                     left: -3px;
                     top: -3px;
@@ -467,3 +418,67 @@ def log_to_html():
 
     if OPEN_HTML_ON_FINISH is True:
         webbrowser.open_new_tab('file://%s.html' % LOG_FILE_WITHOUT_EXT)
+
+
+def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
+
+
+class Logger:
+    def __init__(self, level):
+        self._log_to_console_method = (lambda *args, **kwargs: None) if level < LOG_LEVEL else self._log_to_console
+        self.level = level
+        self.text_color = 0
+
+    def log(self, msg, critical=False):
+        frame = inspect.currentframe()
+        outerframes = inspect.getouterframes(frame)[1]
+        self._log(msg=msg, outerframes=outerframes, critical=critical)
+
+    def log_exception(self, skip_console=True):
+        """
+        :type exc_obj: Exception
+        """
+        tb = sys.exc_info()[2]
+        while True:
+            if tb.tb_next is None:
+                break
+            tb = tb.tb_next
+        frame = tb.tb_frame
+        outerframes = inspect.getouterframes(frame)[0]
+        msg = traceback.format_exc()
+        html_msg = '<span style="white-space: pre-wrap; color: red">%s</span>' % msg
+        self._log(msg=msg, outerframes=outerframes, critical=True, skip_console=skip_console, html_formatted_msg=html_msg)
+
+    def _log(self, msg, outerframes, critical=False, skip_console=False, html_formatted_msg=None):
+        path, lineno = outerframes[1], str(outerframes[2])
+        filepath, filename = os.path.split(path)
+        source, startlineno = inspect.getsourcelines(outerframes[0])
+        if not skip_console:
+            self._log_to_console_method(filename=path, lineno=lineno, msg=msg, critical=critical)
+        if LOG_TO_JSON is True:
+            json_msg = html_formatted_msg or msg
+            source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
+            self._log_to_json(path=filepath, filename=filename, lineno=lineno, msg=json_msg, source=''.join(source), critical=critical)
+
+    def _log_to_console(self, filename, lineno, msg, critical):
+        level = LogLevels.critical if critical else self.level
+        file_text_color = LogColors.level_color.get(level)
+        file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
+        print(file_text + str(msg))
+
+    def _log_to_json(self, path, filename, lineno, msg, source, critical):
+        level = LogLevels.critical if critical else self.level
+        with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
+            json.dump({"path": path, "filename": filename, "lineno": lineno, "text": str(msg), "source": source, "log_level": level}, f)
+            f.write('\n')
+
+
+class LogColors:
+    level_color = {
+        LogLevels.api: log_color(*LOG_API_COLOR),
+        LogLevels.feature: log_color(*LOG_FEATURE_COLOR),
+        LogLevels.test: log_color(*LOG_TEST_COLOR),
+        LogLevels.critical: log_color(*LOG_CRITICAL_COLOR)
+    }
+
+    end = log_color(0, 0, 0)

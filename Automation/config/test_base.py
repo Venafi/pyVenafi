@@ -1,6 +1,5 @@
 from datetime import datetime
-from tools.logger.logger import Logger
-from tools.logger.log_resources import LogLevels
+from tools.logger.logger import Logger, LogLevels
 
 
 class TestBase:
