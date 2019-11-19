@@ -8,9 +8,33 @@ class _Config:
     def __init__(self, session, api_type):
         self.AddDnValue = self._AddDnValue(session, api_type)
         self.AddPolicyValue = self._AddPolicyValue(session, api_type)
+        self.AddValue = self._AddValue(session, api_type)
+        self.ClearAttribute = self._ClearAttribute(session, api_type)
+        self.ClearPolicyAttribute = self._ClearPolicyAttribute(session, api_type)
+        self.ContainableClasses = self._ContainableClasses(session, api_type)
         self.Create = self._Create(session, api_type)
+        self.DefaultDN = self._DefaultDN(session, api_type)
         self.Delete = self._Delete(session, api_type)
         self.FindObjectsOfClass = self._FindObjectsOfClass(session, api_type)
+        self.FindPolicy = self._FindPolicy(session, api_type)
+        self.GetHighestRevision = self._GetHighestRevision(session, api_type)
+        self.GetRevision = self._GetRevision(session, api_type)
+        self.GuidToDn = self._GuidToDn(session, api_type)
+        self.IdInfo = self._IdInfo(session, api_type)
+        self.IsValid = self._IsValid(session, api_type)
+        self.MutateObject = self._MutateObject(session, api_type)
+        self.Read = self._Read(session, api_type)
+        self.ReadAll = self._ReadAll(session, api_type)
+        self.ReadDn = self._ReadDn(session, api_type)
+        self.ReadDnReferencese = self._ReadDnReferences(session, api_type)
+        self.ReadEffectivePolicy = self._ReadEffectivePolicy(session, api_type)
+        self.ReadPolicy = self._ReadPolicy(session, api_type)
+        self.RemoveDnValue = self._RemoveDnValue(session, api_type)
+        self.RemovePolicyValue = self._RemovePolicyValue(session, api_type)
+        self.RenameObject = self._RenameObject(session, api_type)
+        self.Write = self._Write(session, api_type)
+        self.WriteDn = self._WriteDn(session, api_type)
+        self.WritePolicy = self._WritePolicy(session, api_type)
 
     class _AddDnValue(API):
         def __init__(self, session, api_type):
@@ -31,7 +55,7 @@ class _Config:
             self.logger.log('Successfully added DN value.')
             return result
 
-        def post(self, object_dn, attribute_name, value):
+        def post(self, object_dn: str, attribute_name: str, value: str):
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
@@ -59,8 +83,9 @@ class _Config:
             if result.code != 1:
                 raise ValueError('Could not add Policy Value. Received %s: %s.' %(result.code, result.config_result))
             self.logger.log('Successfully added Policy value.')
+            return result
 
-        def post(self, object_dn, attribute_name, class_name, value, locked):
+        def post(self, object_dn: str, attribute_name: str, class_name: str, value: str, locked: bool):
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
@@ -70,7 +95,6 @@ class _Config:
             })
 
             self.response = self._session.post(url=self._url, data=body)
-
             return self
 
     class _AddValue(API):
@@ -91,7 +115,9 @@ class _Config:
                 raise ValueError('Could not add Value. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully added Value.')
 
-        def post(self, object_dn, attribute_name, value):
+            return result
+
+        def post(self, object_dn: str, attribute_name: str, value: str):
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
@@ -119,8 +145,9 @@ class _Config:
             if result.code != 1:
                 raise ValueError('Could not clear Attribute. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully cleared Attribute.')
+            return result
 
-        def post(self, object_dn, attribute_name):
+        def post(self, object_dn: str, attribute_name: str):
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name
@@ -147,8 +174,9 @@ class _Config:
             if result.code != 1:
                 raise ValueError('Could not clear Policy Attribute. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully cleared Policy Attribute.')
+            return result
 
-        def post(self, object_dn, class_name, attribute_name):
+        def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = json.dumps({
                 'ObjectDN': object_dn,
                 'Class': class_name,
@@ -184,7 +212,7 @@ class _Config:
                 raise ValueError('Could not retrieve names of container classes. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully retrieved containing classes.')
 
-        def post(self, object_dn):
+        def post(self, object_dn: str):
             body = json.dumps({
                 'ObjectDN': object_dn
             })
@@ -206,7 +234,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Count'), self._api_type)
+            return self.response.json()['Count']
 
         @property
         @response_property()
@@ -217,10 +245,10 @@ class _Config:
                 raise ValueError('Could get a count of the objects. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully counted the objects.')
 
-        def post(self, object_dn, type, recursive, pattern):
+        def post(self, object_dn: str, type_name: str, recursive: bool = False, pattern: str = None):
             body = json.dumps({
                 'ObjectDN': object_dn,
-                'Type': type,
+                'Type': type_name,
                 'Pattern': pattern
             })
             if recursive:
@@ -255,7 +283,7 @@ class _Config:
                 raise ValueError('Could not create config object. Received %s: %s.' %(result.code, result.config_result))
             return result
 
-        def post(self, object_dn, class_name, name_attribute_list):
+        def post(self, object_dn: str, class_name: str, name_attribute_list: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name,
@@ -281,7 +309,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('DefaultDN'), self._api_type)
+            return self.response.json()['DefaultDN']
 
         @property
         @response_property()
@@ -289,10 +317,10 @@ class _Config:
             code = self.response.json()['Result']
             result = Config.Result(code)
             if result.code != 1:
-                raise ValueError('Could get the default DN. Received %s: %s.' % (result.code, result.config_result))
+                raise ValueError('Could not get the default DN. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully retrieved the Default DN.')
 
-        def post(self, default_dn):
+        def post(self, default_dn: str):
             body = json.dumps({
                 'DefaultDN': default_dn
             })
@@ -318,7 +346,7 @@ class _Config:
                 raise ValueError('Could not delete config object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, recursive):
+        def post(self, object_dn: str, recursive: bool = False):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Recursive": recursive
@@ -353,7 +381,7 @@ class _Config:
                 raise ValueError('Could not find config object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, classes=None, class_name=None, object_dn=None, pattern=None, recursive=None):
+        def post(self, classes: str = None, class_name: str = None, object_dn: str = None, pattern: str = None, recursive: bool = False):
             if not (classes or class_name):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = json.dumps({
@@ -386,7 +414,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Locked'), self._api_type)
+            return self.response.json()['Locked']
 
         @property
         @response_property()
@@ -394,7 +422,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('PolicyDN'), self._api_type)
+            return self.response.json()['PolicyDN']
 
         @property
         @response_property()
@@ -402,7 +430,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Values', [])]
+            return self.response.json()['Values']
 
         @property
         @response_property()
@@ -413,7 +441,7 @@ class _Config:
                 raise ValueError('Could not find the policy object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, class_name, attribute_name):
+        def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name,
@@ -439,7 +467,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Revision'), self._api_type)
+            return self.response.json()['Revision']
 
         @property
         @response_property()
@@ -450,7 +478,7 @@ class _Config:
                 raise ValueError('Could not find the revision of the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, classes=None):
+        def post(self, object_dn: str, classes: str = None):
             body = json.dumps({
                 "ObjectDN": object_dn
             })
@@ -476,7 +504,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Revision'), self._api_type)
+            return self.response.json()['Revision']
 
         @property
         @response_property()
@@ -487,7 +515,7 @@ class _Config:
                 raise ValueError('Could not find the revision of the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn):
+        def post(self, object_dn: str):
             body = json.dumps({
                 "ObjectDN": object_dn
             })
@@ -511,7 +539,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('ObjectDN'), self._api_type)
+            return self.response.json()['ObjectDN']
 
         @property
         @response_property()
@@ -519,7 +547,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('ClassName'), self._api_type)
+                return self.response.json()['ClassName']
 
         @property
         @response_property()
@@ -527,7 +555,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Revision'), self._api_type)
+                return self.response.json()['Revision']
 
         @property
         @response_property()
@@ -535,7 +563,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('HierarchicalGUID'), self._api_type)
+                return self.response.json()['HierarchicalGUID']
 
         @property
         @response_property()
@@ -546,7 +574,7 @@ class _Config:
                 raise ValueError('Could not find the information for the GUID. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_guid):
+        def post(self, object_guid: str):
             body = json.dumps({
                 "ObjectGUID": object_guid
             })
@@ -570,7 +598,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('GUID'), self._api_type)
+            return self.response.json()['GUID']
 
         @property
         @response_property()
@@ -578,7 +606,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('ClassName'), self._api_type)
+            return self.response.json()['ClassName']
 
         @property
         @response_property()
@@ -594,7 +622,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('HierarchicalGUID'), self._api_type)
+            return self.response.json()['HierarchacalGUID']
 
         @property
         @response_property()
@@ -605,7 +633,7 @@ class _Config:
                 raise ValueError('Could not find the information for the given ID. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_id):
+        def post(self, object_id: str):
             body = json.dumps({
                 "ObjectID": object_id
             })
@@ -629,7 +657,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Object', [])]
+            return Config.Object(result['Object'], self._api_type)
 
         @property
         @response_property()
@@ -640,7 +668,7 @@ class _Config:
                 raise ValueError('Could not find the information for the GUID. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, object_guid):
+        def post(self, object_dn: str, object_guid: str):
             if not (object_dn or object_guid):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = json.dumps({
@@ -670,7 +698,7 @@ class _Config:
                 raise ValueError('Could not mutate the object to the specified class. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, class_name):
+        def post(self, object_dn: str, class_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name
@@ -695,7 +723,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('ObjectDN'), self._api_type)
+            return self.response.json()['ObjectDN']
 
         @property
         @response_property()
@@ -703,7 +731,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('AttributeName'), self._api_type)
+            return self.response.json()['AttributeName']
 
         @property
         @response_property()
@@ -711,7 +739,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Values', [])]
+                return self.response.json()['Values']
 
         @property
         @response_property()
@@ -722,7 +750,7 @@ class _Config:
                 raise ValueError('Could not find the information for the object and attribute name combination. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name):
+        def post(self, object_dn: str, attribute_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name
@@ -747,7 +775,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('NameValues', [])]
+            return [Config.NameValue(name, value) for name, value in self.response.json()['NameValues'].items()]
 
         @property
         @response_property()
@@ -758,7 +786,7 @@ class _Config:
                 raise ValueError('Could not find the information for the object_dn. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn):
+        def post(self, object_dn: str):
             body = json.dumps({
                 "ObjectDN": object_dn
             })
@@ -782,7 +810,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Values', [])]
+            return self.response.json()['Values']
 
         @property
         @response_property()
@@ -793,7 +821,7 @@ class _Config:
                 raise ValueError('Could not find the information for the object_dn and attribute combination. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name):
+        def post(self, object_dn: str, attribute_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name
@@ -818,7 +846,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Values', [])]
+            return self.response.json('Values')
 
         @property
         @response_property()
@@ -829,7 +857,7 @@ class _Config:
                 raise ValueError('Could not find the information for the object_dn and attribute combination. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, reference_attribute_name, attribute_name):
+        def post(self, object_dn: str, reference_attribute_name: str, attribute_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "ReferenceAttributeName": reference_attribute_name,
@@ -855,7 +883,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Values', [])]
+            return self.response.json()['Values']
 
         @property
         @response_property()
@@ -863,7 +891,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Locked'), self._api_type)
+            return self.response.json()['Locked']
 
         @property
         @response_property()
@@ -871,7 +899,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Overridden'), self._api_type)
+            return self.response.json()['Overridden']
 
         @property
         @response_property()
@@ -879,7 +907,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('PolicyDN'), self._api_type)
+            return self.response.json()['PolicyDN']
 
         @property
         @response_property()
@@ -888,11 +916,10 @@ class _Config:
             result = Config.Result(code)
             if result.code != 1:
                 raise ValueError(
-                    'Could not find the information for the object_dn and attribute combination. Received %s: %s.' % (
-                    result.code, result.config_result))
+                    'Could not find the information for the object_dn and attribute combination. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name):
+        def post(self, object_dn: str, attribute_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name
@@ -917,7 +944,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('Locked'), self._api_type)
+            return self.response.json()['Locked']
 
         @property
         @response_property()
@@ -925,7 +952,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return Config.Object(result.get('ClassName'), self._api_type)
+                return self.response.json()['ClassName']
 
         @property
         @response_property()
@@ -933,7 +960,7 @@ class _Config:
             result = self.response.json()
             if 'Error' in result.keys():
                 raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('Values', [])]
+            return self.response.json()['Values']
 
         @property
         @response_property()
@@ -944,7 +971,7 @@ class _Config:
                 raise ValueError('Could read the policy for the given object, attribute_name and class. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name, class_name):
+        def post(self, object_dn: str, attribute_name: str, class_name: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -973,7 +1000,7 @@ class _Config:
                 raise ValueError('Could not remove the value of the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name, value):
+        def post(self, object_dn: str, attribute_name: str, value: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1001,7 +1028,7 @@ class _Config:
                 raise ValueError('Could not remove the policy value of the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name, class_name, value):
+        def post(self, object_dn: str, attribute_name: str, class_name: str, value: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1030,7 +1057,7 @@ class _Config:
                 raise ValueError('Could not rename the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, new_object_dn):
+        def post(self, object_dn: str, new_object_dn: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "NewObjectDN": new_object_dn
@@ -1057,7 +1084,7 @@ class _Config:
                 raise ValueError('Could not write the attribute data to the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_data):
+        def post(self, object_dn: str, attribute_data: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeData": attribute_data
@@ -1084,7 +1111,7 @@ class _Config:
                 raise ValueError('Could not write the attribute data to the object. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, attribute_name, values):
+        def post(self, object_dn: str, attribute_name: str, values: str):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1112,7 +1139,7 @@ class _Config:
                 raise ValueError('Could not write the attribute values for the given class. Received %s: %s.' % (result.code, result.config_result))
             return result
 
-        def post(self, object_dn, class_name, attribute_name, locked, values):
+        def post(self, object_dn: str, class_name: str, attribute_name: str, locked: bool = False, values: str = None):
             body = json.dumps({
                 "ObjectDN": object_dn,
                 "Class": class_name,
