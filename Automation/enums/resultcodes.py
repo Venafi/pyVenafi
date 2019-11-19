@@ -203,6 +203,33 @@ class ResultCodes:
         1073741824: 'RetryLater'
     }
 
+    SecretStore = {
+         0: 'Success',
+         1: 'InvalidCallingAssembly',
+         2: 'CreateDatabaseError',
+         3: 'UseDatabaseError',
+         4: 'CreateTableError',
+         5: 'CreateIndexError',
+         6: 'ConnectionError',
+         7: 'TransactionError',
+         8: 'InvalidVaultID',
+         9: 'InvalidParams',
+        10: 'InsufficientPermissions',
+        11: 'CryptoFailure',
+        12: 'DeleteSecretFailed',
+        13: 'AddSecretFailed',
+        14: 'RetrieveSecretFailed',
+        15: 'RetrieveSecretTypeFailed',
+        16: 'GetNextVaultIDFailed',
+        17: 'DisassociateFailed',
+        18: 'OwnerLookupFailed',
+        19: 'AssociateDataFailed',
+        20: 'LookupFailed',
+        21: 'InvalidKey',
+        22: 'QueryError',
+        23: 'SecurityGroupNotImplemented'
+    }
+
     ValidationProtocols = {
           12: "SSL 2.0",
           48: "SSL 3.0",
