@@ -15,6 +15,11 @@ class _Config:
         self.Create = self._Create(session, api_type)
         self.DefaultDN = self._DefaultDN(session, api_type)
         self.Delete = self._Delete(session, api_type)
+        self.DnToGuid = self._DnToGuid(session, api_type)
+        self.Enumerate = self._Enumerate(session, api_type)
+        self.EnumerateAll = self._EnumerateAll(session, api_type)
+        self.EnumerateObjectsDerivedFrom = self._EnumerateObjectsDerivedFrom(session, api_type)
+        self.EnumeratePolicies = self._EnumeratePolicies(session, api_type)
         self.FindObjectsOfClass = self._FindObjectsOfClass(session, api_type)
         self.FindPolicy = self._FindPolicy(session, api_type)
         self.GetHighestRevision = self._GetHighestRevision(session, api_type)
@@ -26,7 +31,7 @@ class _Config:
         self.Read = self._Read(session, api_type)
         self.ReadAll = self._ReadAll(session, api_type)
         self.ReadDn = self._ReadDn(session, api_type)
-        self.ReadDnReferencese = self._ReadDnReferences(session, api_type)
+        self.ReadDnReferences = self._ReadDnReferences(session, api_type)
         self.ReadEffectivePolicy = self._ReadEffectivePolicy(session, api_type)
         self.ReadPolicy = self._ReadPolicy(session, api_type)
         self.RemoveDnValue = self._RemoveDnValue(session, api_type)
@@ -198,10 +203,7 @@ class _Config:
         @property
         @response_property()
         def class_names(self):
-            result = self.response.json()
-            if 'Error' in result.keys():
-                raise AssertionError('An error occurred: "%s"' % result['Error'])
-            return [Config.Object(obj, self._api_type) for obj in result.get('ClassNames', [])]
+            return self.response.json()['ClassNames']
 
         @property
         @response_property()
@@ -344,6 +346,273 @@ class _Config:
             result = Config.Result(code)
             if result.code != 1:
                 raise ValueError('Could not delete config object. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, object_dn: str, recursive: bool = False):
+            body = json.dumps({
+                "ObjectDN": object_dn,
+                "Recursive": recursive
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _DnToGuid(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/DnToGuid',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def class_name(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return self.response.json()['ClassName']
+
+        @property
+        @response_property()
+        def guid(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return self.response.json()['GUID']
+
+        @property
+        @response_property()
+        def revision(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return self.response.json()['Revision']
+
+        @property
+        @response_property()
+        def hierarchical_guid(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return self.response.json()['HierarchicalGUID']
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not convert the given DN. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, object_dn: str):
+            body = json.dumps({
+                "ObjectDN": object_dn,
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _Enumerate(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/Enumerate',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def object(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return [Config.Object(obj, self._api_type) for obj in result.get('Objects', [])]
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not find config object. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, object_dn: str = None, recursive: bool = False, pattern: str = None):
+            body = json.dumps({
+                "ObjectDN": object_dn,
+                "Recursive": recursive,
+                "Pattern": pattern
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _EnumerateAll(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/EnumerateAll',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def object(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return [Config.Object(obj, self._api_type) for obj in result.get('Objects', [])]
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not find config objects. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, pattern: str):
+            body = json.dumps({
+                "Pattern": pattern
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _EnumerateObjectsDerivedFrom(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/EnumerateObjectsDerivedFrom',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def object(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return [Config.Object(obj, self._api_type) for obj in result.get('Objects', [])]
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not find config objects. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, derived_from: str, pattern: str = None):
+            body = json.dumps({
+                "DerivedFrom": derived_from,
+                "Pattern": pattern
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _EnumeratePolicies(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/EnumeratePolicies',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def policies(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return [Config.Policies(obj, self._api_type) for obj in result.get('Policies', [])]
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not find config objects. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, object_dn: str):
+            body = json.dumps({
+                "ObjectDN": object_dn
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _Find(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/Find',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def object(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return [Config.Object(obj, self._api_type) for obj in result.get('Objects', [])]
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not find config objects. Received %s: %s.' % (result.code, result.config_result))
+            return result
+
+        def post(self, pattern: str, attribute_names: str = None):
+            body = json.dumps({
+                "Pattern": pattern,
+                "AttributeNames": attribute_names
+            })
+            self.response = self._session.post(url=self._url, data=body)
+
+            return self
+
+    class _FindContainers(API):
+        def __init__(self, session, api_type):
+            super().__init__(
+                session=session,
+                api_type=api_type,
+                url=WEBSDK_URL + '/Config/FindContainers',
+                valid_return_codes=[200]
+            )
+
+        @property
+        @response_property()
+        def object(self):
+            result = self.response.json()
+            if 'Error' in result.keys():
+                raise AssertionError('An error occurred: "%s"' % result['Error'])
+            return [Config.Object(obj, self._api_type) for obj in result.get('Objects', [])]
+
+        @property
+        @response_property()
+        def result(self):
+            code = self.response.json()['Result']
+            result = Config.Result(code)
+            if result.code != 1:
+                raise ValueError('Could not find config objects. Received %s: %s.' % (result.code, result.config_result))
             return result
 
         def post(self, object_dn: str, recursive: bool = False):
