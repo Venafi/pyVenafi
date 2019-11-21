@@ -1,8 +1,6 @@
-import json
 from apilibs.base import API, response_property
 from apilibs.session import WEBSDK_URL
 from enums.certificate import CertificateAttributes, CertificateStatus, OptionalFields
-from enums.resultcodes import ResultCodes
 from objects.response_objects.certificate import Certificate
 
 
@@ -113,11 +111,11 @@ class _Certificates(API):
             return result
 
         def post(self, application_dn: str, certificate_dn: str, push_to_new: bool):
-            body = json.dumps({
+            body = {
                 'CertiicateDN': certificate_dn,
                 'ApplicationDN': application_dn,
                 'PushToNew': push_to_new
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -146,10 +144,10 @@ class _Certificates(API):
             return p
 
         def post(self, policy_dn: str, pkcs10: str = None):
-            body = json.dumps({
+            body = {
                 'PolicyDN': policy_dn,
                 'PKSC10': pkcs10
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
 
@@ -173,11 +171,11 @@ class _Certificates(API):
             return result
 
         def post(self, certificate_dn: str, application_dn: list, delete_orphans: bool = False):
-            body = json.dumps({
+            body = {
                 'CertificateDN': certificate_dn,
                 'ApplicationDN': application_dn,
                 'DeleteOrphans': delete_orphans
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -299,9 +297,9 @@ class _Certificates(API):
             return self
 
         def put(self, attribute_data: [dict]):
-            body = json.dumps({
+            body = {
                 "AttributeData": attribute_data
-            })
+            }
 
             self.response = self._session.put(url=self._url, data=body)
             return self
@@ -401,7 +399,7 @@ class _Certificates(API):
 
         def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
                  password: str = None, private_key_data: str = None, reconcile: bool = False):
-            body = json.dumps({
+            body = {
                 'CertificateData': certificate_data,
                 'PolicyDN': policy_dn,
                 'CASpecificAttributes': ca_specific_attributes,
@@ -409,7 +407,7 @@ class _Certificates(API):
                 'Password': password,
                 'PrivateKeyData': private_key_data,
                 'Reconcile': reconcile
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -424,11 +422,11 @@ class _Certificates(API):
             )
 
         def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False):
-            body = json.dumps({
+            body = {
                 'CertificateDN': certificate_dn,
                 'PKCS10': pkcs10,
                 'Reenable': reenable
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -453,7 +451,7 @@ class _Certificates(API):
             if not(object_name or subject):
                 raise ValueError('Cannot request the certificate without either and ObjectName or Subject.')
 
-            body = json.dumps({
+            body = {
                 'Approvers': approvers,
                 'CADN': cadn,
                 'CASpecificAttributes': ca_specific_attributes,
@@ -479,7 +477,7 @@ class _Certificates(API):
                 'State': state,
                 'Subject': subject,
                 'SubjectAltNames': subject_alt_names
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -522,10 +520,10 @@ class _Certificates(API):
             return result
 
         def post(self, certificate_dn: str, restart: bool = False):
-            body = json.dumps({
+            body = {
                 'CertificateDN': certificate_dn,
                 'Restart': restart
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -580,7 +578,7 @@ class _Certificates(API):
         def post(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
                 root_first_order: bool = False):
-            body = json.dumps({
+            body = {
                 'CertificateDN': certificate_dn,
                 'Format': format,
                 'FriendlyName': friendly_name,
@@ -589,7 +587,7 @@ class _Certificates(API):
                 'KeystorePassword': keystore_password,
                 'Password': password,
                 'RootFirstOrder': root_first_order
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -649,7 +647,7 @@ class _Certificates(API):
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
                 root_first_order: bool = False):
 
-                body = json.dumps({
+                body = {
                     'Format': format,
                     'FriendlyName': friendly_name,
                     'IncludeChain': include_chain,
@@ -657,7 +655,7 @@ class _Certificates(API):
                     'KeystorePassword': keystore_password,
                     'Password': password,
                     'RootFirstOrder': root_first_order
-                })
+                }
 
                 self.response = self._session.post(url=self._url, data=body)
                 return self
@@ -672,9 +670,9 @@ class _Certificates(API):
             )
 
         def post(self, certificate_dn: str):
-            body = json.dumps({
+            body = {
                 'CertificateDN': certificate_dn
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -697,13 +695,13 @@ class _Certificates(API):
 
         def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
                  disable: bool = False):
-            body = json.dumps({
+            body = {
                 'CertificateDN': certificate_dn,
                 'Thumbprint': thumbprint,
                 'Reason': reason,
                 'Comments': comments,
                 'Disable': disable
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -742,10 +740,10 @@ class _Certificates(API):
             if not(certificate_dns or certificate_guids):
                 raise ValueError('Must supply either a list of Certificate DNs or Certificate GUIDs to validate.')
 
-            body = json.dumps({
+            body = {
                 'CertificateDNs': certificate_dns,
                 'CertificateGUIDs': certificate_guids
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self

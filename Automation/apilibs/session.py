@@ -1,4 +1,5 @@
 import requests
+import json
 from tools.logger.logger import Logger, LogLevels
 from config import settings as s
 
@@ -14,12 +15,13 @@ class Session:
         self._logger = Logger(LogLevels.api)
 
     def post(self, url, data, verify=False):
-        self._logger.log('%s: %s' %(url, data))
+        data = json.dumps(data, indent=4)
+        self._logger.log('%s: %s' % (url, data))
         return requests.post(url=url, data=data, headers=self.headers, verify=verify)
 
     def get(self, url, params=None, verify=False):
         if params:
-            self._logger.log('%s: %s' %(url, params))
+            self._logger.log('%s: %s' %(url, json.dumps(params, indent=4)))
         else:
             self._logger.log(url)
         return requests.get(url=url, params=params, headers=self.headers, verify=verify)
@@ -29,5 +31,6 @@ class Session:
         return requests.delete(url, headers=self.headers, verify=verify)
 
     def put(self, url, data, verify=False):
+        data = json.dumps(data, indent=4)
         self._logger.log('%s: %s' % (url, data))
         return requests.put(url=url, data=data, headers=self.headers, verify=verify)

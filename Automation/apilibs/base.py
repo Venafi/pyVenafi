@@ -1,3 +1,4 @@
+import json
 from apilibs.session import Session
 from requests import Response
 from tools.logger.logger import Logger, LogLevels
@@ -33,6 +34,12 @@ class API:
         self._validated = False
         self._response = value
 
+    def log_json_object(self, name, json_obj):
+        self.logger.log('%s: %s' % (name, json.dumps(json_obj, indent=4)), prev_frames=2)
+
+    def log_valid_result_code(self, msg: str = ''):
+        self.logger.log('%s successful. %s' % (self._url, msg), prev_frames=2)
+
     def get_api_result_log(self, success: bool, code: int = None, code_description: str = '', msg: str = ''):
         if success:
             return '%s successful. %s' % (self._url, msg)
@@ -59,3 +66,13 @@ class API:
 
 class InvalidResponseError(Exception):
     pass
+
+
+class InvalidResultCode(Exception):
+    def __init__(self, url, code, code_desc):
+        msg = "{url} failed.\nResult code: {code}\nCode Description: {desc}".format(
+            url=url,
+            code=code,
+            desc=code_desc
+        )
+        super().__init__(msg)

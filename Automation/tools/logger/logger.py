@@ -64,7 +64,7 @@ def log_to_html():
         <div class='log-item-container log-level-{log_level}' value='{log_level}'>
             <div id='log-{counter}' class='log-item-row-1'>
                 <span id='exp-{counter}' class='log-item exp' onClick=togglePlusMinus({counter})>+</span>
-                <span id='pin-{counter}' class='pin unpinned' onClick='toggleMark(this.id, {counter})'>Pin</span>
+                <span id='pin-{counter}' class='log-item pin unpinned' onClick='toggleMark(this.id, {counter})'>Pin</span>
                 <span class='log-item line-info' style='background-color: {ftc};'>{filename}: {lineno}</span>
                 <span id='log-text-{counter}' class='log-item log-text' style='white-space: nowrap'>{text}</span>
             </div>
@@ -89,7 +89,7 @@ def log_to_html():
                     log = document.getElementById('log-'+counter);
                     sign = exp_el.innerHTML;
                     if(sign === '+') {{
-                        text.style.whiteSpace = 'unset';
+                        text.style.whiteSpace = 'pre-wrap';
                         text.style.overflowWrap = 'break-word';
                         text.style.wordWrap = 'break-word';
                         source.style.display = 'flex';
@@ -424,14 +424,14 @@ def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg
 
 
 class Logger:
-    def __init__(self, level):
+    def __init__(self, level: int):
         self._log_to_console_method = (lambda *args, **kwargs: None) if level < LOG_LEVEL else self._log_to_console
         self.level = level
         self.text_color = 0
 
-    def log(self, msg, critical=False):
+    def log(self, msg: str, critical: bool = False, prev_frames: int = 1):
         frame = inspect.currentframe()
-        outerframes = inspect.getouterframes(frame)[1]
+        outerframes = inspect.getouterframes(frame)[prev_frames]
         self._log(msg=msg, outerframes=outerframes, critical=critical)
 
     def log_exception(self, skip_console=True):
@@ -449,7 +449,8 @@ class Logger:
         html_msg = '<span style="white-space: pre-wrap; color: red">%s</span>' % msg
         self._log(msg=msg, outerframes=outerframes, critical=True, skip_console=skip_console, html_formatted_msg=html_msg)
 
-    def _log(self, msg, outerframes, critical=False, skip_console=False, html_formatted_msg=None):
+    def _log(self, msg: str, outerframes: inspect.FrameInfo, critical: bool = False, skip_console: bool = False,
+             html_formatted_msg: str = None):
         path, lineno = outerframes[1], str(outerframes[2])
         filepath, filename = os.path.split(path)
         source, startlineno = inspect.getsourcelines(outerframes[0])
@@ -460,13 +461,13 @@ class Logger:
             source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
             self._log_to_json(path=filepath, filename=filename, lineno=lineno, msg=json_msg, source=''.join(source), critical=critical)
 
-    def _log_to_console(self, filename, lineno, msg, critical):
+    def _log_to_console(self, filename: str, lineno: int, msg: str, critical: bool):
         level = LogLevels.critical if critical else self.level
         file_text_color = LogColors.level_color.get(level)
         file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
         print(file_text + str(msg))
 
-    def _log_to_json(self, path, filename, lineno, msg, source, critical):
+    def _log_to_json(self, path: str, filename: str, lineno: int, msg: str, source: str, critical: bool):
         level = LogLevels.critical if critical else self.level
         with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
             json.dump({"path": path, "filename": filename, "lineno": lineno, "text": str(msg), "source": source, "log_level": level}, f)

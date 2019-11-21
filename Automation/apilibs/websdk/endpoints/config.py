@@ -1,5 +1,4 @@
-import json
-from apilibs.base import API, response_property
+from apilibs.base import API, response_property, InvalidResultCode
 from apilibs.session import WEBSDK_URL
 from objects.response_objects.config import Config
 
@@ -32,11 +31,11 @@ class _Config:
             return result
 
         def post(self, object_dn, attribute_name, value):
-            body = json.dumps({
+            body = {
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
                 'Value': value
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
 
@@ -57,7 +56,7 @@ class _Config:
             code = self.response.json()['Result']
             result = Config.Result(code)
             if result.code != 1:
-                raise ValueError('Could not add Policy Value. Received %s: %s.' %(result.code, result.config_result))
+                raise ValueError('Could not add Policy Value. Received %s: %s.' % (result.code, result.config_result))
             self.logger.log('Successfully added Policy value.')
 
         def post(self, object_dn, attribute_name, class_name, value, locked):
@@ -77,7 +76,8 @@ class _Config:
         def object(self):
             result = self.response.json()
             if 'Error' in result.keys():
-                raise AssertionError('An error occurred: "%s"' % result['Error'])
+                raise ValueError('An error occurred: "%s"' % result['Error'])
+            self.log_json_object('Config Object', result)
             return Config.Object(result.get('Object'), self._api_type)
 
         @property
@@ -86,15 +86,16 @@ class _Config:
             code = self.response.json()['Result']
             result = Config.Result(code)
             if result.code != 1:
-                raise ValueError('Could not create config object. Received %s: %s.' %(result.code, result.config_result))
+                raise InvalidResultCode(url=self._url, code=result.code, code_desc=result.config_result)
+            self.log_valid_result_code()
             return result
 
         def post(self, object_dn, class_name, name_attribute_list):
-            body = json.dumps({
+            body = {
                 "ObjectDN": object_dn,
                 "Class": class_name,
                 "NameAttributeList": name_attribute_list
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
 
@@ -119,10 +120,10 @@ class _Config:
             return result
 
         def post(self, object_dn, recursive):
-            body = json.dumps({
+            body = {
                 "ObjectDN": object_dn,
                 "Recursive": recursive
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
 
@@ -157,13 +158,13 @@ class _Config:
         def post(self, classes=None, class_name=None, object_dn=None, pattern=None, recursive=None):
             if not (classes or class_name):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
-            body = json.dumps({
+            body = {
                 "Classes": classes,
                 "Class": class_name,
                 "ObjectDN": object_dn,
                 "Pattern": pattern,
                 "Recursive": recursive
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
 
