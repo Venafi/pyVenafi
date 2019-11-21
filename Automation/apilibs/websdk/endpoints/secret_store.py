@@ -12,9 +12,9 @@ class _SecretStore:
         self.Dissociate = self._Dissociate(session=session, api_type=api_type)
         self.EncryptionKeysInUse = self._EncryptionKeysInUse(session=session, api_type=api_type)
         self.Lookup = self._Lookup(session=session, api_type=api_type)
-        self.LookupAllAssocationsbyVaultid = self._LookupAllAssocationsbyVaultid(session=session, api_type=api_type)
+        self.LookupAllAssociationsbyVaultid = self._LookupAllAssociationsbyVaultid(session=session, api_type=api_type)
         self.LookupByAssociation = self._LookupByAssociation(session=session, api_type=api_type)
-        self.LookupAssocationbyVaultID = self._LookupAssocationbyVaultID(session=session, api_type=api_type)
+        self.LookupAssociationbyVaultID = self._LookupAssociationbyVaultID(session=session, api_type=api_type)
         self.LookupByOwner = self._LookupByOwner(session=session, api_type=api_type)
         self.LookupByVaultType = self._LookupByVaultType(session=session, api_type=api_type)
         self.Mutate = self._Mutate(session=session, api_type=api_type)
@@ -36,11 +36,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -74,11 +74,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def post(self, name: str, vault_id: int, date_value: int = None, int_value: int = None, string_value: str = None):
@@ -105,11 +105,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def post(self, vault_id: int):
@@ -132,11 +132,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
@@ -170,11 +170,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def get(self):
@@ -193,11 +193,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -211,23 +211,23 @@ class _SecretStore:
             self.response = self._session.get(url=self._url)
             return self
 
-    class _LookupAllAssocationsbyVaultid(API):
+    class _LookupAllAssociationsbyVaultid(API):
         def __init__(self, session, api_type):
             super().__init__(
                 session=session,
                 api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupAllAssocationsbyVaultid',
+                url=WEBSDK_URL + '/SecretStore/LookupAllAssociationsbyVaultid',
                 valid_return_codes=[200]
             )
 
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -256,11 +256,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -285,23 +285,23 @@ class _SecretStore:
             self.response = self._session.post(url=self._url, data=body)
             return self
 
-    class _LookupAssocationbyVaultID(API):
+    class _LookupAssociationbyVaultID(API):
         def __init__(self, session, api_type):
             super().__init__(
                 session=session,
                 api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupAssocationbyVaultID',
+                url=WEBSDK_URL + '/SecretStore/LookupAssociationbyVaultID',
                 valid_return_codes=[200]
             )
 
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -309,7 +309,7 @@ class _SecretStore:
         def value(self):
             return self.response.json()['Value']
 
-        def post(self, vault_id: int, name: str = None):
+        def post(self, vault_id: int, name: str = ''):
             body = {
                 'VaultID': vault_id
             }
@@ -317,7 +317,8 @@ class _SecretStore:
             if name:
                 body.update({'Name': name})
 
-            self.response = self._session.post(url=-self._url, data=body)
+            body = json.dumps(body)
+            self.response = self._session.post(url=self._url, data=body)
             return self
 
     class _LookupByOwner(API):
@@ -332,11 +333,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -352,6 +353,7 @@ class _SecretStore:
             if vault_type:
                 body.update({'VaultType': vault_type})
 
+            body = json.dumps(body)
             self.response = self._session.post(url=self._url, data=body)
             return self
 
@@ -367,11 +369,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -399,11 +401,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def post(self, vault_id: int, vault_type: int):
@@ -427,11 +429,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -459,11 +461,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def post(self, namespace: str, owner: str, vault_id: int):
@@ -488,11 +490,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         def post(self, namespace: str, owner: str, vault_id: int = None):
@@ -504,6 +506,7 @@ class _SecretStore:
             if vault_id:
                 body.update({'VaultId': vault_id})
 
+            body = json.dumps(body)
             self.response = self._session.post(url=self._url, data=body)
             return self
 
@@ -519,11 +522,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
@@ -557,11 +560,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json().get('Result')
+            result = self.response.json()['Result']
             result = SecretStore.Result(result)
             if result.code != 1:
-                raise ValueError('Could not create credential. Received %s: %s.' % (result.code, result.secret_store_result))
-            self.logger.log('Secret Store object created successfully.')
+                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
+            self.logger.log(self.get_api_result_log(success=True))
             return result
 
         @property
