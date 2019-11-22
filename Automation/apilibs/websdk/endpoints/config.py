@@ -265,7 +265,7 @@ class _Config:
                 raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
             return result
 
-        def post(self, object_dn: str, class_name: str, name_attribute_list: str):
+        def post(self, object_dn: str, class_name: str, name_attribute_list: list):
             body = {
                 "ObjectDN": object_dn,
                 "Class": class_name,
