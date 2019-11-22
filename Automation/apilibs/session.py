@@ -5,7 +5,7 @@ from config import settings as s
 
 
 WEBSDK_URL = 'https://{host}/vedsdk'.format(host=s.TPP_HOST)
-APERTURE_URL = 'https://{host}/aperture/apilibs'.format(host=s.TPP_HOST)
+APERTURE_URL = 'https://{host}/aperture/api'.format(host=s.TPP_HOST)
 requests.packages.urllib3.disable_warnings()
 
 

@@ -8,7 +8,7 @@ class _Users:
 
     class _Authorize:
         def __init__(self):
-            self._session = Session({'Content-Type': 'application/json', 'Referer': APERTURE_URL.rstrip('/apilibs')})
+            self._session = Session({'Content-Type': 'application/json', 'Referer': APERTURE_URL.rstrip('/api')})
             self._url = APERTURE_URL + '/users/authorize'
             self.response = None
 
@@ -20,7 +20,7 @@ class _Users:
             return {
                 'Authorization': token,
                 'Content-Type': 'application/json',
-                'Referer': APERTURE_URL.rstrip('/apilibs')
+                'Referer': APERTURE_URL.rstrip('/api')
             }
 
         def post(self, username, password):
