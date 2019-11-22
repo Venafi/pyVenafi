@@ -925,7 +925,7 @@ class _Config:
         @response_property()
         def name_values(self):
             result = self.json_response(key='NameValues', error_key='Error')
-            return [Config.NameValue(name, value) for name, value in result]
+            return [Config.NameValues(nv, self._api_type) for nv in result]
 
         @property
         @response_property()

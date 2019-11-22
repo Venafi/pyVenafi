@@ -7,6 +7,20 @@ class Config:
             self.code = code
             self.config_result = ResultCodes.Config.get(code, 'Unknown')
 
+    class NameValues:
+        def __init__(self, name_values_dict: dict, api_type: str):
+            if not isinstance(name_values_dict, dict):
+                name_values_dict = {}
+
+            if api_type.lower() == 'websdk':
+                self.name = name_values_dict.get('Name')
+                self.values = name_values_dict.get('Values')
+
+            elif api_type.lower() == 'aperture':
+                # Not implemented yet.
+                pass
+
+
     class Object:
         def __init__(self, object_dict: dict, api_type: str):
             if not isinstance(object_dict, dict):
