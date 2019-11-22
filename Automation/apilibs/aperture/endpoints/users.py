@@ -1,5 +1,5 @@
-from api.session import APERTURE_URL
-from api.session import Session
+from apilibs.session import APERTURE_URL
+from apilibs.session import Session
 
 
 class _Users:
@@ -8,7 +8,7 @@ class _Users:
 
     class _Authorize:
         def __init__(self):
-            self._session = Session({'Content-Type': 'application/json', 'Referer': APERTURE_URL.rstrip('/api')})
+            self._session = Session({'Content-Type': 'application/json', 'Referer': APERTURE_URL.rstrip('/apilibs')})
             self._url = APERTURE_URL + '/users/authorize'
             self.response = None
 
@@ -20,7 +20,7 @@ class _Users:
             return {
                 'Authorization': token,
                 'Content-Type': 'application/json',
-                'Referer': APERTURE_URL.rstrip('/api')
+                'Referer': APERTURE_URL.rstrip('/apilibs')
             }
 
         def post(self, username, password):

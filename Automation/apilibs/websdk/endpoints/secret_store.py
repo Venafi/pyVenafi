@@ -1,5 +1,5 @@
-from api.api_base import API, response_property, InvalidResultCode
-from api.session import WEBSDK_URL
+from apilibs.api_base import API, response_property, InvalidResultCode
+from apilibs.session import WEBSDK_URL
 from objects.response_objects.secret_store import SecretStore
 
 

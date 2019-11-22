@@ -1,6 +1,5 @@
-import json
-from api.api_base import API, response_property
-from api.session import WEBSDK_URL
+from apilibs.api_base import API, response_property
+from apilibs.session import WEBSDK_URL
 from objects.response_objects.identity import Identity
 
 
@@ -31,11 +30,11 @@ class _Identity:
             return [Identity.Identity(i, self._api_type) for i in result]
 
         def post(self, filter, limit, identity_type):
-            data = json.dumps({
+            data = {
                 "Filter": filter,
                 "Limit": limit,
                 "IdentityType": identity_type
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=data)
             return self

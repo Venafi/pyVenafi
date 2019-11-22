@@ -1,5 +1,5 @@
 import json
-from api.session import Session
+from apilibs.session import Session
 from requests import Response
 from tools.logger.logger import Logger, LogLevels
 

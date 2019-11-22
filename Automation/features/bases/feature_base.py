@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from tools.logger.logger import Logger, LogLevels
-from api.authenticate import Authenticate
+from apilibs.authenticate import Authenticate
 
 
 class FeatureBase:

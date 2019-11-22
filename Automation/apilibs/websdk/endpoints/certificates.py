@@ -1,5 +1,5 @@
-from api.api_base import API, response_property
-from api.session import WEBSDK_URL
+from apilibs.api_base import API, response_property
+from apilibs.session import WEBSDK_URL
 from enums.certificate import CertificateAttributes, CertificateStatus, OptionalFields
 from objects.response_objects.certificate import Certificate
 

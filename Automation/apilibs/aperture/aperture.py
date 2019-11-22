@@ -1,7 +1,6 @@
-import json
-from api.session import Session, APERTURE_URL
-from api.aperture.endpoints.users import _Users
-from api.aperture.endpoints.configobjects import _ConfigObjects
+from apilibs.session import Session, APERTURE_URL
+from apilibs.aperture.endpoints.users import _Users
+from apilibs.aperture.endpoints.configobjects import _ConfigObjects
 
 
 class Aperture:

@@ -1,5 +1,5 @@
-from api.api_base import API, response_property
-from api.session import APERTURE_URL
+from apilibs.api_base import API, response_property
+from apilibs.session import APERTURE_URL
 from objects.response_objects.config import Config
 
 
