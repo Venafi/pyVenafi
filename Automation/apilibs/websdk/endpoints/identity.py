@@ -1,4 +1,4 @@
-from apilibs.api_base import API, response_property
+from apilibs.base import API, response_property
 from apilibs.session import WEBSDK_URL
 from objects.response_objects.identity import Identity
 
