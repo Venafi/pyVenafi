@@ -3,8 +3,14 @@ from enums.config import ConfigClass
 
 
 class Folder(FeatureBase):
-    def __init__(self, auth_obj, name=None, container=None, attributes=None):
-        super().__init__(auth_obj)
+    def __init__(self, auth=None, name: str = None, container: str = None, attributes: list = None):
+        if auth:
+            super().__init__(auth)
+        assert self.auth
+
+        self.name = name
+        self.container = container
+        self.attributes = attributes
 
         self.absolute_guid = None
         self.dn = None
@@ -14,26 +20,12 @@ class Folder(FeatureBase):
         self.parent = None
         self.revision = None
         self.type_name = None
-
-        self.name = name
-        self.container = container
-        self.attributes = attributes
 
     def __enter__(self):
         return self.create()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.delete(self.dn, recursive=True)
-
-    def reinitialize(self):
-        self.absolute_guid = None
-        self.dn = None
-        self.guid = None
-        self.config_id = None
-        self.name = None
-        self.parent = None
-        self.revision = None
-        self.type_name = None
 
     def load(self, policy_object):
         self.absolute_guid = policy_object.absolute_guid
@@ -45,7 +37,7 @@ class Folder(FeatureBase):
         self.revision = policy_object.revision
         self.type_name = policy_object.type_name
 
-    def create(self, name=None, container=None, attributes=None):
+    def create(self, name:str = None, container: str = None, attributes: list = None):
         if not name:
             if not self.name:
                 raise AssertionError('Must supply a name property.')
@@ -68,7 +60,7 @@ class Folder(FeatureBase):
         elif self.auth.preference == ApiPreferences.aperture:
             policy = self.auth.aperture.ConfigObjects.Policies.post(name, container).object
         else:
-            raise FeatureError.invalid_api_preference(self.auth.preference)
+            raise FeatureError.InvalidAPIPreference(self.auth.preference)
 
         self.load(policy)
         if self.dn:
@@ -81,7 +73,7 @@ class Folder(FeatureBase):
     def delete(self, object_dn, recursive=False):
         self._logger.log('Deleting policy with DN "%s".' % object_dn)
         if self.auth.preference == ApiPreferences.aperture:
-            self._logger(FeatureError.not_implemented(ApiPreferences.aperture))
+            self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self.auth.websdk.Config.Delete.post(object_dn, recursive).result
-        self.reinitialize()
+        assert self.auth.websdk.Config.Delete.post(object_dn, recursive).result == 1
+        self.__init__()

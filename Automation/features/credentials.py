@@ -1,24 +1,22 @@
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
 
 
-class UsernamePasswordCredential(FeatureBase):
+class _Credential:
+    pass
+
+
+class UsernamePasswordCredential(FeatureBase, _Credential):
     def __init__(self, auth_obj):
         super().__init__(auth_obj)
 
     def load(self):
         pass
 
-    def create(self, name, folder, username, password):
-        """
-        :type name: str
-        :type folder: Folder
-        :type username: str
-        :type password: str
-        """
-        dn = folder.dn + "\\" + name
+    def create(self, name: str, container: str, username: str, password: str):
+        dn = container + "\\" + name
 
         if self.auth.preference == ApiPreferences.aperture:
-            self._logger.log(FeatureError.not_implemented(ApiPreferences.aperture).__str__())
+            self._log_not_implemented_warning(ApiPreferences.aperture)
 
         result = self.auth.websdk.Credentials.Create.post(
             credential_path=dn,
