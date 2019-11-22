@@ -3,16 +3,15 @@ from enums.resultcodes import ResultCodes
 
 class Config:
     class Result:
-        def __init__(self, code):
+        def __init__(self, code: int):
             self.code = code
             self.config_result = ResultCodes.Config.get(code, 'Unknown')
 
     class Object:
-        def __init__(self, object_dict, api_type):
-            """
-            :type api_type: str
-            :type object_dict: dict
-            """
+        def __init__(self, object_dict: dict, api_type: str):
+            if not isinstance(object_dict, dict):
+                object_dict = {}
+
             if api_type.lower() == 'websdk':
                 self.absolute_guid = object_dict.get('AbsoluteGUID')
                 self.dn = object_dict.get('DN')
@@ -34,7 +33,7 @@ class Config:
                 self.type_name = object_dict.get('typeName')
 
     class Policy:
-        def __init__(self, policy_dict, api_type):
+        def __init__(self, policy_dict: dict, api_type: str):
             if not isinstance(policy_dict, dict):
                 policy_dict = {}
 
