@@ -1,5 +1,5 @@
-from apilibs.websdk.websdk import WebSDK
-from apilibs.aperture.aperture import Aperture
+from api.websdk.websdk import WebSDK
+from api.aperture.aperture import Aperture
 
 
 class Authenticate:

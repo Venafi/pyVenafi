@@ -1,5 +1,5 @@
 import json
-from apilibs.session import Session
+from api.session import Session
 from requests import Response
 from tools.logger.logger import Logger, LogLevels
 
@@ -39,7 +39,6 @@ class API:
         if error_key and error_key in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
         value = result if not key else result[key]
-        self.logger.log('%s: %s' % (key, json.dumps(value, indent=4)), prev_frames=2)
         return value
 
     def _validate(self):

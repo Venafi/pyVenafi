@@ -1,6 +1,5 @@
-import json
-from apilibs.base import API, response_property, InvalidResultCode
-from apilibs.session import WEBSDK_URL
+from api.api_base import API, response_property, InvalidResultCode
+from api.session import WEBSDK_URL
 from objects.response_objects.secret_store import SecretStore
 
 
@@ -47,13 +46,13 @@ class _SecretStore:
             return self.json_response(key='VaultID')
 
         def post(self, base_64_data: str, keyname: str, namespace: str, owner: str, vault_type: int):
-            body = json.dumps({
+            body = {
                 'Base64Data': base_64_data,
                 'Keyname': keyname,
                 'Namespace': namespace,
                 'Owner': owner,
                 'VaultType': vault_type
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -76,13 +75,13 @@ class _SecretStore:
             return result
 
         def post(self, name: str, vault_id: int, date_value: int = None, int_value: int = None, string_value: str = None):
-            body = json.dumps({
+            body = {
                 'Name': name,
                 'VaultID': vault_id,
                 'DateValue': date_value,
                 'IntValue': int_value,
                 'StringValue': string_value
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -105,9 +104,9 @@ class _SecretStore:
             return result
 
         def post(self, vault_id: int):
-            body = json.dumps({
+            body = {
                 'VaultId': vault_id
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -130,13 +129,13 @@ class _SecretStore:
             return result
 
         def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
-            body = json.dumps({
+            body = {
                 'VaultID': vault_id,
                 'IntValue': int_value,
                 'Name': name,
                 'StringValue': string_value,
                 'DateValue': date_value
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -217,9 +216,9 @@ class _SecretStore:
             return [SecretStore.TypedNameValues(tnv) for tnv in result]
 
         def post(self, vault_id: int):
-            body = json.dumps({
+            body = {
                 'VaultID': vault_id
-            })
+            }
 
             self.response = self._session.post(url=-self._url, data=body)
             return self
@@ -259,7 +258,6 @@ class _SecretStore:
             if date_value:
                 body.update({'DateValue': date_value})
 
-            body = json.dumps(body)
             self.response = self._session.post(url=self._url, data=body)
             return self
 
@@ -293,7 +291,6 @@ class _SecretStore:
             if name:
                 body.update({'Name': name})
 
-            body = json.dumps(body)
             self.response = self._session.post(url=self._url, data=body)
             return self
 
@@ -327,7 +324,6 @@ class _SecretStore:
             if vault_type:
                 body.update({'VaultType': vault_type})
 
-            body = json.dumps(body)
             self.response = self._session.post(url=self._url, data=body)
             return self
 
@@ -354,9 +350,9 @@ class _SecretStore:
             return self.json_response(key='VaultIDs')
 
         def post(self, vault_type: int):
-            body = json.dumps({
+            body = {
                 'VaultType': vault_type
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -379,10 +375,10 @@ class _SecretStore:
             return result
 
         def post(self, vault_id: int, vault_type: int):
-            body = json.dumps({
+            body = {
                 'VaultID': vault_id,
                 'VaultType': vault_type
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -410,9 +406,9 @@ class _SecretStore:
             return self.json_response(key='VaultIDs')
 
         def post(self, vault_type: int):
-            body = json.dumps({
+            body = {
                 'VaultType': vault_type
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -435,11 +431,11 @@ class _SecretStore:
             return result
 
         def post(self, namespace: str, owner: str, vault_id: int):
-            body = json.dumps({
+            body = {
                 'Namespace': namespace,
                 'Owner': owner,
                 'VaultId': vault_id
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -470,7 +466,6 @@ class _SecretStore:
             if vault_id:
                 body.update({'VaultId': vault_id})
 
-            body = json.dumps(body)
             self.response = self._session.post(url=self._url, data=body)
             return self
 
@@ -497,10 +492,10 @@ class _SecretStore:
             return self.json_response(key='Owners')
 
         def post(self, namespace: str, vault_id: int):
-            body = json.dumps({
+            body = {
                 'Namespace': namespace,
                 'VaultID': vault_id
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self
@@ -533,9 +528,9 @@ class _SecretStore:
             return self.json_response(key='VaultType')
 
         def post(self, vault_id: int):
-            body = json.dumps({
+            body = {
                 'VaultID': vault_id
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self

@@ -1,5 +1,5 @@
-from apilibs.session import WEBSDK_URL
-from apilibs.session import Session
+from api.session import WEBSDK_URL
+from api.session import Session
 
 
 class _Authorize:

@@ -1,10 +1,10 @@
-from apilibs.session import Session
-from apilibs.websdk.endpoints.authorize import _Authorize
-from apilibs.websdk.endpoints.identity import _Identity
-from apilibs.websdk.endpoints.config import _Config
-from apilibs.websdk.endpoints.credentials import _Credentials
-from apilibs.websdk.endpoints.certificates import _Certificates
-from apilibs.websdk.endpoints.secret_store import _SecretStore
+from api.session import Session
+from api.websdk.endpoints.authorize import _Authorize
+from api.websdk.endpoints.identity import _Identity
+from api.websdk.endpoints.config import _Config
+from api.websdk.endpoints.credentials import _Credentials
+from api.websdk.endpoints.certificates import _Certificates
+from api.websdk.endpoints.secret_store import _SecretStore
 
 
 class WebSDK:

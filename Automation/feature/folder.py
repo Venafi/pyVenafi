@@ -1,4 +1,4 @@
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
+from feature.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
 from enums.config import ConfigClass
 
 
