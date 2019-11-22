@@ -33,8 +33,20 @@ class API:
         self._validated = False
         self._response = value
 
+    def get_api_result_log(self, success: bool, code: int = None, code_description: str = '', msg: str = ''):
+        if success:
+            return '%s successful. %s' % (self._url, msg)
+        else:
+            fail_desc = 'Received code %s: %s' % (code, code_description) if code and code_description else ''
+            if msg:
+                fail_desc += '\n' + msg
+            return '%s failed. %s' % (self._url, fail_desc)
+
     def _validate(self):
         self._validated = True
+
+        if not self._valid_return_codes:
+            raise ValueError('No valid return codes were provided, so the API response cannot be validated.')
 
         if not isinstance(self.response, Response):
             raise TypeError("Expected response object, but got %s." % type(self.response))

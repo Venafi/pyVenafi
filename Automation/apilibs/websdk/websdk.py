@@ -4,6 +4,7 @@ from apilibs.websdk.endpoints.identity import _Identity
 from apilibs.websdk.endpoints.config import _Config
 from apilibs.websdk.endpoints.credentials import _Credentials
 from apilibs.websdk.endpoints.certificates import _Certificates
+from apilibs.websdk.endpoints.secret_store import _SecretStore
 
 
 class WebSDK:
@@ -23,3 +24,4 @@ class WebSDK:
         self.Config = _Config(self.session, api_type)
         self.Credentials = _Credentials(self.session, api_type)
         self.Certificates = _Certificates(self.session, api_type)
+        self.SecretStore = _SecretStore(self.session, api_type)
