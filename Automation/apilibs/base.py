@@ -42,23 +42,6 @@ class API:
         self.logger.log('%s: %s' % (key, json.dumps(value, indent=4)), prev_frames=2)
         return value
 
-    def log_response_object(self, obj, obj_name: str = None):
-        value = json.dumps(obj.__dict__, indent=4)
-        name = obj_name or obj.__class__.__qualname__
-        self.logger.log('%s: %s' % (name, value), prev_frames=2)
-
-    def log_valid_result_code(self, msg: str = ''):
-        self.logger.log('%s successful. %s' % (self._url, msg), prev_frames=2)
-
-    def get_api_result_log(self, success: bool, code: int = None, code_description: str = '', msg: str = ''):
-        if success:
-            return '%s successful. %s' % (self._url, msg)
-        else:
-            fail_desc = 'Received code %s: %s' % (code, code_description) if code and code_description else ''
-            if msg:
-                fail_desc += '\n' + msg
-            return '%s failed. %s' % (self._url, fail_desc)
-
     def _validate(self):
         self._validated = True
 
@@ -69,9 +52,11 @@ class API:
             raise TypeError("Expected response object, but got %s." % type(self.response))
 
         if self.response.status_code not in self._valid_return_codes:
-            raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (self.response.status_code, str(self._valid_return_codes), self.response.text))
+            raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
+                self.response.status_code, str(self._valid_return_codes), json.dumps(self.response.text, indent=4)))
 
-        self.logger.log('Response to %s is valid. Got %s: %s' %(self._url, self.response.status_code, self.response.text))
+        self.logger.log('Response to %s is valid. Got %s: %s' %(
+            self._url, self.response.status_code, json.dumps(self.response.json(), indent=4)))
 
 
 class InvalidResponseError(Exception):
