@@ -1,9 +1,9 @@
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from tools.logger.logger import Logger, LogLevels
 from apilibs.authenticate import Authenticate
 
 
-class FeatureBase:
+class FeatureBase(metaclass=ABCMeta):
     def __init__(self, auth: Authenticate):
         self._logger = Logger(LogLevels.feature)
         self.auth = auth
