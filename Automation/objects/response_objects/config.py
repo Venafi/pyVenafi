@@ -33,17 +33,17 @@ class Config:
                 self.revision = None
                 self.type_name = object_dict.get('typeName')
 
-    class Policies:
-        def __init__(self, policies_dict, api_type):
-            if not isinstance(policies_dict, dict):
-                policies_dict = {}
+    class Policy:
+        def __init__(self, policy_dict, api_type):
+            if not isinstance(policy_dict, dict):
+                policy_dict = {}
 
             if api_type.lower() == 'websdk':
-                self.attribute_name = policies_dict.get('AttributeName')
-                self.guid = policies_dict.get('GUID')
-                self.property = policies_dict.get('Property')
-                self.type_name = policies_dict.get('TypeName')
-                self.value_list = policies_dict.get('ValueList')
+                self.attribute_name = policy_dict.get('AttributeName')
+                self.guid = policy_dict.get('GUID')
+                self.property = policy_dict.get('Property')
+                self.type_name = policy_dict.get('TypeName')
+                self.value_list = policy_dict.get('ValueList')
 
             elif api_type.lower() == 'aperture':
                 # not implemented yet
