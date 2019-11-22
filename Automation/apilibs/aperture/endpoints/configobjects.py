@@ -1,4 +1,3 @@
-import json
 from apilibs.base import API, response_property
 from apilibs.session import APERTURE_URL
 from objects.response_objects.config import Config
@@ -20,16 +19,16 @@ class _ConfigObjects:
         @property
         @response_property()
         def object(self):
-            result = self.response.json()
+            result = self.json_response()
             obj = Config.Object(result, self._api_type)
             if not obj.dn:
                 raise ValueError('Could not create policy.')
             return obj
 
         def post(self, name, container):
-            body = json.dumps({
+            body = {
                 "DN": container + "\\" + name
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
 

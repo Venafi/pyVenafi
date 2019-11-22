@@ -27,12 +27,8 @@ class _Identity:
         @property
         @response_property()
         def identities(self):
-            identities = []
-            for identity in self.response.json().get('Identities', []):
-                identities.append(Identity(identity))
-
-            self.logger.log('Identities: %s' % ', '.join([x.PrefixedName for x in identities]))
-            return identities
+            result = self.json_response(key='Identities')
+            return [Identity.Identity(i, self._api_type) for i in result]
 
         def post(self, filter, limit, identity_type):
             data = json.dumps({
@@ -56,29 +52,11 @@ class _Identity:
         @property
         @response_property()
         def identities(self):
-            identities = []
-            for identity in self.response.json().get('Identities', []):
-                identities.append(Identity(identity))
-
-            return identities
+            result = self.json_response(key='Identities')
+            return [Identity.Identity(i, self._api_type) for i in result]
 
         def post(self, identity):
-            """
-            :param identity: http://doc.venqa.venafi.com/Content/SDK/WebSDK/API_Reference/r-SDK-IdentityInformation.htm
-            :type identity: Identity or dict
-            """
-            if isinstance(identity, Identity):
-                data = json.dumps({
-                    "PrefixedUniversal": identity.PrefixedUniversal
-                })
-            elif isinstance(identity, dict):
-                data = json.dumps(identity)
-            else:
-                raise TypeError('Parameter "identity" must be of type "Identity" or dict. See docstring.')
-
-            self.response = self._session.post(url=self._url, data=data)
-
-            return self
+            pass # TODO
 
     class _Self(API):
         def __init__(self, session, api_type):
@@ -92,11 +70,8 @@ class _Identity:
         @property
         @response_property()
         def identities(self):
-            identities = []
-            for identity in self.response.json().get('Identities', []):
-                identities.append(Identity(identity))
-
-            return identities
+            result = self.json_response(key='Identities')
+            return [Identity.Identity(i, self._api_type) for i in result]
 
         def get(self):
             self.response = self._session.get(url=self._url)
@@ -113,30 +88,12 @@ class _Identity:
 
         @property
         @response_property()
-        def members(self):
-            identities = []
-            for identity in self.response.json().get('Identities', []):
-                identities.append(Identity(identity))
-
-            self.logger.log('Identities: %s' % ', '.join([x.PrefixedName for x in identities]))
-            return identities
+        def identities(self):
+            result = self.json_response(key='Members')
+            return [Identity.Identity(i, self._api_type) for i in result]
 
         def post(self, identity, resolve_nested=False):
-            """
-            :type identity: Identity
-            :type resolve_nested: bool
-            """
-            body = json.dumps({
-                'ID': {
-                    'Name': identity.Name,
-                    'PrefixedUniversal': identity.PrefixedUniversal
-                },
-                'ResolveNested': 1 if resolve_nested else 0
-            })
-
-            self.response = self._session.post(url=self._url, data=body)
-
-            return self
+            pass #TODO
 
     class _GetMemberships(API):
         def __init__(self, session, api_type):
@@ -146,32 +103,15 @@ class _Identity:
                 url=WEBSDK_URL + '/Identity/GetMemberships',
                 valid_return_codes=[200]
             )
-        
+
         @property
         @response_property()
-        def memberships(self):
-            identities = []
-            for identity in self.response.json().get('Identities', []):
-                identities.append(Identity(identity))
-
-            self.logger.log('Identities: %s' % ', '.join([x.PrefixedName for x in identities]))
-            return identities
+        def identities(self):
+            result = self.json_response(key='Identities')
+            return [Identity.Identity(i, self._api_type) for i in result]
 
         def post(self, identity):
-            """
-            :type identity: Identity
-            :type resolve_nested: bool
-            """
-            body = json.dumps({
-                'ID': {
-                    'Name': identity.Name,
-                    'PrefixedUniversal': identity.PrefixedUniversal
-                }
-            })
-
-            self.response = self._session.post(url=self._url, data=body)
-
-            return self
+            pass # TODO
 
     class _ReadAttribute(API):
         def __init__(self, session, api_type):
@@ -185,8 +125,7 @@ class _Identity:
         @property
         @response_property()
         def attribute(self):
-            attribute = None
-            return attribute
+            return self.json_response(key='Attribute')
 
         def post(self):
             return self
@@ -203,8 +142,7 @@ class _Identity:
         @property
         @response_property()
         def password(self):
-            password = None
-            return password
+            return self.json_response(key='Password')
 
         def post(self):
             return self
@@ -221,8 +159,7 @@ class _Identity:
         @property
         @response_property()
         def validation(self):
-            validation = None
-            return validation
+            return self.json_response(key='Validation')
 
         def post(self):
             return self

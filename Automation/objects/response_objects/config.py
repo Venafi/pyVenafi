@@ -33,7 +33,7 @@ class Config:
                 self.revision = None
                 self.type_name = object_dict.get('typeName')
 
-    class Policies:
+    class Policy:
         def __init__(self, policies_dict, api_type):
             if not isinstance(policies_dict, dict):
                 policies_dict = {}

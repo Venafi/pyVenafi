@@ -30,39 +30,31 @@ class _Certificates(API):
     @property
     @response_property()
     def links(self):
-        lnks = self.response.json()['_links']
-        lnks = [Certificate.Link(lnk) for lnk in lnks]
-        self.logger.log('_links object created.')
-        return lnks
+        lnks = self.json_response(key='_links')
+        return [Certificate.Link(lnk) for lnk in lnks]
 
     @property
     @response_property()
     def x_record_count(self):
         xrc = self.response.headers.get('X-Record-Count')
-        self.logger.log('Certificates X-Record-Count: %s' % xrc)
+        self.logger.log('X-Record-Count: %s' % xrc)
         return xrc
 
     @property
     @response_property()
     def certificates(self):
-        certs = self.response.json()['Certificates']
-        certs = [Certificate.Certificate(cert) for cert in certs]
-        self.logger.log('Certificate objects created.')
-        return certs
+        certs = self.json_response(key='Certificates')
+        return [Certificate.Certificate(cert) for cert in certs]
 
     @property
     @response_property()
     def data_range(self):
-        dr = self.response.json()['DataRange']
-        self.logger.log('Certificates DataRange: %s' % dr)
-        return dr
+        return self.json_response(key='DataRange')
 
     @property
     @response_property()
     def total_count(self):
-        tc = self.response.json()['TotalCount']
-        self.logger.log('Certificates TotalCount: %s' % tc)
-        return tc
+        return self.json_response(key='TotalCount')
 
     def get(self, limit: int = None, offset: int = None, optional_fields: list = None, filters: dict = None):
         if optional_fields:
@@ -105,10 +97,7 @@ class _Certificates(API):
         @property
         @response_property()
         def success(self):
-            result = self.response.json()['Success']
-            if result is False:
-                raise ValueError('Associating certificate failed.')
-            return result
+            return self.json_response(key='Success')
 
         def post(self, application_dn: str, certificate_dn: str, push_to_new: bool):
             body = {
@@ -132,16 +121,12 @@ class _Certificates(API):
         @property
         @response_property()
         def csr(self):
-            c = Certificate.CSR(self.response.json()['CSR'])
-            self.logger.log('CSR object created successfully.')
-            return c
+            return Certificate.CSR(self.json_response(key='CSR', error_key='Error'))
 
         @property
         @response_property()
         def policy(self):
-            p = Certificate.Policy(self.response.json()['Policy'])
-            self.logger.log('Certificate Policy object created successfully.')
-            return p
+            return Certificate.Policy(self.json_response(key='Policy'))
 
         def post(self, policy_dn: str, pkcs10: str = None):
             body = {
@@ -165,10 +150,7 @@ class _Certificates(API):
         @property
         @response_property()
         def success(self):
-            result = self.response.json()['Success']
-            if result is False:
-                raise ValueError('Dissociating certificate failed.')
-            return result
+            return self.json_response(key='Success')
 
         def post(self, certificate_dn: str, application_dn: list, delete_orphans: bool = False):
             body = {
@@ -195,98 +177,67 @@ class _Certificates(API):
         @property
         @response_property()
         def success(self):
-            result = self.response.json()['Success']
-            if result is False:
-                raise ValueError('Dissociating certificate failed.')
-            return result
+            return self.json_response(key='Success')
 
         @property
         @response_property()
         def approver(self):
-            apps = self.response.json()['Approver']
-            self.logger.log('Certificate Approvers: %s' % apps)
-            return apps
+            return self.json_response(key='Approver')
 
         @property
         @response_property()
         def certificate_details(self):
-            details = self.response.json()['CertificateDetails']
-            result = Certificate.CertificateDetails(details)
-            self.logger.log('Certificate Details object created successfully')
-            return result
+            return Certificate.CertificateDetails(self.json_response(key='CertificateDetails'))
 
         @property
         @response_property()
         def contact(self):
-            conts = self.response.json()['Contact']
-            self.logger.log('Certificate Contacts: %s' % conts)
-            return conts
+            return self.json_response(key='Contact')
 
         @property
         @response_property()
         def created_on(self):
-            created = self.response.json()['CreatedOn']
-            self.logger.log('Certificate CreatedOn: %s' % created)
-            return created
+            return self.json_response(key='CreatedOn')
 
         @property
         @response_property()
         def dn(self):
-            cert_dn = self.response.json()['DN']
-            self.logger.log('Certificate DN: %s' % cert_dn)
-            return cert_dn
+            return self.json_response(key='DN')
 
         @property
         @response_property()
         def guid(self):
-            cert_guid = self.response.json()['Guid']
-            self.logger.log('Certificate GUID: %s' % cert_guid)
-            return cert_guid
+            return self.json_response(key='Guid')
 
         @property
         @response_property()
         def name(self):
-            cert_name = self.response.json()['Name']
-            self.logger.log('Certificate Name: %s' % cert_name)
-            return cert_name
+            return self.json_response(key='Name')
 
         @property
         @response_property()
         def parent_dn(self):
-            pdn = self.response.json()['ParentDn']
-            self.logger.log('Certificate Parent DN: %s' % pdn)
-            return pdn
+            return self.json_response(key='ParentDN')
 
         @property
         @response_property()
         def processing_details(self):
-            details = self.response.json()['ProcessingDetails']
-            result = Certificate.ProcessingDetails(details)
-            self.logger.log('Certificate Processing Details object created successfully.')
-            return result
+            return Certificate.ProcessingDetails(self.json_response(key='ProcessingDetails'))
 
         @property
         @response_property()
         def renewal_details(self):
-            details = self.response.json()['RenewalDetails']
-            result = Certificate.RenewalDetails(details)
-            self.logger.log('Certificate Renewal Details object created successfully.')
-            return result
+            return Certificate.RenewalDetails(self.json_response(key='RenewalDetails'))
 
         @property
         @response_property()
         def schema_class(self):
-            schema = self.response.json()['SchemaClass']
-            self.logger.log('Certificate Schema Class: %s' % schema)
-            return schema
+            return self.json_response(key='SchemaClass')
 
         @property
         @response_property()
         def validation_details(self):
-            details = self.response.json()['ValidationDetails']
-            result = Certificate.ValidationDetails(details)
-            self.logger.log('Certificate Validation Details object created successfully.')
-            return result
+            return Certificate.ValidationDetails(self.json_response(key='ValidationDetails'))
 
         def delete(self):
             self.response = self._session.delete(url=self._url)
@@ -316,11 +267,14 @@ class _Certificates(API):
 
             @property
             @response_property()
+            def success(self):
+                return self.json_response(key='Success')
+
+            @property
+            @response_property()
             def previous_versions(self):
-                versions = self.response.json()['PreviousVersions']
-                results = [Certificate.PreviousVersions(version) for version in versions]
-                self.logger.log('Certificate Previous Versions created successfully.')
-                return results
+                versions = self.json_response(key='PreviousVersions')
+                return [Certificate.PreviousVersions(version) for version in versions]
 
             def get(self, exclude_expired: bool = False, exclude_revoked: bool = False):
                 params = {
@@ -343,18 +297,14 @@ class _Certificates(API):
             @property
             @response_property()
             def file(self):
-                files = self.response.json()['File']
-                result = [Certificate.File(f) for f in files]
-                self.logger.log('Certificate File Validation Results object created successfully.')
-                return result
+                files = self.json_response(key='File')
+                return [Certificate.File(f) for f in files]
 
             @property
             @response_property()
             def ssltls(self):
-                ssl = self.response.json()['SslTls']
-                result = [Certificate.SslTls(s) for s in ssl]
-                self.logger.log('Certificate SslTls Validation Results object created successfully.')
-                return result
+                ssl = self.json_response(key='SslTls')
+                return [Certificate.SslTls(s) for s in ssl]
 
             def get(self):
                 self.response = self._session.get(url=self._url)
@@ -372,30 +322,22 @@ class _Certificates(API):
         @property
         @response_property()
         def certificate_dn(self):
-            cdn = self.response.json()['CertificateDN']
-            self.logger.log('Certificate DN: %s' % cdn)
-            return cdn
+            return self.json_response(key='CertificateDN')
 
         @property
         @response_property()
         def certificate_vault_id(self):
-            cvid = self.response.json()['CertificateVaultID']
-            self.logger.log('Certificate Vault Id: %s' % cvid)
-            return cvid
+            return self.json_response(key='CertificateVaultID')
 
         @property
         @response_property()
         def guid(self):
-            g = self.response.json()['Guid']
-            self.logger.log('Certificate Guid: %s' % g)
-            return g
+            return self.json_response(key='Guid')
 
         @property
         @response_property()
         def private_key_vault_id(self):
-            pkvid = self.response.json()['PrivateKeyVaultId']
-            self.logger.log('Certificate Private Key Vault Id: %s' % pkvid)
-            return pkvid
+            return self.json_response(key='PrivateKeyVaultID')
 
         def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
                  password: str = None, private_key_data: str = None, reconcile: bool = False):
@@ -420,6 +362,11 @@ class _Certificates(API):
                 url=WEBSDK_URL + '/Certificates/Renew',
                 valid_return_codes=[200]
             )
+
+        @property
+        @response_property()
+        def success(self):
+            return self.json_response(key='Success')
 
         def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False):
             body = {
@@ -494,30 +441,22 @@ class _Certificates(API):
         @property
         @response_property()
         def private_key_mismatch_reset_completed(self):
-            result = self.response.json()['PrivateKeyMismatchResetCompleted']
-            self.logger.log('PrivateKeyMismatchResetCompleted: %s' % result)
-            return result
+            return self.json_response(key='PrivateKeyMismatchResetCompleted')
 
         @property
         @response_property()
         def processing_reset_completed(self):
-            result = self.response.json()['ProcessingResetCompleted']
-            self.logger.log('ProcessingResetCompleted: %s' % result)
-            return result
+            return self.json_response(key='ProcessingResetCompleted')
 
         @property
         @response_property()
         def restart_completed(self):
-            result = self.response.json()['RestartCompleted']
-            self.logger.log('RestartCompleted: %s' % result)
-            return result
+            return self.json_response(key='RestartCompleted')
 
         @property
         @response_property()
         def revocation_reset_completed(self):
-            result = self.response.json()['RevocationResetCompleted']
-            self.logger.log('RevocationResetCompleted: %s' % result)
-            return result
+            return self.json_response(key='RevocationResetCompleted')
 
         def post(self, certificate_dn: str, restart: bool = False):
             body = {
@@ -540,23 +479,17 @@ class _Certificates(API):
         @property
         @response_property()
         def certificate_data(self):
-            cd = self.response.json()['CertificateData']
-            self.logger.log('Certificate Data: %s' % cd)
-            return cd
+            return self.json_response(key='CertificateData')
 
         @property
         @response_property()
         def filename(self):
-            f = self.response.json()['Filename']
-            self.logger.log('Certificate Filename: %s' % f)
-            return f
+            return self.json_response(key='Filename')
 
         @property
         @response_property()
         def format(self):
-            f = self.response.json()['Format']
-            self.logger.log('Certificate Format: %s' % f)
-            return f
+            return self.json_response(key='Format')
 
         def get(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -608,23 +541,17 @@ class _Certificates(API):
             @property
             @response_property()
             def certificate_data(self):
-                cd = self.response.json()['CertificateData']
-                self.logger.log('Certificate Data: %s' % cd)
-                return cd
+                return self.json_response(key='CertificateData')
 
             @property
             @response_property()
             def filename(self):
-                f = self.response.json()['Filename']
-                self.logger.log('Certificate Filename: %s' % f)
-                return f
+                return self.json_response(key='Filename')
 
             @property
             @response_property()
             def format(self):
-                f = self.response.json()['Format']
-                self.logger.log('Certificate Format: %s' % f)
-                return f
+                return self.json_response(key='Format')
 
             def get(self, format: str, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -669,6 +596,11 @@ class _Certificates(API):
                 valid_return_codes=[200]
             )
 
+        @property
+        @response_property()
+        def success(self):
+            return self.json_response(key='Success')
+
         def post(self, certificate_dn: str):
             body = {
                 'CertificateDN': certificate_dn
@@ -689,9 +621,12 @@ class _Certificates(API):
         @property
         @response_property()
         def requested(self):
-            req = self.response.json()['Requested']
-            self.logger.log('Requested: %s' % req)
-            return req
+            return self.json_response(key='Requested')
+
+        @property
+        @response_property()
+        def success(self):
+            return self.json_response(key='Success')
 
         def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
                  disable: bool = False):
@@ -717,24 +652,23 @@ class _Certificates(API):
 
         @property
         @response_property()
+        def success(self):
+            return self.json_response(key='Success')
+
+        @property
+        @response_property()
         def validated_certificate_dns(self):
-            dns = self.response.json()['ValidatedCertificateDNs']
-            self.logger.log('Validated Certificate DNs: %s' % dns)
-            return dns
+            return self.json_response(key='ValidatedCertificateDNs')
 
         @property
         @response_property()
         def validated_certificate_guids(self):
-            guids = self.response.json()['ValidatedCertificateGUIDs']
-            self.logger.log('Validated Certificate GUIDs: %s' % guids)
-            return guids
+            return self.json_response(key='ValidatedCertificateGUIDs')
 
         @property
         @response_property()
         def warnings(self):
-            w = self.response.json()['Warnings']
-            self.logger.log('Validation Warnings: %s' % w)
-            return w
+            return self.json_response(key='Warnings')
 
         def post(self, certificate_dns: [str] = None, certificate_guids: [str] = None):
             if not(certificate_dns or certificate_guids):
@@ -747,3 +681,7 @@ class _Certificates(API):
 
             self.response = self._session.post(url=self._url, data=body)
             return self
+
+
+class WebSDKCertificateError(Exception):
+    pass

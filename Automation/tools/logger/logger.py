@@ -467,7 +467,7 @@ class Logger:
         file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
         print(file_text + str(msg))
 
-    def _log_to_json(self, path: str, filename: str, lineno: int, msg: str, source: str, critical: bool):
+    def _log_to_json(self, path: str, filename: str, lineno: str, msg: str, source: str, critical: bool):
         level = LogLevels.critical if critical else self.level
         with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
             json.dump({"path": path, "filename": filename, "lineno": lineno, "text": str(msg), "source": source, "log_level": level}, f)

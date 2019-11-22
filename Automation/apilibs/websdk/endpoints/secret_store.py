@@ -1,5 +1,5 @@
 import json
-from apilibs.base import API, response_property
+from apilibs.base import API, response_property, InvalidResultCode
 from apilibs.session import WEBSDK_URL
 from objects.response_objects.secret_store import SecretStore
 
@@ -36,19 +36,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_id(self):
-            result = self.response.json()['VaultId']
-            self.logger.log('VaultId is %s.' % result)
-            return result
+            return self.json_response(key='VaultID')
 
         def post(self, base_64_data: str, keyname: str, namespace: str, owner: str, vault_type: int):
             body = json.dumps({
@@ -74,11 +70,9 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def post(self, name: str, vault_id: int, date_value: int = None, int_value: int = None, string_value: str = None):
@@ -105,11 +99,9 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def post(self, vault_id: int):
@@ -132,11 +124,9 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
@@ -163,18 +153,14 @@ class _SecretStore:
         @property
         @response_property()
         def encryption_keys(self):
-            result = self.response.json()['EncryptionKeys']
-            self.logger.log('Encryption Keys retrieved successfully.')
-            return result
+            return self.json_response(key='EncryptionKeys')
 
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def get(self):
@@ -193,19 +179,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_ids(self):
-            result = self.response.json()['VaultIDs']
-            self.logger.log('Vault IDs retrieved successfully.')
-            return result
+            return self.json_response(key='VaultIDs')
 
         def get(self):
             self.response = self._session.get(url=self._url)
@@ -223,17 +205,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def typed_name_values(self):
-            result = self.response.json()['TypedNameValues']
+            result = self.json_response('TypedNameValues')
             return [SecretStore.TypedNameValues(tnv) for tnv in result]
 
         def post(self, vault_id: int):
@@ -256,17 +236,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_ids(self):
-            return self.response.json()['VaultIDs']
+            return self.json_response(key='VaultIDs')
 
         def post(self, name: str, int_value: int = None ,string_value: str = None, date_value: int = None):
             body = {
@@ -297,17 +275,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def value(self):
-            return self.response.json()['Value']
+            return self.json_response(key='Value')
 
         def post(self, vault_id: int, name: str = ''):
             body = {
@@ -333,17 +309,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_ids(self):
-            return self.response.json()['VaultIDs']
+            return self.json_response(key='VaultIDs')
 
         def post(self, namespace: str, owner: str, vault_type: str = None):
             body = {
@@ -369,17 +343,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_ids(self):
-            return self.response.json()['VaultIDs']
+            return self.json_response(key='VaultIDs')
 
         def post(self, vault_type: int):
             body = json.dumps({
@@ -401,11 +373,9 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def post(self, vault_id: int, vault_type: int):
@@ -429,17 +399,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_ids(self):
-            return self.response.json()['VaultIDs']
+            return self.json_response(key='VaultIDs')
 
         def post(self, vault_type: int):
             body = json.dumps({
@@ -461,11 +429,9 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def post(self, namespace: str, owner: str, vault_id: int):
@@ -490,11 +456,9 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         def post(self, namespace: str, owner: str, vault_id: int = None):
@@ -522,17 +486,15 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def owners(self):
-            return self.response.json()['Owners']
+            return self.json_response(key='Owners')
 
         def post(self, namespace: str, vault_id: int):
             body = json.dumps({
@@ -555,22 +517,20 @@ class _SecretStore:
         @property
         @response_property()
         def base_64_data(self):
-            return self.response.json()['Base64Data']
+            return self.json_response(key='Base64Data')
 
         @property
         @response_property()
         def result(self):
-            result = self.response.json()['Result']
-            result = SecretStore.Result(result)
-            if result.code != 1:
-                raise ValueError(self.get_api_result_log(success=False, code=result.code, code_description=result.secret_store_result))
-            self.logger.log(self.get_api_result_log(success=True))
+            result = SecretStore.Result(self.json_response(key='Result'))
+            if result.code != 0:
+                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
             return result
 
         @property
         @response_property()
         def vault_type(self):
-            return self.response.json()['VaultType']
+            return self.json_response(key='VaultType')
 
         def post(self, vault_id: int):
             body = json.dumps({
