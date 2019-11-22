@@ -46,7 +46,7 @@ class API:
         self._validated = True
 
         if not self._valid_return_codes:
-            raise ValueError('No valid return codes were provided, so the API response cannot be validated.')
+            raise ValueError('No valid return codes were provided, so the response to %s cannot be validated.' % self._url)
 
         if not isinstance(self.response, Response):
             raise TypeError("Expected response object, but got %s." % type(self.response))
