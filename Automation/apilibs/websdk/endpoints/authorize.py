@@ -1,4 +1,3 @@
-import json
 from apilibs.session import WEBSDK_URL
 from apilibs.session import Session
 
@@ -20,10 +19,10 @@ class _Authorize:
         }
 
     def post(self, username, password):
-        body = json.dumps({
+        body = {
             "Username": username,
             "Password": password
-        })
+        }
 
         self.response = self._session.post(url=self._url, data=body)
         return self

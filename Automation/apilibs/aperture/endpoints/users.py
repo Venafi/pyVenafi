@@ -1,4 +1,3 @@
-import json
 from apilibs.session import APERTURE_URL
 from apilibs.session import Session
 
@@ -25,10 +24,10 @@ class _Users:
             }
 
         def post(self, username, password):
-            body = json.dumps({
+            body = {
                 "username": username,
                 "password": password
-            })
+            }
 
             self.response = self._session.post(url=self._url, data=body)
             return self

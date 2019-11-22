@@ -1,3 +1,4 @@
+import json
 from apilibs.session import Session
 from requests import Response
 from tools.logger.logger import Logger, LogLevels
@@ -33,29 +34,39 @@ class API:
         self._validated = False
         self._response = value
 
-    def get_api_result_log(self, success: bool, code: int = None, code_description: str = '', msg: str = ''):
-        if success:
-            return '%s successful. %s' % (self._url, msg)
-        else:
-            fail_desc = 'Received code %s: %s' % (code, code_description) if code and code_description else ''
-            if msg:
-                fail_desc += '\n' + msg
-            return '%s failed. %s' % (self._url, fail_desc)
+    def json_response(self, key: str = None, error_key: str = None):
+        result = self.response.json()
+        if error_key and error_key in result.keys():
+            raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
+        value = result if not key else result[key]
+        return value
 
     def _validate(self):
         self._validated = True
 
         if not self._valid_return_codes:
-            raise ValueError('No valid return codes were provided, so the API response cannot be validated.')
+            raise ValueError('No valid return codes were provided, so the response to %s cannot be validated.' % self._url)
 
         if not isinstance(self.response, Response):
             raise TypeError("Expected response object, but got %s." % type(self.response))
 
         if self.response.status_code not in self._valid_return_codes:
-            raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (self.response.status_code, str(self._valid_return_codes), self.response.text))
+            raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
+                self.response.status_code, str(self._valid_return_codes), json.dumps(self.response.text, indent=4)))
 
-        self.logger.log('Response to %s is valid. Got %s.' %(self._url, self.response.status_code))
+        self.logger.log('Response to %s is valid. Got %s: %s' %(
+            self._url, self.response.status_code, json.dumps(self.response.json(), indent=4)))
 
 
 class InvalidResponseError(Exception):
     pass
+
+
+class InvalidResultCode(Exception):
+    def __init__(self, url, code, code_description):
+        msg = "{url} failed.\nResult code: {code}\nCode Description: {desc}".format(
+            url=url,
+            code=code,
+            desc=code_description
+        )
+        super().__init__(msg)

@@ -18,7 +18,7 @@ class UsernamePasswordCredential(FeatureBase):
         dn = folder.dn + "\\" + name
 
         if self.auth.preference == ApiPreferences.aperture:
-            self._logger.log(FeatureError.not_implemented(ApiPreferences.aperture).message)
+            self._logger.log(FeatureError.not_implemented(ApiPreferences.aperture).__str__())
 
         result = self.auth.websdk.Credentials.Create.post(
             credential_path=dn,

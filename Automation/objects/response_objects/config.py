@@ -3,16 +3,29 @@ from enums.resultcodes import ResultCodes
 
 class Config:
     class Result:
-        def __init__(self, code):
+        def __init__(self, code: int):
             self.code = code
             self.config_result = ResultCodes.Config.get(code, 'Unknown')
 
+    class NameValues:
+        def __init__(self, name_values_dict: dict, api_type: str):
+            if not isinstance(name_values_dict, dict):
+                name_values_dict = {}
+
+            if api_type.lower() == 'websdk':
+                self.name = name_values_dict.get('Name')
+                self.values = name_values_dict.get('Values')
+
+            elif api_type.lower() == 'aperture':
+                # Not implemented yet.
+                pass
+
+
     class Object:
-        def __init__(self, object_dict, api_type):
-            """
-            :type api_type: str
-            :type object_dict: dict
-            """
+        def __init__(self, object_dict: dict, api_type: str):
+            if not isinstance(object_dict, dict):
+                object_dict = {}
+
             if api_type.lower() == 'websdk':
                 self.absolute_guid = object_dict.get('AbsoluteGUID')
                 self.dn = object_dict.get('DN')
@@ -33,17 +46,17 @@ class Config:
                 self.revision = None
                 self.type_name = object_dict.get('typeName')
 
-    class Policies:
-        def __init__(self, policies_dict, api_type):
-            if not isinstance(policies_dict, dict):
-                policies_dict = {}
+    class Policy:
+        def __init__(self, policy_dict: dict, api_type: str):
+            if not isinstance(policy_dict, dict):
+                policy_dict = {}
 
             if api_type.lower() == 'websdk':
-                self.attribute_name = policies_dict.get('AttributeName')
-                self.guid = policies_dict.get('GUID')
-                self.property = policies_dict.get('Property')
-                self.type_name = policies_dict.get('TypeName')
-                self.value_list = policies_dict.get('ValueList')
+                self.attribute_name = policy_dict.get('AttributeName')
+                self.guid = policy_dict.get('GUID')
+                self.property = policy_dict.get('Property')
+                self.type_name = policy_dict.get('TypeName')
+                self.value_list = policy_dict.get('ValueList')
 
             elif api_type.lower() == 'aperture':
                 # not implemented yet
