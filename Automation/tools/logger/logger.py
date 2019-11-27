@@ -434,6 +434,9 @@ class Logger:
         outerframes = inspect.getouterframes(frame)[prev_frames]
         self._log(msg=msg, outerframes=outerframes, critical=critical)
 
+    def log_method(self, func_obj, msg: str, critical: bool = False):
+        self._log(msg=msg, func_obj=func_obj, critical=critical)
+
     def log_exception(self, skip_console=True):
         """
         :type exc_obj: Exception
@@ -449,11 +452,18 @@ class Logger:
         html_msg = '<span style="white-space: pre-wrap; color: red">%s</span>' % msg
         self._log(msg=msg, outerframes=outerframes, critical=True, skip_console=skip_console, html_formatted_msg=html_msg)
 
-    def _log(self, msg: str, outerframes: inspect.FrameInfo, critical: bool = False, skip_console: bool = False,
-             html_formatted_msg: str = None):
-        path, lineno = outerframes[1], str(outerframes[2])
-        filepath, filename = os.path.split(path)
-        source, startlineno = inspect.getsourcelines(outerframes[0])
+    def _log(self, msg: str, outerframes: inspect.FrameInfo = None, critical: bool = False, skip_console: bool = False,
+             html_formatted_msg: str = None, func_obj = None):
+        if outerframes:
+            source, startlineno = inspect.getsourcelines(outerframes[0])
+            path, lineno = outerframes[1], str(outerframes[2])
+            filepath, filename = os.path.split(path)
+        elif func_obj:
+            source, startlineno = inspect.getsourcelines(func_obj)
+            path, lineno = inspect.getfile(func_obj), startlineno
+            filepath, filename = os.path.split(path)
+        else:
+            raise ValueError('Must supply either "outerframes" or "func_obj".')
         if not skip_console:
             self._log_to_console_method(filename=path, lineno=lineno, msg=msg, critical=critical)
         if LOG_TO_JSON is True:

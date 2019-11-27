@@ -60,13 +60,3 @@ class API:
 
 class InvalidResponseError(Exception):
     pass
-
-
-class InvalidResultCode(Exception):
-    def __init__(self, url, code, code_description):
-        msg = "{url} failed.\nResult code: {code}\nCode Description: {desc}".format(
-            url=url,
-            code=code,
-            desc=code_description
-        )
-        super().__init__(msg)

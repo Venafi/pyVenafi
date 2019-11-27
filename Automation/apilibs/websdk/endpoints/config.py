@@ -1,4 +1,4 @@
-from apilibs.base import API, response_property, InvalidResultCode
+from apilibs.base import API, response_property
 from apilibs.session import WEBSDK_URL
 from objects.response_objects.config import Config
 
@@ -52,10 +52,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
@@ -80,10 +77,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, class_name: str, value: str, locked: bool):
             body = {
@@ -109,10 +103,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
@@ -137,10 +128,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -164,10 +152,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = {
@@ -196,10 +181,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str):
             body = {
@@ -225,10 +207,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, type_name: str, recursive: bool = False, pattern: str = None):
             body = {
@@ -260,10 +239,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, class_name: str, name_attribute_list: list):
             body = {
@@ -293,10 +269,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, default_dn: str):
             body = {
@@ -318,10 +291,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, recursive: bool = False):
             body = {
@@ -364,10 +334,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str):
             body = {
@@ -395,10 +362,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str = None, recursive: bool = False, pattern: str = None):
             body = {
@@ -428,10 +392,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, pattern: str):
             body = {
@@ -459,10 +420,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, derived_from: str, pattern: str = None):
             body = {
@@ -491,10 +449,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str):
             body = {
@@ -522,10 +477,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, pattern: str, attribute_names: str = None):
             body = {
@@ -554,10 +506,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, recursive: bool = False):
             body = {
@@ -586,10 +535,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, classes: str = None, class_name: str = None, object_dn: str = None, pattern: str = None, recursive: bool = False):
             if not (classes or class_name):
@@ -636,10 +582,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = {
@@ -669,10 +612,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, classes: str = None):
             body = {
@@ -702,10 +642,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str):
             body = {
@@ -748,10 +685,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_guid: str):
             body = {
@@ -794,10 +728,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_id: str):
             body = {
@@ -826,10 +757,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, object_guid: str):
             if not (object_dn or object_guid):
@@ -855,10 +783,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, class_name: str):
             body = {
@@ -897,10 +822,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -930,10 +852,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str):
             body = {
@@ -961,10 +880,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -993,10 +909,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, reference_attribute_name: str, attribute_name: str):
             body = {
@@ -1041,10 +954,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -1083,10 +993,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, class_name: str):
             body = {
@@ -1111,10 +1018,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
@@ -1138,10 +1042,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, class_name: str, value: str):
             body = {
@@ -1166,10 +1067,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, new_object_dn: str):
             body = {
@@ -1192,10 +1090,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_data: str):
             body = {
@@ -1218,10 +1113,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, values: str):
             body = {
@@ -1245,10 +1137,7 @@ class _Config:
         @property
         @response_property()
         def result(self):
-            result = Config.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.config_result)
-            return result
+            return Config.Result(self.json_response(key='Result'))
 
         def post(self, object_dn: str, class_name: str, attribute_name: str, locked: bool = False, values: str = None):
             body = {

@@ -1,6 +1,6 @@
 from typing import *
 import time
-from apilibs.base import API, response_property, InvalidResultCode
+from apilibs.base import API, response_property
 from apilibs.session import WEBSDK_URL
 from objects.response_objects.credential import Credentials
 
@@ -27,10 +27,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            result = Credentials.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-            return result
+            return Credentials.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str, friendly_name: str, values: List[Dict], password: str = None, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
@@ -75,10 +72,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            result = Credentials.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-            return result
+            return Credentials.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str):
             body = {
@@ -100,10 +94,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            result = Credentials.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-            return result
+            return Credentials.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -136,10 +127,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            result = Credentials.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-            return result
+            return Credentials.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str, new_credential_path: str):
             body = {
@@ -182,10 +170,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            result = Credentials.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-            return result
+            return Credentials.Result(self.json_response(key='Result'))
         
         @property
         @response_property()
@@ -213,10 +198,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            result = Credentials.Result(self.json_response(key='Result'))
-            if result.code != 1:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-            return result
+            return Credentials.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str, friendly_name: str, values: List[Dict], description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
@@ -266,10 +248,7 @@ class _Credentials:
             @property
             @response_property()
             def result(self):
-                result = Credentials.Result(self.json_response(key='Result'))
-                if result.code != 1:
-                    raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-                return result
+                return Credentials.Result(self.json_response(key='Result'))
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):
@@ -299,10 +278,7 @@ class _Credentials:
             @property
             @response_property()
             def result(self):
-                result = Credentials.Result(self.json_response(key='Result'))
-                if result.code != 1:
-                    raise InvalidResultCode(url=self._url, code=result.code, code_description=result.credential_result)
-                return result
+                return Credentials.Result(self.json_response(key='Result'))
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):

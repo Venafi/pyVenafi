@@ -1,7 +1,9 @@
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
+from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 from enums.config import ConfigClass
+from enums.secret_store import Namespaces
 
 
+@feature()
 class Folder(FeatureBase):
     def __init__(self, auth=None, name: str = None, container: str = None, attributes: list = None):
         if auth:
@@ -22,12 +24,13 @@ class Folder(FeatureBase):
         self.type_name = None
 
     def __enter__(self):
-        return self.create()
+        self.create()
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.delete(self.dn, recursive=True)
 
-    def load(self, policy_object):
+    def _load(self, policy_object):
         self.absolute_guid = policy_object.absolute_guid
         self.dn = policy_object.dn
         self.guid = policy_object.guid
@@ -37,43 +40,46 @@ class Folder(FeatureBase):
         self.revision = policy_object.revision
         self.type_name = policy_object.type_name
 
-    def create(self, name:str = None, container: str = None, attributes: list = None):
-        if not name:
-            if not self.name:
-                raise AssertionError('Must supply a name property.')
-            name = self.name
-        if not container:
-            if not self.container:
-                raise AssertionError('Must supply a container property.')
-            container = self.container
-        if not attributes:
-            if self.attributes:
-                if not isinstance(attributes, list):
-                    raise TypeError('Attributes must be a list.')
-                attributes = self.attributes
+    def create(self, name: str = None, container: str = None, attributes: dict = None):
+        def throw_error():
+            raise FeatureError.NoParameterProvided()
 
-        dn = container + '\\' + name
+        name = name or self.name or throw_error()
+        container = container or self.container or throw_error()
+        attributes = attributes or self.attributes
+        if attributes:
+            attributes = [{'Name': key, 'Value': value} for key, value in attributes.items()]
 
-        self._logger.log('Creating policy with DN "%s".' % dn)
+        dn = f'{container}\\{name}'
+
         if self.auth.preference == ApiPreferences.websdk:
-            policy = self.auth.websdk.Config.Create.post(dn, ConfigClass.policy, attributes or []).object
+            policy = self.auth.websdk.Config.Create.post(dn, ConfigClass.policy, attributes or [])
         elif self.auth.preference == ApiPreferences.aperture:
-            policy = self.auth.aperture.ConfigObjects.Policies.post(name, container).object
+            policy = self.auth.aperture.ConfigObjects.Policies.post(name, container)
         else:
             raise FeatureError.InvalidAPIPreference(self.auth.preference)
 
-        self.load(policy)
-        if self.dn:
-            self._logger.log('Folder DN is %s.' % self.dn)
-        else:
-            raise ValueError('DN not created as expected.')
+        result = policy.result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        return self
+        self._load(policy.object)
 
-    def delete(self, object_dn, recursive=False):
-        self._logger.log('Deleting policy with DN "%s".' % object_dn)
+    def delete(self, object_dn: str = None, recursive: bool = True):
+        object_dn = object_dn or self.dn
+
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        assert self.auth.websdk.Config.Delete.post(object_dn, recursive).result == 1
+        if recursive:
+            # Must delete all of the secrets first.
+            all_child_dns = self.auth.websdk.Config.Enumerate.post(object_dn=object_dn, recursive=True).objects
+            for child in all_child_dns:
+                owners = self.auth.websdk.SecretStore.LookupByOwner.post(namespace=Namespaces.config, owner=child.dn).vault_ids
+                for owner in owners:
+                    self.auth.websdk.SecretStore.OwnerDelete.post(namespace=Namespaces.config, owner=owner)
+
+        result = self.auth.websdk.Config.Delete.post(object_dn, recursive).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
         self.__init__()

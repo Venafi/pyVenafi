@@ -26,3 +26,7 @@ class SecretStoreVaultTypes:
         1073743872: 'Archived RSA Public Key (obsolete, use Vault Type 1073745920, Archived Public Key)',
         1073745920: 'Archived Public Key'
     }
+
+
+class Namespaces:
+    config = 'config'
