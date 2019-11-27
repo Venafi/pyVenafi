@@ -26,6 +26,8 @@ def _feature_decorator(func):
             ret_vals = jsonpickle.dumps(result, max_depth=2)
             after_string += f'\nReturn Values: {ret_vals}'
         self._logger.log_method(func_obj=func, msg=after_string)
+
+        return result
     return _wrapper
 
 
@@ -44,14 +46,6 @@ class FeatureBase(metaclass=ABCMeta):
     def __init__(self, auth: Authenticate):
         self._logger = Logger(LogLevels.feature)
         self.auth = auth
-
-    @abstractmethod
-    def __enter__(self):
-        pass
-
-    @abstractmethod
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
 
     def _log_not_implemented_warning(self, api_type):
         self._logger.log('No implementation defined for this method using %s.' % api_type, prev_frames=2)
