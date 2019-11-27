@@ -66,10 +66,6 @@ class FeatureError:
         def __init__(self, code: int, code_description: str = 'Unknown'):
             super().__init__(f'Expected a valid result code, but got "{code}": {code_description}.')
 
-    class NoParameterProvided(Exception):
-        def __init__(self):
-            super().__init__('Not all parameters were satisfied.')
-
 
 class ApiPreferences:
     websdk = 'websdk'

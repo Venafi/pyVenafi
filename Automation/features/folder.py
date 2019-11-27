@@ -24,7 +24,7 @@ class Folder(FeatureBase):
         self.type_name = None
 
     def __enter__(self):
-        self.create()
+        self.create(self.name, self.container, self.attributes)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -40,13 +40,7 @@ class Folder(FeatureBase):
         self.revision = policy_object.revision
         self.type_name = policy_object.type_name
 
-    def create(self, name: str = None, container: str = None, attributes: dict = None):
-        def throw_error():
-            raise FeatureError.NoParameterProvided()
-
-        name = name or self.name or throw_error()
-        container = container or self.container or throw_error()
-        attributes = attributes or self.attributes
+    def create(self, name: str, container: str, attributes: dict = None):
         if attributes:
             attributes = [{'Name': key, 'Value': value} for key, value in attributes.items()]
 
