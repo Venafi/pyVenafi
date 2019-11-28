@@ -1,6 +1,5 @@
 import inspect
 import jsonpickle
-from abc import ABCMeta, abstractmethod
 from tools.logger.logger import Logger, LogLevels
 from apilibs.authenticate import Authenticate
 
@@ -42,7 +41,7 @@ def feature():
 
 
 @feature()
-class FeatureBase(metaclass=ABCMeta):
+class FeatureBase:
     def __init__(self, auth: Authenticate):
         self._logger = Logger(LogLevels.feature)
         self.auth = auth
