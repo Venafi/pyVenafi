@@ -5,40 +5,8 @@ from enums.secret_store import Namespaces
 
 @feature()
 class Folder(FeatureBase):
-    def __init__(self, auth=None, name: str = None, container: str = None, attributes: list = None):
-        if auth:
-            super().__init__(auth)
-        assert self.auth
-
-        self.name = name
-        self.container = container
-        self.attributes = attributes
-
-        self.absolute_guid = None
-        self.dn = None
-        self.guid = None
-        self.config_id = None
-        self.name = None
-        self.parent = None
-        self.revision = None
-        self.type_name = None
-
-    def __enter__(self):
-        self.create(self.name, self.container, self.attributes)
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.delete(self.dn, recursive=True)
-
-    def _load(self, policy_object):
-        self.absolute_guid = policy_object.absolute_guid
-        self.dn = policy_object.dn
-        self.guid = policy_object.guid
-        self.config_id = policy_object.config_id
-        self.name = policy_object.name
-        self.parent = policy_object.parent
-        self.revision = policy_object.revision
-        self.type_name = policy_object.type_name
+    def __init__(self, auth):
+        super().__init__(auth)
 
     def create(self, name: str, container: str, attributes: dict = None):
         if attributes:
@@ -49,7 +17,7 @@ class Folder(FeatureBase):
         if self.auth.preference == ApiPreferences.websdk:
             policy = self.auth.websdk.Config.Create.post(dn, ConfigClass.policy, attributes or [])
         elif self.auth.preference == ApiPreferences.aperture:
-            policy = self.auth.aperture.ConfigObjects.Policies.post(name, container)
+            policy = self.auth.aperture.ConfigObjects.Policies.post(self.name, self.container)
         else:
             raise FeatureError.InvalidAPIPreference(self.auth.preference)
 
@@ -57,11 +25,9 @@ class Folder(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        self._load(policy.object)
+        return policy.object
 
-    def delete(self, object_dn: str = None, recursive: bool = True):
-        object_dn = object_dn or self.dn
-
+    def delete(self, object_dn: str, recursive: bool = True):
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -76,4 +42,3 @@ class Folder(FeatureBase):
         result = self.auth.websdk.Config.Delete.post(object_dn, recursive).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-        self.__init__()
