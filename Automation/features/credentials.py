@@ -1,19 +1,13 @@
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
+from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
-class _Credential:
-    pass
+@feature()
+class UsernamePasswordCredential(FeatureBase):
+    def __init__(self, auth):
+        super().__init__(auth)
 
-
-class UsernamePasswordCredential(FeatureBase, _Credential):
-    def __init__(self, auth_obj):
-        super().__init__(auth_obj)
-
-    def load(self):
-        pass
-
-    def create(self, name: str, container: str, username: str, password: str):
-        dn = container + "\\" + name
+    def create(self, name: str, container: str, username: str, password: str, expiration: int = None):
+        dn = f'{container}\\{name}'
 
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
@@ -27,7 +21,15 @@ class UsernamePasswordCredential(FeatureBase, _Credential):
             ]
         ).result
 
-        self._logger.log('UsernamePassword credential "%s" created successfully.' % dn)
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        self.load()
-        return self
+        return self.auth.websdk.Config.IsValid.post(object_dn=dn).object
+
+    def delete(self, object_dn: str):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self.auth.websdk.Credentials.Delete.post(credential_path=object_dn).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)

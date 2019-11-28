@@ -19,6 +19,7 @@ class _Config:
         self.EnumerateAll = self._EnumerateAll(session, api_type)
         self.EnumerateObjectsDerivedFrom = self._EnumerateObjectsDerivedFrom(session, api_type)
         self.EnumeratePolicies = self._EnumeratePolicies(session, api_type)
+        self.Find = self._Find(session, api_type)
         self.FindObjectsOfClass = self._FindObjectsOfClass(session, api_type)
         self.FindPolicy = self._FindPolicy(session, api_type)
         self.GetHighestRevision = self._GetHighestRevision(session, api_type)
@@ -751,7 +752,7 @@ class _Config:
         @property
         @response_property()
         def object(self):
-            result = self.json_response(key='HierarchicalGUID', error_key='Error')
+            result = self.json_response(key='Object', error_key='Error')
             return Config.Object(result, self._api_type)
 
         @property
@@ -759,7 +760,7 @@ class _Config:
         def result(self):
             return Config.Result(self.json_response(key='Result'))
 
-        def post(self, object_dn: str, object_guid: str):
+        def post(self, object_dn: str = None, object_guid: str = None):
             if not (object_dn or object_guid):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = {
