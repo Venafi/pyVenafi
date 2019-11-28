@@ -29,6 +29,28 @@ class FolderAttributes:
     workflow_block = 'Workflow Block'
 
 
+class CredentialAttributes:
+    contact = 'Contact'
+    created_by = 'Created By'
+    description = 'Description'
+    disabled = 'Disabled'
+    escalation_contact = 'Escalation Contact'
+    escalation_notice_interval = 'Escalation Notice Interval'
+    escalation_notice_start = 'Escalation Notice Start'
+    expiration_notice_interval = 'Expiration Notice Interval'
+    expiration_notice_start = 'Expiration Notice Start'
+    expiration = 'Expiration'
+    guid = 'GUID'
+    last_notification = 'Last Notification'
+    managed_by = 'Managed By'
+    metadata = 'Metadata'
+    protection_key = 'Protection Key'
+    reference = 'Reference'
+    shared = 'Shared'
+    username = 'Username'
+    vault_id = 'Vault Id'
+    workflow = 'Workflow'
+    workflow_block = 'Workflow Block'
 
 # Example format for config enums
 
