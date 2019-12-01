@@ -1,3 +1,5 @@
+import time
+from typing import *
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -6,11 +8,14 @@ class UsernamePasswordCredential(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth)
 
-    def create(self, name: str, container: str, username: str, password: str, expiration: int = None):
+    def create(self, name: str, container: str, username: str, password: str, expiration: int = None, description: str = None,
+               encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         dn = f'{container}\\{name}'
 
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        expiration = expiration or int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)  # Default to expire in 10 years.
 
         result = self.auth.websdk.Credentials.Create.post(
             credential_path=dn,
@@ -18,7 +23,12 @@ class UsernamePasswordCredential(FeatureBase):
             values=[
                 {'Name': 'Username', 'Type': 'string', 'Value': username},
                 {'Name': 'Password', 'Type': 'string', 'Value': password}
-            ]
+            ],
+            expiration=expiration,
+            description=description,
+            encryption_key=encryption_key,
+            shared=shared,
+            contact=contact
         ).result
 
         if result.code != 1:

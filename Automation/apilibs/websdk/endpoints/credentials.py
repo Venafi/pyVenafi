@@ -35,7 +35,8 @@ class _Credentials:
                 'CredentialPath': credential_path,
                 'Password': password,
                 'FriendlyName': friendly_name,
-                'Values': values
+                'Values': values,
+                'Expiration': f'/Date({expiration})/'
             }
             if description:
                 body.update({'Description': description})
@@ -46,13 +47,6 @@ class _Credentials:
             if shared:
                 body.update({'Shared': shared})
 
-            if expiration:
-                exp_date = expiration
-            else:
-                # Expire in 10 years.
-                exp_date = int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
-
-            body.update({'Expiration': r'/Date(%s)/' % exp_date})
             if contact:
                 body.update({'Contact': contact})
 

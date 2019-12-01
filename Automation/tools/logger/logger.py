@@ -438,9 +438,6 @@ class Logger:
         self._log(msg=msg, func_obj=func_obj, critical=critical)
 
     def log_exception(self, skip_console=True):
-        """
-        :type exc_obj: Exception
-        """
         tb = sys.exc_info()[2]
         while True:
             if tb.tb_next is None:

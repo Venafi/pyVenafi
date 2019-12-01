@@ -29,7 +29,7 @@ class FolderAttributes:
     workflow_block = 'Workflow Block'
 
 
-class CredentialAttributes:
+class _CredentialAttributes:
     contact = 'Contact'
     created_by = 'Created By'
     description = 'Description'
@@ -47,10 +47,36 @@ class CredentialAttributes:
     protection_key = 'Protection Key'
     reference = 'Reference'
     shared = 'Shared'
-    username = 'Username'
     vault_id = 'Vault Id'
     workflow = 'Workflow'
     workflow_block = 'Workflow Block'
+
+
+class CredentialAttributes:
+    class Amazon(_CredentialAttributes):
+        authentication_credential = 'Authentication Credential'
+        region_code = 'Region Code'
+        role = 'Role'
+        username = 'Username'
+        web_service_url = 'Web Service URL'
+
+    class Certificate(_CredentialAttributes):
+        certificate = 'Certificate'
+        username = 'Username'
+
+    class Generic(_CredentialAttributes):
+        pass
+
+    class Password(_CredentialAttributes):
+        pass
+
+    class PrivateKey(_CredentialAttributes):
+        username = 'Username'
+
+    class UsernamePassword(_CredentialAttributes):
+        username = 'Username'
+
+
 
 # Example format for config enums
 
