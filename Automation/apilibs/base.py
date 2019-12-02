@@ -1,7 +1,7 @@
 import json
 from apilibs.session import Session
 from requests import Response
-from tools.logger.logger import Logger, LogLevels
+from logger import logger
 
 
 def response_property():
@@ -23,7 +23,7 @@ class API:
 
         self._response = Response()
         self._validated = False
-        self.logger = Logger(LogLevels.api)
+        self.logger = logger.api_logger
 
     @property
     def response(self):

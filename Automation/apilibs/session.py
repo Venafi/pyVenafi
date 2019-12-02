@@ -1,6 +1,6 @@
 import requests
 import json
-from tools.logger.logger import Logger, LogLevels
+from logger import logger
 from config import settings as s
 
 
@@ -12,7 +12,7 @@ requests.packages.urllib3.disable_warnings()
 class Session:
     def __init__(self, headers):
         self.headers = headers
-        self._logger = Logger(LogLevels.api)
+        self._logger = logger.api_logger
 
     def post(self, url: str, data: dict, verify: bool = False):
         data = json.dumps(data, indent=4)

@@ -1,5 +1,7 @@
 class ConfigClass:
     policy = 'Policy'
+    msca = 'Microsoft CA'
+    self_signed = 'Self Signed CA'
 
 
 class FolderAttributes:
@@ -77,27 +79,54 @@ class CredentialAttributes:
         username = 'Username'
 
 
+class _CertificateAuthorityAttributes:
+    additional_field = 'Additional Field'
+    algorithm = 'Algorithm'
+    concurrent_connection_limit = 'Concurrent Connection Limit'
+    contact = 'Contact'
+    created_by = 'Created By'
+    credential = 'Credential'
+    credits = 'Credits'
+    credits_alert = 'Credits Alert'
+    credits_used = 'Credits Used'
+    description = 'Description'
+    disabled = 'Disabled'
+    driver_arguments = 'Driver Arguments'
+    driver_name = 'Driver Name'
+    enhanced_key_usage = 'Enhanced Key Usage'
+    escalation_contact = 'Escalation Contact'
+    guid = 'GUID'
+    host = 'Host'
+    key_usage = 'Key Usage'
+    managed_by = 'Managed By'
+    manual_approval = 'Manual Approval'
+    metadata = 'Metadata'
+    port = 'Port'
+    protection_key = 'Protection Key'
+    rank = 'Rank'
+    reference = 'Reference'
+    renewal_window = 'Renewal Window'
+    retry_count = 'Retry Count'
+    retry_interval = 'Retry Interval'
+    san_enabled= 'SAN Enabled'
+    signature_algorithm = 'Signature Algorithm'
+    specific_end_date_enabled = 'Specific End Date Enabled'
+    template = 'Template'
+    test_account = 'Test Account'
+    timeout = 'Timeout'
+    validatity_period = 'Validity Period'
+    vault_id = 'Vault Id'
+    workflow = 'Workflow'
+    workflow_block = 'Workflow Block'
 
-# Example format for config enums
 
-# class _Device:
-#     pass
-#
-#
-# class Devices:
-#     class JumpServer(_Device):
-#         pass
-#
-#
-# class _Application:
-#     pass
-#
-#
-# class Applications:
-#     class PKCS11(_Application):
-#         pass
-#
-# attrs = {
-#     Applications.PKCS11.dn: '\\asdfasdf\\asdfasdf'
-# }
-# app.create(..., attrs)
+class CertificateAuthorityAttributes:
+    class SelfSigned(_CertificateAuthorityAttributes):
+        pass
+
+    class MSCA(_CertificateAuthorityAttributes):
+        given_name = 'Given Name'
+        enrollment_agent_certificate = 'Enrollment Agent Certificate'
+        host = 'Host'
+        include_cn_as_san = 'Include CN as SAN'
+        template = 'Template'

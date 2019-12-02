@@ -1,13 +1,13 @@
 import inspect
 import jsonpickle
-from tools.logger.logger import Logger, LogLevels
+from logger import logger
 from apilibs.authenticate import Authenticate
 
 jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 
 
-def _feature_decorator(func):
-    def _wrapper(self, *args, **kwargs):
+def __feature_decorator(func):
+    def __wrapper(self, *args, **kwargs):
         # Before the function is called.
         params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
         if 'self' in params.keys():
@@ -15,7 +15,7 @@ def _feature_decorator(func):
         before_string = 'Called ' + func.__qualname__
         if params:
             before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=2)
-        self._logger.log_method(func_obj=func, msg=before_string)
+        self._logger.log_method(func_obj=func, msg=before_string, reference_lastlineno=False)
 
         result = func(self, *args, **kwargs)
 
@@ -24,18 +24,18 @@ def _feature_decorator(func):
         if result is not None:
             ret_vals = jsonpickle.dumps(result, max_depth=2)
             after_string += f'\nReturn Values: {ret_vals}'
-        self._logger.log_method(func_obj=func, msg=after_string)
+        self._logger.log_method(func_obj=func, msg=after_string, reference_lastlineno=True)
 
         return result
-    return _wrapper
+    return __wrapper
 
 
 def feature():
     def decorate(cls):
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
-            if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                setattr(cls, attr, _feature_decorator(getattr(cls, attr)))
+            if callable(getattr(cls, attr)) and not fn.__name__.startswith('__'):
+                setattr(cls, attr, __feature_decorator(getattr(cls, attr)))
         return cls
     return decorate
 
@@ -43,12 +43,14 @@ def feature():
 @feature()
 class FeatureBase:
     def __init__(self, auth: Authenticate):
-        self._logger = Logger(LogLevels.feature)
+        self._logger = logger.feature_logger
         self.auth = auth
 
     def _log_not_implemented_warning(self, api_type):
         self._logger.log('No implementation defined for this method using %s.' % api_type, prev_frames=2)
 
+    def _name_value_attributes(self, attributes: dict):
+        return [{'Name': str(key), 'Value': str(value)}for key, value in attributes.items()]
 
 class FeatureError:
     class InvalidAPIPreference(Exception):

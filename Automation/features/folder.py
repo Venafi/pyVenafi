@@ -10,7 +10,7 @@ class Folder(FeatureBase):
 
     def create(self, name: str, container: str, attributes: dict = None):
         if attributes:
-            attributes = [{'Name': key, 'Value': value} for key, value in attributes.items()]
+            attributes = self._name_value_attributes(attributes=attributes)
 
         dn = f'{container}\\{name}'
 
