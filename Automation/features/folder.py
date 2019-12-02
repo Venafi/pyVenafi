@@ -22,14 +22,13 @@ class Folder(FeatureBase):
 
         if recursive:
             # Must delete all of the secrets first.
-            all_child_dns = self.auth.websdk.Config.Enumerate.post(object_dn=object_dn, recursive=True).objects
-            for child in all_child_dns:
-                owners = self.auth.websdk.SecretStore.LookupByOwner.post(namespace=Namespaces.config, owner=child.dn).vault_ids
-                for owner in owners:
-                    result = self.auth.websdk.SecretStore.Delete.post(vault_id=owner).result
-                    if result.code != 0:
-                        raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
+            response = self.auth.websdk.Config.Enumerate.post(object_dn=object_dn, recursive=True)
+            result = response.result
+            if result.code != 1:
+                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        result = self.auth.websdk.Config.Delete.post(object_dn, recursive).result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            all_child_dns = response.objects
+            for child in all_child_dns:
+                self._secret_store_delete_by_dn(object_dn=child.dn)
+
+        self._config_delete(object_dn=object_dn, recursive=recursive)

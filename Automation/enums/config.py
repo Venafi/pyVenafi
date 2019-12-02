@@ -133,6 +133,55 @@ class ApplicationAttributes:
         hsm_token_password = 'HSM:Token Password'
 
 
+class _ApplicationAttributeValues:
+    class ConnectionMethod:
+        ssh = 'SSH'
+        winrm = 'WinRM'
+        winrms = 'WinRMs'
+
+    class ProtectionType:
+        module = 'Module'
+        ocs = 'OCS'
+        softcard = 'softcard'
+
+
+class ApplicationAttributeValues:
+    class PKCS11(_ApplicationAttributeValues):
+        class ImportCertificatesIntoHsm:
+            zero = 0
+            no = 'No'
+            import_certificate_only = 'Import Certificate Only'
+            import_certificate_and_chain = 'Import Certificate And Chain'
+            import_certificate_with_intermediate_certificates = 'Import Certificate With Intermediate Certificates'
+
+        class LabelFormat:
+            date_with_cn = 'Date with CN'
+            custom_label = 'Custom Label'
+
+        class OpenSslType:
+            custom_openssl_directory = 'Custom OpenSSL Directory'
+            system = 'System'
+
+        class UseCase:
+            tls_client_ecc = 'TLS Client - ECC'
+            tls_client_rsa = 'TLS Client - RSA'
+            tls_client_server_ecc = 'TLS Client/Server - ECC'
+            tls_client_server_rsa = 'TLS Client/Server - RSA'
+            tls_client_server_rsa_ibm_jvm = 'TLS Client/Server - RSA - IBM JVM'
+            tls_client_server_rsa_oracle_sun_jvm = 'TLS Client/Server - RSA - Oracle/Sun JVM'
+            tls_server_ecc = 'TLS Server - ECC'
+            tls_server_rsa = 'TLS Server - RSA'
+            tls_server_rsa_ibm_jvm = 'TLS Server - RSA - IBM JVM'
+            tls_server_rsa_oracle_sun_jvm = 'TLS Server - RSA - Oracle/Sun JVM'
+            message_encryption_rsa = 'Message Encryption - RSA'
+            message_signing_ecc = 'Message Signing - ECC'
+            message_signing_rsa = 'Message Signing - RSA'
+            code_signing_ecc = 'Code Signing - ECC'
+            code_signing_rsa = 'Code Signing - RSA'
+            key_derivation_ecc = 'Key Derivation - ECC'
+            key_wrapping_rsa = 'Key Wrapping - RSA'
+
+
 class FolderAttributes:
     certificate_origin = 'Certificate Origin'
     contact = 'Contact'

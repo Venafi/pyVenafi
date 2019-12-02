@@ -7,6 +7,7 @@ class _CertificateAuthorityBase(FeatureBase):
         super().__init__(auth=auth)
 
     def delete(self, object_dn: str):
+        self._secret_store_delete_by_dn(object_dn=object_dn)
         self._config_delete(object_dn=object_dn)
 
 
