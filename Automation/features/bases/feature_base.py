@@ -9,7 +9,11 @@ jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 def __feature_decorator(func):
     def __wrapper(self, *args, **kwargs):
         # Before the function is called.
-        params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
+        try:
+            params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
+        except TypeError as e:
+            raise TypeError(e)
+
         if 'self' in params.keys():
             del params['self']
         before_string = 'Called ' + func.__qualname__
