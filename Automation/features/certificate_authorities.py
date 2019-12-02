@@ -1,4 +1,4 @@
-from enums.config import ConfigClass
+from enums.config import ConfigClass, CertificateAuthorityAttributes
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -37,7 +37,15 @@ class MSCA(_CertificateAuthorityBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def create(self, name: str, container: str, attributes: dict = None):
+    def create(self, name: str, container: str, hostname: str, service_name: str, credential_dn: str, template: str, attributes: dict = None):
+        attributes = attributes or {}
+        msca_attrs = CertificateAuthorityAttributes.MSCA
+        attributes.update({
+            msca_attrs.host: hostname,
+            msca_attrs.given_name: service_name,
+            msca_attrs.credential: credential_dn,
+            msca_attrs.template: template
+        })
         return self._create(config_class=ConfigClass.msca, name=name, container=container, attributes=attributes)
 
 
