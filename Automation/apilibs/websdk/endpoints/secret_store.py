@@ -96,7 +96,7 @@ class _SecretStore:
 
         def post(self, vault_id: int):
             body = {
-                'VaultId': vault_id
+                'VaultID': vault_id
             }
 
             self.response = self._session.post(url=self._url, data=body)

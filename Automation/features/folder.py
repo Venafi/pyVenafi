@@ -9,23 +9,12 @@ class Folder(FeatureBase):
         super().__init__(auth)
 
     def create(self, name: str, container: str, attributes: dict = None):
-        if attributes:
-            attributes = self._name_value_attributes(attributes=attributes)
-
-        dn = f'{container}\\{name}'
-
-        if self.auth.preference == ApiPreferences.websdk:
-            policy = self.auth.websdk.Config.Create.post(dn, ConfigClass.policy, attributes or [])
-        elif self.auth.preference == ApiPreferences.aperture:
-            policy = self.auth.aperture.ConfigObjects.Policies.post(self.name, self.container)
-        else:
-            raise FeatureError.InvalidAPIPreference(self.auth.preference)
-
-        result = policy.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return policy.object
+        return self._config_create(
+            name=name,
+            container=container,
+            config_class=ConfigClass.policy,
+            attributes=attributes
+        )
 
     def delete(self, object_dn: str, recursive: bool = True):
         if self.auth.preference == ApiPreferences.aperture:
@@ -37,7 +26,9 @@ class Folder(FeatureBase):
             for child in all_child_dns:
                 owners = self.auth.websdk.SecretStore.LookupByOwner.post(namespace=Namespaces.config, owner=child.dn).vault_ids
                 for owner in owners:
-                    self.auth.websdk.SecretStore.OwnerDelete.post(namespace=Namespaces.config, owner=owner)
+                    result = self.auth.websdk.SecretStore.Delete.post(vault_id=owner).result
+                    if result.code != 0:
+                        raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
         result = self.auth.websdk.Config.Delete.post(object_dn, recursive).result
         if result.code != 1:

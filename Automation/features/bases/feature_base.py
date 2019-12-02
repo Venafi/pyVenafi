@@ -56,6 +56,32 @@ class FeatureBase:
     def _name_value_attributes(self, attributes: dict):
         return [{'Name': str(key), 'Value': str(value)}for key, value in attributes.items()]
 
+    def _config_create(self, name: str, container: str, config_class: str, attributes: dict = None):
+        if attributes:
+            attributes = self._name_value_attributes(attributes=attributes)
+
+        dn = f'{container}\\{name}'
+
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        ca = self.auth.websdk.Config.Create.post(dn, config_class, attributes or [])
+
+        result = ca.result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+        return ca.object
+
+    def _config_delete(self, object_dn):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self.auth.websdk.Config.Delete.post(object_dn).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+
 class FeatureError:
     class InvalidAPIPreference(Exception):
         def __init__(self, api_pref):
