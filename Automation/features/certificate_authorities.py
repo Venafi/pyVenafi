@@ -39,6 +39,10 @@ class SelfSigned(_CertificateAuthorityBase):
         super().__init__(auth=auth)
 
     def create(self, name: str, container: str, attributes: dict = None):
+        attributes = attributes or {}
+        attributes.update({
+            CertificateAuthorityAttributes.SelfSigned.driver_name: 'caselfsigned'
+        })
         return self._config_create(
             name=name,
             container=container,
