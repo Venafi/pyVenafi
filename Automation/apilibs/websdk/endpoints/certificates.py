@@ -101,7 +101,7 @@ class _Certificates(API):
 
         def post(self, application_dn: str, certificate_dn: str, push_to_new: bool):
             body = {
-                'CertiicateDN': certificate_dn,
+                'CertificateDN': certificate_dn,
                 'ApplicationDN': application_dn,
                 'PushToNew': push_to_new
             }
@@ -173,11 +173,6 @@ class _Certificates(API):
             )
             self.PreviousVersions = self._PreviousVersions(self._cert_guid, session, api_type)
             self.ValidationResults = self._ValidationResults(self._cert_guid, session, api_type)
-
-        @property
-        @response_property()
-        def success(self):
-            return self.json_response(key='Success')
 
         @property
         @response_property()
@@ -387,6 +382,16 @@ class _Certificates(API):
                 valid_return_codes=[200]
             )
 
+        @property
+        @response_property()
+        def certificate_dn(self):
+            return self.json_response(key='CertificateDN')
+
+        @property
+        @response_property()
+        def guid(self):
+            return self.json_response(key='Guid')
+
         def post(self, policy_dn: str, approvers: [dict] = None, cadn: str = None, ca_specific_attributes: [dict] = None,
                  certificate_type: str = None, city: str = None, contacts: [dict] = None, country: str=None,
                  custom_fields: [dict] = None, created_by: str = None, devices: [dict] = None,
@@ -395,35 +400,32 @@ class _Certificates(API):
                  organizational_unit: str = None, pkcs10: str = None, reenable: bool = False, set_work_todo: bool = True,
                  state: str = None, subject: str = None, subject_alt_names: [dict] = None):
 
-            if not(object_name or subject):
-                raise ValueError('Cannot request the certificate without either and ObjectName or Subject.')
-
             body = {
-                'Approvers': approvers,
+                # 'Approvers': approvers,
                 'CADN': cadn,
-                'CASpecificAttributes': ca_specific_attributes,
-                'CertificateType': certificate_type,
-                'City': city,
-                'Contacts': contacts,
-                'Country': country,
-                'CustomFields': custom_fields,
-                'CreatedBy': created_by,
-                'Devices': devices,
-                'DisableAutomaticRenewal': disable_automatic_renewal,
-                'EllipticCurve': elliptic_curve,
-                'KeyAlgorithm': key_algorithm,
-                'KeyBitSize': key_bit_size,
-                'ManagementType': management_type,
+                # 'CASpecificAttributes': ca_specific_attributes,
+                # 'CertificateType': certificate_type,
+                # 'City': city,
+                # 'Contacts': contacts,
+                # 'Country': country,
+                # 'CustomFields': custom_fields,
+                # 'CreatedBy': created_by,
+                # 'Devices': devices,
+                # 'DisableAutomaticRenewal': disable_automatic_renewal,
+                # 'EllipticCurve': elliptic_curve,
+                # 'KeyAlgorithm': key_algorithm,
+                # 'KeyBitSize': key_bit_size,
+                # 'ManagementType': management_type,
                 'ObjectName': object_name,
-                'Organization': organization,
-                'OrganizationalUnit': organizational_unit,
-                'PKCS10': pkcs10,
+                # 'Organization': organization,
+                # 'OrganizationalUnit': organizational_unit,
+                # 'PKCS10': pkcs10,
                 'PolicyDN': policy_dn,
-                'Reenable': reenable,
-                'SetWorkToDo': set_work_todo,
-                'State': state,
+                # 'Reenable': reenable,
+                # 'SetWorkToDo': set_work_todo,
+                # 'State': state,
                 'Subject': subject,
-                'SubjectAltNames': subject_alt_names
+                # 'SubjectAltNames': subject_alt_names
             }
 
             self.response = self._session.post(url=self._url, data=body)

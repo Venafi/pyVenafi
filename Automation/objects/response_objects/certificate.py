@@ -107,7 +107,19 @@ class Certificate:
             if not isinstance(renewal_dict, dict):
                 renewal_dict = {}
 
+            self.city = renewal_dict.get('City')
+            self.city = renewal_dict.get('Country')
+            self.city = renewal_dict.get('Organization')
+            self.city = renewal_dict.get('OrganizationUnit')
+            self.city = renewal_dict.get('State')
             self.subject = renewal_dict.get('Subject')
+            self.subject_alt_name_dns = renewal_dict.get('SubjectAltNameDNS')
+            self.subject_alt_name_email = renewal_dict.get('SubjectAltNameEmail')
+            self.subject_alt_name_ip_address = renewal_dict.get('SubjectAltNameIPAddress')
+            self.subject_alt_name_other_name_upn = renewal_dict.get('SubjectAltNameOtherNameUPN')
+            self.subject_alt_name_uri = renewal_dict.get('SubjectAltNameURI')
+            self.valid_from = renewal_dict.get('ValidFrom')
+            self.valid_to = renewal_dict.get('ValidTo')
 
     class ValidationDetails:
         def __init__(self, validation_dict: dict):

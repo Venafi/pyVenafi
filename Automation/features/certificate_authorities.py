@@ -22,7 +22,8 @@ class MSCA(_CertificateAuthorityBase):
             CertificateAuthorityAttributes.MSCA.host: hostname,
             CertificateAuthorityAttributes.MSCA.given_name: service_name,
             CertificateAuthorityAttributes.MSCA.credential: credential_dn,
-            CertificateAuthorityAttributes.MSCA.template: template
+            CertificateAuthorityAttributes.MSCA.template: template,
+            CertificateAuthorityAttributes.MSCA.driver_name: 'camicrosoft'
         })
         return self._config_create(
             name=name,

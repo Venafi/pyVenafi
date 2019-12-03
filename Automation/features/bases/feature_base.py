@@ -1,5 +1,6 @@
 import inspect
 import jsonpickle
+import time
 from logger import logger
 from enums.secret_store import Namespaces
 from apilibs.authenticate import Authenticate
@@ -51,6 +52,30 @@ class FeatureBase:
         self._logger = logger.feature_logger
         self.auth = auth
 
+    def wait_for_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
+        def get_attribute():
+            values = self.auth.websdk.Config.ReadDn.post(object_dn=object_dn, attiribute_name=attiribute_name).values
+            found = any([True for value in values if str(value).lower() == attribute_value.lower()])
+            if found:
+                return True
+        self._wait(method=get_attribute, return_value=True, timeout=timeout)
+
+    def _wait(self, method, return_value, timeout: int = 10):
+        maxtime = time.time() + timeout
+        interval = 0.5
+        logger.disable_all_logging(why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals.')
+
+        actual_value = None
+        while time.time() < maxtime:
+            actual_value = method()
+            if actual_value == return_value:
+                lapse = int(timeout - (maxtime - time.time()))
+                logger.enable_all_logging(why=f'Wait method returning after {lapse} seconds.')
+                return
+            time.sleep(interval)
+
+        raise TimeoutError(f'{method.__name__} did not return {return_value} in {timeout} seconds. Got {actual_value} instead.')
+
     def _log_not_implemented_warning(self, api_type):
         self._logger.log('No implementation defined for this method using %s.' % api_type, prev_frames=2)
 
@@ -98,6 +123,9 @@ class FeatureBase:
 
 
 class FeatureError:
+    class GeneralError(Exception):
+        pass
+
     class InvalidAPIPreference(Exception):
         def __init__(self, api_pref):
             super().__init__(f'"{api_pref}" is not a valid API preference. Valid preferences are "websdk" and "aperture".')
