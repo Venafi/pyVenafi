@@ -276,7 +276,7 @@ class _CertificateAttributes:
     approved_issuer = "Approved Issuer"
     approver = "Approver"
     certificate_authority = "Certificate Authority"
-    certificate_download__pbes2_algorithm = "Certificate Download: PBES2 Algorithm"
+    certificate_download_pbes2_algorithm = "Certificate Download: PBES2 Algorithm"
     certificate_process_validator = "Certificate Process Validator"
     certificate_vault_id = "Certificate Vault Id"
     city = "City"
