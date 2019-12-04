@@ -1,5 +1,5 @@
-from apilibs.session import APERTURE_URL
-from apilibs.session import Session
+from api.session import APERTURE_URL
+from api.session import Session
 
 
 class _Users:

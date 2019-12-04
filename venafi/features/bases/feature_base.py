@@ -3,7 +3,7 @@ import jsonpickle
 import time
 from logger import logger, LogLevels
 from enums.secret_store import Namespaces
-from apilibs.authenticate import Authenticate
+from api.authenticate import Authenticate
 
 jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 
@@ -62,9 +62,12 @@ class FeatureBase:
     def _wait(self, method, return_value, timeout: int = 10):
         maxtime = time.time() + timeout
         interval = 0.5
+
         logger.disable_all_logging(
             level=LogLevels.feature,
-            why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals.'
+            why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals. '
+                f'Expected output value is "{return_value}".',
+            func_obj=method
         )
 
         actual_value = None
@@ -74,7 +77,9 @@ class FeatureBase:
                 lapse = int(timeout - (maxtime - time.time()))
                 logger.enable_all_logging(
                     level=LogLevels.feature,
-                    why=f'Wait method returning after {lapse} seconds.'
+                    why=f'{method.__name__} returned "{actual_value}" after {lapse} seconds.',
+                    func_obj=method,
+                    reference_lastlineno=True
                 )
                 return
             time.sleep(interval)

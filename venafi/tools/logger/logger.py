@@ -430,17 +430,23 @@ class Logger:
         self.log_method = self._log_method
         self.log_exception = self._log_exception
 
-    def disable_all_logging(self, level: str = LogLevels.main, why: str = ''):
-        self._log(f'Disabling all logging. {why}', level=level, prev_frames=2)
+    def disable_all_logging(self, level: str = LogLevels.main, why: str = '', func_obj=None, reference_lastlineno: bool = False):
+        if func_obj:
+            self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
+        else:
+            self._log(f'Disabling all logging. {why}', level=level, prev_frames=2)
         self.log = self.no_op
         self.log_method = self.no_op
         self.log_exception = self.no_op
 
-    def enable_all_logging(self, level: str = LogLevels.main, why: str = ''):
+    def enable_all_logging(self, level: str = LogLevels.main, why: str = '', func_obj=None, reference_lastlineno: bool = False):
         self.log = self._log
         self.log_method = self._log_method
         self.log_exception = self._log_exception
-        self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
+        if func_obj:
+            self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
+        else:
+            self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
     def _create_log(self, msg: str, level: str, outerframes: inspect.FrameInfo = None, skip_console: bool = False,
                     html_formatted_msg: str = None, func_obj=None, reference_lastlineno: bool = False):

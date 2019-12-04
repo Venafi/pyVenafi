@@ -2,5 +2,5 @@
 venv/
 *.pyc
 testfile.py
-/Automation/tools/logger/logs/
-/Automation/config/settings.py
+/venafi/tools/logger/logs/
+/venafi/config/settings.py
