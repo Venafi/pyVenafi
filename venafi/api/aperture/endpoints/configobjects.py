@@ -4,17 +4,12 @@ from objects.response_objects.config import Config
 
 
 class _ConfigObjects:
-    def __init__(self, session, api_type):
-        self.Policies = self._Policies(session, api_type)
+    def __init__(self, aperture_obj):
+        self.Policies = self._Policies(aperture_obj)
 
     class _Policies(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=APERTURE_URL + '/configobjects/policies',
-                valid_return_codes=[200]
-            )
+        def __init__(self, aperture_obj):
+            super().__init__(api_obj=aperture_obj, url=APERTURE_URL + '/configobjects/policies', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -30,6 +25,6 @@ class _ConfigObjects:
                 "DN": container + "\\" + name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self

@@ -5,27 +5,22 @@ from objects.response_objects.certificate import Certificate
 
 
 class _Certificates(API):
-    def __init__(self, session, api_type):
-        super().__init__(
-            session=session,
-            api_type=api_type,
-            url=WEBSDK_URL + '/Certificates',
-            valid_return_codes=[200]
-        )
-        self.Associate = self._Associate(session, api_type)
-        self.CheckPolicy = self._CheckPolicy(session, api_type)
-        self.Dissociate = self._Dissociate(session, api_type)
-        self.Import = self._Import(session, api_type)
-        self.Renew = self._Renew(session, api_type)
-        self.Request = self._Request(session, api_type)
-        self.Reset = self._Reset(session, api_type)
-        self.Retrieve = self._Retrieve(session, api_type)
-        self.Retry = self._Retry(session, api_type)
-        self.Revoke = self._Revoke(session, api_type)
-        self.Validate = self._Validate(session, api_type)
+    def __init__(self, websdk_obj):
+        super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates', valid_return_codes=[200])
+        self.Associate = self._Associate(websdk_obj=websdk_obj)
+        self.CheckPolicy = self._CheckPolicy(websdk_obj=websdk_obj)
+        self.Dissociate = self._Dissociate(websdk_obj=websdk_obj)
+        self.Import = self._Import(websdk_obj=websdk_obj)
+        self.Renew = self._Renew(websdk_obj=websdk_obj)
+        self.Request = self._Request(websdk_obj=websdk_obj)
+        self.Reset = self._Reset(websdk_obj=websdk_obj)
+        self.Retrieve = self._Retrieve(websdk_obj=websdk_obj)
+        self.Retry = self._Retry(websdk_obj=websdk_obj)
+        self.Revoke = self._Revoke(websdk_obj=websdk_obj)
+        self.Validate = self._Validate(websdk_obj=websdk_obj)
 
     def Guid(self, guid):
-        return self._Guid(guid=guid, session=self._session, api_type=self._api_type)
+        return self._Guid(guid=guid, websdk_obj=self._api_obj)
 
     @property
     @response_property()
@@ -37,7 +32,6 @@ class _Certificates(API):
     @response_property()
     def x_record_count(self):
         xrc = self.response.headers.get('X-Record-Count')
-        self.logger.log('X-Record-Count: %s' % xrc)
         return xrc
 
     @property
@@ -86,13 +80,8 @@ class _Certificates(API):
         return self
 
     class _Associate(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Associate',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Associate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -110,13 +99,8 @@ class _Certificates(API):
             return self
 
     class _CheckPolicy(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/CheckPolicy',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/CheckPolicy', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -139,13 +123,8 @@ class _Certificates(API):
             return self
 
     class _Dissociate(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Dissociate',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Dissociate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -163,16 +142,11 @@ class _Certificates(API):
             return self
 
     class _Guid(API):
-        def __init__(self, guid: str, session, api_type):
+        def __init__(self, guid: str, websdk_obj):
             self._cert_guid = guid
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/{guid}'.format(guid=self._cert_guid),
-                valid_return_codes=[200]
-            )
-            self.PreviousVersions = self._PreviousVersions(self._cert_guid, session, api_type)
-            self.ValidationResults = self._ValidationResults(self._cert_guid, session, api_type)
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/{guid}'.format(guid=self._cert_guid), valid_return_codes=[200])
+            self.PreviousVersions = self._PreviousVersions(guid=self._cert_guid, websdk_obj=websdk_obj)
+            self.ValidationResults = self._ValidationResults(guid=self._cert_guid, websdk_obj=websdk_obj)
 
         @property
         @response_property()
@@ -251,11 +225,10 @@ class _Certificates(API):
             return self
 
         class _PreviousVersions(API):
-            def __init__(self, guid, session, api_type):
+            def __init__(self, guid: str, websdk_obj):
                 self._cert_guid = guid
                 super().__init__(
-                    session=session,
-                    api_type=api_type,
+                    api_obj=websdk_obj,
                     url=WEBSDK_URL + '/Certificates/{guid}/PreviousVersions'.format(guid=self._cert_guid),
                     valid_return_codes=[200]
                 )
@@ -280,11 +253,10 @@ class _Certificates(API):
                 return self
 
         class _ValidationResults(API):
-            def __init__(self, guid, session, api_type):
+            def __init__(self, guid: str, websdk_obj):
                 self._cert_guid = guid
                 super().__init__(
-                    session=session,
-                    api_type=api_type,
+                    api_obj=websdk_obj,
                     url=WEBSDK_URL + '/Certificates/{guid}/ValidationResults'.format(guid=self._cert_guid),
                     valid_return_codes=[200, 204]
                 )
@@ -306,13 +278,8 @@ class _Certificates(API):
                 return self
 
     class _Import(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Import',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Import', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -350,13 +317,8 @@ class _Certificates(API):
             return self
 
     class _Renew(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Renew',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Renew', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -374,13 +336,8 @@ class _Certificates(API):
             return self
 
     class _Request(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Request',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Request', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -432,13 +389,8 @@ class _Certificates(API):
             return self
 
     class _Reset(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Reset',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Reset', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -470,13 +422,8 @@ class _Certificates(API):
             return self
 
     class _Retrieve(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Retrieve',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Retrieve', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -528,16 +475,11 @@ class _Certificates(API):
             return self
 
         def VaultId(self, vault_id: int):
-            return self._VaultId(vault_id, self._session, self._api_type)
+            return self._VaultId(vault_id, self._api_type, )
 
         class _VaultId(API):
-            def __init__(self, vault_id, session, api_type):
-                super().__init__(
-                    session=session,
-                    api_type=api_type,
-                    url=WEBSDK_URL + '/Certificates/Retrieve/{vault_id}'.format(vault_id=vault_id),
-                    valid_return_codes=[200]
-                )
+            def __init__(self, vault_id: int, websdk_obj, url):
+                super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Retrieve/{vault_id}'.format(vault_id=vault_id), valid_return_codes=[200])
                 self._vault_id = vault_id
 
             @property
@@ -590,13 +532,8 @@ class _Certificates(API):
                 return self
 
     class _Retry(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Retry',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Retry', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -612,13 +549,8 @@ class _Certificates(API):
             return self
 
     class _Revoke(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Revoke',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Revoke', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -644,13 +576,8 @@ class _Certificates(API):
             return self
 
     class _Validate(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/Certificates/Validate',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Certificates/Validate', valid_return_codes=[200])
 
         @property
         @response_property()

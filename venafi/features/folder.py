@@ -9,12 +9,16 @@ class Folder(FeatureBase):
         super().__init__(auth)
 
     def create(self, name: str, container: str, attributes: dict = None):
-        return self._config_create(
-            name=name,
-            container=container,
-            config_class=ConfigClass.policy,
-            attributes=attributes
-        )
+        if self.auth.preference == ApiPreferences.aperture:
+            return self.auth.aperture.ConfigObjects.Policies.post(name=name, container=container).object
+
+        if self.auth.preference == ApiPreferences.websdk:
+            return self._config_create(
+                name=name,
+                container=container,
+                config_class=ConfigClass.policy,
+                attributes=attributes
+            )
 
     def delete(self, object_dn: str, recursive: bool = True):
         if self.auth.preference == ApiPreferences.aperture:

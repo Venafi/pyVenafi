@@ -24,11 +24,11 @@ class WebSDK:
             raise NotImplementedError('Certificate authentication not available.')
 
         api_type = self.__class__.__name__.lower()
-        self.Identity = _Identity(self.session, api_type)
-        self.Config = _Config(self.session, api_type)
-        self.Credentials = _Credentials(self.session, api_type)
-        self.Certificates = _Certificates(self.session, api_type)
-        self.SecretStore = _SecretStore(self.session, api_type)
+        self.Identity = _Identity(self)
+        self.Config = _Config(self)
+        self.Credentials = _Credentials(self)
+        self.Certificates = _Certificates(self)
+        self.SecretStore = _SecretStore(self)
 
     def re_authenticate(self):
         self.__init__(username=self.username, password=self.password, certificate=self.certificate)

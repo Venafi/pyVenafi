@@ -4,33 +4,28 @@ from objects.response_objects.secret_store import SecretStore
 
 
 class _SecretStore:
-    def __init__(self, session, api_type):
-        self.Add = self._Add(session=session, api_type=api_type)
-        self.Associate = self._Associate(session=session, api_type=api_type)
-        self.Delete = self._Delete(session=session, api_type=api_type)
-        self.Dissociate = self._Dissociate(session=session, api_type=api_type)
-        self.EncryptionKeysInUse = self._EncryptionKeysInUse(session=session, api_type=api_type)
-        self.Lookup = self._Lookup(session=session, api_type=api_type)
-        self.LookupAllAssociationsbyVaultid = self._LookupAllAssociationsbyVaultid(session=session, api_type=api_type)
-        self.LookupByAssociation = self._LookupByAssociation(session=session, api_type=api_type)
-        self.LookupAssociationbyVaultID = self._LookupAssociationbyVaultID(session=session, api_type=api_type)
-        self.LookupByOwner = self._LookupByOwner(session=session, api_type=api_type)
-        self.LookupByVaultType = self._LookupByVaultType(session=session, api_type=api_type)
-        self.Mutate = self._Mutate(session=session, api_type=api_type)
-        self.OrphanLookup = self._OrphanLookup(session=session, api_type=api_type)
-        self.OwnerAdd = self._OwnerAdd(session=session, api_type=api_type)
-        self.OwnerDelete = self._OwnerDelete(session=session, api_type=api_type)
-        self.OwnerLookup = self._OwnerLookup(session=session, api_type=api_type)
-        self.Retrieve = self._Retrieve(session=session, api_type=api_type)
+    def __init__(self, websdk_obj):
+        self.Add = self._Add(websdk_obj=websdk_obj)
+        self.Associate = self._Associate(websdk_obj=websdk_obj)
+        self.Delete = self._Delete(websdk_obj=websdk_obj)
+        self.Dissociate = self._Dissociate(websdk_obj=websdk_obj)
+        self.EncryptionKeysInUse = self._EncryptionKeysInUse(websdk_obj=websdk_obj)
+        self.Lookup = self._Lookup(websdk_obj=websdk_obj)
+        self.LookupAllAssociationsbyVaultid = self._LookupAllAssociationsbyVaultid(websdk_obj=websdk_obj)
+        self.LookupByAssociation = self._LookupByAssociation(websdk_obj=websdk_obj)
+        self.LookupAssociationbyVaultID = self._LookupAssociationbyVaultID(websdk_obj=websdk_obj)
+        self.LookupByOwner = self._LookupByOwner(websdk_obj=websdk_obj)
+        self.LookupByVaultType = self._LookupByVaultType(websdk_obj=websdk_obj)
+        self.Mutate = self._Mutate(websdk_obj=websdk_obj)
+        self.OrphanLookup = self._OrphanLookup(websdk_obj=websdk_obj)
+        self.OwnerAdd = self._OwnerAdd(websdk_obj=websdk_obj)
+        self.OwnerDelete = self._OwnerDelete(websdk_obj=websdk_obj)
+        self.OwnerLookup = self._OwnerLookup(websdk_obj=websdk_obj)
+        self.Retrieve = self._Retrieve(websdk_obj=websdk_obj)
 
     class _Add(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Add',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Add', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -55,13 +50,8 @@ class _SecretStore:
             return self
 
     class _Associate(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Associate',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Associate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -81,13 +71,8 @@ class _SecretStore:
             return self
 
     class _Delete(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Delete',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Delete', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -103,13 +88,8 @@ class _SecretStore:
             return self
 
     class _Dissociate(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Dissociate',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Dissociate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -129,13 +109,8 @@ class _SecretStore:
             return self
 
     class _EncryptionKeysInUse(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/EncryptionKeysInUse',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/EncryptionKeysInUse', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -152,13 +127,8 @@ class _SecretStore:
             return self
 
     class _Lookup(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Lookup',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Lookup', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -175,13 +145,8 @@ class _SecretStore:
             return self
 
     class _LookupAllAssociationsbyVaultid(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupAllAssociationsbyVaultid',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/LookupAllAssociationsbyVaultid', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -203,13 +168,8 @@ class _SecretStore:
             return self
 
     class _LookupByAssociation(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupByAssociation',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/LookupByAssociation', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -238,13 +198,8 @@ class _SecretStore:
             return self
 
     class _LookupAssociationbyVaultID(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupAssociationbyVaultID',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/LookupAssociationbyVaultID', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -268,13 +223,8 @@ class _SecretStore:
             return self
 
     class _LookupByOwner(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupByOwner',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/LookupByOwner', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -298,13 +248,8 @@ class _SecretStore:
             return self
 
     class _LookupByVaultType(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/LookupByVaultType',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/LookupByVaultType', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -325,13 +270,8 @@ class _SecretStore:
             return self
 
     class _Mutate(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Mutate',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Mutate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -348,13 +288,8 @@ class _SecretStore:
             return self
 
     class _OrphanLookup(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/OrphanLookup',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/OrphanLookup', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -375,13 +310,8 @@ class _SecretStore:
             return self
 
     class _OwnerAdd(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/OwnerAdd',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/OwnerAdd', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -399,13 +329,8 @@ class _SecretStore:
             return self
 
     class _OwnerDelete(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/OwnerDelete',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/OwnerDelete', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -425,13 +350,8 @@ class _SecretStore:
             return self
 
     class _OwnerLookup(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/OwnerLookup',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/OwnerLookup', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -453,13 +373,8 @@ class _SecretStore:
             return self
 
     class _Retrieve(API):
-        def __init__(self, session, api_type):
-            super().__init__(
-                session=session,
-                api_type=api_type,
-                url=WEBSDK_URL + '/SecretStore/Retrieve',
-                valid_return_codes=[200]
-            )
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/SecretStore/Retrieve', valid_return_codes=[200])
 
         @property
         @response_property()
