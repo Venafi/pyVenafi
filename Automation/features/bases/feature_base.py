@@ -1,7 +1,7 @@
 import inspect
 import jsonpickle
 import time
-from logger import logger
+from logger import logger, LogLevels
 from enums.secret_store import Namespaces
 from apilibs.authenticate import Authenticate
 
@@ -21,7 +21,7 @@ def __feature_decorator(func):
         before_string = 'Called ' + func.__qualname__
         if params:
             before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=2)
-        self._logger.log_method(func_obj=func, msg=before_string, reference_lastlineno=False)
+        logger.log_method(func_obj=func, msg=before_string, level=LogLevels.feature, reference_lastlineno=False)
 
         result = func(self, *args, **kwargs)
 
@@ -30,7 +30,7 @@ def __feature_decorator(func):
         if result is not None:
             ret_vals = jsonpickle.dumps(result, max_depth=2)
             after_string += f'\nReturn Values: {ret_vals}'
-        self._logger.log_method(func_obj=func, msg=after_string, reference_lastlineno=True)
+        logger.log_method(func_obj=func, msg=after_string, level=LogLevels.feature, reference_lastlineno=True)
 
         return result
     return __wrapper
@@ -49,7 +49,6 @@ def feature():
 @feature()
 class FeatureBase:
     def __init__(self, auth: Authenticate):
-        self._logger = logger.feature_logger
         self.auth = auth
 
     def wait_for_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
@@ -63,21 +62,27 @@ class FeatureBase:
     def _wait(self, method, return_value, timeout: int = 10):
         maxtime = time.time() + timeout
         interval = 0.5
-        logger.disable_all_logging(why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals.')
+        logger.disable_all_logging(
+            level=LogLevels.feature,
+            why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals.'
+        )
 
         actual_value = None
         while time.time() < maxtime:
             actual_value = method()
             if actual_value == return_value:
                 lapse = int(timeout - (maxtime - time.time()))
-                logger.enable_all_logging(why=f'Wait method returning after {lapse} seconds.')
+                logger.enable_all_logging(
+                    level=LogLevels.feature,
+                    why=f'Wait method returning after {lapse} seconds.'
+                )
                 return
             time.sleep(interval)
 
         raise TimeoutError(f'{method.__name__} did not return {return_value} in {timeout} seconds. Got {actual_value} instead.')
 
     def _log_not_implemented_warning(self, api_type):
-        self._logger.log('No implementation defined for this method using %s.' % api_type, prev_frames=2)
+        logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.feature, prev_frames=2)
 
     def _name_value_attributes(self, attributes: dict):
         return [{'Name': str(key), 'Value': str(value)}for key, value in attributes.items()]
