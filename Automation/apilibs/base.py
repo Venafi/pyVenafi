@@ -1,7 +1,7 @@
 import json
 from apilibs.session import Session
 from requests import Response
-from logger import logger
+from logger import logger, LogLevels
 
 
 def response_property():
@@ -23,7 +23,6 @@ class API:
 
         self._response = Response()
         self._validated = False
-        self.logger = logger.api_logger
 
     @property
     def response(self):
@@ -54,8 +53,11 @@ class API:
             raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
                 self.response.status_code, str(self._valid_return_codes), json.dumps(self.response.text, indent=4)))
 
-        self.logger.log('Response to %s is valid. Got %s: %s' %(
-            self._url, self.response.status_code, json.dumps(self.response.json(), indent=4)))
+        pretty_json = json.dumps(self.response.json(), indent=4)
+        logger.log(
+            msg=f'Response to {self._url} is valid. Got {self.response.status_code}: {pretty_json}',
+            level=LogLevels.api
+        )
 
 
 class InvalidResponseError(Exception):
