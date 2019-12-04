@@ -1,6 +1,5 @@
 from api.api_base import API, response_property
 from api.session import WEBSDK_URL
-from enums.certificate import CertificateAttributes, CertificateStatus, OptionalFields
 from objects.response_objects.certificate import Certificate
 
 
@@ -51,29 +50,11 @@ class _Certificates(API):
         return self.json_response(key='TotalCount')
 
     def get(self, limit: int = None, offset: int = None, optional_fields: list = None, filters: dict = None):
-        if optional_fields:
-            if not isinstance(optional_fields, list):
-                optional_fields = [optional_fields]
-
-            if not set(optional_fields).issubset(set(OptionalFields.__dict__.values())):
-                raise AssertionError('Invalid option fields. Expected one of {e}, but got {a}. Try importing "enums/certificate.py::OptionalFields".'.format(
-                    e=OptionalFields.__dict__.keys(),
-                    a=optional_fields
-                ))
-            optional_fields = ",".join(optional_fields)
-
-        if filters:
-            if not (isinstance(filters, dict) and set(filters.keys()).issubset(set(CertificateStatus.__dict__.values()) | set(CertificateAttributes.__dict__.values()))):
-                raise TypeError('Filters must be of type dict with keys that map to one or more combinations of certificate attribute filters or '
-                                'certificate status filters. Try importing "CertificateStatus" and "CertificateAttributes" from "enums/certificate.py".')
-
         params = {
             'Limit': limit,
             'Offset': offset,
             'OptionalFields': optional_fields
-        }
-
-        params.update(filters)
+        }.update(filters or {})
 
         self.response = self._session.get(url=self._url, params=params)
 

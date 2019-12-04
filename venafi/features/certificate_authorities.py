@@ -28,7 +28,7 @@ class MSCA(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             container=container,
-            config_class=ConfigClass.msca,
+            config_class=ConfigClass.microsoft_ca,
             attributes=attributes
         )
 
@@ -46,6 +46,6 @@ class SelfSigned(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             container=container,
-            config_class=ConfigClass.self_signed,
+            config_class=ConfigClass.self_signed_ca,
             attributes=attributes
         )
