@@ -1,7 +1,7 @@
 import json
 from apilibs.session import Session
 from requests import Response
-from tools.logger.logger import Logger, LogLevels
+from logger import logger
 
 
 def response_property():
@@ -23,7 +23,7 @@ class API:
 
         self._response = Response()
         self._validated = False
-        self.logger = Logger(LogLevels.api)
+        self.logger = logger.api_logger
 
     @property
     def response(self):
@@ -60,13 +60,3 @@ class API:
 
 class InvalidResponseError(Exception):
     pass
-
-
-class InvalidResultCode(Exception):
-    def __init__(self, url, code, code_description):
-        msg = "{url} failed.\nResult code: {code}\nCode Description: {desc}".format(
-            url=url,
-            code=code,
-            desc=code_description
-        )
-        super().__init__(msg)

@@ -1,7 +1,7 @@
 class LogLevels:
     api = 0
     feature = 1
-    test = 2
+    main = 2
     critical = 9
 
 

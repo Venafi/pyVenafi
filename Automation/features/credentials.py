@@ -1,24 +1,22 @@
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences
+import time
+from typing import *
+from enums.config import CredentialAttributes
+from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
+@feature()
 class UsernamePasswordCredential(FeatureBase):
-    def __init__(self, auth_obj):
-        super().__init__(auth_obj)
+    def __init__(self, auth):
+        super().__init__(auth)
 
-    def load(self):
-        pass
-
-    def create(self, name, folder, username, password):
-        """
-        :type name: str
-        :type folder: Folder
-        :type username: str
-        :type password: str
-        """
-        dn = folder.dn + "\\" + name
+    def create(self, name: str, container: str, username: str, password: str, expiration: int = None, description: str = None,
+               encryption_key: str = None, shared: bool = False, contact: List[str] = None):
+        dn = f'{container}\\{name}'
 
         if self.auth.preference == ApiPreferences.aperture:
-            self._logger.log(FeatureError.not_implemented(ApiPreferences.aperture).__str__())
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        expiration = expiration or int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)  # Default to expire in 10 years.
 
         result = self.auth.websdk.Credentials.Create.post(
             credential_path=dn,
@@ -26,10 +24,27 @@ class UsernamePasswordCredential(FeatureBase):
             values=[
                 {'Name': 'Username', 'Type': 'string', 'Value': username},
                 {'Name': 'Password', 'Type': 'string', 'Value': password}
-            ]
+            ],
+            expiration=expiration,
+            description=description,
+            encryption_key=encryption_key,
+            shared=shared,
+            contact=contact
         ).result
 
-        self._logger.log('UsernamePassword credential "%s" created successfully.' % dn)
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        self.load()
-        return self
+        response = self.auth.websdk.Config.IsValid.post(object_dn=dn)
+        result = response.result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+        return response.object
+
+    def delete(self, object_dn: str):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self.auth.websdk.Credentials.Delete.post(credential_path=object_dn).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)

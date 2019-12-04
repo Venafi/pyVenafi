@@ -34,7 +34,7 @@ def log_to_html():
     file_text_colors = {
         LogLevels.api: 'palegoldenrod',
         LogLevels.feature: 'lightcyan',
-        LogLevels.test: 'hotpink',
+        LogLevels.main: 'hotpink',
         LogLevels.critical: 'red'
     }
 
@@ -425,19 +425,50 @@ def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg
 
 class Logger:
     def __init__(self, level: int):
-        self._log_to_console_method = (lambda *args, **kwargs: None) if level < LOG_LEVEL else self._log_to_console
+        self.no_op = (lambda *args, **kwargs: None)
+        self.log = self._log
+        self.log_method = self._log_method
+        self.log_exception = self._log_exception
+        self._log_to_console_method = self.no_op if level < LOG_LEVEL else self._log_to_console
         self.level = level
         self.text_color = 0
 
-    def log(self, msg: str, critical: bool = False, prev_frames: int = 1):
+    def disable_all_logging(self):
+        self.log = self.no_op
+        self.log_method = self.no_op
+        self.log_exception = self.no_op
+
+    def enable_all_logging(self):
+        self.log = self._log
+        self.log_method = self._log_method
+        self.log_exception = self._log_exception
+
+    def _create_log(self, msg: str, outerframes: inspect.FrameInfo = None, critical: bool = False, skip_console: bool = False,
+                    html_formatted_msg: str = None, func_obj=None, reference_lastlineno: bool = False):
+        if outerframes:
+            source, startlineno = inspect.getsourcelines(outerframes[0])
+            path, lineno = outerframes[1], str(outerframes[2])
+            filepath, filename = os.path.split(path)
+        elif func_obj:
+            source, startlineno = inspect.getsourcelines(func_obj)
+            path = inspect.getfile(func_obj)
+            lineno = startlineno+len(source)-1 if reference_lastlineno else startlineno
+            filepath, filename = os.path.split(path)
+        else:
+            raise ValueError('Must supply either "outerframes" or "func_obj".')
+        if not skip_console:
+            self._log_to_console_method(filename=path, lineno=lineno, msg=msg, critical=critical)
+        if LOG_TO_JSON is True:
+            json_msg = html_formatted_msg or msg
+            source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
+            self._log_to_json(path=filepath, filename=filename, lineno=lineno, msg=json_msg, source=''.join(source), critical=critical)
+
+    def _log(self, msg: str, critical: bool = False, prev_frames: int = 1):
         frame = inspect.currentframe()
         outerframes = inspect.getouterframes(frame)[prev_frames]
-        self._log(msg=msg, outerframes=outerframes, critical=critical)
+        self._create_log(msg=msg, outerframes=outerframes, critical=critical)
 
-    def log_exception(self, skip_console=True):
-        """
-        :type exc_obj: Exception
-        """
+    def _log_exception(self, skip_console=True):
         tb = sys.exc_info()[2]
         while True:
             if tb.tb_next is None:
@@ -447,19 +478,10 @@ class Logger:
         outerframes = inspect.getouterframes(frame)[0]
         msg = traceback.format_exc()
         html_msg = '<span style="white-space: pre-wrap; color: red">%s</span>' % msg
-        self._log(msg=msg, outerframes=outerframes, critical=True, skip_console=skip_console, html_formatted_msg=html_msg)
+        self._create_log(msg=msg, outerframes=outerframes, critical=True, skip_console=skip_console, html_formatted_msg=html_msg)
 
-    def _log(self, msg: str, outerframes: inspect.FrameInfo, critical: bool = False, skip_console: bool = False,
-             html_formatted_msg: str = None):
-        path, lineno = outerframes[1], str(outerframes[2])
-        filepath, filename = os.path.split(path)
-        source, startlineno = inspect.getsourcelines(outerframes[0])
-        if not skip_console:
-            self._log_to_console_method(filename=path, lineno=lineno, msg=msg, critical=critical)
-        if LOG_TO_JSON is True:
-            json_msg = html_formatted_msg or msg
-            source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
-            self._log_to_json(path=filepath, filename=filename, lineno=lineno, msg=json_msg, source=''.join(source), critical=critical)
+    def _log_method(self, func_obj, msg: str, critical: bool = False, reference_lastlineno: bool = False):
+        self._create_log(msg=msg, func_obj=func_obj, critical=critical, reference_lastlineno=reference_lastlineno)
 
     def _log_to_console(self, filename: str, lineno: int, msg: str, critical: bool):
         level = LogLevels.critical if critical else self.level
@@ -478,7 +500,7 @@ class LogColors:
     level_color = {
         LogLevels.api: log_color(*LOG_API_COLOR),
         LogLevels.feature: log_color(*LOG_FEATURE_COLOR),
-        LogLevels.test: log_color(*LOG_TEST_COLOR),
+        LogLevels.main: log_color(*LOG_TEST_COLOR),
         LogLevels.critical: log_color(*LOG_CRITICAL_COLOR)
     }
 

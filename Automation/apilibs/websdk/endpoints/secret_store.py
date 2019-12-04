@@ -1,4 +1,4 @@
-from apilibs.base import API, response_property, InvalidResultCode
+from apilibs.base import API, response_property
 from apilibs.session import WEBSDK_URL
 from objects.response_objects.secret_store import SecretStore
 
@@ -35,10 +35,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -69,10 +66,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def post(self, name: str, vault_id: int, date_value: int = None, int_value: int = None, string_value: str = None):
             body = {
@@ -98,14 +92,11 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def post(self, vault_id: int):
             body = {
-                'VaultId': vault_id
+                'VaultID': vault_id
             }
 
             self.response = self._session.post(url=self._url, data=body)
@@ -123,10 +114,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
             body = {
@@ -157,10 +145,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def get(self):
             self.response = self._session.get(url=self._url)
@@ -178,10 +163,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -204,10 +186,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -235,10 +214,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -273,10 +249,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -306,10 +279,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -339,10 +309,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -369,10 +336,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def post(self, vault_id: int, vault_type: int):
             body = {
@@ -395,10 +359,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -425,10 +386,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def post(self, namespace: str, owner: str, vault_id: int):
             body = {
@@ -452,10 +410,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         def post(self, namespace: str, owner: str, vault_id: int = None):
             body = {
@@ -481,10 +436,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
@@ -517,10 +469,7 @@ class _SecretStore:
         @property
         @response_property()
         def result(self):
-            result = SecretStore.Result(self.json_response(key='Result'))
-            if result.code != 0:
-                raise InvalidResultCode(url=self._url, code=result.code, code_description=result.secret_store_result)
-            return result
+            return SecretStore.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
