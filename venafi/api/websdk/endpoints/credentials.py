@@ -1,7 +1,6 @@
 from typing import *
 import time
 from api.api_base import API, response_property
-from api.session import WEBSDK_URL
 from objects.response_objects.credential import Credentials
 
 
@@ -17,7 +16,7 @@ class _Credentials:
 
     class _Create(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/Create', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Create', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -45,13 +44,13 @@ class _Credentials:
             if contact:
                 body.update({'Contact': contact})
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _Delete(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/Delete', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Delete', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -63,12 +62,12 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _Enumerate(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/Enumerate', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Enumerate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -91,12 +90,12 @@ class _Credentials:
                 body.update({'Pattern': pattern})
 
             body = body
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _Rename(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/Rename', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Rename', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -109,12 +108,12 @@ class _Credentials:
                 'NewCredentialPath': new_credential_path
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _Retrieve(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/Retrieve', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Retrieve', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -152,12 +151,12 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
             
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _Update(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/Update', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Update', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -191,7 +190,7 @@ class _Credentials:
                 payload.update({'Contact': contact})
 
             body = payload
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
@@ -202,7 +201,7 @@ class _Credentials:
 
         class _Create(API):
             def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/CyberArk/Create', valid_return_codes=[200])
+                super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Create', valid_return_codes=[200])
 
             @property
             @response_property()
@@ -222,12 +221,12 @@ class _Credentials:
                     'CredentialsPath': credentials_path
                 }
 
-                self.response = self._session.post(url=self._url, data=body)
+                self.response = self._post(data=body)
                 return self
 
         class _Update(API):
             def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Credentials/CyberArk/Update', valid_return_codes=[200])
+                super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Update', valid_return_codes=[200])
 
             @property
             @response_property()
@@ -247,5 +246,5 @@ class _Credentials:
                     'CredentialsPath': credentials_path
                 }
 
-                self.response = self._session.post(url=self._url, data=body)
+                self.response = self._post(data=body)
                 return self

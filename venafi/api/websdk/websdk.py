@@ -8,22 +8,20 @@ from api.websdk.endpoints.secret_store import _SecretStore
 
 
 class WebSDK:
-    Authorize = _Authorize()
-
-    def __init__(self, username=None, password=None, certificate=None, session=None):
+    def __init__(self, host: str, username=None, password=None, certificate=None):
         self.username = username
         self.password = password
         self.certificate = certificate
 
-        if session:
-            self.session = session
-        elif username and password:
+        self.base_url = f'https://{host}/vedsdk'
+        self.session = Session(headers={'Content-Type': 'application/json'})
+        self.Authorize = _Authorize(self)
+        if username and password:
             token = self.Authorize.post(username=username, password=password).token
-            self.session = Session(headers=token)
+            self.session.headers.update(token)
         elif certificate:
             raise NotImplementedError('Certificate authentication not available.')
 
-        api_type = self.__class__.__name__.lower()
         self.Identity = _Identity(self)
         self.Config = _Config(self)
         self.Credentials = _Credentials(self)

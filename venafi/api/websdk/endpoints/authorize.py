@@ -1,25 +1,25 @@
 from logger import logger, LogLevels
-from api.session import WEBSDK_URL
-from api.session import Session
+from api.api_base import API, response_property
 
 
-class _Authorize:
-    def __init__(self):
-        self._session = Session({'Content-Type': 'application/json'})
-        self._url = WEBSDK_URL + '/Authorize'
-        self._response = None
+class _Authorize(API):
+    def __init__(self, websdk_obj):
+        super().__init__(
+            api_obj=websdk_obj,
+            url='/Authorize',
+            valid_return_codes=[200]
+        )
         self._username = None
 
     @property
+    @response_property()
     def token(self):
         if self._response.status_code != 200:
-            raise AssertionError('Could not authorize user. Received {e}: {m}.'.format(e=self._response.status_code, m=self._response.reason))
+            raise AssertionError('Could not authorize user {u} to WebSDK. Received {e}: {m}.'.format(
+                u=self._username, e=self._response.status_code, m=self._response.reason))
         token = self._response.json()['APIKey']
-        logger.log(msg=f'{self._username} authenticated.', level=LogLevels.api)
-        return {
-            'X-Venafi-API-Key': token,
-            'Content-Type': 'application/json'
-        }
+        logger.log(msg=f'{self._username} authenticated to WebSDK.', level=LogLevels.api)
+        return {'X-Venafi-API-Key': token}
 
     def post(self, username, password):
         self._username = username
@@ -30,5 +30,5 @@ class _Authorize:
             "Password": password
         }
 
-        self._response = self._session.post(url=self._url, data=body)
+        self._response = self._post(data=body)
         return self

@@ -1,5 +1,4 @@
 from api.api_base import API, response_property
-from api.session import WEBSDK_URL
 from objects.response_objects.identity import Identity
 
 
@@ -16,7 +15,7 @@ class _Identity:
 
     class _Browse(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/Browse', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/Browse', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -31,12 +30,12 @@ class _Identity:
                 "IdentityType": identity_type
             }
 
-            self.response = self._session.post(url=self._url, data=data)
+            self.response = self._post(data=data)
             return self
 
     class _GetAssociatedEntries(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/GetAssociatedEntries', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/GetAssociatedEntries', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -49,7 +48,7 @@ class _Identity:
 
     class _Self(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/Self', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/Self', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -58,12 +57,12 @@ class _Identity:
             return [Identity.Identity(i, self._api_type) for i in result]
 
         def get(self):
-            self.response = self._session.get(url=self._url)
+            self.response = self._get()
             return self
 
     class _GetMembers(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/GetMembers', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/GetMembers', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -76,7 +75,7 @@ class _Identity:
 
     class _GetMemberships(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/GetMemberships', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/GetMemberships', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -89,7 +88,7 @@ class _Identity:
 
     class _ReadAttribute(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/ReadAttribute', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/ReadAttribute', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -101,7 +100,7 @@ class _Identity:
 
     class _SetPassword(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/SetPassword', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/SetPassword', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -113,7 +112,7 @@ class _Identity:
 
     class _Validate(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Identity/Validate', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Identity/Validate', valid_return_codes=[200])
 
         @property
         @response_property()

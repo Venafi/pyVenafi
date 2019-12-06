@@ -20,7 +20,7 @@ class API:
         self._api_obj = api_obj
         self._session = api_obj.session  # type: Session
         self._api_type = api_obj.__class__.__name__.lower()
-        self._url = url
+        self._url = self._api_obj.base_url + url
         self._valid_return_codes = valid_return_codes
 
         self._response = Response()
@@ -64,7 +64,7 @@ class API:
         logger.log(self._url, level=LogLevels.api, prev_frames=2)
         return result
 
-    def _get(self, params):
+    def _get(self, params:dict = None):
         result = self._api_obj.session.get(url=self._url, params=params)
         if self._is_api_key_valid(response=result):
             logger.log(

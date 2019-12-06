@@ -3,10 +3,6 @@ from datetime import datetime
 from tools.logger.log_resources import LogLevels, TextStyle, ForegroundColors, BackgroundColors
 
 
-# >>>>>>>>>> TPP VARIABLES <<<<<<<<<< #
-TPP_HOST = os.getenv('TPP_HOST', '0.0.0.0')
-
-
 # >>>>>>>>>> LOGGING VARIABLES <<<<<<<<<< #
 LOG_LEVEL = os.getenv('LOG_LEVEL', LogLevels.api)
 LOG_TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')

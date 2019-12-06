@@ -1,5 +1,4 @@
 from api.api_base import API, response_property
-from api.session import WEBSDK_URL
 from objects.response_objects.config import Config
 
 
@@ -43,7 +42,7 @@ class _Config:
 
     class _AddDnValue(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/AddDnValue', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/AddDnValue', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -57,13 +56,13 @@ class _Config:
                 'Value': value
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _AddPolicyValue(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/AddPolicyValue', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/AddPolicyValue', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -79,12 +78,12 @@ class _Config:
                 'Locked': locked
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _AddValue(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/AddValue', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/AddValue', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -98,13 +97,13 @@ class _Config:
                 'Value': value,
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ClearAttribute(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ClearAttribute', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ClearAttribute', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -117,13 +116,13 @@ class _Config:
                 'AttributeName': attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ClearPolicyAttribute(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ClearPolicyAttribute', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ClearPolicyAttribute', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -137,12 +136,12 @@ class _Config:
                 'AttributeName': attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _ContainableClasses(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ContainableClasses', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ContainableClasses', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -158,12 +157,12 @@ class _Config:
             body = {
                 'ObjectDN': object_dn
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _CountObjects(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/CountObjects', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/CountObjects', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -184,12 +183,12 @@ class _Config:
             if recursive:
                 body.update({'Recursive': recursive})
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _Create(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/Create', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/Create', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -215,7 +214,7 @@ class _Config:
 
     class _DefaultDN(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/DefaultDN', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/DefaultDN', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -231,13 +230,13 @@ class _Config:
             body = {
                 'DefaultDN': default_dn
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _Delete(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/Delete', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/Delete', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -249,13 +248,13 @@ class _Config:
                 "ObjectDN": object_dn,
                 "Recursive": recursive
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _DnToGuid(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/DnToGuid', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/DnToGuid', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -286,13 +285,13 @@ class _Config:
             body = {
                 "ObjectDN": object_dn,
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _Enumerate(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/Enumerate', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/Enumerate', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -317,7 +316,7 @@ class _Config:
 
     class _EnumerateAll(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/EnumerateAll', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/EnumerateAll', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -334,13 +333,13 @@ class _Config:
             body = {
                 "Pattern": pattern
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _EnumerateObjectsDerivedFrom(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/EnumerateObjectsDerivedFrom', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/EnumerateObjectsDerivedFrom', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -358,13 +357,13 @@ class _Config:
                 "DerivedFrom": derived_from,
                 "Pattern": pattern
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _EnumeratePolicies(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/EnumeratePolicies', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/EnumeratePolicies', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -381,13 +380,13 @@ class _Config:
             body = {
                 "ObjectDN": object_dn
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _Find(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/Find', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/Find', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -405,13 +404,13 @@ class _Config:
                 "Pattern": pattern,
                 "AttributeNames": attribute_names
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _FindContainers(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/FindContainers', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/FindContainers', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -429,13 +428,13 @@ class _Config:
                 "ObjectDN": object_dn,
                 "Recursive": recursive
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _FindObjectsOfClass(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/FindObjectsOfClass', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/FindObjectsOfClass', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -462,13 +461,13 @@ class _Config:
             if recursive:
                 body.update({'Recursive': recursive})
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _FindPolicy(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/FindPolicy', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/FindPolicy', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -497,13 +496,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _GetHighestRevision(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/GetHighestRevision', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/GetHighestRevision', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -522,13 +521,13 @@ class _Config:
             if classes:
                 body.update({'Classes': classes})
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _GetRevision(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/GetRevision', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/GetRevision', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -545,13 +544,13 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _GuidToDn(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/GuidToDn', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/GuidToDn', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -583,13 +582,13 @@ class _Config:
                 "ObjectGUID": object_guid
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _IdInfo(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/IdInfo', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/IdInfo', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -621,13 +620,13 @@ class _Config:
                 "ObjectID": object_id
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _IsValid(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/IsValid', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/IsValid', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -648,13 +647,13 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _MutateObject(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/MutateObject', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/MutateObject', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -667,13 +666,13 @@ class _Config:
                 "Class": class_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _Read(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/Read', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/Read', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -701,13 +700,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ReadAll(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ReadAll', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ReadAll', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -725,13 +724,13 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ReadDn(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ReadDn', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ReadDn', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -749,13 +748,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ReadDnReferences(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ReadDnReferences', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ReadDnReferences', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -774,13 +773,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ReadEffectivePolicy(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ReadEffectivePolicy', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ReadEffectivePolicy', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -813,13 +812,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _ReadPolicy(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/ReadPolicy', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/ReadPolicy', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -848,13 +847,13 @@ class _Config:
                 "Class": class_name
             }
 
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _RemoveDnValue(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/RemoveDnValue', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/RemoveDnValue', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -867,13 +866,13 @@ class _Config:
                 "AttributeName": attribute_name,
                 "Value": value
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _RemovePolicyValue(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/RemovePolicyValue', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/RemovePolicyValue', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -887,13 +886,13 @@ class _Config:
                 "ClassName": class_name,
                 "Value": value
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _RenameObject(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/RenameObject', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/RenameObject', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -905,13 +904,13 @@ class _Config:
                 "ObjectDN": object_dn,
                 "NewObjectDN": new_object_dn
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _Write(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/Write', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/Write', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -923,13 +922,13 @@ class _Config:
                 "ObjectDN": object_dn,
                 "AttributeData": attribute_data
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _WriteDn(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/WriteDn', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/WriteDn', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -942,13 +941,13 @@ class _Config:
                 "AttributeName": attribute_name,
                 "Values": values
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self
 
     class _WritePolicy(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=WEBSDK_URL + '/Config/WritePolicy', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Config/WritePolicy', valid_return_codes=[200])
 
         @property
         @response_property()
@@ -963,6 +962,6 @@ class _Config:
                 "Locked": locked,
                 "Values": values
             }
-            self.response = self._session.post(url=self._url, data=body)
+            self.response = self._post(data=body)
 
             return self

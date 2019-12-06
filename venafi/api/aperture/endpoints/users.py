@@ -1,30 +1,28 @@
 from logger import logger, LogLevels
-from api.session import APERTURE_URL
-from api.session import Session
+from api.api_base import API, response_property
 
 
 class _Users:
     def __init__(self, aperture_obj):
-        self.Authorize = self._Authorize()
+        self.Authorize = self._Authorize(aperture_obj=aperture_obj)
 
-    class _Authorize:
-        def __init__(self):
-            self._session = Session({'Content-Type': 'application/json', 'Referer': APERTURE_URL.rstrip('/api')})
-            self._url = APERTURE_URL + '/users/authorize'
-            self._response = None
+    class _Authorize(API):
+        def __init__(self, aperture_obj):
+            super().__init__(
+                api_obj=aperture_obj,
+                url='/users/authorize',
+                valid_return_codes=[200]
+            )
             self._username = None
 
         @property
         def token(self):
             if self._response.status_code != 200:
-                raise AssertionError('Could not authorize user. Received {e}: {m}.'.format(e=self._response.status_code, m=self._response.reason))
+                raise AssertionError('Could not authorize user {u} to Aperture API. Received {e}: {m}.'.format(
+                    u=self._username, e=self._response.status_code, m=self._response.reason))
             token = "VENAFI " + self._response.json()['apiKey']
-            logger.log(msg=f'{self._username} authenticated.', level=LogLevels.api)
-            return {
-                'Authorization': token,
-                'Content-Type': 'application/json',
-                'Referer': APERTURE_URL.rstrip('/api')
-            }
+            logger.log(msg=f'{self._username} authenticated to Aperture API.', level=LogLevels.api)
+            return {'Authorization': token}
 
         def post(self, username, password):
             self._username = username
@@ -35,5 +33,5 @@ class _Users:
                 "password": password
             }
 
-            self._response = self._session.post(url=self._url, data=body)
+            self._response = self._post(data=body)
             return self
