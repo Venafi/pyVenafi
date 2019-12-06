@@ -3,4 +3,4 @@ venv/
 *.pyc
 testfile.py
 /venafi/tools/logger/logs/
-/venafi/config/settings.py
+/venafi/tools/logger/config.py

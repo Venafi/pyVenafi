@@ -1,4 +1,4 @@
-from enums.resultcodes import ResultCodes
+from properties.resultcodes import ResultCodes
 
 
 class Certificate:

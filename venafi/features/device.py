@@ -1,4 +1,4 @@
-from enums.config import ConfigClass, DeviceAttributes
+from properties.config import ConfigClass, DeviceAttributes
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 

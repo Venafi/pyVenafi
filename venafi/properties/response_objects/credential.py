@@ -1,7 +1,7 @@
-from enums.resultcodes import ResultCodes
+from properties.resultcodes import ResultCodes
 
 
-class Credentials:
+class Credential:
     class Result:
         def __init__(self, code):
             self.code = code

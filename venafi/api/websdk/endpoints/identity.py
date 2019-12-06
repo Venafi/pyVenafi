@@ -1,5 +1,5 @@
 from api.api_base import API, response_property
-from objects.response_objects.identity import Identity
+from properties.response_objects.identity import Identity
 
 
 class _Identity:

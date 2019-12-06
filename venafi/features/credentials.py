@@ -1,6 +1,6 @@
 import time
 from typing import *
-from enums.config import CredentialAttributes
+from properties.config import CredentialAttributes
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 

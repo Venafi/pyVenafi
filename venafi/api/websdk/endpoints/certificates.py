@@ -1,5 +1,5 @@
 from api.api_base import API, response_property
-from objects.response_objects.certificate import Certificate
+from properties.response_objects.certificate import Certificate
 
 
 class _Certificates(API):

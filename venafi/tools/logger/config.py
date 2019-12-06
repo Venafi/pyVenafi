@@ -4,6 +4,9 @@ from tools.logger.log_resources import LogLevels, TextStyle, ForegroundColors, B
 
 
 # >>>>>>>>>> LOGGING VARIABLES <<<<<<<<<< #
+LOGGING_ENABLED = True
+LOG_DIR = ''
+LOG_FILENAME = 'logfile'
 LOG_LEVEL = os.getenv('LOG_LEVEL', LogLevels.api)
 LOG_TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 LOG_TO_JSON = True  # If this is False, then OPEN_HTML_ON_FINISH will not be evaluated.

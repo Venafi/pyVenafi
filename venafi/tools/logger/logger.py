@@ -2,24 +2,28 @@ import os
 import sys
 import traceback
 import inspect
-from config.settings import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
-    LOG_CRITICAL_COLOR, LOG_TEST_COLOR, LOG_FEATURE_COLOR, LOG_API_COLOR, LOG_LEVEL
+from tools.logger.config import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
+    LOG_CRITICAL_COLOR, LOG_TEST_COLOR, LOG_FEATURE_COLOR, LOG_API_COLOR, LOG_LEVEL, \
+    LOG_DIR, LOG_FILENAME, LOGGING_ENABLED
 from tools.logger.log_resources import LogLevels
 import webbrowser
 import json
 
 
-LOG_DIR = '%s/logs' % os.path.split(__file__)[0]
-if not os.path.exists(LOG_DIR):
-    os.mkdir(LOG_DIR)
-
-LOG_FILE_WITHOUT_EXT = '%s/logfile_%s' % (LOG_DIR, LOG_TIMESTAMP)
+LOG_DIRECTORY = LOG_DIR or '%s/logs' % os.path.split(__file__)[0]
+LOG_FILE_WITHOUT_EXT = '%s/%s_%s' % (LOG_DIRECTORY, LOG_FILENAME, LOG_TIMESTAMP)
+if LOGGING_ENABLED and not os.path.exists(LOG_DIRECTORY):
+    os.mkdir(LOG_DIRECTORY)
 
 
 def log_to_html():
-    json_file = "%s.json" % LOG_FILE_WITHOUT_EXT
+    if not LOGGING_ENABLED:
+        print(f'Cannot open log file because LOGGING_ENABLED = False.')
+        return
+
+    json_file = f'{LOG_FILE_WITHOUT_EXT}.json'
     if not os.path.exists(json_file):
-        print("Cannot open %s because it does not exist." % json_file)
+        print(f'Cannot open "{json_file}" because it does not exist.')
         return
 
     log_item_counter = 0
@@ -423,14 +427,48 @@ def log_to_html():
 def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
 
 
+def singleton(cls, *args, **kwargs):
+    instances = {}
+
+    def _singleton():
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return _singleton
+
+
+def initialize_logger(cls, *args, **kwargs):
+    def decorate():
+        if not LOGGING_ENABLED:
+            def _disable_everything(func):
+                def __disable_everything(self, *args, **kwargs):
+                    return
+                return __disable_everything
+
+            for attr, fn in inspect.getmembers(cls, inspect.isroutine):
+                if callable(getattr(cls, attr)) and not fn.__name__.startswith('__'):
+                    setattr(cls, attr, _disable_everything(getattr(cls, attr)))
+        return cls(*args, **kwargs)
+    return decorate
+
+
+@initialize_logger
+@singleton
 class Logger:
     def __init__(self):
-        self.no_op = (lambda *args, **kwargs: None)
         self.log = self._log
         self.log_method = self._log_method
         self.log_exception = self._log_exception
 
-    def disable_all_logging(self, level: str = LogLevels.main, why: str = '', func_obj=None, reference_lastlineno: bool = False):
+        self._disabled_at_level = -1
+
+    def no_op(self, *args, **kwargs): pass
+
+    def disable_all_logging(self, level: int = LogLevels.main, why: str = '', func_obj=None, reference_lastlineno: bool = False):
+        if level < self._disabled_at_level:
+            return
+
+        self._disabled_at_level = level
         if func_obj:
             self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
         else:
@@ -439,16 +477,20 @@ class Logger:
         self.log_method = self.no_op
         self.log_exception = self.no_op
 
-    def enable_all_logging(self, level: str = LogLevels.main, why: str = '', func_obj=None, reference_lastlineno: bool = False):
+    def enable_all_logging(self, level: int = LogLevels.main, why: str = '', func_obj=None, reference_lastlineno: bool = False):
+        if self._disabled_at_level > level:
+            return
+
         self.log = self._log
         self.log_method = self._log_method
         self.log_exception = self._log_exception
+        self._disabled_at_level = -1
         if func_obj:
             self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
-    def _create_log(self, msg: str, level: str, outerframes: inspect.FrameInfo = None, skip_console: bool = False,
+    def _create_log(self, msg: str, level: int, outerframes: inspect.FrameInfo = None, skip_console: bool = False,
                     html_formatted_msg: str = None, func_obj=None, reference_lastlineno: bool = False):
         if outerframes:
             source, startlineno = inspect.getsourcelines(outerframes[0])
@@ -461,7 +503,7 @@ class Logger:
             filepath, filename = os.path.split(path)
         else:
             raise ValueError('Must supply either "outerframes" or "func_obj".')
-        if not skip_console:
+        if not skip_console and level > LOG_LEVEL:
             file_text_color = LogColors.level_color.get(level)
             file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
             print(file_text + str(msg))
@@ -472,7 +514,7 @@ class Logger:
                 json.dump({"path": path, "filename": filename, "lineno": lineno, "text": str(json_msg), "source": source, "log_level": level}, f)
                 f.write('\n')
 
-    def _log(self, msg: str, level: str = LogLevels.main, critical: bool = False, prev_frames: int = 1):
+    def _log(self, msg: str, level: int = LogLevels.main, critical: bool = False, prev_frames: int = 1):
         frame = inspect.currentframe()
         outerframes = inspect.getouterframes(frame)[prev_frames]
         self._create_log(msg=msg, outerframes=outerframes, level=level if not critical else LogLevels.critical)
@@ -489,7 +531,7 @@ class Logger:
         html_msg = '<span style="white-space: pre-wrap; color: red">%s</span>' % msg
         self._create_log(msg=msg, outerframes=outerframes, level=LogLevels.critical, skip_console=skip_console, html_formatted_msg=html_msg)
 
-    def _log_method(self, func_obj, msg: str, level: str = LogLevels.main, reference_lastlineno: bool = False):
+    def _log_method(self, func_obj, msg: str, level: int = LogLevels.main, reference_lastlineno: bool = False):
         self._create_log(msg=msg, func_obj=func_obj, level=level, reference_lastlineno=reference_lastlineno)
 
 

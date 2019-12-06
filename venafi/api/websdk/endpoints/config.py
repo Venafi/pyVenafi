@@ -1,5 +1,5 @@
 from api.api_base import API, response_property
-from objects.response_objects.config import Config
+from properties.response_objects.config import Config
 
 
 class _Config:

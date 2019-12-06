@@ -1,5 +1,5 @@
 from api.api_base import API, response_property
-from objects.response_objects.secret_store import SecretStore
+from properties.response_objects.secret_store import SecretStore
 
 
 class _SecretStore:

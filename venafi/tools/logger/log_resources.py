@@ -1,8 +1,8 @@
 class LogLevels:
     api = 0
-    feature = 1
-    main = 2
-    critical = 9
+    feature = 10
+    main = 20
+    critical = 90
 
 
 class ForegroundColors:

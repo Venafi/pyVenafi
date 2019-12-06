@@ -1,4 +1,4 @@
-from enums.config import ConfigClass, ApplicationAttributes, ApplicationAttributeValues
+from properties.config import ConfigClass, ApplicationAttributes, ApplicationAttributeValues
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 

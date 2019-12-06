@@ -1,7 +1,7 @@
 from typing import *
 import time
 from api.api_base import API, response_property
-from objects.response_objects.credential import Credentials
+from properties.response_objects.credential import Credential
 
 
 class _Credentials:
@@ -21,7 +21,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            return Credentials.Result(self.json_response(key='Result'))
+            return Credential.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str, friendly_name: str, values: List[Dict], password: str = None, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
@@ -55,7 +55,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            return Credentials.Result(self.json_response(key='Result'))
+            return Credential.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str):
             body = {
@@ -72,13 +72,13 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            return Credentials.Result(self.json_response(key='Result'))
+            return Credential.Result(self.json_response(key='Result'))
 
         @property
         @response_property()
         def credential_infos(self):
             result = self.json_response(key='CredentialInfos')
-            return [Credentials.CredentialInfo(cred_info) for cred_info in result]
+            return [Credential.CredentialInfo(cred_info) for cred_info in result]
 
         def post(self, credential_path: str, pattern: str = None, recursive: bool = False):
             body = {
@@ -100,7 +100,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            return Credentials.Result(self.json_response(key='Result'))
+            return Credential.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str, new_credential_path: str):
             body = {
@@ -138,13 +138,13 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            return Credentials.Result(self.json_response(key='Result'))
+            return Credential.Result(self.json_response(key='Result'))
         
         @property
         @response_property()
         def values(self):
             result = self.json_response(key='Values')
-            return [Credentials.NameTypeValue(ntv) for ntv in result]
+            return [Credential.NameTypeValue(ntv) for ntv in result]
         
         def post(self, credential_path: str):
             body = {
@@ -161,7 +161,7 @@ class _Credentials:
         @property
         @response_property()
         def result(self):
-            return Credentials.Result(self.json_response(key='Result'))
+            return Credential.Result(self.json_response(key='Result'))
 
         def post(self, credential_path: str, friendly_name: str, values: List[Dict], description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
@@ -206,7 +206,7 @@ class _Credentials:
             @property
             @response_property()
             def result(self):
-                return Credentials.Result(self.json_response(key='Result'))
+                return Credential.Result(self.json_response(key='Result'))
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):
@@ -231,7 +231,7 @@ class _Credentials:
             @property
             @response_property()
             def result(self):
-                return Credentials.Result(self.json_response(key='Result'))
+                return Credential.Result(self.json_response(key='Result'))
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):

@@ -2,7 +2,7 @@ import inspect
 import jsonpickle
 import time
 from logger import logger, LogLevels
-from enums.secret_store import Namespaces
+from properties.secret_store import Namespaces
 from api.authenticate import Authenticate
 
 jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)

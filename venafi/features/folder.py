@@ -1,6 +1,5 @@
 from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
-from enums.config import ConfigClass, FolderAttributes
-from enums.secret_store import Namespaces
+from properties.config import ConfigClass, FolderAttributes
 
 
 @feature()
