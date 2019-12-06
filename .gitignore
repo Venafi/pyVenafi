@@ -4,3 +4,4 @@ venv/
 testfile.py
 /venafi/tools/logger/logs/
 /venafi/tools/logger/config.py
+test/
