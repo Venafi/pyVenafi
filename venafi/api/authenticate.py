@@ -10,12 +10,13 @@ class Authenticate:
             raise ValueError('Invalid preference. Must be one of "websdk" or "aperture".')
         self.preference = preference.lower()
 
+        self._host = host
         self._username = username
         self._password = password
         self._certificate = certificate
 
     def re_authenticate(self):
-        self.__init__(username=self._username, password=self._password, certificate=self._certificate,
+        self.__init__(host=self._host, username=self._username, password=self._password, certificate=self._certificate,
                       preference=self.preference)
 
 

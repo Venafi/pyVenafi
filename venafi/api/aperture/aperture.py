@@ -5,6 +5,7 @@ from api.aperture.endpoints.configobjects import _ConfigObjects
 
 class Aperture:
     def __init__(self, host: str, username=None, password=None, certificate=None):
+        self.host = host
         self.username = username
         self.password = password
         self.certificate = certificate
@@ -24,4 +25,4 @@ class Aperture:
         self.ConfigObjects = _ConfigObjects(aperture_obj=self)
 
     def re_authenticate(self):
-        self.__init__(username=self.username, password=self.password, certificate=self.certificate)
+        self.__init__(host=self.host, username=self.username, password=self.password, certificate=self.certificate)
