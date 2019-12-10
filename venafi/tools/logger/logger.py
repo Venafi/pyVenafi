@@ -2,13 +2,16 @@ import os
 import sys
 import traceback
 import inspect
-from tools.logger.config import LOG_TIMESTAMP, LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
+from datetime import datetime
+from tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
     LOG_CRITICAL_COLOR, LOG_TEST_COLOR, LOG_FEATURE_COLOR, LOG_API_COLOR, LOG_LEVEL, \
     LOG_DIR, LOG_FILENAME, LOGGING_ENABLED
 from tools.logger.log_resources import LogLevels
 import webbrowser
 import json
 
+
+LOG_TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
 LOG_DIRECTORY = LOG_DIR or '%s/logs' % os.path.split(__file__)[0]
 LOG_FILE_WITHOUT_EXT = '%s/%s_%s' % (LOG_DIRECTORY, LOG_FILENAME, LOG_TIMESTAMP)
