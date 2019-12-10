@@ -53,58 +53,40 @@ class API:
         return response.status_code == 401 and invalid_api_message_match
 
     def _delete(self):
-        result = self._api_obj.session.delete(url=self._url)
-        if self._is_api_key_valid(response=result):
-            logger.log(
-                msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-                level=LogLevels.api
-            )
-            self._api_obj.re_authenticate()
+        self._log_rest_call()
+        response = self._api_obj.session.delete(url=self._url)
+        self._log_response(response=response)
+        if self._is_api_key_valid(response=response):
+            self._re_authenticate()
             return self._delete()
-        logger.log(self._url, level=LogLevels.api, prev_frames=2)
-        return result
+        return response
 
     def _get(self, params:dict = None):
-        result = self._api_obj.session.get(url=self._url, params=params)
-        if self._is_api_key_valid(response=result):
-            logger.log(
-                msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-                level=LogLevels.api
-            )
-            self._api_obj.re_authenticate()
+        self._log_rest_call(data=params)
+        response = self._api_obj.session.get(url=self._url, params=params)
+        self._log_response(response=response)
+        if self._is_api_key_valid(response=response):
+            self._re_authenticate()
             return self._get(params=params)
-        if params:
-            pretty_params = json.dumps(params, indent=4)
-            logger.log(f'{self._url}: {pretty_params}', level=LogLevels.api, prev_frames=2)
-        else:
-            logger.log(self._url, level=LogLevels.api, prev_frames=2)
-        return result
+        return response
 
-    def _post(self, data):
-        result = self._api_obj.session.post(url=self._url, data=data)
-        if self._is_api_key_valid(response=result):
-            logger.log(
-                msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-                level=LogLevels.api
-            )
-            self._api_obj.re_authenticate()
+    def _post(self, data: dict):
+        self._log_rest_call(data=data)
+        response = self._api_obj.session.post(url=self._url, data=data)
+        self._log_response(response=response)
+        if self._is_api_key_valid(response=response):
+            self._re_authenticate()
             result = self._api_obj.session.post(url=self._url, data=data)
-        payload = json.dumps(data, indent=4)
-        logger.log(f'{self._url}: {payload}', level=LogLevels.api, prev_frames=2)
-        return result
+        return response
 
-    def _put(self, data):
-        payload = json.dumps(data, indent=4)
-        result = self._api_obj.session.put(url=self._url, data=data)
-        if self._is_api_key_valid(response=result):
-            logger.log(
-                msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-                level=LogLevels.api
-            )
-            self._api_obj.re_authenticate()
+    def _put(self, data: dict):
+        self._log_rest_call(data=data)
+        response = self._api_obj.session.put(url=self._url, data=data)
+        self._log_response(response=response)
+        if self._is_api_key_valid(response=response):
+            self._re_authenticate()
             return self._put(data)
-        logger.log(f'{self._url}: {payload}', level=LogLevels.api, prev_frames=2)
-        return result
+        return response
 
     def _validate(self):
         self._validated = True
@@ -119,10 +101,32 @@ class API:
             raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
                 self.response.status_code, str(self._valid_return_codes), json.dumps(self.response.text, indent=4)))
 
-        pretty_json = json.dumps(self.response.json(), indent=4)
+    def _re_authenticate(self):
         logger.log(
-            msg=f'Response to {self._url} is valid. Got {self.response.status_code}: {pretty_json}',
+            msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
             level=LogLevels.api
+        )
+        self._api_obj.re_authenticate()
+
+    def _log_rest_call(self, data: dict = None):
+        if data:
+            payload = json.dumps(data, indent=4)
+            logger.log(f'{self._url}: {payload}', level=LogLevels.api, prev_frames=3)
+        else:
+            logger.log(self._url, level=LogLevels.api, prev_frames=3)
+
+    def _log_response(self, response: Response):
+        try:
+            pretty_json = json.dumps(response.json(), indent=4)
+        except json.JSONDecodeError:
+            pretty_json = response.text or response.reason or 'No Content'
+        except:
+            pretty_json = 'No Content'
+
+        logger.log(
+            msg=f'Response to {self._url} is {response.status_code}: {pretty_json}',
+            level=LogLevels.api,
+            prev_frames=3
         )
 
 

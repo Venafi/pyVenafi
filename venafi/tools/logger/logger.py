@@ -506,7 +506,7 @@ class Logger:
             filepath, filename = os.path.split(path)
         else:
             raise ValueError('Must supply either "outerframes" or "func_obj".')
-        if not skip_console and level > LOG_LEVEL:
+        if not skip_console and level >= LOG_LEVEL:
             file_text_color = LogColors.level_color.get(level)
             file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
             print(file_text + str(msg))
