@@ -39,8 +39,11 @@ class API:
         result = self.response.json()
         if error_key and error_key in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
-        value = result if not key else result[key]
-        return value
+        if not key:
+            return result
+        for k in result.keys():
+            if key.lower() == k.lower():
+                return result[k]
 
     def _is_api_key_valid(self, response=None):
         if self._api_type == 'websdk':
