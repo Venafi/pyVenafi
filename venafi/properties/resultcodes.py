@@ -277,6 +277,35 @@ class ResultCodes:
         1073741824: 'RetryLater'
     }
 
+    Metadata = {
+         0: 'Success',
+         1: 'InvalidConfigObject',
+         2: 'InvalidDN',
+         3: 'InvalidName',
+         4: 'InvalidItem',
+         5: 'InvalidClass',
+         6: 'InvalidMetadataObject',
+         7: 'InvalidRights',
+         8: 'ItemIsNull',
+         9: 'ItemAlreadyExists',
+        10: 'ItemTypeUnknown',
+        11: 'ConfigCreateFailed',
+        12: 'ConfigWriteFailed',
+        13: 'ConfigDeleteFailed',
+        14: 'MetadataInUse',
+        15: 'NoAllowedValues',
+        16: 'AllowedValueDoesNotExist',
+        17: 'ValueNotInAllowedList',
+        18: 'ItemNotValidForClass',
+        19: 'NameTooLong',
+        20: 'TooManyContainers',
+        21: 'ConfigDnNotContainer',
+        22: 'InvalidPolicyState',
+        23: 'ConfigLockFailed',
+        24: 'ConfigReadFailed',
+        25: 'RemoteError'
+    }
+
     SecretStore = {
          0: 'Success',
          1: 'InvalidCallingAssembly',
