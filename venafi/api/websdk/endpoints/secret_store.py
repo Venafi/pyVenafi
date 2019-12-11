@@ -163,7 +163,7 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            self.response = self._post(url=-self._url, data=body)
+            self.response = self._post(data=body)
             return self
 
     class _LookupByAssociation(API):

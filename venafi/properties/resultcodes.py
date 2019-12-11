@@ -237,6 +237,30 @@ class ResultCodes:
         512: 'MismatchedCertificate'
     }
 
+    Discovery = {
+          0: 'None',
+          1: 'Success',
+          2: 'InvalidArgument',
+          3: 'InvalidArgumentRange',
+          4: 'MismatchedArguments',
+          5: 'NotImplemented',
+          6: 'InvalidDestinationList',
+          7: 'InsufficientPrivileges',
+          8: 'UnexpectedAssemblyError',
+         99: 'ConfigAssemblyError',
+        100: 'InvalidDiscoveryDefinition',
+        102: 'PendingPreviousRun',
+        500: 'DriverMissingDSN',
+        501: 'DriverMissingDatabaseName',
+        502: 'DriverDatabaseError',
+        503: 'DriverTransactionError',
+        504: 'DriverTransactionCollision',
+        505: 'DriverGenerationUpdateError',
+        506: 'DriverConnectionError',
+        507: 'DriverUnexpectedQueryResult',
+        600: 'RemoveVaultEntryError',
+    }
+
     EndEntityValidation = {
         -2147483648: 'UnexpectedError',
           0: 'None',
@@ -278,6 +302,20 @@ class ResultCodes:
         21: 'InvalidKey',
         22: 'QueryError',
         23: 'SecurityGroupNotImplemented'
+    }
+
+    ToDo = {
+          0 : 'Success',
+          1 : 'MissingDSN',
+          2 : 'MissingDatabaseName',
+         99 : 'UnexpectedAssemblyError',
+        100	: 'DatabaseError',
+        101	: 'DatabaseConnectionUnavailable',
+        102	: 'TransactionError',
+        103	: 'TransactionCollision',
+        200	: 'InsufficientPrivileges',
+        300	: 'IdentifierDoesNotExist',
+        301	: 'IdentifierAlreadyExists',
     }
 
     ValidationProtocols = {
