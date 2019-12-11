@@ -5,6 +5,7 @@ from api.websdk.endpoints.client import _Client
 from api.websdk.endpoints.config import _Config
 from api.websdk.endpoints.config_schema import _ConfigSchema
 from api.websdk.endpoints.credentials import _Credentials
+from api.websdk.endpoints.crypto import _Crypto
 from api.websdk.endpoints.certificates import _Certificates
 from api.websdk.endpoints.secret_store import _SecretStore
 
@@ -30,6 +31,7 @@ class WebSDK:
         self.Config = _Config(self)
         self.ConfigSchema = _ConfigSchema(self)
         self.Credentials = _Credentials(self)
+        self.Crypto = _Crypto(self)
         self.Certificates = _Certificates(self)
         self.SecretStore = _SecretStore(self)
 
