@@ -98,8 +98,9 @@ class API:
             raise TypeError("Expected response object, but got %s." % type(self.response))
 
         if self.response.status_code not in self._valid_return_codes:
+            error_msg = self.response.text or self.response.reason or 'No error message found.'
             raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
-                self.response.status_code, str(self._valid_return_codes), json.dumps(self.response.text, indent=4)))
+                self.response.status_code, str(self._valid_return_codes), json.dumps(error_msg, indent=4)))
 
     def _re_authenticate(self):
         logger.log(
