@@ -10,6 +10,7 @@ from api.websdk.endpoints.discovery import _Discovery
 from api.websdk.endpoints.identity import _Identity
 from api.websdk.endpoints.log import _Log
 from api.websdk.endpoints.metadata import _Metadata
+from api.websdk.endpoints.processing_engines import _ProcessingEngines
 from api.websdk.endpoints.secret_store import _SecretStore
 
 
@@ -39,6 +40,7 @@ class WebSDK:
         self.Identity = _Identity(self)
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)
+        self.ProcessingEngines = _ProcessingEngines(self)
         self.SecretStore = _SecretStore(self)
 
     def re_authenticate(self):
