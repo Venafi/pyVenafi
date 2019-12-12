@@ -35,6 +35,10 @@ class API:
         self._validated = False
         self._response = value
 
+    def assert_valid_response(self):
+        if not self._validated:
+            self._validate()
+
     def json_response(self, key: str = None, error_key: str = None):
         result = self.response.json()
         if error_key and error_key in result.keys():
@@ -79,7 +83,7 @@ class API:
         self._log_response(response=response)
         if self._is_api_key_valid(response=response):
             self._re_authenticate()
-            result = self._api_obj.session.post(url=self._url, data=data)
+            return self._post(data=data)
         return response
 
     def _put(self, data: dict):
@@ -103,7 +107,7 @@ class API:
         if self.response.status_code not in self._valid_return_codes:
             error_msg = self.response.text or self.response.reason or 'No error message found.'
             raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
-                self.response.status_code, str(self._valid_return_codes), json.dumps(error_msg, indent=4)))
+                self.response.status_code, str(self._valid_return_codes), error_msg))
 
     def _re_authenticate(self):
         logger.log(
@@ -115,9 +119,9 @@ class API:
     def _log_rest_call(self, data: dict = None):
         if data:
             payload = json.dumps(data, indent=4)
-            logger.log(f'{self._url}: {payload}', level=LogLevels.api, prev_frames=3)
+            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.api, prev_frames=3)
         else:
-            logger.log(self._url, level=LogLevels.api, prev_frames=3)
+            logger.log(f'URL: {self._url}', level=LogLevels.api, prev_frames=3)
 
     def _log_response(self, response: Response):
         try:
@@ -128,7 +132,7 @@ class API:
             pretty_json = 'No Content'
 
         logger.log(
-            msg=f'Response to {self._url} is {response.status_code}: {pretty_json}',
+            msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}',
             level=LogLevels.api,
             prev_frames=3
         )
