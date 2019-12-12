@@ -10,7 +10,10 @@ from api.websdk.endpoints.discovery import _Discovery
 from api.websdk.endpoints.identity import _Identity
 from api.websdk.endpoints.log import _Log
 from api.websdk.endpoints.metadata import _Metadata
+from api.websdk.endpoints.revoke import _Revoke
+from api.websdk.endpoints.system_status import _SystemStatus
 from api.websdk.endpoints.secret_store import _SecretStore
+from api.websdk.endpoints.workflow import _Workflow
 
 
 class WebSDK:
@@ -39,7 +42,10 @@ class WebSDK:
         self.Identity = _Identity(self)
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)
+        self.Revoke = _Revoke(self)
+        self.SystemStatus = _SystemStatus(self)
         self.SecretStore = _SecretStore(self)
+        self.Workflow = _Workflow(self)
 
     def re_authenticate(self):
         self.__init__(host=self.host, username=self.username, password=self.password, certificate=self.certificate)

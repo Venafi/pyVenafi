@@ -380,3 +380,15 @@ class ResultCodes:
         4080: "SSL 3.0, TLS 1.0, TLS 1.1, TLS 1.2",
         4092: "SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1, TLS 1.2"
     }
+    
+    Workflow = {
+        0: 'None',
+        1: 'Success',
+        2: 'GenericFailure',
+        3: 'TicketDoesNotExist',
+        4: 'InsufficientPrivileges',
+        5: 'BadArguments',
+        6: 'ObjectDoesNotExist',
+        7: 'RemoteError',
+        8: 'WorkflowObjectDoesNotExist',
+    }
