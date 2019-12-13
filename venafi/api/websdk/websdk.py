@@ -16,6 +16,7 @@ from api.websdk.endpoints.revoke import _Revoke
 from api.websdk.endpoints.system_status import _SystemStatus
 from api.websdk.endpoints.secret_store import _SecretStore
 from api.websdk.endpoints.workflow import _Workflow
+from api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
 
 
 class WebSDK:
@@ -47,9 +48,10 @@ class WebSDK:
         self.Permissions = _Permissions(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
-        self.SystemStatus = _SystemStatus(self)
         self.SecretStore = _SecretStore(self)
+        self.SystemStatus = _SystemStatus(self)
         self.Workflow = _Workflow(self)
+        self.X509CertificateStore = _X509CertificateStore(self)
 
     def re_authenticate(self):
         self.__init__(host=self.host, username=self.username, password=self.password, certificate=self.certificate)
