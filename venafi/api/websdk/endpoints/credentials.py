@@ -1,6 +1,6 @@
 from typing import *
 import time
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.credential import Credential
 
 
@@ -19,9 +19,9 @@ class _Credentials:
             super().__init__(api_obj=websdk_obj, url='/Credentials/Create', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Credential.Result(self.json_response(key='Result'))
+            return Credential.Result(self._from_json(key='Result'))
 
         def post(self, credential_path: str, friendly_name: str, values: List[Dict], password: str = None, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
@@ -44,7 +44,7 @@ class _Credentials:
             if contact:
                 body.update({'Contact': contact})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -53,16 +53,16 @@ class _Credentials:
             super().__init__(api_obj=websdk_obj, url='/Credentials/Delete', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Credential.Result(self.json_response(key='Result'))
+            return Credential.Result(self._from_json(key='Result'))
 
         def post(self, credential_path: str):
             body = {
                 'CredentialPath': credential_path
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Enumerate(API):
@@ -70,14 +70,14 @@ class _Credentials:
             super().__init__(api_obj=websdk_obj, url='/Credentials/Enumerate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Credential.Result(self.json_response(key='Result'))
+            return Credential.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def credential_infos(self):
-            result = self.json_response(key='CredentialInfos')
+            result = self._from_json(key='CredentialInfos')
             return [Credential.CredentialInfo(cred_info) for cred_info in result]
 
         def post(self, credential_path: str, pattern: str = None, recursive: bool = False):
@@ -90,7 +90,7 @@ class _Credentials:
                 body.update({'Pattern': pattern})
 
             body = body
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Rename(API):
@@ -98,9 +98,9 @@ class _Credentials:
             super().__init__(api_obj=websdk_obj, url='/Credentials/Rename', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Credential.Result(self.json_response(key='Result'))
+            return Credential.Result(self._from_json(key='Result'))
 
         def post(self, credential_path: str, new_credential_path: str):
             body = {
@@ -108,7 +108,7 @@ class _Credentials:
                 'NewCredentialPath': new_credential_path
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Retrieve(API):
@@ -116,34 +116,34 @@ class _Credentials:
             super().__init__(api_obj=websdk_obj, url='/Credentials/Retrieve', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def classname(self):
-            return self.json_response(key='Classname')
+            return self._from_json(key='Classname')
 
         @property
-        @response_property()
+        @json_response_property()
         def description(self):
-            return self.json_response(key='Description')
+            return self._from_json(key='Description')
 
         @property
-        @response_property()
+        @json_response_property()
         def expiration(self):
-            return self.json_response(key='Expiration')
+            return self._from_json(key='Expiration')
 
         @property
-        @response_property()
+        @json_response_property()
         def friendly_name(self):
-            return self.json_response(key='FriendlyName')
+            return self._from_json(key='FriendlyName')
         
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Credential.Result(self.json_response(key='Result'))
+            return Credential.Result(self._from_json(key='Result'))
         
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            result = self.json_response(key='Values')
+            result = self._from_json(key='Values')
             return [Credential.NameTypeValue(ntv) for ntv in result]
         
         def post(self, credential_path: str):
@@ -151,7 +151,7 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
             
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Update(API):
@@ -159,9 +159,9 @@ class _Credentials:
             super().__init__(api_obj=websdk_obj, url='/Credentials/Update', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Credential.Result(self.json_response(key='Result'))
+            return Credential.Result(self._from_json(key='Result'))
 
         def post(self, credential_path: str, friendly_name: str, values: List[Dict], description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
@@ -190,7 +190,7 @@ class _Credentials:
                 payload.update({'Contact': contact})
 
             body = payload
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -204,9 +204,9 @@ class _Credentials:
                 super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Create', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
-                return Credential.Result(self.json_response(key='Result'))
+                return Credential.Result(self._from_json(key='Result'))
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):
@@ -221,7 +221,7 @@ class _Credentials:
                     'CredentialsPath': credentials_path
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
                 return self
 
         class _Update(API):
@@ -229,9 +229,9 @@ class _Credentials:
                 super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Update', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
-                return Credential.Result(self.json_response(key='Result'))
+                return Credential.Result(self._from_json(key='Result'))
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):
@@ -246,5 +246,5 @@ class _Credentials:
                     'CredentialsPath': credentials_path
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
                 return self

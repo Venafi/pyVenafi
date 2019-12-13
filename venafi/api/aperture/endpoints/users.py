@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from logger import logger, LogLevels
 import json
 
@@ -16,10 +16,10 @@ class _Users:
             )
 
         @property
-        @response_property()
+        @json_response_property()
         def token(self):
             logger.log('Aperture API Key retrieved.', level=LogLevels.api)
-            token = "VENAFI " + self._response.json()['apiKey']
+            token = "VENAFI " + self._from_json('apiKey')
             return {'Authorization': token}
 
         def post(self, username, password):
@@ -35,6 +35,6 @@ class _Users:
             logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.api)
 
             body['password'] = password
-            self.response = self._session.post(url=self._url, data=body)
+            self.json_response = self._session.post(url=self._url, data=body)
 
             return self

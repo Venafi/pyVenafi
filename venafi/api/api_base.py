@@ -5,7 +5,7 @@ from requests import Response
 from logger import logger, LogLevels
 
 
-def response_property():
+def json_response_property():
     def pre_validation(func):
         def wrap(self, *args, **kwargs):
             if not self._validated:
@@ -23,24 +23,24 @@ class API:
         self._url = self._api_obj.base_url + url
         self._valid_return_codes = valid_return_codes
 
-        self._response = Response()
+        self._json_response = Response()
         self._validated = False
 
     @property
-    def response(self):
-        return self._response
+    def json_response(self):
+        return self._json_response
 
-    @response.setter
-    def response(self, value):
+    @json_response.setter
+    def json_response(self, value):
         self._validated = False
-        self._response = value
+        self._json_response = value
 
     def assert_valid_response(self):
         if not self._validated:
             self._validate()
 
-    def json_response(self, key: str = None, error_key: str = None):
-        result = self.response.json()
+    def _from_json(self, key: str = None, error_key: str = None):
+        result = self.json_response.json()
         if error_key and error_key in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
         if not key:
@@ -101,13 +101,13 @@ class API:
         if not self._valid_return_codes:
             raise ValueError('No valid return codes were provided, so the response to %s cannot be validated.' % self._url)
 
-        if not isinstance(self.response, Response):
-            raise TypeError("Expected response object, but got %s." % type(self.response))
+        if not isinstance(self.json_response, Response):
+            raise TypeError("Expected response object, but got %s." % type(self.json_response))
 
-        if self.response.status_code not in self._valid_return_codes:
-            error_msg = self.response.text or self.response.reason or 'No error message found.'
+        if self.json_response.status_code not in self._valid_return_codes:
+            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
             raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
-                self.response.status_code, str(self._valid_return_codes), error_msg))
+                self.json_response.status_code, str(self._valid_return_codes), error_msg))
 
     def _re_authenticate(self):
         logger.log(

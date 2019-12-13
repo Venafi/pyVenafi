@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.client import Client
 
 
@@ -10,11 +10,11 @@ class _Client(API):
         self.Work = self._Work(websdk_obj=websdk_obj)
 
     @property
-    @response_property()
+    @json_response_property()
     def clients(self):
-        if self.response.status_code == 204:
+        if self.json_response.status_code == 204:
             return []
-        return [Client.Client(client, self._api_type) for client in self.json_response()]
+        return [Client.Client(client, self._api_type) for client in self._from_json()]
 
     def get(self, client_version: int = None, client_type: str = None, host_name: str = None, ip_address: str = None,
             last_seen_on: str = None,last_seen_on_greater: str = None, last_seen_on_less: str = None, mac_address: str = None,
@@ -38,7 +38,7 @@ class _Client(API):
             'VirtualMachineId': virtual_machine_id
         }
 
-        self.response = self._get(params=params)
+        self.json_response = self._get(params=params)
 
         return self
 
@@ -47,14 +47,14 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Delete', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def deleted_count(self):
-            return self.json_response(key='DeletedCount')
+            return self._from_json(key='DeletedCount')
 
         @property
-        @response_property()
+        @json_response_property()
         def errors(self):
-            return self.json_response(key='Errors')
+            return self._from_json(key='Errors')
 
         def post(self, clients: list, delete_associated_devices: bool = False):
             body = {
@@ -62,7 +62,7 @@ class _Client(API):
                 'DeleteAssociatedDevices': delete_associated_devices
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -71,9 +71,9 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Details', valid_return_codes=[200, 204])
 
         @property
-        @response_property()
+        @json_response_property()
         def details(self):
-            return [Client.ClientDetails(client, self._api_type) for client in self.json_response()]
+            return [Client.ClientDetails(client, self._api_type) for client in self._from_json()]
 
         def get(self, client_version: int = None, client_type: str = None, host_name: str = None, ip_address: str = None,
                 last_seen_on: str = None, last_seen_on_greater: str = None, last_seen_on_less: str = None, mac_address: str = None,
@@ -97,7 +97,7 @@ class _Client(API):
                 'VirtualMachineId': virtual_machine_id
             }
 
-            self.response = self._get(params=params)
+            self.json_response = self._get(params=params)
 
             return self
 
@@ -106,10 +106,10 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Work', valid_return_codes=[200, 204])
 
         @property
-        @response_property()
+        @json_response_property()
         def works(self):
-            return [Client.Work(work, self._api_type) for work in self.json_response()]
+            return [Client.Work(work, self._api_type) for work in self._from_json()]
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self

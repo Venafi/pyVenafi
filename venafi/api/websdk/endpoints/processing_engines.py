@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.processing_engines import ProcessingEngines
 
 
@@ -10,12 +10,12 @@ class _ProcessingEngines(API):
         self.Folder = self._Folder(websdk_obj=websdk_obj)
 
     @property
-    @response_property()
+    @json_response_property()
     def engines(self):
-        return [ProcessingEngines.Engine(engine) for engine in self.json_response('Engines')]
+        return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
 
     def get(self):
-        self.response = self._get()
+        self.json_response = self._get()
         return self
 
     class _Engine:
@@ -30,22 +30,22 @@ class _ProcessingEngines(API):
                 super().__init__(api_obj=websdk_obj, url=f'/ProcessingEngines/Engine/{guid}', valid_return_codes=[200, 201, 204])
 
             @property
-            @response_property()
+            @json_response_property()
             def added_count(self):
-                return self.json_response('AddedCount')  # type: str
+                return self._from_json('AddedCount')  # type: str
 
             @property
-            @response_property()
+            @json_response_property()
             def errors(self):
-                return self.json_response('Errors')  # type: list
+                return self._from_json('Errors')  # type: list
 
             @property
-            @response_property()
+            @json_response_property()
             def folders(self):
-                return [ProcessingEngines.Folder(folder) for folder in self.json_response('Folders')][0]
+                return [ProcessingEngines.Folder(folder) for folder in self._from_json('Folders')][0]
 
             def get(self):
-                self.response = self._get()
+                self.json_response = self._get()
                 return self
 
             def post(self, folder_guids: list):
@@ -53,7 +53,7 @@ class _ProcessingEngines(API):
                     'FolderGuids': folder_guids
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -70,16 +70,16 @@ class _ProcessingEngines(API):
                 self._folder_guid = guid
 
             @property
-            @response_property()
+            @json_response_property()
             def engines(self):
-                return [ProcessingEngines.Engine(engine) for engine in self.json_response('Engines')]
+                return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
 
             def delete(self):
-                self.response = self._delete()
+                self.json_response = self._delete()
                 return self
 
             def get(self):
-                self.response = self._get()
+                self.json_response = self._get()
                 return self
 
             def put(self, engine_guids: list):
@@ -87,7 +87,7 @@ class _ProcessingEngines(API):
                     'EngineGuids': engine_guids
                 }
 
-                self.response = self._put(data=body)
+                self.json_response = self._put(data=body)
 
                 return self
 
@@ -99,5 +99,5 @@ class _ProcessingEngines(API):
                     super().__init__(api_obj=websdk_obj, url=f'/ProcessingEngines/Folder/{guid}/{engine_guid}', valid_return_codes=[200])
 
                 def delete(self):
-                    self.response = self.delete()
+                    self.json_response = self.delete()
                     return self

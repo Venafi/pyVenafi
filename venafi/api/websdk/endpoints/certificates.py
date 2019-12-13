@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.certificate import Certificate
 
 
@@ -21,32 +21,32 @@ class _Certificates(API):
         return self._Guid(guid=guid, websdk_obj=self._api_obj)
 
     @property
-    @response_property()
+    @json_response_property()
     def links(self):
-        lnks = self.json_response(key='_links')
+        lnks = self._from_json(key='_links')
         return [Certificate.Link(lnk) for lnk in lnks]
 
     @property
-    @response_property()
+    @json_response_property()
     def x_record_count(self):
-        xrc = self.response.headers.get('X-Record-Count')
+        xrc = self.json_response.headers.get('X-Record-Count')
         return xrc
 
     @property
-    @response_property()
+    @json_response_property()
     def certificates(self):
-        certs = self.json_response(key='Certificates')
+        certs = self._from_json(key='Certificates')
         return [Certificate.Certificate(cert) for cert in certs]
 
     @property
-    @response_property()
+    @json_response_property()
     def data_range(self):
-        return self.json_response(key='DataRange')
+        return self._from_json(key='DataRange')
 
     @property
-    @response_property()
+    @json_response_property()
     def total_count(self):
-        return self.json_response(key='TotalCount')
+        return self._from_json(key='TotalCount')
 
     def get(self, limit: int = None, offset: int = None, optional_fields: list = None, filters: dict = None):
         params = {
@@ -55,7 +55,7 @@ class _Certificates(API):
             'OptionalFields': optional_fields
         }.update(filters or {})
 
-        self.response = self._get(params=params)
+        self.json_response = self._get(params=params)
 
         return self
 
@@ -64,9 +64,9 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Associate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response(key='Success')
+            return self._from_json(key='Success')
 
         def post(self, application_dn: str, certificate_dn: str, push_to_new: bool):
             body = {
@@ -75,7 +75,7 @@ class _Certificates(API):
                 'PushToNew': push_to_new
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _CheckPolicy(API):
@@ -83,14 +83,14 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/CheckPolicy', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def csr(self):
-            return Certificate.CSR(self.json_response(key='CSR', error_key='Error'))
+            return Certificate.CSR(self._from_json(key='CSR', error_key='Error'))
 
         @property
-        @response_property()
+        @json_response_property()
         def policy(self):
-            return Certificate.Policy(self.json_response(key='Policy'))
+            return Certificate.Policy(self._from_json(key='Policy'))
 
         def post(self, policy_dn: str, pkcs10: str = None):
             body = {
@@ -98,7 +98,7 @@ class _Certificates(API):
                 'PKSC10': pkcs10
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -107,9 +107,9 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Dissociate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response(key='Success')
+            return self._from_json(key='Success')
 
         def post(self, certificate_dn: str, application_dn: list, delete_orphans: bool = False):
             body = {
@@ -118,7 +118,7 @@ class _Certificates(API):
                 'DeleteOrphans': delete_orphans
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Guid(API):
@@ -129,71 +129,71 @@ class _Certificates(API):
             self.ValidationResults = self._ValidationResults(guid=self._cert_guid, websdk_obj=websdk_obj)
 
         @property
-        @response_property()
+        @json_response_property()
         def approver(self):
-            return self.json_response(key='Approver')
+            return self._from_json(key='Approver')
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_details(self):
-            return Certificate.CertificateDetails(self.json_response(key='CertificateDetails'))
+            return Certificate.CertificateDetails(self._from_json(key='CertificateDetails'))
 
         @property
-        @response_property()
+        @json_response_property()
         def contact(self):
-            return self.json_response(key='Contact')
+            return self._from_json(key='Contact')
 
         @property
-        @response_property()
+        @json_response_property()
         def created_on(self):
-            return self.json_response(key='CreatedOn')
+            return self._from_json(key='CreatedOn')
 
         @property
-        @response_property()
+        @json_response_property()
         def dn(self):
-            return self.json_response(key='DN')
+            return self._from_json(key='DN')
 
         @property
-        @response_property()
+        @json_response_property()
         def guid(self):
-            return self.json_response(key='Guid')
+            return self._from_json(key='Guid')
 
         @property
-        @response_property()
+        @json_response_property()
         def name(self):
-            return self.json_response(key='Name')
+            return self._from_json(key='Name')
 
         @property
-        @response_property()
+        @json_response_property()
         def parent_dn(self):
-            return self.json_response(key='ParentDN')
+            return self._from_json(key='ParentDN')
 
         @property
-        @response_property()
+        @json_response_property()
         def processing_details(self):
-            return Certificate.ProcessingDetails(self.json_response(key='ProcessingDetails'))
+            return Certificate.ProcessingDetails(self._from_json(key='ProcessingDetails'))
 
         @property
-        @response_property()
+        @json_response_property()
         def renewal_details(self):
-            return Certificate.RenewalDetails(self.json_response(key='RenewalDetails'))
+            return Certificate.RenewalDetails(self._from_json(key='RenewalDetails'))
 
         @property
-        @response_property()
+        @json_response_property()
         def schema_class(self):
-            return self.json_response(key='SchemaClass')
+            return self._from_json(key='SchemaClass')
 
         @property
-        @response_property()
+        @json_response_property()
         def validation_details(self):
-            return Certificate.ValidationDetails(self.json_response(key='ValidationDetails'))
+            return Certificate.ValidationDetails(self._from_json(key='ValidationDetails'))
 
         def delete(self):
-            self.response = self._delete()
+            self.json_response = self._delete()
             return self
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self
 
         def put(self, attribute_data: [dict]):
@@ -201,7 +201,7 @@ class _Certificates(API):
                 "AttributeData": attribute_data
             }
 
-            self.response = self._put(data=body)
+            self.json_response = self._put(data=body)
             return self
 
         class _PreviousVersions(API):
@@ -214,14 +214,14 @@ class _Certificates(API):
                 )
 
             @property
-            @response_property()
+            @json_response_property()
             def success(self):
-                return self.json_response(key='Success')
+                return self._from_json(key='Success')
 
             @property
-            @response_property()
+            @json_response_property()
             def previous_versions(self):
-                versions = self.json_response(key='PreviousVersions')
+                versions = self._from_json(key='PreviousVersions')
                 return [Certificate.PreviousVersions(version) for version in versions]
 
             def get(self, exclude_expired: bool = False, exclude_revoked: bool = False):
@@ -229,7 +229,7 @@ class _Certificates(API):
                     'ExcludeExpired': exclude_expired,
                     'ExcludeRevoked': exclude_revoked
                 }
-                self.response = self._get(params=params)
+                self.json_response = self._get(params=params)
                 return self
 
         class _ValidationResults(API):
@@ -242,19 +242,19 @@ class _Certificates(API):
                 )
 
             @property
-            @response_property()
+            @json_response_property()
             def file(self):
-                files = self.json_response(key='File')
+                files = self._from_json(key='File')
                 return [Certificate.File(f) for f in files]
 
             @property
-            @response_property()
+            @json_response_property()
             def ssltls(self):
-                ssl = self.json_response(key='SslTls')
+                ssl = self._from_json(key='SslTls')
                 return [Certificate.SslTls(s) for s in ssl]
 
             def get(self):
-                self.response = self._get()
+                self.json_response = self._get()
                 return self
 
     class _Import(API):
@@ -262,24 +262,24 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Import', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_dn(self):
-            return self.json_response(key='CertificateDN')
+            return self._from_json(key='CertificateDN')
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_vault_id(self):
-            return self.json_response(key='CertificateVaultID')
+            return self._from_json(key='CertificateVaultID')
 
         @property
-        @response_property()
+        @json_response_property()
         def guid(self):
-            return self.json_response(key='Guid')
+            return self._from_json(key='Guid')
 
         @property
-        @response_property()
+        @json_response_property()
         def private_key_vault_id(self):
-            return self.json_response(key='PrivateKeyVaultID')
+            return self._from_json(key='PrivateKeyVaultID')
 
         def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
                  password: str = None, private_key_data: str = None, reconcile: bool = False):
@@ -293,7 +293,7 @@ class _Certificates(API):
                 'Reconcile': reconcile
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Renew(API):
@@ -301,9 +301,9 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Renew', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response(key='Success')
+            return self._from_json(key='Success')
 
         def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False):
             body = {
@@ -312,7 +312,7 @@ class _Certificates(API):
                 'Reenable': reenable
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Request(API):
@@ -320,14 +320,14 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Request', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_dn(self):
-            return self.json_response(key='CertificateDN')
+            return self._from_json(key='CertificateDN')
 
         @property
-        @response_property()
+        @json_response_property()
         def guid(self):
-            return self.json_response(key='Guid')
+            return self._from_json(key='Guid')
 
         def post(self, policy_dn: str, approvers: [dict] = None, cadn: str = None, ca_specific_attributes: [dict] = None,
                  certificate_type: str = None, city: str = None, contacts: [dict] = None, country: str=None,
@@ -365,7 +365,7 @@ class _Certificates(API):
                 'SubjectAltNames': subject_alt_names
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Reset(API):
@@ -373,24 +373,24 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Reset', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def private_key_mismatch_reset_completed(self):
-            return self.json_response(key='PrivateKeyMismatchResetCompleted')
+            return self._from_json(key='PrivateKeyMismatchResetCompleted')
 
         @property
-        @response_property()
+        @json_response_property()
         def processing_reset_completed(self):
-            return self.json_response(key='ProcessingResetCompleted')
+            return self._from_json(key='ProcessingResetCompleted')
 
         @property
-        @response_property()
+        @json_response_property()
         def restart_completed(self):
-            return self.json_response(key='RestartCompleted')
+            return self._from_json(key='RestartCompleted')
 
         @property
-        @response_property()
+        @json_response_property()
         def revocation_reset_completed(self):
-            return self.json_response(key='RevocationResetCompleted')
+            return self._from_json(key='RevocationResetCompleted')
 
         def post(self, certificate_dn: str, restart: bool = False):
             body = {
@@ -398,7 +398,7 @@ class _Certificates(API):
                 'Restart': restart
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Retrieve(API):
@@ -406,19 +406,19 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Retrieve', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_data(self):
-            return self.json_response(key='CertificateData')
+            return self._from_json(key='CertificateData')
 
         @property
-        @response_property()
+        @json_response_property()
         def filename(self):
-            return self.json_response(key='Filename')
+            return self._from_json(key='Filename')
 
         @property
-        @response_property()
+        @json_response_property()
         def format(self):
-            return self.json_response(key='Format')
+            return self._from_json(key='Format')
 
         def get(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -434,7 +434,7 @@ class _Certificates(API):
                 'RootFirstOrder': root_first_order
             }
 
-            self.response = self._get(params=params)
+            self.json_response = self._get(params=params)
             return self
 
         def post(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
@@ -451,7 +451,7 @@ class _Certificates(API):
                 'RootFirstOrder': root_first_order
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
         def VaultId(self, vault_id: int):
@@ -463,19 +463,19 @@ class _Certificates(API):
                 self._vault_id = vault_id
 
             @property
-            @response_property()
+            @json_response_property()
             def certificate_data(self):
-                return self.json_response(key='CertificateData')
+                return self._from_json(key='CertificateData')
 
             @property
-            @response_property()
+            @json_response_property()
             def filename(self):
-                return self.json_response(key='Filename')
+                return self._from_json(key='Filename')
 
             @property
-            @response_property()
+            @json_response_property()
             def format(self):
-                return self.json_response(key='Format')
+                return self._from_json(key='Format')
 
             def get(self, format: str, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -491,7 +491,7 @@ class _Certificates(API):
                     'RootFirstOrder': root_first_order
                 }
 
-                self.response = self._get(params=params)
+                self.json_response = self._get(params=params)
                 return self
 
             def post(self, format: str, friendly_name: str, include_chain: bool = False,
@@ -508,7 +508,7 @@ class _Certificates(API):
                     'RootFirstOrder': root_first_order
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
                 return self
 
     class _Retry(API):
@@ -516,16 +516,16 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Retry', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response(key='Success')
+            return self._from_json(key='Success')
 
         def post(self, certificate_dn: str):
             body = {
                 'CertificateDN': certificate_dn
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Revoke(API):
@@ -533,14 +533,14 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Revoke', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def requested(self):
-            return self.json_response(key='Requested')
+            return self._from_json(key='Requested')
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response(key='Success')
+            return self._from_json(key='Success')
 
         def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
                  disable: bool = False):
@@ -552,7 +552,7 @@ class _Certificates(API):
                 'Disable': disable
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Validate(API):
@@ -560,24 +560,24 @@ class _Certificates(API):
             super().__init__(api_obj=websdk_obj, url='/Certificates/Validate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response(key='Success')
+            return self._from_json(key='Success')
 
         @property
-        @response_property()
+        @json_response_property()
         def validated_certificate_dns(self):
-            return self.json_response(key='ValidatedCertificateDNs')
+            return self._from_json(key='ValidatedCertificateDNs')
 
         @property
-        @response_property()
+        @json_response_property()
         def validated_certificate_guids(self):
-            return self.json_response(key='ValidatedCertificateGUIDs')
+            return self._from_json(key='ValidatedCertificateGUIDs')
 
         @property
-        @response_property()
+        @json_response_property()
         def warnings(self):
-            return self.json_response(key='Warnings')
+            return self._from_json(key='Warnings')
 
         def post(self, certificate_dns: [str] = None, certificate_guids: [str] = None):
             if not(certificate_dns or certificate_guids):
@@ -588,7 +588,7 @@ class _Certificates(API):
                 'CertificateGUIDs': certificate_guids
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
 

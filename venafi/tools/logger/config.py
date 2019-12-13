@@ -1,5 +1,5 @@
 import os
-from tools.logger.log_resources import LogLevels, TextStyle, ForegroundColors, BackgroundColors
+from venafi.tools.logger.log_resources import LogLevels, TextStyle, ForegroundColors, BackgroundColors
 
 
 # >>>>>>>>>> LOGGING VARIABLES <<<<<<<<<< #

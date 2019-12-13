@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.secret_store import SecretStore
 
 
@@ -27,14 +27,14 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Add', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_id(self):
-            return self.json_response(key='VaultID')
+            return self._from_json(key='VaultID')
 
         def post(self, base_64_data: str, keyname: str, namespace: str, owner: str, vault_type: int):
             body = {
@@ -45,7 +45,7 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Associate(API):
@@ -53,9 +53,9 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Associate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def post(self, name: str, vault_id: int, date_value: int = None, int_value: int = None, string_value: str = None):
             body = {
@@ -66,7 +66,7 @@ class _SecretStore:
                 'StringValue': string_value
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Delete(API):
@@ -74,16 +74,16 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Delete', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def post(self, vault_id: int):
             body = {
                 'VaultID': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Dissociate(API):
@@ -91,9 +91,9 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Dissociate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
             body = {
@@ -104,7 +104,7 @@ class _SecretStore:
                 'DateValue': date_value
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _EncryptionKeysInUse(API):
@@ -112,17 +112,17 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/EncryptionKeysInUse', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def encryption_keys(self):
-            return self.json_response(key='EncryptionKeys')
+            return self._from_json(key='EncryptionKeys')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self
 
     class _Lookup(API):
@@ -130,17 +130,17 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Lookup', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self):
-            return self.json_response(key='VaultIDs')
+            return self._from_json(key='VaultIDs')
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self
 
     class _LookupAllAssociationsbyVaultid(API):
@@ -148,14 +148,14 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/LookupAllAssociationsbyVaultid', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def typed_name_values(self):
-            result = self.json_response('TypedNameValues')
+            result = self._from_json('TypedNameValues')
             return [SecretStore.TypedNameValues(tnv) for tnv in result]
 
         def post(self, vault_id: int):
@@ -163,7 +163,7 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _LookupByAssociation(API):
@@ -171,14 +171,14 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/LookupByAssociation', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self):
-            return self.json_response(key='VaultIDs')
+            return self._from_json(key='VaultIDs')
 
         def post(self, name: str, int_value: int = None ,string_value: str = None, date_value: int = None):
             body = {
@@ -193,7 +193,7 @@ class _SecretStore:
             if date_value:
                 body.update({'DateValue': date_value})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _LookupAssociationbyVaultID(API):
@@ -201,14 +201,14 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/LookupAssociationbyVaultID', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def value(self):
-            return self.json_response(key='Value')
+            return self._from_json(key='Value')
 
         def post(self, vault_id: int, name: str = ''):
             body = {
@@ -218,7 +218,7 @@ class _SecretStore:
             if name:
                 body.update({'Name': name})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _LookupByOwner(API):
@@ -226,14 +226,14 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/LookupByOwner', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self):
-            return self.json_response(key='VaultIDs')
+            return self._from_json(key='VaultIDs')
 
         def post(self, namespace: str, owner: str, vault_type: str = None):
             body = {
@@ -243,7 +243,7 @@ class _SecretStore:
             if vault_type:
                 body.update({'VaultType': vault_type})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _LookupByVaultType(API):
@@ -251,21 +251,21 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/LookupByVaultType', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self):
-            return self.json_response(key='VaultIDs')
+            return self._from_json(key='VaultIDs')
 
         def post(self, vault_type: int):
             body = {
                 'VaultType': vault_type
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Mutate(API):
@@ -273,9 +273,9 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Mutate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def post(self, vault_id: int, vault_type: int):
             body = {
@@ -283,7 +283,7 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _OrphanLookup(API):
@@ -291,21 +291,21 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/OrphanLookup', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self):
-            return self.json_response(key='VaultIDs')
+            return self._from_json(key='VaultIDs')
 
         def post(self, vault_type: int):
             body = {
                 'VaultType': vault_type
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _OwnerAdd(API):
@@ -313,9 +313,9 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/OwnerAdd', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def post(self, namespace: str, owner: str, vault_id: int):
             body = {
@@ -324,7 +324,7 @@ class _SecretStore:
                 'VaultId': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _OwnerDelete(API):
@@ -332,9 +332,9 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/OwnerDelete', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         def post(self, namespace: str, owner: str, vault_id: int = None):
             body = {
@@ -345,7 +345,7 @@ class _SecretStore:
             if vault_id:
                 body.update({'VaultId': vault_id})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _OwnerLookup(API):
@@ -353,14 +353,14 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/OwnerLookup', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def owners(self):
-            return self.json_response(key='Owners')
+            return self._from_json(key='Owners')
 
         def post(self, namespace: str, vault_id: int):
             body = {
@@ -368,7 +368,7 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Retrieve(API):
@@ -376,24 +376,24 @@ class _SecretStore:
             super().__init__(api_obj=websdk_obj, url='/SecretStore/Retrieve', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def base_64_data(self):
-            return self.json_response(key='Base64Data')
+            return self._from_json(key='Base64Data')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return SecretStore.Result(self.json_response(key='Result'))
+            return SecretStore.Result(self._from_json(key='Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_type(self):
-            return self.json_response(key='VaultType')
+            return self._from_json(key='VaultType')
 
         def post(self, vault_id: int):
             body = {
                 'VaultID': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self

@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.config import Config
 
 
@@ -11,19 +11,15 @@ class _ConfigObjects:
             super().__init__(api_obj=aperture_obj, url='/configobjects/policies', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def object(self):
-            result = self.json_response()
-            obj = Config.Object(result, self._api_type)
-            if not obj.dn:
-                raise ValueError('Could not create policy.')
-            return obj
+            return Config.Object(self._from_json(), self._api_type)
 
         def post(self, name, container):
             body = {
                 "DN": container + "\\" + name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self

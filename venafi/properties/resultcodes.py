@@ -333,6 +333,53 @@ class ResultCodes:
         23: 'SecurityGroupNotImplemented'
     }
 
+    SSH = {
+         1: 'IsRootAccessOrphan',
+         2: 'IsUserAccessOrphan',
+         3: 'IsPrivateKeyOrphan',
+         4: 'IsKnownHostOrphan',
+         5: 'IsRootAccess',
+         6: 'IsDuplicatePrivateKey',
+         7: 'IsIllegalAlgorithm',
+         8: 'IsIllegalProtocolVersion',
+         9: 'IsIllegalVendorFormat',
+        10: 'IsIllegalForcedCommand',
+        11: 'IsIllegalSourceRestrictions',
+        12: 'IsMissingOptions',
+        13: 'IsKeyOlderThanAllowed',
+        14: 'IsKeySmallerThanRequired',
+        15: 'IsKeyLengthSmallerThan768',
+        16: 'IsSharedPrivateKey',
+        17: 'Not Currently in Use	',
+        18: 'IsSharedServerAccount',
+        19: 'IsPassphraseUnknown',
+        20: 'IsUnknownClient',
+        21: 'KeyWasNotRotated',
+    }
+    
+    SSHErrorCodes = {
+          1: 'KeyNotFound',
+          2: 'KeysetNotFound',
+          3: 'DeviceNotFound',
+          4: 'BadKeyFormat',
+          5: 'KeyAlreadyExists',
+          6: 'NoPrivateKeyOnTpp',
+          7: 'UnsupportedKeyLength',
+          8: 'OperationIsAlreadyRuninng',
+          9: 'NotAbleToLoadApprovers',
+         10: 'TicketNotFound',
+         11: 'MissingRejectComment',
+         12: 'InsufficientRights',
+         13: 'FolderNotFound',
+         14: 'KeyCannotBeDownloaded',
+         15: 'KeyHasNoMaterial',
+         16: 'InvalidOwnerIdentity',
+         17: 'FolderHasNoRights',
+         18: 'ImproperKeysetStage',
+         19: 'InappropriateTrustType "Key has inappropriate trust type"',
+        100: 'InternalError',
+    }
+
     ToDo = {
           0 : 'Success',
           1 : 'MissingDSN',
@@ -379,4 +426,16 @@ class ResultCodes:
         4044: "SSL 2.0, TLS 1.0, TLS 1.1, TLS 1.2",
         4080: "SSL 3.0, TLS 1.0, TLS 1.1, TLS 1.2",
         4092: "SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1, TLS 1.2"
+    }
+    
+    Workflow = {
+        0: 'None',
+        1: 'Success',
+        2: 'GenericFailure',
+        3: 'TicketDoesNotExist',
+        4: 'InsufficientPrivileges',
+        5: 'BadArguments',
+        6: 'ObjectDoesNotExist',
+        7: 'RemoteError',
+        8: 'WorkflowObjectDoesNotExist',
     }
