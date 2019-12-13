@@ -11,6 +11,7 @@ from api.websdk.endpoints.identity import _Identity
 from api.websdk.endpoints.log import _Log
 from api.websdk.endpoints.metadata import _Metadata
 from api.websdk.endpoints.permissions import _Permissions
+from api.websdk.endpoints.processing_engines import _ProcessingEngines
 from api.websdk.endpoints.revoke import _Revoke
 from api.websdk.endpoints.system_status import _SystemStatus
 from api.websdk.endpoints.secret_store import _SecretStore
@@ -44,6 +45,7 @@ class WebSDK:
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)
         self.Permissions = _Permissions(self)
+        self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
         self.SystemStatus = _SystemStatus(self)
         self.SecretStore = _SecretStore(self)
