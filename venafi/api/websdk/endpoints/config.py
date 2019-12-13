@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.config import Config
 
 
@@ -45,9 +45,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/AddDnValue', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
@@ -56,7 +56,7 @@ class _Config:
                 'Value': value
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -65,9 +65,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/AddPolicyValue', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, class_name: str, value: str, locked: bool):
             body = {
@@ -78,7 +78,7 @@ class _Config:
                 'Locked': locked
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _AddValue(API):
@@ -86,9 +86,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/AddValue', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
@@ -97,7 +97,7 @@ class _Config:
                 'Value': value,
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -106,9 +106,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ClearAttribute', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -116,7 +116,7 @@ class _Config:
                 'AttributeName': attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -125,9 +125,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ClearPolicyAttribute', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = {
@@ -136,7 +136,7 @@ class _Config:
                 'AttributeName': attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _ContainableClasses(API):
@@ -144,20 +144,20 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ContainableClasses', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def class_names(self):
-            return self.json_response(key='ClassNames')
+            return self._from_json(key='ClassNames')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str):
             body = {
                 'ObjectDN': object_dn
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _CountObjects(API):
@@ -165,14 +165,14 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/CountObjects', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def count(self):
-            return self.json_response(key='Count', error_key='Error')
+            return self._from_json(key='Count', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, type_name: str, recursive: bool = False, pattern: str = None):
             body = {
@@ -183,7 +183,7 @@ class _Config:
             if recursive:
                 body.update({'Recursive': recursive})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
             return self
 
     class _Create(API):
@@ -191,15 +191,15 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/Create', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def object(self):
-            result = self.json_response(key='Object', error_key='Error')
+            result = self._from_json(key='Object', error_key='Error')
             return Config.Object(result, self._api_type)
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, class_name: str, name_attribute_list: list):
             body = {
@@ -208,7 +208,7 @@ class _Config:
                 "NameAttributeList": name_attribute_list
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -217,20 +217,20 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/DefaultDN', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def default_dn(self):
-            return self.json_response(key='DefaultDN', error_key='Error')
+            return self._from_json(key='DefaultDN', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, default_dn: str):
             body = {
                 'DefaultDN': default_dn
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -239,16 +239,16 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/Delete', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, recursive: bool = False):
             body = {
                 "ObjectDN": object_dn,
                 "Recursive": recursive
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -257,35 +257,35 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/DnToGuid', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def class_name(self):
-            return self.json_response(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def guid(self):
-            return self.json_response(key='GUID', error_key='Error')
+            return self._from_json(key='GUID', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def revision(self):
-            return self.json_response(key='Revision', error_key='Error')
+            return self._from_json(key='Revision', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def hierarchical_guid(self):
-            return self.json_response(key='HierarchicalGUID', error_key='Error')
+            return self._from_json(key='HierarchicalGUID', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str):
             body = {
                 "ObjectDN": object_dn,
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -294,15 +294,15 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/Enumerate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def objects(self):
-            result = self.json_response(key='Objects', error_key='Error')
+            result = self._from_json(key='Objects', error_key='Error')
             return [Config.Object(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str = None, recursive: bool = False, pattern: str = None):
             body = {
@@ -310,7 +310,7 @@ class _Config:
                 "Recursive": recursive,
                 "Pattern": pattern
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -319,21 +319,21 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/EnumerateAll', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def objects(self):
-            result = self.json_response(key='Objects', error_key='Error')
+            result = self._from_json(key='Objects', error_key='Error')
             return [Config.Object(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, pattern: str):
             body = {
                 "Pattern": pattern
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -342,22 +342,22 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/EnumerateObjectsDerivedFrom', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def objects(self):
-            result = self.json_response(key='Objects', error_key='Error')
+            result = self._from_json(key='Objects', error_key='Error')
             return [Config.Object(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, derived_from: str, pattern: str = None):
             body = {
                 "DerivedFrom": derived_from,
                 "Pattern": pattern
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -366,21 +366,21 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/EnumeratePolicies', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def policies(self):
-            result = self.json_response(key='Policies', error_key='Error')
+            result = self._from_json(key='Policies', error_key='Error')
             return [Config.Policy(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str):
             body = {
                 "ObjectDN": object_dn
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -389,22 +389,22 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/Find', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def objects(self):
-            result = self.json_response(key='Objects', error_key='Error')
+            result = self._from_json(key='Objects', error_key='Error')
             return [Config.Object(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, pattern: str, attribute_names: str = None):
             body = {
                 "Pattern": pattern,
                 "AttributeNames": attribute_names
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -413,22 +413,22 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/FindContainers', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def objects(self):
-            result = self.json_response(key='Objects', error_key='Error')
+            result = self._from_json(key='Objects', error_key='Error')
             return [Config.Object(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, recursive: bool = False):
             body = {
                 "ObjectDN": object_dn,
                 "Recursive": recursive
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -437,15 +437,15 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/FindObjectsOfClass', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def objects(self):
-            result = self.json_response(key='Objects', error_key='Error')
+            result = self._from_json(key='Objects', error_key='Error')
             return [Config.Object(obj, self._api_type) for obj in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, classes: str = None, class_name: str = None, object_dn: str = None, pattern: str = None, recursive: bool = False):
             if not (classes or class_name):
@@ -461,7 +461,7 @@ class _Config:
             if recursive:
                 body.update({'Recursive': recursive})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -470,24 +470,24 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/FindPolicy', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def locked(self):
-            return self.json_response(key='Locked', error_key='Error')
+            return self._from_json(key='Locked', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def policy_dn(self):
-            return self.json_response(key='PolicyDN', error_key='Error')
+            return self._from_json(key='PolicyDN', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            return self.json_response(key='Values', error_key='Error')
+            return self._from_json(key='Values', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = {
@@ -496,7 +496,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -505,14 +505,14 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/GetHighestRevision', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def revision(self):
-            return self.json_response(key='Revision', error_key='Error')
+            return self._from_json(key='Revision', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, classes: str = None):
             body = {
@@ -521,7 +521,7 @@ class _Config:
             if classes:
                 body.update({'Classes': classes})
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -530,21 +530,21 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/GetRevision', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def revision(self):
-            return self.json_response(key='Revision', error_key='Error')
+            return self._from_json(key='Revision', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str):
             body = {
                 "ObjectDN": object_dn
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -553,36 +553,36 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/GuidToDn', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def object_dn(self):
-            return self.json_response(key='ObjectDN', error_key='Error')
+            return self._from_json(key='ObjectDN', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def class_name(self):
-            return self.json_response(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def revision(self):
-            return self.json_response(key='Revision', error_key='Error')
+            return self._from_json(key='Revision', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def hierarchical_guid(self):
-            return self.json_response(key='HierarchicalGUID', error_key='Error')
+            return self._from_json(key='HierarchicalGUID', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_guid: str):
             body = {
                 "ObjectGUID": object_guid
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -591,36 +591,36 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/IdInfo', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def guid(self):
-            return self.json_response(key='GUID', error_key='Error')
+            return self._from_json(key='GUID', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def class_name(self):
-            return self.json_response(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def revision(self):
-            return self.json_response(key='Revision', error_key='Error')
+            return self._from_json(key='Revision', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def hierarchical_guid(self):
-            return self.json_response(key='HierarchicalGUID', error_key='Error')
+            return self._from_json(key='HierarchicalGUID', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_id: str):
             body = {
                 "ObjectID": object_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -629,15 +629,15 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/IsValid', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def object(self):
-            result = self.json_response(key='Object', error_key='Error')
+            result = self._from_json(key='Object', error_key='Error')
             return Config.Object(result, self._api_type)
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str = None, object_guid: str = None):
             if not (object_dn or object_guid):
@@ -647,7 +647,7 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -656,9 +656,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/MutateObject', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, class_name: str):
             body = {
@@ -666,7 +666,7 @@ class _Config:
                 "Class": class_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -675,24 +675,24 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/Read', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def object_dn(self):
-            return self.json_response(key='ObjectDN', error_key='Error')
+            return self._from_json(key='ObjectDN', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def attribute_name(self):
-            return self.json_response(key='AttributeName', error_key='Error')
+            return self._from_json(key='AttributeName', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            return self.json_response(key='Values', error_key='Error')
+            return self._from_json(key='Values', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -700,7 +700,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -709,22 +709,22 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ReadAll', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def name_values(self):
-            result = self.json_response(key='NameValues', error_key='Error')
+            result = self._from_json(key='NameValues', error_key='Error')
             return [Config.NameValues(nv, self._api_type) for nv in result]
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str):
             body = {
                 "ObjectDN": object_dn
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -733,14 +733,14 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ReadDn', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            return self.json_response(key='Values', error_key='Error')
+            return self._from_json(key='Values', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -748,7 +748,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -757,14 +757,14 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ReadDnReferences', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            return self.json_response(key='Values', error_key='Error')
+            return self._from_json(key='Values', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, reference_attribute_name: str, attribute_name: str):
             body = {
@@ -773,7 +773,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -782,29 +782,29 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ReadEffectivePolicy', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            return self.json_response(key='Values', error_key='Error')
+            return self._from_json(key='Values', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def locked(self):
-            return self.json_response(key='Locked', error_key='Error')
+            return self._from_json(key='Locked', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def overridden(self):
-            return self.json_response(key='Overridden', error_key='Error')
+            return self._from_json(key='Overridden', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def policy_dn(self):
-            return self.json_response(key='PolicyDN', error_key='Error')
+            return self._from_json(key='PolicyDN', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
@@ -812,7 +812,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -821,24 +821,24 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/ReadPolicy', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def locked(self):
-            return self.json_response(key='Locked', error_key='Error')
+            return self._from_json(key='Locked', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def class_name(self):
-            return self.json_response(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def values(self):
-            return self.json_response(key='Values', error_key='Error')
+            return self._from_json(key='Values', error_key='Error')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, class_name: str):
             body = {
@@ -847,7 +847,7 @@ class _Config:
                 "Class": class_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -856,9 +856,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/RemoveDnValue', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
@@ -866,7 +866,7 @@ class _Config:
                 "AttributeName": attribute_name,
                 "Value": value
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -875,9 +875,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/RemovePolicyValue', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, class_name: str, value: str):
             body = {
@@ -886,7 +886,7 @@ class _Config:
                 "ClassName": class_name,
                 "Value": value
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -895,16 +895,16 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/RenameObject', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, new_object_dn: str):
             body = {
                 "ObjectDN": object_dn,
                 "NewObjectDN": new_object_dn
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -913,16 +913,16 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/Write', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_data: str):
             body = {
                 "ObjectDN": object_dn,
                 "AttributeData": attribute_data
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -931,9 +931,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/WriteDn', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, attribute_name: str, values: str):
             body = {
@@ -941,7 +941,7 @@ class _Config:
                 "AttributeName": attribute_name,
                 "Values": values
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -950,9 +950,9 @@ class _Config:
             super().__init__(api_obj=websdk_obj, url='/Config/WritePolicy', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return Config.Result(self.json_response(key='Result'))
+            return Config.Result(self._from_json(key='Result'))
 
         def post(self, object_dn: str, class_name: str, attribute_name: str, locked: bool = False, values: str = None):
             body = {
@@ -962,6 +962,6 @@ class _Config:
                 "Locked": locked,
                 "Values": values
             }
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self

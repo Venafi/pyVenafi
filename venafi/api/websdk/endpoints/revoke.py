@@ -11,5 +11,5 @@ class _Revoke:
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self

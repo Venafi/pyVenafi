@@ -13,6 +13,7 @@ from api.websdk.endpoints.metadata import _Metadata
 from api.websdk.endpoints.permissions import _Permissions
 from api.websdk.endpoints.processing_engines import _ProcessingEngines
 from api.websdk.endpoints.revoke import _Revoke
+from api.websdk.endpoints.ssh import _SSH
 from api.websdk.endpoints.system_status import _SystemStatus
 from api.websdk.endpoints.secret_store import _SecretStore
 from api.websdk.endpoints.workflow import _Workflow
@@ -49,6 +50,7 @@ class WebSDK:
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
         self.SecretStore = _SecretStore(self)
+        self.SSH = _SSH(self)
         self.SystemStatus = _SystemStatus(self)
         self.Workflow = _Workflow(self)
         self.X509CertificateStore = _X509CertificateStore(self)

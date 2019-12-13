@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.client import Client
 
 
@@ -15,12 +15,12 @@ class _Discovery:
             super().__init__(api_obj=websdk_obj, url=f'/Discovery/{guid}', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def success(self):
-            return self.json_response('Success')
+            return self._from_json('Success')
 
         def delete(self):
-            self.response = self._delete()
+            self.json_response = self._delete()
             return self
 
     class _Import(API):
@@ -28,34 +28,34 @@ class _Discovery:
             super().__init__(api_obj=websdk_obj, url='/Discovery/Import', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def created_certificates(self):
-            return self.json_response('createdCertificates')
+            return self._from_json('createdCertificates')
 
         @property
-        @response_property()
+        @json_response_property()
         def created_instances(self):
-            return self.json_response('createdInstances')
+            return self._from_json('createdInstances')
 
         @property
-        @response_property()
+        @json_response_property()
         def updated_certificates(self):
-            return self.json_response('updatedCertificates')
+            return self._from_json('updatedCertificates')
 
         @property
-        @response_property()
+        @json_response_property()
         def updated_instances(self):
-            return self.json_response('updatedInstances')
+            return self._from_json('updatedInstances')
 
         @property
-        @response_property()
+        @json_response_property()
         def warnings(self):
-            return self.json_response('warnings')
+            return self._from_json('warnings')
 
         @property
-        @response_property()
+        @json_response_property()
         def zone_name(self):
-            return self.json_response('zoneName')
+            return self._from_json('zoneName')
 
         def post(self, endpoints: list, zone_name: str):
             body = {
@@ -63,7 +63,7 @@ class _Discovery:
                 'endpoints': endpoints
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 

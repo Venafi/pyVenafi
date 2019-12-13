@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 
 
 class _Crypto:
@@ -11,12 +11,12 @@ class _Crypto:
             super().__init__(api_obj=websdk_obj, url='/Crypto/AvailableKeys', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def keynames(self):
-            return self.json_response('Keynames')
+            return self._from_json('Keynames')
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self
 
     class _DefaultKey(API):
@@ -24,10 +24,10 @@ class _Crypto:
             super().__init__(api_obj=websdk_obj, url='/Crypto/DefaultKey', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def default_key(self):
-            return self.json_response('DefaultKey')
+            return self._from_json('DefaultKey')
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self

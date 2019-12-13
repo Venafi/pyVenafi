@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.permissions import Permissions
 
 
@@ -20,12 +20,12 @@ class _Permissions:
                 self._guid = guid
 
             @property
-            @response_property()
+            @json_response_property()
             def principals(self) -> list:
-                return self.json_response()
+                return self._from_json()
 
             def get(self):
-                self.response = self._get()
+                self.json_response = self._get()
                 return self
 
             def Ptype(self, ptype='Local'):
@@ -64,21 +64,21 @@ class _Permissions:
                             self.Effective = self._Effective(guid=guid, ptype=ptype, pname=pname, principal=principal, websdk_obj=websdk_obj)
 
                         @property
-                        @response_property()
+                        @json_response_property()
                         def explicit_permissions(self):
-                            return Permissions.Permissions(self.json_response(key='ExplicitPermissions'))
+                            return Permissions.Permissions(self._from_json(key='ExplicitPermissions'))
 
                         @property
-                        @response_property()
+                        @json_response_property()
                         def implicit_permissions(self):
-                            return Permissions.Permissions(self.json_response(key='ImplicitPermissions'))
+                            return Permissions.Permissions(self._from_json(key='ImplicitPermissions'))
 
                         def delete(self):
-                            self.response = self._delete()
+                            self.json_response = self._delete()
                             return self
 
                         def get(self):
-                            self.response = self._get()
+                            self.json_response = self._get()
                             return self
 
                         def post(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
@@ -101,7 +101,7 @@ class _Permissions:
                                 'IsWriteAllowed': is_write_allowed
                             }
 
-                            self.response = self._post(data=body)
+                            self.json_response = self._post(data=body)
 
                             return self
 
@@ -125,7 +125,7 @@ class _Permissions:
                                 'IsWriteAllowed': is_write_allowed
                             }
 
-                            self.response = self._put(data=body)
+                            self.json_response = self._put(data=body)
 
                             return self
 
@@ -138,12 +138,12 @@ class _Permissions:
                                 )
 
                             @property
-                            @response_property()
+                            @json_response_property()
                             def effective_permissions(self):
-                                return Permissions.Permissions(self.json_response('EffectivePermissions'))
+                                return Permissions.Permissions(self._from_json('EffectivePermissions'))
 
                             def get(self):
-                                self.response = self._get()
+                                self.json_response = self._get()
                                 return self
 
                 class _Principal(API):
@@ -156,21 +156,21 @@ class _Permissions:
                         self.Effective = self._Effective(guid=guid, uuid=uuid, websdk_obj=websdk_obj)
 
                     @property
-                    @response_property()
+                    @json_response_property()
                     def explicit_permissions(self):
-                        return Permissions.Permissions(self.json_response('ExplicitPermissions'))
+                        return Permissions.Permissions(self._from_json('ExplicitPermissions'))
 
                     @property
-                    @response_property()
+                    @json_response_property()
                     def implicit_permissions(self):
-                        return Permissions.Permissions(self.json_response('ImplicitPermissions'))
+                        return Permissions.Permissions(self._from_json('ImplicitPermissions'))
 
                     def delete(self):
-                        self.response = self._delete()
+                        self.json_response = self._delete()
                         return self
 
                     def get(self):
-                        self.response = self._get()
+                        self.json_response = self._get()
                         return self
 
                     def post(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
@@ -193,7 +193,7 @@ class _Permissions:
                            'IsWriteAllowed': is_write_allowed
                         }
                         
-                        self.response = self._post(data=body)
+                        self.json_response = self._post(data=body)
                         
                         return self
 
@@ -217,7 +217,7 @@ class _Permissions:
                             'IsWriteAllowed': is_write_allowed
                         }
 
-                        self.response = self._put(data=body)
+                        self.json_response = self._put(data=body)
 
                         return self
 
@@ -230,12 +230,12 @@ class _Permissions:
                             )
 
                         @property
-                        @response_property()
+                        @json_response_property()
                         def effective_permissions(self):
-                            return Permissions.Permissions(self.json_response('EffectivePermissions'))
+                            return Permissions.Permissions(self._from_json('EffectivePermissions'))
 
                         def get(self):
-                            self.response = self._get()
+                            self.json_response = self._get()
                             return self
 
     class _Refresh(API):
@@ -243,10 +243,10 @@ class _Permissions:
             super().__init__(api_obj=websdk_obj, url='/Permissions/Refresh', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
-            return self.json_response('Result')
+            return self._from_json('Result')
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self

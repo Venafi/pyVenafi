@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.secret_store import SecretStore
 
 
@@ -15,17 +15,17 @@ class _X509CertificateStore:
             super().__init__(api_obj=websdk_obj, url='/X509CertificateStore/Add', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def leaf_existed(self) -> bool:
             return self.json_response('LeafExisted')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
             return SecretStore.Result(self.json_response('Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_id(self) -> int:
             return self.json_response('VaultId')
 
@@ -39,7 +39,7 @@ class _X509CertificateStore:
                 'TypedNameValues': typed_name_values
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -48,22 +48,22 @@ class _X509CertificateStore:
             super().__init__(api_obj=websdk_obj, url='/X509CertificateStore/Lookup', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_id(self) -> int:
             return self.json_response('VaultId')
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self) -> list:
             return self.json_response('VaultIds')
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_collection_strings(self) -> list:
             return self.json_response('CertificateCollectionStrings')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
             return SecretStore.Result(self.json_response('Result'))
 
@@ -75,7 +75,7 @@ class _X509CertificateStore:
                 'Value': value
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -84,12 +84,12 @@ class _X509CertificateStore:
             super().__init__(api_obj=websdk_obj, url='/X509CertificateStore/LookupExpiring', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def vault_ids(self) -> list:
             return self.json_response('VaultIds')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
             return SecretStore.Result(self.json_response('Result'))
 
@@ -99,7 +99,7 @@ class _X509CertificateStore:
                 'OwnerDN': owner_dn
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -108,7 +108,7 @@ class _X509CertificateStore:
             super().__init__(api_obj=websdk_obj, url='/X509CertificateStore/Remove', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
             return SecretStore.Result(self.json_response('Result'))
 
@@ -119,7 +119,7 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -128,17 +128,17 @@ class _X509CertificateStore:
             super().__init__(api_obj=websdk_obj, url='/X509CertificateStore/Retrieve', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def certificate_string(self) -> str:
             return self.json_response('CertificateString')
 
         @property
-        @response_property()
+        @json_response_property()
         def result(self):
             return SecretStore.Result(self.json_response('Result'))
 
         @property
-        @response_property()
+        @json_response_property()
         def typed_name_values(self):
             return SecretStore.TypedNameValues(self.json_response('TypedNameValues'))
 
@@ -147,6 +147,6 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self

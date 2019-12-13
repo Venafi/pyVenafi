@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.worfklow import Workflow
 
 
@@ -15,12 +15,12 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Create', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def guid(self) -> str:
                 return self.json_response('GUID')
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
@@ -33,7 +33,7 @@ class _Workflow:
                     'WorkflowDN': workflow_dn
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -42,7 +42,7 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Delete', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
@@ -51,7 +51,7 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -60,47 +60,47 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Details', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def approval_explanation(self) -> str:
                 return self.json_response('ApprovalExplanation')
 
             @property
-            @response_property()
+            @json_response_property()
             def approval_from(self) -> str:
                 return self.json_response('ApprovalFrom')
 
             @property
-            @response_property()
+            @json_response_property()
             def approvers(self) -> list:
                 return self.json_response('Approvers')
 
             @property
-            @response_property()
+            @json_response_property()
             def blocking(self) -> str:
                 return self.json_response('Blocking')
 
             @property
-            @response_property()
+            @json_response_property()
             def created(self) -> str:
                 return self.json_response('Created')
 
             @property
-            @response_property()
+            @json_response_property()
             def issued_due_to(self) -> str:
                 return self.json_response('IssuedDueTo')
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
             @property
-            @response_property()
+            @json_response_property()
             def status(self) -> str:
                 return self.json_response('Status')
 
             @property
-            @response_property()
+            @json_response_property()
             def updated(self) -> str:
                 return self.json_response('Updated')
 
@@ -109,7 +109,7 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -118,12 +118,12 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Enumerate', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def guids(self) -> list:
                 return self.json_response('GUIDS')
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
@@ -133,7 +133,7 @@ class _Workflow:
                     'UserData': user_data
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -142,7 +142,7 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Exists', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
@@ -151,7 +151,7 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -160,12 +160,12 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Status', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def status(self) -> list:
                 return self.json_response('Status')
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
@@ -174,7 +174,7 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self
 
@@ -183,7 +183,7 @@ class _Workflow:
                 super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/UpdateStatus', valid_return_codes=[200])
 
             @property
-            @response_property()
+            @json_response_property()
             def result(self):
                 return Workflow.Result(self.json_response('Result'))
 
@@ -196,6 +196,6 @@ class _Workflow:
                     'ScheduledStop': scheduled_stop
                 }
 
-                self.response = self._post(data=body)
+                self.json_response = self._post(data=body)
 
                 return self

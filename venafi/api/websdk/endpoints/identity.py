@@ -1,4 +1,4 @@
-from api.api_base import API, response_property
+from api.api_base import API, json_response_property
 from properties.response_objects.identity import Identity
 
 
@@ -23,14 +23,14 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/AddGroup', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identity(self):
-            return Identity.Identity(self.json_response('ID'))
+            return Identity.Identity(self._from_json('ID'))
 
         @property
-        @response_property()
+        @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self.json_response('InvalidMembers')]
+            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers')]
 
         def post(self, name: str, members: list = None):
             body = {
@@ -38,7 +38,7 @@ class _Identity:
                 'Members': members
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -47,14 +47,14 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/AddGroupMembers', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self.json_response('InvalidMembers')]
+            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers')]
 
         @property
-        @response_property()
+        @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self.json_response('Members')]
+            return [Identity.Identity(m) for m in self._from_json('Members')]
 
         def post(self, group: dict, members: list, show_members: bool = False):
             body = {
@@ -63,7 +63,7 @@ class _Identity:
                 'ShowMembers': show_members
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -72,9 +72,9 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/Browse', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self.json_response(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
         def post(self, filter: str, limit: int, identity_type: int):
             data = {
@@ -83,7 +83,7 @@ class _Identity:
                 "IdentityType": identity_type
             }
 
-            self.response = self._post(data=data)
+            self.json_response = self._post(data=data)
             return self
 
     class _GetAssociatedEntries(API):
@@ -91,16 +91,16 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/GetAssociatedEntries', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self.json_response(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
         def post(self, identity: dict):
             body = {
                 'ID': identity
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -109,9 +109,9 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/GetMembers', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self.json_response(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
         def post(self, identity: dict, resolve_nested: bool = False):
             body = {
@@ -119,7 +119,7 @@ class _Identity:
                 'ResolveNested': int(resolve_nested)
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -128,16 +128,16 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/GetMemberships', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self.json_response(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
         def post(self, identity: dict):
             body = {
                 'ID': identity
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -161,12 +161,12 @@ class _Identity:
                     super().__init__(api_obj=websdk_obj, url=f'/Identity/Group/{prefix}/{principal}', valid_return_codes=[200])
 
                 @property
-                @response_property()
+                @json_response_property()
                 def message(self):
-                    return self.json_response('Message')
+                    return self._from_json('Message')
 
                 def delete(self):
-                    self.response = self._delete()
+                    self.json_response = self._delete()
                     return self
 
     class _ReadAttribute(API):
@@ -174,9 +174,9 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/ReadAttribute', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def attributes(self):
-            return self.json_response(key='Attributes')
+            return self._from_json(key='Attributes')
 
         def post(self, attribute_name: str, identity: dict):
             body = {
@@ -184,7 +184,7 @@ class _Identity:
                 'AttributeName': attribute_name
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -193,19 +193,19 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/RemoveGroupMembers', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self.json_response('InvalidMembers')]
+            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers')]
 
         @property
-        @response_property()
+        @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self.json_response('Members')]
+            return [Identity.Identity(m) for m in self._from_json('Members')]
 
         @property
-        @response_property()
+        @json_response_property()
         def message(self):
-            return self.json_response('Message')
+            return self._from_json('Message')
 
         def put(self, group: dict, members: list, show_members: bool = False):
             body = {
@@ -214,7 +214,7 @@ class _Identity:
                 'ShowMembers': show_members
             }
 
-            self.response = self._put(data=body)
+            self.json_response = self._put(data=body)
 
             return self
 
@@ -223,9 +223,9 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/RenameGroup', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identity(self):
-            return Identity.Identity(self.json_response('ID'))
+            return Identity.Identity(self._from_json('ID'))
 
         def put(self, group: dict, new_group_name: str):
             body = {
@@ -233,7 +233,7 @@ class _Identity:
                 'NewGroupName': new_group_name
             }
 
-            self.response = self._put(data=body)
+            self.json_response = self._put(data=body)
 
             return self
 
@@ -242,12 +242,12 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/Self', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self.json_response(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
         def get(self):
-            self.response = self._get()
+            self.json_response = self._get()
             return self
 
     class _SetPassword(API):
@@ -255,9 +255,9 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/SetPassword', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identity(self):
-            return Identity.Identity(self.json_response('ID'))
+            return Identity.Identity(self._from_json('ID'))
 
         def post(self, identity: dict, password: str, old_password: str = None):
             body = {
@@ -266,7 +266,7 @@ class _Identity:
                 'Password': password
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
 
@@ -275,15 +275,15 @@ class _Identity:
             super().__init__(api_obj=websdk_obj, url='/Identity/Validate', valid_return_codes=[200])
 
         @property
-        @response_property()
+        @json_response_property()
         def identity(self):
-            return Identity.Identity(self.json_response('ID'))
+            return Identity.Identity(self._from_json('ID'))
 
         def post(self, identity: dict):
             body = {
                 'ID': identity
             }
 
-            self.response = self._post(data=body)
+            self.json_response = self._post(data=body)
 
             return self
