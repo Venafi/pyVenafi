@@ -5,4 +5,4 @@ class Workflow:
     class Result:
         def __init__(self, code: int):
             self.code = code
-            self.config_result = ResultCodes.Workflow.get(code, 'Unknown')
+            self.workflow_result = ResultCodes.Workflow.get(code, 'Unknown')
