@@ -13,11 +13,11 @@ if not os.path.exists(EXCLUDED_DOCS_FOLDER):
 VENAFI_FOLDER = os.path.abspath('../venafi')
 
 EXCLUDED_DOCS = [
-    'venafi.api.*.rst',
-    'venafi.properties',
-    'venafi.tools',
-    'venafi.logger'
-    'venafi.features.bases'
+    'venafi.api.*',
+    'venafi.properties*',
+    'venafi.tools*',
+    'venafi.logger*'
+    'venafi.features.bases*'
 ]
 
 
@@ -44,7 +44,7 @@ def main():
 
     # Move all .rst files in EXCLUDED_DOCS to the EXCLUDED_DOCS_FOLDER so they do not appear in the documentation.
     for doc in EXCLUDED_DOCS:
-        paths = glob.glob(os.path.join(ALL_DOCS_FOLDER, f'*{doc}*'))
+        paths = glob.glob(os.path.join(ALL_DOCS_FOLDER, f'{doc}'))
         for path in paths:
             if os.path.exists(path):
                 _, filename = os.path.split(path)
