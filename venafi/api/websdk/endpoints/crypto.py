@@ -1,3 +1,4 @@
+from typing import List
 from venafi.api.api_base import API, json_response_property
 
 
@@ -12,7 +13,7 @@ class _Crypto:
 
         @property
         @json_response_property()
-        def keynames(self):
+        def keynames(self) -> List[str]:
             return self._from_json('Keynames')
 
         def get(self):
@@ -25,7 +26,7 @@ class _Crypto:
 
         @property
         @json_response_property()
-        def default_key(self):
+        def default_key(self) -> str:
             return self._from_json('DefaultKey')
 
         def get(self):

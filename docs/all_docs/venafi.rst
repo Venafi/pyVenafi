@@ -6,10 +6,7 @@ Subpackages
 
 .. toctree::
 
-   venafi.api
    venafi.features
-   venafi.properties
-   venafi.tools
 
 Submodules
 ----------
@@ -21,6 +18,7 @@ venafi.logger module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 
 Module contents
@@ -30,3 +28,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:

@@ -98,7 +98,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddKnownHostKey(API):
@@ -125,7 +124,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddSelfServiceKey(API):
@@ -163,7 +161,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddSelfServiceAuthorizedKey(API):
@@ -206,7 +203,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddSelfServicePrivateKey(API):
@@ -239,7 +235,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddUserPrivateKey(API):
@@ -272,7 +267,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ApproveKeyOperation(API):
@@ -291,7 +285,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _CancelKeyOperation(API):
@@ -309,7 +302,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _CancelRotation(API):
@@ -327,7 +319,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ChangePrivateKeyPassphrase(API):
@@ -346,7 +337,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ConfirmSelfServiceKeyInstallation(API):
@@ -364,7 +354,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _DeleteUnmatchedKeyset(API):
@@ -382,7 +371,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Devices(API):
@@ -402,7 +390,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _EditSelfServiceAuthorizedKey(API):
@@ -428,7 +415,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ExportSelfServiceKey(API):
@@ -453,7 +439,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ExportSelfServicePrivateKey(API):
@@ -488,7 +473,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ImportAuthorizedKey(API):
@@ -515,7 +499,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ImportKeyUsageData(API):
@@ -533,7 +516,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ImportPrivateKey(API):
@@ -561,7 +543,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _EditKeyOptions(API):
@@ -584,7 +565,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _KeyDetails(API):
@@ -602,7 +582,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _KeysetDetails(API):
@@ -691,7 +670,6 @@ class _SSH:
             }
 
             self.json_response = self._get(params=params)
-
             return self
 
         def post(self, keyset_filter: list, load_key_data: bool = None, offset: int = None, page_size: int = None):
@@ -703,7 +681,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _KeyUsage(API):
@@ -724,7 +701,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _MoveKeysetsToPolicy(API):
@@ -743,7 +719,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _RejectKeyOperation(API):
@@ -762,7 +737,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _RemoveKey(API):
@@ -780,7 +754,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _RetryKeyOperation(API):
@@ -798,7 +771,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _RetryRotation(API):
@@ -816,7 +788,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Rotate(API):
@@ -835,7 +806,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _SetUnmatchedKeysetPassPhrase(API):
@@ -854,7 +824,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _SkipKeyRotation(API):
@@ -872,7 +841,6 @@ class _SSH:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Widget:
@@ -921,7 +889,6 @@ class _SSH:
                 }
 
                 self.json_response = self._get(params=params)
-
                 return self
 
         class _PolicyViolations(API):
@@ -1002,5 +969,4 @@ class _SSH:
                 }
 
                 self.json_response = self._get(params=params)
-
                 return self

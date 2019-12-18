@@ -1,4 +1,3 @@
-from typing import *
 import time
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.credential import Credential
@@ -23,8 +22,8 @@ class _Credentials:
         def result(self):
             return Credential.Result(self._from_json(key='Result'))
 
-        def post(self, credential_path: str, friendly_name: str, values: List[Dict], password: str = None, description: str = None,
-                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
+        def post(self, credential_path: str, friendly_name: str, values: list, password: str = None, description: str = None,
+                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
             body = {
                 'CredentialPath': credential_path,
                 'Password': password,
@@ -45,7 +44,6 @@ class _Credentials:
                 body.update({'Contact': contact})
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Delete(API):
@@ -77,8 +75,7 @@ class _Credentials:
         @property
         @json_response_property()
         def credential_infos(self):
-            result = self._from_json(key='CredentialInfos')
-            return [Credential.CredentialInfo(cred_info) for cred_info in result]
+            return [Credential.CredentialInfo(cred_info) for cred_info in self._from_json(key='CredentialInfos')]
 
         def post(self, credential_path: str, pattern: str = None, recursive: bool = False):
             body = {
@@ -117,22 +114,22 @@ class _Credentials:
 
         @property
         @json_response_property()
-        def classname(self):
+        def classname(self) -> str:
             return self._from_json(key='Classname')
 
         @property
         @json_response_property()
-        def description(self):
+        def description(self) -> str:
             return self._from_json(key='Description')
 
         @property
         @json_response_property()
-        def expiration(self):
+        def expiration(self) -> str:
             return self._from_json(key='Expiration')
 
         @property
         @json_response_property()
-        def friendly_name(self):
+        def friendly_name(self) -> str:
             return self._from_json(key='FriendlyName')
         
         @property
@@ -143,8 +140,7 @@ class _Credentials:
         @property
         @json_response_property()
         def values(self):
-            result = self._from_json(key='Values')
-            return [Credential.NameTypeValue(ntv) for ntv in result]
+            return [Credential.NameTypeValue(ntv) for ntv in self._from_json(key='Values')]
         
         def post(self, credential_path: str):
             body = {
@@ -163,8 +159,8 @@ class _Credentials:
         def result(self):
             return Credential.Result(self._from_json(key='Result'))
 
-        def post(self, credential_path: str, friendly_name: str, values: List[Dict], description: str = None,
-                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
+        def post(self, credential_path: str, friendly_name: str, values: list, description: str = None,
+                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
             payload = {
                 'CredentialPath': credential_path,
                 'FriendlyName': friendly_name,
@@ -191,7 +187,6 @@ class _Credentials:
 
             body = payload
             self.json_response = self._post(data=body)
-
             return self
 
     class _CyberArk:

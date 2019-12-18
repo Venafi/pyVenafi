@@ -9,8 +9,8 @@ class _SystemStatus(API):
 
     @property
     @json_response_property()
-    def engine_name(self):
-        return self.json_response('engineName')  # type: str
+    def engine_name(self) -> str:
+        return self.json_response('engineName')
 
     @property
     @json_response_property()
@@ -20,7 +20,7 @@ class _SystemStatus(API):
     @property
     @json_response_property()
     def version(self) -> str:
-        return self.json_response('version')  # type: str
+        return self.json_response('version')
 
     def get(self):
         self.json_response = self._get()

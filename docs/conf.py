@@ -31,6 +31,7 @@ author = 'Venafi'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinxcontrib.napoleon'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +48,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'all_docs/excluded/*.rst
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'bootstrap'
+html_theme = 'alabaster'
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # Add any paths that contain custom static files (such as style sheets) here,

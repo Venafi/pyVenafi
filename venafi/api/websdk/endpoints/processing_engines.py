@@ -1,3 +1,4 @@
+from typing import List
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.processing_engines import ProcessingEngines
 
@@ -30,17 +31,17 @@ class _ProcessingEngines(API):
                 super().__init__(api_obj=websdk_obj, url=f'/ProcessingEngines/Engine/{guid}', valid_return_codes=[200, 201, 204])
 
             @property
-            @json_response_property()
-            def added_count(self):
-                return self._from_json('AddedCount')  # type: str
+            @json_response_property(on_204=str)
+            def added_count(self) -> int:
+                return self._from_json('AddedCount')
 
             @property
-            @json_response_property()
-            def errors(self):
-                return self._from_json('Errors')  # type: list
+            @json_response_property(on_204=list)
+            def errors(self) -> List[str]:
+                return self._from_json('Errors')
 
             @property
-            @json_response_property()
+            @json_response_property(on_204=list)
             def folders(self):
                 return [ProcessingEngines.Folder(folder) for folder in self._from_json('Folders')][0]
 
@@ -54,7 +55,6 @@ class _ProcessingEngines(API):
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
     class _Folder:
@@ -70,7 +70,7 @@ class _ProcessingEngines(API):
                 self._folder_guid = guid
 
             @property
-            @json_response_property()
+            @json_response_property(on_204=list)
             def engines(self):
                 return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
 
@@ -88,7 +88,6 @@ class _ProcessingEngines(API):
                 }
 
                 self.json_response = self._put(data=body)
-
                 return self
 
             def EngineGuid(self, guid):

@@ -18,6 +18,7 @@ venafi.features.application module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 venafi.features.certificate module
 ----------------------------------
@@ -26,6 +27,7 @@ venafi.features.certificate module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 venafi.features.certificate\_authorities module
 -----------------------------------------------
@@ -34,6 +36,7 @@ venafi.features.certificate\_authorities module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 venafi.features.credentials module
 ----------------------------------
@@ -42,6 +45,7 @@ venafi.features.credentials module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 venafi.features.device module
 -----------------------------
@@ -50,6 +54,7 @@ venafi.features.device module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 venafi.features.folder module
 -----------------------------
@@ -58,6 +63,7 @@ venafi.features.folder module
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
 
 Module contents
@@ -67,3 +73,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:

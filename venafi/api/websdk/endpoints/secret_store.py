@@ -1,3 +1,4 @@
+from typing import List 
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.secret_store import SecretStore
 
@@ -33,7 +34,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_id(self):
+        def vault_id(self) -> int:
             return self._from_json(key='VaultID')
 
         def post(self, base_64_data: str, keyname: str, namespace: str, owner: str, vault_type: int):
@@ -113,7 +114,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def encryption_keys(self):
+        def encryption_keys(self) -> List[str]:
             return self._from_json(key='EncryptionKeys')
 
         @property
@@ -136,7 +137,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_ids(self):
+        def vault_ids(self) -> List[int]:
             return self._from_json(key='VaultIDs')
 
         def get(self):
@@ -155,8 +156,7 @@ class _SecretStore:
         @property
         @json_response_property()
         def typed_name_values(self):
-            result = self._from_json('TypedNameValues')
-            return [SecretStore.TypedNameValues(tnv) for tnv in result]
+            return [SecretStore.TypedNameValues(tnv) for tnv in self._from_json('TypedNameValues')]
 
         def post(self, vault_id: int):
             body = {
@@ -177,7 +177,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_ids(self):
+        def vault_ids(self) -> List[int]:
             return self._from_json(key='VaultIDs')
 
         def post(self, name: str, int_value: int = None ,string_value: str = None, date_value: int = None):
@@ -207,7 +207,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def value(self):
+        def value(self) -> str:
             return self._from_json(key='Value')
 
         def post(self, vault_id: int, name: str = ''):
@@ -232,7 +232,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_ids(self):
+        def vault_ids(self) -> List[int]:
             return self._from_json(key='VaultIDs')
 
         def post(self, namespace: str, owner: str, vault_type: str = None):
@@ -257,7 +257,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_ids(self):
+        def vault_ids(self) -> List[int]:
             return self._from_json(key='VaultIDs')
 
         def post(self, vault_type: int):
@@ -297,7 +297,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_ids(self):
+        def vault_ids(self) -> List[int]:
             return self._from_json(key='VaultIDs')
 
         def post(self, vault_type: int):
@@ -359,7 +359,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def owners(self):
+        def owners(self) -> List[str]:
             return self._from_json(key='Owners')
 
         def post(self, namespace: str, vault_id: int):
@@ -377,7 +377,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def base_64_data(self):
+        def base_64_data(self) -> str:
             return self._from_json(key='Base64Data')
 
         @property
@@ -387,7 +387,7 @@ class _SecretStore:
 
         @property
         @json_response_property()
-        def vault_type(self):
+        def vault_type(self) -> str:
             return self._from_json(key='VaultType')
 
         def post(self, vault_id: int):

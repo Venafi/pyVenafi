@@ -430,10 +430,10 @@ def log_to_html():
 def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
 
 
-def singleton(cls, *args, **kwargs):
+def singleton(cls):
     instances = {}
 
-    def _singleton():
+    def _singleton(*args, **kwargs):
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]

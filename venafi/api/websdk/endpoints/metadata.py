@@ -1,3 +1,4 @@
+from typing import List 
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.metadata import Metadata
 from venafi.properties.response_objects.config import Config
@@ -30,17 +31,17 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def dn(self):
+        def dn(self) -> str:
             return self._from_json('DN')
 
         @property
         @json_response_property()
         def item(self):
-            return
+            return Metadata.Item(self._from_json('Item'))
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -54,7 +55,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Find(API):
@@ -63,7 +63,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -84,7 +84,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _FindItem(API):
@@ -93,12 +92,12 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def item_guid(self):
+        def item_guid(self) -> str:
             return self._from_json('ItemGuid')
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -112,7 +111,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Get(API):
@@ -126,7 +124,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -141,7 +139,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetItemGuids(API):
@@ -150,12 +147,12 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def item_guids(self):
+        def item_guids(self) -> List[str]:
             return self._from_json('ItemGuids')
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -169,7 +166,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetItems(API):
@@ -183,7 +179,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -197,7 +193,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetItemsForClass(API):
@@ -211,7 +206,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -225,7 +220,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetPolicyItems(API):
@@ -234,7 +228,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -253,7 +247,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Items(API):
@@ -267,7 +260,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -290,7 +283,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -304,7 +297,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(body)
-
             return self
 
     class _LoadItemGuid(API):
@@ -313,12 +305,12 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def item_guid(self):
+        def item_guid(self) -> str:
             return self._from_json('ItemGuid')
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -332,7 +324,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(body)
-
             return self
 
     class _ReadEffectiveValues(API):
@@ -341,12 +332,12 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
         @json_response_property()
-        def policy_dn(self):
+        def policy_dn(self) -> str:
             return self._from_json('PolicyDn')
 
         @property
@@ -356,7 +347,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json('Values')
 
         def post(self, dn: str, item_guid: str):
@@ -366,7 +357,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(body)
-
             return self
 
     class _ReadPolicy(API):
@@ -375,7 +365,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -385,7 +375,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json('Values')
 
         def post(self, dn: str, item_guid: str, obj_type: str):
@@ -396,7 +386,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(body)
-
             return self
 
     class _Set(API):
@@ -405,7 +394,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -421,7 +410,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _SetPolicy(API):
@@ -430,7 +418,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -447,7 +435,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _UndefineItem(API):
@@ -456,7 +443,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -471,7 +458,6 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _UpdateItem(API):
@@ -480,7 +466,7 @@ class _Metadata(API):
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json('Locked')
 
         @property
@@ -495,5 +481,4 @@ class _Metadata(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self

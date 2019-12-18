@@ -45,5 +45,4 @@ class _ConfigSchema:
             }
 
             self.json_response = self._post(data=body)
-
             return self

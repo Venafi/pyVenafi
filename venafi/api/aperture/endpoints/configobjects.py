@@ -21,5 +21,4 @@ class _ConfigObjects:
             }
 
             self.json_response = self._post(data=body)
-
             return self

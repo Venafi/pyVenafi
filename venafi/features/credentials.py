@@ -1,4 +1,4 @@
-import time
+from datetime import datetime, timedelta
 from typing import *
 from venafi.properties.config import CredentialAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
@@ -6,17 +6,38 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 
 @feature()
 class UsernamePasswordCredential(FeatureBase):
+    """
+    This feature provides high-level interaction with TPP Username/Password Credentials.
+    """
     def __init__(self, auth):
         super().__init__(auth)
 
-    def create(self, name: str, container: str, username: str, password: str, expiration: int = None, description: str = None,
+    def create(self, name: str, container: str, username: str, password: str, expiration: int = 6, description: str = None,
                encryption_key: str = None, shared: bool = False, contact: List[str] = None):
+        """
+        Creates a Username/Password Credential object in TPP. By default, the credential is set to expire 6 months from now.
+
+        Args:
+            name: Name of the credential object.
+            container: Absolute path to the parent folder of the credential object.
+            username: Username.
+            password: Password.
+            expiration: Number months from today at which the credential expires.
+            description: Description of the credential object.
+            encryption_key: Encryption Key used to protect the credential data.
+            shared: If True, the credential can be shared between multiple objects.
+            contact: List of absolute paths to the users in TPP to be established as contacts.
+
+        Returns:
+            Config object representing the credential.
+
+        """
         dn = f'{container}\\{name}'
 
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        expiration = expiration or int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)  # Default to expire in 10 years.
+        expiration = int((datetime.now() + timedelta(expiration * (365/12))).timestamp() * 1000)
 
         result = self.auth.websdk.Credentials.Create.post(
             credential_path=dn,
@@ -42,6 +63,12 @@ class UsernamePasswordCredential(FeatureBase):
         return response.object
 
     def delete(self, object_dn: str):
+        """
+        Deletes the credential object.
+
+        Args:
+            object_dn: Absolute path to the credential object.
+        """
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
