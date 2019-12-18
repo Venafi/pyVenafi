@@ -9,6 +9,8 @@ from typing import *
 from datetime import datetime
 from tempfile import NamedTemporaryFile
 from venafi.tools.logger.config import LOG_DIR, LOG_FILENAME
+# from sql.spinDB import TestResults, _insertTestResult
+from sql.spinDB import SPIN
 
 
 GLOBAL_TIMESTAMP = time.strftime('%Y%m%d%H%M')
@@ -135,8 +137,33 @@ if __name__ == '__main__':
             pretty_data = json.dumps(metadata, indent=4)
             temp.write(pretty_data)
             temp.flush()
-            print(pretty_data)
+            # print(pretty_data)
+            # print("Here is the test info: {}".format(test_info))
+            print('------- Timmy Time ------\n')
+            # for crap in test_info:
+            #     print("{} has the vaule {}".format(crap, test_info[crap]))
+            # for more_crap in test_results:
+            #     print("{} has the value {}".format(more_crap, test_results[more_crap]))
+            # result_values = list(test_results.values())
+            # info_values = list(test_info.values())
+            # for crap in info_values:
+            #     print('Value {}\n'.format(crap))
+            test_id = '600'
+            result = '1'
+            log_file = 'log_file'
+            consec_fail = '0'
+            run_date = '2019-12-12 13:41:53.743'
+            time_lapse = '3'
+            spin = SPIN()
+
+            # _insertTestResult(test_id, result, log_file, consec_fail, run_date, time_lapse)
+            # TestResults.insert_results(result_values[1], result_values[2], result_values[3], result_values[4],
+            #                            result_values[4], result_values[1])
+
+
 
         print('done')
+
+
         #TODO: Throw data from json to DB
         # Archive json file
