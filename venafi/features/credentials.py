@@ -1,7 +1,7 @@
 import time
 from typing import *
-from properties.config import CredentialAttributes
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.properties.config import CredentialAttributes
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
 @feature()

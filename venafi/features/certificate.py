@@ -1,5 +1,5 @@
-from properties.config import ConfigClass, CertificateAttributes
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.properties.config import ConfigClass, CertificateAttributes
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
 class _CertificateBase(FeatureBase):

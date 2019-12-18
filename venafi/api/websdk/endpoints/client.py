@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.client import Client
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.client import Client
 
 
 class _Client(API):

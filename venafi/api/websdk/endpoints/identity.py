@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.identity import Identity
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.identity import Identity
 
 
 class _Identity:

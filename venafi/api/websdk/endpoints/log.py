@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.log import Log
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.log import Log
 
 
 class _Log(API):

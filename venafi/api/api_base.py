@@ -1,8 +1,8 @@
 import re
 import json
-from api.session import Session
+from venafi.api.session import Session
 from requests import Response
-from logger import logger, LogLevels
+from venafi.logger import logger, LogLevels
 
 
 def json_response_property():

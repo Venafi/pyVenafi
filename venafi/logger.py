@@ -1,3 +1,3 @@
-from tools.logger.logger import LogLevels, Logger
+from venafi.tools.logger.logger import LogLevels, Logger
 
 logger = Logger()

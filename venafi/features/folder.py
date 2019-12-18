@@ -1,13 +1,22 @@
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
-from properties.config import ConfigClass, FolderAttributes
+"""
+This feature allows you to create a folder, sometimes called a "policy", under \VED\Policy.
+"""
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.properties.config import ConfigClass, FolderAttributes
 
 
 @feature()
 class Folder(FeatureBase):
+    """
+    Folder details here.
+    """
     def __init__(self, auth):
         super().__init__(auth)
 
-    def create(self, name: str, container: str, attributes: dict = None):
+    def create(self, name: str, container: str, attributes: bool = None):
+        """
+        This is what this does....
+        """
         if self.auth.preference == ApiPreferences.aperture:
             return self.auth.aperture.ConfigObjects.Policies.post(name=name, container=container).object
 

@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.system_status import SystemStatus
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.system_status import SystemStatus
 
 
 class _SystemStatus(API):

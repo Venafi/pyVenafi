@@ -1,7 +1,7 @@
 from typing import *
 import time
-from api.api_base import API, json_response_property
-from properties.response_objects.credential import Credential
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.credential import Credential
 
 
 class _Credentials:

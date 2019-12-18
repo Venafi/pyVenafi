@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.config import Config
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.config import Config
 
 
 class _ConfigObjects:
