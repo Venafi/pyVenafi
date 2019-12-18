@@ -11,14 +11,9 @@ Subpackages
 Submodules
 ----------
 
-venafi.tools.threads module
----------------------------
+.. toctree::
 
-.. automodule:: venafi.tools.threads
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   venafi.tools.threads
 
 Module contents
 ---------------

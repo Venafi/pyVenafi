@@ -1,480 +1,178 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>venafi.features package &#8212; Venafi  documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Features &mdash; Venafi  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Applications" href="venafi.features.application.html" />
+    <link rel="prev" title="Venafi Package" href="venafi.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="../index.html" class="icon icon-home"> Venafi
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="venafi-features-package">
-<h1>venafi.features package<a class="headerlink" href="#venafi-features-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="venafi.features.bases.html">venafi.features.bases package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="venafi.features.bases.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="venafi.features.bases.html#module-venafi.features.bases.feature_base">venafi.features.bases.feature_base module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="venafi.features.bases.html#module-venafi.features.bases">Module contents</a></li>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="venafi.html">Venafi Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="venafi.features.application.html">Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="venafi.features.certificate.html">Certificates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="venafi.features.certificate_authorities.html">Certificate Authorities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="venafi.features.credentials.html">Credentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="venafi.features.device.html">Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="venafi.features.folder.html">Folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-venafi.features">Module contents</a></li>
 </ul>
 </li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom.venafi.api.html">Venafi API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Venafi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="venafi.html">Venafi Package</a> &raquo;</li>
+        
+      <li>Features</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/all_docs/venafi.features.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
 </div>
-</div>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-venafi.features.application">
-<span id="venafi-features-application-module"></span><h2>venafi.features.application module<a class="headerlink" href="#module-venafi.features.application" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="venafi.features.application.Apache">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.application.</code><code class="sig-name descname">Apache</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.Apache" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.application._ApplicationBase</span></code></p>
-<p>This feature provides high-level interaction with TPP Apache Application objects.</p>
-<dl class="method">
-<dt id="venafi.features.application.Apache.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">private_key_file: str</em>, <em class="sig-param">certificate_file: str</em>, <em class="sig-param">attributes: dict = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.Apache.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an Apache application object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the Apache application object.</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the application object.</p></li>
-<li><p><strong>private_key_file</strong> – Location on the application device to place the private key file.</p></li>
-<li><p><strong>certificate_file</strong> – Location on the application device to place the certificate file.</p></li>
-<li><p><strong>attributes</strong> – Additional attributes pertaining to the application object.</p></li>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="venafi.features.application.html">Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="venafi.features.certificate.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="venafi.features.certificate_authorities.html">Certificate Authorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="venafi.features.credentials.html">Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="venafi.features.device.html">Devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="venafi.features.folder.html">Folders</a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representation of the application object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.application.Apache.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.Apache.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.application.Apache.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.Apache.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="venafi.features.application.PKCS11">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.application.</code><code class="sig-name descname">PKCS11</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.PKCS11" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.application._ApplicationBase</span></code></p>
-<p>This feature provides high-level interaction with TPP PKCS11 Application objects.</p>
-<dl class="method">
-<dt id="venafi.features.application.PKCS11.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">cryptoki_file_with_path: str</em>, <em class="sig-param">distribution_directory: str</em>, <em class="sig-param">openssl_config_file_with_path: str</em>, <em class="sig-param">openssl_directory: str</em>, <em class="sig-param">token_slot_identifier: str</em>, <em class="sig-param">token_slot_pin_dn: str</em>, <em class="sig-param">use_case: str</em>, <em class="sig-param">attributes: dict = None</em>, <em class="sig-param">connection_method: str = 'SSH'</em>, <em class="sig-param">embed_sans_in_csr: bool = False</em>, <em class="sig-param">import_certificates_into_hsm: str = '0'</em>, <em class="sig-param">label_format: str = 'Date with CN'</em>, <em class="sig-param">port: int = 22</em>, <em class="sig-param">protection_type: str = 'Module'</em>, <em class="sig-param">openssl_type: str = 'System'</em>, <em class="sig-param">reverse_subject_dn: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.PKCS11.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a PKCS11 application object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the Apache application object.</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the application object.</p></li>
-<li><p><strong>cryptoki_file_with_path</strong> – </p></li>
-<li><p><strong>distribution_directory</strong> – </p></li>
-<li><p><strong>openssl_config_file_with_path</strong> – </p></li>
-<li><p><strong>openssl_directory</strong> – </p></li>
-<li><p><strong>token_slot_identifier</strong> – </p></li>
-<li><p><strong>token_slot_pin_dn</strong> – </p></li>
-<li><p><strong>use_case</strong> – </p></li>
-<li><p><strong>attributes</strong> – Additional attributes pertaining to the application object.</p></li>
-<li><p><strong>connection_method</strong> – </p></li>
-<li><p><strong>embed_sans_in_csr</strong> – </p></li>
-<li><p><strong>import_certificates_into_hsm</strong> – </p></li>
-<li><p><strong>label_format</strong> – </p></li>
-<li><p><strong>port</strong> – </p></li>
-<li><p><strong>protection_type</strong> – </p></li>
-<li><p><strong>openssl_type</strong> – </p></li>
-<li><p><strong>reverse_subject_dn</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.application.PKCS11.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.PKCS11.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.application.PKCS11.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.application.PKCS11.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-venafi.features.certificate">
-<span id="venafi-features-certificate-module"></span><h2>venafi.features.certificate module<a class="headerlink" href="#module-venafi.features.certificate" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="venafi.features.certificate.Certificate">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.certificate.</code><code class="sig-name descname">Certificate</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate.Certificate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="venafi.features.bases.html#venafi.features.bases.feature_base.FeatureBase" title="venafi.features.bases.feature_base.FeatureBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.bases.feature_base.FeatureBase</span></code></a></p>
-<p>This feature provides high-level interaction with TPP Server Certificate objects.</p>
-<dl class="method">
-<dt id="venafi.features.certificate.Certificate.associate_application">
-<code class="sig-name descname">associate_application</code><span class="sig-paren">(</span><em class="sig-param">certificate_dn: str</em>, <em class="sig-param">application_dn: list</em>, <em class="sig-param">push_to_new: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate.Certificate.associate_application" title="Permalink to this definition">¶</a></dt>
-<dd><p>Associate an application object to a certificate.
-.. note:: The application object must already be created in TPP.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>certificate_dn</strong> – Absolute path to the certificate object.</p></li>
-<li><p><strong>application_dn</strong> – Absolute path to the application object.</p></li>
-<li><p><strong>push_to_new</strong> – If True, the certificate will be pushed to the application once associated.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate.Certificate.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">attributes: dict = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate.Certificate.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the config object that represents the certificate.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The certificate is NOT automatically requested. Use <a class="reference internal" href="#venafi.features.certificate.Certificate.renew" title="venafi.features.certificate.Certificate.renew"><code class="xref py py-meth docutils literal notranslate"><span class="pre">renew()</span></code></a> to obtain a certificate.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the Certificate object.</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the certificate object.</p></li>
-<li><p><strong>attributes</strong> – Additional attributes that define this certificate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representing the certificate object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate.Certificate.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">certificate_guid: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate.Certificate.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the certificate object from TPP.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method does not affect the actual certificate installed on any application.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>certificate_guid</strong> – Guid representing the certificate object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate.Certificate.renew">
-<code class="sig-name descname">renew</code><span class="sig-paren">(</span><em class="sig-param">certificate_dn: str</em>, <em class="sig-param">csr: str = None</em>, <em class="sig-param">reenable: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate.Certificate.renew" title="Permalink to this definition">¶</a></dt>
-<dd><p>Renews or requests a certificate.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>certificate_dn</strong> – Absolute path to the certificate object.</p></li>
-<li><p><strong>csr</strong> – If provided, uploads the PKCS10 CSR to TPP to send to the CA. If not provided, TPP generates the CSR.</p></li>
-<li><p><strong>reenable</strong> – The action to control a previously disabled certificate:
-If False, do not renew a previously disabled certificate.
-If True, lear the Disabled attribute, reenable, and then renew the certificate (in this request).
-Reuse the same CertificateDN, that is also known as a Certificate object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Certificate details regarding the request and renewal.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate.Certificate.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate.Certificate.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-venafi.features.certificate_authorities">
-<span id="venafi-features-certificate-authorities-module"></span><h2>venafi.features.certificate_authorities module<a class="headerlink" href="#module-venafi.features.certificate_authorities" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="venafi.features.certificate_authorities.MSCA">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.certificate_authorities.</code><code class="sig-name descname">MSCA</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.MSCA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.certificate_authorities._CertificateAuthorityBase</span></code></p>
-<p>This feature provides high-level interaction with TPP Microsoft Certificate Authority objects.</p>
-<dl class="method">
-<dt id="venafi.features.certificate_authorities.MSCA.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">hostname: str</em>, <em class="sig-param">service_name: str</em>, <em class="sig-param">credential_dn: str</em>, <em class="sig-param">template: str</em>, <em class="sig-param">attributes: dict = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.MSCA.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Microsoft Certificate Authority object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the CA object.</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the CA object.</p></li>
-<li><p><strong>hostname</strong> – Hostname or IP Address of the CA.</p></li>
-<li><p><strong>service_name</strong> – Service, or Given, Name of the certificate authority.</p></li>
-<li><p><strong>credential_dn</strong> – Absolute path to the credential object.</p></li>
-<li><p><strong>template</strong> – Name of the CA template.</p></li>
-<li><p><strong>attributes</strong> – Additional attributes associated to the CA object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representing the certificate authority.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate_authorities.MSCA.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.MSCA.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the Certificate Authority object from TPP, including all of the secrets associated to it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>object_dn</strong> – Absolute path to the CA object.</p>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate_authorities.MSCA.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.MSCA.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="venafi.features.certificate_authorities.SelfSigned">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.certificate_authorities.</code><code class="sig-name descname">SelfSigned</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.SelfSigned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.certificate_authorities._CertificateAuthorityBase</span></code></p>
-<p>This feature provides high-level interaction with TPP Self-Signed Certificate Authority objects.</p>
-<dl class="method">
-<dt id="venafi.features.certificate_authorities.SelfSigned.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">attributes: dict = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.SelfSigned.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Self-Signed Certificate Authority object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the CA object.</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the CA object.</p></li>
-<li><p><strong>attributes</strong> – Additional attributes associated to the CA object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representing the certificate authority.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate_authorities.SelfSigned.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.SelfSigned.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the Certificate Authority object from TPP, including all of the secrets associated to it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>object_dn</strong> – Absolute path to the CA object.</p>
-</dd>
-</dl>
-<p>Returns:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.certificate_authorities.SelfSigned.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.certificate_authorities.SelfSigned.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-venafi.features.credentials">
-<span id="venafi-features-credentials-module"></span><h2>venafi.features.credentials module<a class="headerlink" href="#module-venafi.features.credentials" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="venafi.features.credentials.UsernamePasswordCredential">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.credentials.</code><code class="sig-name descname">UsernamePasswordCredential</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.credentials.UsernamePasswordCredential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="venafi.features.bases.html#venafi.features.bases.feature_base.FeatureBase" title="venafi.features.bases.feature_base.FeatureBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.bases.feature_base.FeatureBase</span></code></a></p>
-<p>This feature provides high-level interaction with TPP Username/Password Credentials.</p>
-<dl class="method">
-<dt id="venafi.features.credentials.UsernamePasswordCredential.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">username: str</em>, <em class="sig-param">password: str</em>, <em class="sig-param">expiration: int = 6</em>, <em class="sig-param">description: str = None</em>, <em class="sig-param">encryption_key: str = None</em>, <em class="sig-param">shared: bool = False</em>, <em class="sig-param">contact: List[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.credentials.UsernamePasswordCredential.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Username/Password Credential object in TPP. By default, the credential is set to expire 6 months from now.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the credential object.</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the credential object.</p></li>
-<li><p><strong>username</strong> – Username.</p></li>
-<li><p><strong>password</strong> – Password.</p></li>
-<li><p><strong>expiration</strong> – Number months from today at which the credential expires.</p></li>
-<li><p><strong>description</strong> – Description of the credential object.</p></li>
-<li><p><strong>encryption_key</strong> – Encryption Key used to protect the credential data.</p></li>
-<li><p><strong>shared</strong> – If True, the credential can be shared between multiple objects.</p></li>
-<li><p><strong>contact</strong> – List of absolute paths to the users in TPP to be established as contacts.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representing the credential.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.credentials.UsernamePasswordCredential.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.credentials.UsernamePasswordCredential.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the credential object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>object_dn</strong> – Absolute path to the credential object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.credentials.UsernamePasswordCredential.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.credentials.UsernamePasswordCredential.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-venafi.features.device">
-<span id="venafi-features-device-module"></span><h2>venafi.features.device module<a class="headerlink" href="#module-venafi.features.device" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="venafi.features.device.Device">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.device.</code><code class="sig-name descname">Device</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.device.Device" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.device._DeviceBase</span></code></p>
-<p>This feature provides high-level interaction with TPP device objects.</p>
-<dl class="method">
-<dt id="venafi.features.device.Device.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">hostname: str</em>, <em class="sig-param">credential_dn: str</em>, <em class="sig-param">attributes: dict = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.device.Device.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Device object in TPP.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the device object .</p></li>
-<li><p><strong>container</strong> – Absolute path to the parent folder of the device object.</p></li>
-<li><p><strong>hostname</strong> – DNS or IP Address of the device.</p></li>
-<li><p><strong>credential_dn</strong> – Absolute path to the credential object for this device.</p></li>
-<li><p><strong>attributes</strong> – List of attributes pertaining to the device object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representing the device.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.device.Device.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.device.Device.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the device object specified. Since there are no secret store data attached to this object,
-only a config delete is performed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>object_dn</strong> – Absolute path to the device object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.device.Device.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.device.Device.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-venafi.features.folder">
-<span id="venafi-features-folder-module"></span><h2>venafi.features.folder module<a class="headerlink" href="#module-venafi.features.folder" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="venafi.features.folder.Folder">
-<em class="property">class </em><code class="sig-prename descclassname">venafi.features.folder.</code><code class="sig-name descname">Folder</code><span class="sig-paren">(</span><em class="sig-param">auth</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.folder.Folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="venafi.features.bases.html#venafi.features.bases.feature_base.FeatureBase" title="venafi.features.bases.feature_base.FeatureBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">venafi.features.bases.feature_base.FeatureBase</span></code></a></p>
-<p>This feature provides high-level interaction with TPP folders, also known as policies.</p>
-<dl class="method">
-<dt id="venafi.features.folder.Folder.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">container: str</em>, <em class="sig-param">attributes: dict = None</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.folder.Folder.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Folder, or Policy, object in TPP.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Name of the folder.</p></li>
-<li><p><strong>container</strong> – Absolute path to the folder’s parent folder.</p></li>
-<li><p><strong>attributes</strong> – Attributes pertaining to the folder itself and NOT any of the policyable options.
-In order to set engines on this folder, use <a class="reference internal" href="#venafi.features.folder.Folder.set_engines" title="venafi.features.folder.Folder.set_engines"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_engines()</span></code></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config object representing the folder.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.folder.Folder.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">recursive: bool = True</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.folder.Folder.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes the folder. The folder is, by default, deleted recursively. All objects deleted will be deleted from config
-and secret store.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>object_dn</strong> – Absolute path to the folder.</p></li>
-<li><p><strong>recursive</strong> – If True, delete all sub-folders, etc., from config and secret store.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.folder.Folder.set_engines">
-<code class="sig-name descname">set_engines</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str, engines: List[str]</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.folder.Folder.set_engines" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the desired TPP engine(s) to exclusively do work for all objects contained in the folder.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>object_dn</strong> – Absolute path to the folder.</p></li>
-<li><p><strong>engines</strong> – List of engine names listed in TPP.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="venafi.features.folder.Folder.wait_for_attribute">
-<code class="sig-name descname">wait_for_attribute</code><span class="sig-paren">(</span><em class="sig-param">object_dn: str</em>, <em class="sig-param">attiribute_name: str</em>, <em class="sig-param">attribute_value: str</em>, <em class="sig-param">timeout: int = 10</em><span class="sig-paren">)</span><a class="headerlink" href="#venafi.features.folder.Folder.wait_for_attribute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-venafi.features">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-venafi.features" title="Permalink to this headline">¶</a></h2>
@@ -482,66 +180,52 @@ and secret store.</p>
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Venafi</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="venafi.features.application.html" class="btn btn-neutral float-right" title="Applications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="venafi.html" class="btn btn-neutral float-left" title="Venafi Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Venafi
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Venafi.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/all_docs/venafi.features.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

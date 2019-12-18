@@ -11,14 +11,9 @@ Subpackages
 Submodules
 ----------
 
-venafi.api.aperture.aperture module
------------------------------------
+.. toctree::
 
-.. automodule:: venafi.api.aperture.aperture
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   venafi.api.aperture.aperture
 
 Module contents
 ---------------

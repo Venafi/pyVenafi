@@ -11,14 +11,9 @@ Subpackages
 Submodules
 ----------
 
-venafi.api.websdk.websdk module
--------------------------------
+.. toctree::
 
-.. automodule:: venafi.api.websdk.websdk
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   venafi.api.websdk.websdk
 
 Module contents
 ---------------

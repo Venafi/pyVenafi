@@ -13,9 +13,11 @@ if not os.path.exists(EXCLUDED_DOCS_FOLDER):
 VENAFI_FOLDER = os.path.abspath('../venafi')
 
 EXCLUDED_DOCS = [
-    'api',
-    'properties',
-    'tools'
+    'venafi.api.*.rst',
+    'venafi.properties',
+    'venafi.tools',
+    'venafi.logger'
+    'venafi.features.bases'
 ]
 
 
@@ -37,7 +39,7 @@ def main():
     proc = lambda cmd: subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE, universal_newlines=True)
 
     # Collect .rst files for all modules under venafi.
-    apidoc = proc(f'sphinx-apidoc -o {ALL_DOCS_FOLDER} {VENAFI_FOLDER}')
+    apidoc = proc(f'sphinx-apidoc -e -o {ALL_DOCS_FOLDER} {VENAFI_FOLDER}')
     _read_output(apidoc)
 
     # Move all .rst files in EXCLUDED_DOCS to the EXCLUDED_DOCS_FOLDER so they do not appear in the documentation.

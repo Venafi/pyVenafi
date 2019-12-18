@@ -4,22 +4,10 @@ venafi.api.aperture.endpoints package
 Submodules
 ----------
 
-venafi.api.aperture.endpoints.configobjects module
---------------------------------------------------
+.. toctree::
 
-.. automodule:: venafi.api.aperture.endpoints.configobjects
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-venafi.api.aperture.endpoints.users module
-------------------------------------------
-
-.. automodule:: venafi.api.aperture.endpoints.users
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
+   venafi.api.aperture.endpoints.configobjects
+   venafi.api.aperture.endpoints.users
 
 Module contents
 ---------------
