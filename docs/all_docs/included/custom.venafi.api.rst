@@ -97,7 +97,7 @@ In order to get the list of approvers and status of the ticket:
 .. code-block:: python
 
     # HTTP Status Code == 200 validated with this property.
-    approvers = result.approvers  # returns a list of approvers
+    approvers = result.approvers
     # HTTP Status Code == 200 already validated above, so this property knows not to re-validate.
     status = result.status
 
