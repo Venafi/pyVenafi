@@ -5,8 +5,8 @@ Welcome to Venafi's documentation!
    :maxdepth: 4
    :caption: Contents
 
-   all_docs/venafi
-   all_docs/custom.venafi.api
+   all_docs/included/venafi
+   all_docs/included/custom.venafi.api
 
 
 Indices and tables
