@@ -1,5 +1,5 @@
-from api.websdk.websdk import WebSDK
-from api.aperture.aperture import Aperture
+from venafi.api.websdk.websdk import WebSDK
+from venafi.api.aperture.aperture import Aperture
 
 
 class Authenticate:

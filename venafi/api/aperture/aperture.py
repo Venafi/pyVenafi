@@ -1,6 +1,6 @@
-from api.session import Session
-from api.aperture.endpoints.users import _Users
-from api.aperture.endpoints.configobjects import _ConfigObjects
+from venafi.api.session import Session
+from venafi.api.aperture.endpoints.users import _Users
+from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 
 
 class Aperture:

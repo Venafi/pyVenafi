@@ -1,1 +1,1 @@
-from api.authenticate import Authenticate
+from venafi.api.authenticate import Authenticate

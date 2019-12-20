@@ -1,5 +1,6 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.worfklow import Workflow
+from typing import List 
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.worfklow import Workflow
 
 
 class _Workflow:
@@ -9,6 +10,12 @@ class _Workflow:
     class _Ticket:
         def __init__(self, websdk_obj):
             self.Create = self._Create(websdk_obj=websdk_obj)
+            self.Delete = self.Delete(websdk_obj=websdk_obj)
+            self.Details = self._Details(websdk_obj=websdk_obj)
+            self.Enumerate = self._Enumerate(websdk_obj=websdk_obj)
+            self.Exists = self._Exists(websdk_obj=websdk_obj)
+            self.Status = self._Status(websdk_obj=websdk_obj)
+            self.UpdateStatus = self._UpdateStatus(websdk_obj=websdk_obj)
 
         class _Create(API):
             def __init__(self, websdk_obj):
@@ -34,7 +41,6 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
         class _Delete(API):
@@ -52,7 +58,6 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
         class _Details(API):
@@ -71,7 +76,7 @@ class _Workflow:
 
             @property
             @json_response_property()
-            def approvers(self) -> list:
+            def approvers(self) -> List[str]:
                 return self.json_response('Approvers')
 
             @property
@@ -110,7 +115,6 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
         class _Enumerate(API):
@@ -119,7 +123,7 @@ class _Workflow:
 
             @property
             @json_response_property()
-            def guids(self) -> list:
+            def guids(self) -> List[str]:
                 return self.json_response('GUIDS')
 
             @property
@@ -134,7 +138,6 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
         class _Exists(API):
@@ -152,7 +155,6 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
         class _Status(API):
@@ -161,7 +163,7 @@ class _Workflow:
 
             @property
             @json_response_property()
-            def status(self) -> list:
+            def status(self) -> str:
                 return self.json_response('Status')
 
             @property
@@ -175,7 +177,6 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self
 
         class _UpdateStatus(API):
@@ -197,5 +198,4 @@ class _Workflow:
                 }
 
                 self.json_response = self._post(data=body)
-
                 return self

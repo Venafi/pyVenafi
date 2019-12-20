@@ -1,4 +1,4 @@
-from properties.resultcodes import ResultCodes
+from venafi.properties.resultcodes import ResultCodes
 
 
 class Metadata:
@@ -15,6 +15,8 @@ class Metadata:
             self.allowed_characters = item_dict.get('AllowedCharacters')  # type: str
             self.allowed_values = item_dict.get('AllowedValues')  # type: str
             self.category = item_dict.get('Category')  # type: str
+            self.classes = item_dict.get('Classes')  # type: list
+            self.configAttribute = item_dict.get('ConfigAttribute')  # type: str
             self.date_only = item_dict.get('DateOnly')  # type: bool
             self.default_values = item_dict.get('DefaultValues')  # type: str
             self.display_after = item_dict.get('DisplayAfter')  # type: str
@@ -22,6 +24,7 @@ class Metadata:
             self.error_message = item_dict.get('ErrorMessage')  # type: str
             self.guid = item_dict.get('Guid')  # type: str
             self.help = item_dict.get('Help')  # type: str
+            self.label = item_dict.get('Label')  # type: str
             self.localization_table = item_dict.get('LocalizationTable')  # type: str
             self.localized_help = item_dict.get('LocalizedHelp')  # type: str
             self.localized_label = item_dict.get('LocalizedLabel')  # type: str

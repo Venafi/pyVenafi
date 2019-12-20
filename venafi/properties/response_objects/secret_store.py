@@ -1,4 +1,4 @@
-from properties.resultcodes import ResultCodes
+from venafi.properties.resultcodes import ResultCodes
 
 
 class SecretStore:

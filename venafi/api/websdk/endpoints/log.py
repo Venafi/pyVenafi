@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.log import Log
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.log import Log
 
 
 class _Log(API):
@@ -8,7 +8,7 @@ class _Log(API):
 
     @property
     @json_response_property()
-    def log_result(self):
+    def log_result(self) -> int:
         return self._from_json('LogResult')
 
     @property
@@ -35,7 +35,6 @@ class _Log(API):
             'Value2': value2
         }
         self.json_response = self._get(params=params)
-
         return self
 
     def post(self, component: str, id: int, grouping: int = None, severity: int = None, source_ip: str = None,
@@ -53,7 +52,6 @@ class _Log(API):
         }
 
         self.json_response = self._post(data=body)
-
         return self
 
     def Guid(self, guid: str):

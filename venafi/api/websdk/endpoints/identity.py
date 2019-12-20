@@ -1,5 +1,6 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.identity import Identity
+from typing import List 
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.identity import Identity
 
 
 class _Identity:
@@ -39,7 +40,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddGroupMembers(API):
@@ -64,7 +64,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Browse(API):
@@ -101,7 +100,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetMembers(API):
@@ -120,7 +118,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetMemberships(API):
@@ -138,7 +135,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Group:
@@ -162,7 +158,7 @@ class _Identity:
 
                 @property
                 @json_response_property()
-                def message(self):
+                def message(self) -> str:
                     return self._from_json('Message')
 
                 def delete(self):
@@ -175,7 +171,7 @@ class _Identity:
 
         @property
         @json_response_property()
-        def attributes(self):
+        def attributes(self) -> List[str]:
             return self._from_json(key='Attributes')
 
         def post(self, attribute_name: str, identity: dict):
@@ -185,7 +181,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _RemoveGroupMembers(API):
@@ -204,7 +199,7 @@ class _Identity:
 
         @property
         @json_response_property()
-        def message(self):
+        def message(self) -> str:
             return self._from_json('Message')
 
         def put(self, group: dict, members: list, show_members: bool = False):
@@ -215,7 +210,6 @@ class _Identity:
             }
 
             self.json_response = self._put(data=body)
-
             return self
 
     class _RenameGroup(API):
@@ -234,7 +228,6 @@ class _Identity:
             }
 
             self.json_response = self._put(data=body)
-
             return self
 
     class _Self(API):
@@ -267,7 +260,6 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Validate(API):
@@ -285,5 +277,4 @@ class _Identity:
             }
 
             self.json_response = self._post(data=body)
-
             return self

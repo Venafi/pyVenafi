@@ -1,15 +1,20 @@
 import re
 import json
-from api.session import Session
+from venafi.api.session import Session
 from requests import Response
-from logger import logger, LogLevels
+from venafi.logger import logger, LogLevels
 
 
-def json_response_property():
+def json_response_property(on_204=None):
     def pre_validation(func):
         def wrap(self, *args, **kwargs):
             if not self._validated:
                     self._validate()
+            if on_204 and self.response.status_code == 204:
+                if callable(on_204):
+                    return on_204()
+                else:
+                    return on_204
             return func(self, *args, **kwargs)
         return wrap
     return pre_validation

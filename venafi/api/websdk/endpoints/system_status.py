@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.system_status import SystemStatus
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.system_status import SystemStatus
 
 
 class _SystemStatus(API):
@@ -9,8 +9,8 @@ class _SystemStatus(API):
 
     @property
     @json_response_property()
-    def engine_name(self):
-        return self.json_response('engineName')  # type: str
+    def engine_name(self) -> str:
+        return self.json_response('engineName')
 
     @property
     @json_response_property()
@@ -20,7 +20,7 @@ class _SystemStatus(API):
     @property
     @json_response_property()
     def version(self) -> str:
-        return self.json_response('version')  # type: str
+        return self.json_response('version')
 
     def get(self):
         self.json_response = self._get()

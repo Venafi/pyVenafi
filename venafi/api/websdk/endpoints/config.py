@@ -1,5 +1,6 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.config import Config
+from typing import List 
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.config import Config
 
 
 class _Config:
@@ -57,7 +58,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _AddPolicyValue(API):
@@ -98,7 +98,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ClearAttribute(API):
@@ -117,7 +116,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ClearPolicyAttribute(API):
@@ -145,7 +143,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def class_names(self):
+        def class_names(self) -> List[str]:
             return self._from_json(key='ClassNames')
 
         @property
@@ -166,7 +164,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def count(self):
+        def count(self) -> int:
             return self._from_json(key='Count', error_key='Error')
 
         @property
@@ -193,8 +191,7 @@ class _Config:
         @property
         @json_response_property()
         def object(self):
-            result = self._from_json(key='Object', error_key='Error')
-            return Config.Object(result, self._api_type)
+            return Config.Object(self._from_json(key='Object', error_key='Error'), self._api_type)
 
         @property
         @json_response_property()
@@ -209,7 +206,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _DefaultDN(API):
@@ -218,7 +214,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def default_dn(self):
+        def default_dn(self) -> str:
             return self._from_json(key='DefaultDN', error_key='Error')
 
         @property
@@ -231,7 +227,6 @@ class _Config:
                 'DefaultDN': default_dn
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _Delete(API):
@@ -249,7 +244,6 @@ class _Config:
                 "Recursive": recursive
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _DnToGuid(API):
@@ -258,22 +252,22 @@ class _Config:
 
         @property
         @json_response_property()
-        def class_name(self):
+        def class_name(self) -> str:
             return self._from_json(key='ClassName', error_key='Error')
 
         @property
         @json_response_property()
-        def guid(self):
+        def guid(self) -> str:
             return self._from_json(key='GUID', error_key='Error')
 
         @property
         @json_response_property()
-        def revision(self):
+        def revision(self) -> str:
             return self._from_json(key='Revision', error_key='Error')
 
         @property
         @json_response_property()
-        def hierarchical_guid(self):
+        def hierarchical_guid(self) -> str:
             return self._from_json(key='HierarchicalGUID', error_key='Error')
 
         @property
@@ -286,7 +280,6 @@ class _Config:
                 "ObjectDN": object_dn,
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _Enumerate(API):
@@ -296,8 +289,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            result = self._from_json(key='Objects', error_key='Error')
-            return [Config.Object(obj, self._api_type) for obj in result]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
 
         @property
         @json_response_property()
@@ -311,7 +303,6 @@ class _Config:
                 "Pattern": pattern
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _EnumerateAll(API):
@@ -321,8 +312,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            result = self._from_json(key='Objects', error_key='Error')
-            return [Config.Object(obj, self._api_type) for obj in result]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
 
         @property
         @json_response_property()
@@ -334,7 +324,6 @@ class _Config:
                 "Pattern": pattern
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _EnumerateObjectsDerivedFrom(API):
@@ -344,8 +333,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            result = self._from_json(key='Objects', error_key='Error')
-            return [Config.Object(obj, self._api_type) for obj in result]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
 
         @property
         @json_response_property()
@@ -358,7 +346,6 @@ class _Config:
                 "Pattern": pattern
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _EnumeratePolicies(API):
@@ -368,8 +355,7 @@ class _Config:
         @property
         @json_response_property()
         def policies(self):
-            result = self._from_json(key='Policies', error_key='Error')
-            return [Config.Policy(obj, self._api_type) for obj in result]
+            return [Config.Policy(obj, self._api_type) for obj in self._from_json(key='Policies', error_key='Error')]
 
         @property
         @json_response_property()
@@ -381,7 +367,6 @@ class _Config:
                 "ObjectDN": object_dn
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _Find(API):
@@ -391,8 +376,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            result = self._from_json(key='Objects', error_key='Error')
-            return [Config.Object(obj, self._api_type) for obj in result]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
 
         @property
         @json_response_property()
@@ -405,7 +389,6 @@ class _Config:
                 "AttributeNames": attribute_names
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _FindContainers(API):
@@ -415,8 +398,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            result = self._from_json(key='Objects', error_key='Error')
-            return [Config.Object(obj, self._api_type) for obj in result]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
 
         @property
         @json_response_property()
@@ -429,7 +411,6 @@ class _Config:
                 "Recursive": recursive
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _FindObjectsOfClass(API):
@@ -439,8 +420,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            result = self._from_json(key='Objects', error_key='Error')
-            return [Config.Object(obj, self._api_type) for obj in result]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
 
         @property
         @json_response_property()
@@ -462,7 +442,6 @@ class _Config:
                 body.update({'Recursive': recursive})
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _FindPolicy(API):
@@ -471,17 +450,17 @@ class _Config:
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json(key='Locked', error_key='Error')
 
         @property
         @json_response_property()
-        def policy_dn(self):
+        def policy_dn(self) -> str:
             return self._from_json(key='PolicyDN', error_key='Error')
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json(key='Values', error_key='Error')
 
         @property
@@ -497,7 +476,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetHighestRevision(API):
@@ -506,7 +484,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def revision(self):
+        def revision(self) -> str:
             return self._from_json(key='Revision', error_key='Error')
 
         @property
@@ -522,7 +500,6 @@ class _Config:
                 body.update({'Classes': classes})
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GetRevision(API):
@@ -531,7 +508,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def revision(self):
+        def revision(self) -> str:
             return self._from_json(key='Revision', error_key='Error')
 
         @property
@@ -545,7 +522,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _GuidToDn(API):
@@ -554,22 +530,22 @@ class _Config:
 
         @property
         @json_response_property()
-        def object_dn(self):
+        def object_dn(self) -> str:
             return self._from_json(key='ObjectDN', error_key='Error')
 
         @property
         @json_response_property()
-        def class_name(self):
+        def class_name(self) -> str:
             return self._from_json(key='ClassName', error_key='Error')
 
         @property
         @json_response_property()
-        def revision(self):
+        def revision(self) -> str:
             return self._from_json(key='Revision', error_key='Error')
 
         @property
         @json_response_property()
-        def hierarchical_guid(self):
+        def hierarchical_guid(self) -> str:
             return self._from_json(key='HierarchicalGUID', error_key='Error')
 
         @property
@@ -583,7 +559,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _IdInfo(API):
@@ -592,22 +567,22 @@ class _Config:
 
         @property
         @json_response_property()
-        def guid(self):
+        def guid(self) -> str:
             return self._from_json(key='GUID', error_key='Error')
 
         @property
         @json_response_property()
-        def class_name(self):
+        def class_name(self) -> str:
             return self._from_json(key='ClassName', error_key='Error')
 
         @property
         @json_response_property()
-        def revision(self):
+        def revision(self) -> str:
             return self._from_json(key='Revision', error_key='Error')
 
         @property
         @json_response_property()
-        def hierarchical_guid(self):
+        def hierarchical_guid(self) -> str:
             return self._from_json(key='HierarchicalGUID', error_key='Error')
 
         @property
@@ -621,7 +596,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _IsValid(API):
@@ -631,8 +605,7 @@ class _Config:
         @property
         @json_response_property()
         def object(self):
-            result = self._from_json(key='Object', error_key='Error')
-            return Config.Object(result, self._api_type)
+            return Config.Object(self._from_json(key='Object', error_key='Error'), self._api_type)
 
         @property
         @json_response_property()
@@ -648,7 +621,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _MutateObject(API):
@@ -667,7 +639,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Read(API):
@@ -676,17 +647,17 @@ class _Config:
 
         @property
         @json_response_property()
-        def object_dn(self):
+        def object_dn(self) -> str:
             return self._from_json(key='ObjectDN', error_key='Error')
 
         @property
         @json_response_property()
-        def attribute_name(self):
+        def attribute_name(self) -> str:
             return self._from_json(key='AttributeName', error_key='Error')
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json(key='Values', error_key='Error')
 
         @property
@@ -701,7 +672,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ReadAll(API):
@@ -711,8 +681,7 @@ class _Config:
         @property
         @json_response_property()
         def name_values(self):
-            result = self._from_json(key='NameValues', error_key='Error')
-            return [Config.NameValues(nv, self._api_type) for nv in result]
+            return [Config.NameValues(nv, self._api_type) for nv in self._from_json(key='NameValues', error_key='Error')]
 
         @property
         @json_response_property()
@@ -725,7 +694,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ReadDn(API):
@@ -734,7 +702,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json(key='Values', error_key='Error')
 
         @property
@@ -749,7 +717,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ReadDnReferences(API):
@@ -758,7 +725,7 @@ class _Config:
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json(key='Values', error_key='Error')
 
         @property
@@ -774,7 +741,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ReadEffectivePolicy(API):
@@ -783,22 +749,22 @@ class _Config:
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json(key='Values', error_key='Error')
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json(key='Locked', error_key='Error')
 
         @property
         @json_response_property()
-        def overridden(self):
+        def overridden(self) -> bool:
             return self._from_json(key='Overridden', error_key='Error')
 
         @property
         @json_response_property()
-        def policy_dn(self):
+        def policy_dn(self) -> str:
             return self._from_json(key='PolicyDN', error_key='Error')
 
         @property
@@ -813,7 +779,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _ReadPolicy(API):
@@ -822,17 +787,17 @@ class _Config:
 
         @property
         @json_response_property()
-        def locked(self):
+        def locked(self) -> bool:
             return self._from_json(key='Locked', error_key='Error')
 
         @property
         @json_response_property()
-        def class_name(self):
+        def class_name(self) -> str:
             return self._from_json(key='ClassName', error_key='Error')
 
         @property
         @json_response_property()
-        def values(self):
+        def values(self) -> List[str]:
             return self._from_json(key='Values', error_key='Error')
 
         @property
@@ -848,7 +813,6 @@ class _Config:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _RemoveDnValue(API):
@@ -867,7 +831,6 @@ class _Config:
                 "Value": value
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _RemovePolicyValue(API):
@@ -887,7 +850,6 @@ class _Config:
                 "Value": value
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _RenameObject(API):
@@ -905,7 +867,6 @@ class _Config:
                 "NewObjectDN": new_object_dn
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _Write(API):
@@ -923,7 +884,6 @@ class _Config:
                 "AttributeData": attribute_data
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _WriteDn(API):
@@ -942,7 +902,6 @@ class _Config:
                 "Values": values
             }
             self.json_response = self._post(data=body)
-
             return self
 
     class _WritePolicy(API):
@@ -963,5 +922,4 @@ class _Config:
                 "Values": values
             }
             self.json_response = self._post(data=body)
-
             return self

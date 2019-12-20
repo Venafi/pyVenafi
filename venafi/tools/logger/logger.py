@@ -3,10 +3,10 @@ import sys
 import traceback
 import inspect
 from datetime import datetime
-from tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
+from venafi.tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
     LOG_CRITICAL_COLOR, LOG_TEST_COLOR, LOG_FEATURE_COLOR, LOG_API_COLOR, LOG_LEVEL, \
     LOG_DIR, LOG_FILENAME, LOGGING_ENABLED
-from tools.logger.log_resources import LogLevels
+from venafi.tools.logger.log_resources import LogLevels
 import webbrowser
 import json
 
@@ -430,10 +430,10 @@ def log_to_html():
 def log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
 
 
-def singleton(cls, *args, **kwargs):
+def singleton(cls):
     instances = {}
 
-    def _singleton():
+    def _singleton(*args, **kwargs):
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]

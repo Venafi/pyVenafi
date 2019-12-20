@@ -1,6 +1,6 @@
 from queue import Queue
 import threading
-from tools.logger.logger import Logger, LogLevels
+from venafi.logger import logger, LogLevels
 
 
 class _LogThread(threading.Thread):
@@ -15,7 +15,7 @@ class _LogThread(threading.Thread):
     """
     def __init__(self, **kwargs):
         threading.Thread.__init__(self, **kwargs)
-        self._logger = Logger(LogLevels.feature)
+        self._logger = logger
         self._real_run = self.run
         self.run = self._wrap_run
         self.exc_raised = False

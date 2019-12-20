@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.config_schema import ConfigSchema
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.config_schema import ConfigSchema
 
 
 class _ConfigSchema:
@@ -45,5 +45,4 @@ class _ConfigSchema:
             }
 
             self.json_response = self._post(data=body)
-
             return self

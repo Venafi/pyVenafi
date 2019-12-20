@@ -1,5 +1,6 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.secret_store import SecretStore
+from typing import List
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.secret_store import SecretStore
 
 
 class _X509CertificateStore:
@@ -40,7 +41,6 @@ class _X509CertificateStore:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Lookup(API):
@@ -54,12 +54,12 @@ class _X509CertificateStore:
 
         @property
         @json_response_property()
-        def vault_ids(self) -> list:
+        def vault_ids(self) -> List[int]:
             return self.json_response('VaultIds')
 
         @property
         @json_response_property()
-        def certificate_collection_strings(self) -> list:
+        def certificate_collection_strings(self) -> List[str]:
             return self.json_response('CertificateCollectionStrings')
 
         @property
@@ -76,7 +76,6 @@ class _X509CertificateStore:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _LookupExpiring(API):
@@ -85,7 +84,7 @@ class _X509CertificateStore:
 
         @property
         @json_response_property()
-        def vault_ids(self) -> list:
+        def vault_ids(self) -> List[int]:
             return self.json_response('VaultIds')
 
         @property
@@ -100,7 +99,6 @@ class _X509CertificateStore:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Remove(API):
@@ -120,7 +118,6 @@ class _X509CertificateStore:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Retrieve(API):
@@ -148,5 +145,4 @@ class _X509CertificateStore:
             }
 
             self.json_response = self._post(data=body)
-
             return self
