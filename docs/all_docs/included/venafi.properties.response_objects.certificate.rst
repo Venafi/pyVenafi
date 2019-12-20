@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.certificate module
-======================================================
+Certificate
+===========
 
 .. automodule:: venafi.properties.response_objects.certificate
    :members:

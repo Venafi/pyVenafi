@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.permissions module
-======================================================
+Permissions
+===========
 
 .. automodule:: venafi.properties.response_objects.permissions
    :members:

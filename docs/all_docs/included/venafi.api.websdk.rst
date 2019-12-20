@@ -1,5 +1,5 @@
-venafi.api.websdk.websdk module
-===============================
+WebSDK API
+==========
 
 .. automodule:: venafi.api.websdk.websdk
    :members:

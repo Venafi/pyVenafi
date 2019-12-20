@@ -1,5 +1,5 @@
-venafi.properties.resultcodes module
-====================================
+Result Codes
+============
 
 .. automodule:: venafi.properties.resultcodes
    :members:

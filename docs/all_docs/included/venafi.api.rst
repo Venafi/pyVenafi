@@ -7,11 +7,3 @@ API
    venafi.api.session
    venafi.api.websdk
    venafi.api.aperture
-
-Module contents
----------------
-
-.. automodule:: venafi.api
-   :members:
-   :undoc-members:
-   :show-inheritance:

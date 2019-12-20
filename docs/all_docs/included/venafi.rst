@@ -4,6 +4,7 @@ Venafi Package
 .. toctree::
    :caption: Venafi
 
-   venafi.features
    venafi.api
+   venafi.features
    venafi.logger
+   venafi.properties

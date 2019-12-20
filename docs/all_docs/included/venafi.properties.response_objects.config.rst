@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.config module
-=================================================
+Config
+======
 
 .. automodule:: venafi.properties.response_objects.config
    :members:

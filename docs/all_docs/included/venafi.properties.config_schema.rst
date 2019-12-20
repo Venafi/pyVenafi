@@ -1,5 +1,5 @@
-venafi.properties.config\_schema module
-=======================================
+Config Schema
+=============
 
 .. automodule:: venafi.properties.config_schema
    :members:

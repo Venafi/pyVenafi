@@ -1,5 +1,5 @@
-venafi.properties.permissions module
-====================================
+Permissions
+===========
 
 .. automodule:: venafi.properties.permissions
    :members:

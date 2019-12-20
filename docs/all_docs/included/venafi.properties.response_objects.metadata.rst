@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.metadata module
-===================================================
+Metdata
+=======
 
 .. automodule:: venafi.properties.response_objects.metadata
    :members:

@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.client module
-=================================================
+Client
+=======
 
 .. automodule:: venafi.properties.response_objects.client
    :members:
