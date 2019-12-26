@@ -1,9 +1,0 @@
-README.md
-setup.cfg
-setup.py
-venafi/__init__.py
-venafi/logger.py
-venafi.egg-info/PKG-INFO
-venafi.egg-info/SOURCES.txt
-venafi.egg-info/dependency_links.txt
-venafi.egg-info/top_level.txt
