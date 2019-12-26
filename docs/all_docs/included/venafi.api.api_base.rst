@@ -1,5 +1,5 @@
-venafi.api.api\_base module
-===========================
+API Base Class
+==============
 
 .. automodule:: venafi.api.api_base
    :members:

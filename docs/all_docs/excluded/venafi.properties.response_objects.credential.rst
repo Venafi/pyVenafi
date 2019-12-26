@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.credential module
-=====================================================
+Credential
+==========
 
 .. automodule:: venafi.properties.response_objects.credential
    :members:

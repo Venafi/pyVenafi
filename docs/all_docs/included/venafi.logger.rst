@@ -1,5 +1,5 @@
-venafi.logger module
-====================
+Logger
+======
 
 .. automodule:: venafi.logger
    :members:

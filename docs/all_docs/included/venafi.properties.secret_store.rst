@@ -1,5 +1,5 @@
-venafi.properties.secret\_store module
-======================================
+Secret Store
+============
 
 .. automodule:: venafi.properties.secret_store
    :members:

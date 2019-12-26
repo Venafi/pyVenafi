@@ -99,4 +99,4 @@ class Certificate(FeatureBase):
             return thumbprint != prev_thumbprint
 
         self._wait(validate_thumbprint, True, 60)
-        return self.auth.websdk.Certificates.Guid(certificate_guid).get()
+        return self.auth.websdk.Certificates.Guid(certificate_guid).get().certificate_details

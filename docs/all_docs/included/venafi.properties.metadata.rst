@@ -1,5 +1,5 @@
-venafi.properties.metadata module
-=================================
+Metadata
+========
 
 .. automodule:: venafi.properties.metadata
    :members:

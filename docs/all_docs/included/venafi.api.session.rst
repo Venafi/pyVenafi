@@ -1,5 +1,5 @@
-venafi.api.session module
-=========================
+API Session Class
+=================
 
 .. automodule:: venafi.api.session
    :members:

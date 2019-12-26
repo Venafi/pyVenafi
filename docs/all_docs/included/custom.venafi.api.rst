@@ -1,6 +1,6 @@
-**********
-Venafi API
-**********
+****************
+Using Venafi API
+****************
 
 Official Documentation
 ======================

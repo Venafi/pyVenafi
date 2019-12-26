@@ -1,8 +1,5 @@
-venafi.properties.response\_objects package
-===========================================
-
-Submodules
-----------
+Response Objects
+================
 
 .. toctree::
 
@@ -20,11 +17,3 @@ Submodules
    venafi.properties.response_objects.ssh
    venafi.properties.response_objects.system_status
    venafi.properties.response_objects.worfklow
-
-Module contents
----------------
-
-.. automodule:: venafi.properties.response_objects
-   :members:
-   :undoc-members:
-   :show-inheritance:
