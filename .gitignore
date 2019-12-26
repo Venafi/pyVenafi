@@ -2,7 +2,7 @@
 venv/
 *.pyc
 testfile.py
-/venafi/tools/logger/logs/
+/venafi/venafi/tools/logger/logs/
 /test/
 /Tape/logs
 /Tape/venafi
