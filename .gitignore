@@ -8,3 +8,4 @@ testfile.py
 /Tape/venafi
 /docs/_build/
 /venafi/venafi.egg-info
+/dist
