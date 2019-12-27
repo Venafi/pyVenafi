@@ -19,7 +19,8 @@ class Folder(FeatureBase):
             name: Name of the folder.
             parent_folder_dn: Absolute path to the folder's parent folder.
             attributes: Attributes pertaining to the folder itself and NOT any of the policyable options.
-                In order to set engines on this folder, use :meth:`set_engines`.
+                In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
+                options on the folder, use :meth:`lock_attributes`.
 
         Returns:
             Config object representing the folder.
@@ -60,6 +61,9 @@ class Folder(FeatureBase):
                 self._secret_store_delete_by_dn(object_dn=child.dn)
 
         self._config_delete(object_dn=folder_dn, recursive=recursive)
+
+    def lock_attributes(self):
+        pass
 
     def search(self, object_name_pattern: str, object_type: str = None, recursive: bool = True, starting_dn: str = None):
         """
