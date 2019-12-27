@@ -42,7 +42,7 @@ def json_response_property(on_204=None):
         def wrap(self, *args, **kwargs):
             if not self._validated:
                     self._validate()
-            if on_204 and self.response.status_code == 204:
+            if on_204 and self.json_response.status_code == 204:
                 if callable(on_204):
                     return on_204()
                 else:
@@ -156,7 +156,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call()
-        response = self._api_obj.session.delete(url=self._url)
+        response = self._api_obj.session.delete()
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()

@@ -340,8 +340,9 @@ class _Config:
         def result(self):
             return Config.Result(self._from_json(key='Result'))
 
-        def post(self, derived_from: str, pattern: str = None):
+        def post(self, derived_from: str, pattern: str = None, object_dn: str = None):
             body = {
+                "ObjectDN": object_dn,
                 "DerivedFrom": derived_from,
                 "Pattern": pattern
             }

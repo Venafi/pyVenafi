@@ -1,14 +1,16 @@
+from venafi.features.bases.feature_base import FeatureBase
 from venafi.features.folder import Folder, FolderAttributes
 from venafi.features.certificate import Certificate, CertificateAttributes
 from venafi.features.device import Device, DeviceAttributes
 from venafi.features.application import Apache, PKCS11, ApplicationAttributes, ApplicationAttributeValues
-from venafi.features.credentials import UsernamePasswordCredential, CredentialAttributes
+from venafi.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
+    PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
 from venafi.features.certificate_authorities import MSCA, SelfSigned, CertificateAuthorityAttributes
 
 
-class Features:
+class Features(FeatureBase):
     def __init__(self, auth):
-        self.auth = auth
+        super().__init__(auth=auth)
 
         self._applications = None
         self._ca = None
@@ -85,7 +87,37 @@ class Features:
         def __init__(self, auth):
             self.auth = auth
 
+            self._amazon = None
+            self._certificate = None
+            self._generic = None
+            self._password = None
+            self._private_key = None
             self._upcred = None
+
+        @property
+        def amazon(self):
+            self._amazon = self._amazon or AmazonCredential(self.auth)
+            return self._amazon
+
+        @property
+        def certificate(self):
+            self._certificate = self._certificate or CertificateCredential(self.auth)
+            return self._certificate
+
+        @property
+        def generic(self):
+            self._generic = self._generic or GenericCredential(self.auth)
+            return self._generic
+
+        @property
+        def password(self):
+            self._password = self._password or PasswordCredential(self.auth)
+            return self._password
+
+        @property
+        def private_key(self):
+            self._private_key = self._private_key or PrivateKeyCredential(self.auth)
+            return self._private_key
 
         @property
         def username_password(self):

@@ -15,6 +15,11 @@ def __feature_decorator(func):
         try:
             params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
         except TypeError as e:
+            logger.log(
+                msg='\n'.join(e.args),
+                level=LogLevels.critical,
+                prev_frames=2
+            )
             raise TypeError(e)
 
         if 'self' in params.keys():
@@ -54,7 +59,7 @@ class FeatureBase:
     def __init__(self, auth: Authenticate):
         self.auth = auth
 
-    def wait_for_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
+    def read_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
         def get_attribute():
             values = self.auth.websdk.Config.ReadDn.post(object_dn=object_dn, attiribute_name=attiribute_name).values
             found = any([True for value in values if str(value).lower() == attribute_value.lower()])
@@ -62,7 +67,59 @@ class FeatureBase:
                 return True
         self._wait(method=get_attribute, return_value=True, timeout=timeout)
 
-    def _wait(self, method, return_value, timeout: int = 10):
+    def _config_create(self, name: str, container: str, config_class: str, attributes: dict = None):
+        if attributes:
+            attributes = self._name_value_list(attributes=attributes)
+
+        dn = f'{container}\\{name}'
+
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        ca = self.auth.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
+
+        result = ca.result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+        return ca.object
+
+    def _config_delete(self, object_dn, recursive: bool = False):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self.auth.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+    @staticmethod
+    def _log_not_implemented_warning(api_type):
+        logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.feature, prev_frames=2)
+
+    @staticmethod
+    def _name_type_value(name: str, type: str, value):
+        return {'Name': str(name), 'Type': str(type), 'Value': str(value)}
+
+    @staticmethod
+    def _name_value_list(attributes: dict):
+        return [{'Name': str(key), 'Value': str(value)}for key, value in attributes.items()]
+
+    def _secret_store_delete_by_dn(self, object_dn: str, namespace: str = Namespaces.config):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        owners = self.auth.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
+        result = owners.result
+        if result.code != 0:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
+
+        for vault_id in owners.vault_ids:
+            result = self.auth.websdk.SecretStore.Delete.post(vault_id=vault_id).result
+            if result.code != 0:
+                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
+
+    @staticmethod
+    def _wait(method, return_value, timeout: int = 10):
         maxtime = time.time() + timeout
         interval = 0.5
 
@@ -88,51 +145,6 @@ class FeatureBase:
             time.sleep(interval)
 
         raise TimeoutError(f'{method.__name__} did not return {return_value} in {timeout} seconds. Got {actual_value} instead.')
-
-    def _log_not_implemented_warning(self, api_type):
-        logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.feature, prev_frames=2)
-
-    def _name_value_attributes(self, attributes: dict):
-        return [{'Name': str(key), 'Value': str(value)}for key, value in attributes.items()]
-
-    def _config_create(self, name: str, container: str, config_class: str, attributes: dict = None):
-        if attributes:
-            attributes = self._name_value_attributes(attributes=attributes)
-
-        dn = f'{container}\\{name}'
-
-        if self.auth.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        ca = self.auth.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
-
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return ca.object
-
-    def _config_delete(self, object_dn, recursive: bool = False):
-        if self.auth.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self.auth.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-    def _secret_store_delete_by_dn(self, object_dn: str, namespace: str = Namespaces.config):
-        if self.auth.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        owners = self.auth.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
-        result = owners.result
-        if result.code != 0:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
-
-        for vault_id in owners.vault_ids:
-            result = self.auth.websdk.SecretStore.Delete.post(vault_id=vault_id).result
-            if result.code != 0:
-                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
 
 class FeatureError:

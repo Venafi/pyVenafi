@@ -29,19 +29,12 @@ class _Credentials:
                 'Password': password,
                 'FriendlyName': friendly_name,
                 'Values': values,
-                'Expiration': f'/Date({expiration})/'
+                'Expiration': f'/Date({expiration})/',
+                'Description': description,
+                'EncryptionKey': encryption_key,
+                'Shared': shared,
+                'Contact': contact
             }
-            if description:
-                body.update({'Description': description})
-
-            if encryption_key:
-                body.update({'EncryptionKey': encryption_key})
-
-            if shared:
-                body.update({'Shared': shared})
-
-            if contact:
-                body.update({'Contact': contact})
 
             self.json_response = self._post(data=body)
             return self

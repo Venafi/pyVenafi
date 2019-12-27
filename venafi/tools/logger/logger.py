@@ -170,6 +170,7 @@ class Logger:
                             text.style.whiteSpace = 'pre-wrap';
                             text.style.overflowWrap = 'break-word';
                             text.style.wordWrap = 'break-word';
+                            text.style.overflowY = 'auto';
                             source.style.display = 'flex';
                             log.style.borderRadius = '5px 5px 0px 0px';
                             exp_el.innerHTML = '-';
@@ -179,6 +180,7 @@ class Logger:
                             text.style.whiteSpace = 'nowrap';
                             text.style.overflowWrap = 'unset';
                             text.style.wordWrap = 'unset';
+                            text.style.overflowY = 'hidden';
                             source.style.display = 'none';
                             log.style.borderRadius = '5px';
                             exp_el.innerHTML = '+';
@@ -306,10 +308,12 @@ class Logger:
                     }}
 
                     .log-text {{
-                        padding-left: 10px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
                         display: inline-block;
+                        max-height: 500px;
+                        width: 100%;
+                        padding-left: 10px;
+                        text-overflow: ellipsis;
+                        overflow-x: hidden;
                     }}
 
                     .source-code {{
