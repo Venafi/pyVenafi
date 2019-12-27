@@ -1,4 +1,4 @@
-from venafi.properties.config import ConfigClass, DeviceAttributes
+from venafi.properties.config import DevicesClassNames, DeviceAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -49,6 +49,6 @@ class Device(_DeviceBase):
         return self._config_create(
             name=name,
             container=container,
-            config_class=ConfigClass.device,
+            config_class=DevicesClassNames.device,
             attributes=attributes
         )

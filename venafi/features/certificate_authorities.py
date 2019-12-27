@@ -1,4 +1,4 @@
-from venafi.properties.config import ConfigClass, CertificateAuthorityAttributes
+from venafi.properties.config import CertificateAuthorityClassNames, CertificateAuthorityAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -56,7 +56,7 @@ class MSCA(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             container=container,
-            config_class=ConfigClass.microsoft_ca,
+            config_class=CertificateAuthorityClassNames.microsoft_ca,
             attributes=attributes
         )
 
@@ -89,6 +89,6 @@ class SelfSigned(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             container=container,
-            config_class=ConfigClass.self_signed_ca,
+            config_class=CertificateAuthorityClassNames.self_signed_ca,
             attributes=attributes
         )

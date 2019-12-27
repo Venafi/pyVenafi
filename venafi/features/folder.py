@@ -1,6 +1,6 @@
 from typing import List
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
-from venafi.properties.config import ConfigClass, FolderAttributes
+from venafi.properties.config import FolderClassNames, FolderAttributes
 
 
 @feature()
@@ -10,6 +10,56 @@ class Folder(FeatureBase):
     """
     def __init__(self, auth):
         super().__init__(auth)
+
+    def add_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+        """
+        Adds policy configurations to a folder. If the value is locked, then all objects derived
+        from the folder of the specified policy class will inherit the given attribute value and
+        cannot be changed by any child folders or objects. Otherwise the value will be set as a
+        suggested value that appears as a default value in any of the Venafi websites.
+
+        Examples:
+
+            .. code-block:: python
+
+                from venafi import logger, Authenticate, Features, Attributes, \\
+                    AttributeValues, Classes
+
+                auth = Authenticate(# params here)
+                features = Features(auth)
+
+                features.folder.add_policy(
+                    folder_dn=folder.dn,
+                    class_name=Classes.Certificate.x509_certificate,
+                    attributes={
+                        Attributes.Certificate.management_type: 'Enrollment',
+                        Attributes.Certificate.organization: 'Venafi'
+                    },
+                    locked=True
+                )
+
+        Args:
+            folder_dn: Absolute path to the folder enforcing the policy.
+            class_name: TPP Class Name for the attributes being locked.
+            attributes: A dictionary of attribute name/value pairs where the name is the
+                attribute name and the value is the attribute value.
+            locked: Enforces the policy on all subordinate folders and objects.
+        """
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        for name, values in attributes.items():
+            if not isinstance(values, list):
+                values = [values]
+
+            result = self.auth.websdk.Config.WritePolicy.post(
+                object_dn=folder_dn,
+                class_name=class_name,
+                attribute_name=name,
+                values=values,
+                locked=locked
+            )
+            result.assert_valid_response()
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -33,7 +83,7 @@ class Folder(FeatureBase):
             return self._config_create(
                 name=name,
                 container=parent_folder_dn,
-                config_class=ConfigClass.policy,
+                config_class=FolderClassNames.policy,
                 attributes=attributes
             )
 
@@ -62,9 +112,6 @@ class Folder(FeatureBase):
 
         self._config_delete(object_dn=folder_dn, recursive=recursive)
 
-    def lock_attributes(self):
-        pass
-
     def search(self, object_name_pattern: str, object_type: str = None, recursive: bool = True, starting_dn: str = None):
         """
         Searches for an object with the given object name pattern. The pattern is a regular expression. An object type
@@ -84,7 +131,7 @@ class Folder(FeatureBase):
                 auth = Authenticate(# params here)
                 features = Features(auth)
 
-                objects = features.folder.search(object_name_pattern='*some_object*.com', starting_dn='\\VED\\Policy\\Certificates')
+                objects = features.folder.search(object_name_pattern='*some_object*.com', starting_dn='\\\VED\\\Policy\\\Certificates')
 
         Args:
             object_name_pattern: A regular expression

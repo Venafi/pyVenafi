@@ -1,4 +1,4 @@
-from venafi.properties.config import ConfigClass, CertificateAttributes
+from venafi.properties.config import CertificateClassNames, CertificateAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -50,7 +50,7 @@ class Certificate(FeatureBase):
         return self._config_create(
             name=name,
             container=container,
-            config_class=ConfigClass.x509_certificate,
+            config_class=CertificateClassNames.x509_certificate,
             attributes=attributes
         )
 

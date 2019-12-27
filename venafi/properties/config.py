@@ -1,335 +1,3 @@
-class ConfigClass:
-    a10_ax_traffic_manager = "A10 AX Traffic Manager"
-    acme_account = "ACME Account"
-    acme_authorization = "ACME Authorization"
-    acme_order = "ACME Order"
-    acme_root = "ACME Root"
-    activedirectory_identity_driver = "ActiveDirectory Identity Driver"
-    adaptable_app = "Adaptable App"
-    adaptable_bulk_app = "Adaptable Bulk App"
-    adaptable_ca = "Adaptable CA"
-    adaptable_workflow = "Adaptable Workflow"
-    agent = "Agent"
-    agent_base = "Agent Base"
-    agent_certificate_base = "Agent Certificate Base"
-    agent_certificate_discovery = "Agent Certificate Discovery"
-    agent_certificate_driver = "Agent Certificate Driver"
-    agent_container = "Agent Container"
-    agent_discovery = "Agent Discovery"
-    agent_discovery_base = "Agent Discovery Base"
-    agent_driver = "Agent Driver"
-    agent_driver_base = "Agent Driver Base"
-    agent_module_handler = "Agent Module Handler"
-    agent_module_handler_container = "Agent Module Handler Container"
-    agent_root = "Agent Root"
-    agent_ssh_base = "Agent SSH Base"
-    agent_ssh_discovery = "Agent SSH Discovery"
-    agent_ssh_driver = "Agent SSH Driver"
-    amazon_app = "Amazon App"
-    amazon_ca = "Amazon CA"
-    amazon_credential = "Amazon Credential"
-    apache = "Apache"
-    apache_application_group = "Apache Application Group"
-    aperture_configuration = "Aperture Configuration"
-    application_base = "Application Base"
-    application_group = "Application Group"
-    auto_layout_manager = "Auto Layout Manager"
-    automatic_password_credential = "Automatic Password Credential"
-    aws_ec2_instance_monitor = "AWS EC2 Instance Monitor"
-    azure_key_vault = "Azure Key Vault"
-    basic = "Basic"
-    bluecoat_sslva = "BlueCoat SSLVA"
-    bluecoat_sslva_trust_store = "BlueCoat SSLVA Trust Store"
-    branch_base = "Branch Base"
-    brocade = "Brocade"
-    bulk_application_base = "Bulk Application Base"
-    bulk_provisioning_manager = "Bulk Provisioning Manager"
-    ca_import = "CA Import"
-    ca_import_manager = "CA Import Manager"
-    capi = "CAPI"
-    capi_trust_store = "CAPI Trust Store"
-    certificate_authority_base = "Certificate Authority Base"
-    certificate_credential = "Certificate Credential"
-    certificate_manager = "Certificate Manager"
-    certificate_pre_enrollment = "Certificate Pre-Enrollment"
-    certificate_provisioning_work = "Certificate Provisioning Work"
-    certificate_revocation = "Certificate Revocation"
-    certificate_trust_bundle = "Certificate Trust Bundle"
-    certificate_trust_store_base = "Certificate Trust Store Base"
-    ciscoace = "CiscoACE"
-    ciscocsm = "CiscoCSM"
-    ciscocss = "CiscoCSS"
-    client_agent_automatic_upgrade_work = "Client Agent Automatic Upgrade Work"
-    client_agent_configuration_work = "Client Agent Configuration Work"
-    client_agent_device_placement_work = "Client Agent Device Placement Work"
-    client_agent_ssh_discovery_work = "Client Agent SSH Discovery Work"
-    client_agent_ssh_key_usage_work = "Client Agent SSH Key Usage Work"
-    client_agent_ssh_provisioning_work = "Client Agent SSH Provisioning Work"
-    client_certificate_discovery_work = "Client Certificate Discovery Work"
-    client_certificate_work = "Client Certificate Work"
-    client_group = "Client Group"
-    client_group_base = "Client Group Base"
-    client_group_container = "Client Group Container"
-    client_group_root = "Client Group Root"
-    client_portal_base = "Client Portal Base"
-    client_root = "Client Root"
-    client_subgroup = "Client Subgroup"
-    client_user_certificate_work = "Client User Certificate Work"
-    client_work_base = "Client Work Base"
-    client_work_container = "Client Work Container"
-    client_work_root = "Client Work Root"
-    clientgroup_monitor = "ClientGroup Monitor"
-    cloud_instance_monitor = "Cloud Instance Monitor"
-    cloud_instance_monitor_driver_base = "Cloud Instance Monitor Driver Base"
-    code_signing_action = "Code Signing Action"
-    code_signing_application = "Code Signing Application"
-    code_signing_application_collection = "Code Signing Application Collection"
-    code_signing_application_container = "Code Signing Application Container"
-    code_signing_application_root = "Code Signing Application Root"
-    code_signing_environment = "Code Signing Environment"
-    code_signing_environment_container = "Code Signing Environment Container"
-    code_signing_environment_root = "Code Signing Environment Root"
-    code_signing_environment_template = "Code Signing Environment Template"
-    code_signing_flow_container = "Code Signing Flow Container"
-    code_signing_flow_root = "Code Signing Flow Root"
-    code_signing_project = "Code Signing Project"
-    code_signing_project_container = "Code Signing Project Container"
-    code_signing_project_root = "Code Signing Project Root"
-    code_signing_root = "Code Signing Root"
-    comodo_ca = "Comodo CA"
-    comodo_ccm = "Comodo CCM"
-    connectdirect = "ConnectDirect"
-    connectdirect_trust_store = "ConnectDirect Trust Store"
-    connection_base = "Connection Base"
-    credential_base = "Credential Base"
-    credential_container = "Credential Container"
-    credential_driver_base = "Credential Driver Base"
-    credential_root = "Credential Root"
-    csp_key_container = "CSP Key Container"
-    custom_driver_base = "Custom Driver Base"
-    cyberark_credentials_driver = "CyberArk Credentials Driver"
-    cyberark_password_credential = "CyberArk Password Credential"
-    cyberark_username_password_credential = "CyberArk Username Password Credential"
-    datapower = "DataPower"
-    device = "Device"
-    digicert_ca = "DigiCert CA"
-    discovery = "Discovery"
-    discovery_container = "Discovery Container"
-    discovery_exclusion = "Discovery Exclusion"
-    discovery_manager = "Discovery Manager"
-    discovery_root = "Discovery Root"
-    discovery_statistics = "Discovery Statistics"
-    dpapi_encryption_driver = "DPAPI Encryption Driver"
-    driver_base = "Driver Base"
-    encryption_driver = "Encryption Driver"
-    encryption_root = "Encryption Root"
-    engine_root = "Engine Root"
-    entrust_security_manager_ca = "Entrust Security Manager CA"
-    entrustnet_ca = "EntrustNET CA"
-    exclusion = "Exclusion"
-    f5 = "F5"
-    f5_authentication_bundle = "F5 Authentication Bundle"
-    f5_ltm_advanced = "F5 LTM Advanced"
-    f5_ltm_advanced_trust_store = "F5 LTM Advanced Trust Store"
-    flow = "Flow"
-    flow_action_approver_base = "Flow Action Approver Base"
-    flow_action_base = "Flow Action Base"
-    flow_action_config_read_approvers = "Flow Action Config Read Approvers"
-    flow_action_direct_approvers = "Flow Action Direct Approvers"
-    flow_event_action = "Flow Event Action"
-    flow_group = "Flow Group"
-    flow_root = "Flow Root"
-    generational_credential = "Generational Credential"
-    generic_credential = "Generic Credential"
-    geotrust_ca = "Geotrust CA"
-    geotrust_enterprise_ca = "Geotrust Enterprise CA"
-    geotrusttrueflex_ca = "GeotrustTrueFlex CA"
-    globalsign_mssl_ca = "GlobalSign MSSL CA"
-    group = "Group"
-    gsk = "GSK"
-    gsk_trust_store = "GSK Trust Store"
-    http_ca_base = "HTTP CA Base"
-    hydrantid_ca = "HydrantId CA"
-    identity_driver = "Identity Driver"
-    identity_root = "Identity Root"
-    iis5 = "IIS5"
-    iis6 = "IIS6"
-    imperva_mx = "Imperva MX"
-    integrated_credential_driver = "Integrated Credential Driver"
-    intermediate_and_root_certificates = "Intermediate and Root Certificates"
-    iplanet = "iPlanet"
-    jks = "JKS"
-    jks_trust_store = "JKS Trust Store"
-    jump_server = "Jump Server"
-    juniper_sas = "Juniper SAS"
-    key_base = "Key Base"
-    keynectis_sequoia_ca = "Keynectis Sequoia CA"
-    kmip_service_module = "Kmip Service Module"
-    layer_7_ssg = "Layer 7 SSG"
-    layout_driver_base = "Layout Driver Base"
-    layout_driver_container = "Layout Driver Container"
-    layout_root = "Layout Root"
-    layout_rule_base = "Layout Rule Base"
-    layout_rule_container = "Layout Rule Container"
-    ldap_identity_driver = "LDAP Identity Driver"
-    license = "License"
-    license_root = "License Root"
-    log_adaptable = "Log Adaptable"
-    log_application = "Log Application"
-    log_application_container = "Log Application Container"
-    log_application_customization = "Log Application Customization"
-    log_channel = "Log Channel"
-    log_channel_container = "Log Channel Container"
-    log_file = "Log File"
-    log_filter = "Log Filter"
-    log_heartbeat = "Log Heartbeat"
-    log_mssql = "Log MSSQL"
-    log_notification = "Log Notification"
-    log_notification_container = "Log Notification Container"
-    log_root = "Log Root"
-    log_server = "Log Server"
-    log_smtp = "Log SMTP"
-    log_snmp = "Log SNMP"
-    log_splunk = "Log Splunk"
-    log_sql_channel = "Log SQL Channel"
-    log_syslog = "Log Syslog"
-    metadata_base = "Metadata Base"
-    metadata_category = "Metadata Category"
-    metadata_choice = "Metadata Choice"
-    metadata_container = "Metadata Container"
-    metadata_datetime = "Metadata DateTime"
-    metadata_identity = "Metadata Identity"
-    metadata_list = "Metadata List"
-    metadata_root = "Metadata Root"
-    metadata_text = "Metadata Text"
-    microsoft_ca = 'Microsoft CA'
-    microsoft_ca_pool = "Microsoft CA Pool"
-    monitoring_base = "Monitoring Base"
-    monitoring_module = "Monitoring Module"
-    netscaler = "NetScaler"
-    null_encryption_driver = "Null Encryption Driver"
-    onboard_discovery = "Onboard Discovery"
-    onboard_discovery_manager = "Onboard Discovery Manager"
-    openssl_ca = "OpenSSL CA"
-    opentrust_pki_ca = "OpenTrust PKI CA"
-    organization = "Organization"
-    palo_alto_network_fw = "Palo Alto Network FW"
-    palo_alto_network_fw_trust_store = "Palo Alto Network FW Trust Store"
-    password_credential = "Password Credential"
-    pem = "PEM"
-    pem_trust_store = "PEM Trust Store"
-    person = "Person"
-    pkcs11 = 'PKCS11'
-    pkcs12 = "PKCS#12"
-    pkcs12_trust_store = "PKCS#12 Trust Store"
-    pkcs11_encryption_driver = "Pkcs11 Encryption Driver"
-    placement_job = "Placement Job"
-    placement_job_container = "Placement Job Container"
-    policy = "Policy"
-    premium_driver_base = "Premium Driver Base"
-    private_key_credential = "Private Key Credential"
-    proxy = "Proxy"
-    proxy_base = "Proxy Base"
-    quovadis_ca = "QuoVadis CA"
-    redhat_ca = "Redhat CA"
-    remote_access_application = "Remote Access Application"
-    remote_access_application_container = "Remote Access Application Container"
-    remote_access_root = "Remote Access Root"
-    remote_access_scope = "Remote Access Scope"
-    remote_access_scope_container = "Remote Access Scope Container"
-    report_analytics = "Report:Analytics"
-    report_assessor = "Report:Assessor"
-    report_base = "Report Base"
-    report_certificate_trends_report = "Report:Certificate Trends Report"
-    report_certificateduplication = "Report:CertificateDuplication"
-    report_certificateinventory = "Report:CertificateInventory"
-    report_certificatenetworkvalidation = "Report:CertificateNetworkValidation"
-    report_client_certificate_trends_report = "Report:Client Certificate Trends Report"
-    report_clients = "Report:Clients"
-    report_container = "Report Container"
-    report_custom_report = "Report:Custom Report"
-    report_demographics_certificate_authority = "Report:Demographics Certificate Authority"
-    report_demographics_key_length = "Report:Demographics Key Length"
-    report_demographics_signing_algorithm = "Report:Demographics Signing Algorithm"
-    report_demographics_validity_period = "Report:Demographics Validity Period"
-    report_demographics_wildcard = "Report:Demographics Wildcard"
-    report_enhancedcertificateexpiration = "Report:EnhancedCertificateExpiration"
-    report_entitlement = "Report:Entitlement"
-    report_expiration = "Report:Expiration"
-    report_filter_base = "Report Filter Base"
-    report_licensing = "Report:Licensing"
-    report_root = "Report Root"
-    report_ssh_authorized_user = "Report:SSH Authorized User"
-    report_ssh_discrepancy = "Report:SSH Discrepancy"
-    report_ssh_key_expiration = "Report:SSH Key Expiration"
-    report_ssh_server_summary = "Report:SSH Server Summary"
-    report_ssh_trends_report = "Report:Ssh Trends Report"
-    report_ssh_trust = "Report:SSH Trust"
-    report_ssh_user_key = "Report:SSH User Key"
-    report_template = "Report Template"
-    report_trust = "Report:Trust"
-    reporter_service_module = "Reporter Service Module"
-    riverbed_steelhead = "Riverbed SteelHead"
-    rsa_keon_ca = "RSA Keon CA"
-    schedule_base = "Schedule Base"
-    secret_store_root = "Secret Store Root"
-    self_signed_ca = 'Self Signed CA'
-    server_certificate_work = "Server Certificate Work"
-    service_module = "Service Module"
-    ssh_automatic_rotation_trigger = "SSH Automatic Rotation Trigger"
-    ssh_device_base = "Ssh Device Base"
-    ssh_key = "SSH Key"
-    ssh_manager = "SSH Manager"
-    ssh_manual_install_key_device = "SSH Manual Install Key Device"
-    ssh_server_key = "SSH Server Key"
-    ssh_user_key = "SSH User Key"
-    ssh_work = "SSH Work"
-    statistics_container = "Statistics Container"
-    statistics_counter = "Statistics Counter"
-    statistics_root = "Statistics Root"
-    symantec_lhk_ca = "Symantec LHK CA"
-    symmetric_key = "Symmetric Key"
-    tealeaf_pca = "Tealeaf PCA"
-    tealeafsunimp = "TealeafSunimp"
-    thawte_spki_ca = "Thawte SPKI CA"
-    top = "Top"
-    tree_root = "Tree Root"
-    trust = "Trust"
-    trustnet_discovery = "TrustNet Discovery"
-    trustnet_manager = "TrustNet Manager"
-    trustwave_ca = "Trustwave CA"
-    unicert_ca = "UniCERT CA"
-    untrusted_client_group = "Untrusted Client Group"
-    user = "User"
-    user_preference = "User Preference"
-    username_password_credential = "Username Password Credential"
-    validation_base = "Validation Base"
-    validation_manager = "Validation Manager"
-    vam_nshield = "VAM nShield"
-    vamcavium = "VamCavium"
-    vamsca6000 = "VamSCA6000"
-    vamsunimp = "VamSunimp"
-    venafi_platform = "Venafi Platform"
-    verisign_ca = "VeriSign CA"
-    verizon_ca = "Verizon CA"
-    workflow = "Workflow"
-    workflow_container = "Workflow Container"
-    workflow_root = "Workflow Root"
-    workflow_ticket = "Workflow Ticket"
-    x509_certificate = "X509 Certificate"
-    x509_certificate_base = "X509 Certificate Base"
-    x509_certificate_validation = "X509 Certificate Validation"
-    x509_code_signing_certificate = "X509 Code Signing Certificate"
-    x509_device_certificate = "X509 Device Certificate"
-    x509_intermediate_root_certificate = "X509 Intermediate Root Certificate"
-    x509_root_certificate = "X509 Root Certificate"
-    x509_server_certificate = "X509 Server Certificate"
-    x509_user_certificate = "X509 User Certificate"
-    xolphin_ca = "Xolphin CA"
-    zone_base = "Zone Base"
-    zos_ca = "zOS CA"
-
-
 class _ApplicationAttributes:
     adaptable_workflow_approvers = "Adaptable Workflow Approvers"
     adaptable_workflow_reference_id = "Adaptable Workflow Reference ID"
@@ -506,92 +174,45 @@ class ApplicationAttributeValues:
             key_wrapping_rsa = 'Key Wrapping - RSA'
 
 
-class FolderAttributes:
-    certificate_origin = "Certificate Origin"
-    contact = "Contact"
-    created_by = "Created By"
-    description = "Description"
-    disabled = "Disabled"
-    escalation_contact = "Escalation Contact"
-    guid = "GUID"
-    log_view_server = "Log View Server"
-    managed_by = "Managed By"
-    master_preferences = "Master Preferences"
-    metadata = "Metadata"
-    reference = "Reference"
-    scep_ca_ident = "Scep CA Ident"
-    scep_certificate_authority = "Scep Certificate Authority"
-    scep_challenge_password = "Scep Challenge Password"
-    scep_encryption_ra_certificate = "Scep Encryption RA Certificate"
-    scep_intune_application_id = "Scep Intune Application Id"
-    scep_intune_application_secret = "Scep Intune Application Secret"
-    scep_intune_tenant_name = "Scep Intune Tenant Name"
-    scep_ra_certificate = "Scep RA Certificate"
-    scep_selection_rule = "Scep Selection Rule"
-    scep_signing_ra_certificate = "Scep Signing RA Certificate"
-    workflow = "Workflow"
-    workflow_block = "Workflow Block"
+class ApplicationClassNames:
+    a10_ax_traffic_manager = "A10 AX Traffic Manager"
+    adaptable_app = "Adaptable App"
+    amazon_app = "Amazon App"
+    apache = "Apache"
+    azure_key_vault = "Azure Key Vault"
+    basic = "Basic"
+    blue_coat_sslva = "BlueCoat SSLVA"
+    brocade = "Brocade"
+    capi = "CAPI"
+    cisco_ace = "CiscoACE"
+    cisco_csm = "CiscoCSM"
+    cisco_css = "CiscoCSS"
+    connect_direct = "ConnectDirect"
+    data_power = "DataPower"
+    f5 = "F5"
+    f5_ltm_advanced = "F5 LTM Advanced"
+    gsk = "GSK"
+    iis5 = "IIS5"
+    iis6 = "IIS6"
+    imperva_mx = "Imperva MX"
+    iplanet = "iPlanet"
+    jks = "JKS"
+    juniper_sas = "Juniper SAS"
+    layer_7_ssg = "Layer 7 SSG"
+    net_scaler = "NetScaler"
+    palo_alto_network_fw = "Palo Alto Network FW"
+    pem = "PEM"
+    pkcs11 = "PKCS11"
+    pkcs12 = "PKCS#12"
+    riverbed_steel_head = "Riverbed SteelHead"
+    server_certificate_work = "Server Certificate Work"
+    tealeaf_pca = "Tealeaf PCA"
+    tealeafsunimp = "TealeafSunimp"
+    vam_nshield = "VAM nShield"
+    vam_cavium = "VamCavium"
 
 
-class _CredentialAttributes:
-    contact = "Contact"
-    created_by = "Created By"
-    description = "Description"
-    disabled = "Disabled"
-    escalation_contact = "Escalation Contact"
-    escalation_notice_interval = "Escalation Notice Interval"
-    escalation_notice_start = "Escalation Notice Start"
-    expiration = "Expiration"
-    expiration_notice_interval = "Expiration Notice Interval"
-    expiration_notice_start = "Expiration Notice Start"
-    guid = "GUID"
-    last_notification = "Last Notification"
-    managed_by = "Managed By"
-    metadata = "Metadata"
-    protection_key = "Protection Key"
-    reference = "Reference"
-    shared = "Shared"
-    vault_id = "Vault Id"
-    workflow = "Workflow"
-    workflow_block = "Workflow Block"
-
-
-class CredentialAttributes:
-    class Amazon(_CredentialAttributes):
-        authentication_credential = "Authentication Credential"
-        authentication_source = "Authentication Source"
-        region_code = "Region Code"
-        role = "Role"
-        web_service_url = "Web Service URL"
-
-    class Certificate(_CredentialAttributes):
-        certificate = 'Certificate'
-        username = 'Username'
-
-    class CyberArkPassword(_CredentialAttributes):
-        account_name = "Account Name"
-        application_id = "Application ID"
-        folder = "Folder"
-        safe = "Safe"
-
-    class CyberArkUsernamePassword(_CredentialAttributes):
-        account_name = "Account Name"
-        application_id = "Application ID"
-        folder = "Folder"
-        safe = "Safe"
-        username = "Username"
-
-    class Generic(_CredentialAttributes):
-        pass
-
-    class Password(_CredentialAttributes):
-        pass
-
-    class PrivateKey(_CredentialAttributes):
-        username = 'Username'
-
-    class UsernamePassword(_CredentialAttributes):
-        username = 'Username'
+################################
 
 
 class CertificateAttributes:
@@ -864,6 +485,16 @@ class CertificateAttributes:
     xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
 
+class CertificateClassNames:
+    client_certificate_work = "Client Certificate Work"
+    client_user_certificate_work = "Client User Certificate Work"
+    server_certificate_work = "Server Certificate Work"
+    x509_certificate = "X509 Certificate"
+
+
+################################
+
+
 class _CertificateAuthorityAttributes:
     additional_field = "Additional Field"
     concurrent_connection_limit = "Concurrent Connection Limit"
@@ -913,6 +544,126 @@ class CertificateAuthorityAttributes:
         enrollment_agent_certificate = "Enrollment Agent Certificate"
         given_name = "Given Name"
         include_cn_as_san = "Include CN as SAN"
+
+
+class CertificateAuthorityClassNames:
+    adaptable_ca = "Adaptable CA"
+    comodo_ccm = "Comodo CCM"
+    entrust_security_manager_ca = "Entrust Security Manager CA"
+    geotrust_true_flex_ca = "GeotrustTrueFlex CA"
+    http_ca_base = "HTTP CA Base"
+    microsoft_ca = "Microsoft CA"
+    microsoft_ca_pool = "Microsoft CA Pool"
+    open_ssl_ca = "OpenSSL CA"
+    redhat_ca = "Redhat CA"
+    rsa_keon_ca = "RSA Keon CA"
+    self_signed_ca = "Self Signed CA"
+    symantec_lhk_ca = "Symantec LHK CA"
+    unicert_ca = "UniCERT CA"
+    verisign_ca = "VeriSign CA"
+    verizon_ca = "Verizon CA"
+    xolphin_ca = "Xolphin CA"
+    zos_ca = "zOS CA"
+
+
+################################
+
+
+class CertificateTrustStoreClassNames:
+    blue_coat_sslva_trust_store = "BlueCoat SSLVA Trust Store"
+    capi_trust_store = "CAPI Trust Store"
+    connect_direct_trust_store = "ConnectDirect Trust Store"
+    f5_ltm_advanced_trust_store = "F5 LTM Advanced Trust Store"
+    gsk_trust_store = "GSK Trust Store"
+    jks_trust_store = "JKS Trust Store"
+    palo_alto_network_fw_trust_store = "Palo Alto Network FW Trust Store"
+    pem_trust_store = "PEM Trust Store"
+    pkcs_12_trust_store = "PKCS#12 Trust Store"
+
+
+################################
+
+
+class CloudInstanceMonitoringClassNames:
+    aws_ec2_instance_monitor = 'AWS EC2 Instance Monitor'
+
+
+################################
+
+
+class _CredentialAttributes:
+    contact = "Contact"
+    created_by = "Created By"
+    description = "Description"
+    disabled = "Disabled"
+    escalation_contact = "Escalation Contact"
+    escalation_notice_interval = "Escalation Notice Interval"
+    escalation_notice_start = "Escalation Notice Start"
+    expiration = "Expiration"
+    expiration_notice_interval = "Expiration Notice Interval"
+    expiration_notice_start = "Expiration Notice Start"
+    guid = "GUID"
+    last_notification = "Last Notification"
+    managed_by = "Managed By"
+    metadata = "Metadata"
+    protection_key = "Protection Key"
+    reference = "Reference"
+    shared = "Shared"
+    vault_id = "Vault Id"
+    workflow = "Workflow"
+    workflow_block = "Workflow Block"
+
+
+class CredentialAttributes:
+    class Amazon(_CredentialAttributes):
+        authentication_credential = "Authentication Credential"
+        authentication_source = "Authentication Source"
+        region_code = "Region Code"
+        role = "Role"
+        web_service_url = "Web Service URL"
+
+    class Certificate(_CredentialAttributes):
+        certificate = 'Certificate'
+        username = 'Username'
+
+    class CyberArkPassword(_CredentialAttributes):
+        account_name = "Account Name"
+        application_id = "Application ID"
+        folder = "Folder"
+        safe = "Safe"
+
+    class CyberArkUsernamePassword(_CredentialAttributes):
+        account_name = "Account Name"
+        application_id = "Application ID"
+        folder = "Folder"
+        safe = "Safe"
+        username = "Username"
+
+    class Generic(_CredentialAttributes):
+        pass
+
+    class Password(_CredentialAttributes):
+        pass
+
+    class PrivateKey(_CredentialAttributes):
+        username = 'Username'
+
+    class UsernamePassword(_CredentialAttributes):
+        username = 'Username'
+
+
+class CredentialClassNames:
+    amazon_credential = "Amazon Credential"
+    automatic_password_credential = "Automatic Password Credential"
+    certificate_credential = "Certificate Credential"
+    generational_credential = "Generational Credential"
+    generic_credential = "Generic Credential"
+    password_credential = "Password Credential"
+    private_key_credential = "Private Key Credential"
+    username_password_credential = "Username Password Credential"
+
+
+################################
 
 
 class _DeviceAttributes:
@@ -1031,3 +782,49 @@ class DeviceAttributes:
         location = "Location"
         ssh_connection_string = "SSH Connection String"
         ssh_version = "SSH Version"
+
+
+class DevicesClassNames:
+    device = 'Device'
+    jump_server = 'Jump Server'
+
+
+################################
+
+
+class FolderClassNames:
+    policy = 'Policy'
+
+
+class FolderAttributes:
+    certificate_origin = "Certificate Origin"
+    contact = "Contact"
+    created_by = "Created By"
+    description = "Description"
+    disabled = "Disabled"
+    escalation_contact = "Escalation Contact"
+    guid = "GUID"
+    log_view_server = "Log View Server"
+    managed_by = "Managed By"
+    master_preferences = "Master Preferences"
+    metadata = "Metadata"
+    reference = "Reference"
+    scep_ca_ident = "Scep CA Ident"
+    scep_certificate_authority = "Scep Certificate Authority"
+    scep_challenge_password = "Scep Challenge Password"
+    scep_encryption_ra_certificate = "Scep Encryption RA Certificate"
+    scep_intune_application_id = "Scep Intune Application Id"
+    scep_intune_application_secret = "Scep Intune Application Secret"
+    scep_intune_tenant_name = "Scep Intune Tenant Name"
+    scep_ra_certificate = "Scep RA Certificate"
+    scep_selection_rule = "Scep Selection Rule"
+    scep_signing_ra_certificate = "Scep Signing RA Certificate"
+    workflow = "Workflow"
+    workflow_block = "Workflow Block"
+
+
+################################
+
+
+class WorkflowClassNames:
+    workflow = 'Workflow'

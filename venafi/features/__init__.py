@@ -1,12 +1,13 @@
 from venafi.features.bases.feature_base import FeatureBase
-from venafi.features.folder import Folder, FolderAttributes
-from venafi.features.certificate import Certificate, CertificateAttributes
-from venafi.features.device import Device, DeviceAttributes
-from venafi.features.application import Apache, PKCS11, ApplicationAttributes, ApplicationAttributeValues
+from venafi.features.folder import Folder, FolderAttributes, FolderClassNames
+from venafi.features.certificate import Certificate, CertificateAttributes, CertificateClassNames
+from venafi.features.device import Device, DeviceAttributes, DevicesClassNames
+from venafi.features.application import Apache, PKCS11, ApplicationAttributes, ApplicationAttributeValues, \
+    ApplicationClassNames
 from venafi.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
     PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
-from venafi.features.certificate_authorities import MSCA, SelfSigned, CertificateAuthorityAttributes
-
+from venafi.features.certificate_authorities import MSCA, SelfSigned, CertificateAuthorityAttributes, \
+    CertificateAuthorityClassNames
 
 class Features(FeatureBase):
     def __init__(self, auth):
@@ -136,3 +137,11 @@ class Attributes:
 
 class AttributeValues:
     Application = ApplicationAttributeValues
+
+
+class Classes:
+    Application = ApplicationClassNames
+    Certificate = CertificateClassNames
+    CertificateAuthority = CertificateAuthorityClassNames
+    Device = DevicesClassNames
+    Folder = FolderClassNames

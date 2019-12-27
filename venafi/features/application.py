@@ -1,4 +1,4 @@
-from venafi.properties.config import ConfigClass, ApplicationAttributes, ApplicationAttributeValues
+from venafi.properties.config import ApplicationClassNames, ApplicationAttributes, ApplicationAttributeValues
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -40,7 +40,7 @@ class Apache(_ApplicationBase):
             ApplicationAttributes.Apache.private_key_file: private_key_file,
             ApplicationAttributes.Apache.certificate_file: certificate_file
         })
-        return self._config_create(config_class=ConfigClass.apache, name=name, container=container, attributes=attributes)
+        return self._config_create(config_class=ApplicationClassNames.apache, name=name, container=container, attributes=attributes)
 
 
 @feature()
@@ -102,4 +102,4 @@ class PKCS11(_ApplicationBase):
             pkcs11_attrs.hsm_openssl_type: openssl_type,
             pkcs11_attrs.hsm_reverse_subject_dn: reverse_subject_dn
         })
-        return self._config_create(config_class=ConfigClass.pkcs11, name=name, container=container, attributes=attributes)
+        return self._config_create(config_class=ApplicationClassNames.pkcs11, name=name, container=container, attributes=attributes)
