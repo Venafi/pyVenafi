@@ -167,6 +167,9 @@ class FeatureError(_FeatureException):
         def __init__(self, api_pref):
             super().__init__(f'"{api_pref}" is not a valid API preference. Valid preferences are "websdk" and "aperture".')
 
+    class InvalidFormat(_FeatureException):
+        pass
+
     class InvalidResultCode(_FeatureException):
         def __init__(self, code: int, code_description: str = 'Unknown'):
             super().__init__(f'Expected a valid result code, but got "{code}": {code_description}.')

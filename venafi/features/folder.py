@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 from venafi.properties.config import FolderClassNames, FolderAttributes
 
@@ -11,14 +11,15 @@ class Folder(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth)
 
-    def add_policy_attribute(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+    def clear_policy(self, folder_dn: str, class_name: str, attributes: Union[dict, List[str]]):
         """
-        Adds policy configurations to a folder. If the value is locked, then all objects derived
-        from the folder of the specified policy class will inherit the given attribute value and
-        cannot be changed by any child folders or objects. Otherwise the value will be set as a
-        suggested value that appears as a default value in any of the Venafi websites.
+        If ``attributes`` are not provided, clears the policy attribute name along with all of its values
+        on a folder. If ``attributes`` are provided, then only the corresponding policy attribute values
+        will be cleared. No error is thrown if the attribute value doesn't exist to begin with. If the
+        same attribute name is defined in any ancestor folder, then this folder will inherit that setting.
 
         Examples:
+        1. Clear all policy values by the given policy attribute names.
 
             .. code-block:: python
 
@@ -28,38 +29,71 @@ class Folder(FeatureBase):
                 auth = Authenticate(# params here)
                 features = Features(auth)
 
-                features.folder.add_policy(
-                    folder_dn=folder.dn,
+                features.folder.clear_all_policy_values(
+                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    class_name=Classes.Certificate.x509_certificate,
+                    attributes=[
+                        Attributes.Certificate.management_type,
+                        Attributes.Certificate.organization
+                    ]
+                )
+
+        2. Clear only the specified values of the given policy attribute names.
+
+        .. code-block:: python
+
+                from venafi import logger, Authenticate, Features, Attributes, \\
+                    AttributeValues, Classes
+
+                auth = Authenticate(# params here)
+                features = Features(auth)
+
+                features.folder.clear_policy_value(
+                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
                     class_name=Classes.Certificate.x509_certificate,
                     attributes={
-                        Attributes.Certificate.management_type: 'Enrollment',
-                        Attributes.Certificate.organization: 'Venafi'
-                    },
-                    locked=True
+                        Attributes.Certificate.organizational_unit: 'Venafi'
+                    }
                 )
 
         Args:
             folder_dn: Absolute path to the folder enforcing the policy.
             class_name: TPP Class Name for the attributes being locked.
-            attributes: A dictionary of attribute name/value pairs where the name is the
-                attribute name and the value is the attribute value.
-            locked: Enforces the policy on all subordinate folders and objects.
+            attributes: Either a list of attribute names or a dictionary of attribute
+                name/value pairs where the name is the attribute name and the value
+                is the attribute value.
         """
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        for name, values in attributes.items():
-            if not isinstance(values, list):
-                values = [values]
+        if isinstance(attributes, list):
+            for attribute_name in attributes:
+                result = self.auth.websdk.Config.ClearPolicyAttribute.post(
+                    object_dn=folder_dn,
+                    attribute_name=attribute_name,
+                    class_name=class_name
+                ).result
 
-            result = self.auth.websdk.Config.WritePolicy.post(
-                object_dn=folder_dn,
-                class_name=class_name,
-                attribute_name=name,
-                values=values,
-                locked=locked
-            )
-            result.assert_valid_response()
+                if result.code != 1:
+                    raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+        elif isinstance(attributes, dict):
+            for name, values in attributes.items():
+                if not isinstance(values, list):
+                    values = [values]
+
+                for value in values:
+                    result = self.auth.websdk.Config.RemovePolicyValue.post(
+                        object_dn=folder_dn,
+                        class_name=class_name,
+                        attribute_name=name,
+                        value=value
+                    ).result
+
+                    if result.code != 1:
+                        raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+        else:
+            raise TypeError(f'Expected attributes to be of type List[str] or Dict, but got {type(attributes)} instead.')
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -70,7 +104,7 @@ class Folder(FeatureBase):
             parent_folder_dn: Absolute path to the folder's parent folder.
             attributes: Attributes pertaining to the folder itself and NOT any of the policyable options.
                 In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
-                options on the folder, use :meth:`lock_attributes`.
+                options on the folder, use :meth:`set_policy`.
 
         Returns:
             Config object representing the folder.
@@ -112,19 +146,29 @@ class Folder(FeatureBase):
 
         self._config_delete(object_dn=folder_dn, recursive=recursive)
 
-    def read_policy_attribute(self, folder_dn: str, class_name: str, attribute_name: str):
+    def delete_engines(self, folder_guid: str):
+        """
+        Deletes the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
+
+        Args:
+            folder_guid: GUID of the folder.
+        """
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        # TODO
-        pass
+        return self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
-    def remove_policy_attribute(self, folder_dn: str, class_name: str, attribute_name: str):
+    def get_engines(self, folder_guid: str):
+        """
+        Gets the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
+
+        Args:
+            folder_guid: GUID of the folder.
+        """
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        # TODO
-        pass
+        return self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
 
     def search(self, object_name_pattern: str, object_type: str = None, recursive: bool = True, starting_dn: str = None):
         """
@@ -189,3 +233,153 @@ class Folder(FeatureBase):
             engine_guids.extend([engine.engine_guid for engine in current_engines])
         result = self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).put(engine_guids)
         result.assert_valid_response()
+
+    def read_policy(self, folder_dn: str, class_name: str, attribute_name: str):
+        """
+        Reads policy settings for the given folder, class name, and attribute name. Returns List[List, bool] where the
+        first element of the list is a list of values and the second element a boolean indicating whether or not the
+        value(s) are locked on the policy. An empty list of values may be returned. In order to get engines on this
+        folder, use :meth:`get_engines`.
+
+        Examples:
+
+            .. code-block:: python
+
+                from venafi import logger, Authenticate, Features, Attributes, \\
+                    AttributeValues, Classes
+
+                auth = Authenticate(# params here)
+                features = Features(auth)
+
+                values, locked = features.folder.read_policy(
+                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    class_name=Classes.Certificate.x509_certificate,
+                    attribute_name=Attributes.Certificate.management_type
+                )
+
+        Args:
+            folder_dn: Absolute path to the folder enforcing the policy.
+            class_name: TPP Class Name for the attributes being locked.
+            attribute_name: The attribute name.
+
+        Returns:
+            List[List, bool] where the first element of the list is a list of values and the second element a
+            boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
+            be returned.
+        """
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        resp = self.auth.websdk.Config.ReadPolicy.post(
+            object_dn=folder_dn,
+            class_name=class_name,
+            attribute_name=attribute_name
+        )
+
+        result = resp.result
+        if result.code != 1:
+            FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+
+        return [resp.values, resp.locked]
+
+    def write_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+        """
+        Sets policy configurations on a folder. If the value is locked, then all objects derived
+        from the folder of the specified policy class will inherit the given attribute value and
+        cannot be changed by any child folders or objects. Otherwise the value will be set as a
+        suggested value that appears as a default value in any of the Venafi websites. In order
+        to set engines on this folder, use :meth:`set_engines`.
+
+        Examples:
+
+            .. code-block:: python
+
+                from venafi import logger, Authenticate, Features, Attributes, \\
+                    AttributeValues, Classes
+
+                auth = Authenticate(# params here)
+                features = Features(auth)
+
+                features.folder.add_policy(
+                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    class_name=Classes.Certificate.x509_certificate,
+                    attributes={
+                        Attributes.Certificate.management_type: 'Enrollment',
+                        Attributes.Certificate.organization: 'Venafi'
+                    },
+                    locked=True
+                )
+
+        Args:
+            folder_dn: Absolute path to the folder enforcing the policy.
+            class_name: TPP Class Name for the attributes being locked.
+            attributes: A dictionary of attribute name/value pairs where the name is the
+                attribute name and the value is the attribute value.
+            locked: Enforces the policy on all subordinate folders and objects.
+        """
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        for name, values in attributes.items():
+            if not isinstance(values, list):
+                values = [values]
+
+            result = self.auth.websdk.Config.WritePolicy.post(
+                object_dn=folder_dn,
+                class_name=class_name,
+                attribute_name=name,
+                values=values,
+                locked=locked
+            ).result
+
+            if result.code != 1:
+                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+
+    def update_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+        """
+        Updates policy configurations on a folder. If the value is locked, then all objects derived
+        from the folder of the specified policy class will inherit the given attribute value and
+        cannot be changed by any child folders or objects. Otherwise the value will be set as a
+        suggested value that appears as a default value in any of the Venafi websites.
+
+        Examples:
+
+            .. code-block:: python
+
+                from venafi import logger, Authenticate, Features, Attributes, \\
+                    AttributeValues, Classes
+
+                auth = Authenticate(# params here)
+                features = Features(auth)
+
+                features.folder.add_policy(
+                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    class_name=Classes.Certificate.x509_certificate,
+                    attributes={
+                        Attributes.Certificate.management_type: 'Enrollment',
+                        Attributes.Certificate.organization: 'Venafi'
+                    },
+                    locked=True
+                )
+
+        Args:
+            folder_dn: Absolute path to the folder enforcing the policy.
+            class_name: TPP Class Name for the attributes being locked.
+            attributes: A dictionary of attribute name/value pairs where the name is the
+                attribute name and the value is the attribute value.
+            locked: Enforces the policy on all subordinate folders and objects.
+        """
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        for name, value in attributes.items():
+            result = self.auth.websdk.Config.AddPolicyValue.post(
+                object_dn=folder_dn,
+                class_name=class_name,
+                attribute_name=name,
+                value=value,
+                locked=locked,
+            ).result
+
+            if result.code != 1:
+                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
