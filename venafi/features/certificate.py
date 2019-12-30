@@ -68,7 +68,8 @@ class Certificate(FeatureBase):
 
         result = self.auth.websdk.Certificates.Guid(certificate_guid).delete()
         if not result.success:
-            raise FeatureError.GeneralError('Could not delete certificate.')
+            certificate_dn = self.auth.websdk.Config.GuidToDn.post(object_guid=certificate_guid).object_dn
+            raise FeatureError(f'Could not delete certificate {certificate_dn}.')
 
     def renew(self, certificate_dn: str, csr: str = None, reenable: bool = False):
         """
@@ -98,5 +99,5 @@ class Certificate(FeatureBase):
             thumbprint = self.auth.websdk.Certificates.Guid(certificate_guid).get().certificate_details.thumbprint
             return thumbprint != prev_thumbprint
 
-        self._wait(validate_thumbprint, True, 60)
+        self._wait_for_method(validate_thumbprint, True, 60)
         return self.auth.websdk.Certificates.Guid(certificate_guid).get().certificate_details

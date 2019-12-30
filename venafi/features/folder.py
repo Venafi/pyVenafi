@@ -11,7 +11,7 @@ class Folder(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth)
 
-    def add_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+    def add_policy_attribute(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
         """
         Adds policy configurations to a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
@@ -111,6 +111,20 @@ class Folder(FeatureBase):
                 self._secret_store_delete_by_dn(object_dn=child.dn)
 
         self._config_delete(object_dn=folder_dn, recursive=recursive)
+
+    def read_policy_attribute(self, folder_dn: str, class_name: str, attribute_name: str):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        # TODO
+        pass
+
+    def remove_policy_attribute(self, folder_dn: str, class_name: str, attribute_name: str):
+        if self.auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        # TODO
+        pass
 
     def search(self, object_name_pattern: str, object_type: str = None, recursive: bool = True, starting_dn: str = None):
         """

@@ -59,13 +59,13 @@ class FeatureBase:
     def __init__(self, auth: Authenticate):
         self.auth = auth
 
-    def read_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
-        def get_attribute():
-            values = self.auth.websdk.Config.ReadDn.post(object_dn=object_dn, attiribute_name=attiribute_name).values
-            found = any([True for value in values if str(value).lower() == attribute_value.lower()])
-            if found:
-                return True
-        self._wait(method=get_attribute, return_value=True, timeout=timeout)
+    # def read_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
+    #     def get_attribute():
+    #         values = self.auth.websdk.Config.ReadDn.post(object_dn=object_dn, attiribute_name=attiribute_name).values
+    #         found = any([True for value in values if str(value).lower() == attribute_value.lower()])
+    #         if found:
+    #             return True
+    #     self._wait_for_method(method=get_attribute, return_value=True, timeout=timeout)
 
     def _config_create(self, name: str, container: str, config_class: str, attributes: dict = None):
         if attributes:
@@ -102,7 +102,7 @@ class FeatureBase:
 
     @staticmethod
     def _name_value_list(attributes: dict):
-        return [{'Name': str(key), 'Value': str(value)}for key, value in attributes.items()]
+        return [{'Name': str(key), 'Value': value} for key, value in attributes.items()]
 
     def _secret_store_delete_by_dn(self, object_dn: str, namespace: str = Namespaces.config):
         if self.auth.preference == ApiPreferences.aperture:
@@ -119,7 +119,7 @@ class FeatureBase:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
     @staticmethod
-    def _wait(method, return_value, timeout: int = 10):
+    def _wait_for_method(method, return_value, timeout: int = 10):
         maxtime = time.time() + timeout
         interval = 0.5
 
@@ -147,15 +147,27 @@ class FeatureBase:
         raise TimeoutError(f'{method.__name__} did not return {return_value} in {timeout} seconds. Got {actual_value} instead.')
 
 
-class FeatureError:
-    class GeneralError(Exception):
-        pass
+class _FeatureException(Exception):
+    def __init__(self, msg):
+        super().__init__(msg)
 
-    class InvalidAPIPreference(Exception):
+    def log(self):
+        logger.log(
+            msg=self.__str__(),
+            level=LogLevels.critical,
+            prev_frames=2
+        )
+
+
+class FeatureError(_FeatureException):
+    def __init__(self, msg):
+        super().__init__(msg)
+
+    class InvalidAPIPreference(_FeatureException):
         def __init__(self, api_pref):
             super().__init__(f'"{api_pref}" is not a valid API preference. Valid preferences are "websdk" and "aperture".')
 
-    class InvalidResultCode(Exception):
+    class InvalidResultCode(_FeatureException):
         def __init__(self, code: int, code_description: str = 'Unknown'):
             super().__init__(f'Expected a valid result code, but got "{code}": {code_description}.')
 

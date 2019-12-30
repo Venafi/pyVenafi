@@ -73,7 +73,7 @@ class _Config:
             body = {
                 'ObjectDN': object_dn,
                 'AttributeName': attribute_name,
-                'ClassName': class_name,
+                'Class': class_name,
                 'Value': value,
                 'Locked': locked
             }
@@ -165,7 +165,7 @@ class _Config:
         @property
         @json_response_property()
         def count(self) -> int:
-            return self._from_json(key='Count', error_key='Error')
+            return self._from_json(key='Count')
 
         @property
         @json_response_property()
@@ -191,7 +191,7 @@ class _Config:
         @property
         @json_response_property()
         def object(self):
-            return Config.Object(self._from_json(key='Object', error_key='Error'), self._api_type)
+            return Config.Object(self._from_json(key='Object'), self._api_type)
 
         @property
         @json_response_property()
@@ -215,7 +215,7 @@ class _Config:
         @property
         @json_response_property()
         def default_dn(self) -> str:
-            return self._from_json(key='DefaultDN', error_key='Error')
+            return self._from_json(key='DefaultDN')
 
         @property
         @json_response_property()
@@ -253,22 +253,22 @@ class _Config:
         @property
         @json_response_property()
         def class_name(self) -> str:
-            return self._from_json(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName')
 
         @property
         @json_response_property()
         def guid(self) -> str:
-            return self._from_json(key='GUID', error_key='Error')
+            return self._from_json(key='GUID')
 
         @property
         @json_response_property()
         def revision(self) -> str:
-            return self._from_json(key='Revision', error_key='Error')
+            return self._from_json(key='Revision')
 
         @property
         @json_response_property()
         def hierarchical_guid(self) -> str:
-            return self._from_json(key='HierarchicalGUID', error_key='Error')
+            return self._from_json(key='HierarchicalGUID')
 
         @property
         @json_response_property()
@@ -289,7 +289,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects')]
 
         @property
         @json_response_property()
@@ -312,7 +312,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects')]
 
         @property
         @json_response_property()
@@ -333,7 +333,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects')]
 
         @property
         @json_response_property()
@@ -356,7 +356,7 @@ class _Config:
         @property
         @json_response_property()
         def policies(self):
-            return [Config.Policy(obj, self._api_type) for obj in self._from_json(key='Policies', error_key='Error')]
+            return [Config.Policy(obj, self._api_type) for obj in self._from_json(key='Policies')]
 
         @property
         @json_response_property()
@@ -377,7 +377,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects')]
 
         @property
         @json_response_property()
@@ -399,7 +399,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects')]
 
         @property
         @json_response_property()
@@ -421,7 +421,7 @@ class _Config:
         @property
         @json_response_property()
         def objects(self):
-            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects', error_key='Error')]
+            return [Config.Object(obj, self._api_type) for obj in self._from_json(key='Objects')]
 
         @property
         @json_response_property()
@@ -452,17 +452,17 @@ class _Config:
         @property
         @json_response_property()
         def locked(self) -> bool:
-            return self._from_json(key='Locked', error_key='Error')
+            return self._from_json(key='Locked')
 
         @property
         @json_response_property()
         def policy_dn(self) -> str:
-            return self._from_json(key='PolicyDN', error_key='Error')
+            return self._from_json(key='PolicyDN')
 
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', error_key='Error')
+            return self._from_json(key='Values')
 
         @property
         @json_response_property()
@@ -486,7 +486,7 @@ class _Config:
         @property
         @json_response_property()
         def revision(self) -> str:
-            return self._from_json(key='Revision', error_key='Error')
+            return self._from_json(key='Revision')
 
         @property
         @json_response_property()
@@ -510,7 +510,7 @@ class _Config:
         @property
         @json_response_property()
         def revision(self) -> str:
-            return self._from_json(key='Revision', error_key='Error')
+            return self._from_json(key='Revision')
 
         @property
         @json_response_property()
@@ -532,22 +532,22 @@ class _Config:
         @property
         @json_response_property()
         def object_dn(self) -> str:
-            return self._from_json(key='ObjectDN', error_key='Error')
+            return self._from_json(key='ObjectDN')
 
         @property
         @json_response_property()
         def class_name(self) -> str:
-            return self._from_json(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName')
 
         @property
         @json_response_property()
         def revision(self) -> str:
-            return self._from_json(key='Revision', error_key='Error')
+            return self._from_json(key='Revision')
 
         @property
         @json_response_property()
         def hierarchical_guid(self) -> str:
-            return self._from_json(key='HierarchicalGUID', error_key='Error')
+            return self._from_json(key='HierarchicalGUID')
 
         @property
         @json_response_property()
@@ -569,22 +569,22 @@ class _Config:
         @property
         @json_response_property()
         def guid(self) -> str:
-            return self._from_json(key='GUID', error_key='Error')
+            return self._from_json(key='GUID')
 
         @property
         @json_response_property()
         def class_name(self) -> str:
-            return self._from_json(key='ClassName', error_key='Error')
+            return self._from_json(key='ClassName')
 
         @property
         @json_response_property()
         def revision(self) -> str:
-            return self._from_json(key='Revision', error_key='Error')
+            return self._from_json(key='Revision')
 
         @property
         @json_response_property()
         def hierarchical_guid(self) -> str:
-            return self._from_json(key='HierarchicalGUID', error_key='Error')
+            return self._from_json(key='HierarchicalGUID')
 
         @property
         @json_response_property()
@@ -606,7 +606,7 @@ class _Config:
         @property
         @json_response_property()
         def object(self):
-            return Config.Object(self._from_json(key='Object', error_key='Error'), self._api_type)
+            return Config.Object(self._from_json(key='Object'), self._api_type)
 
         @property
         @json_response_property()
@@ -649,17 +649,17 @@ class _Config:
         @property
         @json_response_property()
         def object_dn(self) -> str:
-            return self._from_json(key='ObjectDN', error_key='Error')
+            return self._from_json(key='ObjectDN')
 
         @property
         @json_response_property()
         def attribute_name(self) -> str:
-            return self._from_json(key='AttributeName', error_key='Error')
+            return self._from_json(key='AttributeName')
 
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', error_key='Error')
+            return self._from_json(key='Values')
 
         @property
         @json_response_property()
@@ -682,7 +682,7 @@ class _Config:
         @property
         @json_response_property()
         def name_values(self):
-            return [Config.NameValues(nv, self._api_type) for nv in self._from_json(key='NameValues', error_key='Error')]
+            return [Config.NameValues(nv, self._api_type) for nv in self._from_json(key='NameValues')]
 
         @property
         @json_response_property()
@@ -704,7 +704,7 @@ class _Config:
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', error_key='Error')
+            return self._from_json(key='Values')
 
         @property
         @json_response_property()
@@ -727,7 +727,7 @@ class _Config:
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', error_key='Error')
+            return self._from_json(key='Values', return_on_key_error=list)
 
         @property
         @json_response_property()
@@ -751,22 +751,22 @@ class _Config:
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', error_key='Error')
+            return self._from_json(key='Values')
 
         @property
         @json_response_property()
         def locked(self) -> bool:
-            return self._from_json(key='Locked', error_key='Error')
+            return self._from_json(key='Locked')
 
         @property
         @json_response_property()
         def overridden(self) -> bool:
-            return self._from_json(key='Overridden', error_key='Error')
+            return self._from_json(key='Overridden')
 
         @property
         @json_response_property()
         def policy_dn(self) -> str:
-            return self._from_json(key='PolicyDN', error_key='Error')
+            return self._from_json(key='PolicyDN')
 
         @property
         @json_response_property()
@@ -789,17 +789,12 @@ class _Config:
         @property
         @json_response_property()
         def locked(self) -> bool:
-            return self._from_json(key='Locked', error_key='Error')
-
-        @property
-        @json_response_property()
-        def class_name(self) -> str:
-            return self._from_json(key='ClassName', error_key='Error')
+            return self._from_json(key='Locked')
 
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', error_key='Error')
+            return self._from_json(key='Values', return_on_key_error=list)
 
         @property
         @json_response_property()
@@ -847,7 +842,7 @@ class _Config:
             body = {
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
-                "ClassName": class_name,
+                "Class": class_name,
                 "Value": value
             }
             self.json_response = self._post(data=body)
@@ -879,7 +874,7 @@ class _Config:
         def result(self):
             return Config.Result(self._from_json(key='Result'))
 
-        def post(self, object_dn: str, attribute_data: str):
+        def post(self, object_dn: str, attribute_data: dict):
             body = {
                 "ObjectDN": object_dn,
                 "AttributeData": attribute_data

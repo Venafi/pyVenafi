@@ -96,7 +96,7 @@ class API:
         if not self._validated:
             self._validate()
 
-    def _from_json(self, key: str = None, error_key: str = None):
+    def _from_json(self, key: str = None, error_key: str = None, return_on_key_error: type = None):
         """
         Returns the particular key within the response dictionary. If no key is provided, then
         the full response is returned as a dictionary.
@@ -123,6 +123,9 @@ class API:
         for k in result.keys():
             if key.lower() == k.lower():
                 return result[k]
+
+        if return_on_key_error:
+            return return_on_key_error()
         raise KeyError(f'{key} was not returned by TPP.')
 
     def _is_api_key_invalid(self, response: Response):

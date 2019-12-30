@@ -1,4 +1,5 @@
 from venafi.features.bases.feature_base import FeatureBase
+from venafi.features.attributes import Attributes
 from venafi.features.folder import Folder, FolderAttributes, FolderClassNames
 from venafi.features.certificate import Certificate, CertificateAttributes, CertificateClassNames
 from venafi.features.device import Device, DeviceAttributes, DevicesClassNames
@@ -9,11 +10,13 @@ from venafi.features.credentials import AmazonCredential, CertificateCredential,
 from venafi.features.certificate_authorities import MSCA, SelfSigned, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
 
+
 class Features(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
         self._applications = None
+        self._attributes = None
         self._ca = None
         self._certificate = None
         self._credentials = None
@@ -24,6 +27,11 @@ class Features(FeatureBase):
     def application(self):
         self._applications = self._applications or self._Applications(self.auth)
         return self._applications
+
+    @property
+    def attributes(self):
+        self._attributes = self._attributes or Attributes(self.auth)
+        return self._attributes
 
     @property
     def certificate(self):
@@ -126,7 +134,7 @@ class Features(FeatureBase):
             return self._upcred
 
 
-class Attributes:
+class AttributesNames:
     Application = ApplicationAttributes
     Certificate = CertificateAttributes
     CertificateAuthority = CertificateAuthorityAttributes
