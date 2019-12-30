@@ -102,7 +102,12 @@ class FeatureBase:
 
     @staticmethod
     def _name_value_list(attributes: dict):
-        return [{'Name': str(key), 'Value': value} for key, value in attributes.items()]
+        nvl = []
+        for name, value in attributes.items():
+            if not isinstance(value, dict) or not isinstance(value, list):
+                value = str(value)
+            nvl.append({'Name': str(name), 'Value': value})
+        return nvl
 
     def _secret_store_delete_by_dn(self, object_dn: str, namespace: str = Namespaces.config):
         if self.auth.preference == ApiPreferences.aperture:

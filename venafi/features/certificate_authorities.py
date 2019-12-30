@@ -28,7 +28,8 @@ class MSCA(_CertificateAuthorityBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def create(self, name: str, container: str, hostname: str, service_name: str, credential_dn: str, template: str, attributes: dict = None):
+    def create(self, name: str, container: str, hostname: str, service_name: str, credential_dn: str,
+               template: str, attributes: dict = None):
         """
         Creates a Microsoft Certificate Authority object.
 
