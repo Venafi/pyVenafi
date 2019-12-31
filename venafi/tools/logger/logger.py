@@ -234,12 +234,22 @@ class Logger:
         <html>
             <head>
                 <script>
-                    function initialize_document() {{
-                        // Collapse all logs
+                    function toggleAllNodes() {{
                         var nodes = document.querySelectorAll('.node');
                         for(var i=0; i < nodes.length; i++) {{
                             nodes[i].onclick.apply(nodes[i]);
                         }}
+                    }}
+                    
+                    function expandAllNodes(id) {{
+                        id.classList.toggle('exp-sym');
+                        id.classList.toggle('col-sym');
+                        toggleAllNodes()
+                    }}
+                    
+                    function initialize_document() {{
+                        // Collapse all logs
+                        toggleAllNodes();
                     }}
                     
                     function toggleNodes(node_value) {{
@@ -342,14 +352,43 @@ class Logger:
                         content: '\\21E7'
                     }}
                     
+                    .btn {{
+                        height: 25px;
+                        border-radius: 5px;
+                        border: outset lightgrey 2px;
+                        color: #4d4d4d;
+                        font-weight: 600;
+                        font-size: 0.8em;
+                        min-width: 125px !important;
+                    }}
+                    
+                    #controls-container {{    
+                        width: 100%;
+                        min-height: 50px;
+                        display: flex;
+                        align-items: center;
+                    }}
+                    
+                    body {{
+                        width: 90%;
+                        margin: 0 auto;
+                    }}
+                    
+                    .exp-sym:after {{
+                        content: 'Expand All';
+                    }}
+                    
+                    .col-sym:after {{
+                        content: 'Collapse All';
+                    }}
+                    
                     #page-title {{
                         color: grey;
                         text-align: center;
                     }}
 
                     #log-container {{
-                        width: 90%;
-                        margin: 0 auto;
+                        width: 100%;
                         font-size: medium;
                     }}
 
@@ -601,6 +640,9 @@ class Logger:
                         <h3 id='legend-title'>Log Filter</h3>
                         {legend}
                     </div>
+                </div>
+                <div id='controls-container'>
+                    <button id='expand-btn' class='btn exp-sym' onclick="expandAllNodes(this);"></button>
                 </div>
                 <div id='log-container'>
                     {rows}
