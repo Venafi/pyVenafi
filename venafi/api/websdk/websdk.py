@@ -1,3 +1,4 @@
+from venafi.logger import logger, LogLevels
 from venafi.api.session import Session
 from venafi.api.websdk.endpoints.authorize import _Authorize
 from venafi.api.websdk.endpoints.certificates import _Certificates
@@ -26,6 +27,7 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
+    @logger.wrap(LogLevels.feature)
     def __init__(self, host: str, username: str, password: str):
         """
         Args:

@@ -183,9 +183,26 @@ class Logger:
             legend += add_legend_item(id='log-level-{level}-cb'.format(level=level), value=value, text=level, fgcolor='black', bgcolor=legend_item_color)
         legend += add_legend_item(id='pin-cb', value='-1', text='Pin Only', fgcolor='white', bgcolor='#0077FF', checked='')
 
+        node_value = 0
         rows = ''
-        for output in json_output:
+
+        for index, output in enumerate(json_output):
             file_text_color = file_text_colors.get(output['log_level'], 'orange')
+
+            if index+1 < len(json_output) and json_output[index+1]['depth'] > output['depth']:
+                node_value += 1
+                node = f"""
+                <span 
+                    id='node-{node_value}' 
+                    class='log-item node ellipsis' 
+                    value={node_value}
+                    onClick=toggleNodes({node_value})
+                ></span>"""
+
+                rows += f"<div class='node-container-{node_value}'>" * (json_output[index + 1]['depth'] - output['depth'])
+            else:
+                node = ''
+
             rows += """
             <div 
                 class='log-item-container log-level-{log_level}' 
@@ -193,6 +210,7 @@ class Logger:
                 style="position: relative; width: calc(100% - (25px * {depth})); left: calc(25px * {depth})" 
             >
                 <div id='log-{counter}' class='log-item-row-1'>
+                    {node}
                     <span id='exp-{counter}' class='log-item exp' onClick=togglePlusMinus({counter})>+</span>
                     <span id='pin-{counter}' class='log-item pin unpinned' onClick='toggleMark(this.id, {counter})'>Pin</span>
                     <span class='log-item line-info' style='background-color: {ftc};'>{filename}: {lineno}</span>
@@ -202,9 +220,12 @@ class Logger:
                     <span class='source-code'>{source}</span>
                 </div>
             </div>
-            """.format(counter=str(log_item_counter), path=output['path'], filename=output['filename'],
-                       lineno=f"{output['lineno']} -> {output['depth']}", depth=output['depth'],
-                       text=output['text'], source=output['source'], ftc=file_text_color, log_level=output['log_level'])
+            """.format(counter=str(log_item_counter), path=output['path'], filename=output['filename'], lineno=output['lineno'],
+                       text=output['text'], source=output['source'], ftc=file_text_color, log_level=output['log_level'],
+                       depth=output['depth'], node=node)
+
+            if index + 1 < len(json_output) and json_output[index + 1]['depth'] < output['depth']:
+                rows += "</div>" * (output['depth'] - json_output[index + 1]['depth'])
             log_item_counter += 1
 
         f = open('%s.html' % LOG_FILE_WITHOUT_EXT, 'w')
@@ -213,6 +234,26 @@ class Logger:
         <html>
             <head>
                 <script>
+                    function initialize_document() {{
+                        // Collapse all logs
+                        var nodes = document.querySelectorAll('.node');
+                        for(var i=0; i < nodes.length; i++) {{
+                            nodes[i].onclick.apply(nodes[i]);
+                        }}
+                    }}
+                    
+                    function toggleNodes(node_value) {{
+                        node_id = document.querySelector("#node-"+node_value);
+                        
+                        node_id.classList.toggle('arrow-up');
+                        node_id.classList.toggle('ellipsis');
+                        
+                        node_container = node_id.closest(".node-container-"+node_value).firstElementChild;
+                        for(var child=node_container.nextElementSibling; child!==null; child=child.nextElementSibling) {{
+                            child.classList.toggle('hide');
+                        }}
+                    }}
+                    
                     function togglePlusMinus(counter) {{
                         exp_el = document.getElementById('exp-'+counter);
                         text = document.getElementById('log-text-'+counter);
@@ -289,11 +330,22 @@ class Logger:
                     }}
                 </script>
                 <style>
+                    .hide {{
+                        display: none;
+                    }}
+                    
+                    .ellipsis:after {{
+                        content: '\\2026'
+                    }}
+                    
+                    .arrow-up:after {{
+                        content: '\\21E7'
+                    }}
+                    
                     #page-title {{
                         color: grey;
                         text-align: center;
                     }}
-
 
                     #log-container {{
                         width: 90%;
@@ -327,6 +379,15 @@ class Logger:
                         display: inline-flex;
                         align-items: center;
                         justify-content: center;
+                    }}
+                    
+                    .node {{
+                        min-width: 40px !important;
+                        border-right: solid lightgrey 2px;
+                        text-align: center;
+                        cursor: pointer;
+                        font-size: small;
+                        color: slategrey;
                     }}
 
                     .exp {{
@@ -533,7 +594,7 @@ class Logger:
                 </style>
                 <title>Testing Log</title>
             </head>
-            <body>
+            <body onload="initialize_document();">
                 <h1 id='page-title'>TESTING LOG</h1>
                 <div id='legend-container'>
                     <div id='legend'>
