@@ -1,45 +1,8 @@
 import inspect
-import jsonpickle
 import time
 from venafi.logger import logger, LogLevels
 from venafi.properties.secret_store import Namespaces
-from venafi.api.authenticate import Authenticate
 import os
-
-jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
-
-
-def __feature_decorator(func):
-    def __wrapper(self, *args, **kwargs):
-        # Before the function is called.
-        try:
-            params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
-        except TypeError as e:
-            logger.log(
-                msg='\n'.join(e.args),
-                level=LogLevels.critical,
-                prev_frames=2
-            )
-            raise TypeError(e)
-
-        if 'self' in params.keys():
-            del params['self']
-        before_string = 'Called ' + func.__qualname__
-        if params:
-            before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=2)
-        logger.log_method(func_obj=func, msg=before_string, level=LogLevels.feature, reference_lastlineno=False)
-
-        result = func(self, *args, **kwargs)
-
-        # After the function returns.
-        after_string = f'{func.__qualname__} returned.'
-        if result is not None:
-            ret_vals = jsonpickle.dumps(result, max_depth=2)
-            after_string += f'\nReturn Values: {ret_vals}'
-        logger.log_method(func_obj=func, msg=after_string, level=LogLevels.feature, reference_lastlineno=True)
-
-        return result
-    return __wrapper
 
 
 def feature():
@@ -49,23 +12,15 @@ def feature():
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                setattr(cls, attr, __feature_decorator(getattr(cls, attr)))
+                setattr(cls, attr, logger.wrap(LogLevels.feature)(getattr(cls, attr)))
         return cls
     return decorate
 
 
 @feature()
 class FeatureBase:
-    def __init__(self, auth: Authenticate):
+    def __init__(self, auth):
         self.auth = auth
-
-    # def read_attribute(self, object_dn: str, attiribute_name: str, attribute_value: str, timeout: int = 10):
-    #     def get_attribute():
-    #         values = self.auth.websdk.Config.ReadDn.post(object_dn=object_dn, attiribute_name=attiribute_name).values
-    #         found = any([True for value in values if str(value).lower() == attribute_value.lower()])
-    #         if found:
-    #             return True
-    #     self._wait_for_method(method=get_attribute, return_value=True, timeout=timeout)
 
     def _config_create(self, name: str, container: str, config_class: str, attributes: dict = None):
         if attributes:

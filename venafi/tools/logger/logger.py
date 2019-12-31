@@ -9,7 +9,9 @@ from venafi.tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
 from venafi.tools.logger.log_resources import LogLevels
 import webbrowser
 import json
+import jsonpickle
 
+jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 
 LOG_TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
@@ -60,6 +62,7 @@ class Logger:
         self.log_exception = self._log_exception
 
         self._disabled_at_level = -1
+        self._depth = []
 
     def no_op(self, *args, **kwargs): pass
 
@@ -88,6 +91,51 @@ class Logger:
             self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
+
+    def wrap(self, level: int):
+        def _wrap(func):
+            def __wrapper(slf, *args, **kwargs):
+                func_id = id(func)
+
+                def truncate_depth():
+                    indexes = [i for i, e in enumerate(self._depth) if e == func_id]
+                    if indexes:
+                        self._depth = self._depth[:indexes[-1]]
+
+                # Before the function is called.
+                try:
+                    params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
+                except TypeError as e:
+                    self.log(
+                        msg='\n'.join(e.args),
+                        level=LogLevels.critical,
+                        prev_frames=2
+                    )
+                    raise TypeError(e)
+
+                if 'self' in params.keys():
+                    del params['self']
+                before_string = 'Called ' + func.__qualname__
+                if params:
+                    before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=2)
+                self.log_method(func_obj=func, msg=before_string, level=level, reference_lastlineno=False)
+
+                truncate_depth()
+                self._depth.append(func_id)
+
+                result = func(slf, *args, **kwargs)
+
+                # After the function returns.
+                after_string = f'{func.__qualname__} returned.'
+                if result is not None:
+                    ret_vals = jsonpickle.dumps(result, max_depth=2)
+                    after_string += f'\nReturn Values: {ret_vals}'
+                self.log_method(func_obj=func, msg=after_string, level=level, reference_lastlineno=True)
+
+                truncate_depth()
+                return result
+            return __wrapper
+        return _wrap
 
     @staticmethod
     def log_to_html():
@@ -507,22 +555,34 @@ class Logger:
             source, startlineno = inspect.getsourcelines(outerframes[0])
             path, lineno = outerframes[1], str(outerframes[2])
             filepath, filename = os.path.split(path)
+
         elif func_obj:
             source, startlineno = inspect.getsourcelines(func_obj)
             path = inspect.getfile(func_obj)
             lineno = startlineno+len(source)-1 if reference_lastlineno else startlineno
             filepath, filename = os.path.split(path)
+
         else:
             raise ValueError('Must supply either "outerframes" or "func_obj".')
+
         if not skip_console and level >= LOG_LEVEL:
             file_text_color = LogColors.level_color.get(level)
             file_text = '{c}File "{f}", line {l}{e}'.format(c=file_text_color, f=filename, l=lineno, e=LogColors.end)
             print(file_text + str(msg))
+
         if LOG_TO_JSON is True:
             json_msg = html_formatted_msg or msg
             source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
             with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
-                json.dump({"path": path, "filename": filename, "lineno": lineno, "text": str(json_msg), "source": source, "log_level": level}, f)
+                json.dump({
+                    "path": path,
+                    "filename": filename,
+                    "lineno": lineno,
+                    "text": str(json_msg),
+                    "source": source,
+                    "log_level": level,
+                    "depth": len(self._depth)
+                }, f)
                 f.write('\n')
 
     def _log(self, msg: str, level: int = LogLevels.main, critical: bool = False, prev_frames: int = 1):
