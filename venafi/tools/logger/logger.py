@@ -240,13 +240,7 @@ class Logger:
                             nodes[i].onclick.apply(nodes[i]);
                         }}
                     }}
-                    
-                    function expandAllNodes(id) {{
-                        id.classList.toggle('exp-sym');
-                        id.classList.toggle('col-sym');
-                        toggleAllNodes()
-                    }}
-                    
+                                        
                     function initialize_document() {{
                         // Collapse all logs
                         toggleAllNodes();
@@ -315,9 +309,19 @@ class Logger:
 
                             // Filter logs.
                             for(var i=0; i < all_logs.length; i++) {{
-                                display = all_logs[i].querySelectorAll('.unpinned').length == 0 ? 'block' : 'none';
-                                all_logs[i].style.display = display;
+                                is_filtered = !(all_logs[i].querySelectorAll('.unpinned').length == 0);
+                                
+                                if(is_filtered) {{
+                                    if(!all_logs[i].classList.contains('filtered')) {{
+                                        all_logs[i].classList.add('filtered');
+                                    }}
+                                }} else {{
+                                    if(all_logs[i].classList.contains('filtered')) {{
+                                        all_logs[i].classList.remove('filtered');
+                                    }}
+                                }}
                             }}
+                            
                         }} else {{ // All other filters.
                             // Enable all filters.
                             legend_items = document.querySelectorAll('.legend-item');
@@ -328,8 +332,17 @@ class Logger:
 
                             // Filter logs.
                             for(var i=0; i < all_logs.length; i++) {{
-                                display = (display_filters.includes(all_logs[i].getAttribute('value'))) ? 'block' : 'none';
-                                all_logs[i].style.display = display;
+                                is_filtered = !display_filters.includes(all_logs[i].getAttribute('value'));
+                                
+                                if(is_filtered) {{
+                                    if(!all_logs[i].classList.contains('filtered')) {{
+                                        all_logs[i].classList.add('filtered');
+                                    }}
+                                }} else {{
+                                    if(all_logs[i].classList.contains('filtered')) {{
+                                        all_logs[i].classList.remove('filtered');
+                                    }}
+                                }}
                             }}
                         }}
                     }}
@@ -341,6 +354,10 @@ class Logger:
                 </script>
                 <style>
                     .hide {{
+                        display: none;
+                    }}
+                    
+                    .filtered {{
                         display: none;
                     }}
                     
@@ -372,14 +389,6 @@ class Logger:
                     body {{
                         width: 90%;
                         margin: 0 auto;
-                    }}
-                    
-                    .exp-sym:after {{
-                        content: 'Expand All';
-                    }}
-                    
-                    .col-sym:after {{
-                        content: 'Collapse All';
                     }}
                     
                     #page-title {{
@@ -642,7 +651,7 @@ class Logger:
                     </div>
                 </div>
                 <div id='controls-container'>
-                    <button id='expand-btn' class='btn exp-sym' onclick="expandAllNodes(this);"></button>
+                    <button id='expand-btn' class='btn' onclick="toggleAllNodes();">Toggle All Logs</button>
                 </div>
                 <div id='log-container'>
                     {rows}
