@@ -94,7 +94,7 @@ class Logger:
 
     def wrap(self, level: int):
         def _wrap(func):
-            def __wrapper(slf, *args, **kwargs):
+            def __wrapper(*args, **kwargs):
                 func_id = id(func)
 
                 def truncate_depth():
@@ -104,7 +104,7 @@ class Logger:
 
                 # Before the function is called.
                 try:
-                    params = dict(inspect.signature(func).bind(self, *args, **kwargs).arguments)
+                    params = dict(inspect.signature(func).bind(*args, **kwargs).arguments)
                 except TypeError as e:
                     self.log(
                         msg='\n'.join(e.args),
@@ -123,7 +123,7 @@ class Logger:
                 truncate_depth()
                 self._depth.append(func_id)
 
-                result = func(slf, *args, **kwargs)
+                result = func(*args, **kwargs)
 
                 # After the function returns.
                 after_string = f'{func.__qualname__} returned.'
@@ -187,7 +187,11 @@ class Logger:
         for output in json_output:
             file_text_color = file_text_colors.get(output['log_level'], 'orange')
             rows += """
-            <div class='log-item-container log-level-{log_level}' value='{log_level}'>
+            <div 
+                class='log-item-container log-level-{log_level}' 
+                value='{log_level}'
+                style="position: relative; width: calc(100% - (25px * {depth})); left: calc(25px * {depth})" 
+            >
                 <div id='log-{counter}' class='log-item-row-1'>
                     <span id='exp-{counter}' class='log-item exp' onClick=togglePlusMinus({counter})>+</span>
                     <span id='pin-{counter}' class='log-item pin unpinned' onClick='toggleMark(this.id, {counter})'>Pin</span>
@@ -198,7 +202,8 @@ class Logger:
                     <span class='source-code'>{source}</span>
                 </div>
             </div>
-            """.format(counter=str(log_item_counter), path=output['path'], filename=output['filename'], lineno=output['lineno'],
+            """.format(counter=str(log_item_counter), path=output['path'], filename=output['filename'],
+                       lineno=f"{output['lineno']} -> {output['depth']}", depth=output['depth'],
                        text=output['text'], source=output['source'], ftc=file_text_color, log_level=output['log_level'])
             log_item_counter += 1
 
