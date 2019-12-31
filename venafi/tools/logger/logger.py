@@ -92,7 +92,7 @@ class Logger:
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
-    def wrap(self, level: int):
+    def wrap(self, level: int = LogLevels.main):
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
