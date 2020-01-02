@@ -251,7 +251,7 @@ class API:
         """
         logger.log(
             msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-            level=LogLevels.api
+            level=LogLevels.low.level
         )
         self._api_obj.re_authenticate()
 
@@ -261,9 +261,9 @@ class API:
         """
         if data:
             payload = json.dumps(data, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.api, prev_frames=3)
+            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level, prev_frames=3)
         else:
-            logger.log(f'URL: {self._url}', level=LogLevels.api, prev_frames=3)
+            logger.log(f'URL: {self._url}', level=LogLevels.low.level, prev_frames=3)
 
     def _log_response(self, response: Response):
         """
@@ -279,7 +279,7 @@ class API:
 
         logger.log(
             msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}',
-            level=LogLevels.api,
+            level=LogLevels.low.level,
             prev_frames=3
         )
 

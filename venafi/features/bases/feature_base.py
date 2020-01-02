@@ -12,7 +12,7 @@ def feature():
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                setattr(cls, attr, logger.wrap(LogLevels.feature)(getattr(cls, attr)))
+                setattr(cls, attr, logger.wrap(LogLevels.medium.level)(getattr(cls, attr)))
         return cls
     return decorate
 
@@ -49,7 +49,7 @@ class FeatureBase:
 
     @staticmethod
     def _log_not_implemented_warning(api_type):
-        logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.feature, prev_frames=2)
+        logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.medium.level, prev_frames=2)
 
     @staticmethod
     def _name_type_value(name: str, type: str, value):
@@ -84,7 +84,7 @@ class FeatureBase:
         interval = 0.5
 
         logger.disable_all_logging(
-            level=LogLevels.feature,
+            level=LogLevels.medium.level,
             why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals. '
                 f'Expected output value is "{return_value}".',
             func_obj=method
@@ -96,7 +96,7 @@ class FeatureBase:
             if actual_value == return_value:
                 lapse = int(timeout - (maxtime - time.time()))
                 logger.enable_all_logging(
-                    level=LogLevels.feature,
+                    level=LogLevels.medium.level,
                     why=f'{method.__name__} returned "{actual_value}" after {lapse} seconds.',
                     func_obj=method,
                     reference_lastlineno=True
@@ -114,7 +114,7 @@ class _FeatureException(Exception):
     def log(self):
         logger.log(
             msg=self.__str__(),
-            level=LogLevels.critical,
+            level=LogLevels.critical.level,
             prev_frames=2
         )
 

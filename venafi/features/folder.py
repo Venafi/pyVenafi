@@ -104,7 +104,7 @@ class Folder(FeatureBase):
             parent_folder_dn: Absolute path to the folder's parent folder.
             attributes: Attributes pertaining to the folder itself and NOT any of the policyable options.
                 In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
-                options on the folder, use :meth:`set_policy`.
+                options on the folder, use :meth:`write_policy`.
 
         Returns:
             Config object representing the folder.

@@ -14,7 +14,7 @@ class _Authorize(API):
     @property
     @json_response_property()
     def token(self) -> dict:
-        logger.log('WebSDK API Key retrieved.', level=LogLevels.api)
+        logger.log('WebSDK API Key retrieved.', level=LogLevels.low.level)
         token = self.json_response.json()['APIKey']
         return {'X-Venafi-API-Key': token}
 
@@ -28,7 +28,7 @@ class _Authorize(API):
         }
 
         payload = json.dumps(body, indent=4)
-        logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.api)
+        logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level)
 
         body['Password'] = password
         self.json_response = self._session.post(url=self._url, data=body)

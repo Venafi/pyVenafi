@@ -27,7 +27,7 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap(LogLevels.feature)
+    @logger.wrap(LogLevels.medium.level)
     def __init__(self, host: str, username: str, password: str):
         """
         Args:

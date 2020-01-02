@@ -4,7 +4,7 @@ from venafi.api.aperture.endpoints.users import _Users
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 
 
-@logger.wrap(LogLevels.feature)
+@logger.wrap(LogLevels.medium.level)
 class Aperture:
     """
     Initializes an Aperture session via username/password. Certificate authentication is not
