@@ -22,11 +22,11 @@ class FeatureBase:
     def __init__(self, auth):
         self.auth = auth
 
-    def _config_create(self, name: str, container: str, config_class: str, attributes: dict = None):
+    def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None):
         if attributes:
             attributes = self._name_value_list(attributes=attributes)
 
-        dn = f'{container}\\{name}'
+        dn = f'{parent_folder_dn}\\{name}'
 
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
@@ -64,7 +64,7 @@ class FeatureBase:
             nvl.append({'Name': str(name), 'Value': value})
         return nvl
 
-    def _secret_store_delete_by_dn(self, object_dn: str, namespace: str = Namespaces.config):
+    def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):
         if self.auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 

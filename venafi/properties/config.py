@@ -535,15 +535,175 @@ class _CertificateAuthorityAttributes:
 
 
 class CertificateAuthorityAttributes:
-    class SelfSigned(_CertificateAuthorityAttributes):
-        algorithm = "Algorithm"
-        enhanced_key_usage = "Enhanced Key Usage"
-        key_usage = "Key Usage"
+    class Adaptable(_CertificateAuthorityAttributes):
+        allow_reissue = "Allow Reissue"
+        certificate_credential = "Certificate Credential"
+        connection_valid = "Connection Valid"
+        custom_fields = "Custom Fields"
+        interoperability_script = "Interoperability Script"
+        log_debug = "Log Debug"
+        powershell_script_hash_vault_id = "PowerShell Script Hash Vault Id"
+        renewal_window = "Renewal Window"
+        retry_after_script_hash_mismatch = "Retry After Script Hash Mismatch"
+        secondary_credential = "Secondary Credential"
+
+    class ComodoCCM(_CertificateAuthorityAttributes):
+        address = "Address"
+        company_number = "Company Number"
+        customer_login_uri = "Customer Login URI"
+        domain_control_validation = "Domain Control Validation"
+        domain_control_validation_email = "Domain Control Validation Email"
+        organization = "Organization"
+        postal_code = "Postal Code"
+        secret_key = "Secret Key"
+        uri = "URI"
+
+    class Digicert(_CertificateAuthorityAttributes):
+        account_number = "Account Number"
+        account_organization = "Account Organization"
+        allow_reissue = "Allow Reissue"
+        api_credentials = "API Credentials"
+        api_key = "API Key"
+        certificate_transparency = "Certificate Transparency"
+        ev_allowed = "EV Allowed"
+        ev_enabled = "EV Enabled"
+        manual_approval = "Manual Approval"
+        organizational_unit = "Organizational Unit"
+        profile_id = "Profile ID"
+        renewal_window = "Renewal Window"
+        san_enabled = "SAN Enabled"
+        uc_allowed = "UC Allowed"
+        wildcard_allowed = "Wildcard Allowed"
+
+    class EntrustCertificateServices(_CertificateAuthorityAttributes):
+        certificate_type = "Certificate Type"
+        create_entrust_user = "Create Entrust User"
+        enrollment_server_for_web_folder = "Enrollment Server for Web Folder"
+        epf_credential = "EPF Credential"
+        epf_credential_dn = "EPF Credential DN"
+        ini_file = "INI File"
+        role = "Role"
+        searchbase = "Searchbase"
+        user_class_name = "User Class Name"
+
+    class GeoTrustReseller(_CertificateAuthorityAttributes):
+        account_type = "Account Type"
+        address = "Address"
+        billing_contact_first_name = "Billing Contact First Name"
+        billing_contact_internet_email_address = "Billing Contact Internet EMail Address"
+        billing_contact_last_name = "Billing Contact Last Name"
+        billing_contact_telephone_number = "Billing Contact Telephone Number"
+        city = "City"
+        country = "Country"
+        interval = "Interval"
+        organization = "Organization"
+        partner_code = "Partner Code"
+        postal_code = "Postal Code"
+        state = "State"
+        technical_contact_address = "Technical Contact Address"
+        technical_contact_city = "Technical Contact City"
+        technical_contact_country = "Technical Contact Country"
+        technical_contact_first_name = "Technical Contact First Name"
+        technical_contact_internet_email_address = "Technical Contact Internet EMail Address"
+        technical_contact_last_name = "Technical Contact Last Name"
+        technical_contact_organization = "Technical Contact Organization"
+        technical_contact_postal_code = "Technical Contact Postal Code"
+        technical_contact_state = "Technical Contact State"
+        technical_contact_telephone_number = "Technical Contact Telephone Number"
+        technical_contact_title = "Technical Contact Title"
+        telephone_number = "Telephone Number"
+        test_account = "Test Account"
+        web_service_url = "Web Service URL"
+
+    class GlobalSignMSSL(_CertificateAuthorityAttributes):
+        domain_id = "Domain ID"
+        profile_id = "Profile ID"
+        san_type = "SAN Type"
+        web_service_url = "Web Service URL"
+
+    class HydrantID(_CertificateAuthorityAttributes):
+        account_name = "Account Name"
+        account_organization = "Account Organization"
+        api_credentials = "API Credentials"
+        certificate_type = "Certificate Type"
+        subscriber_email = "Subscriber Email"
+        ui_credentials = "UI Credentials"
+        web_service_url = "Web Service URL"
+        web_ui_url = "Web UI URL"
 
     class MSCA(_CertificateAuthorityAttributes):
         enrollment_agent_certificate = "Enrollment Agent Certificate"
         given_name = "Given Name"
         include_cn_as_san = "Include CN as SAN"
+
+    class OpenSSL(_CertificateAuthorityAttributes):
+        certificate_directory = "Certificate Directory"
+        certificate_file = "Certificate File"
+        configuration_file = "Configuration File"
+        copy_extensions = "Copy Extensions"
+        private_key_file = "Private Key File"
+        private_key_password_credential = "Private Key Password Credential"
+        temp_directory = "Temp Directory"
+
+    class OpenTrust(_CertificateAuthorityAttributes):
+        connector_type = "Connector Type"
+        fields = "Fields"
+        retrieval_period = "Retrieval Period"
+        web_service_url = "Web Service URL"
+
+    class QuoVadis(_CertificateAuthorityAttributes):
+        account_name = "Account Name"
+        account_organization = "Account Organization"
+        api_credentials = "API Credentials"
+        certificate_type = "Certificate Type"
+        subscriber_email = "Subscriber Email"
+        ui_credentials = "UI Credentials"
+        web_service_url = "Web Service URL"
+        web_ui_url = "Web UI URL"
+
+    class RedHat(_CertificateAuthorityAttributes):
+        agent_port = "Agent Port"
+        agent_url_surffix = "Agent URL Surffix"
+        end_entity_port = "End Entity Port"
+        end_entity_url_surffix = "End Entity URL Surffix"
+        use_profile = "Use Profile"
+
+    class RSA(_CertificateAuthorityAttributes):
+        ca_md5 = "CA MD5"
+        ca_name = "CA Name"
+        certificate_block = "Certificate Block"
+        jurisdiction_id = "Jurisdiction ID"
+        jurisdiction_name = "Jurisdiction Name"
+        supported_validity_periods = "Supported Validity Periods"
+
+    class SelfSigned(_CertificateAuthorityAttributes):
+        algorithm = "Algorithm"
+        enhanced_key_usage = "Enhanced Key Usage"
+        key_usage = "Key Usage"
+
+    class Symantec(_CertificateAuthorityAttributes):
+        fields = "Fields"
+        uri = "URI"
+
+    class Thawte(_CertificateAuthorityAttributes):
+        certificate_block = "Certificate Block"
+        certificate_transparency = "Certificate Transparency"
+        retrieval_period = "Retrieval Period"
+        server_type = "Server Type"
+        signature_algorithm = "Signature Algorithm"
+        uri = "URI"
+
+    class TrustWave(_CertificateAuthorityAttributes):
+        interval = "Interval"
+        reseller_id = "Reseller ID"
+        retrieval_period = "Retrieval Period"
+        web_service_url = "Web Service URL"
+
+    class UniCERT(_CertificateAuthorityAttributes):
+        ca_dn = "CA DN"
+        ra_dn = "RA DN"
+        secure = "Secure"
+        web_instance = "Web Instance"
 
 
 class CertificateAuthorityClassNames:

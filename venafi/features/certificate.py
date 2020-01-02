@@ -32,7 +32,7 @@ class Certificate(FeatureBase):
             push_to_new=push_to_new
         ).success
 
-    def create(self, name: str, container: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
         Creates the config object that represents the certificate.
 
@@ -40,7 +40,7 @@ class Certificate(FeatureBase):
 
         Args:
             name: Name of the Certificate object.
-            container: Absolute path to the parent folder of the certificate object.
+            parent_folder_dn: Absolute path to the parent folder of the certificate object.
             attributes: Additional attributes that define this certificate.
 
         Returns:
@@ -49,7 +49,7 @@ class Certificate(FeatureBase):
         """
         return self._config_create(
             name=name,
-            container=container,
+            parent_folder_dn=parent_folder_dn,
             config_class=CertificateClassNames.x509_certificate,
             attributes=attributes
         )

@@ -7,7 +7,7 @@ from venafi.features.application import Apache, PKCS11, ApplicationAttributes, A
     ApplicationClassNames
 from venafi.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
     PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
-from venafi.features.certificate_authorities import MSCA, SelfSigned, CertificateAuthorityAttributes, \
+from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
 
 
@@ -33,17 +33,23 @@ class Features(FeatureBase):
         def __init__(self, auth):
             self.auth = auth
 
+            self._adaptable = None
             self._msca = None
             self._self_signed = None
 
         @property
-        def msca(self):
+        def adaptable(self) -> AdaptableCA:
+            self._adaptable = self._adaptable or AdaptableCA(self.auth)
+            return self._adaptable
+
+        @property
+        def msca(self) -> MSCA:
             self._msca = self._msca or MSCA(self.auth)
             return self._msca
 
         @property
-        def self_signed(self):
-            self._self_signed = self._self_signed or SelfSigned(self.auth)
+        def self_signed(self) -> SelfSignedCA:
+            self._self_signed = self._self_signed or SelfSignedCA(self.auth)
             return self._self_signed
 
     class _Credentials:

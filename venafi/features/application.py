@@ -7,7 +7,7 @@ class _ApplicationBase(FeatureBase):
         super().__init__(auth=auth)
 
     def delete(self, object_dn: str):
-        self._secret_store_delete_by_dn(object_dn=object_dn)
+        self._secret_store_delete(object_dn=object_dn)
         self._config_delete(object_dn=object_dn)
 
 
@@ -19,13 +19,13 @@ class Apache(_ApplicationBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def create(self, name: str, container: str, private_key_file: str, certificate_file: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, private_key_file: str, certificate_file: str, attributes: dict = None):
         """
         Creates an Apache application object.
 
         Args:
             name: Name of the Apache application object.
-            container: Absolute path to the parent folder of the application object.
+            parent_folder_dn: Absolute path to the parent folder of the application object.
             private_key_file: Location on the application device to place the private key file.
             certificate_file: Location on the application device to place the certificate file.
             attributes: Additional attributes pertaining to the application object.
@@ -40,7 +40,12 @@ class Apache(_ApplicationBase):
             ApplicationAttributes.Apache.private_key_file: private_key_file,
             ApplicationAttributes.Apache.certificate_file: certificate_file
         })
-        return self._config_create(config_class=ApplicationClassNames.apache, name=name, container=container, attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=parent_folder_dn,
+            config_class=ApplicationClassNames.apache,
+            attributes=attributes
+        )
 
 
 @feature()
@@ -51,17 +56,18 @@ class PKCS11(_ApplicationBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def create(self, name: str, container: str, cryptoki_file_with_path: str, distribution_directory: str, openssl_config_file_with_path:str,
-               openssl_directory: str, token_slot_identifier: str, token_slot_pin_dn: str, use_case: str, attributes: dict = None,
-               connection_method: str = 'SSH', embed_sans_in_csr: bool = False, import_certificates_into_hsm: str = '0',
-               label_format: str = 'Date with CN', port: int = 22, protection_type: str = 'Module', openssl_type:str = 'System',
-               reverse_subject_dn: bool = False):
+    def create(self, name: str, parent_folder_dn: str, cryptoki_file_with_path: str, distribution_directory: str,
+               openssl_config_file_with_path:str, openssl_directory: str, token_slot_identifier: str,
+               token_slot_pin_dn: str, use_case: str, attributes: dict = None, connection_method: str = 'SSH',
+               embed_sans_in_csr: bool = False, import_certificates_into_hsm: str = '0',
+               label_format: str = 'Date with CN', port: int = 22, protection_type: str = 'Module',
+               openssl_type: str = 'System', reverse_subject_dn: bool = False):
         """
         Creates a PKCS11 application object.
 
         Args:
             name: Name of the Apache application object.
-            container: Absolute path to the parent folder of the application object.
+            parent_folder_dn: Absolute path to the parent folder of the application object.
             cryptoki_file_with_path:
             distribution_directory:
             openssl_config_file_with_path:
@@ -102,4 +108,9 @@ class PKCS11(_ApplicationBase):
             pkcs11_attrs.hsm_openssl_type: openssl_type,
             pkcs11_attrs.hsm_reverse_subject_dn: reverse_subject_dn
         })
-        return self._config_create(config_class=ApplicationClassNames.pkcs11, name=name, container=container, attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=parent_folder_dn,
+            config_class=ApplicationClassNames.pkcs11,
+            attributes=attributes
+        )

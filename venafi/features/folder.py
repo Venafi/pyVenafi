@@ -116,7 +116,7 @@ class Folder(FeatureBase):
         if self.auth.preference == ApiPreferences.websdk:
             return self._config_create(
                 name=name,
-                container=parent_folder_dn,
+                parent_folder_dn=parent_folder_dn,
                 config_class=FolderClassNames.policy,
                 attributes=attributes
             )
@@ -142,7 +142,7 @@ class Folder(FeatureBase):
 
             all_child_dns = response.objects
             for child in all_child_dns:
-                self._secret_store_delete_by_dn(object_dn=child.dn)
+                self._secret_store_delete(object_dn=child.dn)
 
         self._config_delete(object_dn=folder_dn, recursive=recursive)
 
