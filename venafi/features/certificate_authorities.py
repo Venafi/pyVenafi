@@ -37,10 +37,12 @@ class AdaptableCA(_CertificateAuthorityBase):
         Args:
             name: Name of the CA object.
             parent_folder_dn: Absolute path to the parent folder of the CA object.
-            hostname: Hostname or IP Address of the CA.
-            service_name: Service, or Given, Name of the certificate authority.
-            credential_dn: Absolute path to the credential object.
-            template: Name of the CA template.
+            powershell_script: Name of the PowerShell script located at `C:\\Program Files\\Venafi\\Scripts\\AdaptableCA`
+            username_credential_dn: Absolute path to the Username/Password credential object. This is required by TPP if no
+                ``certificate_credential_dn`` is given.
+            certificate_credential_dn: Absolute path to the Certificate credential object. This is required by TPP if no
+                ``username_credential_dn`` is given.
+            secondary_credential_dn: Absolute path to the secondary credential object.
             attributes: Additional attributes associated to the CA object.
 
         Returns:

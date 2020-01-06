@@ -12,12 +12,12 @@ class _CredentialBase(FeatureBase):
                 encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         dn = f'{parent_folder}\\{name}'
 
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         expiration = int((datetime.now() + timedelta(expiration * (365 / 12))).timestamp() * 1000)
 
-        result = self.auth.websdk.Credentials.Create.post(
+        result = self._auth.websdk.Credentials.Create.post(
             credential_path=dn,
             friendly_name=friendly_name,
             values=values,
@@ -31,7 +31,7 @@ class _CredentialBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        response = self.auth.websdk.Config.IsValid.post(object_dn=dn)
+        response = self._auth.websdk.Config.IsValid.post(object_dn=dn)
         result = response.result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -44,10 +44,10 @@ class _CredentialBase(FeatureBase):
         Args:
             credential_dn: Absolute path to the credential object.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self.auth.websdk.Credentials.Delete.post(credential_path=credential_dn).result
+        result = self._auth.websdk.Credentials.Delete.post(credential_path=credential_dn).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
@@ -353,12 +353,12 @@ class UsernamePasswordCredential(_CredentialBase):
         """
         dn = f'{parent_folder_dn}\\{name}'
 
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         expiration = int((datetime.now() + timedelta(expiration * (365/12))).timestamp() * 1000)
 
-        result = self.auth.websdk.Credentials.Create.post(
+        result = self._auth.websdk.Credentials.Create.post(
             credential_path=dn,
             friendly_name='UsernamePassword',
             values=[
@@ -375,7 +375,7 @@ class UsernamePasswordCredential(_CredentialBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        response = self.auth.websdk.Config.IsValid.post(object_dn=dn)
+        response = self._auth.websdk.Config.IsValid.post(object_dn=dn)
         result = response.result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)

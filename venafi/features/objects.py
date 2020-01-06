@@ -3,7 +3,7 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 
 
 @feature()
-class Attributes(FeatureBase):
+class Objects(FeatureBase):
     """
     This feature provides access to read, write, update, and clear attributes on any TPP Object given that
     the authenticated session has permission to do so. This is very useful for validating that TPP Objects
@@ -65,12 +65,12 @@ class Attributes(FeatureBase):
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if isinstance(attributes, list):
             for attribute_name in attributes:
-                result = self.auth.websdk.Config.ClearAttribute.post(
+                result = self._auth.websdk.Config.ClearAttribute.post(
                     object_dn=object_dn,
                     attribute_name=attribute_name
                 ).result
@@ -84,7 +84,7 @@ class Attributes(FeatureBase):
                     values = [values]
 
                 for value in values:
-                    result = self.auth.websdk.Config.RemoveDnValue.post(
+                    result = self._auth.websdk.Config.RemoveDnValue.post(
                         object_dn=object_dn,
                         attribute_name=name,
                         value=value
@@ -112,10 +112,10 @@ class Attributes(FeatureBase):
             2. Attribute Values: A list of all values corresponding to the given attribute name.
             3. Locked: A boolean representing whether or not the returned values are locked.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self.auth.websdk.Config.FindPolicy.post(
+        resp = self._auth.websdk.Config.FindPolicy.post(
             object_dn=object_dn,
             class_name=class_name,
             attribute_name=attribute_name
@@ -203,10 +203,10 @@ class Attributes(FeatureBase):
             A list of NameValue objects having ``name`` and ``values`` properties corresponding to each
             attribute name and attribute value.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self.auth.websdk.Config.ReadAll.post(object_dn=object_dn)
+        resp = self._auth.websdk.Config.ReadAll.post(object_dn=object_dn)
 
         result = resp.result
         if result.code != 1:
@@ -214,7 +214,7 @@ class Attributes(FeatureBase):
 
         return resp.name_values
 
-    def rename_object(self, object_dn: str, new_object_dn: str):
+    def rename(self, object_dn: str, new_object_dn: str):
         """
         Renames an object DN. This method requires two absolute paths, the old one and the new one. This
         method also effectively moves objects from one folder to another.
@@ -228,10 +228,10 @@ class Attributes(FeatureBase):
         if not new_object_dn.startswith('\\VED'):
             raise FeatureError.InvalidFormat(f'"{new_object_dn}" must be an absolute path starting from \\VED.')
 
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self.auth.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn).result
+        result = self._auth.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn).result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -264,11 +264,11 @@ class Attributes(FeatureBase):
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         for name, value in attributes.items():
-            result = self.auth.websdk.Config.AddValue.post(
+            result = self._auth.websdk.Config.AddValue.post(
                 object_dn=object_dn,
                 attribute_name=name,
                 value=value,
@@ -287,14 +287,21 @@ class Attributes(FeatureBase):
             attribute_name: The name of the attribute.
             attribute_value: The expected value to the ``attribute_name``.
             timeout: Timeout period in seconds.
+
+        Returns:
+            Values of the given ``attribute_name`` for the given ``object_dn``.
         """
 
-        def get_attribute():
-            values = self._read(object_dn=object_dn, attribute_name=attribute_name)
-            found = any([True for value in values if str(value).lower() == attribute_value.lower()])
-            if found:
-                return True
-        self._wait_for_method(method=get_attribute, return_value=True, timeout=timeout)
+        values = None
+        with self._Timeout(timeout=timeout) as to:
+            while not to.is_expired():
+                values = self._read(object_dn=object_dn, attribute_name=attribute_name)
+                found = any([True for value in values if str(value).lower() == attribute_value.lower()])
+                if found:
+                    return values
+
+        raise FeatureError.TimeoutError(method=self.wait_for, expected_value=attribute_value,
+                                        actual_value=values, timeout=timeout)
 
     def write(self, object_dn: str, attributes: dict):
         """
@@ -324,24 +331,24 @@ class Attributes(FeatureBase):
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = {k: ([v] if not isinstance(v, list) else v) for k, v in attributes.items()}
 
-        result = self.auth.websdk.Config.Write.post(
+        result = self._auth.websdk.Config.Write.post(
             object_dn=object_dn,
-            attribute_data=self._name_value_list(attributes)
+            attribute_data=self._name_value_list(attributes, keep_list_values=True)
         ).result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def _read(self, object_dn: str, attribute_name: str):
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self.auth.websdk.Config.ReadEffectivePolicy.post(
+        resp = self._auth.websdk.Config.ReadEffectivePolicy.post(
             object_dn=object_dn,
             attribute_name=attribute_name
         )

@@ -1,7 +1,7 @@
 from venafi.features.bases.feature_base import FeatureBase
-from venafi.features.attributes import Attributes
+from venafi.features.objects import Objects
 from venafi.features.folder import Folder, FolderAttributes, FolderClassNames
-from venafi.features.certificate import Certificate, CertificateAttributes, CertificateClassNames
+from venafi.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, CertificateClassNames
 from venafi.features.device import Device, DeviceAttributes, DevicesClassNames
 from venafi.features.application import Apache, PKCS11, ApplicationAttributes, ApplicationAttributeValues, \
     ApplicationClassNames
@@ -11,27 +11,27 @@ from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSigne
     CertificateAuthorityClassNames
 
 
-class Features(FeatureBase):
+class Features:
     class _Applications:
         def __init__(self, auth):
-            self.auth = auth
+            self._auth = auth
 
             self._apache = None
             self._pkcs11 = None
 
         @property
         def apache(self):
-            self._apache = self._apache or Apache(self.auth)
+            self._apache = self._apache or Apache(self._auth)
             return self._apache
 
         @property
         def pkcs11(self):
-            self._pkcs11 = self._pkcs11 or PKCS11(self.auth)
+            self._pkcs11 = self._pkcs11 or PKCS11(self._auth)
             return self._pkcs11
 
     class _CertificateAuthorities:
         def __init__(self, auth):
-            self.auth = auth
+            self._auth = auth
 
             self._adaptable = None
             self._msca = None
@@ -39,22 +39,22 @@ class Features(FeatureBase):
 
         @property
         def adaptable(self) -> AdaptableCA:
-            self._adaptable = self._adaptable or AdaptableCA(self.auth)
+            self._adaptable = self._adaptable or AdaptableCA(self._auth)
             return self._adaptable
 
         @property
         def msca(self) -> MSCA:
-            self._msca = self._msca or MSCA(self.auth)
+            self._msca = self._msca or MSCA(self._auth)
             return self._msca
 
         @property
         def self_signed(self) -> SelfSignedCA:
-            self._self_signed = self._self_signed or SelfSignedCA(self.auth)
+            self._self_signed = self._self_signed or SelfSignedCA(self._auth)
             return self._self_signed
 
     class _Credentials:
         def __init__(self, auth):
-            self.auth = auth
+            self._auth = auth
 
             self._amazon = None
             self._certificate = None
@@ -65,39 +65,39 @@ class Features(FeatureBase):
 
         @property
         def amazon(self):
-            self._amazon = self._amazon or AmazonCredential(self.auth)
+            self._amazon = self._amazon or AmazonCredential(self._auth)
             return self._amazon
 
         @property
         def certificate(self):
-            self._certificate = self._certificate or CertificateCredential(self.auth)
+            self._certificate = self._certificate or CertificateCredential(self._auth)
             return self._certificate
 
         @property
         def generic(self):
-            self._generic = self._generic or GenericCredential(self.auth)
+            self._generic = self._generic or GenericCredential(self._auth)
             return self._generic
 
         @property
         def password(self):
-            self._password = self._password or PasswordCredential(self.auth)
+            self._password = self._password or PasswordCredential(self._auth)
             return self._password
 
         @property
         def private_key(self):
-            self._private_key = self._private_key or PrivateKeyCredential(self.auth)
+            self._private_key = self._private_key or PrivateKeyCredential(self._auth)
             return self._private_key
 
         @property
         def username_password(self):
-            self._upcred = self._upcred or UsernamePasswordCredential(self.auth)
+            self._upcred = self._upcred or UsernamePasswordCredential(self._auth)
             return self._upcred
 
     def __init__(self, auth):
-        super().__init__(auth=auth)
-
+        self._auth = auth
+        
         self._applications = None
-        self._attributes = None
+        self._objects = None
         self._ca = None
         self._certificate = None
         self._credentials = None
@@ -106,37 +106,37 @@ class Features(FeatureBase):
 
     @property
     def application(self) -> _Applications:
-        self._applications = self._applications or self._Applications(self.auth)
+        self._applications = self._applications or self._Applications(self._auth)
         return self._applications
 
     @property
-    def attributes(self) -> Attributes:
-        self._attributes = self._attributes or Attributes(self.auth)
-        return self._attributes
+    def objects(self) -> Objects:
+        self._objects = self._objects or Objects(self._auth)
+        return self._objects
 
     @property
     def certificate(self) -> Certificate:
-        self._certificate = self._certificate or Certificate(self.auth)
+        self._certificate = self._certificate or Certificate(self._auth)
         return self._certificate
 
     @property
     def certificate_authority(self) -> _CertificateAuthorities:
-        self._ca = self._ca or self._CertificateAuthorities(self.auth)
+        self._ca = self._ca or self._CertificateAuthorities(self._auth)
         return self._ca
 
     @property
     def credential(self) -> _Credentials:
-        self._credentials = self._credentials or self._Credentials(self.auth)
+        self._credentials = self._credentials or self._Credentials(self._auth)
         return self._credentials
 
     @property
     def device(self) -> Device:
-        self._device = self._device or Device(self.auth)
+        self._device = self._device or Device(self._auth)
         return self._device
 
     @property
     def folder(self) -> Folder:
-        self._folder = self._folder or Folder(self.auth)
+        self._folder = self._folder or Folder(self._auth)
         return self._folder
 
 
@@ -151,6 +151,7 @@ class AttributesNames:
 
 class AttributeValues:
     Application = ApplicationAttributeValues
+    Certificate = CertificateAttributeValues
 
 
 class Classes:

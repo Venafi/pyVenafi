@@ -124,7 +124,7 @@ class Logger:
                     del params['self']
                 before_string = 'Called ' + func.__qualname__
                 if params:
-                    before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=2)
+                    before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=3, unpicklable=False)
                 self.log_method(func_obj=func, msg=before_string, level=level, reference_lastlineno=False)
 
                 truncate_depth()
@@ -135,7 +135,7 @@ class Logger:
                 # After the function returns.
                 after_string = f'{func.__qualname__} returned.'
                 if result is not None:
-                    ret_vals = jsonpickle.dumps(result, max_depth=2)
+                    ret_vals = jsonpickle.dumps(result, max_depth=3, unpicklable=False)
                     after_string += f'\nReturn Values: {ret_vals}'
                 self.log_method(func_obj=func, msg=after_string, level=level, reference_lastlineno=True)
 
@@ -654,8 +654,9 @@ class Logger:
                     {rows}
                 </div>
             </body>
+            {empty_spaces}
         </html>
-        """.format(legend=legend, rows=rows)
+        """.format(legend=legend, rows=rows, empty_spaces='<br/>' * 12)
 
         f.write(message)
         f.close()

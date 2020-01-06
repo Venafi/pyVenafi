@@ -485,6 +485,47 @@ class CertificateAttributes:
     xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
 
+class CertificateAttributeValues:
+    class EllipticCurve:
+        p256 = 'P256'
+        p384 = 'P384'
+        p521 = 'P521'
+
+    class Format:
+        base64 = 'Base64'
+        pkcs8 = 'Base64 (PKCS #8)'
+        der = 'DER'
+        jks = 'JKS'
+        pkcs7 = 'PKCS #7'
+        pkcs12 = 'PKCS #12'
+
+    class HashAlgorithm:
+        sha1 = 'Sha1'
+        sha256 = 'Sha256'
+
+    class KeyAlgorithm:
+        rsa = 'RSA'
+        ecc = 'ECC'
+
+    class ManagedBy:
+        aperture = 'Aperture'
+        user_portal = 'User Portal'
+
+    class ManagementType:
+        unassigned = 'Unassigned'
+        monitoring = 'Monitoring'
+        enrollment = 'Enrollment'
+        provisioning = 'Provisioning'
+
+    class RevokeReason:
+        none = 0
+        user_key_compromised = 1
+        ca_key_compromised = 2
+        user_changed_affiliation = 3
+        certificate_superceded = 4
+        original_use_no_longer_valid = 5
+
+
 class CertificateClassNames:
     client_certificate_work = "Client Certificate Work"
     client_user_certificate_work = "Client User Certificate Work"

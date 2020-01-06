@@ -2,6 +2,7 @@ import inspect
 import time
 from venafi.logger import logger, LogLevels
 from venafi.properties.secret_store import Namespaces
+from venafi.api.authenticate import Authenticate
 import os
 
 
@@ -19,8 +20,8 @@ def feature():
 
 @feature()
 class FeatureBase:
-    def __init__(self, auth):
-        self.auth = auth
+    def __init__(self, auth: Authenticate):
+        self._auth = auth
 
     def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None):
         if attributes:
@@ -28,10 +29,10 @@ class FeatureBase:
 
         dn = f'{parent_folder_dn}\\{name}'
 
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        ca = self.auth.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
+        ca = self._auth.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
 
         result = ca.result
         if result.code != 1:
@@ -40,10 +41,10 @@ class FeatureBase:
         return ca.object
 
     def _config_delete(self, object_dn, recursive: bool = False):
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self.auth.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
+        result = self._auth.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
@@ -56,25 +57,30 @@ class FeatureBase:
         return {'Name': str(name), 'Type': str(type), 'Value': str(value)}
 
     @staticmethod
-    def _name_value_list(attributes: dict):
+    def _name_value_list(attributes: dict, keep_list_values: bool = False):
         nvl = []
         for name, value in attributes.items():
-            if not isinstance(value, dict) or not isinstance(value, list):
-                value = str(value)
-            nvl.append({'Name': str(name), 'Value': value})
+            if isinstance(value, list):
+                if keep_list_values is True:
+                    nvl.append({'Name': str(name), 'Value': value})
+                else:
+                    for v in value:
+                        nvl.append({'Name': str(name), 'Value': str(v)})
+            elif not isinstance(value, dict):
+                nvl.append({'Name': str(name), 'Value': str(value)})
         return nvl
 
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        owners = self.auth.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
+        owners = self._auth.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
         result = owners.result
         if result.code != 0:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
         for vault_id in owners.vault_ids:
-            result = self.auth.websdk.SecretStore.Delete.post(vault_id=vault_id).result
+            result = self._auth.websdk.SecretStore.Delete.post(vault_id=vault_id).result
             if result.code != 0:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
@@ -101,10 +107,38 @@ class FeatureBase:
                     func_obj=method,
                     reference_lastlineno=True
                 )
-                return
+                return [True, actual_value]
             time.sleep(interval)
 
-        raise TimeoutError(f'{method.__name__} did not return {return_value} in {timeout} seconds. Got {actual_value} instead.')
+        logger.enable_all_logging(
+            level=LogLevels.critical.level,
+            why=f'{method.__name__} did not return "{actual_value}" after {timeout} seconds.',
+            func_obj=method,
+            reference_lastlineno=True
+        )
+        return [False, actual_value]
+
+    class _Timeout:
+        def __init__(self, timeout):
+            self.timeout = timeout
+            self.max_time = timeout + time.time()
+
+        def __enter__(self):
+            logger.disable_all_logging(
+                level=LogLevels.medium.level,
+                why=f'Disabling all logs during timeout to reduce redundant logging.'
+            )
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            logger.enable_all_logging(
+                level=LogLevels.medium.level,
+                why=f'Enabling all logs after timeout.'
+            )
+            return
+
+        def is_expired(self):
+            return time.time() >= self.max_time
 
 
 class _FeatureException(Exception):
@@ -133,6 +167,13 @@ class FeatureError(_FeatureException):
     class InvalidResultCode(_FeatureException):
         def __init__(self, code: int, code_description: str = 'Unknown'):
             super().__init__(f'Expected a valid result code, but got "{code}": {code_description}.')
+
+    class TimeoutError(_FeatureException):
+        def __init__(self, method, expected_value, actual_value, timeout: int):
+            super().__init__(f'{method.__name__} did not return {expected_value} in {timeout} seconds. Got {actual_value} instead.')
+
+    class UnexpectedValue(_FeatureException):
+        pass
 
 
 class ApiPreferences:

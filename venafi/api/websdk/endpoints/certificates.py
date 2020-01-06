@@ -149,6 +149,11 @@ class _Certificates(API):
 
         @property
         @json_response_property()
+        def custom_fields(self) -> List[dict]:
+            return self._from_json(key='CustomFields')
+
+        @property
+        @json_response_property()
         def dn(self) -> str:
             return self._from_json(key='DN')
 
@@ -527,6 +532,11 @@ class _Certificates(API):
 
         @property
         @json_response_property()
+        def error(self) -> bool:
+            return self._from_json(key='Error')
+
+        @property
+        @json_response_property()
         def requested(self) -> bool:
             return self._from_json(key='Requested')
 
@@ -536,7 +546,7 @@ class _Certificates(API):
             return self._from_json(key='Success')
 
         def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
-                 disable: bool = False):
+                 disable: bool = None):
             body = {
                 'CertificateDN': certificate_dn,
                 'Thumbprint': thumbprint,

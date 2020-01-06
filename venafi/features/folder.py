@@ -63,12 +63,12 @@ class Folder(FeatureBase):
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if isinstance(attributes, list):
             for attribute_name in attributes:
-                result = self.auth.websdk.Config.ClearPolicyAttribute.post(
+                result = self._auth.websdk.Config.ClearPolicyAttribute.post(
                     object_dn=folder_dn,
                     attribute_name=attribute_name,
                     class_name=class_name
@@ -83,7 +83,7 @@ class Folder(FeatureBase):
                     values = [values]
 
                 for value in values:
-                    result = self.auth.websdk.Config.RemovePolicyValue.post(
+                    result = self._auth.websdk.Config.RemovePolicyValue.post(
                         object_dn=folder_dn,
                         class_name=class_name,
                         attribute_name=name,
@@ -110,10 +110,10 @@ class Folder(FeatureBase):
             Config object representing the folder.
 
         """
-        if self.auth.preference == ApiPreferences.aperture:
-            return self.auth.aperture.ConfigObjects.Policies.post(name=name, container=parent_folder_dn).object
+        if self._auth.preference == ApiPreferences.aperture:
+            return self._auth.aperture.ConfigObjects.Policies.post(name=name, container=parent_folder_dn).object
 
-        if self.auth.preference == ApiPreferences.websdk:
+        if self._auth.preference == ApiPreferences.websdk:
             return self._config_create(
                 name=name,
                 parent_folder_dn=parent_folder_dn,
@@ -130,12 +130,12 @@ class Folder(FeatureBase):
             folder_dn: Absolute path to the folder.
             recursive: If True, delete all sub-folders, etc., from config and secret store.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if recursive:
             # Must delete all of the secrets first.
-            response = self.auth.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
+            response = self._auth.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
             result = response.result
             if result.code != 1:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -153,10 +153,10 @@ class Folder(FeatureBase):
         Args:
             folder_guid: GUID of the folder.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        return self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
+        return self._auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
     def get_engines(self, folder_guid: str):
         """
@@ -165,10 +165,10 @@ class Folder(FeatureBase):
         Args:
             folder_guid: GUID of the folder.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        return self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
+        return self._auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
 
     def search(self, object_name_pattern: str, object_type: str = None, recursive: bool = True, starting_dn: str = None):
         """
@@ -200,18 +200,18 @@ class Folder(FeatureBase):
         Returns:
             A list of Config Objects representing the objects found.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if object_type:
-            objects = self.auth.websdk.Config.EnumerateObjectsDerivedFrom.post(derived_from=object_type, pattern=object_name_pattern).objects
+            objects = self._auth.websdk.Config.EnumerateObjectsDerivedFrom.post(derived_from=object_type, pattern=object_name_pattern).objects
             if starting_dn:
                 objects = [obj for obj in objects if starting_dn in obj.dn]
             return objects
         elif starting_dn:
-            objects = self.auth.websdk.Config.Enumerate.post(object_dn=starting_dn, pattern=object_name_pattern, recursive=recursive).objects
+            objects = self._auth.websdk.Config.Enumerate.post(object_dn=starting_dn, pattern=object_name_pattern, recursive=recursive).objects
         else:
-            objects = self.auth.websdk.Config.EnumerateAll.post(pattern=object_name_pattern).objects
+            objects = self._auth.websdk.Config.EnumerateAll.post(pattern=object_name_pattern).objects
 
         return objects
 
@@ -225,13 +225,13 @@ class Folder(FeatureBase):
             append_engines: If True, append `engine_guids` to the current list on the folder. Otherwise
                 overwrite the current setting.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if append_engines:
-            current_engines = self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
+            current_engines = self._auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
             engine_guids.extend([engine.engine_guid for engine in current_engines])
-        result = self.auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).put(engine_guids)
+        result = self._auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).put(engine_guids)
         result.assert_valid_response()
 
     def read_policy(self, folder_dn: str, class_name: str, attribute_name: str):
@@ -267,10 +267,10 @@ class Folder(FeatureBase):
             boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
             be returned.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self.auth.websdk.Config.ReadPolicy.post(
+        resp = self._auth.websdk.Config.ReadPolicy.post(
             object_dn=folder_dn,
             class_name=class_name,
             attribute_name=attribute_name
@@ -317,14 +317,14 @@ class Folder(FeatureBase):
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         for name, values in attributes.items():
             if not isinstance(values, list):
                 values = [values]
 
-            result = self.auth.websdk.Config.WritePolicy.post(
+            result = self._auth.websdk.Config.WritePolicy.post(
                 object_dn=folder_dn,
                 class_name=class_name,
                 attribute_name=name,
@@ -369,11 +369,11 @@ class Folder(FeatureBase):
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
-        if self.auth.preference == ApiPreferences.aperture:
+        if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         for name, value in attributes.items():
-            result = self.auth.websdk.Config.AddPolicyValue.post(
+            result = self._auth.websdk.Config.AddPolicyValue.post(
                 object_dn=folder_dn,
                 class_name=class_name,
                 attribute_name=name,
