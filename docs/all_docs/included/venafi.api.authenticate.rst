@@ -1,5 +1,5 @@
-venafi.api.authenticate module
-==============================
+Authenticate
+============
 
 .. automodule:: venafi.api.authenticate
    :members:

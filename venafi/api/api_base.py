@@ -6,6 +6,38 @@ from venafi.logger import logger, LogLevels
 
 
 def json_response_property(on_204=None):
+    """
+    This function serves as a decorator for all API response objects. Each
+    response property must be validated before returning the object. This
+    function depends upon the API class.
+
+    The `on_204` parameter suggests what data type is expected to be
+    returned when the response status code is valid, but has no content.
+    Since there is no content to return, an empty object representing that
+    object will be returned instead. For example,
+
+    .. code-block:: python
+
+        # No 204 should ever be returned, so just validate the response
+        # status codes and return the object on 200.
+        @property
+        @json_response_property()
+        def value1(self) -> str:
+            return self._from_json(key='Value1')
+
+        # 204 could be returned by TPP, so just send an empty response
+        # of the same object type as the expected response.
+        @property
+        @json_response_property(on_204=list)
+        def value2(self) -> list:
+            return self._from_json(key='Value2')
+
+    Args:
+        on_204: type
+
+    Returns: Key of response content returned by TPP.
+
+    """
     def pre_validation(func):
         def wrap(self, *args, **kwargs):
             if not self._validated:
@@ -21,7 +53,22 @@ def json_response_property(on_204=None):
 
 
 class API:
-    def __init__(self, api_obj, url, valid_return_codes):
+    """
+    This is the backbone of all API definitions. It performs all requests,
+    validations, logging, re-authentication, and holds the raw response. This
+    class MUST be inherited by all API definitions.
+    """
+    def __init__(self, api_obj, url: str, valid_return_codes: list):
+        """
+        Args:
+            api_obj: This is passed down from the API type object (eg. WebSDK, etc.) and
+                represents that type. This type is REQUIRED because it contains the
+                authenticated sessions, base URL, and re-authentication methods. It is
+                through these properties this class is able to send and receive requests
+                to TPP.
+            url: This is the URL extension from the base URL.
+            valid_return_codes: A list of valid status codes, such as [200, 204].
+        """
         self._api_obj = api_obj
         self._session = api_obj.session  # type: Session
         self._api_type = api_obj.__class__.__name__.lower()
@@ -37,14 +84,37 @@ class API:
 
     @json_response.setter
     def json_response(self, value):
+        # When set, a new raw response is stored and hasn't been validated, so invalidate.
         self._validated = False
         self._json_response = value
 
     def assert_valid_response(self):
+        """
+        Use this method when no response property is available after an API call. This simply
+        asserts that a valid response status code was returned by TPP.
+        """
         if not self._validated:
             self._validate()
 
     def _from_json(self, key: str = None, error_key: str = None):
+        """
+        Returns the particular key within the response dictionary. If no key is provided, then
+        the full response is returned as a dictionary.
+
+        If ``key`` is provided, then it is searched in the response content. It is not case
+        sensitive. If ``key`` is not found, an error is thrown and logged.
+
+        TPP often returns a key with an error message. When an ``error_key`` is provided and an
+        error message is returned an error is thrown and logged with the message provided by TPP.
+
+        Args:
+            key: Key within the top level of the response content.
+            error_key: Error key within the top level of the response content.
+
+        Returns:
+            If a key is provided, returns the response content at that key. Otherwise, the full
+            response content.
+        """
         result = self.json_response.json()
         if error_key and error_key in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
@@ -53,8 +123,20 @@ class API:
         for k in result.keys():
             if key.lower() == k.lower():
                 return result[k]
+        raise KeyError(f'{key} was not returned by TPP.')
 
-    def _is_api_key_valid(self, response=None):
+    def _is_api_key_invalid(self, response: Response):
+        """
+        Uses a regular expression to search the response text for an indication that the API key
+        is expired.
+
+        Args:
+            response: The raw response object.
+
+        Returns:
+            Returns True if the API key expired. Otherwise False.
+
+        """
         if self._api_type == 'websdk':
              invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
         elif self._api_type == 'aperture':
@@ -65,42 +147,88 @@ class API:
         return response.status_code == 401 and invalid_api_message_match
 
     def _delete(self):
+        """
+        Performs a DELETE method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Returns:
+            Returns the raw JSON response.
+        """
         self._log_rest_call()
         response = self._api_obj.session.delete(url=self._url)
         self._log_response(response=response)
-        if self._is_api_key_valid(response=response):
+        if self._is_api_key_invalid(response=response):
             self._re_authenticate()
             return self._delete()
         return response
 
     def _get(self, params:dict = None):
+        """
+        Performs a GET method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Args:
+            params: A dictionary of URL parameters to append to the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
         self._log_rest_call(data=params)
         response = self._api_obj.session.get(url=self._url, params=params)
         self._log_response(response=response)
-        if self._is_api_key_valid(response=response):
+        if self._is_api_key_invalid(response=response):
             self._re_authenticate()
             return self._get(params=params)
         return response
 
     def _post(self, data: dict):
+        """
+        Performs a POST method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Args:
+            data: A dictionary of data to send with the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
         self._log_rest_call(data=data)
         response = self._api_obj.session.post(url=self._url, data=data)
         self._log_response(response=response)
-        if self._is_api_key_valid(response=response):
+        if self._is_api_key_invalid(response=response):
             self._re_authenticate()
             return self._post(data=data)
         return response
 
     def _put(self, data: dict):
+        """
+        Performs a POST method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Args:
+            data: A dictionary of data to send with the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
         self._log_rest_call(data=data)
         response = self._api_obj.session.put(url=self._url, data=data)
         self._log_response(response=response)
-        if self._is_api_key_valid(response=response):
+        if self._is_api_key_invalid(response=response):
             self._re_authenticate()
             return self._put(data)
         return response
 
     def _validate(self):
+        """
+        Validates the current response property by validating that there are expected return codes
+        and that the actual return code is one of the valid return codes. If the return code is
+        invalid, an error is thrown and logged.
+        """
         self._validated = True
 
         if not self._valid_return_codes:
@@ -115,6 +243,9 @@ class API:
                 self.json_response.status_code, str(self._valid_return_codes), error_msg))
 
     def _re_authenticate(self):
+        """
+        The current API token expired and the session needs to be re-authenticated.
+        """
         logger.log(
             msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
             level=LogLevels.api
@@ -122,6 +253,9 @@ class API:
         self._api_obj.re_authenticate()
 
     def _log_rest_call(self, data: dict = None):
+        """
+        Logs the URL and any additional data. This enforces consistency in logging across all API calls.
+        """
         if data:
             payload = json.dumps(data, indent=4)
             logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.api, prev_frames=3)
@@ -129,6 +263,10 @@ class API:
             logger.log(f'URL: {self._url}', level=LogLevels.api, prev_frames=3)
 
     def _log_response(self, response: Response):
+        """
+        Logs the URL, response code, and the content returned by TPP.
+        This enforces consistency in logging across all API calls.
+        """
         try:
             pretty_json = json.dumps(response.json(), indent=4)
         except json.JSONDecodeError:

@@ -1,5 +1,5 @@
-venafi.api.aperture.aperture module
-===================================
+Aperture API
+============
 
 .. automodule:: venafi.api.aperture.aperture
    :members:

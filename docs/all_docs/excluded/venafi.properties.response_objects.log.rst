@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.log module
-==============================================
+Log
+===
 
 .. automodule:: venafi.properties.response_objects.log
    :members:

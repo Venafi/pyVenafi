@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.system\_status module
-=========================================================
+System Status
+=============
 
 .. automodule:: venafi.properties.response_objects.system_status
    :members:

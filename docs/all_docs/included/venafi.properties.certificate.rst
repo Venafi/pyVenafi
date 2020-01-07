@@ -1,5 +1,5 @@
-venafi.properties.certificate module
-====================================
+Certificate
+===========
 
 .. automodule:: venafi.properties.certificate
    :members:

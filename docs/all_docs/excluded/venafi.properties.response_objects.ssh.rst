@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.ssh module
-==============================================
+SSH
+===
 
 .. automodule:: venafi.properties.response_objects.ssh
    :members:

@@ -1,4 +1,4 @@
-venafi.properties.response\_objects.secret\_store module
+Secret Store
 ========================================================
 
 .. automodule:: venafi.properties.response_objects.secret_store

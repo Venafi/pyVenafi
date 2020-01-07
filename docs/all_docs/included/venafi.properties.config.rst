@@ -1,5 +1,5 @@
-venafi.properties.config module
-===============================
+Config
+======
 
 .. automodule:: venafi.properties.config
    :members:

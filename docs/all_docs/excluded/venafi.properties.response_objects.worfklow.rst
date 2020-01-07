@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.worfklow module
-===================================================
+Workflow
+========
 
 .. automodule:: venafi.properties.response_objects.worfklow
    :members:

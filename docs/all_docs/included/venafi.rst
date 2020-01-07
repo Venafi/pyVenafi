@@ -2,6 +2,9 @@ Venafi Package
 ==============
 
 .. toctree::
-   :caption: Features
+   :caption: Venafi
 
+   venafi.api
    venafi.features
+   venafi.logger
+   venafi.properties

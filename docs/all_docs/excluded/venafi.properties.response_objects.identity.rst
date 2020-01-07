@@ -1,5 +1,5 @@
-venafi.properties.response\_objects.identity module
-===================================================
+Identity
+========
 
 .. automodule:: venafi.properties.response_objects.identity
    :members:

@@ -1,5 +1,5 @@
-venafi.properties.ssh module
-============================
+SSH
+===
 
 .. automodule:: venafi.properties.ssh
    :members:
