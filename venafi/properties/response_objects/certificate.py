@@ -1,3 +1,4 @@
+from typing import List
 from venafi.properties.resultcodes import ResultCodes
 
 
@@ -147,7 +148,7 @@ class Certificate:
 
             self.installation = file_dict.get('Installation')  # type: str
             self.performed_on = file_dict.get('PerformedOn')  # type: str
-            self.result = file_dict.get('Result')  # type: list
+            self.result = file_dict.get('Result')  # type: List[str]
 
     class _SslTlsResult:
         def __init__(self, results_dict: dict):
@@ -165,7 +166,7 @@ class Certificate:
                 bit_mask_dict = {}
 
             self.bitmask = bit_mask_dict.get('BitMask')  # type: int
-            self.values = bit_mask_dict.get('Values')  # type: list
+            self.values = bit_mask_dict.get('Values')  # type: List[str]
 
     class _SANS:
         def __init__(self, sans_dict: dict, api_type: str):

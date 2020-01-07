@@ -1,4 +1,4 @@
-class _ApplicationAttributes:
+class _ApplicationAttributesBase:
     adaptable_workflow_approvers = "Adaptable Workflow Approvers"
     adaptable_workflow_reference_id = "Adaptable Workflow Reference ID"
     adaptable_workflow_stage = "Adaptable Workflow Stage"
@@ -20,10 +20,10 @@ class _ApplicationAttributes:
     driver_name = "Driver Name"
     enforce_known_host = "Enforce Known Host"
     escalation_contact = "Escalation Contact"
-    file_owner__group = "File Owner: Group"
-    file_owner__user = "File Owner: User"
-    file_permissions__group = "File Permissions: Group"
-    file_permissions__user = "File Permissions: User"
+    file_owner_group = "File Owner: Group"
+    file_owner_user = "File Owner: User"
+    file_permissions_group = "File Permissions: Group"
+    file_permissions_user = "File Permissions: User"
     file_permissions_enabled = "File Permissions Enabled"
     file_validation_error = "File Validation Error"
     file_validation_result = "File Validation Result"
@@ -72,8 +72,86 @@ class _ApplicationAttributes:
     workflow_block = "Workflow Block"
 
 
-class ApplicationAttributes:
-    class Apache(_ApplicationAttributes):
+class ApplicationAttributes(_ApplicationAttributesBase):
+    class A10AXTrafficManager:
+        bundle_certificate = "Bundle Certificate"
+        certificate_chain_name = "Certificate Chain Name"
+        certificate_name = "Certificate Name"
+        file_validation_disabled = "File Validation Disabled"
+        install_chain_file = "Install Chain File"
+        network_validation_disabled = "Network Validation Disabled"
+        ssh_port = "SSH Port"
+        ssl_cache_size = "SSL Cache Size"
+        ssl_close_notification = "SSL Close Notification"
+        ssl_false_start = "SSL False Start"
+        ssl_pass_phrase = "SSL Pass Phrase"
+        ssl_profile_name = "SSL Profile Name"
+        ssl_profile_type = "SSL Profile Type"
+        tls_version = "TLS Version"
+        use_ssl_template = "Use SSL Template"
+
+    class Adaptable:
+        certificate_name = "Certificate Name"
+        file_validation_disabled = "File Validation Disabled"
+        installation_status = "Installation Status"
+        log_debug = "Log Debug"
+        network_validation_disabled = "Network Validation Disabled"
+        option_1 = "Option 1"
+        option_2 = "Option 2"
+        password_1 = "Password 1"
+        pk_credential = "PK Credential"
+        powershell_script = "PowerShell Script"
+        powershell_script_hash_vault_id = "PowerShell Script Hash Vault Id"
+        retry_after_script_hash_mismatch = "Retry After Script Hash Mismatch"
+        script_hash_mismatch_error = "Script Hash Mismatch Error"
+        secondary_credential = "Secondary Credential"
+        text_field_1 = "Text Field 1"
+        text_field_2 = "Text Field 2"
+        text_field_3 = "Text Field 3"
+        text_field_4 = "Text Field 4"
+        text_field_5 = "Text Field 5"
+
+    class AmazonAWS:
+        access_key_id = "Access Key ID"
+        aws_credential_dn = "Aws Credential DN"
+        binding_target = "Binding Target"
+        certificate_arn = "Certificate ARN"
+        certificate_name = "Certificate Name"
+        cloud_front_distribution_id = "CloudFront Distribution ID"
+        create_binding = "Create Binding"
+        file_validation_disabled = "File Validation Disabled"
+        iam_certificate_id = "IAM Certificate ID"
+        initial_binding_attempt = "Initial Binding Attempt"
+        install_path = "Install Path"
+        issued_by_aws = "Issued By AWS"
+        load_balancer_name = "Load Balancer Name"
+        load_balancer_port = "Load Balancer Port"
+        load_balancer_region_code = "Load Balancer Region Code"
+        network_validation_disabled = "Network Validation Disabled"
+        provisioning_to = "Provisioning To"
+        region_code = "Region Code"
+        replace_store = "Replace Store"
+        secret_access_key = "Secret Access Key"
+        target_group = "Target Group"
+        timeout = "Timeout"
+
+    class AzureKeyVault:
+        binding_hostnames = "Binding Hostnames"
+        binding_ssl_type = "Binding SSL Type"
+        certificate_credential = "Certificate Credential"
+        certificate_name = "Certificate Name"
+        client_id = "Client ID"
+        create_binding = "Create Binding"
+        create_san_dns_bindings = "Create SAN DNS Bindings"
+        file_validation_disabled = "File Validation Disabled"
+        network_validation_disabled = "Network Validation Disabled"
+        non_exportable = "Non-Exportable"
+        timeout = "Timeout"
+        update_web_app = "Update Web App"
+        vault_name = "Vault Name"
+        web_app_name = "Web App Name"
+
+    class Apache:
         application_id = "Application ID"
         certificate_chain_file = "Certificate Chain File"
         certificate_file = "Certificate File"
@@ -90,7 +168,254 @@ class ApplicationAttributes:
         slot_number = "Slot Number"
         softcard_identifier = "Softcard Identifier"
 
-    class PKCS11(_ApplicationAttributes):
+    class Basic:
+        certificate_file = "Certificate File"
+        network_validation_disabled = "Network Validation Disabled"
+
+    class BlueCoatSSLVA:
+        certificate_label = "Certificate Label"
+        certificate_oid = "Certificate OID"
+        certificate_only = "Certificate Only"
+        create_lists = "Create Lists"
+        device_certificate = "Device Certificate"
+        file_validation_disabled = "File Validation Disabled"
+        key_store = "Key Store"
+        network_validation_disabled = "Network Validation Disabled"
+        replace_store = "Replace Store"
+
+    class CAPI:
+        binding_ip_address = "Binding IP Address"
+        binding_port = "Binding Port"
+        create_binding = "Create Binding"
+        crypto_service_provider = "Crypto Service Provider"
+        file_validation_disabled = "File Validation Disabled"
+        friendly_name = "Friendly Name"
+        hostname = "Hostname"
+        log_windows_events = "Log Windows Events"
+        network_validation_disabled = "Network Validation Disabled"
+        non_exportable = "Non-Exportable"
+        private_key_label = "Private Key Label"
+        private_key_location = "Private Key Location"
+        private_key_trustee = "Private Key Trustee"
+        update_iis = "Update IIS"
+        web_site_name = "Web Site Name"
+
+    class CitrixNetScaler:
+        certificate_file = "Certificate File"
+        chain_cert = "Chain Cert"
+        file_validation_disabled = "File Validation Disabled"
+        fips_key = "Fips Key"
+        import_only = "Import Only"
+        issuer_certificate_name = "Issuer Certificate Name"
+        max_filesize = "Max Filesize"
+        network_validation_disabled = "Network Validation Disabled"
+        private_key_file = "Private Key File"
+        sni_certificate = "SNI Certificate"
+        ssl_object_type = "SSL Object Type"
+        temp_certificate_label = "Temp Certificate Label"
+        virtual_server_name = "Virtual Server Name"
+
+    class ConnectDirect:
+        certificate_label = "Certificate Label"
+        certificate_only = "Certificate Only"
+        file_validation_disabled = "File Validation Disabled"
+        key_store = "Key Store"
+        key_store_credential = "Key Store Credential"
+        network_validation_disabled = "Network Validation Disabled"
+        node_name = "Node Name"
+        protocol = "Protocol"
+
+    class F5AuthenticationBundle:
+        advanced_settings_bundle_name = "Advanced Settings Bundle Name"
+        certificates = "Certificates"
+
+    class F5LTMAdvanced:
+        advanced_settings_bundle_name = "Advanced Settings Bundle Name"
+        advertised_ca = "Advertised CA"
+        archive_location = "Archive Location"
+        authentication_frequency = "Authentication Frequency"
+        build = "Build"
+        bundle_certificate = "Bundle Certificate"
+        bundle_certificate_collection = "Bundle Certificate Collection"
+        certificate_chain_name = "Certificate Chain Name"
+        certificate_name = "Certificate Name"
+        chain_traversal_depth = "Chain Traversal Depth"
+        client_authentication_certificate = "Client Authentication Certificate"
+        config_sync = "Config Sync"
+        connection_attempts = "Connection Attempts"
+        crl = "CRL"
+        delete_previous_cert_and_key = "Delete Previous Cert And Key"
+        device_certificate = "Device Certificate"
+        file_validation_disabled = "File Validation Disabled"
+        fips_key = "Fips Key"
+        force_profile_update = "Force Profile Update"
+        install_chain_file = "Install Chain File"
+        last_used_host = "Last Used Host"
+        network_validation_disabled = "Network Validation Disabled"
+        overwrite_certificate = "Overwrite Certificate"
+        overwrite_existing_chain = "Overwrite Existing Chain"
+        parent_ssl_profile_name = "Parent SSL Profile Name"
+        partition = "Partition"
+        previous_certificate = "Previous Certificate"
+        previous_key = "Previous Key"
+        provisioning_to = "Provisioning To"
+        server_authentication_certificate = "Server Authentication Certificate"
+        server_authentication_name = "Server Authentication Name"
+        sni_default = "SNI Default"
+        sni_server_name = "SNI Server Name"
+        ssh_port = "SSH Port"
+        ssl_profile_name = "SSL Profile Name"
+        ssl_profile_type = "SSL Profile Type"
+        system_id = "System Id"
+        trusted_ca = "Trusted CA"
+        use_advanced_settings = "Use Advanced Settings"
+        use_basic_provisioning = "Use Basic Provisioning"
+        version = "Version"
+        virtual_server_name = "Virtual Server Name"
+        virtual_server_partition = "Virtual Server Partition"
+
+    class IBMDataPower:
+        application_domain = "Application Domain"
+        associate_to_cp = "Associate To CP"
+        certificate_name = "Certificate Name"
+        certificate_only = "Certificate Only"
+        chain_cert = "Chain Cert"
+        create_cp = "Create CP"
+        create_ic = "Create IC"
+        create_vc = "Create VC"
+        credential_type = "Credential Type"
+        crypto_profile = "Crypto Profile"
+        file_validation_disabled = "File Validation Disabled"
+        fips_key = "Fips Key"
+        folder = "Folder"
+        ftp_credential = "FTP Credential"
+        ftp_host = "FTP Host"
+        ftp_path = "FTP Path"
+        ftp_port = "FTP Port"
+        max_filesize = "Max Filesize"
+        network_validation_disabled = "Network Validation Disabled"
+        private_key_name = "Private Key Name"
+        ssh_prompt = "SSH Prompt"
+        ssl_profile_type = "SSL Profile Type"
+        ssl_proxy_profile = "SSL Proxy Profile"
+        temp_certificate_label = "Temp Certificate Label"
+        use_basic_provisioning = "Use Basic Provisioning"
+        xml_port = "XML Port"
+
+    class IBMGSK:
+        backup_store = "Backup Store"
+        certificate_label = "Certificate Label"
+        create_store = "Create Store"
+        default_cert = "Default Cert"
+        disable_ssh_history = "Disable SSH History"
+        file_validation_disabled = "File Validation Disabled"
+        fips_key = "Fips Key"
+        hide_command_line_passwords = "Hide Command Line Passwords"
+        java_home_path = "Java Home Path"
+        key_store = "Key Store"
+        key_store_credential = "Key Store Credential"
+        key_store_validation_disabled = "Key Store Validation Disabled"
+        network_validation_disabled = "Network Validation Disabled"
+        password_expire_days = "Password Expire Days"
+        recycle_alias = "Recycle Alias"
+        refresh_security = "Refresh Security"
+        replace_store = "Replace Store"
+        stash_password = "Stash Password"
+        store_type = "Store Type"
+        temp_certificate_label = "Temp Certificate Label"
+        utility_path = "Utility Path"
+        version = "Version"
+
+    class ImpervaMX:
+        file_validation_disabled = "File Validation Disabled"
+        key_store_validation_disabled = "Key Store Validation Disabled"
+        private_key_name = "Private Key Name"
+        server_group = "Server Group"
+        service = "Service"
+        site = "Site"
+        username_credential = "Username Credential"
+        utility_path = "Utility Path"
+
+    class JKS:
+        certificate_label = "Certificate Label"
+        create_store = "Create Store"
+        disable_ssh_history = "Disable SSH History"
+        file_validation_disabled = "File Validation Disabled"
+        java_vendor = "Java Vendor"
+        key_algorithm = "Key Algorithm"
+        key_store = "Key Store"
+        key_store_credential = "Key Store Credential"
+        key_store_validation_disabled = "Key Store Validation Disabled"
+        keytool_path = "Keytool Path"
+        network_validation_disabled = "Network Validation Disabled"
+        private_key_location = "Private Key Location"
+        protection_type = "Protection Type"
+        recycle_alias = "Recycle Alias"
+        replace_store = "Replace Store"
+        slot_number = "Slot Number"
+        softcard_identifier = "Softcard Identifier"
+        store_type = "Store Type"
+        temp_certificate_label = "Temp Certificate Label"
+        version = "Version"
+
+    class JuniperSAS:
+        external_port = "External Port"
+        file_validation_disabled = "File Validation Disabled"
+        internal_port = "Internal Port"
+        network_validation_disabled = "Network Validation Disabled"
+        reassign_ports = "Reassign Ports"
+        vlan_port = "Vlan Port"
+
+    class OracleIPlanet:
+        alias = "Alias"
+        certutil_path = "Certutil Path"
+        create_store = "Create Store"
+        create_virtual_server = "Create Virtual Server"
+        database_credential = "Database Credential"
+        database_prefix = "Database Prefix"
+        database_type = "Database Type"
+        database_validation_disabled = "Database Validation Disabled"
+        document_root = "Document Root"
+        file_validation_disabled = "File Validation Disabled"
+        install_path = "Install Path"
+        key_store = "Key Store"
+        key_store_credential = "Key Store Credential"
+        mta_host = "MTA Host"
+        network_validation_disabled = "Network Validation Disabled"
+        pk12util_path = "Pk12util Path"
+        protocol = "Protocol"
+        replace_store = "Replace Store"
+        secure_server_name = "Secure Server Name"
+        use_proxy = "Use Proxy"
+        virtual_server_dns_value = "Virtual Server DNS Value"
+        virtual_server_port = "Virtual Server Port"
+        virtual_server_user = "Virtual Server User"
+        web_credential = "Web Credential"
+        web_port = "Web Port"
+
+    class PaloAltoNetworkFW:
+        certificate_only = "Certificate Only"
+        chain_cert = "Chain Cert"
+        create_decryption_policy = "Create Decryption Policy"
+        decryption_destinations = "Decryption Destinations"
+        decryption_policy = "Decryption Policy"
+        decryption_profile = "Decryption Profile"
+        file_validation_disabled = "File Validation Disabled"
+        lock_config = "Lock Config"
+        network_validation_disabled = "Network Validation Disabled"
+        replace_store = "Replace Store"
+        temporary_name = "Temporary Name"
+
+    class PEM:
+        certificate_chain_file = "Certificate Chain File"
+        certificate_file = "Certificate File"
+        file_validation_disabled = "File Validation Disabled"
+        key_store = "Key Store"
+        network_validation_disabled = "Network Validation Disabled"
+        overwrite_existing_chain = "Overwrite Existing Chain"
+        private_key_file = "Private Key File"
+
+    class PKCS11:
         hsm_cblob = 'HSM:CBlob'
         hsm_cka_label_format = 'HSM:CKA LABEL Format'
         hsm_csr_subject_dn = 'HSM:CSR Subject DN'
@@ -124,12 +449,62 @@ class ApplicationAttributes:
         hsm_token_label = 'HSM:Token Label'
         hsm_token_password = 'HSM:Token Password'
 
+    class PKCS12:
+        bundle_certificate = "Bundle Certificate"
+        certificate_chain_file = "Certificate Chain File"
+        certificate_file = "Certificate File"
+        create_store = "Create Store"
+        file_validation_disabled = "File Validation Disabled"
+        friendly_name = "Friendly Name"
+        key_store = "Key Store"
+        key_store_credential = "Key Store Credential"
+        network_validation_disabled = "Network Validation Disabled"
+        recycle_alias = "Recycle Alias"
+        replace_store = "Replace Store"
 
-class _ApplicationAttributeValues:
+    class RiverbedSteelHead:
+        certificate_type = "Certificate Type"
+        file_validation_disabled = "File Validation Disabled"
+        install_chain = "Install Chain"
+        network_validation_disabled = "Network Validation Disabled"
+        replace_existing = "Replace Existing"
+
+    class TealeafPCA:
+        file_validation_disabled = "File Validation Disabled"
+        install_path = "Install Path"
+        key_store_credential = "Key Store Credential"
+        key_store_name = "Key Store Name"
+        key_store_validation_disabled = "Key Store Validation Disabled"
+        sunimp_utility_path = "Sunimp Utility Path"
+        tealeaf_utility_path = "Tealeaf Utility Path"
+
+    class VAMnShield:
+        file_validation_disabled = "File Validation Disabled"
+        install_path = "Install Path"
+        key_store_validation_disabled = "Key Store Validation Disabled"
+        km_local_path = "KM Local Path"
+        module_id = "Module Id"
+
+
+class _ApplicationAttributeValuesBase:
     class ConnectionMethod:
+        https = 'HTTPS'
         ssh = 'SSH'
         winrm = 'WinRM'
         winrms = 'WinRMs'
+
+    class GroupPermissions:
+        none = '0000'
+        read_only = '0040'
+        read_and_write = '0060'
+
+    class ManagedBy:
+        aperture = 'Aperture'
+        user_portal = 'User Portal'
+
+    class OwnerPermissions:
+        read_only = '0400'
+        read_and_write = '0600'
 
     class ProtectionType:
         module = 'Module'
@@ -137,8 +512,158 @@ class _ApplicationAttributeValues:
         softcard = 'softcard'
 
 
-class ApplicationAttributeValues:
-    class PKCS11(_ApplicationAttributeValues):
+class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
+    class A10AXTrafficManager:
+        class TemplateType:
+            client = 'Client'
+            server = 'Server'
+
+        class ServerSslTlsVersion:
+            ssl_3_0 = 'SSL Version 3.0'
+            tls_1_0 = 'TLS Version 1.0'
+
+    class AmazonAWS:
+        class BindingTarget:
+            no_binding = 0
+            elastic_load_balancer = 1
+            cloud_front = 2
+            application_load_balancer = 3
+
+        class ProvisionTo:
+            acm = 'ACM'
+            iam = 'IAM'
+
+        class Region:
+            us_east_virginia = 'us-east-1'
+            us_east_ohio = 'us-east-2'
+            us_west_california = 'us-west-1'
+            us_west_oregon = 'us-west-2'
+            asian_pacific_tokyo = 'ap-northeast-1'
+            asian_pacific_seoul = 'ap-northeast-2'
+            asian_pacific_osaka_local = 'ap-northeast-3'
+            asian_pacific_mumbai = 'ap-south-1'
+            asian_pacific_singapore = 'ap-southeast-1'
+            asian_pacific_sydney = 'ap-southeast-2'
+            canada = 'ca-central-1'
+            eu_frankfurt = 'eu-central-1'
+            eu_ireland = 'eu-west-1'
+            eu_london = 'eu-west-2'
+            eu_paris = 'eu-west-3'
+            south_america_sao_paolo = 'sa-east-1'
+            aws_govcloud_us = 'us-gov-west-1'
+
+    class Apache:
+        class PrivateKeyLocation:
+            device = 'Device'
+            gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
+            thales_nshield_hsm = "Thales nShield HSM"
+
+    class AzureKeyVault:
+        class SslTye:
+            sni = 0
+            ip_based = 1
+
+    class CAPI:
+        class PrivateKeyLocation:
+            device = 'Device'
+            gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
+            thales_nshield_hsm = "Thales nShield HSM"
+
+    class CitrixNetScaler:
+        class BindCertificateTo:
+            virtual_server = 'Virtual Server'
+            service = 'Service'
+            service_group = 'Service Group'
+
+    class ConnectDirect:
+        class APIProtocol:
+            ssl = 'SSL'
+            tls = 'TLS'
+            tls_1_1 = 'TLS11'
+            tls_1_2 = 'TLS12'
+
+    class F5LTMAdvanced:
+        class ClientCertificate:
+            ignore = 'Ignore'
+            require = 'Require'
+            request = 'Request'
+
+        class Frequency:
+            once = 'Once'
+            always = 'Always'
+
+        class ProvisioningMode:
+            advanced = 0
+            basic_with_configurable_certificate_name = 1
+            basic_with_automatic_certificate_name = 2
+
+        class ProvisioningTo:
+            standalone = 'Standalone'
+            active = 'Active'
+            standby = 'Standby'
+            ignore_failover_state = 'Ignore Failover State'
+
+        class ServerCertificate:
+            ignore = 'Ignore'
+            require = 'Require'
+
+        class SslProfileType:
+            client = 'Client'
+            server = 'Server'
+
+    class IBMDataPower:
+        class CertificateFolder:
+            cert = 1
+            shared_cert = 2
+
+        class CredentialType:
+            identification = 1
+            validation = 2
+
+        class ProfileType:
+            ssl_proxy = 1
+            ssl_client = 2
+            ssl_server = 3
+
+        class ProvisioningMode:
+            advanced = 1
+            basic = 2
+
+    class IBMGSK:
+        class Version:
+            gsk_7_0 = 'GSK 7.0'
+            gsk_8_0 = 'GSK 8.0'
+
+    class JKS:
+        class PrivateKeyLocation:
+            device = 'Device'
+            gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
+            thales_nshield_hsm = "Thales nShield HSM"
+
+        class JavaVendor:
+            oracle = 'Oracle'
+            ibm = 'IBM'
+
+        class JavaVersion:
+            java_1_6 = 'Java 1.6'
+            java_1_7 = 'Java 1.7'
+            java_1_8 = 'Java 1.8'
+
+        class StoreType:
+            jks = 'JKS'
+            jceks = 'JCEKS'
+
+    class OracleIPlanet:
+        class CertificateDatabaseType:
+            berkeley = 'Berkeley'
+            sqlite = 'SQLite'
+
+    class PaloAltoNetworkFW:
+        class Provision:
+            certificate_only = 1
+            certificate_and_private_key = 2
+
+    class PKCS11:
         class ImportCertificatesIntoHsm:
             zero = 0
             no = 'No'
@@ -173,6 +698,17 @@ class ApplicationAttributeValues:
             key_derivation_ecc = 'Key Derivation - ECC'
             key_wrapping_rsa = 'Key Wrapping - RSA'
 
+    class PKCS12:
+        class CertificateChainLocation:
+            certificate_chain_file = 0
+            pkcs12_file = 1
+
+    class RiverbedSteelHead:
+        class CertificateType:
+            ssl_main = 0
+            secure_peering = 1
+            web = 2
+
 
 class ApplicationClassNames:
     a10_ax_traffic_manager = "A10 AX Traffic Manager"
@@ -190,6 +726,7 @@ class ApplicationClassNames:
     connect_direct = "ConnectDirect"
     data_power = "DataPower"
     f5 = "F5"
+    f5_authentication_bundle = 'F5 Authentication Bundle'
     f5_ltm_advanced = "F5 LTM Advanced"
     gsk = "GSK"
     iis5 = "IIS5"
@@ -536,7 +1073,7 @@ class CertificateClassNames:
 ################################
 
 
-class _CertificateAuthorityAttributes:
+class _CertificateAuthorityAttributesBase:
     additional_field = "Additional Field"
     concurrent_connection_limit = "Concurrent Connection Limit"
     contact = "Contact"
@@ -575,8 +1112,8 @@ class _CertificateAuthorityAttributes:
     workflow_block = "Workflow Block"
 
 
-class CertificateAuthorityAttributes:
-    class Adaptable(_CertificateAuthorityAttributes):
+class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
+    class Adaptable:
         allow_reissue = "Allow Reissue"
         certificate_credential = "Certificate Credential"
         connection_valid = "Connection Valid"
@@ -588,7 +1125,7 @@ class CertificateAuthorityAttributes:
         retry_after_script_hash_mismatch = "Retry After Script Hash Mismatch"
         secondary_credential = "Secondary Credential"
 
-    class ComodoCCM(_CertificateAuthorityAttributes):
+    class ComodoCCM:
         address = "Address"
         company_number = "Company Number"
         customer_login_uri = "Customer Login URI"
@@ -599,7 +1136,7 @@ class CertificateAuthorityAttributes:
         secret_key = "Secret Key"
         uri = "URI"
 
-    class Digicert(_CertificateAuthorityAttributes):
+    class Digicert:
         account_number = "Account Number"
         account_organization = "Account Organization"
         allow_reissue = "Allow Reissue"
@@ -616,7 +1153,7 @@ class CertificateAuthorityAttributes:
         uc_allowed = "UC Allowed"
         wildcard_allowed = "Wildcard Allowed"
 
-    class EntrustCertificateServices(_CertificateAuthorityAttributes):
+    class EntrustCertificateServicesBase:
         certificate_type = "Certificate Type"
         create_entrust_user = "Create Entrust User"
         enrollment_server_for_web_folder = "Enrollment Server for Web Folder"
@@ -627,7 +1164,7 @@ class CertificateAuthorityAttributes:
         searchbase = "Searchbase"
         user_class_name = "User Class Name"
 
-    class GeoTrustReseller(_CertificateAuthorityAttributes):
+    class GeoTrustReseller:
         account_type = "Account Type"
         address = "Address"
         billing_contact_first_name = "Billing Contact First Name"
@@ -656,13 +1193,13 @@ class CertificateAuthorityAttributes:
         test_account = "Test Account"
         web_service_url = "Web Service URL"
 
-    class GlobalSignMSSL(_CertificateAuthorityAttributes):
+    class GlobalSignMSSL:
         domain_id = "Domain ID"
         profile_id = "Profile ID"
         san_type = "SAN Type"
         web_service_url = "Web Service URL"
 
-    class HydrantID(_CertificateAuthorityAttributes):
+    class HydrantID:
         account_name = "Account Name"
         account_organization = "Account Organization"
         api_credentials = "API Credentials"
@@ -672,12 +1209,12 @@ class CertificateAuthorityAttributes:
         web_service_url = "Web Service URL"
         web_ui_url = "Web UI URL"
 
-    class MSCA(_CertificateAuthorityAttributes):
+    class MSCA:
         enrollment_agent_certificate = "Enrollment Agent Certificate"
         given_name = "Given Name"
         include_cn_as_san = "Include CN as SAN"
 
-    class OpenSSL(_CertificateAuthorityAttributes):
+    class OpenSSL:
         certificate_directory = "Certificate Directory"
         certificate_file = "Certificate File"
         configuration_file = "Configuration File"
@@ -686,13 +1223,13 @@ class CertificateAuthorityAttributes:
         private_key_password_credential = "Private Key Password Credential"
         temp_directory = "Temp Directory"
 
-    class OpenTrust(_CertificateAuthorityAttributes):
+    class OpenTrust:
         connector_type = "Connector Type"
         fields = "Fields"
         retrieval_period = "Retrieval Period"
         web_service_url = "Web Service URL"
 
-    class QuoVadis(_CertificateAuthorityAttributes):
+    class QuoVadis:
         account_name = "Account Name"
         account_organization = "Account Organization"
         api_credentials = "API Credentials"
@@ -702,14 +1239,14 @@ class CertificateAuthorityAttributes:
         web_service_url = "Web Service URL"
         web_ui_url = "Web UI URL"
 
-    class RedHat(_CertificateAuthorityAttributes):
+    class RedHat:
         agent_port = "Agent Port"
         agent_url_surffix = "Agent URL Surffix"
         end_entity_port = "End Entity Port"
         end_entity_url_surffix = "End Entity URL Surffix"
         use_profile = "Use Profile"
 
-    class RSA(_CertificateAuthorityAttributes):
+    class RSA:
         ca_md5 = "CA MD5"
         ca_name = "CA Name"
         certificate_block = "Certificate Block"
@@ -717,16 +1254,16 @@ class CertificateAuthorityAttributes:
         jurisdiction_name = "Jurisdiction Name"
         supported_validity_periods = "Supported Validity Periods"
 
-    class SelfSigned(_CertificateAuthorityAttributes):
+    class SelfSigned:
         algorithm = "Algorithm"
         enhanced_key_usage = "Enhanced Key Usage"
         key_usage = "Key Usage"
 
-    class Symantec(_CertificateAuthorityAttributes):
+    class Symantec:
         fields = "Fields"
         uri = "URI"
 
-    class Thawte(_CertificateAuthorityAttributes):
+    class Thawte:
         certificate_block = "Certificate Block"
         certificate_transparency = "Certificate Transparency"
         retrieval_period = "Retrieval Period"
@@ -734,13 +1271,13 @@ class CertificateAuthorityAttributes:
         signature_algorithm = "Signature Algorithm"
         uri = "URI"
 
-    class TrustWave(_CertificateAuthorityAttributes):
+    class TrustWave:
         interval = "Interval"
         reseller_id = "Reseller ID"
         retrieval_period = "Retrieval Period"
         web_service_url = "Web Service URL"
 
-    class UniCERT(_CertificateAuthorityAttributes):
+    class UniCERT:
         ca_dn = "CA DN"
         ra_dn = "RA DN"
         secure = "Secure"
@@ -792,7 +1329,7 @@ class CloudInstanceMonitoringClassNames:
 ################################
 
 
-class _CredentialAttributes:
+class _CredentialAttributesBase:
     contact = "Contact"
     created_by = "Created By"
     description = "Description"
@@ -815,41 +1352,41 @@ class _CredentialAttributes:
     workflow_block = "Workflow Block"
 
 
-class CredentialAttributes:
-    class Amazon(_CredentialAttributes):
+class CredentialAttributes(_CredentialAttributesBase):
+    class Amazon:
         authentication_credential = "Authentication Credential"
         authentication_source = "Authentication Source"
         region_code = "Region Code"
         role = "Role"
         web_service_url = "Web Service URL"
 
-    class Certificate(_CredentialAttributes):
+    class Certificate:
         certificate = 'Certificate'
         username = 'Username'
 
-    class CyberArkPassword(_CredentialAttributes):
+    class CyberArkPassword:
         account_name = "Account Name"
         application_id = "Application ID"
         folder = "Folder"
         safe = "Safe"
 
-    class CyberArkUsernamePassword(_CredentialAttributes):
+    class CyberArkUsernamePassword:
         account_name = "Account Name"
         application_id = "Application ID"
         folder = "Folder"
         safe = "Safe"
         username = "Username"
 
-    class Generic(_CredentialAttributes):
+    class Generic:
         pass
 
-    class Password(_CredentialAttributes):
+    class Password(_CredentialAttributesBase):
         pass
 
-    class PrivateKey(_CredentialAttributes):
+    class PrivateKey(_CredentialAttributesBase):
         username = 'Username'
 
-    class UsernamePassword(_CredentialAttributes):
+    class UsernamePassword(_CredentialAttributesBase):
         username = 'Username'
 
 
@@ -867,7 +1404,7 @@ class CredentialClassNames:
 ################################
 
 
-class _DeviceAttributes:
+class _DeviceAttributesBase:
     agentless_discovery_stage = "Agentless Discovery Stage"
     agentless_discovery_status = "Agentless Discovery Status"
     algorithm = "Algorithm"
@@ -974,11 +1511,11 @@ class _DeviceAttributes:
     workflow_block = "Workflow Block"
 
 
-class DeviceAttributes:
-    class Device(_DeviceAttributes):
+class DeviceAttributes(_DeviceAttributesBase):
+    class DeviceBase:
         pass
 
-    class JumpServer(_DeviceAttributes):
+    class JumpServer:
         consumers = "Consumers"
         location = "Location"
         ssh_connection_string = "SSH Connection String"

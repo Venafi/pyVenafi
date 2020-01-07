@@ -70,9 +70,9 @@ class API:
             valid_return_codes: A list of valid status codes, such as [200, 204].
         """
         self._api_obj = api_obj
-        self._session = api_obj.session  # type: Session
+        self._session = api_obj._session  # type: Session
         self._api_type = api_obj.__class__.__name__.lower()
-        self._url = self._api_obj.base_url + url
+        self._url = self._api_obj._base_url + url
         self._valid_return_codes = valid_return_codes
 
         self._json_response = Response()
@@ -141,7 +141,7 @@ class API:
 
         """
         if self._api_type == 'websdk':
-             invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
+            invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
         elif self._api_type == 'aperture':
             invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
         else:
@@ -159,7 +159,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call()
-        response = self._api_obj.session.delete()
+        response = self._api_obj._session.delete()
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
@@ -179,7 +179,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(data=params)
-        response = self._api_obj.session.get(url=self._url, params=params)
+        response = self._api_obj._session.get(url=self._url, params=params)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
@@ -199,7 +199,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(data=data)
-        response = self._api_obj.session.post(url=self._url, data=data)
+        response = self._api_obj._session.post(url=self._url, data=data)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
@@ -219,7 +219,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(data=data)
-        response = self._api_obj.session.put(url=self._url, data=data)
+        response = self._api_obj._session.put(url=self._url, data=data)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()

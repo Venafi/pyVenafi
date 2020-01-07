@@ -1,3 +1,4 @@
+from typing import Callable
 import os
 import sys
 import traceback
