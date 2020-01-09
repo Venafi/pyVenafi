@@ -1,4 +1,4 @@
-from api.api_base import API
+from venafi.api.api_base import API
 
 
 class _Revoke:

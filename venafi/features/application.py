@@ -1,5 +1,5 @@
-from properties.config import ConfigClass, ApplicationAttributes, ApplicationAttributeValues
-from features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.properties.config import ConfigClass, ApplicationAttributes, ApplicationAttributeValues
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
 class _ApplicationBase(FeatureBase):
@@ -13,10 +13,27 @@ class _ApplicationBase(FeatureBase):
 
 @feature()
 class Apache(_ApplicationBase):
+    """
+    This feature provides high-level interaction with TPP Apache Application objects.
+    """
     def __init__(self, auth):
         super().__init__(auth=auth)
 
     def create(self, name: str, container: str, private_key_file: str, certificate_file: str, attributes: dict = None):
+        """
+        Creates an Apache application object.
+
+        Args:
+            name: Name of the Apache application object.
+            container: Absolute path to the parent folder of the application object.
+            private_key_file: Location on the application device to place the private key file.
+            certificate_file: Location on the application device to place the certificate file.
+            attributes: Additional attributes pertaining to the application object.
+
+        Returns:
+            Config object representation of the application object.
+
+        """
         attributes = attributes or {}
         apache_attrs = ApplicationAttributes.Apache
         attributes.update({
@@ -28,6 +45,9 @@ class Apache(_ApplicationBase):
 
 @feature()
 class PKCS11(_ApplicationBase):
+    """
+    This feature provides high-level interaction with TPP PKCS11 Application objects.
+    """
     def __init__(self, auth):
         super().__init__(auth=auth)
 
@@ -36,6 +56,32 @@ class PKCS11(_ApplicationBase):
                connection_method: str = 'SSH', embed_sans_in_csr: bool = False, import_certificates_into_hsm: str = '0',
                label_format: str = 'Date with CN', port: int = 22, protection_type: str = 'Module', openssl_type:str = 'System',
                reverse_subject_dn: bool = False):
+        """
+        Creates a PKCS11 application object.
+
+        Args:
+            name: Name of the Apache application object.
+            container: Absolute path to the parent folder of the application object.
+            cryptoki_file_with_path:
+            distribution_directory:
+            openssl_config_file_with_path:
+            openssl_directory:
+            token_slot_identifier:
+            token_slot_pin_dn:
+            use_case:
+            attributes: Additional attributes pertaining to the application object.
+            connection_method:
+            embed_sans_in_csr:
+            import_certificates_into_hsm:
+            label_format:
+            port:
+            protection_type:
+            openssl_type:
+            reverse_subject_dn:
+
+        Returns:
+
+        """
         attributes = attributes or {}
         pkcs11_attrs = ApplicationAttributes.PKCS11
         pkcs11_attr_vals = ApplicationAttributeValues.PKCS11

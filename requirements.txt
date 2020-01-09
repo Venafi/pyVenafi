@@ -11,3 +11,6 @@ pymssql==2.1.4
 python-dateutil==2.8.1
 keyring==19.2.0
 jsonpickle==1.2
+sphinx==2.3.0
+sphinxcontrib-napoleon==0.7
+requests

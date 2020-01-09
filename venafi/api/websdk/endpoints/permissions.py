@@ -1,5 +1,6 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.permissions import Permissions
+from typing import List 
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.permissions import Permissions
 
 
 class _Permissions:
@@ -21,7 +22,7 @@ class _Permissions:
 
             @property
             @json_response_property()
-            def principals(self) -> list:
+            def principals(self) -> List[str]:
                 return self._from_json()
 
             def get(self):
@@ -102,7 +103,6 @@ class _Permissions:
                             }
 
                             self.json_response = self._post(data=body)
-
                             return self
 
                         def put(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
@@ -126,7 +126,6 @@ class _Permissions:
                             }
 
                             self.json_response = self._put(data=body)
-
                             return self
 
                         class _Effective(API):
@@ -218,7 +217,6 @@ class _Permissions:
                         }
 
                         self.json_response = self._put(data=body)
-
                         return self
 
                     class _Effective(API):
@@ -244,7 +242,7 @@ class _Permissions:
 
         @property
         @json_response_property()
-        def result(self):
+        def result(self) -> int:
             return self._from_json('Result')
 
         def get(self):

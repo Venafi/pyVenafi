@@ -1,9 +1,10 @@
 import inspect
 import jsonpickle
 import time
-from logger import logger, LogLevels
-from properties.secret_store import Namespaces
-from api.authenticate import Authenticate
+from venafi.logger import logger, LogLevels
+from venafi.properties.secret_store import Namespaces
+from venafi.api.authenticate import Authenticate
+import os
 
 jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 
@@ -38,6 +39,8 @@ def __feature_decorator(func):
 
 def feature():
     def decorate(cls):
+        if int(os.getenv('VENAFI_PY_DOC_IN_PROGRESS', 0)):
+            return cls
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):

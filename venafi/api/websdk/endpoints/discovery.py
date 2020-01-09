@@ -1,5 +1,5 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.client import Client
+from typing import List 
+from venafi.api.api_base import API, json_response_property
 
 
 class _Discovery:
@@ -16,7 +16,7 @@ class _Discovery:
 
         @property
         @json_response_property()
-        def success(self):
+        def success(self) -> bool:
             return self._from_json('Success')
 
         def delete(self):
@@ -29,32 +29,32 @@ class _Discovery:
 
         @property
         @json_response_property()
-        def created_certificates(self):
+        def created_certificates(self) -> int:
             return self._from_json('createdCertificates')
 
         @property
         @json_response_property()
-        def created_instances(self):
+        def created_instances(self) -> int:
             return self._from_json('createdInstances')
 
         @property
         @json_response_property()
-        def updated_certificates(self):
+        def updated_certificates(self) -> int:
             return self._from_json('updatedCertificates')
 
         @property
         @json_response_property()
-        def updated_instances(self):
+        def updated_instances(self) -> int:
             return self._from_json('updatedInstances')
 
         @property
         @json_response_property()
-        def warnings(self):
+        def warnings(self) -> List[str]:
             return self._from_json('warnings')
 
         @property
         @json_response_property()
-        def zone_name(self):
+        def zone_name(self) -> str:
             return self._from_json('zoneName')
 
         def post(self, endpoints: list, zone_name: str):
@@ -64,6 +64,5 @@ class _Discovery:
             }
 
             self.json_response = self._post(data=body)
-
             return self
 

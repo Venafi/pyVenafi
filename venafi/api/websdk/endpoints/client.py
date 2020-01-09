@@ -1,5 +1,6 @@
-from api.api_base import API, json_response_property
-from properties.response_objects.client import Client
+from typing import List
+from venafi.api.api_base import API, json_response_property
+from venafi.properties.response_objects.client import Client
 
 
 class _Client(API):
@@ -10,10 +11,8 @@ class _Client(API):
         self.Work = self._Work(websdk_obj=websdk_obj)
 
     @property
-    @json_response_property()
+    @json_response_property(on_204=list)
     def clients(self):
-        if self.json_response.status_code == 204:
-            return []
         return [Client.Client(client, self._api_type) for client in self._from_json()]
 
     def get(self, client_version: int = None, client_type: str = None, host_name: str = None, ip_address: str = None,
@@ -39,7 +38,6 @@ class _Client(API):
         }
 
         self.json_response = self._get(params=params)
-
         return self
 
     class _Delete(API):
@@ -48,12 +46,12 @@ class _Client(API):
 
         @property
         @json_response_property()
-        def deleted_count(self):
+        def deleted_count(self) -> int:
             return self._from_json(key='DeletedCount')
 
         @property
         @json_response_property()
-        def errors(self):
+        def errors(self) -> List[str]:
             return self._from_json(key='Errors')
 
         def post(self, clients: list, delete_associated_devices: bool = False):
@@ -63,7 +61,6 @@ class _Client(API):
             }
 
             self.json_response = self._post(data=body)
-
             return self
 
     class _Details(API):
@@ -71,7 +68,7 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Details', valid_return_codes=[200, 204])
 
         @property
-        @json_response_property()
+        @json_response_property(on_204=list)
         def details(self):
             return [Client.ClientDetails(client, self._api_type) for client in self._from_json()]
 
@@ -98,7 +95,6 @@ class _Client(API):
             }
 
             self.json_response = self._get(params=params)
-
             return self
 
     class _Work(API):
@@ -106,7 +102,7 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Work', valid_return_codes=[200, 204])
 
         @property
-        @json_response_property()
+        @json_response_property(on_204=list)
         def works(self):
             return [Client.Work(work, self._api_type) for work in self._from_json()]
 
