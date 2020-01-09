@@ -25,6 +25,7 @@ class SQLCommandExecutor:
             user=self.username,
             password=self.password
         )
+
     def _connect_mssql(self):
         timeout = time.time() + 60
         while time.time() < timeout:

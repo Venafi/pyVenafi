@@ -8,9 +8,7 @@ import uuid
 from typing import *
 from datetime import datetime
 from tempfile import NamedTemporaryFile
-from venafi.tools.logger.config import LOG_DIR, LOG_FILENAME
-# from sql.spinDB import TestResults, _insertTestResult
-from sql.spinDB import SPIN
+from venafi.logger import logger, LOG_DIR, LOG_FILENAME
 
 
 GLOBAL_TIMESTAMP = time.strftime('%Y%m%d%H%M')
@@ -43,14 +41,17 @@ def get_test_info(test):
 
 def get_test_attributes(test) -> dict:
     errors = []
+    owner = None
+    features = None
     try:
         owner = getattr(test.__class__, test._testMethodName).owner
         features = getattr(test.__class__, test._testMethodName).features
     except AttributeError:
-        owner = test.__class__.owner
-        features = test.__class__.features
-    else:
-        errors.append('Attributes are not valid.')
+        try:
+            owner = test.__class__.owner
+            features = test.__class__.features
+        except AttributeError:
+                errors.append('Attributes are not valid.')
 
     return {
         'owner': owner,
@@ -77,9 +78,13 @@ def get_test_results(result, lapse, log_file = None):
 
 def get_tests_from_suites(suites) -> List[unittest.TestCase]:
     for suite in suites:
-        for tests in suite:
-            for test in tests:
-                yield test
+        for tests in suite:  # type: unittest.TestSuite
+            if len(tests._tests) > 0:
+                setUpClass, tearDownClass = tests._tests[0].setUpClass, tests._tests[0].tearDownClass
+                setUpClass()
+                for test in tests:
+                    yield test
+                tearDownClass()
 
 
 if __name__ == '__main__':
@@ -100,6 +105,8 @@ if __name__ == '__main__':
         start_dir = os.path.abspath(os.path.dirname(__file__))
         print(start_dir)
         suites = loader.discover(start_dir)
+        current_suite = None
+        new_suite = False
         for test in get_tests_from_suites(suites):
             result = unittest.TestResult()
             test_info = get_test_info(test)
@@ -112,6 +119,7 @@ if __name__ == '__main__':
             test.run(result)
             end = time.time()
             lapse = int(end - start)
+            logger.log_to_html()
 
             new_logfile = f"{new_log_dir}/{test_info.get('testName')}_{test_info.get('guid')}.html"
 
@@ -137,33 +145,22 @@ if __name__ == '__main__':
             pretty_data = json.dumps(metadata, indent=4)
             temp.write(pretty_data)
             temp.flush()
-            # print(pretty_data)
-            # print("Here is the test info: {}".format(test_info))
-            print('------- Timmy Time ------\n')
-            # for crap in test_info:
-            #     print("{} has the vaule {}".format(crap, test_info[crap]))
-            # for more_crap in test_results:
-            #     print("{} has the value {}".format(more_crap, test_results[more_crap]))
-            # result_values = list(test_results.values())
-            # info_values = list(test_info.values())
-            # for crap in info_values:
-            #     print('Value {}\n'.format(crap))
-            test_id = '600'
-            result = '1'
-            log_file = 'log_file'
-            consec_fail = '0'
-            run_date = '2019-12-12 13:41:53.743'
-            time_lapse = '3'
-            spin = SPIN()
-
-            # _insertTestResult(test_id, result, log_file, consec_fail, run_date, time_lapse)
-            # TestResults.insert_results(result_values[1], result_values[2], result_values[3], result_values[4],
-            #                            result_values[4], result_values[1])
-
-
+            print(pretty_data)
 
         print('done')
-
-
-        #TODO: Throw data from json to DB
+        # TODO: Throw data from json to DB
         # Archive json file
+
+
+# Label IDs -
+# owner = 1
+# feature = 2
+# result_values =
+# passed = 1
+# failed = 2
+# skipped = 3
+
+# Annotation IDs
+#
+
+# FTP up the HTML file to the server -

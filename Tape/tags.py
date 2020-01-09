@@ -2,7 +2,7 @@ import inspect
 import uuid
 
 
-def tag(guid: str, owner: str = None, features: list = None):
+def tag(guid: str = None, owner: str = None, features: list = None):
     def decorate(cls_or_meth):
         if inspect.ismethod(cls_or_meth) or inspect.isfunction(cls_or_meth):
             setattr(cls_or_meth, 'guid', guid)
@@ -17,6 +17,7 @@ class Owner:
 
 
 class Features:
+
     class Certificates:
         certificate_renewal = 0
 
