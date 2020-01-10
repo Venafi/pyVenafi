@@ -1,4 +1,5 @@
 from venafi.properties.resultcodes import ResultCodes
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class SSH:
@@ -27,7 +28,7 @@ class SSH:
             if not isinstance(data_dict, dict):
                 data_dict = {}
                 
-            self.active_from = data_dict.get('ActiveFrom')  # type: str
+            self.active_from = from_date_string(data_dict.get('ActiveFrom'))
             self.algorithm = data_dict.get('Algorithm')  # type: str
             self.allowed_source_restriction = data_dict.get('AllowedSourceRestriction')  # type: list
             self.approver = data_dict.get('Approver')  # type: list
@@ -39,7 +40,8 @@ class SSH:
             self.is_encrypted = data_dict.get('IsEncrypted')  # type: bool
             self.key_id = data_dict.get('KeyId')  # type: str
             self.keysetid = data_dict.get('Keysetid')  # type: str
-            self.last_used = data_dict.get('Last Used')  # type: str
+            last_used = data_dict.get('Last Used')
+            self.last_used = from_date_string(last_used) if last_used else None
             self.length = data_dict.get('Length')  # type: int
             self.notes = data_dict.get('Notes')  # type: str
             self.options = data_dict.get('Options')  # type: list

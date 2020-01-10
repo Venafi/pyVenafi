@@ -6,9 +6,9 @@ class _ApplicationBase(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def delete(self, object_dn: str):
-        self._secret_store_delete(object_dn=object_dn)
-        self._config_delete(object_dn=object_dn)
+    def delete(self, application_dn: str):
+        self._secret_store_delete(object_dn=application_dn)
+        self._config_delete(object_dn=application_dn)
 
     def disable(self, application_dn: str):
         if self._auth.preference == ApiPreferences.aperture:
@@ -16,7 +16,7 @@ class _ApplicationBase(FeatureBase):
 
         result = self._auth.websdk.Config.ClearAttribute.post(
             object_dn=application_dn,
-            attributes=ApplicationAttributes.disabled
+            attribute_name=ApplicationAttributes.disabled
         )
 
         if result.code != 1:
@@ -28,7 +28,7 @@ class _ApplicationBase(FeatureBase):
 
         result = self._auth.websdk.Config.Write.post(
             object_dn=application_dn,
-            attributes=self._name_value_list({
+            attribute_data=self._name_value_list({
                 ApplicationAttributes.disabled: "1"
             })
         ).result

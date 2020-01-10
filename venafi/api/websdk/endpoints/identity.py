@@ -56,14 +56,19 @@ class _Identity:
         def members(self):
             return [Identity.Identity(m) for m in self._from_json('Members')]
 
-        def post(self, group: dict, members: list, show_members: bool = False):
+        @property
+        @json_response_property()
+        def message(self) -> str:
+            return self._from_json('Message')
+
+        def put(self, group: dict, members: list, show_members: bool = False):
             body = {
                 'Group': group,
                 'Members': members,
                 'ShowMembers': show_members
             }
 
-            self.json_response = self._post(data=body)
+            self.json_response = self._put(data=body)
             return self
 
     class _Browse(API):

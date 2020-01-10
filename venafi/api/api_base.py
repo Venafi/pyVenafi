@@ -115,7 +115,11 @@ class API:
             If a key is provided, returns the response content at that key. Otherwise, the full
             response content.
         """
-        result = self.json_response.json()
+        try:
+            result = self.json_response.json()
+        except json.decoder.JSONDecodeError as e:
+            raise InvalidResponseError(f'{self.json_response.url} return no content. '
+                                       f'Got status code {self.json_response.status_code}.')
         if error_key and error_key in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
         if not key:

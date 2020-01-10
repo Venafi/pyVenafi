@@ -1,6 +1,7 @@
 import time
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.credential import Credential
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class _Credentials:
@@ -117,8 +118,8 @@ class _Credentials:
 
         @property
         @json_response_property()
-        def expiration(self) -> str:
-            return self._from_json(key='Expiration')
+        def expiration(self):
+            return from_date_string(self._from_json(key='Expiration'))
 
         @property
         @json_response_property()

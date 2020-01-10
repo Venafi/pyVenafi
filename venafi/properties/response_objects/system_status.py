@@ -1,3 +1,6 @@
+from venafi.tools.helpers.date_converter import from_date_string
+
+
 class SystemStatus:
     class Services:
         def __init__(self, serv_dict: dict):
@@ -14,6 +17,6 @@ class SystemStatus:
                 vplat_dict = {}
 
             self.modules = vplat_dict.get('modules')  # type: list
-            self.time_since_first_seen = vplat_dict.get('timeSinceFirstSeen')  # type: str
-            self.time_since_last_seen = vplat_dict.get('timeSinceLastSeen')  # type: str
+            self.time_since_first_seen = from_date_string(vplat_dict.get('timeSinceFirstSeen'))
+            self.time_since_last_seen = from_date_string(vplat_dict.get('timeSinceLastSeen'))
             self.status = vplat_dict.get('Status')  # type: str

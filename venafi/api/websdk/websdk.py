@@ -14,6 +14,7 @@ from venafi.api.websdk.endpoints.metadata import _Metadata
 from venafi.api.websdk.endpoints.permissions import _Permissions
 from venafi.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from venafi.api.websdk.endpoints.revoke import _Revoke
+from venafi.api.websdk.endpoints.rights import _Rights
 from venafi.api.websdk.endpoints.ssh import _SSH
 from venafi.api.websdk.endpoints.system_status import _SystemStatus
 from venafi.api.websdk.endpoints.secret_store import _SecretStore
@@ -67,6 +68,7 @@ class WebSDK:
         self.Permissions = _Permissions(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
+        self.Rights = _Rights(self)
         self.SecretStore = _SecretStore(self)
         self.SSH = _SSH(self)
         self.SystemStatus = _SystemStatus(self)

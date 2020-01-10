@@ -10,3 +10,4 @@ Features
    venafi.features.credentials
    venafi.features.device
    venafi.features.folder
+   venafi.features.workflow

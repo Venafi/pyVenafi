@@ -11,6 +11,30 @@ class Folder(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth)
 
+    def apply_workflow(self, folder_dn: str, workflow_dn: str):
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self._auth.websdk.Config.AddValue.post(
+            object_dn=folder_dn,
+            attribute_name=FolderAttributes.workflow,
+            value=workflow_dn
+        )
+
+        result.assert_valid_response()
+
+    def block_workflow(self, folder_dn: str, workflow_dn: str):
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self._auth.websdk.Config.AddValue.post(
+            object_dn=folder_dn,
+            attribute_name=FolderAttributes.workflow_block,
+            value=workflow_dn
+        )
+
+        result.assert_valid_response()
+
     def clear_policy(self, folder_dn: str, class_name: str, attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the policy attribute name along with all of its values
@@ -281,6 +305,30 @@ class Folder(FeatureBase):
             FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
         return [resp.values, resp.locked]
+
+    def remove_workflow(self, folder_dn: str, workflow_dn: str):
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self._auth.websdk.Config.RemoveDnValue.post(
+            object_dn=folder_dn,
+            attribute_name=FolderAttributes.workflow,
+            value=workflow_dn
+        )
+
+        result.assert_valid_response()
+
+    def remove_blocked_workflow(self, folder_dn: str, workflow_dn: str):
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        result = self._auth.websdk.Config.RemoveDnValue.post(
+            object_dn=folder_dn,
+            attribute_name=FolderAttributes.workflow_block,
+            value=workflow_dn
+        )
+
+        result.assert_valid_response()
 
     def write_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
         """

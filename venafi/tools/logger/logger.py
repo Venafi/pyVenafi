@@ -116,7 +116,7 @@ class Logger:
                 except TypeError as e:
                     self.log(
                         msg='\n'.join(e.args),
-                        level=LogLevels.critical,
+                        level=LogLevels.critical.level,
                         prev_frames=2
                     )
                     raise TypeError(e)

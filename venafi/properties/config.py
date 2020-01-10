@@ -1560,9 +1560,91 @@ class FolderAttributes:
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
+################################
+
+
+class IdentityClassNames:
+    user = 'USER'
+    security_group = 'GROUP'
+
+
+class IdentityAttributes:
+    class Types:
+        user = 1
+        security_group = 2
+        distribution_group = 8
+
+
+class IdentityAttributeValues:
+    pass
 
 ################################
 
 
+class _WorkflowAttributes:
+    contact = "Contact"
+    created_by = "Created By"
+    description = "Description"
+    disabled = "Disabled"
+    escalation_contact = "Escalation Contact"
+    guid = "GUID"
+    managed_by = "Managed By"
+    metadata = "Metadata"
+    reference = "Reference"
+    rule = "Rule"
+    rule_vault_id = "Rule Vault Id"
+    workflow = "Workflow"
+    workflow_block = "Workflow Block"
+
+
+class WorkflowAttributes(_WorkflowAttributes):
+    class Adaptable:
+        adaptable_workflow_text_field_1 = "Adaptable Workflow Text Field 1"
+        adaptable_workflow_text_field_10 = "Adaptable Workflow Text Field 10"
+        adaptable_workflow_text_field_11 = "Adaptable Workflow Text Field 11"
+        adaptable_workflow_text_field_12 = "Adaptable Workflow Text Field 12"
+        adaptable_workflow_text_field_2 = "Adaptable Workflow Text Field 2"
+        adaptable_workflow_text_field_3 = "Adaptable Workflow Text Field 3"
+        adaptable_workflow_text_field_4 = "Adaptable Workflow Text Field 4"
+        adaptable_workflow_text_field_5 = "Adaptable Workflow Text Field 5"
+        adaptable_workflow_text_field_6 = "Adaptable Workflow Text Field 6"
+        adaptable_workflow_text_field_7 = "Adaptable Workflow Text Field 7"
+        adaptable_workflow_text_field_8 = "Adaptable Workflow Text Field 8"
+        adaptable_workflow_text_field_9 = "Adaptable Workflow Text Field 9"
+        credential = "Credential"
+        log_debug = "Log Debug"
+        powershell_script = "PowerShell Script"
+        powershell_script_hash_vault_id = "PowerShell Script Hash Vault Id"
+        secondary_credential = "Secondary Credential"
+        service_address = "Service Address"
+
+    class Standard:
+        approval_explanation = "Approval Explanation"
+        approval_from = "Approval From"
+        approval_reason = "Approval Reason"
+        approver_not_found_timestamp = "Approver Not Found Timestamp"
+        creation_date = "Creation Date"
+        last_notification = "Last Notification"
+        last_update = "Last Update"
+        owner_object = "Owner Object"
+        scheduled_start = "Scheduled Start"
+        scheduled_stop = "Scheduled Stop"
+        status = "Status"
+        suspended_attribute = "Suspended Attribute"
+        updated_by = "Updated By"
+        user_data = "User Data"
+
+
+class WorkflowAttributeValues:
+    class Status:
+        approved = 'Approved'
+        approved_after = 'Approved After'
+        approved_before = 'Approved Before'
+        approved_between = 'Approved Between'
+        pending = 'Pending'
+        rejected = 'Rejected'
+
+
 class WorkflowClassNames:
+    adaptable_workflow = 'Adaptable Workflow'
     workflow = 'Workflow'

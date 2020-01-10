@@ -1,6 +1,7 @@
 from typing import List 
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.certificate import Certificate
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class _Certificates(API):
@@ -144,8 +145,8 @@ class _Certificates(API):
 
         @property
         @json_response_property()
-        def created_on(self) -> str:
-            return self._from_json(key='CreatedOn')
+        def created_on(self):
+            return from_date_string(self._from_json(key='CreatedOn'))
 
         @property
         @json_response_property()

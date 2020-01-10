@@ -1,6 +1,7 @@
 from typing import List 
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.worfklow import Workflow
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class _Workflow:
@@ -24,12 +25,12 @@ class _Workflow:
             @property
             @json_response_property()
             def guid(self) -> str:
-                return self.json_response('GUID')
+                return self._from_json('GUID')
 
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
+                return Workflow.Result(self._from_json('Result'))
 
             def post(self, object_dn: str, approvers: list, reason: str, workflow_dn: str, user_data: str = None):
                 body = {
@@ -50,7 +51,7 @@ class _Workflow:
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
+                return Workflow.Result(self._from_json('Result'))
 
             def post(self, guid: str):
                 body = {
@@ -66,48 +67,13 @@ class _Workflow:
 
             @property
             @json_response_property()
-            def approval_explanation(self) -> str:
-                return self.json_response('ApprovalExplanation')
-
-            @property
-            @json_response_property()
-            def approval_from(self) -> str:
-                return self.json_response('ApprovalFrom')
-
-            @property
-            @json_response_property()
-            def approvers(self) -> List[str]:
-                return self.json_response('Approvers')
-
-            @property
-            @json_response_property()
-            def blocking(self) -> str:
-                return self.json_response('Blocking')
-
-            @property
-            @json_response_property()
-            def created(self) -> str:
-                return self.json_response('Created')
-
-            @property
-            @json_response_property()
-            def issued_due_to(self) -> str:
-                return self.json_response('IssuedDueTo')
+            def details(self):
+                return Workflow.Details(self._from_json())
 
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
-
-            @property
-            @json_response_property()
-            def status(self) -> str:
-                return self.json_response('Status')
-
-            @property
-            @json_response_property()
-            def updated(self) -> str:
-                return self.json_response('Updated')
+                return Workflow.Result(self._from_json('Result'))
 
             def post(self, guid: str):
                 body = {
@@ -124,12 +90,12 @@ class _Workflow:
             @property
             @json_response_property()
             def guids(self) -> List[str]:
-                return self.json_response('GUIDS')
+                return self._from_json('GUIDS')
 
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
+                return Workflow.Result(self._from_json('Result'))
 
             def post(self, object_dn: str = None, user_data: str = None):
                 body = {
@@ -147,7 +113,7 @@ class _Workflow:
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
+                return Workflow.Result(self._from_json('Result'))
 
             def post(self, guid: str):
                 body = {
@@ -164,12 +130,12 @@ class _Workflow:
             @property
             @json_response_property()
             def status(self) -> str:
-                return self.json_response('Status')
+                return self._from_json('Status')
 
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
+                return Workflow.Result(self._from_json('Result'))
 
             def post(self, guid: str):
                 body = {
@@ -186,13 +152,13 @@ class _Workflow:
             @property
             @json_response_property()
             def result(self):
-                return Workflow.Result(self.json_response('Result'))
+                return Workflow.Result(self._from_json('Result'))
 
-            def post(self, guid: str, status: str, exlanation: str = None, scheduled_start: str = None, scheduled_stop: str = None):
+            def post(self, guid: str, status: str, explanation: str = None, scheduled_start: str = None, scheduled_stop: str = None):
                 body = {
                     'GUID': guid,
                     'Status': status,
-                    'Explanation': exlanation,
+                    'Explanation': explanation,
                     'ScheduledStart': scheduled_start,
                     'ScheduledStop': scheduled_stop
                 }

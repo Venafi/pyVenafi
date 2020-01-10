@@ -1,4 +1,5 @@
 from venafi.properties.resultcodes import ResultCodes
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class Client:
@@ -33,14 +34,14 @@ class Client:
                 self.client_id = clients_dict.get('ClientId')  # type: int
                 self.client_type = clients_dict.get('ClientType')  # type: str
                 self.client_version = clients_dict.get('ClientVersion')  # type: str
-                self.created_on = clients_dict.get('CreatedOn')  # type: str
+                self.created_on = from_date_string(clients_dict.get('CreatedOn'))
                 self.dns_name = clients_dict.get('DnsName')  # type: str
                 self.effective_work = clients_dict.get('EffectiveWork')  # type: list
                 self.fqdn = clients_dict.get('FQDN')  # type: str
                 self.groups = clients_dict.get('Groups')  # type: list
                 self.host_domain = clients_dict.get('HostDomain')  # type: str
                 self.hostname = clients_dict.get('Hostname')  # type: str
-                self.last_seen_on = clients_dict.get('LastSeenOn')  # type: str
+                self.last_seen_on = from_date_string(clients_dict.get('LastSeenOn'))
                 self.networks = [Client._Network(network) for network in clients_dict.get('Networks')]
                 self.os_build = clients_dict.get('OsBuild')  # type: str
                 self.os_name = clients_dict.get('OsName')  # type: str
