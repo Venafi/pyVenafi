@@ -83,7 +83,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, filter: str, limit: int, identity_type: int):
             data = {
@@ -102,7 +102,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict):
             body = {
@@ -119,7 +119,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict, resolve_nested: bool = False):
             body = {
@@ -137,7 +137,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict):
             body = {

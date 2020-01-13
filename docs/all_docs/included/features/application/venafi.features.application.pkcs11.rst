@@ -1,7 +1,7 @@
-Credentials
-===========
+PKCS #11
+========
 
-.. automodule:: venafi.features.credentials
+.. autoclass:: venafi.features.application.PKCS11
    :members:
    :undoc-members:
    :show-inheritance:

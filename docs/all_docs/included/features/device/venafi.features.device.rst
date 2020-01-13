@@ -1,7 +1,7 @@
-Applications
-============
+Devices
+=======
 
-.. automodule:: venafi.features.application
+.. autoclass:: venafi.features.device.Device
    :members:
    :undoc-members:
    :show-inheritance:

@@ -12,6 +12,14 @@ class Folder(FeatureBase):
         super().__init__(auth)
 
     def apply_workflow(self, folder_dn: str, workflow_dn: str):
+        """
+        Applies a workflow to a folder and all of its subordinate objects. However, a subordinate folder
+        may block the workflow.
+
+        Args:
+            folder_dn: Absolute path to the folder object.
+            workflow_dn: Absolute path to the workflow object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -24,6 +32,14 @@ class Folder(FeatureBase):
         result.assert_valid_response()
 
     def block_workflow(self, folder_dn: str, workflow_dn: str):
+        """
+        Blocks a workflow on a folder and all of its subordinate objects. This prevents any parent folders from
+        enforcing a workflow on this folder and its subordinate objects.
+
+        Args:
+            folder_dn: Absolute path to the folder object.
+            workflow_dn: Absolute path to the workflow object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -307,6 +323,13 @@ class Folder(FeatureBase):
         return [resp.values, resp.locked]
 
     def remove_workflow(self, folder_dn: str, workflow_dn: str):
+        """
+        Removes an applied workflow from a folder.
+
+        Args:
+            folder_dn: Absolute path to the folder object.
+            workflow_dn: Absolute path to the workflow object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -319,6 +342,13 @@ class Folder(FeatureBase):
         result.assert_valid_response()
 
     def remove_blocked_workflow(self, folder_dn: str, workflow_dn: str):
+        """
+        Removes a blocked workflow from a folder.
+
+        Args:
+            folder_dn: Absolute path to the folder object.
+            workflow_dn: Absolute path to the workflow object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 

@@ -129,7 +129,7 @@ class _IdentityBase(FeatureBase):
         a user or group exists by throwing an error if it does not, use :meth:`validate`.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
 
         Returns:
             ``True`` if the Identity exists, otherwise ``False``.
@@ -150,7 +150,7 @@ class _IdentityBase(FeatureBase):
         Finds all groups to which a user or group belongs.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
 
         Returns:
             List of Identity objects for each group.
@@ -184,7 +184,7 @@ class _IdentityBase(FeatureBase):
         Returns the value associated to the given ``attribute_name``.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
             attribute_name: The name of the attribute.
 
         Returns:
@@ -269,7 +269,7 @@ class _IdentityBase(FeatureBase):
         One of ``prefixed_name`` or ``prefixed_universal`` must be provided.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
             prefixed_universal: The prefixed universal GUID of the Identity object.
 
         Returns:
@@ -290,7 +290,7 @@ class _IdentityBase(FeatureBase):
         Creates an ID object to write to the Identity APIs.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
             prefixed_universal: The prefixed universal GUID of the Identity object.
 
         Returns:
@@ -374,7 +374,7 @@ class User(_IdentityBase):
         has all rights removed.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
@@ -431,7 +431,7 @@ class User(_IdentityBase):
         the ``old_password`` is not required.
 
         Args:
-            prefixed_name: The prefixed universal name of the Identity object.
+            prefixed_name: The prefixed name of the Identity object.
             new_password: The new password for the user.
             old_password: The old password for the user. Required only if it exists.
 
@@ -459,7 +459,7 @@ class Group(_IdentityBase):
         Adds members to a local group.
 
         Args:
-            group_prefixed_name: The prefixed universal name of the group.
+            group_prefixed_name: The prefixed name of the group.
             member_prefixed_names: List of prefixed universal names of each member.
 
         Returns:
@@ -611,7 +611,7 @@ class Group(_IdentityBase):
         Removes members from a local group.
 
         Args:
-            group_prefixed_name: The prefixed universal name of the group.
+            group_prefixed_name: The prefixed name of the group.
             member_prefixed_names: List of prefixed universal names of each member.
 
         Returns:

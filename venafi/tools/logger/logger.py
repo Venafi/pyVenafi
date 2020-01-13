@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import List
 import os
 import sys
 import traceback
@@ -100,7 +100,7 @@ class Logger:
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
-    def wrap(self, level: int = LogLevels.high.level):
+    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
@@ -125,6 +125,10 @@ class Logger:
                     del params['self']
                 before_string = 'Called ' + func.__qualname__
                 if params:
+                    if masked_variables:
+                        for key in params.keys():
+                            if key in masked_variables:
+                                params[key] = '********'
                     before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=3, unpicklable=False)
                 self.log_method(func_obj=func, msg=before_string, level=level, reference_lastlineno=False)
 
@@ -688,8 +692,8 @@ class Logger:
             else:
                 file_text_color = file_text_color.colors.console
 
-            file_text = '{c}File "{f}", line {l}{e}'.format(
-                c=file_text_color, f=filename, l=lineno, e=console_log_color(0, 0, 0)
+            file_text = '{color}File "{path}", line {lineno}{end}'.format(
+                color=file_text_color, path=path, lineno=lineno, end=console_log_color(0, 0, 0)
             )
             print(file_text + str(msg))
 

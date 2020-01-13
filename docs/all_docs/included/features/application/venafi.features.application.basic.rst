@@ -1,7 +1,7 @@
-Workflow
-========
+Basic
+=====
 
-.. automodule:: venafi.features.workflow
+.. autoclass:: venafi.features.application.Basic
    :members:
    :undoc-members:
    :show-inheritance:

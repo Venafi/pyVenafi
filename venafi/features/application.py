@@ -7,10 +7,22 @@ class _ApplicationBase(FeatureBase):
         super().__init__(auth=auth)
 
     def delete(self, application_dn: str):
+        """
+        Deletes an Application object.
+
+        Args:
+            application_dn: Absolute path to the Application object.
+        """
         self._secret_store_delete(object_dn=application_dn)
         self._config_delete(object_dn=application_dn)
 
     def disable(self, application_dn: str):
+        """
+        Disables all processing and provisioning of the application.
+
+        Args:
+            application_dn:  Absolute path to the Application object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -23,6 +35,12 @@ class _ApplicationBase(FeatureBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def enable(self, application_dn: str):
+        """
+        Enables all processing and provisioning of the application.
+
+        Args:
+            application_dn:  Absolute path to the Application object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -37,6 +55,15 @@ class _ApplicationBase(FeatureBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def get_associated_certificate(self, application_dn: str):
+        """
+        Returns the Certificate object details associated to the Application object.
+
+        Args:
+            application_dn:  Absolute path to the Application object.
+
+        Returns:
+            Config Object of the certificate object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -52,6 +79,15 @@ class _ApplicationBase(FeatureBase):
         return self._auth.websdk.Config.IsValid.post(object_dn=certificate_dn).object
 
     def get_stage(self, application_dn: str):
+        """
+        Returns the current processing stage of the application object.
+
+        Args:
+            application_dn: Absolute path to the Application object.
+
+        Returns:
+            The current stage if it exists. Otherwise, returns ``None``.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -63,6 +99,15 @@ class _ApplicationBase(FeatureBase):
         return int(result[0]) if result else None
 
     def get_status(self, application_dn: str):
+        """
+        Returns the current processing status of the application object.
+
+        Args:
+            application_dn: Absolute path to the Application object.
+
+        Returns:
+            The current status if it exists. Otherwise, returns ``None``.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 

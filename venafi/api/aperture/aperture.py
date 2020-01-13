@@ -4,13 +4,13 @@ from venafi.api.aperture.endpoints.users import _Users
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 
 
-@logger.wrap(LogLevels.medium.level)
 class Aperture:
     """
     Initializes an Aperture session via username/password. Certificate authentication is not
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
+    @logger.wrap(LogLevels.medium.level, masked_variables=['password'])
     def __init__(self, host: str, username: str, password: str):
         """
         Args:

@@ -1,7 +1,7 @@
-Folders
-=======
+PEM
+===
 
-.. automodule:: venafi.features.folder
+.. autoclass:: venafi.features.application.PEM
    :members:
    :undoc-members:
    :show-inheritance:

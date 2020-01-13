@@ -380,4 +380,3 @@ class UsernamePasswordCredential(_CredentialBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
         return response.object
-

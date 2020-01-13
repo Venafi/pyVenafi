@@ -52,10 +52,10 @@ class AdaptableCA(_CertificateAuthorityBase):
         attributes = attributes or {}
         attributes.update({
             CertificateAuthorityAttributes.Adaptable.interoperability_script: powershell_script,
-            CertificateAuthorityAttributes.Adaptable.credential: username_credential_dn,
+            CertificateAuthorityAttributes.credential: username_credential_dn,
             CertificateAuthorityAttributes.Adaptable.certificate_credential: certificate_credential_dn,
             CertificateAuthorityAttributes.Adaptable.secondary_credential: secondary_credential_dn,
-            CertificateAuthorityAttributes.Adaptable.driver_name: 'caadaptable'
+            CertificateAuthorityAttributes.driver_name: 'caadaptable'
         })
         return self._config_create(
             name=name,
@@ -93,11 +93,11 @@ class MSCA(_CertificateAuthorityBase):
         """
         attributes = attributes or {}
         attributes.update({
-            CertificateAuthorityAttributes.MSCA.host: hostname,
+            CertificateAuthorityAttributes.host: hostname,
             CertificateAuthorityAttributes.MSCA.given_name: service_name,
-            CertificateAuthorityAttributes.MSCA.credential: credential_dn,
-            CertificateAuthorityAttributes.MSCA.template: template,
-            CertificateAuthorityAttributes.MSCA.driver_name: 'camicrosoft'
+            CertificateAuthorityAttributes.credential: credential_dn,
+            CertificateAuthorityAttributes.template: template,
+            CertificateAuthorityAttributes.driver_name: 'camicrosoft'
         })
         return self._config_create(
             name=name,
@@ -130,7 +130,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
         """
         attributes = attributes or {}
         attributes.update({
-            CertificateAuthorityAttributes.SelfSigned.driver_name: 'caselfsigned'
+            CertificateAuthorityAttributes.driver_name: 'caselfsigned'
         })
         return self._config_create(
             name=name,

@@ -1,7 +1,7 @@
-Attributes
-==========
+Tealeaf PCA
+===========
 
-.. automodule:: venafi.features.attributes
+.. autoclass:: venafi.features.application.TealeafPCA
    :members:
    :undoc-members:
    :show-inheritance:

@@ -274,6 +274,7 @@ class API:
             level=LogLevels.low.level
         )
         self._api_obj.re_authenticate()
+        self._session = self._api_obj._session
 
     def _log_rest_call(self, data: dict = None):
         """

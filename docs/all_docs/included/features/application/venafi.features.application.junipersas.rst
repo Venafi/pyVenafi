@@ -1,7 +1,7 @@
-Devices
-=======
+Juniper SAS
+===========
 
-.. automodule:: venafi.features.device
+.. autoclass:: venafi.features.application.JuniperSAS
    :members:
    :undoc-members:
    :show-inheritance:

@@ -12,6 +12,7 @@ from venafi.features.credentials import AmazonCredential, CertificateCredential,
 from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
 from venafi.features.identity import User, Group, IdentityClassNames, IdentityAttributes, IdentityAttributeValues
+from venafi.features.permissions import Permissions
 from venafi.features.workflow import ResultCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 
@@ -292,6 +293,7 @@ class Features:
         self._device = None
         self._folder = None
         self._identity = None
+        self._permissions = None
         self._workflow = None
 
     @property
@@ -333,6 +335,11 @@ class Features:
     def identity(self) -> _Identity:
         self._identity = self._identity or _Identity(self._auth)
         return self._identity
+
+    @property
+    def permissions(self) -> Permissions:
+        self._permissions = self._permissions or Permissions(self._auth)
+        return self._permissions
 
     @property
     def workflow(self) -> _Workflow:

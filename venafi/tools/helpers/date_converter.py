@@ -2,10 +2,6 @@ from datetime import datetime, timezone, timedelta
 from dateutil.parser import parse
 
 
-def to_date_string():
-    pass
-
-
 def from_date_string(date_string: str, is_str_format: bool = False) -> datetime:
     if 'Date' in date_string:
         date_as_num = ''.join([c for c in date_string if c.isnumeric() or c == '+'])
@@ -27,7 +23,3 @@ def from_date_string(date_string: str, is_str_format: bool = False) -> datetime:
 
     else:
         return parse(date_string)
-
-
-date = from_date_string('PT3H28M57.680125S')
-print(date)

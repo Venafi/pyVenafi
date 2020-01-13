@@ -11,6 +11,12 @@ class _WorkflowBase(FeatureBase):
         super().__init__(auth=auth)
 
     def delete(self, workflow_dn: str):
+        """
+        Deletes a workflow.
+
+        Args:
+            workflow_dn: Absolute path to the workflow object.
+        """
         self._secret_store_delete(object_dn=workflow_dn)
         self._config_delete(object_dn=workflow_dn)
 
@@ -66,6 +72,17 @@ class ResultCode(FeatureBase):
         self._workflow_dn = r'\VED\Workflow Tickets'
 
     def create(self, code: int, name: str, description: str):
+        """
+        Creates a workflow result code.
+
+        Args:
+            code: An integer code.
+            name: Name of the result code.
+            description: Purpose of the result code.
+
+        Returns:
+            List of ``code``, ``name``, and ``description``.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -79,6 +96,15 @@ class ResultCode(FeatureBase):
         return [code, name, description]
 
     def delete(self, code: int, name: str = None):
+        """
+        Deletes a result code. ``name`` is not required, but when supplied, in the
+        event that multiple codes exist with the same integer value, only the ones
+        having ``name`` will be deleted.
+
+        Args:
+            code: An integer code.
+            name: Name of the result code.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -108,6 +134,31 @@ class AdaptableWorkflow(_WorkflowBase):
 
     def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_hash: str,
                approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False):
+        """
+        Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
+        located on the TPP server(s) that will process this workflow. The ``powershell_script_hash`` is the Base64 has of
+        the SHA256 hash of the UTF-32LE-encoded PowerShell script. Without the PowerShell script hash TPP cannot trust using
+        the Adaptable Workflow until the hash is verified.
+
+        If a list of user GUIDS, or prefixed universal GUIDS, is provided, the will be added to the workflow as dedicated
+        approvers of the workflow. If the approvers should come from the PowerShell script, do not supply this parameter.
+        Instead, set ``use_approvers_from_powershell_script = True``. If the approvers should come from the object requiring
+        the workflow, such as the certificate object, then do not supply ``approver_guids`` or
+        ``use_approvers_from_powershell_script``.
+
+        Args:
+            name: Name of the workflow object.
+            parent_folder_dn: Absolute path to the parent folder of the workflow object.
+            stage: One of the valid stages that represent the certificate lifecycle.
+            powershell_script_name: Name (not path) of the actual PowerShell script on the TPP server.
+            powershell_script_hash: Base64 hash of the SHA256 has of the UTF-32LE-encoded PowerShell script.
+            approver_guids: List of prefixed universal GUIDS for each approver identity.
+            reason_code: Integer reason code.
+            use_approvers_from_powershell_script: If ``True`` and no ``approver_guids`` is supplied, then set the
+                workflow to use the approvers defined by the script.
+        Returns:
+            Config Object of the workflow.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -154,6 +205,33 @@ class StandardWorkflow(_WorkflowBase):
 
     def create(self, name: str, parent_folder_dn: str, stage: int, injection_command: str = None, application_class_name: str = None,
                approver_guids: List[str] = None, macro: str = None, reason_code: int = None):
+        """
+        Creates a Standard Workflow object.
+
+        TPP requires that one of ``injection_command`` or ``approver_guids`` be supplied.
+
+        If a list of user GUIDS, or prefixed universal GUIDS, is provided, the will be added to the workflow as dedicated
+        approvers of the workflow. If the approvers should come from the object requiring the workflow, such as the certificate
+        object, then do not supply ``approver_guids``. If the approvers come from a TPP Macro, then supply ``macro`` with the
+        desired macro.
+
+        If an ``injection_command`` is supplied, then that command will be invoked during the workflow.
+
+        If an ``application_class_name`` is supplied, then the workflow will only apply to application objects of this class.
+        Otherwise all applications are subject to this workflow.
+
+        Args:
+            name: Name of the workflow object.
+            parent_folder_dn: Absolute path to the parent folder of the workflow object.
+            stage: One of the valid stages that represent the certificate lifecycle.
+            injection_command: Command to be invoked on the target application.
+            application_class_name: Application Class Name to trigger this workflow.
+            approver_guids: List of prefixed universal GUIDS for each approver identity.
+            macro: TPP Approver Macro.
+            reason_code: Integer reason code.
+        Returns:
+            Config Object of the workflow.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -189,6 +267,19 @@ class Ticket(FeatureBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
     def create(self, object_dn: str, workflow_dn: str, approver_guids: List[str], reason: str, user_data: str = None):
+        """
+        Creates a workflow ticket on ``object_dn`` if the object is in a state to received a workflow ticket.
+
+        Args:
+            object_dn: Absolute path to the object requiring a workflow ticket.
+            workflow_dn: Absolute path to the Workflow object DN that blocks the workflow.
+            approver_guids: List of approver identities by prefixed universal GUID.
+            reason: Integer reason code.
+            user_data: User data.
+
+        Returns:
+            Workflow ticket name.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -205,6 +296,12 @@ class Ticket(FeatureBase):
         return response.guid
 
     def delete(self, ticket_guid: str):
+        """
+        Deletes a workflow ticket.
+
+        Args:
+            ticket_guid: Name of the workflow ticket.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -212,6 +309,15 @@ class Ticket(FeatureBase):
         self._validate_result_code(result)
 
     def details(self, ticket_guid: str):
+        """
+        Returns the details of a ticket request.
+
+        Args:
+            ticket_guid: Name of the workflow ticket.
+
+        Returns:
+            Ticket Details object.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -220,6 +326,17 @@ class Ticket(FeatureBase):
         return response.details
 
     def enumerate(self, object_dn: str = None, user_data: str = None):
+        """
+        Enumerates all tickets issued to a particular ``object_dn``.
+
+        Args:
+            object_dn: Absolute path to the object blocked by a workflow.
+            user_data: The string to filter results using the User Data attribute of the
+                workflow ticket.
+
+        Returns:
+            List of workflow names.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -231,6 +348,15 @@ class Ticket(FeatureBase):
         return response.guids
 
     def exists(self, ticket_guid: str):
+        """
+        Returns ``True`` when a particular workflow exists, otherwise ``False``.
+
+        Args:
+            ticket_guid: Name of the workflow ticket.
+
+        Returns:
+            ``True`` when a particular workflow exists, otherwise ``False``.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -238,6 +364,15 @@ class Ticket(FeatureBase):
         return result.code == 1
 
     def status(self, ticket_guid: str):
+        """
+        Returns the current status of a workflow ticket.
+
+        Args:
+            ticket_guid: Name of the workflow ticket.
+
+        Returns:
+            The current status of a workflow ticket.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -247,6 +382,17 @@ class Ticket(FeatureBase):
 
     def update_status(self, ticket_guid: str, status: str, explanation: str = None, scheduled_start: datetime = None,
                       scheduled_stop: datetime = None):
+        """
+        Updates the status of a workflow ticket with the optional explanations and scheduled approvals. Marking a
+        ticket as "Approved" will automatically delete the ticket.
+
+        Args:
+            ticket_guid: Name of the workflow ticket.
+            status: The new status of the workflow ticket.
+            explanation: Reason for the new status.
+            scheduled_start: Date/time to continue the approval process.
+            scheduled_stop:  Date/time to expire the approval process.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 

@@ -1,7 +1,7 @@
-Certificates
-============
+CAPI
+====
 
-.. automodule:: venafi.features.certificate
+.. autoclass:: venafi.features.application.CAPI
    :members:
    :undoc-members:
    :show-inheritance:
