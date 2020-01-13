@@ -13,7 +13,7 @@ from tempfile import NamedTemporaryFile
 from venafi.logger import logger
 from venafi.tools.logger.logger import LOG_DIR, LOG_FILENAME
 from sql.spinDB import SPIN
-
+from pathlib import Path
 
 GLOBAL_TIMESTAMP = time.strftime('%Y%m%d%H%M')
 
@@ -37,18 +37,38 @@ class TestMetaData:
 
 class FTPServer:
     def __init__(self, ftp_server):
-        self.server = ftp_server['192.168.7.148',]
-        self.username = ftp_server['yoda'],
+        self.server = ftp_server['192.168.7.148']
+        self.username = ftp_server['yoda']
         self.password = ftp_server['passw0rd']
 
     @staticmethod
     def send_file(test_html: str):
         session = ftplib.FTP(host='192.168.7.148', user='yoda', passwd='passw0rd')
-        # file = open(test_html, 'rb')
-        # command = 'STOR ' + test_html
-        # print(command)
+        # We need to change to the correct directory, if it's not there, create it
+        # check to see if we can get into the directory first
+        today = datetime.now()
+        if (str(today.year)) in session.nlst():
+            session.cwd(str(today.year))
+        else:
+            session.mkd(str(today.year))
+            session.cwd(str(today.year))
+
+        if (str(today.month)) in session.nlst():
+            session.cwd(str(today.month))
+        else:
+            session.mkd(str(today.month))
+            session.cwd(str(today.month))
+
+        if (str(today.day)) in session.nlst():
+            session.cwd(str(today.day))
+        else:
+            session.mkd(str(today.day))
+            session.cwd(str(today.day))
+
+        # We should be in the directory we want
+        print(session.pwd())
+        # push the file
         session.storbinary('STOR '+test_html, open(test_html, 'rb'))
-        # file.close()
         session.quit()
 
 
@@ -186,6 +206,15 @@ if __name__ == '__main__':
         temp.flush()
         # print(json.dumps(metadata, indent=4))
 
+        # Run this for each test we make
+        # We will change to the directory that has the logs in it
+        os.chdir(new_log_dir)
+        # then we get the file name that we created
+        html_file = Path(new_logfile)
+        file_to_push = html_file.name
+        # We will push this file
+        FTPServer.send_file(test_html=file_to_push)
+
     json_output = []
     with open(temp.name, 'r') as f:
         for line in f.readlines():
@@ -233,22 +262,7 @@ if __name__ == '__main__':
             time_lapse=metadata.lapse
         ))
 
-    print(new_logfile)
-    print('ha ha')
-    FTPServer.send_file(test_html=new_logfile)
-
     temp.close()
 
 # TODO: Need to populate the TestAnnotations, TestAnnotationLabels, TestAnnotationValues and TestResultValues
-# Label IDs -
-# owner = 1
-# feature = 2
-# result_values =
-# passed = 1
-# failed = 2
-# skipped = 3
 
-# Annotation IDs
-#
-
-# FTP up the HTML file to the server -
