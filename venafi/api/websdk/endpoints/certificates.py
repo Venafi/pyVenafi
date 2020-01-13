@@ -246,12 +246,12 @@ class _Certificates(API):
                 )
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def file(self):
                 return [Certificate.File(f) for f in self._from_json(key='File')]
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def ssltls(self):
                 return [Certificate.SslTls(s) for s in self._from_json(key='SslTls')]
 

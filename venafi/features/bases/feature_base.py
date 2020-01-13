@@ -49,6 +49,10 @@ class FeatureBase:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     @staticmethod
+    def _log_warning_message(msg: str):
+        logger.log(msg=msg, level=LogLevels.critical.level, prev_frames=2)
+
+    @staticmethod
     def _log_not_implemented_warning(api_type):
         logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.medium.level, prev_frames=2)
 

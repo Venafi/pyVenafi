@@ -46,6 +46,9 @@ class LogLevel:
 
         self.colors = Colors()
 
+    def __repr__(self):
+        return str(self.level)
+
     def as_dictionary(self):
         log_level = {}
         for key, value in vars(self).items():  # type: str, LogLevel

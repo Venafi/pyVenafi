@@ -727,7 +727,7 @@ class _Config:
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', return_on_key_error=list)
+            return self._from_json(key='Values', return_on_error=list)
 
         @property
         @json_response_property()
@@ -794,7 +794,7 @@ class _Config:
         @property
         @json_response_property()
         def values(self) -> List[str]:
-            return self._from_json(key='Values', return_on_key_error=list)
+            return self._from_json(key='Values', return_on_error=list)
 
         @property
         @json_response_property()

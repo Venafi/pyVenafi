@@ -4,4 +4,4 @@ class SubSystemTypes:
     config = 'Config'
     rights = 'Rights'
     secret_store_config = 'SecretStoreconfig'
-    websdk = 'åWebSDK'
+    websdk = 'WebSDK'

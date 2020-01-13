@@ -5,13 +5,13 @@ from requests import Response
 from venafi.logger import logger, LogLevels
 
 
-def json_response_property(on_204=None):
+def json_response_property(return_on_204: type = None):
     """
     This function serves as a decorator for all API response objects. Each
     response property must be validated before returning the object. This
     function depends upon the API class.
 
-    The `on_204` parameter suggests what data type is expected to be
+    The ``on_204`` parameter suggests what data type is expected to be
     returned when the response status code is valid, but has no content.
     Since there is no content to return, an empty object representing that
     object will be returned instead. For example,
@@ -33,7 +33,7 @@ def json_response_property(on_204=None):
             return self._from_json(key='Value2')
 
     Args:
-        on_204: type
+        return_on_204: type
 
     Returns: Key of response content returned by TPP.
 
@@ -41,12 +41,12 @@ def json_response_property(on_204=None):
     def pre_validation(func):
         def wrap(self, *args, **kwargs):
             if not self._validated:
-                    self._validate()
-            if on_204 and self.json_response.status_code == 204:
-                if callable(on_204):
-                    return on_204()
+                self._validate()
+            if return_on_204 and self.json_response.status_code == 204:
+                if callable(return_on_204):
+                    return return_on_204()
                 else:
-                    return on_204
+                    return return_on_204
             return func(self, *args, **kwargs)
         return wrap
     return pre_validation
@@ -69,7 +69,7 @@ class API:
             url: This is the URL extension from the base URL.
             valid_return_codes: A list of valid status codes, such as [200, 204].
         """
-        self._api_obj = api_obj
+        self._api_obj = api_obj  # type:
         self._session = api_obj._session  # type: Session
         self._api_type = api_obj.__class__.__name__.lower()
         self._url = self._api_obj._base_url + url
@@ -90,13 +90,25 @@ class API:
 
     def assert_valid_response(self):
         """
-        Use this method when no response property is available after an API call. This simply
-        asserts that a valid response status code was returned by TPP.
+        Use this method when no response property is available after an API call or to simply
+        throw an error if the return code is invalid. This simply asserts that a valid response
+        status code was returned by TPP.
         """
         if not self._validated:
             self._validate()
 
-    def _from_json(self, key: str = None, error_key: str = None, return_on_key_error: type = None):
+    def is_valid_response(self):
+        """
+        Returns ``True`` when the response is valid, meaning a valid return code was returned by
+        TPP, otherwise ``False``.
+        """
+        try:
+            self._validate()
+            return True
+        except InvalidResponseError:
+            return False
+
+    def _from_json(self, key: str = None, error_key: str = None, return_on_error: type = None):
         """
         Returns the particular key within the response dictionary. If no key is provided, then
         the full response is returned as a dictionary.
@@ -110,6 +122,8 @@ class API:
         Args:
             key: Key within the top level of the response content.
             error_key: Error key within the top level of the response content.
+            return_on_error: If an error occurs in retrieving content or accessing a key, this
+                type will be returned instead of throwing an error.
 
         Returns:
             If a key is provided, returns the response content at that key. Otherwise, the full
@@ -118,6 +132,8 @@ class API:
         try:
             result = self.json_response.json()
         except json.decoder.JSONDecodeError as e:
+            if return_on_error:
+                return return_on_error()
             raise InvalidResponseError(f'{self.json_response.url} return no content. '
                                        f'Got status code {self.json_response.status_code}.')
         if error_key and error_key in result.keys():
@@ -128,8 +144,8 @@ class API:
             if key.lower() == k.lower():
                 return result[k]
 
-        if return_on_key_error:
-            return return_on_key_error()
+        if return_on_error:
+            return return_on_error()
         raise KeyError(f'{key} was not returned by TPP.')
 
     def _is_api_key_invalid(self, response: Response):
@@ -163,7 +179,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call()
-        response = self._api_obj._session.delete()
+        response = self._session.delete(url=self._url)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
@@ -183,7 +199,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(data=params)
-        response = self._api_obj._session.get(url=self._url, params=params)
+        response = self._session.get(url=self._url, params=params)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
@@ -203,7 +219,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(data=data)
-        response = self._api_obj._session.post(url=self._url, data=data)
+        response = self._session.post(url=self._url, data=data)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
@@ -223,7 +239,7 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(data=data)
-        response = self._api_obj._session.put(url=self._url, data=data)
+        response = self._session.put(url=self._url, data=data)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()

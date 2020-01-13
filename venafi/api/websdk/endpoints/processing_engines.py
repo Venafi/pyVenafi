@@ -31,17 +31,17 @@ class _ProcessingEngines(API):
                 super().__init__(api_obj=websdk_obj, url=f'/ProcessingEngines/Engine/{guid}', valid_return_codes=[200, 201, 204])
 
             @property
-            @json_response_property(on_204=str)
+            @json_response_property(return_on_204=str)
             def added_count(self) -> int:
                 return self._from_json('AddedCount')
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def errors(self) -> List[str]:
                 return self._from_json('Errors')
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def folders(self):
                 return [ProcessingEngines.Folder(folder) for folder in self._from_json('Folders')][0]
 
@@ -70,7 +70,7 @@ class _ProcessingEngines(API):
                 self._folder_guid = guid
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def engines(self):
                 return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
 
