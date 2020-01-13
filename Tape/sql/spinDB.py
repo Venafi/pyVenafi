@@ -1,159 +1,141 @@
-from sql.sqlHelper import SQLCommandExecutor, SQLColumn, SQLCommandBuilder, quote
+from sql.sqlHelper import SQLCommandExecutor
+from datetime import datetime
 
 
-class SPIN:
-    executor = SQLCommandExecutor(
-        server='192.168.7.148',
-        port='1433',
-        database='SPIN',
-        username='sa',
-        password='newPassw0rd!'
-    )
-    # self.tableName = self.__class__.__name__
+class SPIN(SQLCommandExecutor):
+    def __init__(self):
+        super().__init__(
+            server='192.168.7.148',
+            port='1433',
+            database='SPIN',
+            username='sa',
+            password='newPassw0rd!'
+        )
 
-    def query(self, qry, print_qry=False):
-        if print_qry:
-            print(qry)
-        self._cmd = qry
-        return self
+    def query(self, command: str):
+        self._cmd = command
+        return self.execute()
 
     class TestInfo:
         tableName = 'TestInfo'
-        testId = SQLColumn(table=tableName, name="testId")
-        testGuid = SQLColumn(tableName, "testGuid")
-        testName = SQLColumn(tableName, "testName")
-        filePath = SQLColumn(tableName, "filePath")
-        created = SQLColumn(tableName, "created")
-        lastRun = SQLColumn(tableName, "lastRun")
+        testId = f"{tableName}.testId"
+        testGuid = f"{tableName}.testGuid"
+        testName = f"{tableName}.testName"
+        filePath = f"{tableName}.filePath"
+        created = f"{tableName}.created"
+        lastRun = f"{tableName}.lastRun"
 
-        def insert(self):
-            pass
+        @classmethod
+        def fetch(cls, guid: str):
+            return f"""
+            SELECT 
+                {cls.testId} AS '{cls.testId}',
+                {cls.testGuid} AS '{cls.testGuid}',
+                {cls.filePath} AS '{cls.filePath}',
+                {cls.lastRun} AS '{cls.lastRun}',
+                {cls.created} AS '{cls.created}',
+                {cls.testName} AS '{cls.testName}'
+            FROM {cls.tableName}
+            WHERE {cls.testGuid} = '{guid}'
+        """
+
+        @classmethod
+        def insert(cls, test_guid: str, test_name: str, file_path: str, created: datetime, last_run: datetime):
+            return f"""
+                INSERT INTO {cls.tableName} 
+                (
+                    {cls.testGuid},
+                    {cls.testName},
+                    {cls.filePath},
+                    {cls.lastRun},
+                    {cls.created}
+                ) 
+                VALUES 
+                (
+                    '{test_guid}',
+                    '{test_name}',
+                    '{file_path}',
+                    '{created.strftime('%Y-%m-%d %H:%M:%S')}',
+                    '{last_run.strftime('%Y-%m-%d %H:%M:%S')}'
+                )
+            """
 
     class TestResults:
         tableName = 'TestResults'
-        testId = SQLColumn(table=tableName, name="testId")
-        testResult = SQLColumn(tableName, name="testResult")
-        logFile = SQLColumn(tableName, name="logFile")
-        consecutiveFailures = SQLColumn(tableName, name="consecutiveFailures")
-        runDate = SQLColumn(tableName, name="runDate")
-        timeLapse = SQLColumn(tableName, name="timeLapse")
+        testId = f"{tableName}.testId"
+        testResult = f"{tableName}.testResult"
+        logFile = f"{tableName}.logFile"
+        consecutiveFailures = f"{tableName}.consecutiveFailures"
+        runDate = f"{tableName}.runDate"
+        timeLapse = f"{tableName}.timeLapse"
 
-        def insert(self, testId: str, result: str, logFile: str, consecutiveFailures: str, runDate: str, timeLapse: str):
-            results = SPIN.query(
-                SQLCommandBuilder.InsertInto(
-                    self.tableName
-                ).Values([
-                    testId,
-                    result,
-                    logFile,
-                    consecutiveFailures,
-                    runDate,
-                    timeLapse
-                ]).sqltext
-            ).execute()
+        @classmethod
+        def fetch_most_recent(cls, test_id: int):
+            return f"""
+                SELECT 
+                    {cls.testId} AS ' {cls.testId}',
+                    {cls.testResult} AS ' {cls.testResult}',
+                    {cls.logFile} AS ' {cls.logFile}',
+                    {cls.consecutiveFailures} AS ' {cls.consecutiveFailures}',
+                    {cls.runDate} AS ' {cls.runDate}',
+                    {cls.timeLapse} AS ' {cls.timeLapse}'
+                FROM {cls.tableName}
+                WHERE {cls.testId} = {test_id}
+                ORDER BY {cls.runDate} DESC
+            """
 
-    # @staticmethod
-    # def insert_results(testId: str, result: str, logFile: str, consecutiveFailures: str, runDate: str, timeLapse: str):
-    #     spin = SPIN()
-    #     ops = SQLCommandBuilder()
-    #     testResultsTable = TestResults()
-    #
-    #     # testId = '600'
-    #     # result = '1'
-    #     # logFile = 'log_file'
-    #     # consecutiveFailures = '0'
-    #     # runDate = '2019-12-12 13:41:53.743'
-    #     # timeLapse = '3'
-    #     results = spin.query(
-    #         ops.InsertInto(
-    #             testResultsTable.tableName
-    #         ).Values([
-    #             testId,
-    #             result,
-    #             logFile,
-    #             consecutiveFailures,
-    #             runDate,
-    #             timeLapse
-    #         ]).sqltext
-    #     ).execute()
+        @classmethod
+        def insert(cls, test_id: int,  test_result: int, log_file: str, consecutive_fails: int,
+                   run_date: datetime, time_lapse: int):
+            return f"""
+                INSERT INTO {cls.tableName} 
+                (
+                    {cls.testId},
+                    {cls.testResult},
+                    {cls.logFile},
+                    {cls.consecutiveFailures},
+                    {cls.runDate},
+                    {cls.timeLapse}
+                )
+                VALUES
+                (
+                    {test_id},
+                    {test_result},
+                    '{log_file}',
+                    {consecutive_fails},
+                    '{run_date.strftime('%Y-%m-%d %H:%M:%S')}',
+                    {time_lapse}
+                )
+            """
 
+    class TestAnnotations:
+        tableName = 'TestAnnotations'
+        testId = f"{tableName}.testId"
+        labelId = f"{tableName}.labelId"
+        valueId = f"{tableName}.valueId"
 
-class TestAnnotations(SPIN):
-    def __init__(self):
-        super().__init__()
-        self.testId = SQLColumn(table=self.tableName, name="testId")
-        self.labelId = SQLColumn(table=self.tableName, name="labelId")
-        self.valueId = SQLColumn(table=self.tableName, name="valueId")
+    class TestAnnotationLabels:
+        tableName = 'TestAnnotationLabels'
+        labelId = f"{tableName}.labelId"
+        annotationLabel = f"{tableName}.annotationLabel"
 
+    class TestAnnotationValues:
+        tableName = 'TestAnnotationValues'
+        valueId = f"{tableName}.valueId"
+        annotationValue = f"{tableName}.annotationValue"
 
-class TestAnnotationLabels(SPIN):
-    def __init__(self):
-        super().__init__()
-        self.labelId = SQLColumn(table=self.tableName, name="labelId")
-        self.annotationLabel = SQLColumn(table=self.tableName, name="annotationLabel")
-
-
-class TestAnnotationValues(SPIN):
-    def __init__(self):
-        super().__init__()
-        self.valueId = SQLColumn(table=self.tableName, name="valueId")
-        self.annotationValue = SQLColumn(table=self.tableName, name="annotationValue")
-
-
-class TestResultValues(SPIN):
-    def __init__(self):
-        super().__init__()
-        self.resultId = SQLColumn(table=self.tableName, name="resultId")
-        self.resultValue = SQLColumn(table=self.tableName, name="resultValue")
+    class TestResultValues:
+        tableName = 'TestResultValues'
+        resultId = f"{tableName}.resultId"
+        resultValue = f"{tableName}.resultValue"
 
 
-def _SqlTablesTest():
+def test_it():
     spin = SPIN()
-    testInfoTable = TestInfo()
-    ops = SQLCommandBuilder()
-
-    results = spin.query(
-        ops.Select([
-            testInfoTable.testId.aliased_name,
-            testInfoTable.testName.aliased_name,
-            testInfoTable.lastRun
-        ]).From([
-            testInfoTable.tableName
-        ]).Where([
-            testInfoTable.testId.GreaterThanEquals(599)
-        ]).sqltext
-    ).execute()
-
-    print(results)
+    result = spin.query(spin.TestInfo.fetch('guid_0'))
+    print(result)
 
 
-def _insertTestResult(testId: str, result: str, logFile: str, consecutiveFailures: str, runDate: str, timeLapse: str):
-    spin = SPIN()
-    ops = SQLCommandBuilder()
-    testResultsTable = TestResults()
-
-    # testId = '600'
-    # result = '1'
-    # logFile = 'log_file'
-    # consecutiveFailures = '0'
-    # runDate = '2019-12-12 13:41:53.743'
-    # timeLapse = '3'
-    results = spin.query(
-        ops.InsertInto(
-            testResultsTable.tableName
-        ).Values([
-            quote(testId),
-            quote(result),
-            quote(logFile),
-            quote(consecutiveFailures),
-            quote(runDate),
-            quote(timeLapse)
-        ]).sqltext
-    ).execute()
-
-
-#
-# if __name__ == '__main__':
-# #     _SqlTablesTest()
-#     _insertTestResult()
+if __name__ == '__main__':
+    test_it()
 
