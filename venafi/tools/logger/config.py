@@ -4,7 +4,7 @@ from venafi.tools.logger.log_resources import LogLevels, TextStyle, ForegroundCo
 
 # >>>>>>>>>> LOGGING VARIABLES <<<<<<<<<< #
 LOGGING_ENABLED = eval(str(os.getenv('VENAFI_PY_LOGGING_ENABLED', True)).title())
-LOG_DIR = os.getenv('VENAFI_PY_LOG_DIR', '/Users/tim.gunn/spi/spi/Tape/logs')
+LOG_DIR = os.getenv('VENAFI_PY_LOG_DIR', '')
 LOG_FILENAME = os.getenv('VENAFI_PY_LOG_FILENAME', 'venafi_py_logfile')
 LOG_LEVEL = int(os.getenv('VENAFI_PY_LOG_LEVEL', LogLevels.api))
 LOG_TO_JSON = eval(str(os.getenv('VENAFI_PY_LOG_TO_JSON', True)).title())  # If this is False, then OPEN_HTML_ON_FINISH will not be evaluated.
