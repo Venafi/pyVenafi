@@ -142,10 +142,10 @@ class Permissions(FeatureBase):
         return principals
 
     def update(self, object_dn: str, identity_prefixed_universal: str, is_associate_allowed: bool = None, is_create_allowed: bool = None,
-            is_delete_allowed: bool = None, is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
-            is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
-            is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
-            is_write_allowed: bool = None):
+               is_delete_allowed: bool = None, is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
+               is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
+               is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
+               is_write_allowed: bool = None):
         """
         Grants the specified permissions to a user or group identity.
 

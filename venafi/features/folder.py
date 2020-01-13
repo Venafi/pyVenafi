@@ -148,7 +148,6 @@ class Folder(FeatureBase):
 
         Returns:
             Config object representing the folder.
-
         """
         if self._auth.preference == ApiPreferences.aperture:
             return self._auth.aperture.ConfigObjects.Policies.post(name=name, container=parent_folder_dn).object
