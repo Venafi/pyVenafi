@@ -65,8 +65,6 @@ class FTPServer:
             session.mkd(str(today.day))
             session.cwd(str(today.day))
 
-        # We should be in the directory we want
-        print(session.pwd())
         # push the file
         session.storbinary('STOR '+test_html, open(test_html, 'rb'))
         session.quit()
@@ -244,6 +242,7 @@ if __name__ == '__main__':
         else:
             new_fails = 0
 
+        # Set the correct value for the results, the db expects and int
         if metadata.result == "passed":
             metadata.result = 1
         elif metadata.result == "failed":
@@ -252,6 +251,10 @@ if __name__ == '__main__':
             metadata.result = 3
         else:
             raise ValueError
+
+        # Set the correct log_file, we need it to match what is on the database
+        today = datetime.now()
+        metadata.log_file = str(today.year) + '/' + str(today.month) + '/' + str(today.day) + '/' + html_file.name
 
         updated_info = spin.query(spin.TestResults.insert(
             test_id=current_test_info['TestInfo.testId'][0],
