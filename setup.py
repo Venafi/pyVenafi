@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='venafi',
-    packages=find_packages(where='./venafi'),
+    packages=find_packages(where='venafi'),
     package_dir={
-      '': './venafi'
+      '': 'venafi'
     },
     description='Venafi Features and API Implementation In Python',
     version='0.1',
@@ -17,5 +17,4 @@ setup(
         'datetime',
         'jsonpickle',
     ],
-    zip_safe=False,
 )
