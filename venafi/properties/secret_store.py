@@ -1,32 +1,35 @@
-class SecretStoreVaultTypes:
-    vault_types = {
-          0: 'None',
-          1: 'Private Key (obsolete, use Vault Type 256, PKCS#8)',
-          2: 'Certificate',
-          4: 'PKCS#12',
-          8: 'Symmetric Key',
-         16: 'State (Obsolete)',
-         32: 'Password',
-         64: 'CSR (obsolete, use Vault Type 512, PKCS#10)',
-        128: 'Blob',
-        256: 'PKCS#8',
-        512: 'PKCS#10',
-        1024: 'File',
-        2048: 'RSA Public Key (obsolete, use Vault Type 4096, Public Key)',
-        4096: 'Public Key',
-        1073741826: 'Archived Certificate',
-        1073741828: 'Archived PKCS#12',
-        1073741832: 'Archived Symmetric Key',
-        1073741840: 'Archived State (Obsolete)',
-        1073741856: 'Archived Password',
-        1073741952: 'Archived Blob',
-        1073742080: 'Archived PKCS#8',
-        1073742336: 'Archived PKCS#10',
-        1073742848: 'Archived File',
-        1073743872: 'Archived RSA Public Key (obsolete, use Vault Type 1073745920, Archived Public Key)',
-        1073745920: 'Archived Public Key'
-    }
-
-
 class Namespaces:
     config = 'config'
+
+
+class KeyNames:
+    software_default = 'Software:Default'
+    null_null = 'Null:Null'
+
+
+class VaultTypes:
+    none = 0
+    private_key = 1
+    certificate = 2
+    pkcs12 = 4
+    symmetric_key = 8
+    state = 16  # Obsolete
+    password = 32
+    csr = 64  # Obsolete: use pkcs10 instead
+    blob = 128
+    pkcs8 = 256
+    pkcs10 = 512
+    file = 1024
+    rsa_public_key = 2048  # Obsolete: use archived_public_key instead
+    public_key = 4096
+    archived_certificate = 1073741826
+    archived_pkcs12 = 1073741828
+    archived_symmetric_key = 1073741832
+    archived_state = 1073741840  # Obsolete
+    archived_password = 1073741856
+    archived_blob = 1073741952
+    archived_pkcs8 = 1073742080
+    archived_pkcs10 = 1073742336
+    archived_file = 1073742848
+    archived_rsa_public_key  = 1073743872  # Obsolete: use archived_public_key instead
+    archived_public_key = 1073745920

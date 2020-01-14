@@ -60,7 +60,7 @@ class _Permissions:
                             super().__init__(
                                 api_obj=websdk_obj,
                                 url=f'/Permissions/Object/{guid}/{ptype}/{pname}/{principal}',
-                                valid_return_codes=[200]
+                                valid_return_codes=[200, 201]
                             )
                             self.Effective = self._Effective(guid=guid, ptype=ptype, pname=pname, principal=principal, websdk_obj=websdk_obj)
 
@@ -82,11 +82,11 @@ class _Permissions:
                             self.json_response = self._get()
                             return self
 
-                        def post(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
-                                 is_manage_permissions_allowed: bool = False, is_policy_write_allowed: bool = False,
-                                 is_private_key_read_allowed: bool = False, is_private_key_write_allowed: bool = False, is_read_allowed: bool = False,
-                                 is_rename_allowed: bool = False, is_revoke_allowed: bool = False, is_view_allowed: bool = False,
-                                 is_write_allowed: bool = False):
+                        def post(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
+                                 is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
+                                 is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
+                                 is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
+                                 is_write_allowed: bool = None):
                             body = {
                                 'IsAssociateAllowed': is_associate_allowed,
                                 'IsCreateAllowed': is_create_allowed,
@@ -105,11 +105,11 @@ class _Permissions:
                             self.json_response = self._post(data=body)
                             return self
 
-                        def put(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
-                                is_manage_permissions_allowed: bool = False, is_policy_write_allowed: bool = False,
-                                is_private_key_read_allowed: bool = False, is_private_key_write_allowed: bool = False, is_read_allowed: bool = False,
-                                is_rename_allowed: bool = False, is_revoke_allowed: bool = False, is_view_allowed: bool = False,
-                                is_write_allowed: bool = False):
+                        def put(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
+                                is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
+                                is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
+                                is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
+                                is_write_allowed: bool = None):
                             body = {
                                 'IsAssociateAllowed': is_associate_allowed,
                                 'IsCreateAllowed': is_create_allowed,
@@ -150,7 +150,7 @@ class _Permissions:
                         super().__init__(
                             api_obj=websdk_obj,
                             url=f'/Permissions/Object/{guid}/{ptype}/{uuid}',
-                            valid_return_codes=[200]
+                            valid_return_codes=[200, 201]
                         )
                         self.Effective = self._Effective(guid=guid, uuid=uuid, websdk_obj=websdk_obj)
 
@@ -172,11 +172,11 @@ class _Permissions:
                         self.json_response = self._get()
                         return self
 
-                    def post(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
-                             is_manage_permissions_allowed: bool = False, is_policy_write_allowed: bool = False,
-                             is_private_key_read_allowed: bool = False, is_private_key_write_allowed: bool = False, is_read_allowed: bool = False,
-                             is_rename_allowed: bool = False, is_revoke_allowed: bool = False, is_view_allowed: bool = False,
-                             is_write_allowed: bool = False):
+                    def post(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
+                             is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
+                             is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
+                             is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
+                             is_write_allowed: bool = None):
                         body = {
                            'IsAssociateAllowed': is_associate_allowed,
                            'IsCreateAllowed': is_create_allowed,
@@ -196,11 +196,11 @@ class _Permissions:
                         
                         return self
 
-                    def put(self, is_associate_allowed: bool = False, is_create_allowed: bool = False, is_delete_allowed: bool = False,
-                             is_manage_permissions_allowed: bool = False, is_policy_write_allowed: bool = False,
-                             is_private_key_read_allowed: bool = False, is_private_key_write_allowed: bool = False, is_read_allowed: bool = False,
-                             is_rename_allowed: bool = False, is_revoke_allowed: bool = False, is_view_allowed: bool = False,
-                             is_write_allowed: bool = False):
+                    def put(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
+                            is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
+                            is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
+                            is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
+                            is_write_allowed: bool = None):
                         body = {
                             'IsAssociateAllowed': is_associate_allowed,
                             'IsCreateAllowed': is_create_allowed,

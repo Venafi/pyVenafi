@@ -31,7 +31,12 @@ class _Identity:
         @property
         @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers')]
+            return [Identity.InvalidMembers(im) for im in self._from_json(key='InvalidMembers', return_on_error=list)]
+
+        @property
+        @json_response_property()
+        def message(self) -> str:
+            return self._from_json(key='Message', return_on_error=str)
 
         def post(self, name: str, members: list = None):
             body = {
@@ -49,21 +54,26 @@ class _Identity:
         @property
         @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers')]
+            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
 
         @property
         @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self._from_json('Members')]
+            return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
-        def post(self, group: dict, members: list, show_members: bool = False):
+        @property
+        @json_response_property()
+        def message(self) -> str:
+            return self._from_json('Message')
+
+        def put(self, group: dict, members: list, show_members: bool = False):
             body = {
                 'Group': group,
                 'Members': members,
                 'ShowMembers': show_members
             }
 
-            self.json_response = self._post(data=body)
+            self.json_response = self._put(data=body)
             return self
 
     class _Browse(API):
@@ -73,7 +83,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, filter: str, limit: int, identity_type: int):
             data = {
@@ -92,7 +102,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict):
             body = {
@@ -109,7 +119,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict, resolve_nested: bool = False):
             body = {
@@ -127,7 +137,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict):
             body = {
@@ -190,12 +200,12 @@ class _Identity:
         @property
         @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers')]
+            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
 
         @property
         @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self._from_json('Members')]
+            return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
         @property
         @json_response_property()

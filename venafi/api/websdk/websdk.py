@@ -1,3 +1,4 @@
+from venafi.logger import logger, LogLevels
 from venafi.api.session import Session
 from venafi.api.websdk.endpoints.authorize import _Authorize
 from venafi.api.websdk.endpoints.certificates import _Certificates
@@ -13,6 +14,7 @@ from venafi.api.websdk.endpoints.metadata import _Metadata
 from venafi.api.websdk.endpoints.permissions import _Permissions
 from venafi.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from venafi.api.websdk.endpoints.revoke import _Revoke
+from venafi.api.websdk.endpoints.rights import _Rights
 from venafi.api.websdk.endpoints.ssh import _SSH
 from venafi.api.websdk.endpoints.system_status import _SystemStatus
 from venafi.api.websdk.endpoints.secret_store import _SecretStore
@@ -26,6 +28,7 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
+    @logger.wrap(LogLevels.medium.level, masked_variables=['password'])
     def __init__(self, host: str, username: str, password: str):
         """
         Args:
@@ -33,22 +36,22 @@ class WebSDK:
             username: Username
             password: Password
         """
-        self.host = host
-        self.username = username
-        self.password = password
+        self._host = host
+        self._username = username
+        self._password = password
 
         # This is used by the endpoints to avoid redundancy.
-        self.base_url = f'https://{host}/vedsdk'
+        self._base_url = f'https://{host}/vedsdk'
 
         # This is used by the endpoints to authorize the API writes.
-        self.session = Session(headers={'Content-Type': 'application/json'})
+        self._session = Session(headers={'Content-Type': 'application/json'})
 
         # Authorize the WebSDK session and store the API token.
         self.Authorize = _Authorize(self)
 
         # Update the authorization header to include the API Key token.
         token = self.Authorize.post(username=username, password=password).token
-        self.session.headers.update(token)
+        self._session.headers.update(token)
 
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
@@ -65,6 +68,7 @@ class WebSDK:
         self.Permissions = _Permissions(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
+        self.Rights = _Rights(self)
         self.SecretStore = _SecretStore(self)
         self.SSH = _SSH(self)
         self.SystemStatus = _SystemStatus(self)
@@ -75,4 +79,4 @@ class WebSDK:
         """
         Performs a re-authentication using the same parameters used to authorize initially.
         """
-        self.__init__(host=self.host, username=self.username, password=self.password)
+        self.__init__(host=self._host, username=self._username, password=self._password)

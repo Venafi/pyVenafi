@@ -1,4 +1,5 @@
-from venafi.properties.resultcodes import ResultCodes
+from typing import List
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class Certificate:
@@ -30,7 +31,7 @@ class Certificate:
                 csr_dict = {}
 
             self.details = Certificate._CSRDetails(csr_dict.get('Details'))
-            self.enrollable = csr_dict.get('Enrollable') # type: bool
+            self.enrollable = csr_dict.get('Enrollable')  # type: bool
 
     class Policy:
         def __init__(self, policy_dict: dict):
@@ -82,8 +83,8 @@ class Certificate:
             self.subject_alt_name_upn = certificate_dict.get('SubjectAltNameUpn')  # type: str
             self.subject_alt_name_uri = certificate_dict.get('SubjectAltNameUri')  # type: str
             self.thumbprint = certificate_dict.get('Thumbprint')  # type: str
-            self.valid_from = certificate_dict.get('ValidFrom')  # type: str
-            self.valid_to = certificate_dict.get('ValidTo')  # type: str
+            self.valid_from = from_date_string(certificate_dict.get('ValidFrom'))
+            self.valid_to = from_date_string(certificate_dict.get('ValidTo'))
 
     class PreviousVersions:
         def __init__(self, prev_vers_dict: dict):
@@ -118,8 +119,8 @@ class Certificate:
             self.subject_alt_name_ip_address = renewal_dict.get('SubjectAltNameIPAddress')  # type: str
             self.subject_alt_name_other_name_upn = renewal_dict.get('SubjectAltNameOtherNameUPN')  # type: str
             self.subject_alt_name_uri = renewal_dict.get('SubjectAltNameURI')  # type: str
-            self.valid_from = renewal_dict.get('ValidFrom')  # type: str
-            self.valid_to = renewal_dict.get('ValidTo')  # type: str
+            self.valid_from = from_date_string(renewal_dict.get('ValidFrom'))
+            self.valid_to = from_date_string(renewal_dict.get('ValidTo'))
 
     class ValidationDetails:
         def __init__(self, validation_dict: dict):
@@ -146,8 +147,8 @@ class Certificate:
                 file_dict = {}
 
             self.installation = file_dict.get('Installation')  # type: str
-            self.performed_on = file_dict.get('PerformedOn')  # type: str
-            self.result = file_dict.get('Result')  # type: list
+            self.performed_on = from_date_string(file_dict.get('PerformedOn'))
+            self.result = file_dict.get('Result')  # type: List[str]
 
     class _SslTlsResult:
         def __init__(self, results_dict: dict):
@@ -165,7 +166,7 @@ class Certificate:
                 bit_mask_dict = {}
 
             self.bitmask = bit_mask_dict.get('BitMask')  # type: int
-            self.values = bit_mask_dict.get('Values')  # type: list
+            self.values = bit_mask_dict.get('Values')  # type: List[str]
 
     class _SANS:
         def __init__(self, sans_dict: dict, api_type: str):
@@ -192,8 +193,8 @@ class Certificate:
             self.serial = x509_dict.get('Serial')  # type: str
             self.subject = x509_dict.get('Subject')  # type: str
             self.thumbprint = x509_dict.get('Thumbprint')  # type: str
-            self.valid_from = x509_dict.get('ValidFrom')  # type: str
-            self.valid_to = x509_dict.get('ValidTo')  # type: str
+            self.valid_from = from_date_string(x509_dict.get('ValidFrom'))
+            self.valid_to = from_date_string(x509_dict.get('ValidTo'))
 
     class _Compliant:
         def __init__(self, comp_dict: dict):

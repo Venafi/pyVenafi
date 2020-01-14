@@ -1,4 +1,4 @@
-from venafi.properties.config import ConfigClass, DeviceAttributes
+from venafi.properties.config import DevicesClassNames, DeviceAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
@@ -25,13 +25,13 @@ class Device(_DeviceBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def create(self, name: str, container: str, hostname: str, credential_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
         Creates a Device object in TPP.
 
         Args:
             name: Name of the device object .
-            container: Absolute path to the parent folder of the device object.
+            parent_folder_dn: Absolute path to the parent folder of the device object.
             hostname: DNS or IP Address of the device.
             credential_dn: Absolute path to the credential object for this device.
             attributes: List of attributes pertaining to the device object.
@@ -40,15 +40,9 @@ class Device(_DeviceBase):
             Config object representing the device.
 
         """
-        attributes = attributes or {}
-        device_attrs = DeviceAttributes.Device
-        attributes.update({
-            device_attrs.host: hostname,
-            device_attrs.credential: credential_dn
-        })
         return self._config_create(
             name=name,
-            container=container,
-            config_class=ConfigClass.device,
+            parent_folder_dn=parent_folder_dn,
+            config_class=DevicesClassNames.device,
             attributes=attributes
         )

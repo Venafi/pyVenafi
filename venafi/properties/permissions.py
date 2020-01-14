@@ -11,3 +11,9 @@ class PermissionParameter:
     is_revoke_allowed = 'IsRevokeAllowed'
     is_view_allowed = 'IsViewAllowed'
     is_write_allowed = 'IsWriteAllowed'
+
+
+class ProviderTypes:
+    local = 'local'
+    ad = 'AD'
+    ldap = 'LDAP'

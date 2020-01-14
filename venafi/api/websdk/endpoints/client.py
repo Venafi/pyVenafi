@@ -11,7 +11,7 @@ class _Client(API):
         self.Work = self._Work(websdk_obj=websdk_obj)
 
     @property
-    @json_response_property(on_204=list)
+    @json_response_property(return_on_204=list)
     def clients(self):
         return [Client.Client(client, self._api_type) for client in self._from_json()]
 
@@ -68,7 +68,7 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Details', valid_return_codes=[200, 204])
 
         @property
-        @json_response_property(on_204=list)
+        @json_response_property(return_on_204=list)
         def details(self):
             return [Client.ClientDetails(client, self._api_type) for client in self._from_json()]
 
@@ -102,7 +102,7 @@ class _Client(API):
             super().__init__(api_obj=websdk_obj, url='/Client/Work', valid_return_codes=[200, 204])
 
         @property
-        @json_response_property(on_204=list)
+        @json_response_property(return_on_204=list)
         def works(self):
             return [Client.Work(work, self._api_type) for work in self._from_json()]
 

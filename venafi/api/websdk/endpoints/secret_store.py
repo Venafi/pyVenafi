@@ -210,7 +210,7 @@ class _SecretStore:
         def value(self) -> str:
             return self._from_json(key='Value')
 
-        def post(self, vault_id: int, name: str = ''):
+        def post(self, vault_id: int, name: str = None):
             body = {
                 'VaultID': vault_id
             }

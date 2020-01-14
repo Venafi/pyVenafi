@@ -1,6 +1,7 @@
 from typing import List 
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.certificate import Certificate
+from venafi.tools.helpers.date_converter import from_date_string
 
 
 class _Certificates(API):
@@ -144,8 +145,13 @@ class _Certificates(API):
 
         @property
         @json_response_property()
-        def created_on(self) -> str:
-            return self._from_json(key='CreatedOn')
+        def created_on(self):
+            return from_date_string(self._from_json(key='CreatedOn'))
+
+        @property
+        @json_response_property()
+        def custom_fields(self) -> List[dict]:
+            return self._from_json(key='CustomFields')
 
         @property
         @json_response_property()
@@ -240,12 +246,12 @@ class _Certificates(API):
                 )
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def file(self):
                 return [Certificate.File(f) for f in self._from_json(key='File')]
 
             @property
-            @json_response_property(on_204=list)
+            @json_response_property(return_on_204=list)
             def ssltls(self):
                 return [Certificate.SslTls(s) for s in self._from_json(key='SslTls')]
 
@@ -527,6 +533,11 @@ class _Certificates(API):
 
         @property
         @json_response_property()
+        def error(self) -> bool:
+            return self._from_json(key='Error')
+
+        @property
+        @json_response_property()
         def requested(self) -> bool:
             return self._from_json(key='Requested')
 
@@ -536,7 +547,7 @@ class _Certificates(API):
             return self._from_json(key='Success')
 
         def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
-                 disable: bool = False):
+                 disable: bool = None):
             body = {
                 'CertificateDN': certificate_dn,
                 'Thumbprint': thumbprint,

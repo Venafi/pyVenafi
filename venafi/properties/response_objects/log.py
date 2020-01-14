@@ -1,10 +1,13 @@
+from venafi.tools.helpers.date_converter import from_date_string
+
+
 class Log:
     class LogEvent:
         def __init__(self, log_event_dict: dict):
             if not isinstance(log_event_dict, dict):
                 log_event_dict = {}
 
-            self.client_timestamp = log_event_dict.get('ClientTimestamp')  # type: str
+            self.client_timestamp = from_date_string(log_event_dict.get('ClientTimestamp'))
             self.component = log_event_dict.get('Component')  # type: str
             self.component_id = log_event_dict.get('ComponentId')  # type: int
             self.component_subsystem = log_event_dict.get('ComponentSubsystem')  # type: str
@@ -12,7 +15,7 @@ class Log:
             self.grouping = log_event_dict.get('Grouping')  # type: int
             self.id = log_event_dict.get('Id')  # type: int
             self.name = log_event_dict.get('Name')  # type: str
-            self.server_timestamp = log_event_dict.get('ServerTimestamp')  # type: str
+            self.server_timestamp = from_date_string(log_event_dict.get('ServerTimestamp'))
             self.severity = log_event_dict.get('Severity')  # type: str
             self.source_ip = log_event_dict.get('SourceIP')  # type: str
             self.text1 = log_event_dict.get('Text1')  # type: str

@@ -1,7 +1,8 @@
 Devices
 =======
 
-.. automodule:: venafi.features.device
+.. autoclass:: venafi.features.device.Device
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:

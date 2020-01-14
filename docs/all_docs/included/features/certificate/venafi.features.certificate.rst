@@ -1,7 +1,8 @@
 Certificates
 ============
 
-.. automodule:: venafi.features.certificate
+.. autoclass:: venafi.features.certificate.Certificate
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
