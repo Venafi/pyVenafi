@@ -129,7 +129,7 @@ def get_test_results(result, lapse, log_file = None):
     return {
         'lapse': lapse,
         'result': test_result,
-        'logFile': os.path.split(log_file)[1] if new_logfile else None,
+        'logFile': None,
         'runDate': datetime.today().isoformat()
     }
 
@@ -250,7 +250,7 @@ if __name__ == '__main__':
         elif metadata.result == "skipped":
             metadata.result = 3
         else:
-            raise ValueError
+            print(f'Got unexpected test status: {metadata.result}')
 
         # Set the correct log_file, we need it to match what is on the database
         today = datetime.now()
