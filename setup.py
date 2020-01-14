@@ -16,5 +16,6 @@ setup(
         'requests',
         'datetime',
         'jsonpickle',
+        'python-dateutil'
     ],
 )
