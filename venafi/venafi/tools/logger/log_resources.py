@@ -32,7 +32,10 @@ class TextStyle:
     cross_through = 9
 
 
-def console_log_color(s, fg, bg): return "\033[{s};{fg};{bg}m ".format(s=s, fg=fg, bg=bg)
+def console_log_color(s=None, fg=None, bg=None):
+    log_color = f"\033["
+    log_color += ';'.join([str(x) for x in (s,fg,bg) if x])
+    return f"{log_color}m "
 
 
 class LogLevel:
