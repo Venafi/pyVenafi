@@ -503,18 +503,16 @@ class Logger:
                         border-radius: 5px;
                         display: flex;
                         flex-wrap: wrap;
-                        position: relative;
                         justify-content: space-evenly;
-                        width: 300px;
+                        width: 75%;
                         margin: 30px auto;
                         border: solid lightgrey 2px;
                         padding: 10px;
-                        background-color: "#EFEFEF";
                     }}
 
                     .legend-item {{
                         height: 45px;
-                        width: 120px;
+                        width: auto;
                         display: block;
                     }}
 
