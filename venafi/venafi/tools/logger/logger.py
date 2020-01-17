@@ -135,17 +135,22 @@ class Logger:
                 truncate_depth()
                 self._depth.append(func_id)
 
-                result = func(*args, **kwargs)
+                try:
+                    result = func(*args, **kwargs)
 
-                # After the function returns.
-                after_string = f'{func.__qualname__} returned.'
-                if result is not None:
-                    ret_vals = jsonpickle.dumps(result, max_depth=3, unpicklable=False)
-                    after_string += f'\nReturn Values: {ret_vals}'
-                self.log_method(func_obj=func, msg=after_string, level=level, reference_lastlineno=True)
+                    # After the function returns.
+                    after_string = f'{func.__qualname__} returned.'
+                    if result is not None:
+                        ret_vals = jsonpickle.dumps(result, max_depth=3, unpicklable=False)
+                        after_string += f'\nReturn Values: {ret_vals}'
+                    self.log_method(func_obj=func, msg=after_string, level=level, reference_lastlineno=True)
 
-                truncate_depth()
-                return result
+                    return result
+                except:
+                    self.log_exception()
+                    raise
+                finally:
+                    truncate_depth()
             return __wrapper
         return _wrap
 
@@ -247,6 +252,20 @@ class Logger:
                     function initialize_document() {{
                         // Collapse all logs
                         toggleAllNodes();
+                        
+                        // Expand all logs with critical logs.
+                        critical_logs = document.querySelectorAll('.log-level-90');
+                        for(var i=0; i<critical_logs.length; i++) {{
+                            parent = critical_logs[i].parentElement;
+                            if(parent.id == "log-container") {{
+                                continue;
+                            }}
+                            node = parent.firstElementChild.querySelector('.node');
+                            if(node === null) {{
+                                continue;
+                            }}
+                            node.onclick.apply(node);
+                        }}
                     }}
                     
                     function toggleNodes(node_value) {{
