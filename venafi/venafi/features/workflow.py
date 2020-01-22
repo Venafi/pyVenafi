@@ -93,7 +93,13 @@ class ResultCode(FeatureBase):
         )
         result.assert_valid_response()
 
-        return [code, name, description]
+        class RC:
+            def __init__(self):
+                self.code = code
+                self.name = name
+                self.description = description
+
+        return RC()
 
     def delete(self, code: int, name: str = None):
         """
