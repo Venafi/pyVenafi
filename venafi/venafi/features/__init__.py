@@ -13,7 +13,7 @@ from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSigne
     CertificateAuthorityClassNames
 from venafi.features.identity import User, Group, IdentityClassNames, IdentityAttributes, IdentityAttributeValues
 from venafi.features.permissions import Permissions
-from venafi.features.workflow import ResultCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
+from venafi.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 
 
@@ -256,7 +256,7 @@ class _Workflow:
         self._auth = auth
 
         self._adaptable = None
-        self._result_code = None
+        self._reason_code = None
         self._standard = None
         self._ticket = None
 
@@ -266,9 +266,9 @@ class _Workflow:
         return self._adaptable
 
     @property
-    def result_code(self) -> ResultCode:
-        self._result_code = self._result_code or ResultCode(self._auth)
-        return self._result_code
+    def reason_code(self) -> ReasonCode:
+        self._reason_code = self._reason_code or ReasonCode(self._auth)
+        return self._reason_code
 
     @property
     def standard(self) -> StandardWorkflow:

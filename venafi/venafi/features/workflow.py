@@ -65,7 +65,7 @@ class _WorkflowBase(FeatureBase):
 
 
 @feature()
-class ResultCode(FeatureBase):
+class ReasonCode(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
