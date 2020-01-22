@@ -1,4 +1,5 @@
 import base64
+import hashlib
 from typing import List
 from datetime import datetime
 from venafi.properties.config import WorkflowClassNames, WorkflowAttributes, WorkflowAttributeValues
@@ -62,6 +63,131 @@ class _WorkflowBase(FeatureBase):
         )
 
         return workflow
+
+
+@feature()
+class AdaptableWorkflow(_WorkflowBase):
+    def __init__(self, auth):
+        super().__init__(auth=auth)
+
+    def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_content: bytes,
+               approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False):
+        """
+        Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
+        located on the TPP server(s) that will process this workflow. The ``powershell_script_hash`` is the Base64 has of
+        the SHA256 hash of the UTF-32LE-encoded PowerShell script. Without the PowerShell script hash TPP cannot trust using
+        the Adaptable Workflow until the hash is verified.
+
+         Examples:
+            .. code-block::python
+
+                from venafi import Authenticate, Features
+
+                api = Authenticate(...)  # ... is short-hand for the parameters
+                features = Features(api)
+
+                with open('./local/path/to/SuperAwesomeScript.ps1', 'rb') as f:
+                    content = f.read()
+
+                adaptable_workflow = features.workflow.adaptable.create(
+                    ...,
+                    powershell_script_name='SuperAwesomeScript',
+                    powershell_script_content=content
+                    ...
+                )
+
+        If a list of user GUIDS, or prefixed universal GUIDS, is provided, the will be added to the workflow as dedicated
+        approvers of the workflow. If the approvers should come from the PowerShell script, do not supply this parameter.
+        Instead, set ``use_approvers_from_powershell_script = True``. If the approvers should come from the object requiring
+        the workflow, such as the certificate object, then do not supply ``approver_guids`` or
+        ``use_approvers_from_powershell_script``.
+
+        Args:
+            name: Name of the workflow object.
+            parent_folder_dn: Absolute path to the parent folder of the workflow object.
+            stage: One of the valid stages that represent the certificate lifecycle.
+            powershell_script_name: Name (not path) of the actual PowerShell script on the TPP server.
+            powershell_script_content: Contents of the PowerShell script as bytes.
+            approver_guids: List of prefixed universal GUIDS for each approver identity.
+            reason_code: Integer reason code.
+            use_approvers_from_powershell_script: If ``True`` and no ``approver_guids`` is supplied, then set the
+                workflow to use the approvers defined by the script.
+        Returns:
+            Config Object of the workflow.
+        """
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        if approver_guids:
+            approvers = ','.join(approver_guids)
+        elif use_approvers_from_powershell_script:
+            approvers = "$CONFIG[$SELFDN$,'Adaptable Workflow Approvers']$"
+        else:
+            approvers = ''
+
+        workflow = self._create(
+            name=name,
+            parent_folder_dn=parent_folder_dn,
+            is_adaptable=True,
+            stage=stage,
+            approvers=approvers,
+            reason_code=reason_code
+        )
+
+        add_value = lambda x, y, z: self._auth.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
+        add_value(workflow.dn, WorkflowAttributes.Adaptable.powershell_script, powershell_script_name)
+
+        vault_id = self._auth.websdk.SecretStore.Add.post(
+            base_64_data=self._calculate_hash(powershell_script_content),
+            keyname=KeyNames.software_default,
+            vault_type=VaultTypes.blob,
+            namespace=Namespaces.config,
+            owner=workflow.dn
+        ).vault_id
+
+        self._auth.websdk.Config.WriteDn.post(
+            object_dn=workflow.dn,
+            attribute_name=WorkflowAttributes.Adaptable.powershell_script_hash_vault_id,
+            values=[vault_id]
+        )
+
+        return workflow
+
+    @staticmethod
+    def _calculate_hash(script_content: bytes):
+        """
+        Calculates the hash of the Adaptable Workflow script that TPP would store. This is useful when creating or modifying
+        an Adaptable Workflow script.
+
+        Examples:
+            .. code-block::python
+
+                from venafi import Authenticate, Features
+
+                api = Authenticate(...)  # ... is short-hand for the parameters
+                features = Features(api)
+
+                with open('./local/path/to/script.ps1', 'rb') as f:
+                    content = f.read()
+
+                hash = features.workflow.adaptable.calculate_hash(script_content=content)
+                adaptable_workflow = features.workflow.adaptable.create(
+                    ...,
+                    powershell_script_hash=hash,
+                    ...
+                )
+
+        Args:
+            script_content: The raw content of the Adaptable Workflow script as bytes.
+
+        Returns:
+            Base64 data of the SHA 256 hash of the UTF-32LE encoded script.
+        """
+        return base64.b64encode(
+            hashlib.sha256(
+                script_content.decode().encode('utf-32-le')
+            ).hexdigest().encode()
+        ).decode()
 
 
 @feature()
@@ -131,77 +257,6 @@ class ReasonCode(FeatureBase):
                     value=rc
                 )
                 result.assert_valid_response()
-
-
-@feature()
-class AdaptableWorkflow(_WorkflowBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
-
-    def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_hash: str,
-               approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False):
-        """
-        Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
-        located on the TPP server(s) that will process this workflow. The ``powershell_script_hash`` is the Base64 has of
-        the SHA256 hash of the UTF-32LE-encoded PowerShell script. Without the PowerShell script hash TPP cannot trust using
-        the Adaptable Workflow until the hash is verified.
-
-        If a list of user GUIDS, or prefixed universal GUIDS, is provided, the will be added to the workflow as dedicated
-        approvers of the workflow. If the approvers should come from the PowerShell script, do not supply this parameter.
-        Instead, set ``use_approvers_from_powershell_script = True``. If the approvers should come from the object requiring
-        the workflow, such as the certificate object, then do not supply ``approver_guids`` or
-        ``use_approvers_from_powershell_script``.
-
-        Args:
-            name: Name of the workflow object.
-            parent_folder_dn: Absolute path to the parent folder of the workflow object.
-            stage: One of the valid stages that represent the certificate lifecycle.
-            powershell_script_name: Name (not path) of the actual PowerShell script on the TPP server.
-            powershell_script_hash: Base64 hash of the SHA256 has of the UTF-32LE-encoded PowerShell script.
-            approver_guids: List of prefixed universal GUIDS for each approver identity.
-            reason_code: Integer reason code.
-            use_approvers_from_powershell_script: If ``True`` and no ``approver_guids`` is supplied, then set the
-                workflow to use the approvers defined by the script.
-        Returns:
-            Config Object of the workflow.
-        """
-        if self._auth.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        if approver_guids:
-            approvers = ','.join(approver_guids)
-        elif use_approvers_from_powershell_script:
-            approvers = "$CONFIG[$SELFDN$,'Adaptable Workflow Approvers']$"
-        else:
-            approvers = ''
-
-        workflow = self._create(
-            name=name,
-            parent_folder_dn=parent_folder_dn,
-            is_adaptable=True,
-            stage=stage,
-            approvers=approvers,
-            reason_code=reason_code
-        )
-
-        add_value = lambda x, y, z: self._auth.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
-        add_value(workflow.dn, WorkflowAttributes.Adaptable.powershell_script, powershell_script_name)
-
-        vault_id = self._auth.websdk.SecretStore.Add.post(
-            base_64_data=powershell_script_hash,
-            keyname=KeyNames.software_default,
-            vault_type=VaultTypes.blob,
-            namespace=Namespaces.config,
-            owner=workflow.dn
-        ).vault_id
-
-        self._auth.websdk.Config.WriteDn.post(
-            object_dn=workflow.dn,
-            attribute_name=WorkflowAttributes.Adaptable.powershell_script_hash_vault_id,
-            values=[vault_id]
-        )
-
-        return workflow
 
 
 @feature()
