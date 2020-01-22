@@ -74,9 +74,10 @@ class AdaptableWorkflow(_WorkflowBase):
                approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False):
         """
         Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
-        located on the TPP server(s) that will process this workflow. The ``powershell_script_hash`` is the Base64 has of
-        the SHA256 hash of the UTF-32LE-encoded PowerShell script. Without the PowerShell script hash TPP cannot trust using
-        the Adaptable Workflow until the hash is verified.
+        located on the TPP server(s) that will process this workflow. The ``powershell_script_content`` is the content of the
+        PowerShell script as bytes. This is required to create the Base64 hash of the SHA256 hash of the UTF-32LE-encoded
+        PowerShell script. Without the PowerShell script hash TPP cannot trust using the Adaptable Workflow until the hash
+        is verified.
 
          Examples:
             .. code-block::python
