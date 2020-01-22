@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='venafi',
-    packages=find_packages(where='venafi'),
+    packages=find_packages(where='venafi', exclude=['docs']),
     package_dir={
       '': 'venafi'
     },
