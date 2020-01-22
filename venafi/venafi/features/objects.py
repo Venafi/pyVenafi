@@ -127,6 +127,28 @@ class Objects(FeatureBase):
 
         return [resp.policy_dn, resp.values, resp.locked]
 
+    def get(self, object_dn: str = None, object_guid: str = None):
+        """
+        Converts an Object DN or Object GUID into a Config Object and returns it. Only
+        one of the parameters is required.
+
+        Args:
+            object_dn: Absolute path to the object.
+            object_guid: GUID of the object.
+
+        Returns:
+            Config Object
+        """
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        if not (object_dn or object_guid):
+            raise ValueError(
+                'Must supply either an Object DN or Object GUID, but neither was provided.'
+            )
+        obj = self._auth.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
+        return obj.object
+
     def read(self, object_dn: str, attribute_name: str):
         """
         Reads attributes on the given TPP Object and attribute name. Returns List[List, bool] where the
