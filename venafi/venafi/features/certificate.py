@@ -502,12 +502,7 @@ class Certificate(FeatureBase):
         cert = self._get(certificate_guid=certificate_guid)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                if cert.processing_details.in_error:
-                    raise FeatureError.UnexpectedValue(
-                        f'Certificate renewal encountered an error at stage {cert.processing_details.stage} with '
-                        f'status "{cert.processing_details.status}".'
-                    )
-                elif cert.processing_details.stage == stage:
+                if cert.processing_details.stage == stage:
                     return cert
                 cert = self._get(certificate_guid=certificate_guid)
 

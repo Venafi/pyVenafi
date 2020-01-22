@@ -22,14 +22,15 @@ class _WorkflowBase(FeatureBase):
         self._config_delete(object_dn=workflow_dn)
 
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
-                application_class_name: str = None, approvers: str = None, reason_code: int = None):
+                application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         workflow = self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=WorkflowClassNames.workflow if not is_adaptable else WorkflowClassNames.adaptable_workflow
+            config_class=WorkflowClassNames.workflow if not is_adaptable else WorkflowClassNames.adaptable_workflow,
+            attributes=attributes
         )
 
         if is_adaptable:
@@ -71,7 +72,8 @@ class AdaptableWorkflow(_WorkflowBase):
         super().__init__(auth=auth)
 
     def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_content: bytes,
-               approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False):
+               approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False,
+               attributes: dict = None):
         """
         Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
         located on the TPP server(s) that will process this workflow. The ``powershell_script_content`` is the content of the
@@ -113,6 +115,7 @@ class AdaptableWorkflow(_WorkflowBase):
             reason_code: Integer reason code.
             use_approvers_from_powershell_script: If ``True`` and no ``approver_guids`` is supplied, then set the
                 workflow to use the approvers defined by the script.
+            attributes: Additional attributes to apply to the workflow object.
         Returns:
             Config Object of the workflow.
         """
@@ -132,7 +135,8 @@ class AdaptableWorkflow(_WorkflowBase):
             is_adaptable=True,
             stage=stage,
             approvers=approvers,
-            reason_code=reason_code
+            reason_code=reason_code,
+            attributes=attributes
         )
 
         add_value = lambda x, y, z: self._auth.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
@@ -266,7 +270,7 @@ class StandardWorkflow(_WorkflowBase):
         super().__init__(auth=auth)
 
     def create(self, name: str, parent_folder_dn: str, stage: int, injection_command: str = None, application_class_name: str = None,
-               approver_guids: List[str] = None, macro: str = None, reason_code: int = None):
+               approver_guids: List[str] = None, macro: str = None, reason_code: int = None, attributes: dict = None):
         """
         Creates a Standard Workflow object.
 
@@ -291,6 +295,7 @@ class StandardWorkflow(_WorkflowBase):
             approver_guids: List of prefixed universal GUIDS for each approver identity.
             macro: TPP Approver Macro.
             reason_code: Integer reason code.
+            attributes: Additional attributes to apply to the workflow object.
         Returns:
             Config Object of the workflow.
         """
@@ -312,7 +317,8 @@ class StandardWorkflow(_WorkflowBase):
             injection_command=injection_command,
             application_class_name=application_class_name,
             approvers=approvers,
-            reason_code=reason_code
+            reason_code=reason_code,
+            attributes=attributes
         )
 
         return workflow

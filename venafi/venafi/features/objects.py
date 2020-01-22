@@ -2,6 +2,12 @@ from typing import List, Union
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
+class _AttributeValue:
+    def __init__(self):
+        self.values = values
+        self.locked = locked
+
+
 @feature()
 class Objects(FeatureBase):
     """
@@ -125,7 +131,12 @@ class Objects(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        return [resp.policy_dn, resp.values, resp.locked]
+        class Policy:
+            policy_dn = resp.policy_dn
+            values = resp.values
+            locked = resp.locked
+
+        return Policy()
 
     def get(self, object_dn: str = None, object_guid: str = None):
         """
@@ -149,7 +160,7 @@ class Objects(FeatureBase):
         obj = self._auth.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
         return obj.object
 
-    def read(self, object_dn: str, attribute_name: str):
+    def read(self, object_dn: str, attribute_name: str, timeout: int = 10):
         """
         Reads attributes on the given TPP Object and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether
@@ -198,7 +209,14 @@ class Objects(FeatureBase):
             boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
             be returned.
         """
-        return self._read(object_dn=object_dn, attribute_name=attribute_name)
+        with self._Timeout(timeout=timeout) as to:
+            while not to.is_expired():
+                value = self._read(object_dn=object_dn, attribute_name=attribute_name)
+                if value.values:
+                    return value
+
+        raise TimeoutError(f'Could not read {attribute_name} on {object_dn} because it did not exist '
+                           f'after {timeout} seconds.')
 
     def read_all(self, object_dn: str):
         """
@@ -379,4 +397,9 @@ class Objects(FeatureBase):
         if result.code != 1:
             FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-        return [resp.values, resp.locked]
+
+        class AttributeValues:
+            values = resp.values
+            locked = resp.locked
+
+        return AttributeValues()
