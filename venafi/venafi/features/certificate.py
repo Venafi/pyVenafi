@@ -220,62 +220,6 @@ class Certificate(FeatureBase):
         )
         return result.previous_versions
 
-    def get_tickets(self, certificate_dn: str, expected_num_tickets: int = 1, timeout: int = 3):
-        """
-        Reads the Ticket DN attribute of the certificate and returns a list of all tickets if the
-        number of expected tickets or greater appear on the certificate.
-
-        An optional ``timeout`` parameter can be used to wait for the above to be ``True``.
-
-        If the minimum expected number of tickets do not appear on the certificate, then a warning
-        is logged and whatever was found is returned. No error is raised.
-
-        Args:
-            certificate_dn: Absolute path to the certificate object.
-            expected_num_tickets: Minimum number of tickets expected to be written for the certificate.
-            timeout: Time in seconds to wait for a ticket DN value. Default is 3 seconds.
-
-        Returns:
-            List of Config Objects
-        """
-        if self._auth.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        def _get_tickets():
-            ticket_names = self._auth.websdk.Workflow.Ticket.Enumerate.post(
-                object_dn=certificate_dn
-            ).guids
-
-            tickets = [
-                self._auth.websdk.Config.IsValid.post(object_dn=f'\\VED\\Workflow\\{ticket_name}').object
-                for ticket_name in ticket_names
-            ]
-
-            return tickets
-
-        def warn(num_tickets):
-            self._log_warning_message(
-                f'The expected number of tickets on {certificate_dn} was '
-                f'{expected_num_tickets}, but {num_tickets} tickets were '
-                f'found instead.'
-            )
-
-        if timeout:
-            tickets = []
-            with self._Timeout(timeout=timeout) as to:
-                while not to.is_expired():
-                    tickets = _get_tickets()
-                    if len(tickets) >= expected_num_tickets:
-                        return tickets
-
-            warn(num_tickets=len(tickets))
-            return tickets
-        else:
-            tickets = _get_tickets()
-            if len(tickets) >= expected_num_tickets:
-                warn(num_tickets=len(tickets))
-            return tickets
-
     def get_validation_results(self, certificate_guid: str):
         """
         Returns the file and SSL/TLS validation results for each of the applications

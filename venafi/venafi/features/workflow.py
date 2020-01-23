@@ -328,6 +328,7 @@ class StandardWorkflow(_WorkflowBase):
 class Ticket(FeatureBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
+        self._workflow_ticket_dn = r'\VED\Workflow Tickets'
 
     @staticmethod
     def _validate_result_code(result):
@@ -393,28 +394,6 @@ class Ticket(FeatureBase):
         self._validate_result_code(result=response.result)
         return response.details
 
-    def enumerate(self, object_dn: str = None, user_data: str = None):
-        """
-        Enumerates all tickets issued to a particular ``object_dn``.
-
-        Args:
-            object_dn: Absolute path to the object blocked by a workflow.
-            user_data: The string to filter results using the User Data attribute of the
-                workflow ticket.
-
-        Returns:
-            List of workflow names.
-        """
-        if self._auth.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        response = self._auth.websdk.Workflow.Ticket.Enumerate.post(
-            object_dn=object_dn,
-            user_data=user_data
-        )
-        self._validate_result_code(result=response.result)
-        return response.guids
-
     def exists(self, ticket_name: str):
         """
         Returns ``True`` when a particular workflow exists, otherwise ``False``.
@@ -430,6 +409,63 @@ class Ticket(FeatureBase):
 
         result = self._auth.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
+
+    def get(self, object_dn: str, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 3):
+        """
+        Gets all tickets associated to ``object_dn``. If the minimum expected number of tickets do not
+        appear on the ``object_dn``, then a warning is logged and whatever was found is returned and no
+        error is raised.
+
+        An optional ``timeout`` parameter can be used to wait for the above to be ``True``.
+
+        Args:
+            object_dn: Absolute path to the object with a workflow ticket issued to it.
+            user_data: The string to filter results using the User Data attribute of the
+                workflow ticket.
+            expected_num_tickets: Minimum number of tickets expected to be written for the certificate.
+            timeout: Time in seconds to wait for a ticket DN value. Default is 3 seconds.
+
+        Returns:
+            List of Config Objects
+        """
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        def get_tickets():
+            ticket_names = self._auth.websdk.Workflow.Ticket.Enumerate.post(
+                object_dn=object_dn,
+                user_data=user_data
+            ).guids
+
+            return [
+                self._auth.websdk.Config.IsValid.post(
+                    object_dn=f'{self._workflow_ticket_dn}\\{ticket_name}'
+                ).object
+                for ticket_name in ticket_names
+            ]
+
+        def warn(num_tickets):
+            self._log_warning_message(
+                f'The expected number of tickets on {object_dn} was '
+                f'{expected_num_tickets}, but {num_tickets} tickets were '
+                f'found instead.'
+            )
+
+        if timeout:
+            tickets = []
+            with self._Timeout(timeout=timeout) as to:
+                while not to.is_expired():
+                    tickets = get_tickets()
+                    if len(tickets) >= expected_num_tickets:
+                        return tickets
+
+            warn(num_tickets=len(tickets))
+            return tickets
+        else:
+            tickets = get_tickets()
+            if len(tickets) < expected_num_tickets:
+                warn(num_tickets=len(tickets))
+            return tickets
 
     def status(self, ticket_name: str):
         """
