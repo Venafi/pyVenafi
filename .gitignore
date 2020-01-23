@@ -4,6 +4,6 @@ venv/
 testfile.py
 /venafi/tools/logger/logs/
 /test/
-/docs/_build/
-/venafi/venafi.egg-info
+/venafi/docs/_build/
+/venafi/venafi/venafi.egg-info
 /dist
