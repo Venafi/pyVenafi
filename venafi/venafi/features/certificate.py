@@ -223,6 +223,7 @@ class Certificate(FeatureBase):
     def get_tickets(self, certificate_dn: str):
         """
         Reads the Ticket DN attribute of the certificate and returns a list of all tickets.
+
         Args:
             certificate_dn: Absolute path to the certificate object.
 
