@@ -363,25 +363,25 @@ class Ticket(FeatureBase):
         self._validate_result_code(response.result)
         return response.guid
 
-    def delete(self, ticket_guid: str):
+    def delete(self, ticket_name: str):
         """
         Deletes a workflow ticket.
 
         Args:
-            ticket_guid: Name of the workflow ticket.
+            ticket_name: Name of the workflow ticket.
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Workflow.Ticket.Delete.post(guid=ticket_guid).result
+        result = self._auth.websdk.Workflow.Ticket.Delete.post(guid=ticket_name).result
         self._validate_result_code(result)
 
-    def details(self, ticket_guid: str):
+    def details(self, ticket_name: str):
         """
         Returns the details of a ticket request.
 
         Args:
-            ticket_guid: Name of the workflow ticket.
+            ticket_name: Name of the workflow ticket.
 
         Returns:
             Ticket Details object.
@@ -389,7 +389,7 @@ class Ticket(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Workflow.Ticket.Details.post(guid=ticket_guid)
+        response = self._auth.websdk.Workflow.Ticket.Details.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
         return response.details
 
@@ -415,12 +415,12 @@ class Ticket(FeatureBase):
         self._validate_result_code(result=response.result)
         return response.guids
 
-    def exists(self, ticket_guid: str):
+    def exists(self, ticket_name: str):
         """
         Returns ``True`` when a particular workflow exists, otherwise ``False``.
 
         Args:
-            ticket_guid: Name of the workflow ticket.
+            ticket_name: Name of the workflow ticket.
 
         Returns:
             ``True`` when a particular workflow exists, otherwise ``False``.
@@ -428,15 +428,15 @@ class Ticket(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Workflow.Ticket.Exists.post(guid=ticket_guid).result
+        result = self._auth.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def status(self, ticket_guid: str):
+    def status(self, ticket_name: str):
         """
         Returns the current status of a workflow ticket.
 
         Args:
-            ticket_guid: Name of the workflow ticket.
+            ticket_name: Name of the workflow ticket.
 
         Returns:
             The current status of a workflow ticket.
@@ -444,18 +444,18 @@ class Ticket(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Workflow.Ticket.Status.post(guid=ticket_guid)
+        response = self._auth.websdk.Workflow.Ticket.Status.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
         return response.status
 
-    def update_status(self, ticket_guid: str, status: str, explanation: str = None, scheduled_start: datetime = None,
+    def update_status(self, ticket_name: str, status: str, explanation: str = None, scheduled_start: datetime = None,
                       scheduled_stop: datetime = None):
         """
         Updates the status of a workflow ticket with the optional explanations and scheduled approvals. Marking a
         ticket as "Approved" will automatically delete the ticket.
 
         Args:
-            ticket_guid: Name of the workflow ticket.
+            ticket_name: Name of the workflow ticket.
             status: The new status of the workflow ticket.
             explanation: Reason for the new status.
             scheduled_start: Date/time to continue the approval process.
@@ -465,7 +465,7 @@ class Ticket(FeatureBase):
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         result = self._auth.websdk.Workflow.Ticket.UpdateStatus.post(
-            guid=ticket_guid,
+            guid=ticket_name,
             status=status,
             explanation=explanation,
             scheduled_start=scheduled_start.isoformat() if scheduled_start else None,

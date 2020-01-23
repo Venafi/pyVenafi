@@ -220,6 +220,29 @@ class Certificate(FeatureBase):
         )
         return result.previous_versions
 
+    def get_tickets(self, certificate_dn: str):
+        """
+        Reads the Ticket DN attribute of the certificate and returns a list of all tickets.
+        Args:
+            certificate_dn: Absolute path to the certificate object.
+
+        Returns:
+            List of Config Objects
+        """
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        ticket_names = self._auth.websdk.Workflow.Ticket.Enumerate.post(
+            object_dn=certificate_dn
+        ).guids
+
+        ticket_dns = [
+            self._auth.websdk.Config.IsValid.post(object_dn=f'\\VED\\Workflow\\{ticket_name}').object
+            for ticket_name in ticket_names
+        ]
+
+        return ticket_dns
+
     def get_validation_results(self, certificate_guid: str):
         """
         Returns the file and SSL/TLS validation results for each of the applications

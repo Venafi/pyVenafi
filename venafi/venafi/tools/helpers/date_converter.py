@@ -1,8 +1,12 @@
+from typing import Union
 from datetime import datetime, timezone, timedelta
 from dateutil.parser import parse
 
 
-def from_date_string(date_string: str, is_str_format: bool = False) -> datetime:
+def from_date_string(date_string: str) -> Union[None, datetime]:
+    if not date_string:
+        return
+
     if 'Date' in date_string:
         date_as_num = ''.join([c for c in date_string if c.isnumeric() or c == '+'])
         if '+' in date_as_num:
