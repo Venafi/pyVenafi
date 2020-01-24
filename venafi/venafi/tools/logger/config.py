@@ -12,6 +12,5 @@ OPEN_HTML_ON_FINISH = eval(str(os.getenv('VENAFI_PY_OPEN_HTML', False)).title())
 CUSTOM_LOGLEVEL_PATH = os.getenv('VENAFI_PY_CUSTOM_LOGLEVEL_PATH', None)
 MASK_REGEX_EXPRS = os.getenv('VENAFI_PY_MASK_REGEX_EXPRS', []) + [
     'password',
-    '.*private.*key.*',
-    '.*parent.*'
+    '.*private.*key.*'
 ]
