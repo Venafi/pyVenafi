@@ -7,9 +7,12 @@ from datetime import datetime
 import webbrowser
 import json
 import jsonpickle
+import re
 from venafi.tools.logger.log_resources import console_log_color
 from venafi.tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
-    LOG_LEVEL, LOG_DIR, LOG_FILENAME, LOGGING_ENABLED, CUSTOM_LOGLEVEL_PATH
+    LOG_LEVEL, LOG_DIR, LOG_FILENAME, LOGGING_ENABLED, CUSTOM_LOGLEVEL_PATH, \
+    MASK_REGEX_EXPRS
+
 if CUSTOM_LOGLEVEL_PATH is not None:
     import importlib.util
     import os
@@ -20,7 +23,6 @@ if CUSTOM_LOGLEVEL_PATH is not None:
     LogLevels = _LogLevelModule.LogLevels
 else:
     from venafi.tools.logger.log_resources import LogLevels
-
 
 jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 
@@ -43,6 +45,7 @@ def singleton(cls):
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]
+
     return _singleton
 
 
@@ -52,12 +55,14 @@ def initialize_logger(cls, *args, **kwargs):
             def _disable_everything(func):
                 def __disable_everything(self, *args, **kwargs):
                     return
+
                 return __disable_everything
 
             for attr, fn in inspect.getmembers(cls, inspect.isroutine):
                 if callable(getattr(cls, attr)) and not fn.__name__.startswith('__'):
                     setattr(cls, attr, _disable_everything(getattr(cls, attr)))
         return cls(*args, **kwargs)
+
     return decorate
 
 
@@ -72,7 +77,8 @@ class Logger:
         self._disabled_at_level = -1
         self._depth = []
 
-    def no_op(self, *args, **kwargs): pass
+    def no_op(self, *args, **kwargs):
+        pass
 
     def disable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
         if level < self._disabled_at_level:
@@ -100,7 +106,7 @@ class Logger:
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
-    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
+    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = []):
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
@@ -125,10 +131,10 @@ class Logger:
                     del params['self']
                 before_string = 'Called ' + func.__qualname__
                 if params:
-                    if masked_variables:
-                        for key in params.keys():
-                            if key in masked_variables:
-                                params[key] = '********'
+                    for key in params.keys():
+                        regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + masked_variables)) + ")"
+                        if re.match(pattern=regexes, string=key, flags=re.IGNORECASE):
+                            params[key] = '********'
                     before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=3, unpicklable=False)
                 self.log_method(func_obj=func, msg=before_string, level=level, reference_lastlineno=False)
 
@@ -151,7 +157,9 @@ class Logger:
                     raise
                 finally:
                     truncate_depth()
+
             return __wrapper
+
         return _wrap
 
     @staticmethod
@@ -197,7 +205,7 @@ class Logger:
             file_text_color = LogLevels.as_dictionary().get(output['log_level'])
             file_text_color = 'orange' if not file_text_color else file_text_color.colors.html
 
-            if index+1 < len(json_output) and json_output[index+1]['depth'] > output['depth']:
+            if index + 1 < len(json_output) and json_output[index + 1]['depth'] > output['depth']:
                 node_value += 1
                 node = f"""
                 <span 
@@ -248,11 +256,11 @@ class Logger:
                             nodes[i].onclick.apply(nodes[i]);
                         }}
                     }}
-                                        
+
                     function initialize_document() {{
                         // Collapse all logs
                         toggleAllNodes();
-                        
+
                         // Expand all logs with critical logs.
                         critical_logs = document.querySelectorAll('.log-level-90');
                         for(var i=0; i<critical_logs.length; i++) {{
@@ -267,19 +275,19 @@ class Logger:
                             node.onclick.apply(node);
                         }}
                     }}
-                    
+
                     function toggleNodes(node_value) {{
                         node_id = document.querySelector("#node-"+node_value);
-                        
+
                         node_id.classList.toggle('arrow-up');
                         node_id.classList.toggle('ellipsis');
-                        
+
                         node_container = node_id.closest(".node-container-"+node_value).firstElementChild;
                         for(var child=node_container.nextElementSibling; child!==null; child=child.nextElementSibling) {{
                             child.classList.toggle('hide');
                         }}
                     }}
-                    
+
                     function togglePlusMinus(counter) {{
                         exp_el = document.getElementById('exp-'+counter);
                         text = document.getElementById('log-text-'+counter);
@@ -332,7 +340,7 @@ class Logger:
                             // Filter logs.
                             for(var i=0; i < all_logs.length; i++) {{
                                 is_filtered = !(all_logs[i].querySelectorAll('.unpinned').length == 0);
-                                
+
                                 if(is_filtered) {{
                                     if(!all_logs[i].classList.contains('filtered')) {{
                                         all_logs[i].classList.add('filtered');
@@ -343,7 +351,7 @@ class Logger:
                                     }}
                                 }}
                             }}
-                            
+
                         }} else {{ // All other filters.
                             // Enable all filters.
                             legend_items = document.querySelectorAll('.legend-item');
@@ -355,7 +363,7 @@ class Logger:
                             // Filter logs.
                             for(var i=0; i < all_logs.length; i++) {{
                                 is_filtered = !display_filters.includes(all_logs[i].getAttribute('value'));
-                                
+
                                 if(is_filtered) {{
                                     if(!all_logs[i].classList.contains('filtered')) {{
                                         all_logs[i].classList.add('filtered');
@@ -378,19 +386,19 @@ class Logger:
                     .hide {{
                         display: none;
                     }}
-                    
+
                     .filtered {{
                         display: none;
                     }}
-                    
+
                     .ellipsis:after {{
                         content: '\\2026'
                     }}
-                    
+
                     .arrow-up:after {{
                         content: '\\21E7'
                     }}
-                    
+
                     .btn {{
                         height: 25px;
                         border-radius: 5px;
@@ -400,19 +408,19 @@ class Logger:
                         font-size: 0.8em;
                         min-width: 125px !important;
                     }}
-                    
+
                     #controls-container {{    
                         width: 100%;
                         min-height: 50px;
                         display: flex;
                         align-items: center;
                     }}
-                    
+
                     body {{
                         width: 90%;
                         margin: 0 auto;
                     }}
-                    
+
                     #page-title {{
                         color: grey;
                         text-align: center;
@@ -450,7 +458,7 @@ class Logger:
                         align-items: center;
                         justify-content: center;
                     }}
-                    
+
                     .node {{
                         min-width: 40px !important;
                         border-right: solid lightgrey 2px;
@@ -696,7 +704,7 @@ class Logger:
         elif func_obj:
             source, startlineno = inspect.getsourcelines(func_obj)
             path = inspect.getfile(func_obj)
-            lineno = startlineno+len(source)-1 if reference_lastlineno else startlineno
+            lineno = startlineno + len(source) - 1 if reference_lastlineno else startlineno
             filepath, filename = os.path.split(path)
 
         else:

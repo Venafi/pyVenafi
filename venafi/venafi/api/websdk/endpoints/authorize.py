@@ -24,12 +24,8 @@ class _Authorize(API):
         """
         body = {
             "Username": username,
-            "Password": '********'
+            "Password": password
         }
 
-        payload = json.dumps(body, indent=4)
-        logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level)
-
-        body['Password'] = password
-        self.json_response = self._session.post(url=self._url, data=body)
+        self.json_response = self._post(data=body)
         return self

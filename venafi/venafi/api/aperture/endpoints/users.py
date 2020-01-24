@@ -28,12 +28,8 @@ class _Users:
             """
             body = {
                 "username": username,
-                "password": '********'
+                "password": password
             }
 
-            payload = json.dumps(body, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level)
-
-            body['password'] = password
-            self.json_response = self._session.post(url=self._url, data=body)
+            self.json_response = self._post(data=body)
             return self
