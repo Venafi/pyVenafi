@@ -33,8 +33,19 @@ class Authenticate:
         self._username = username
         self._password = password
 
-    def re_authenticate(self):
+    def re_authenticate(self, host: str = None, username: str = None, password: str = None, preference=None):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
+
+        Args:
+            host: Hostname or IP Address
+            username: Username
+            password: Password
+            preference: 'websdk' or 'aperture'
         """
-        self.__init__(host=self._host, username=self._username, password=self._password, preference=self.preference)
+        self.__init__(
+            host=host or self._host,
+            username=username or self._username,
+            password=password or self._password,
+            preference=preference or self.preference
+        )
