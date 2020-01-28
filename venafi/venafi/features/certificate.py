@@ -8,6 +8,7 @@ class Certificate(FeatureBase):
     """
     This feature provides high-level interaction with TPP Server Certificate objects.
     """
+
     def __init__(self, auth):
         super().__init__(auth)
 
@@ -83,9 +84,9 @@ class Certificate(FeatureBase):
     def details(self, certificate_guid: str):
         """
         Returns details of the actual certificate and not the renewal settings for the object.
-        
+
         Args:
-            certificate_guid: GUID of the certificate object. 
+            certificate_guid: GUID of the certificate object.
 
         Returns:
             A single object with these properties:
@@ -371,7 +372,7 @@ class Certificate(FeatureBase):
             )
 
     def upload(self, certificate_data: str, parent_folder_dn: str, certificate_authority_attributes: dict = None, name: str = None,
-                 password: str = None, private_key_data: str = None, reconcile: bool = False):
+               password: str = None, private_key_data: str = None, reconcile: bool = False):
         """
         Uploads the certificate data to TPP to create a certificate object under the given parent folder DN. If the BEGIN/END
         header or footer is missing, the data is assumed to be Base 64 encoded in the PKCS#12 format. For Base 64 encoded
@@ -486,7 +487,7 @@ class Certificate(FeatureBase):
             f'status "{cert.processing_details.status}".'
         )
 
-    def wait_for_stage(self, certificate_guid: str, stage: int, timeout: int = 60):
+    def wait_for_stage(self, certificate_guid: str, stage: int, expect_workflow: bool = True, timeout: int = 60):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of
         ``timeout`` seconds. If the timeout is reached, an error is thrown.
@@ -494,6 +495,7 @@ class Certificate(FeatureBase):
         Args:
             certificate_guid: GUID of the certificate object.
             stage: Stage at which to return
+            expect_workflow: If ``True``, validates that a Ticket DN has been issued to the certificate.
             timeout: Timeout in seconds before throwing an error.
 
         Returns:
@@ -503,7 +505,11 @@ class Certificate(FeatureBase):
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
                 if cert.processing_details.stage == stage:
-                    return cert
+                    if expect_workflow:
+                        if 'pending workflow resolution' in cert.processing_details.status.lower():
+                            return cert
+                    else:
+                        return cert
                 cert = self._get(certificate_guid=certificate_guid)
 
         raise FeatureError.UnexpectedValue(

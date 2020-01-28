@@ -410,7 +410,7 @@ class Ticket(FeatureBase):
         result = self._auth.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def get(self, object_dn: str, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 3):
+    def get(self, object_dn: str, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
         """
         Gets all tickets associated to ``object_dn``. If the minimum expected number of tickets do not
         appear on the ``object_dn``, then a warning is logged and whatever was found is returned and no
@@ -423,7 +423,7 @@ class Ticket(FeatureBase):
             user_data: The string to filter results using the User Data attribute of the
                 workflow ticket.
             expected_num_tickets: Minimum number of tickets expected to be written for the certificate.
-            timeout: Time in seconds to wait for a ticket DN value. Default is 3 seconds.
+            timeout: Time in seconds to wait for a ticket DN value. Default is 10 seconds.
 
         Returns:
             List of Config Objects
@@ -444,8 +444,7 @@ class Ticket(FeatureBase):
                 for ticket_name in ticket_names
             ]
 
-        def warn(num_tickets):
-            self._log_warning_message(
+        warn = lambda num_tickets: self._log_warning_message(
                 f'The expected number of tickets on {object_dn} was '
                 f'{expected_num_tickets}, but {num_tickets} tickets were '
                 f'found instead.'
