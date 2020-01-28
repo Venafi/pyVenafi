@@ -64,7 +64,9 @@ class FeatureBase:
     def _name_value_list(attributes: dict, keep_list_values: bool = False):
         nvl = []
         for name, value in attributes.items():
-            if isinstance(value, list):
+            if value is None:
+                continue
+            elif isinstance(value, list):
                 if keep_list_values is True:
                     nvl.append({'Name': str(name), 'Value': value})
                 else:

@@ -1,10 +1,8 @@
 class MetadataFieldType:
-    field_type = {
-        1: 'Text String',
-        2: 'List',
-        4: 'Date/Time',
-        5: 'Identity'
-    }
+    text_string = 1
+    list = 2
+    date_time = 4
+    identity = 5
 
 
 class MetadataItem:

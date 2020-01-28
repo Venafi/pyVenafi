@@ -1,5 +1,5 @@
 from typing import List
-from venafi.properties.config import IdentityClassNames, IdentityAttributes, IdentityAttributeValues
+from venafi.properties.config import IdentityClassNames, IdentityAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 from venafi.properties.rights import SubSystemTypes
 

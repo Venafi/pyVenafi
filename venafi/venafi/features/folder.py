@@ -364,8 +364,11 @@ class Folder(FeatureBase):
         Sets policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
         cannot be changed by any child folders or objects. Otherwise the value will be set as a
-        suggested value that appears as a default value in any of the Venafi websites. In order
-        to set engines on this folder, use :meth:`set_engines`.
+        suggested value that appears as a default value in any of the Venafi websites.
+
+        In order to set engines on this folder, use :meth:`set_engines`.
+
+        In order to set custom field policies, use :meth:`venafi.features.custom_fields.CustomField.write_policy`.
 
         Examples:
 
