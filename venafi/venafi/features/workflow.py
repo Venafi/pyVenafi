@@ -444,12 +444,6 @@ class Ticket(FeatureBase):
                 for ticket_name in ticket_names
             ]
 
-        warn = lambda num_tickets: self._log_warning_message(
-                f'The expected number of tickets on {object_dn} was '
-                f'{expected_num_tickets}, but {num_tickets} tickets were '
-                f'found instead.'
-            )
-
         if timeout:
             tickets = []
             with self._Timeout(timeout=timeout) as to:
@@ -458,12 +452,20 @@ class Ticket(FeatureBase):
                     if len(tickets) >= expected_num_tickets:
                         return tickets
 
-            warn(num_tickets=len(tickets))
+            self._log_warning_message(
+                msg=f'The expected number of tickets on {object_dn} was '
+                    f'{expected_num_tickets}, but {len(tickets)} tickets were '
+                    f'found instead.'
+            )
             return tickets
         else:
             tickets = get_tickets()
             if len(tickets) < expected_num_tickets:
-                warn(num_tickets=len(tickets))
+                self._log_warning_message(
+                    msg=f'The expected number of tickets on {object_dn} was '
+                        f'{expected_num_tickets}, but {len(tickets)} tickets were '
+                        f'found instead.'
+                )
             return tickets
 
     def status(self, ticket_name: str):

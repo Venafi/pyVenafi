@@ -190,6 +190,11 @@ class _Certificates(API):
 
         @property
         @json_response_property()
+        def success(self) -> str:
+            return self._from_json(key='Success')
+
+        @property
+        @json_response_property()
         def validation_details(self):
             return Certificate.ValidationDetails(self._from_json(key='ValidationDetails'))
 

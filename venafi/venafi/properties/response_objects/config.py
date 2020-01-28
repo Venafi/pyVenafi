@@ -20,7 +20,6 @@ class Config:
                 # Not implemented yet.
                 pass
 
-
     class Object:
         def __init__(self, object_dict: dict, api_type: str):
             if not isinstance(object_dict, dict):
