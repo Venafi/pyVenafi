@@ -178,6 +178,20 @@ class CustomField(FeatureBase):
         self._validate_result_code(result=response.result)
         return response.item
 
+    def list(self):
+        """
+        Lists all custom fields registered in TPP.
+
+        Returns:
+            List of Metadata Item objects.
+        """
+        if self._auth.preference == ApiPreferences.aperture:
+            self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        response = self._auth.websdk.Metadata.Items.get()
+        self._validate_result_code(response.result)
+        return response.items
+
     def read(self, object_dn: str, custom_field_guid: str):
         """
         Reads the actual value(s) of a custom field, accounting for policy settings. Value(s) may be None.
