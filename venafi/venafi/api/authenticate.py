@@ -33,6 +33,18 @@ class Authenticate:
         self._username = username
         self._password = password
 
+    @property
+    def host(self):
+        return self._host
+
+    @property
+    def username(self):
+        return self._username
+
+    @property
+    def password(self):
+        return self._password
+
     def re_authenticate(self, host: str = None, username: str = None, password: str = None, preference=None):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
