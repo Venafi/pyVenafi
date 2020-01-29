@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from venafi.properties.response_objects.credential import Credential
     from venafi.properties.response_objects.client import Client
     from venafi.properties.response_objects.permissions import Permissions
-    from venafi.properties.response_objects.metadata import Metadata
+    from venafi.properties.response_objects.metadata import Metadata as CustomFields
     from venafi.properties.response_objects.rights import Rights
     from venafi.properties.response_objects.secret_store import SecretStore
     from venafi.properties.response_objects.ssh import SSH
