@@ -493,10 +493,10 @@ class Logger:
 
                     .line-info {{
                         text-align: center;
-                        padding-left: 10px;
-                        padding-right: 10px;
                         border-right: solid lightgrey 2px;
+                        min-width: 250px !important;
                         width: auto;
+                        padding: 0px 30px;
                     }}
 
                     .log-text {{
