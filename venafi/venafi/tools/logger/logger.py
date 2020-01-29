@@ -496,7 +496,7 @@ class Logger:
                         padding-left: 10px;
                         padding-right: 10px;
                         border-right: solid lightgrey 2px;
-                        min-width: 200px !important;
+                        width: auto;
                     }}
 
                     .log-text {{
