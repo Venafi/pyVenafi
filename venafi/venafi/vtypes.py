@@ -14,3 +14,5 @@ if TYPE_CHECKING:
     from venafi.properties.response_objects.worfklow import Workflow
     from venafi.properties.response_objects.processing_engines import ProcessingEngines
     from venafi.properties.response_objects.system_status import SystemStatus
+
+    from venafi.features.workflow import RC as ReasonCode

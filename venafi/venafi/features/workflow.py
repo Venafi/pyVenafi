@@ -195,6 +195,13 @@ class AdaptableWorkflow(_WorkflowBase):
         ).decode()
 
 
+class RC:
+    def __init__(self, code, name, description):
+        self.code = code
+        self.name = name
+        self.description = description
+
+
 @feature()
 class ReasonCode(FeatureBase):
     def __init__(self, auth):
@@ -224,13 +231,7 @@ class ReasonCode(FeatureBase):
         )
         result.assert_valid_response()
 
-        class RC:
-            def __init__(self):
-                self.code = code
-                self.name = name
-                self.description = description
-
-        return RC()
+        return RC(name=name, code=code, description=description)
 
     def delete(self, code: int, name: str = None):
         """
