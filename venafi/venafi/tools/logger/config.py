@@ -10,7 +10,7 @@ LOG_LEVEL = int(os.getenv('VENAFI_PY_LOG_LEVEL', LogLevels.low.level))
 LOG_TO_JSON = eval(str(os.getenv('VENAFI_PY_LOG_TO_JSON', True)).title())  # If this is False, then OPEN_HTML_ON_FINISH will not be evaluated.
 OPEN_HTML_ON_FINISH = eval(str(os.getenv('VENAFI_PY_OPEN_HTML', False)).title())
 CUSTOM_LOGLEVEL_PATH = os.getenv('VENAFI_PY_CUSTOM_LOGLEVEL_PATH', None)
-MASK_REGEX_EXPRS = os.getenv('VENAFI_PY_MASK_REGEX_EXPRS', []) + [
+MASK_REGEX_EXPRS = os.getenv('VENAFI_PY_MASK_REGEX_EXPRS', '').split(',') + [
     'password',
     '.*private.*key.*'
 ]
