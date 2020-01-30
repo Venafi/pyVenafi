@@ -106,7 +106,10 @@ class Logger:
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
-    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = []):
+    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
+        if not isinstance(masked_variables, list):
+            masked_variables = []
+
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
