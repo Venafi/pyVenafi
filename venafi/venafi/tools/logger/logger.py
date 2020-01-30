@@ -107,9 +107,8 @@ class Logger:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
     def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
-        if not isinstance(masked_variables, list):
-            masked_variables = []
-
+        regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + (masked_variables or []))) + ")"
+        
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
@@ -135,7 +134,6 @@ class Logger:
                 before_string = 'Called ' + func.__qualname__
                 if params:
                     for key in params.keys():
-                        regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + masked_variables)) + ")"
                         if re.match(pattern=regexes, string=key, flags=re.IGNORECASE):
                             params[key] = '********'
                     before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=3, unpicklable=False)
