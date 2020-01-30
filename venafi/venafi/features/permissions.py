@@ -184,7 +184,7 @@ class Permissions(FeatureBase):
 
         current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
 
-        if current_permissions:
+        if bool([y for x, y in current_permissions.__dict__.items() if not x.startswith('_') and y is not None]):
             method = api.put
         else:
             method = api.post
