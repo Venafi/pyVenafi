@@ -794,11 +794,11 @@ class PKCS11(_ApplicationBase):
     def create(self, name: str, parent_folder_dn: str, cryptoki_file_with_path: str, distribution_directory: str,
                openssl_config_file_with_path:str, token_slot_identifier: str, token_slot_pin_dn: str, use_case: str,
                attributes: dict = None, connection_method: str = ApplicationAttributeValues.ConnectionMethod.ssh,
-               embed_sans_in_csr: bool = False, import_certificates_into_hsm: str = '0',
+               embed_sans_in_csr: str = "No", import_certificates_into_hsm: str = '0',
                label_format: str = ApplicationAttributeValues.PKCS11.LabelFormat.date_with_cn, port: int = 22,
                protection_type: str = ApplicationAttributeValues.ProtectionType.module, openssl_directory: str = None,
                openssl_type: str = ApplicationAttributeValues.PKCS11.OpenSslType.system,
-               reverse_subject_dn: bool = False):
+               reverse_subject_dn: str = "No"):
         """
         Creates a PKCS11 application object.
 
@@ -815,7 +815,7 @@ class PKCS11(_ApplicationBase):
             use_case: Purpose for which the certificate is to be used.
             attributes: Additional attributes pertaining to the application object.
             connection_method: Connection protocol for TPP to communicate with the client.
-            embed_sans_in_csr: If ``True``, the SANs are included in the CSR.
+            embed_sans_in_csr: If "Yes", the SANs are included in the CSR.
             import_certificates_into_hsm: If ``True``, the certificates are imported into the HSM.
             label_format: The format of the label. May be custom.
             port: Connection port.
@@ -823,7 +823,7 @@ class PKCS11(_ApplicationBase):
             openssl_directory: Directory holding the OpenSSL executable. Only set when ``openssl_type`` is set to
                 be custom.
             openssl_type: If set to 'System', then the ``openssl_directory`` is set to the default system location.
-            reverse_subject_dn: If ``True``, the subject's domain components are reversed in the CSR.
+            reverse_subject_dn: If "Yes", the subject's domain components are reversed in the CSR.
 
         Returns:
             Config Object representing the PKCS11 object.
