@@ -7,3 +7,4 @@ testfile.py
 /venafi/docs/_build/
 /venafi/venafi.egg-info
 /dist
+*logfile*.*

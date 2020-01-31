@@ -11,12 +11,14 @@ from venafi.features.credentials import AmazonCredential, CertificateCredential,
     PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
 from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
-from venafi.features.identity import User, Group, IdentityClassNames, IdentityAttributes, IdentityAttributeValues
+from venafi.features.identity import User, Group, IdentityClassNames, IdentityAttributes
 from venafi.features.permissions import Permissions
 from venafi.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
+from venafi.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
 
 
+# region Features
 class _Application:
     def __init__(self, auth):
         self._auth = auth
@@ -290,6 +292,7 @@ class Features:
         self._ca = None
         self._certificate = None
         self._credentials = None
+        self._custom_fields = None
         self._device = None
         self._folder = None
         self._identity = None
@@ -322,6 +325,11 @@ class Features:
         return self._credentials
 
     @property
+    def custom_fields(self) -> CustomField:
+        self._custom_fields = self._custom_fields or CustomField(self._auth)
+        return self._custom_fields
+
+    @property
     def device(self) -> Device:
         self._device = self._device or Device(self._auth)
         return self._device
@@ -346,12 +354,16 @@ class Features:
         self._workflow = self._workflow or _Workflow(self._auth)
         return self._workflow
 
+# endregion
 
+
+# region AttributeNames, AttributeValues, and Classes
 class AttributeNames:
     Application = ApplicationAttributes
     Certificate = CertificateAttributes
     CertificateAuthority = CertificateAuthorityAttributes
     Credentials = CredentialAttributes
+    CustomField = CustomFieldAttributes
     Device = DeviceAttributes
     Folder = FolderAttributes
     Identity = IdentityAttributes
@@ -361,6 +373,7 @@ class AttributeNames:
 class AttributeValues:
     Application = ApplicationAttributeValues
     Certificate = CertificateAttributeValues
+    CustomField = CustomFieldAttributeValues
     Workflow = WorkflowAttributeValues
 
 
@@ -372,3 +385,5 @@ class Classes:
     Folder = FolderClassNames
     Identity = IdentityClassNames
     Workflow = WorkflowClassNames
+
+# endregion

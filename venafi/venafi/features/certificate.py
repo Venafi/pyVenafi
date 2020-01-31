@@ -6,7 +6,7 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 @feature()
 class Certificate(FeatureBase):
     """
-    This feature provides high-level interaction with TPP Server Certificate objects.
+    This feature provides high-level interaction with TPP Certificate objects.
     """
 
     def __init__(self, auth):

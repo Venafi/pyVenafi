@@ -1,3 +1,4 @@
+# region Application
 class _ApplicationAttributesBase:
     adaptable_workflow_approvers = "Adaptable Workflow Approvers"
     adaptable_workflow_reference_id = "Adaptable Workflow Reference ID"
@@ -748,10 +749,10 @@ class ApplicationClassNames:
     vam_nshield = "VAM nShield"
     vam_cavium = "VamCavium"
 
+# endregion
 
-################################
 
-
+# region Certificate
 class CertificateAttributes:
     acme_account_dn = "ACME Account DN"
     adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
@@ -1069,10 +1070,10 @@ class CertificateClassNames:
     server_certificate_work = "Server Certificate Work"
     x509_certificate = "X509 Certificate"
 
+# endregion
 
-################################
 
-
+# region Certificate Authority
 class _CertificateAuthorityAttributesBase:
     additional_field = "Additional Field"
     concurrent_connection_limit = "Concurrent Connection Limit"
@@ -1303,10 +1304,10 @@ class CertificateAuthorityClassNames:
     xolphin_ca = "Xolphin CA"
     zos_ca = "zOS CA"
 
+# endregion
 
-################################
 
-
+# region Certificate Trust Store
 class CertificateTrustStoreClassNames:
     blue_coat_sslva_trust_store = "BlueCoat SSLVA Trust Store"
     capi_trust_store = "CAPI Trust Store"
@@ -1318,17 +1319,17 @@ class CertificateTrustStoreClassNames:
     pem_trust_store = "PEM Trust Store"
     pkcs_12_trust_store = "PKCS#12 Trust Store"
 
+# endregion
 
-################################
 
-
+# region Cloud Instance Monitoring
 class CloudInstanceMonitoringClassNames:
     aws_ec2_instance_monitor = 'AWS EC2 Instance Monitor'
 
+# endregion
 
-################################
 
-
+# region Credential
 class _CredentialAttributesBase:
     contact = "Contact"
     created_by = "Created By"
@@ -1400,10 +1401,69 @@ class CredentialClassNames:
     private_key_credential = "Private Key Credential"
     username_password_credential = "Username Password Credential"
 
+# endregion
 
-################################
+
+# region Custom Field
+class _CustomFieldAttributes:
+    allowed_values = "Allowed Values"
+    associated_classes = "Associated Classes"
+    category = "Category"
+    contact = "Contact"
+    created_by = "Created By"
+    default_values = "Default Values"
+    description = "Description"
+    disabled = "Disabled"
+    escalation_contact = "Escalation Contact"
+    guid = "GUID"
+    help_text = "Help Text"
+    label_text = "Label Text"
+    localization = "Localization"
+    managed_by = "Managed By"
+    mandatory = "Mandatory"
+    metadata = "Metadata"
+    not_before = "Not Before"
+    policyable = "Policyable"
+    reference = "Reference"
+    render_hidden = "Render Hidden"
+    render_read_only = "Render Read Only"
+    workflow = "Workflow"
+    workflow_block = "Workflow Block"
 
 
+class CustomFieldAttributes(_CustomFieldAttributes):
+    class Choice:
+        single = "Single"
+
+    class DateTime:
+        date_only = "Date Only"
+
+    class Identity:
+        single = "Single"
+
+    class List:
+        single = "Single"
+
+    class Text:
+        allowed_characters = "Allowed Characters"
+        error_message = "Error Message"
+        mask = "Mask"
+        maximum_length = "Maximum Length"
+        minimum_length = "Minimum Length"
+        regular_expression = "Regular Expression"
+
+
+class CustomFieldAttributeValues:
+    class Type:
+        text_string = 1
+        list = 2
+        date_time = 4
+        identity = 5
+
+# endregion
+
+
+# region Device
 class _DeviceAttributesBase:
     agentless_discovery_stage = "Agentless Discovery Stage"
     agentless_discovery_status = "Agentless Discovery Status"
@@ -1526,10 +1586,10 @@ class DevicesClassNames:
     device = 'Device'
     jump_server = 'Jump Server'
 
+# endregion
 
-################################
 
-
+# region Folder
 class FolderClassNames:
     policy = 'Policy'
 
@@ -1560,9 +1620,10 @@ class FolderAttributes:
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-################################
+# endregion
 
 
+# region Identity
 class IdentityClassNames:
     user = 'USER'
     security_group = 'GROUP'
@@ -1574,13 +1635,10 @@ class IdentityAttributes:
         security_group = 2
         distribution_group = 8
 
-
-class IdentityAttributeValues:
-    pass
-
-################################
+# endregion
 
 
+# region Workflow
 class _WorkflowAttributes:
     contact = "Contact"
     created_by = "Created By"
@@ -1648,3 +1706,5 @@ class WorkflowAttributeValues:
 class WorkflowClassNames:
     adaptable_workflow = 'Adaptable Workflow'
     workflow = 'Workflow'
+
+# endregion

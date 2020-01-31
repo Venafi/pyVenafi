@@ -106,7 +106,9 @@ class Logger:
         else:
             self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
 
-    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = []):
+    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
+        regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + (masked_variables or []))) + ")"
+        
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
@@ -132,7 +134,6 @@ class Logger:
                 before_string = 'Called ' + func.__qualname__
                 if params:
                     for key in params.keys():
-                        regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + masked_variables)) + ")"
                         if re.match(pattern=regexes, string=key, flags=re.IGNORECASE):
                             params[key] = '********'
                     before_string += '\nArguments:\n' + jsonpickle.dumps(params, max_depth=3, unpicklable=False)
@@ -493,10 +494,10 @@ class Logger:
 
                     .line-info {{
                         text-align: center;
-                        padding-left: 10px;
-                        padding-right: 10px;
                         border-right: solid lightgrey 2px;
-                        min-width: 200px !important;
+                        min-width: 250px !important;
+                        width: auto;
+                        padding: 0px 30px;
                     }}
 
                     .log-text {{

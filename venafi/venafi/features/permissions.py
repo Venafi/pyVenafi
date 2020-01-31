@@ -1,4 +1,5 @@
 from venafi.features.bases.feature_base import FeatureBase, ApiPreferences, feature
+from venafi.properties.response_objects.permissions import Permissions as PermResponseObj
 
 
 @feature()
@@ -58,7 +59,7 @@ class Permissions(FeatureBase):
             api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.Effective.get()
-        return result.effective_permissions if result.is_valid_response() else []
+        return result.effective_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
     def get_explicit(self, object_dn: str, identity_prefixed_universal: str):
         """
@@ -87,7 +88,7 @@ class Permissions(FeatureBase):
             api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.get()
-        return result.explicit_permissions if result.is_valid_response() else []
+        return result.explicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
     def get_implicit(self, object_dn: str, identity_prefixed_universal: str):
         """
@@ -113,7 +114,7 @@ class Permissions(FeatureBase):
             api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.get()
-        return result.implicit_permissions if result.is_valid_response() else []
+        return result.implicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
     def list_identities(self, object_dn: str):
         """
@@ -183,7 +184,7 @@ class Permissions(FeatureBase):
 
         current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
 
-        if current_permissions:
+        if bool([y for x, y in current_permissions.__dict__.items() if not x.startswith('_') and y is not None]):
             method = api.put
         else:
             method = api.post
