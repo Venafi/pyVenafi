@@ -242,7 +242,7 @@ class PasswordCredential(_CredentialBase):
     def __init__(self, auth):
         super().__init__(auth)
 
-    def create(self, name: str, parent_folder_dn: str, password: str = None, expiration: int = 6,
+    def create(self, name: str, parent_folder_dn: str, password: str, expiration: int = 6,
                description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         """
         Creates a Password Credential object in TPP. The credential is set to expire 6 months from now.
