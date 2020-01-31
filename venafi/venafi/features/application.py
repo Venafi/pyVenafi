@@ -793,10 +793,13 @@ class PKCS11(_ApplicationBase):
 
     def create(self, name: str, parent_folder_dn: str, cryptoki_file_with_path: str, distribution_directory: str,
                openssl_config_file_with_path:str, openssl_directory: str, token_slot_identifier: str,
-               token_slot_pin_dn: str, use_case: str, attributes: dict = None, connection_method: str = 'SSH',
+               token_slot_pin_dn: str, use_case: str, attributes: dict = None,
+               connection_method: str = ApplicationAttributeValues.ConnectionMethod.ssh,
                embed_sans_in_csr: bool = False, import_certificates_into_hsm: str = '0',
-               label_format: str = 'Date with CN', port: int = 22, protection_type: str = 'Module',
-               openssl_type: str = 'System', reverse_subject_dn: bool = False):
+               label_format: str = ApplicationAttributeValues.PKCS11.LabelFormat.date_with_cn, port: int = 22,
+               protection_type: str = ApplicationAttributeValues.ProtectionType.module,
+               openssl_type: str = ApplicationAttributeValues.PKCS11.OpenSslType.system,
+               reverse_subject_dn: bool = False):
         """
         Creates a PKCS11 application object.
 
