@@ -161,7 +161,7 @@ class Objects(FeatureBase):
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
         obj = self._auth.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
-        if obj.result == 400 and not raise_error_if_not_exists:
+        if obj.result.code == 400 and not raise_error_if_not_exists:
             # The object doesn't exist, but just return an empty object.
             return Config.Object(object_dict={}, api_type=self._auth.preference)
         return obj.object
