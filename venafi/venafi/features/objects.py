@@ -1,9 +1,10 @@
 from typing import List, Union
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.properties.response_objects.config import Config, ResultCodes
 
 
 class _AttributeValue:
-    def __init__(self):
+    def __init__(self, values: List[str], locked: bool):
         self.values = values
         self.locked = locked
 
@@ -138,7 +139,7 @@ class Objects(FeatureBase):
 
         return Policy()
 
-    def get(self, object_dn: str = None, object_guid: str = None):
+    def get(self, object_dn: str = None, object_guid: str = None, raise_error_if_not_exists: bool = False):
         """
         Converts an Object DN or Object GUID into a Config Object and returns it. Only
         one of the parameters is required.
@@ -146,6 +147,8 @@ class Objects(FeatureBase):
         Args:
             object_dn: Absolute path to the object.
             object_guid: GUID of the object.
+            raise_error_if_not_exists: If ``True``, an empty Config Object is returned where each property
+                is ``None``.
 
         Returns:
             Config Object
@@ -158,6 +161,9 @@ class Objects(FeatureBase):
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
         obj = self._auth.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
+        if obj.result == 400 and not raise_error_if_not_exists:
+            # The object doesn't exist, but just return an empty object.
+            return Config.Object(object_dict={}, api_type=self._auth.preference)
         return obj.object
 
     def read(self, object_dn: str, attribute_name: str, timeout: int = 10):
@@ -203,6 +209,7 @@ class Objects(FeatureBase):
         Args:
             object_dn: Absolute path to the folder enforcing the policy.
             attribute_name: The attribute name.
+            timeout: Read timeout in seconds.
 
         Returns:
             List[List, bool] where the first element of the list is a list of values and the second element a
@@ -335,7 +342,7 @@ class Objects(FeatureBase):
         values = None
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                values = self._read(object_dn=object_dn, attribute_name=attribute_name)
+                values = self._read(object_dn=object_dn, attribute_name=attribute_name).values
                 found = any([True for value in values if str(value).lower() == attribute_value.lower()])
                 if found:
                     return values
@@ -397,9 +404,4 @@ class Objects(FeatureBase):
         if result.code != 1:
             FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-
-        class AttributeValues:
-            values = resp.values
-            locked = resp.locked
-
-        return AttributeValues()
+        return _AttributeValue(values=resp.values, locked=resp.locked)
