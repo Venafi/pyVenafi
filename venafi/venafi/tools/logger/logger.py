@@ -711,7 +711,7 @@ class Logger:
         else:
             raise ValueError('Must supply either "outerframes" or "func_obj".')
 
-        if not skip_console and level >= LOG_LEVEL:
+        if not skip_console and level > LOG_LEVEL:
             file_text_color = LogLevels.as_dictionary().get(level)
             if not file_text_color:
                 file_text_color = LogLevels.high.colors.console
