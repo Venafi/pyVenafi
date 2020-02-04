@@ -166,7 +166,7 @@ class Objects(FeatureBase):
             return Config.Object(object_dict={}, api_type=self._auth.preference)
         return obj.object
 
-    def read(self, object_dn: str, attribute_name: str, timeout: int = 10):
+    def read(self, object_dn: str, attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
         """
         Reads attributes on the given TPP Object and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether
@@ -209,6 +209,8 @@ class Objects(FeatureBase):
         Args:
             object_dn: Absolute path to the folder enforcing the policy.
             attribute_name: The attribute name.
+            include_policy_values: If ``True``, the effective value(s) are returned.
+                Otherwise only values assigned to the DN explicitly are returned.
             timeout: Read timeout in seconds.
 
         Returns:
@@ -218,7 +220,11 @@ class Objects(FeatureBase):
         """
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                value = self._read(object_dn=object_dn, attribute_name=attribute_name)
+                value = self._read(
+                    object_dn=object_dn,
+                    attribute_name=attribute_name,
+                    include_policy_values=include_policy_values
+                )
                 if value.values:
                     return value
 
@@ -324,7 +330,8 @@ class Objects(FeatureBase):
             if result.code != 1:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def wait_for(self, object_dn: str, attribute_name: str, attribute_value: str, timeout: int = 10):
+    def wait_for(self, object_dn: str, attribute_name: str, attribute_value: str, include_policy_values: bool = False,
+                 timeout: int = 10):
         """
         Waits for the ``attribute_name`` to have the ``attribute_value`` on the object_dn for the timeout period. A
         TimeoutError is thrown if the ``attribute_name`` does not have the ``attribute_value``.
@@ -333,22 +340,26 @@ class Objects(FeatureBase):
             object_dn: Absolute path to the TPP Object.
             attribute_name: The name of the attribute.
             attribute_value: The expected value to the ``attribute_name``.
+            include_policy_values: If ``True``, the effective value(s) are returned.
+                Otherwise only values assigned to the DN explicitly are returned.
             timeout: Timeout period in seconds.
 
         Returns:
             Values of the given ``attribute_name`` for the given ``object_dn``.
         """
 
-        values = None
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                values = self._read(object_dn=object_dn, attribute_name=attribute_name).values
-                found = any([True for value in values if str(value).lower() == attribute_value.lower()])
-                if found:
-                    return values
+                attr = self._read(
+                    object_dn=object_dn,
+                    attribute_name=attribute_name,
+                    include_policy_values=include_policy_values
+                )
+                if any([True for value in attr.values if str(value).lower() == attribute_value.lower()]):
+                    return attr
 
         raise FeatureError.TimeoutError(method=self.wait_for, expected_value=attribute_value,
-                                        actual_value=values, timeout=timeout)
+                                        actual_value=attr.values, timeout=timeout)
 
     def write(self, object_dn: str, attributes: dict):
         """
@@ -391,17 +402,27 @@ class Objects(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def _read(self, object_dn: str, attribute_name: str):
+    def _read(self, object_dn: str, attribute_name: str, include_policy_values: bool):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self._auth.websdk.Config.ReadEffectivePolicy.post(
-            object_dn=object_dn,
-            attribute_name=attribute_name
-        )
+        if include_policy_values is True:
+            resp = self._auth.websdk.Config.ReadEffectivePolicy.post(
+                object_dn=object_dn,
+                attribute_name=attribute_name
+            )
+            result = resp.result
+            if result.code != 1:
+                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-        result = resp.result
-        if result.code != 1:
-            FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+            return _AttributeValue(values=resp.values, locked=resp.locked)
+        else:
+            resp = self._auth.websdk.Config.Read.post(
+                object_dn=object_dn,
+                attribute_name=attribute_name
+            )
+            result = resp.result
+            if result.code != 1:
+                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-        return _AttributeValue(values=resp.values, locked=resp.locked)
+            return _AttributeValue(values=resp.values, locked=False)
