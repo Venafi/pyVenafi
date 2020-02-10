@@ -37,7 +37,9 @@ class Aperture:
 
         # Update the authorization header to include the API Key token.
         token = self.Users.Authorize.post(username=username, password=password).token
-        self._session.headers.update(token)
+        self._session.headers.update({
+            'Authorization': f'VENAFI {token}'
+        })
 
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.

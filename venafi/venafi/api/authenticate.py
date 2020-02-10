@@ -55,9 +55,15 @@ class Authenticate:
             password: Password
             preference: 'websdk' or 'aperture'
         """
-        self.__init__(
-            host=host or self._host,
-            username=username or self._username,
-            password=password or self._password,
-            preference=preference or self.preference
-        )
+        if host or username or password:
+            self.__init__(
+                host=host or self._host,
+                username=username or self._username,
+                password=password or self._password,
+                preference=preference or self.preference
+            )
+        else:
+            if preference:
+                self.preference = preference
+            self.websdk.re_authenticate()
+            self.aperture.re_authenticate()

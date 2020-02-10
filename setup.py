@@ -7,7 +7,7 @@ setup(
       '': 'venafi'
     },
     description='Venafi Features and API Implementation In Python',
-    version='0.1',
+    version='19.4.0.0',
     url='ssh://git@git.eng.venafi.com/spi',
     author='Venafi',
     author_email='spi@venafi.com',

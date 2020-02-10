@@ -1,3 +1,4 @@
+from typing import List
 import re
 import json
 from venafi.api.session import Session
@@ -276,23 +277,47 @@ class API:
         self._api_obj.re_authenticate()
         self._session = self._api_obj._session
 
-    def _log_rest_call(self, data: dict = None):
+    def _log_api_deprecated_warning(self, alternate_api: str = None, prev_frames=2):
+        msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
+        if alternate_api:
+            msg += f'\nUse {alternate_api} instead.'
+        logger.log(
+            msg=msg,
+            level=LogLevels.critical.level,
+            prev_frames=prev_frames
+        )
+
+    def _log_rest_call(self, data: dict = None, mask_values_with_key: List[str] = None, prev_frames: int = 3):
         """
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
         if data:
-            payload = json.dumps(data, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level, prev_frames=3)
+            if mask_values_with_key:
+                payload = json.dumps(
+                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
+                    indent=4
+                )
+            else:
+                payload = json.dumps(data, indent=4)
+            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level, prev_frames=prev_frames)
         else:
             logger.log(f'URL: {self._url}', level=LogLevels.low.level, prev_frames=3)
 
-    def _log_response(self, response: Response):
+    def _log_response(self, response: Response, mask_values_with_key: List[str] = None, prev_frames: int = 3):
         """
         Logs the URL, response code, and the content returned by TPP.
         This enforces consistency in logging across all API calls.
         """
+
         try:
-            pretty_json = json.dumps(response.json(), indent=4)
+            data = response.json()
+            if mask_values_with_key and isinstance(data, dict):
+                pretty_json = json.dumps(
+                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
+                    indent=4
+                )
+            else:
+                pretty_json = json.dumps(data, indent=4)
         except json.JSONDecodeError:
             pretty_json = response.text or response.reason or 'No Content'
         except:
@@ -301,8 +326,16 @@ class API:
         logger.log(
             msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}',
             level=LogLevels.low.level,
-            prev_frames=3
+            prev_frames=prev_frames
         )
+
+    def _mask_values_by_key(self, d: dict, mask_values_with_key: List[str]):
+        for key, value in d.items():
+            if key in mask_values_with_key:
+                d[key] = '********'
+            elif isinstance(value, dict):
+                d = self._mask_values_by_key(d, mask_values_with_key=mask_values_with_key)
+        return d
 
 
 class InvalidResponseError(Exception):
