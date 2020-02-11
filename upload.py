@@ -5,6 +5,7 @@ from setuptools import sandbox
 import asyncio
 import asyncssh
 from sphinx import make_mode
+from setup import __version__
 
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -35,13 +36,19 @@ def compile_docs():
 async def send_files():
     print('\n>>>>>>>>>>>>> Connecting to PyPI server...\n')
     async with asyncssh.connect(host='192.168.7.239', username='root', password='Passw0rd') as conn:
-        print('Uploading Venafi package...')
-        await asyncssh.scp(f'{project_dir}/dist/*', (conn, f'/opt/packages'), recurse=True, preserve=True)
-        print('\n>>>>>>>>>>>>> Compiling documentation...\n')
-        compile_docs()
-        print('Uploading documentation... (This can take a minute or two.)')
-        await asyncssh.scp(f'{project_dir}/venafi/docs/_build/*', (conn, '/opt/docs'), recurse=True, preserve=True)
-        print('Done!')
+        async with conn.start_sftp_client() as sftp:
+            print('Uploading Venafi package...')
+            await asyncssh.scp(f'{project_dir}/dist/*', (conn, f'/opt/packages'), recurse=True, preserve=True)
+            print('\n>>>>>>>>>>>>> Compiling documentation...\n')
+            # compile_docs()
+            src = f'{project_dir}/venafi/docs/_build/*'
+            dest = f'/opt/docs/{__version__}'
+            if not await sftp.exists(dest):
+                print(f'\n>>>>>>>>>>>>> Creating {dest} on the documentation server...')
+                await sftp.mkdir(dest)
+            print(f'\n>>>>>>>>>>>>> Uploading documentation from {src} to {dest}... (This can take a minute or two.)\n')
+            await asyncssh.scp(src, (conn, dest), recurse=True, preserve=True)
+            print('Done!')
 
 
 def main():
