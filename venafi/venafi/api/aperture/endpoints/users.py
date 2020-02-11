@@ -19,8 +19,7 @@ class _Users:
         @json_response_property()
         def token(self) -> dict:
             logger.log('Aperture API Key retrieved.', level=LogLevels.low.level)
-            token = "VENAFI " + self._from_json('apiKey')
-            return {'Authorization': token}
+            return self._from_json('apiKey')
 
         def post(self, username, password):
             """

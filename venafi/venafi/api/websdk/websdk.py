@@ -1,5 +1,6 @@
 from venafi.logger import logger, LogLevels
 from venafi.api.session import Session
+from venafi.properties.oauth import Scope
 from venafi.api.websdk.endpoints.authorize import _Authorize
 from venafi.api.websdk.endpoints.certificates import _Certificates
 from venafi.api.websdk.endpoints.client import _Client
@@ -28,8 +29,8 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap(LogLevels.medium.level, masked_variables=['password'])
-    def __init__(self, host: str, username: str, password: str):
+    @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'refresh_token', 'access_token'])
+    def __init__(self, host: str, username: str, password: str, refresh_token: str = None):
         """
         Args:
             host: Hostname or IP Address of TPP
@@ -50,8 +51,36 @@ class WebSDK:
         self.Authorize = _Authorize(self)
 
         # Update the authorization header to include the API Key token.
-        token = self.Authorize.post(username=username, password=password).token
-        self._session.headers.update(token)
+
+        # Deprecated
+        # token = self.Authorize.post(username=username, password=password).token
+        # authorization_header = {'X-Venafi-API-Key': token}
+
+        scope = [
+            Scope.any(approve=True, manage=True),
+            Scope.agent(delete=True),
+            Scope.certificate(delete=True, discover=True, manage=True, revoke=True),
+            Scope.configuration(delete=True, manage=True),
+            Scope.restricted(delete=True, manage=True),
+            Scope.security(delete=True, manage=True),
+            Scope.ssh(delete=True, discover=True, manage=True)
+        ]
+        if refresh_token:
+            self._oauth = self.Authorize.Token.post(
+                client_id='websdk',
+                refresh_token=refresh_token
+            )
+        else:
+            self._oauth = self.Authorize.OAuth.post(
+                client_id="websdk",
+                username=username,
+                password=password,
+                scope=';'.join(scope)
+            )
+        authorization_header = {
+            'Authorization': f'Bearer {self._oauth.access_token}'
+        }
+        self._session.headers.update(authorization_header)
 
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
@@ -79,4 +108,5 @@ class WebSDK:
         """
         Performs a re-authentication using the same parameters used to authorize initially.
         """
-        self.__init__(host=self._host, username=self._username, password=self._password)
+        self.__init__(host=self._host, username=self._username, password=self._password,
+                      refresh_token=self._oauth.refresh_token)
