@@ -222,6 +222,35 @@ class _Identity:
             self.json_response = self._put(data=body)
             return self
 
+    class _RemoveGroupOwners(API):
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url='/Identity/RemoveGroupOwners', valid_return_codes=[200])
+
+        @property
+        @json_response_property()
+        def members(self):
+            return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
+
+        @property
+        @json_response_property()
+        def message(self) -> str:
+            return self._from_json('Message')
+
+        @property
+        @json_response_property()
+        def owners(self):
+            return [Identity.Identity(m) for m in self._from_json('Owners', return_on_error=list)]
+
+        def put(self, group: str, owners: list, show_members: bool = False):
+            body = {
+                'Group': group,
+                'Owners': owners,
+                'ShowMembers': show_members
+            }
+
+            self.json_response = self._put(data=body)
+            return self
+
     class _RenameGroup(API):
         def __init__(self, websdk_obj):
             super().__init__(api_obj=websdk_obj, url='/Identity/RenameGroup', valid_return_codes=[200])

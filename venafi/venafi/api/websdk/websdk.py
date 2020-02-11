@@ -13,12 +13,14 @@ from venafi.api.websdk.endpoints.identity import _Identity
 from venafi.api.websdk.endpoints.log import _Log
 from venafi.api.websdk.endpoints.metadata import _Metadata
 from venafi.api.websdk.endpoints.permissions import _Permissions
+from venafi.api.websdk.endpoints.pki import _PKI
 from venafi.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from venafi.api.websdk.endpoints.revoke import _Revoke
 from venafi.api.websdk.endpoints.rights import _Rights
 from venafi.api.websdk.endpoints.ssh import _SSH
 from venafi.api.websdk.endpoints.system_status import _SystemStatus
 from venafi.api.websdk.endpoints.secret_store import _SecretStore
+from venafi.api.websdk.endpoints.stats import _Stats
 from venafi.api.websdk.endpoints.workflow import _Workflow
 from venafi.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
 
@@ -95,11 +97,13 @@ class WebSDK:
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)
         self.Permissions = _Permissions(self)
+        self.PKI = _PKI(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
         self.Rights = _Rights(self)
         self.SecretStore = _SecretStore(self)
         self.SSH = _SSH(self)
+        self.Stats = _Stats(self)
         self.SystemStatus = _SystemStatus(self)
         self.Workflow = _Workflow(self)
         self.X509CertificateStore = _X509CertificateStore(self)

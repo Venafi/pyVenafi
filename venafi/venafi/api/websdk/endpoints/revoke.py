@@ -11,5 +11,6 @@ class _Revoke:
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
+            self._log_api_deprecated_warning()
             self.json_response = self._get()
             return self
