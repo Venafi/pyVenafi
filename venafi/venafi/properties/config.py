@@ -1593,6 +1593,10 @@ class DeviceAttributeValues:
         windows = 'OS_WINDOWS'
         z_os = 'OS_zOS'
 
+    class ConnectionMethod:
+        agent = 'Agent'
+        agentless = 'Agentless'
+
 
 class DevicesClassNames:
     device = 'Device'
