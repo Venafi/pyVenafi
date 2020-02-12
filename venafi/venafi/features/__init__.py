@@ -374,6 +374,7 @@ class AttributeValues:
     Application = ApplicationAttributeValues
     Certificate = CertificateAttributeValues
     CustomField = CustomFieldAttributeValues
+    Device = DeviceAttributeValues
     Workflow = WorkflowAttributeValues
 
 
