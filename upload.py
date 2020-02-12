@@ -40,7 +40,7 @@ async def send_files():
             print('Uploading Venafi package...')
             await asyncssh.scp(f'{project_dir}/dist/*', (conn, f'/opt/packages'), recurse=True, preserve=True)
             print('\n>>>>>>>>>>>>> Compiling documentation...\n')
-            # compile_docs()
+            compile_docs()
             src = f'{project_dir}/venafi/docs/_build/*'
             dest = f'/opt/docs/{__version__}'
             if not await sftp.exists(dest):
