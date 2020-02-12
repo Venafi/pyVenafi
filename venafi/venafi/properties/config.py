@@ -1582,6 +1582,18 @@ class DeviceAttributes(_DeviceAttributesBase):
         ssh_version = "SSH Version"
 
 
+class DeviceAttributeValues:
+    class OSType:
+        aix = 'OS_AIX'
+        automatic = 'OS_AUTO'
+        hpux = 'OS_HPUX'
+        linux = 'OS_LINUX'
+        router = 'OS_ROUTER'
+        solaris = 'OS_SOLARIS'
+        windows = 'OS_WINDOWS'
+        z_os = 'OS_zOS'
+
+
 class DevicesClassNames:
     device = 'Device'
     jump_server = 'Jump Server'
