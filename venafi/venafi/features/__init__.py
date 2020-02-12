@@ -2,7 +2,7 @@ from venafi.features.bases.feature_base import FeatureBase
 from venafi.features.objects import Objects
 from venafi.features.folder import Folder, FolderAttributes, FolderClassNames
 from venafi.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, CertificateClassNames
-from venafi.features.device import Device, DeviceAttributes, DevicesClassNames
+from venafi.features.device import Device, DeviceAttributes, DevicesClassNames, DeviceAttributeValues
 from venafi.features.application import A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, \
     CitrixNetScaler, ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, JuniperSAS, \
     OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, ApplicationAttributes, \

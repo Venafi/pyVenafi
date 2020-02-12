@@ -1,4 +1,4 @@
-from venafi.properties.config import DevicesClassNames, DeviceAttributes
+from venafi.properties.config import DevicesClassNames, DeviceAttributes, DeviceAttributeValues
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
