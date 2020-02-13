@@ -480,6 +480,8 @@ class Certificate(FeatureBase):
                 thumbprint = cert.certificate_details.thumbprint
                 if thumbprint and thumbprint != current_thumbprint and cert.processing_details.stage is None:
                     return cert.certificate_details
+                if cert.processing_details.in_error == "1":
+                    break
                 cert = self._get(certificate_guid=certificate_guid)
 
         raise FeatureError.UnexpectedValue(
