@@ -142,6 +142,11 @@ class A10AXTrafficManager(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appa10axtm'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -173,6 +178,11 @@ class Adaptable(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appadaptable'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -203,6 +213,11 @@ class AmazonAWS(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appamazon'
+        })
 
         return self._config_create(
             name=name,
@@ -236,6 +251,11 @@ class Apache(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appapache'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -267,6 +287,11 @@ class AzureKeyVault(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appazurekeyvault'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -297,6 +322,11 @@ class Basic(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appbasic'
+        })
 
         return self._config_create(
             name=name,
@@ -367,6 +397,11 @@ class BlueCoatSSLVA(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appBlueCoat'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -397,6 +432,11 @@ class CAPI(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appcapi'
+        })
 
         return self._config_create(
             name=name,
@@ -429,6 +469,11 @@ class CitrixNetScaler(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appnetscaler'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -459,6 +504,11 @@ class ConnectDirect(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appConnectDirect'
+        })
 
         return self._config_create(
             name=name,
@@ -527,6 +577,11 @@ class F5LTMAdvanced(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appf5ltmadvanced'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -557,6 +612,11 @@ class IBMDataPower(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appdatapower'
+        })
 
         return self._config_create(
             name=name,
@@ -589,6 +649,11 @@ class IBMGSK(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appgsk'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -619,6 +684,11 @@ class ImpervaMX(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appimpervamx'
+        })
 
         return self._config_create(
             name=name,
@@ -651,6 +721,11 @@ class JKS(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appjks'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -681,6 +756,11 @@ class JuniperSAS(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appjuniper'
+        })
 
         return self._config_create(
             name=name,
@@ -713,6 +793,11 @@ class OracleIPlanet(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appiplanet'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -744,6 +829,11 @@ class PaloAltoNetworkFW(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appPaloAlto'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -774,6 +864,11 @@ class PEM(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appPem'
+        })
 
         return self._config_create(
             name=name,
@@ -833,6 +928,7 @@ class PKCS11(_ApplicationBase):
         attributes = attributes or {}
         pkcs11_attrs = ApplicationAttributes.PKCS11
         attributes.update({
+            ApplicationAttributes.driver_name: 'apppkcs11',
             pkcs11_attrs.hsm_cryptoki_file: cryptoki_file_with_path,
             pkcs11_attrs.hsm_certificate_directory: distribution_directory,
             pkcs11_attrs.hsm_openssl_config_file: openssl_config_file_with_path,
@@ -880,6 +976,11 @@ class PKCS12(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'apppkcs12'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -910,6 +1011,11 @@ class RiverbedSteelHead(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appriverbedsteelhead'
+        })
 
         return self._config_create(
             name=name,
@@ -942,6 +1048,11 @@ class TealeafPCA(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'apptealeafpca'
+        })
+
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -972,6 +1083,11 @@ class VAMnShield(_ApplicationBase):
         """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
+
+        attributes = attributes or {}
+        attributes.update({
+            ApplicationAttributes.driver_name: 'appvamnshield'
+        })
 
         return self._config_create(
             name=name,
