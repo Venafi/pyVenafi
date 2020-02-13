@@ -510,7 +510,7 @@ class _ApplicationAttributeValuesBase:
     class ProtectionType:
         module = 'Module'
         ocs = 'OCS'
-        softcard = 'softcard'
+        softcard = 'Softcard'
 
 
 class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
