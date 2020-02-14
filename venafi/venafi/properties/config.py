@@ -666,7 +666,6 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
 
     class PKCS11:
         class ImportCertificatesIntoHsm:
-            zero = 0
             no = 'No'
             import_certificate_only = 'Import Certificate Only'
             import_certificate_and_chain = 'Import Certificate And Chain'
