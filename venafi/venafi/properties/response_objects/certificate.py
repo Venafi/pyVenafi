@@ -109,10 +109,10 @@ class Certificate:
                 renewal_dict = {}
 
             self.city = renewal_dict.get('City')  # type: str
-            self.city = renewal_dict.get('Country')  # type: str
-            self.city = renewal_dict.get('Organization')  # type: str
-            self.city = renewal_dict.get('OrganizationUnit')  # type: str
-            self.city = renewal_dict.get('State')  # type: str
+            self.country = renewal_dict.get('Country')  # type: str
+            self.organization = renewal_dict.get('Organization')  # type: str
+            self.organizational_unit = renewal_dict.get('OrganizationUnit')  # type: str
+            self.state = renewal_dict.get('State')  # type: str
             self.subject = renewal_dict.get('Subject')  # type: str
             self.subject_alt_name_dns = renewal_dict.get('SubjectAltNameDNS')  # type: str
             self.subject_alt_name_email = renewal_dict.get('SubjectAltNameEmail')  # type: str
