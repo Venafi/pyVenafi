@@ -37,7 +37,7 @@ async def send_files(src: str, dst: str):
     print('\n>>>>>>>>>>>>> Connecting to PyPI server...\n')
     async with asyncssh.connect(host='192.168.7.239', username='root', password='Passw0rd') as conn:
         async with conn.start_sftp_client() as sftp:
-            # await asyncssh.scp(f'{project_dir}/dist/*', (conn, f'/opt/packages'), recurse=True, preserve=True)
+            print('\n>>>>>>>>>>>>> Connected to PyPI server!!!\n')
             await sftp.put(src, dst, recurse=True, preserve=True)
             print('Done!')
 
