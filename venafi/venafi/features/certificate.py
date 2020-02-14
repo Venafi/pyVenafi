@@ -433,11 +433,13 @@ class Certificate(FeatureBase):
         result = self._auth.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
         return result
 
-    def wait_for_renewal_complete(self, certificate_guid: str, current_thumbprint: str, timeout: int = 60):
+    def wait_for_enrollment_to_complete(self, certificate_guid: str, current_thumbprint: str, timeout: int = 60):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The `current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
-        thumbprint AND there is no processing stage.
+        thumbprint and either the processing stage is "none" or greater than or equal to 800, which is the start of the
+        provisioning stage. If the certificate management type is set to *Provisioning*, use the application feature
+        :meth:`venafi.venafi.features.application._ApplicationBase.
 
         Args:
             certificate_guid: GUID of the certificate object.
@@ -480,7 +482,7 @@ class Certificate(FeatureBase):
                 thumbprint = cert.certificate_details.thumbprint
                 if thumbprint and thumbprint != current_thumbprint and cert.processing_details.stage is None:
                     return cert.certificate_details
-                if cert.processing_details.in_error == "1":
+                elif cert.processing_details.in_error:
                     break
                 cert = self._get(certificate_guid=certificate_guid)
 
