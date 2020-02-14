@@ -480,7 +480,7 @@ class Certificate(FeatureBase):
             while not to.is_expired():
                 cert.assert_valid_response()
                 thumbprint = cert.certificate_details.thumbprint
-                if thumbprint and thumbprint != current_thumbprint and cert.processing_details.stage is None:
+                if thumbprint and thumbprint != current_thumbprint and cert.processing_details.stage in {None, 800}:
                     return cert.certificate_details
                 elif cert.processing_details.in_error:
                     break
