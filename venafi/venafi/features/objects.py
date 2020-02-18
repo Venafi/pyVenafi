@@ -284,10 +284,13 @@ class Objects(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn).result
+        response = self._auth.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn)
+        result = response.result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+        return self.get(object_dn=new_object_dn, raise_error_if_not_exists=True)
 
     def update(self, object_dn: str, attributes: dict):
         """
