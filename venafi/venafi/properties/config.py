@@ -669,7 +669,7 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
             no = 'No'
             import_certificate_only = 'Import Certificate Only'
             import_certificate_and_chain = 'Import Certificate And Chain'
-            import_certificate_with_intermediate_certificates = 'Import Certificate With Intermediate Certificates'
+            import_certificate_with_intermediate_certificates = 'Import Certificate with Intermediate certificates'
 
         class LabelFormat:
             date_with_cn = 'Date with CN'
