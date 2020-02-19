@@ -8,6 +8,7 @@ import webbrowser
 import json
 import jsonpickle
 import re
+import threading
 from venafi.tools.logger.log_resources import console_log_color
 from venafi.tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
     LOG_LEVEL, LOG_DIR, LOG_FILENAME, LOGGING_ENABLED, CUSTOM_LOGLEVEL_PATH, \
@@ -36,6 +37,8 @@ if LOGGING_ENABLED and not os.path.exists(LOG_DIRECTORY):
         file_path += path + os.sep
         if not os.path.exists(file_path):
             os.mkdir(file_path)
+
+logger_lock = threading.Lock()
 
 
 def singleton(cls):
@@ -75,7 +78,13 @@ class Logger:
         self.log_exception = self._log_exception
 
         self._disabled_at_level = -1
-        self._depth = []
+        self._thread_depth = {
+            threading.get_ident(): []
+        }
+        self._thread_logs = {
+            threading.get_ident(): []
+        }
+        self._thread_watch_enabled = False
 
     def no_op(self, *args, **kwargs):
         pass
@@ -108,15 +117,18 @@ class Logger:
 
     def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
         regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + (masked_variables or []))) + ")"
-        
+
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
+                thread_ident = threading.get_ident()
+                if not self._thread_depth.get(thread_ident):
+                    self._thread_depth[thread_ident] = []
 
                 def truncate_depth():
-                    indexes = [i for i, e in enumerate(self._depth) if e == func_id]
+                    indexes = [i for i, e in enumerate(self._thread_depth[thread_ident]) if e == func_id]
                     if indexes:
-                        self._depth = self._depth[:indexes[-1]]
+                        self._thread_depth[thread_ident] = self._thread_depth[thread_ident][:indexes[-1]]
 
                 # Before the function is called.
                 try:
@@ -140,7 +152,7 @@ class Logger:
                 self.log_method(func_obj=func, msg=before_string, level=level, reference_lastlineno=False)
 
                 truncate_depth()
-                self._depth.append(func_id)
+                self._thread_depth[thread_ident].append(func_id)
 
                 try:
                     result = func(*args, **kwargs)
@@ -726,16 +738,24 @@ class Logger:
         if LOG_TO_JSON is True:
             json_msg = html_formatted_msg or msg
             source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
+            log_content = {
+                "path": path,
+                "filename": filename,
+                "lineno": lineno,
+                "text": str(json_msg),
+                "source": source,
+                "log_level": level,
+                "depth": len(self._thread_depth[threading.get_ident()])
+            }
+            if len(self._thread_depth) > 1:
+                thread_ident = threading.get_ident()
+                try:
+                    self._thread_logs[thread_ident].append(log_content)
+                except:
+                    self._thread_logs[thread_ident] = [log_content]
+                return
             with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
-                json.dump({
-                    "path": path,
-                    "filename": filename,
-                    "lineno": lineno,
-                    "text": str(json_msg),
-                    "source": source,
-                    "log_level": level,
-                    "depth": len(self._depth)
-                }, f)
+                json.dump(log_content, f)
                 f.write('\n')
 
     def _log(self, msg: str, level: int = LogLevels.high.level, critical: bool = False, prev_frames: int = 1):
