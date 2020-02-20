@@ -8,6 +8,7 @@ import webbrowser
 import json
 import jsonpickle
 import re
+import threading
 from venafi.tools.logger.log_resources import console_log_color
 from venafi.tools.logger.config import LOG_TO_JSON, OPEN_HTML_ON_FINISH, \
     LOG_LEVEL, LOG_DIR, LOG_FILENAME, LOGGING_ENABLED, CUSTOM_LOGLEVEL_PATH, \
@@ -36,6 +37,8 @@ if LOGGING_ENABLED and not os.path.exists(LOG_DIRECTORY):
         file_path += path + os.sep
         if not os.path.exists(file_path):
             os.mkdir(file_path)
+
+logger_lock = threading.Lock()
 
 
 def singleton(cls):
@@ -70,53 +73,79 @@ def initialize_logger(cls, *args, **kwargs):
 @singleton
 class Logger:
     def __init__(self):
-        self.log = self._log
-        self.log_method = self._log_method
-        self.log_exception = self._log_exception
+        # self.log = self._log
+        # self.log_method = self._log_method
+        # self.log_exception = self._log_exception
 
-        self._disabled_at_level = -1
-        self._depth = []
+        self._main_thread = threading.get_ident()
+        self._disabled_at_level = {
+            self._main_thread: -1
+        }
+        self._thread_depth = {
+            self._main_thread: []
+        }
+        self._thread_logs = {
+            self._main_thread: []
+        }
+        self._thread_watch_enabled = False
+        self._pending_logs = False
+        self._thread_starting_depth = 0
 
     def no_op(self, *args, **kwargs):
         pass
 
     def disable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if level < self._disabled_at_level:
+        if level < self._disabled_at_level.get(threading.get_ident(), -1):
             return
 
-        self._disabled_at_level = level
+        self._disabled_at_level[threading.get_ident()] = level
         if func_obj:
-            self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
+            self.log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
         else:
-            self._log(f'Disabling all logging. {why}', level=level, prev_frames=2)
-        self.log = self.no_op
-        self.log_method = self.no_op
-        self.log_exception = self.no_op
+            self.log(f'Disabling all logging. {why}', level=level, prev_frames=2)
+        # self.log = self.no_op
+        # self.log_method = self.no_op
+        # self.log_exception = self.no_op
+
+    def disable_thread_watch(self):
+        self._thread_watch_enabled = False
+        self._thread_starting_depth = 0
+        self._disabled_at_level = {
+            self._main_thread: self._disabled_at_level.get(self._main_thread, -1)
+        }
 
     def enable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if self._disabled_at_level > level:
+        if self._disabled_at_level.get(threading.get_ident(), -1) > level:
             return
 
-        self.log = self._log
-        self.log_method = self._log_method
-        self.log_exception = self._log_exception
-        self._disabled_at_level = -1
+        # self.log = self._log
+        # self.log_method = self._log_method
+        # self.log_exception = self._log_exception
+        self._disabled_at_level[threading.get_ident()] = -1
         if func_obj:
-            self._log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
+            self.log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
         else:
-            self._log(f'Enabling all logging. {why}', level=level, prev_frames=2)
+            self.log(f'Enabling all logging. {why}', level=level, prev_frames=2)
+
+    def enable_thread_watch(self):
+        self._thread_watch_enabled = True
+        self._pending_logs = True
+        self._thread_starting_depth = len(self._thread_depth.get(threading.get_ident(), []))
 
     def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
         regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + (masked_variables or []))) + ")"
-        
+
         def _wrap(func):
             def __wrapper(*args, **kwargs):
                 func_id = id(func)
+                thread_ident = threading.get_ident()
+                if not self._thread_depth.get(thread_ident):
+                    self._thread_depth[thread_ident] = []
 
                 def truncate_depth():
-                    indexes = [i for i, e in enumerate(self._depth) if e == func_id]
+                    indexes = [i for i, e in enumerate(self._thread_depth[thread_ident]) if e == func_id]
                     if indexes:
-                        self._depth = self._depth[:indexes[-1]]
+                        self._thread_depth[thread_ident] = self._thread_depth[thread_ident][:indexes[-1]]
 
                 # Before the function is called.
                 try:
@@ -131,6 +160,8 @@ class Logger:
 
                 if 'self' in params.keys():
                     del params['self']
+                elif 'cls' in params.keys():
+                    del params['cls']
                 before_string = 'Called ' + func.__qualname__
                 if params:
                     for key in params.keys():
@@ -140,7 +171,7 @@ class Logger:
                 self.log_method(func_obj=func, msg=before_string, level=level, reference_lastlineno=False)
 
                 truncate_depth()
-                self._depth.append(func_id)
+                self._thread_depth[thread_ident].append(func_id)
 
                 try:
                     result = func(*args, **kwargs)
@@ -724,27 +755,49 @@ class Logger:
             print(file_text + str(msg))
 
         if LOG_TO_JSON is True:
+            def commit(content):
+                with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
+                    json.dump(content, f)
+                    f.write('\n')
+
+            if not self._thread_watch_enabled and self._pending_logs:
+                for thread_ident, contents in self._thread_logs.items():
+                    for content in contents:
+                        commit(content)
+                self._pending_logs = False
+
             json_msg = html_formatted_msg or msg
             source = ''.join(['%s:\t%s' % (x + startlineno, y) for x, y in enumerate(source)])
-            with open('%s.json' % LOG_FILE_WITHOUT_EXT, 'a+') as f:
-                json.dump({
-                    "path": path,
-                    "filename": filename,
-                    "lineno": lineno,
-                    "text": str(json_msg),
-                    "source": source,
-                    "log_level": level,
-                    "depth": len(self._depth)
-                }, f)
-                f.write('\n')
+            log_content = {
+                "path": path,
+                "filename": filename,
+                "lineno": lineno,
+                "text": str(json_msg),
+                "source": source,
+                "log_level": level,
+                "depth": len(self._thread_depth[threading.get_ident()]) + self._thread_starting_depth
+            }
+            if self._thread_watch_enabled:
+                thread_ident = threading.get_ident()
+                with logger_lock:
+                    try:
+                        self._thread_logs[thread_ident].append(log_content)
+                    except:
+                        self._thread_logs[thread_ident] = [log_content]
+                return
+            commit(log_content)
 
-    def _log(self, msg: str, level: int = LogLevels.high.level, critical: bool = False, prev_frames: int = 1):
-        frame = inspect.currentframe()
+    def log(self, msg: str, level: int = LogLevels.high.level, critical: bool = False, prev_frames: int = 1):
+        if self._disabled_at_level.get(threading.get_ident(), -1) > level:
+            return
+        with logger_lock:
+            frame = inspect.currentframe()
         outerframes = inspect.getouterframes(frame)[prev_frames]
         self._create_log(msg=msg, outerframes=outerframes, level=level if not critical else LogLevels.critical.level)
 
-    def _log_exception(self, skip_console=True):
-        tb = sys.exc_info()[2]
+    def log_exception(self, skip_console=True):
+        with logger_lock:
+            tb = sys.exc_info()[2]
         while True:
             if tb.tb_next is None:
                 break
@@ -756,5 +809,7 @@ class Logger:
         self._create_log(msg=msg, outerframes=outerframes, level=LogLevels.critical.level,
                          skip_console=skip_console, html_formatted_msg=html_msg)
 
-    def _log_method(self, func_obj, msg: str, level: int = LogLevels.high.level, reference_lastlineno: bool = False):
+    def log_method(self, func_obj, msg: str, level: int = LogLevels.high.level, reference_lastlineno: bool = False):
+        if self._disabled_at_level.get(threading.get_ident(), -1) > level:
+            return
         self._create_log(msg=msg, func_obj=func_obj, level=level, reference_lastlineno=reference_lastlineno)
