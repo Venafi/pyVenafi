@@ -15,7 +15,8 @@ class Authenticate:
     to WebSDK and log a message that Aperture could not be used. It should be noted that more support
     is provided by WebSDK, which is the default.
     """
-    def __init__(self, host: str, username: str, password: str, preference='websdk'):
+    def __init__(self, host: str, username: str, password: str, preference='websdk', websdk_token: str = None,
+                 aperture_token: str = None):
         """
         Args:
             host: Hostname or IP Address
@@ -23,8 +24,8 @@ class Authenticate:
             password: Password
             preference: 'websdk' or 'aperture'
         """
-        self.websdk = WebSDK(host=host, username=username, password=password)
-        self.aperture = Aperture(host=host, username=username, password=password)
+        self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token)
+        self.aperture = Aperture(host=host, username=username, password=password, token=aperture_token)
         self.preference = preference.lower()
         if self.preference not in {'websdk', 'aperture'}:
             raise ValueError('Invalid preference. Must be one of "websdk" or "aperture".')
@@ -44,6 +45,16 @@ class Authenticate:
     @property
     def password(self):
         return self._password
+
+    def copy(self):
+        return Authenticate(
+            host=self._host,
+            username=self._username,
+            password=self._password,
+            preference=self.preference,
+            websdk_token=self.websdk._token,
+            aperture_token=self.aperture._token
+        )
 
     def re_authenticate(self, host: str = None, username: str = None, password: str = None, preference=None):
         """

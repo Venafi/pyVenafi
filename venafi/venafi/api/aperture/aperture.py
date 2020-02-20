@@ -10,8 +10,8 @@ class Aperture:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap(LogLevels.medium.level, masked_variables=['password'])
-    def __init__(self, host: str, username: str, password: str):
+    @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'token'])
+    def __init__(self, host: str, username: str, password: str, token: str = None):
         """
         Args:
             host: Hostname or IP Address of TPP
@@ -36,9 +36,12 @@ class Aperture:
         self.Users = _Users(self)
 
         # Update the authorization header to include the API Key token.
-        token = self.Users.Authorize.post(username=username, password=password).token
+        if not token:
+            token = self.Users.Authorize.post(username=username, password=password).token
+            token = f'VENAFI {token}'
+        self._token = token
         self._session.headers.update({
-            'Authorization': f'VENAFI {token}'
+            'Authorization': f'{token}'
         })
 
         # Initialize the rest of the endpoints with self, which contains the base url,

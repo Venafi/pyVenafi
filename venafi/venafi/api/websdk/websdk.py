@@ -31,8 +31,8 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'refresh_token', 'access_token'])
-    def __init__(self, host: str, username: str, password: str, refresh_token: str = None):
+    @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'token'])
+    def __init__(self, host: str, username: str, password: str, token: str = None):
         """
         Args:
             host: Hostname or IP Address of TPP
@@ -54,33 +54,31 @@ class WebSDK:
 
         # Update the authorization header to include the API Key token.
 
-        # Deprecated
+        # Deprecated since TPP Version 20.1
         # token = self.Authorize.post(username=username, password=password).token
         # authorization_header = {'X-Venafi-API-Key': token}
 
-        scope = [
-            Scope.any(approve=True, manage=True),
-            Scope.agent(delete=True),
-            Scope.certificate(delete=True, discover=True, manage=True, revoke=True),
-            Scope.configuration(delete=True, manage=True),
-            Scope.restricted(delete=True, manage=True),
-            Scope.security(delete=True, manage=True),
-            Scope.ssh(delete=True, discover=True, manage=True)
-        ]
-        if refresh_token:
-            self._oauth = self.Authorize.Token.post(
-                client_id='websdk',
-                refresh_token=refresh_token
-            )
-        else:
-            self._oauth = self.Authorize.OAuth.post(
+        if not token:
+            scope = [
+                Scope.any(approve=True, manage=True),
+                Scope.agent(delete=True),
+                Scope.certificate(delete=True, discover=True, manage=True, revoke=True),
+                Scope.configuration(delete=True, manage=True),
+                Scope.restricted(delete=True, manage=True),
+                Scope.security(delete=True, manage=True),
+                Scope.ssh(delete=True, discover=True, manage=True)
+            ]
+            oauth = self.Authorize.OAuth.post(
                 client_id="websdk",
                 username=username,
                 password=password,
                 scope=';'.join(scope)
             )
+            self._token = oauth.access_token
+        else:
+            self._token = token
         authorization_header = {
-            'Authorization': f'Bearer {self._oauth.access_token}'
+            'Authorization': f'Bearer {self._token}'
         }
         self._session.headers.update(authorization_header)
 
@@ -112,5 +110,4 @@ class WebSDK:
         """
         Performs a re-authentication using the same parameters used to authorize initially.
         """
-        self.__init__(host=self._host, username=self._username, password=self._password,
-                      refresh_token=self._oauth.refresh_token)
+        self.__init__(host=self._host, username=self._username, password=self._password)
