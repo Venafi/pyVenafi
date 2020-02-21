@@ -73,10 +73,6 @@ def initialize_logger(cls, *args, **kwargs):
 @singleton
 class Logger:
     def __init__(self):
-        # self.log = self._log
-        # self.log_method = self._log_method
-        # self.log_exception = self._log_exception
-
         self._main_thread = threading.get_ident()
         self._disabled_at_level = {
             self._main_thread: -1
@@ -740,9 +736,9 @@ class Logger:
             else:
                 file_text_color = file_text_color.colors.console
 
-            file_text = '{color}File "{path}", line {lineno}{end}\n'.format(
+            file_text = '{color}File "{path}", line {lineno}{end}:\n'.format(
                 color=file_text_color, path=path, lineno=lineno, end=console_log_color(0, 0, 0)
-            )
+            ).strip()
             print(file_text + str(msg))
 
         if LOG_TO_JSON is True:
