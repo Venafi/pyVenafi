@@ -91,21 +91,15 @@ class Logger:
         self._pending_logs = False
         self._thread_starting_depth = 0
 
-    def no_op(self, *args, **kwargs):
-        pass
-
     def disable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if level < self._disabled_at_level.get(threading.get_ident(), -1):
+        if level <= self._disabled_at_level.get(threading.get_ident(), -1):
             return
 
-        self._disabled_at_level[threading.get_ident()] = level
         if func_obj:
             self.log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
         else:
             self.log(f'Disabling all logging. {why}', level=level, prev_frames=2)
-        # self.log = self.no_op
-        # self.log_method = self.no_op
-        # self.log_exception = self.no_op
+        self._disabled_at_level[threading.get_ident()] = level
 
     def disable_thread_watch(self):
         self._thread_watch_enabled = False
@@ -115,12 +109,9 @@ class Logger:
         }
 
     def enable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if self._disabled_at_level.get(threading.get_ident(), -1) > level:
+        if self._disabled_at_level.get(threading.get_ident(), -1) >= level:
             return
 
-        # self.log = self._log
-        # self.log_method = self._log_method
-        # self.log_exception = self._log_exception
         self._disabled_at_level[threading.get_ident()] = -1
         if func_obj:
             self.log_method(func_obj=func_obj, msg=why, level=level, reference_lastlineno=reference_lastlineno)
@@ -749,7 +740,7 @@ class Logger:
             else:
                 file_text_color = file_text_color.colors.console
 
-            file_text = '{color}File "{path}", line {lineno}{end}'.format(
+            file_text = '{color}File "{path}", line {lineno}{end}\n'.format(
                 color=file_text_color, path=path, lineno=lineno, end=console_log_color(0, 0, 0)
             )
             print(file_text + str(msg))
@@ -788,7 +779,7 @@ class Logger:
             commit(log_content)
 
     def log(self, msg: str, level: int = LogLevels.high.level, critical: bool = False, prev_frames: int = 1):
-        if self._disabled_at_level.get(threading.get_ident(), -1) > level:
+        if self._disabled_at_level.get(threading.get_ident(), -1) >= level:
             return
         with logger_lock:
             frame = inspect.currentframe()
@@ -810,6 +801,6 @@ class Logger:
                          skip_console=skip_console, html_formatted_msg=html_msg)
 
     def log_method(self, func_obj, msg: str, level: int = LogLevels.high.level, reference_lastlineno: bool = False):
-        if self._disabled_at_level.get(threading.get_ident(), -1) > level:
+        if self._disabled_at_level.get(threading.get_ident(), -1) >= level:
             return
         self._create_log(msg=msg, func_obj=func_obj, level=level, reference_lastlineno=reference_lastlineno)

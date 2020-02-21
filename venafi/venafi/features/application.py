@@ -992,39 +992,14 @@ class PKCS11(_ApplicationBase):
     def __init__(self, auth):
         super().__init__(auth=auth)
 
-    def create(self, name: str, parent_folder_dn: str, cryptoki_file_with_path: str, distribution_directory: str,
-               openssl_config_file_with_path: str, token_slot_identifier: str, token_slot_pin_dn: str, use_case: str,
-               attributes: dict = None, connection_method: str = ApplicationAttributeValues.ConnectionMethod.ssh,
-               embed_sans_in_csr: str = "No", import_certificates_into_hsm: str = '0',
-               label_format: str = ApplicationAttributeValues.PKCS11.LabelFormat.date_with_cn, port: int = 22,
-               protection_type: str = ApplicationAttributeValues.ProtectionType.module, openssl_directory: str = None,
-               openssl_type: str = ApplicationAttributeValues.PKCS11.OpenSslType.system,
-               reverse_subject_dn: str = "No"):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
         Creates a PKCS11 application object.
 
         Args:
             name: Name of the Apache application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
-            cryptoki_file_with_path: Absolute path to the Cryptoki file on the client machine.
-            distribution_directory: Absolute path to the folder on the client machine where the
-                certificate and chain are installed.
-            openssl_config_file_with_path: Absolute path to the OpenSSL configuration file on the
-                client machine.
-            token_slot_identifier: HSM token slot identifier.
-            token_slot_pin_dn: Absolute path to the password credential object storing the slot PIN.
-            use_case: Purpose for which the certificate is to be used.
             attributes: Additional attributes pertaining to the application object.
-            connection_method: Connection protocol for TPP to communicate with the client.
-            embed_sans_in_csr: If "Yes", the SANs are included in the CSR.
-            import_certificates_into_hsm: If ``True``, the certificates are imported into the HSM.
-            label_format: The format of the label. May be custom.
-            port: Connection port.
-            protection_type: Protection type of the HSM.
-            openssl_directory: Directory holding the OpenSSL executable. Only set when ``openssl_type`` is set to
-                be custom.
-            openssl_type: If set to 'System', then the ``openssl_directory`` is set to the default system location.
-            reverse_subject_dn: If "Yes", the subject's domain components are reversed in the CSR.
 
         Returns:
             Config Object representing the PKCS11 object.
@@ -1032,24 +1007,8 @@ class PKCS11(_ApplicationBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
         attributes = attributes or {}
-        pkcs11_attrs = ApplicationAttributes.PKCS11
         attributes.update({
-            ApplicationAttributes.driver_name: 'apppkcs11',
-            pkcs11_attrs.hsm_cryptoki_file: cryptoki_file_with_path,
-            pkcs11_attrs.hsm_certificate_directory: distribution_directory,
-            pkcs11_attrs.hsm_openssl_config_file: openssl_config_file_with_path,
-            pkcs11_attrs.hsm_openssl_path: openssl_directory,
-            pkcs11_attrs.hsm_token_label: token_slot_identifier,
-            pkcs11_attrs.hsm_token_password: token_slot_pin_dn,
-            pkcs11_attrs.hsm_requested_usecase: use_case,
-            ApplicationAttributes.connection_method: connection_method,
-            pkcs11_attrs.hsm_embed_sans_in_csr: embed_sans_in_csr,
-            pkcs11_attrs.hsm_import_certificate: import_certificates_into_hsm,
-            pkcs11_attrs.hsm_cka_label_format: label_format,
-            ApplicationAttributes.port: port,
-            pkcs11_attrs.hsm_protection_type: protection_type,
-            pkcs11_attrs.hsm_openssl_type: openssl_type,
-            pkcs11_attrs.hsm_reverse_subject_dn: reverse_subject_dn
+            ApplicationAttributes.driver_name: 'apppkcs11'
         })
         return self._config_create(
             name=name,

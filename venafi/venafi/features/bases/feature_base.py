@@ -143,7 +143,8 @@ class FeatureBase:
             )
             return
 
-        def is_expired(self):
+        def is_expired(self, poll: int = 0.5):
+            time.sleep(poll)
             return time.time() >= self.max_time
 
 
