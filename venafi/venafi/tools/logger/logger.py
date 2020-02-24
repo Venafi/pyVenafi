@@ -105,7 +105,7 @@ class Logger:
         }
 
     def enable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if self._disabled_at_level.get(threading.get_ident(), -1) >= level:
+        if level < self._disabled_at_level.get(threading.get_ident(), -1):
             return
 
         self._disabled_at_level[threading.get_ident()] = -1
