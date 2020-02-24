@@ -508,11 +508,11 @@ class Certificate(FeatureBase):
         cert = self._get(certificate_guid=certificate_guid)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                if cert.processing_details.stage == stage:
-                    if expect_workflow:
+                if cert.processing_details.stage is not None:
+                    if expect_workflow and cert.processing_details.stage == stage:
                         if 'pending workflow resolution' in cert.processing_details.status.lower():
                             return cert
-                    else:
+                    elif not expect_workflow and cert.processing_details.stage >= stage:
                         return cert
                 cert = self._get(certificate_guid=certificate_guid)
 
