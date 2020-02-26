@@ -23,6 +23,8 @@ def gather_pip_reqs():
                 req_file.seek(0)
                 req_file.write(b''.join(new_reqs))
                 req_file.truncate()
+            else:
+                print('\n>>>>>>>>>>>>> No changes to requirements.txt file...\n')
 
 
 def compile_docs():
