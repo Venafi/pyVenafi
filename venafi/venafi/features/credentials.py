@@ -29,7 +29,7 @@ class _CredentialBase(FeatureBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
         response = self._auth.websdk.Config.IsValid.post(object_dn=dn)
         result = response.result
@@ -373,7 +373,7 @@ class UsernamePasswordCredential(_CredentialBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
         response = self._auth.websdk.Config.IsValid.post(object_dn=dn)
         result = response.result
