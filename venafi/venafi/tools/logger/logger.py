@@ -30,7 +30,7 @@ jsonpickle.set_encoder_options('json', sort_keys=True, indent=4)
 LOG_TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
 LOG_DIRECTORY = LOG_DIR or '%s/logs' % os.path.split(__file__)[0]
-LOG_FILE_WITHOUT_EXT = '%s/%s_%s' % (LOG_DIRECTORY, LOG_FILENAME, LOG_TIMESTAMP)
+LOG_FILE_WITHOUT_EXT = os.path.abspath('%s/%s_%s' % (LOG_DIRECTORY, LOG_FILENAME, LOG_TIMESTAMP))
 if LOGGING_ENABLED and not os.path.exists(LOG_DIRECTORY):
     file_path = ''
     for path in LOG_DIRECTORY.split(os.sep):
