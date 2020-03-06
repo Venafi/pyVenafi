@@ -2,6 +2,7 @@ from venafi.logger import logger, LogLevels
 from venafi.api.session import Session
 from venafi.api.aperture.endpoints.users import _Users
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
+from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
 
 
 class Aperture:
@@ -47,6 +48,7 @@ class Aperture:
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
         self.ConfigObjects = _ConfigObjects(aperture_obj=self)
+        self.CertificateDashboard = _CertificateDashboard(aperture_obj=self)
 
     def re_authenticate(self):
         """
