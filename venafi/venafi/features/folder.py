@@ -209,7 +209,8 @@ class Folder(FeatureBase):
 
         return self._auth.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
 
-    def search(self, object_name_pattern: str, object_type: str = None, recursive: bool = True, starting_dn: str = None):
+    def search(self, object_name_pattern: str = '*', object_types: List[str] = None, recursive: bool = True,
+               starting_dn: str = None):
         """
         Searches for an object with the given object name pattern. The pattern is a regular expression. An object type
         can be supplied to specify the TPP object type, such as 'X509 Certificate'. If a starting DN is given without
@@ -232,7 +233,7 @@ class Folder(FeatureBase):
 
         Args:
             object_name_pattern: A regular expression
-            object_type: TPP Object Type (also called a Config Class)
+            object_types: List of TPP Object Typse (also called a Config Classes)
             recursive: Search sub-folders when True
             starting_dn: Parent folder to all desired results
 
@@ -242,15 +243,23 @@ class Folder(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        if object_type:
-            objects = self._auth.websdk.Config.EnumerateObjectsDerivedFrom.post(derived_from=object_type, pattern=object_name_pattern).objects
-            if starting_dn:
-                objects = [obj for obj in objects if starting_dn in obj.dn]
-            return objects
+        if object_types:
+            objects = self._auth.websdk.Config.FindObjectsOfClass.post(
+                classes=object_types,
+                pattern=object_name_pattern,
+                object_dn=starting_dn,
+                recursive=recursive
+            ).objects
         elif starting_dn:
-            objects = self._auth.websdk.Config.Enumerate.post(object_dn=starting_dn, pattern=object_name_pattern, recursive=recursive).objects
+            objects = self._auth.websdk.Config.Enumerate.post(
+                object_dn=starting_dn,
+                pattern=object_name_pattern,
+                recursive=recursive
+            ).objects
         else:
-            objects = self._auth.websdk.Config.EnumerateAll.post(pattern=object_name_pattern).objects
+            objects = self._auth.websdk.Config.EnumerateAll.post(
+                pattern=object_name_pattern
+            ).objects
 
         return objects
 

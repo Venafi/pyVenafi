@@ -87,8 +87,11 @@ class Logger:
         self._pending_logs = False
         self._thread_starting_depth = 0
 
-    def disable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if level <= self._disabled_at_level.get(threading.get_ident(), -1):
+    def disable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None,
+                            reference_lastlineno: bool = False):
+        # The main thread overrides all threads if logging was disabled on the main thread.
+        if level <= self._disabled_at_level.get(threading.get_ident(), -1) or \
+           level <= self._disabled_at_level.get(self._main_thread, -1):
             return
 
         if func_obj:
@@ -105,7 +108,9 @@ class Logger:
         }
 
     def enable_all_logging(self, level: int = LogLevels.high.level, why: str = '', func_obj=None, reference_lastlineno: bool = False):
-        if level < self._disabled_at_level.get(threading.get_ident(), -1):
+        # The main thread overrides all threads if logging was disabled on the main thread.
+        if level < self._disabled_at_level.get(threading.get_ident(), -1) or \
+           level < self._disabled_at_level.get(self._main_thread, -1):
             return
 
         self._disabled_at_level[threading.get_ident()] = -1
@@ -747,6 +752,10 @@ class Logger:
                     json.dump(content, f)
                     f.write('\n')
 
+            thread_ident = threading.get_ident()
+            if not self._thread_depth.get(thread_ident):
+                self._thread_depth[thread_ident] = []
+
             if not self._thread_watch_enabled and self._pending_logs:
                 for thread_ident, contents in self._thread_logs.items():
                     for content in contents:
@@ -775,7 +784,9 @@ class Logger:
             commit(log_content)
 
     def log(self, msg: str, level: int = LogLevels.high.level, critical: bool = False, prev_frames: int = 1):
-        if self._disabled_at_level.get(threading.get_ident(), -1) >= level:
+        # The main thread overrides all threads if logging was disabled on the main thread.
+        if level <= self._disabled_at_level.get(threading.get_ident(), -1) or \
+           level <= self._disabled_at_level.get(self._main_thread, -1):
             return
         with logger_lock:
             frame = inspect.currentframe()
@@ -797,6 +808,8 @@ class Logger:
                          skip_console=skip_console, html_formatted_msg=html_msg)
 
     def log_method(self, func_obj, msg: str, level: int = LogLevels.high.level, reference_lastlineno: bool = False):
-        if self._disabled_at_level.get(threading.get_ident(), -1) >= level:
+        # The main thread overrides all threads if logging was disabled on the main thread.
+        if level <= self._disabled_at_level.get(threading.get_ident(), -1) or \
+           level <= self._disabled_at_level.get(self._main_thread, -1):
             return
         self._create_log(msg=msg, func_obj=func_obj, level=level, reference_lastlineno=reference_lastlineno)
