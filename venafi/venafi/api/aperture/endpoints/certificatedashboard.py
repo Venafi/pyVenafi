@@ -47,9 +47,9 @@ class _CertificateDashboard:
             self.json_response = self._get()
             return self
 
-    class _GetCertificateSigningAlgorithm(API):
+    class _GetCertificateSigningAlgorithms(API):
         def __init__(self, aperture_obj):
-            super().__init__(api_obj=aperture_obj, url='/CertificateDashboard/GetCertificateSigningAlgorithm',
+            super().__init__(api_obj=aperture_obj, url='/CertificateDashboard/GetCertificateSigningAlgorithms',
                              valid_return_codes=[200])
 
         @property
