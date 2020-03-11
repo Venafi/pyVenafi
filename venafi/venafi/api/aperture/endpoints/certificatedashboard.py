@@ -7,7 +7,7 @@ class _CertificateDashboard:
         self.GetCertificateExpireDates = self._GetCertificateExpireDates(aperture_obj=aperture_obj)
         self.GetCertificateIssuers = self._GetCertificateIssuers(aperture_obj=aperture_obj)
         self.GetCertificateKeyLength = self._GetCertificateKeyLength(aperture_obj=aperture_obj)
-        self.GetCertificateSigningAlgorithm = self._GetCertificateSigningAlgorithm(aperture_obj=aperture_obj)
+        self.GetCertificateSigningAlgorithms = self._GetCertificateSigningAlgorithms(aperture_obj=aperture_obj)
         self.GetCertificateValidityPeriods = self._GetCertificateValidityPeriods(aperture_obj=aperture_obj)
         self.GetProtectionStatus = self._GetProtectionStatus(aperture_obj=aperture_obj)
         self.GetValidationChain = self._GetValidationChain(aperture_obj=aperture_obj)
