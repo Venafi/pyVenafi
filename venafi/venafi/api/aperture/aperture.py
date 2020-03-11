@@ -18,15 +18,18 @@ class Aperture:
             host: Hostname or IP Address of TPP
             username: Username
             password: Password
-            certificate: Certificate
+            token: Either an Authorization Token created by Aperture or an OAuth Access Bearer Token.
         """
+        # region Instance Variables
         self._host = host
         self._username = username
         self._password = password
 
         # This is used by the endpoints to avoid redundancy.
         self._base_url = f'https://{host}/aperture/api'
+        # endregion Instance Variables
 
+        # region Authentication
         # This is used by the endpoints to authorize the API writes.
         self._session = Session(headers={
             'Content-Type': 'application/json',
@@ -44,14 +47,20 @@ class Aperture:
         self._session.headers.update({
             'Authorization': f'{token}'
         })
+        # endregion Authentication
 
+        # region Initialize All Aperture Endpoints
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
         self.ConfigObjects = _ConfigObjects(aperture_obj=self)
         self.CertificateDashboard = _CertificateDashboard(aperture_obj=self)
+        # endregion Initialize All Aperture Endpoints
 
-    def re_authenticate(self):
+    def re_authenticate(self, token: str = None):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
+
+        Args:
+            token: OAuth token created via WebSDK.
         """
-        self.__init__(host=self._host, username=self._username, password=self._password)
+        self.__init__(host=self._host, username=self._username, password=self._password, token=token)

@@ -23,6 +23,7 @@ class _Authorize(API):
         """
         This POST method is written differently in order to effectively omit the password from being logged.
         """
+        self._log_api_deprecated_warning(alternate_api=self.OAuth._url)
         body = {
             "Username": username,
             "Password": password

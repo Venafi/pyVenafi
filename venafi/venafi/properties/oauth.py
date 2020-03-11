@@ -19,10 +19,6 @@ class Scope:
             return scope_name
 
     @classmethod
-    def any(cls, approve: bool = False, manage: bool = False):
-        return cls._create_scope('any', approve=approve, manage=manage)
-
-    @classmethod
     def agent(cls, delete: bool = False):
         return cls._create_scope('agent', delete=delete)
 
