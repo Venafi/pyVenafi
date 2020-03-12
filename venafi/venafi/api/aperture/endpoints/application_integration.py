@@ -17,27 +17,26 @@ class _ApplicationIntegration(API):
              description: str, vendor: str, mode: str = "create"):
         body = {
             'allowedIdentities': allowed_identities,
-            'applicationId': application_id,
-            'applicationName': application_name,
-            'applicationScope': application_scope,
-            'description': description,
-            'vendor': vendor,
-            'mode': mode
+            'applicationId'    : application_id,
+            'applicationName'  : application_name,
+            'applicationScope' : application_scope,
+            'description'      : description,
+            'vendor'           : vendor,
+            'mode'             : mode
         }
 
         self.json_response = self._post(data=body)
         return self
 
-    def put(self, allowed_identities: List[str], application_id: str, application_name: str, application_scope: dict,
-            description: str, vendor: str, mode: str = "edit"):
+    def put(self, allowed_identities: List[str], application_id: str, application_name: str, description: str, vendor: str,
+            mode: str = "edit"):
         body = {
             'allowedIdentities': allowed_identities,
-            'applicationId': application_id,
-            'applicationName': application_name,
-            'applicationScope': application_scope,
-            'description': description,
-            'vendor': vendor,
-            'mode': mode
+            'applicationId'    : application_id,
+            'applicationName'  : application_name,
+            'description'      : description,
+            'vendor'           : vendor,
+            'mode'             : mode
         }
 
         self.json_response = self._put(data=body)
@@ -58,7 +57,7 @@ class _ApplicationIntegration(API):
         @json_response_property()
         def allowed_identities(self):
             return [Identity.Identity(id, self._api_type) for id in self._from_json(key='allowedIdentities')]
-        
+
         @property
         @json_response_property()
         def application_id(self) -> str:
@@ -73,7 +72,7 @@ class _ApplicationIntegration(API):
         @json_response_property()
         def application_scope(self):
             return OAuth.ApplicationScope(self._from_json(key='applicationScope'))
-        
+
         @property
         @json_response_property()
         def description(self) -> str:
