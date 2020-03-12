@@ -26,7 +26,7 @@ class _Identity:
         @property
         @json_response_property()
         def identity(self):
-            return Identity.Identity(self._from_json('ID'))
+            return Identity.Identity(self._from_json('ID'), self._api_type) 
 
         @property
         @json_response_property()
@@ -59,7 +59,7 @@ class _Identity:
         @property
         @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
+            return [Identity.Identity(m, self._api_type)  for m in self._from_json('Members', return_on_error=list)]
 
         @property
         @json_response_property()
@@ -83,7 +83,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
+            return [Identity.Identity(i, self._api_type)  for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, filter: str, limit: int, identity_type: int):
             data = {
@@ -102,7 +102,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
+            return [Identity.Identity(i, self._api_type)  for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict):
             body = {
@@ -119,7 +119,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
+            return [Identity.Identity(i, self._api_type)  for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict, resolve_nested: bool = False):
             body = {
@@ -137,7 +137,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
+            return [Identity.Identity(i, self._api_type)  for i in self._from_json(key='Identities', return_on_error=list)]
 
         def post(self, identity: dict):
             body = {
@@ -205,7 +205,7 @@ class _Identity:
         @property
         @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
+            return [Identity.Identity(m, self._api_type)  for m in self._from_json('Members', return_on_error=list)]
 
         @property
         @json_response_property()
@@ -229,7 +229,7 @@ class _Identity:
         @property
         @json_response_property()
         def members(self):
-            return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
+            return [Identity.Identity(m, self._api_type)  for m in self._from_json('Members', return_on_error=list)]
 
         @property
         @json_response_property()
@@ -239,7 +239,7 @@ class _Identity:
         @property
         @json_response_property()
         def owners(self):
-            return [Identity.Identity(m) for m in self._from_json('Owners', return_on_error=list)]
+            return [Identity.Identity(m, self._api_type)  for m in self._from_json('Owners', return_on_error=list)]
 
         def put(self, group: str, owners: list, show_members: bool = False):
             body = {
@@ -258,7 +258,7 @@ class _Identity:
         @property
         @json_response_property()
         def identity(self):
-            return Identity.Identity(self._from_json('ID'))
+            return Identity.Identity(self._from_json('ID'), self._api_type) 
 
         def put(self, group: dict, new_group_name: str):
             body = {
@@ -276,7 +276,7 @@ class _Identity:
         @property
         @json_response_property()
         def identities(self):
-            return [Identity.Identity(i) for i in self._from_json(key='Identities')]
+            return [Identity.Identity(i, self._api_type)  for i in self._from_json(key='Identities')]
 
         def get(self):
             self.json_response = self._get()
@@ -289,7 +289,7 @@ class _Identity:
         @property
         @json_response_property()
         def identity(self):
-            return Identity.Identity(self._from_json('ID'))
+            return Identity.Identity(self._from_json('ID'), self._api_type) 
 
         def post(self, identity: dict, password: str, old_password: str = None):
             body = {
@@ -308,7 +308,7 @@ class _Identity:
         @property
         @json_response_property()
         def identity(self):
-            return Identity.Identity(self._from_json('ID'))
+            return Identity.Identity(self._from_json('ID'), self._api_type) 
 
         def post(self, identity: dict):
             body = {

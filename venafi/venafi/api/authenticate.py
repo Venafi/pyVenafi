@@ -1,3 +1,5 @@
+from typing import Union
+from venafi.properties.oauth import Scope
 from venafi.api.websdk.websdk import WebSDK
 from venafi.api.aperture.aperture import Aperture
 
@@ -16,7 +18,7 @@ class Authenticate:
     is provided by WebSDK, which is the default.
     """
     def __init__(self, host: str, username: str, password: str, preference='websdk', application_id: str = None,
-                 scope: str = None, websdk_token: str = None, aperture_token: str = None):
+                 scope: Union[Scope, str] = None, websdk_token: str = None, aperture_token: str = None):
         """
         Authenticates the given user to WebSDK and Aperture. The only supported method for authentication at
         this time is with a username and password.

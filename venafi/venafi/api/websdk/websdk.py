@@ -1,5 +1,7 @@
+from typing import Union
 from venafi.logger import logger, LogLevels
 from venafi.api.session import Session
+from venafi.properties.oauth import Scope
 from venafi.api.websdk.endpoints.authorize import _Authorize
 from venafi.api.websdk.endpoints.certificates import _Certificates
 from venafi.api.websdk.endpoints.client import _Client
@@ -31,8 +33,8 @@ class WebSDK:
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
     @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'token'])
-    def __init__(self, host: str, username: str, password: str, token: str = None,
-                 application_id: str = None, scope: str = None, refresh_token: str = None):
+    def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
+                 scope: Union[Scope, str] = None, refresh_token: str = None):
         """
         Authenticates the given user to WebSDK. The only supported method for authentication at this time
         is with a username and password. Either an OAuth bearer token can be obtained, which requires
@@ -73,6 +75,12 @@ class WebSDK:
 
         if not token:
             if application_id:
+                if not scope:
+                    raise ValueError(f'OAuth authentication requires both an Application ID and a scope be. '
+                                     f'The scope was not defined.')
+                elif isinstance(scope, Scope):
+                    scope = scope.to_string()
+
                 oauth = self.Authorize.OAuth.post(
                     client_id=application_id,
                     username=username,
