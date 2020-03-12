@@ -1,8 +1,9 @@
 from venafi.logger import logger, LogLevels
 from venafi.api.session import Session
-from venafi.api.aperture.endpoints.users import _Users
+from venafi.api.aperture.endpoints.application_integration import _ApplicationIntegration
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
+from venafi.api.aperture.endpoints.users import _Users
 
 
 class Aperture:
@@ -52,6 +53,7 @@ class Aperture:
         # region Initialize All Aperture Endpoints
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
+        self.ApplicationIntegration = _ApplicationIntegration(aperture_obj=self)
         self.ConfigObjects = _ConfigObjects(aperture_obj=self)
         self.CertificateDashboard = _CertificateDashboard(aperture_obj=self)
         # endregion Initialize All Aperture Endpoints
