@@ -95,14 +95,3 @@ class Scope:
             scope_name='statistics',
             read=read
         )
-
-
-scope = Scope()
-scope.agent(True, True)
-scope.certificate(True, True, True, True, True)
-scope.configuration(True, True, True)
-scope.restricted(True, True, True)
-scope.security(True, True, True)
-scope.ssh(True, True, True, True)
-scope.statistics(True)
-print(scope.to_string())
