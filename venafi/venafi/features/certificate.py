@@ -435,11 +435,11 @@ class Certificate(FeatureBase):
 
     def wait_for_enrollment_to_complete(self, certificate_guid: str, current_thumbprint: str, timeout: int = 60):
         """
-        Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The `current_thumbprint``
+        Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
         thumbprint and either the processing stage is "none" or greater than or equal to 800, which is the start of the
         provisioning stage. If the certificate management type is set to *Provisioning*, use the application feature
-        :meth:`venafi.venafi.features.application._ApplicationBase.
+        :meth:`venafi.venafi.features.application._ApplicationBase`.
 
         Args:
             certificate_guid: GUID of the certificate object.

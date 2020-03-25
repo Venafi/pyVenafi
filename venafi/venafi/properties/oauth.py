@@ -1,49 +1,97 @@
 class Scope:
-    @classmethod
-    def _create_scope(cls, scope_name: str, approve: bool= False, delete: bool = False, discover: bool = False,
-                      manage: bool = False, revoke: bool = False):
-        restrictions = []
-        if approve:
-            restrictions.append('approve')
-        if delete:
-            restrictions.append('delete')
-        if discover:
-            restrictions.append('discover')
-        if manage:
-            restrictions.append('manage')
-        if revoke:
-            restrictions.append('revoke')
-        if restrictions:
-            return f'{scope_name}:' + ','.join(restrictions)
-        else:
-            return scope_name
+    def __init__(self):
+        self.scopes = []
 
-    @classmethod
-    def any(cls, approve: bool = False, manage: bool = False):
-        return cls._create_scope('any', approve=approve, manage=manage)
+    def _scope(self, scope_name: str, approve: bool = None, delete: bool = None, discover: bool = None,
+               manage: bool = None, read: bool = None, revoke: bool = None):
+        scope = {
+            'name': scope_name, 
+            'permissions': {
+                'approve': approve,
+                'delete': delete,
+                'discover': discover,
+                'manage': manage,
+                'read': read,
+                'revoke': revoke
+            }
+        }
+        self.scopes.append(scope)
 
-    @classmethod
-    def agent(cls, delete: bool = False):
-        return cls._create_scope('agent', delete=delete)
+    def to_string(self):
+        total_scope = []
+        for scope in self.scopes:  # type: dict
+            name = scope.get('name', '??unknown??')
+            restrictions = ','.join([
+                k for k, v in scope.get('permissions', {}).items()
+                if v is True and k != 'read'
+            ])
+            if restrictions:
+                total_scope.append(f"{name}:{restrictions}")
+            else:
+                total_scope.append(name)
+        return ';'.join(total_scope)
 
-    @classmethod
-    def certificate(cls, delete: bool = False, discover: bool = False, manage: bool = False,
-                    revoke: bool = False):
-        return cls._create_scope('certificate', delete=delete, discover=discover, manage=manage,
-                                 revoke=revoke)
+    def agent(self, delete: bool = False, read: bool = False):
+        self._scope(
+            scope_name='agent',
+            delete=delete,
+            read=read
+        )
 
-    @classmethod
-    def configuration(cls, delete: bool = False, manage: bool = False):
-        return cls._create_scope('configuration', delete=delete, manage=manage)
+    def certificate(self, delete: bool = False, discover: bool = False, manage: bool = False,
+                    read: bool = False, revoke: bool = False):
+        self._scope(
+            scope_name='certificate',
+            delete=delete,
+            discover=discover,
+            manage=manage,
+            read=read,
+            revoke=revoke
+        )
 
-    @classmethod
-    def restricted(cls, delete: bool = False, manage: bool = False):
-        return cls._create_scope('restricted', delete=delete, manage=manage)
+    def configuration(self, delete: bool = False, manage: bool = False, read: bool = False):
+        self._scope(
+            scope_name='configuration',
+            delete=delete,
+            manage=manage,
+            read=read
+        )
 
-    @classmethod
-    def security(cls, delete: bool = False, manage: bool = False):
-        return cls._create_scope('security', delete=delete, manage=manage)
+    def codesign(self, delete: bool = False, manage: bool = False, read: bool = False):
+        self._scope(
+            scope_name='codesign',
+            delete=delete,
+            manage=manage,
+            read=read
+        )
 
-    @classmethod
-    def ssh(cls, delete: bool = False, discover: bool = False, manage: bool = False):
-        return cls._create_scope('ssh', delete=delete, discover=discover, manage=manage)
+    def restricted(self, delete: bool = False, manage: bool = False, read: bool = False):
+        self._scope(
+            scope_name='restricted',
+            delete=delete,
+            manage=manage,
+            read=read
+        )
+
+    def security(self, delete: bool = False, manage: bool = False, read: bool = False):
+        self._scope(
+            scope_name='security',
+            delete=delete,
+            manage=manage,
+            read=read
+        )
+
+    def ssh(self, delete: bool = False, discover: bool = False, manage: bool = False, read: bool = False):
+        self._scope(
+            scope_name='ssh',
+            delete=delete,
+            discover=discover,
+            manage=manage,
+            read=read
+        )
+
+    def statistics(self, read: bool = False):
+        self._scope(
+            scope_name='statistics',
+            read=read
+        )

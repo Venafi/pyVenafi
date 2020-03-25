@@ -4,11 +4,11 @@ from tempfile import NamedTemporaryFile
 from setuptools import sandbox
 import asyncio
 import asyncssh
-from sphinx import make_mode
 from setup import __version__
 
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+MAKE_CMD = 'make' if sys.platform != 'win32' else 'make.bat'
 
 
 def gather_pip_reqs():
@@ -28,11 +28,11 @@ def gather_pip_reqs():
 
 
 def compile_docs():
-    curdir = os.curdir
+    cur_dir = os.curdir
     os.chdir(f'{PROJECT_DIR}/venafi/docs')
-    make_mode.run_make_mode(['clean', '.', '_build'])
-    make_mode.run_make_mode(['html', '.', '_build'])
-    os.chdir(curdir)
+    os.system(f'{MAKE_CMD} clean')
+    os.system(f'{MAKE_CMD} html')
+    os.chdir(cur_dir)
 
 
 async def send_files(src: str, dst: str):

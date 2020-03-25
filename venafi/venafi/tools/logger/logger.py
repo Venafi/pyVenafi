@@ -741,10 +741,10 @@ class Logger:
             else:
                 file_text_color = file_text_color.colors.console
 
-            file_text = '{color}File "{path}", line {lineno}{end}:\n'.format(
+            file_text = '{color}File "{path}", line {lineno}{end}:'.format(
                 color=file_text_color, path=path, lineno=lineno, end=console_log_color(0, 0, 0)
-            ).strip()
-            print(file_text + str(msg))
+            ).lstrip()
+            print(f'{file_text}\n{str(msg)}\n')
 
         if LOG_TO_JSON is True:
             def commit(content):
