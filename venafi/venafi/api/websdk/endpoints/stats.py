@@ -50,5 +50,3 @@ class _Stats:
 
             self.json_response = self._post(data=body)
             return self
-
-

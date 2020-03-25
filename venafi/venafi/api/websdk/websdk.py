@@ -22,6 +22,7 @@ from venafi.api.websdk.endpoints.ssh import _SSH
 from venafi.api.websdk.endpoints.system_status import _SystemStatus
 from venafi.api.websdk.endpoints.secret_store import _SecretStore
 from venafi.api.websdk.endpoints.stats import _Stats
+from venafi.api.websdk.endpoints.teams import _Teams
 from venafi.api.websdk.endpoints.workflow import _Workflow
 from venafi.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
 
@@ -135,6 +136,7 @@ class WebSDK:
         self.SSH = _SSH(self)
         self.Stats = _Stats(self)
         self.SystemStatus = _SystemStatus(self)
+        self.Teams = _Teams(self)
         self.Workflow = _Workflow(self)
         self.X509CertificateStore = _X509CertificateStore(self)
         # endregion Initialize All WebSDK Endpoints

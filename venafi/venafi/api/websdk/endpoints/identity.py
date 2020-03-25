@@ -31,7 +31,7 @@ class _Identity:
         @property
         @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self._from_json(key='InvalidMembers', return_on_error=list)]
+            return [Identity.InvalidIdentity(im) for im in self._from_json(key='InvalidMembers', return_on_error=list)]
 
         @property
         @json_response_property()
@@ -54,7 +54,7 @@ class _Identity:
         @property
         @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
+            return [Identity.InvalidIdentity(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
 
         @property
         @json_response_property()
@@ -200,7 +200,7 @@ class _Identity:
         @property
         @json_response_property()
         def invalid_members(self):
-            return [Identity.InvalidMembers(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
+            return [Identity.InvalidIdentity(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
 
         @property
         @json_response_property()

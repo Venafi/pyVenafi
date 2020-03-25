@@ -12,6 +12,15 @@ class SSH:
             self.error_code = resp_obj.get('ErrorCode')  # type: int
             self.error_message = ResultCodes.SSHErrorCodes.get(self.error_code, 'Unknown') if self.error_code else None  # type: str
 
+    class ConnectionResult:
+        def __init__(self, connection_result_dict: dict):
+            if not isinstance(connection_result_dict, dict):
+                connection_result_dict = {}
+
+            self.device_guid = connection_result_dict.get('DeviceGuid')  # type: str
+            self.error = connection_result_dict.get('Error')  # type: str
+            self.success = connection_result_dict.get('Success')  # type: bool
+
     class DeviceData:
         def __init__(self, data_dict: dict):
             if not isinstance(data_dict, dict):

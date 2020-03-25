@@ -73,6 +73,8 @@ class API:
         self._api_obj = api_obj  # type:
         self._session = api_obj._session  # type: Session
         self._api_type = api_obj.__class__.__name__.lower()
+        if not url.startswith('/'):
+            url = '/' + url
         self._url = self._api_obj._base_url + url
         self._valid_return_codes = valid_return_codes
 
