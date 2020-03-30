@@ -1,3 +1,4 @@
+from typing import List
 from venafi.api.api_base import API, json_response_property
 from venafi.properties.response_objects.ssh import SSH
 
@@ -36,6 +37,7 @@ class _SSH:
         self.Rotate = self._Rotate(websdk_obj=websdk_obj)
         self.SetUnmatchedKeysetPassPhrase = self._SetUnmatchedKeysetPassPhrase(websdk_obj=websdk_obj)
         self.SkipKeyRotation = self._SkipKeyRotation(websdk_obj=websdk_obj)
+        self.TestDeviceConnection = self._TestDeviceConnection(websdk_obj=websdk_obj)
         self.Widget = self._Widget(websdk_obj=websdk_obj)
 
     class _AddAuthorizedKey(API):
@@ -838,6 +840,23 @@ class _SSH:
         def post(self, key_id: str):
             body = {
                 'KeyId': key_id
+            }
+
+            self.json_response = self._post(data=body)
+            return self
+
+    class _TestDeviceConnection(API):
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url='SSH/TestDeviceConnection', valid_return_codes=[200])
+
+        @property
+        @json_response_property()
+        def connection_results(self):
+            return [SSH.ConnectionResult(result) for result in self._from_json()]
+
+        def post(self, device_guids: List[str]):
+            body = {
+                'DeviceGuids': device_guids
             }
 
             self.json_response = self._post(data=body)

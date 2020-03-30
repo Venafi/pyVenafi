@@ -26,12 +26,12 @@ class Identity:
                 self.type = ''
                 self.universal = ''
 
-    class InvalidMembers:
-        def __init__(self, invalid_members_dict: dict):
-            if not isinstance(invalid_members_dict, dict):
-                invalid_members_dict = {}
+    class InvalidIdentity:
+        def __init__(self, invalid_identity_dict: dict):
+            if not isinstance(invalid_identity_dict, dict):
+                invalid_identity_dict = {}
 
-            self.prefix = invalid_members_dict.get('Prefix')  # type: str
-            self.prefixed_name = invalid_members_dict.get('PrefixedName')  # type: str
-            self.prefixed_universal = invalid_members_dict.get('PrefixedUniversal')  # type: str
-            self.universal = invalid_members_dict.get('Universal')  # type: str
+            self.prefix = invalid_identity_dict.get('Prefix')  # type: str
+            self.prefixed_name = invalid_identity_dict.get('PrefixedName')  # type: str
+            self.prefixed_universal = invalid_identity_dict.get('PrefixedUniversal')  # type: str
+            self.universal = invalid_identity_dict.get('Universal')  # type: str
