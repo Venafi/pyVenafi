@@ -14,7 +14,10 @@ def feature():
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                setattr(cls, attr, logger.wrap(LogLevels.medium.level)(getattr(cls, attr)))
+                if type(cls.__dict__.get(fn.__name__)) is staticmethod:
+                    setattr(cls, attr, logger.wrap(LogLevels.medium.level, is_static=True)(getattr(cls, attr)))
+                else:
+                    setattr(cls, attr, logger.wrap(LogLevels.medium.level)(getattr(cls, attr)))
         return cls
     return decorate
 

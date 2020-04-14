@@ -6,13 +6,22 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 @feature()
 class NetworkDiscovery(FeatureBase):
     """
-    This feature provides high-level interaction with TPP device objects.
+    This feature provides high-level interaction with TPP Network Discovery objects.
     """
     def __init__(self, auth):
         super().__init__(auth=auth)
         self._discovery_dn = r'\VED\Discovery'
 
     def _is_in_progress(self, job_dn: str):
+        """
+        Returns a boolean value according to whether a job is currently in progress or not.
+
+        Args:
+            job_dn: Absolute path to the discovery job.
+
+        Returns:
+            Boolean value
+        """
         return len(self._auth.websdk.Config.Read.post(
             object_dn=job_dn,
             attribute_name=DiscoveryAttributes.Network.in_progress
@@ -24,6 +33,66 @@ class NetworkDiscovery(FeatureBase):
                days_of_year: List[str] = None, description: str = None, exclusion_dns: List[str] = None,
                hour: int = None, placement_rule_guids: List[str] = None, ports: List[Union[str, int]] = None,
                priority: int = None, reschedule: bool = True, resolve_host: bool = True, utc: str = '1'):
+        """
+        Creates a network discovery job.
+
+        Examples:
+
+        .. code-block::python
+
+                features.discovery.create(
+                    name='My Discovery Job',
+                    hosts=['192.168.0.1/24', '10.0.1.64-10.0.1.75', '10.0.1.201:80'],
+                    default_certificate_dn=r'\VED\Policy\Certificates\Homeless',
+                    automatically_import=False,
+                    blackout={
+                        '0':list(map(str, range(13, 20))),  # Sunday from 1PM-8PM UTC
+                    },
+                    contacts=[user1.guid, user2.guid],
+                    days_of_week=['0', '3'],
+                    description='Does important scanning.',
+                    hour=4,  # 4AM UTC
+                    placement_rule_guids=[rule1.guid, rule2.guid],
+                    ports=[22, 80, 443],
+                    priority=1,
+                    reschedule=True,
+                    resolve_host=True,
+                )
+
+        Args:
+            name: Name of the discovery job.
+            hosts: A list of hosts. If specific hosts should scan different ports, then specify by appending the
+                   port to the IP address or hostname (i.e. 192.168.0.10:80). If no port is specified, then the
+                   `ports` parameter will be appended to those hosts.
+            default_certificate_dn: Absolute path to the default folder that will contain all certificates not
+                                    matching a placement rule.
+            attributes: Additional attributes.
+            automatically_import: If `True`, the job will terminate by placing the certificate objects, device
+                                  objects, and application objects according to the placement rules.
+            blackout: Period of time that TPP will not perform discovery operations. The format of this value
+                      should be as follows: `[{<day>:[<hour>, <hour>, ...]}, {...}]` where `day` is the
+                      zero-based index day of the week (i.e. Sunday = '0', etc.) and `hour` is the 24-hour
+                      hour of the day (i.e. 1, 2, 3, ..., 23). For example:
+            contacts: List of identity prefixed universal GUIDs.
+            days_of_week: Zero-based index value of the days of the week to run the job.
+            days_of_month: Day value(s) of the month to run the job.
+            days_of_year: Days of the year to run the job in the format "MM/DD" where leading zeros can be ignored
+                          (i.e. 1/23, 10/3).
+            description: Description of the job.
+            exclusion_dns: List of absolute paths to exclusion DN folders.
+            hour: 24-hour UTC hour format of the day (i.e. 20 = 8 PM UTC).
+            placement_rule_guids: List of GUIDs for the placement rules. The order of the list matters as the
+                                  rules are prioritized accordingly.
+            ports: List of ports to scan.
+            priority: Priority of the job.
+            reschedule: When ``True``, the job will run again on the next scheduled interval.
+            resolve_host: Resolve the hostname when ``True``.
+            utc: UTC offset.
+
+        Returns:
+            Config object of the discovery job.
+
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -69,6 +138,12 @@ class NetworkDiscovery(FeatureBase):
         )
 
     def delete(self, job_guid: str):
+        """
+        Deletes the discovery job.
+
+        Args:
+            job_guid: GUID of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -76,6 +151,13 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def get(self, name: str):
+        """
+        Args:
+            name: Name of the discovery job.
+
+        Returns:
+            Config object of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -83,6 +165,16 @@ class NetworkDiscovery(FeatureBase):
 
     def schedule(self, name: str, hour: Union[str, int], days_of_week: List[str] = None,
                  days_of_month: List[str] = None, days_of_year: List[str] = None):
+        """
+        Schedules an existing job.
+
+        Args:
+            name: Name of the discovery job.
+            hour: 24-hour UTC hour format (i.e. 20 = 8PM UTC).
+            days_of_week: Zero-based index of the days of the week (i.e. Sunday = '0').
+            days_of_month: Days of the month without leading zeros.
+            days_of_year: Days of the year in "MM/DD" format without leading zeros (i.e. 1/23, 10/3).
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -108,6 +200,12 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def unschedule(self, name: str):
+        """
+        Removes a schedule from a job. This does not delete the job.
+
+        Args:
+            name: Name of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -124,9 +222,23 @@ class NetworkDiscovery(FeatureBase):
                 attribute_name=attribute_name
             ).assert_valid_response()
 
-    def blackout_schedule(self, name, sunday: list = None, monday: list = None, tuesday: list = None,
-                          wednesday: list = None, thursday: list = None, friday: list = None,
-                          saturday: list = None):
+    def blackout_schedule(self, name, sunday: List[Union[str, int]] = None, monday: List[Union[str, int]] = None,
+                          tuesday: List[Union[str, int]] = None, wednesday: List[Union[str, int]] = None,
+                          thursday: List[Union[str, int]] = None, friday: List[Union[str, int]] = None,
+                          saturday: List[Union[str, int]] = None):
+        """
+        Times of the week to restrict a discovery job from processing.
+
+        Args:
+            name: Name of the discovery job.
+            sunday: List of hours without leading zeros to restrict processing on Sunday.
+            monday: List of hours without leading zeros to restrict processing on Monday.
+            tuesday: List of hours without leading zeros to restrict processing on Tuesday.
+            wednesday: List of hours without leading zeros to restrict processing on Wednesday.
+            thursday: List of hours without leading zeros to restrict processing on Thursday.
+            friday: List of hours without leading zeros to restrict processing on Friday.
+            saturday: List of hours without leading zeros to restrict processing on Saturday.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -145,6 +257,12 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def run_now(self, job_guid: str):
+        """
+        Runs a job despite any scheduling. This does not return until the job is processing, or has a `Processing` Attribute.
+
+        Args:
+            job_guid: GUID of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
@@ -162,6 +280,12 @@ class NetworkDiscovery(FeatureBase):
         )
 
     def cancel(self, job_guid: str):
+        """
+        Cancels a currently running job.
+
+        Args:
+            job_guid: GUID of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
@@ -169,6 +293,12 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def pause(self, job_guid: str):
+        """
+        Pauses a currently running job.
+
+        Args:
+            job_guid: GUID of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
@@ -176,6 +306,12 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def resume(self, job_guid: str):
+        """
+        Resumes a currently paused job.
+
+        Args:
+            job_guid: GUID of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
@@ -183,6 +319,12 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def place_results(self, job_guid: str):
+        """
+        Places the results of the discovery job according to the placement rules.
+
+        Args:
+            job_guid: GUID of the discovery job.
+        """
         if self._auth.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
@@ -190,6 +332,10 @@ class NetworkDiscovery(FeatureBase):
         response.assert_valid_response()
 
     def get_all_jobs(self):
+        """
+        Returns:
+            List of all network discovery jobs.
+        """
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
@@ -201,6 +347,16 @@ class NetworkDiscovery(FeatureBase):
         return jobs.objects
 
     def wait_for_job_to_finish(self, job_dn: str, check_interval: int = 30, timeout: int = 300):
+        """
+        Waits for the `Processing` attribute to disappear from the discovery job. An error is
+        raised if the timeout is exceeded. A timeout is necessary to prevent an infinite loop.
+        It is usually wise to buffer this value significantly to allow the job to complete.
+
+        Args:
+            job_dn: Absolute path to the discovery job.
+            check_interval: Time interval in seconds to validate that the job finished.
+            timeout: Timeout value to wait for the job to finish.
+        """
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired(poll=check_interval):
                 if not self._is_in_progress(job_dn=job_dn):

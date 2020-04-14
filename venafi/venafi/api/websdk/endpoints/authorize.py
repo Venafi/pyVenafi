@@ -1,5 +1,3 @@
-import json
-from venafi.logger import logger, LogLevels
 from venafi.api.api_base import API, json_response_property
 
 
