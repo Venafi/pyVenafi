@@ -16,6 +16,7 @@ class CertificateDashboard:
         def __init__(self, trend: dict):
             if not isinstance(trend, dict):
                 trend = {}
+
             self.date = from_date_string(trend.get("date"))
             self.key_length = trend.get("KeyLength")  # type: dict
             self.signing_algorithm = trend.get("SigningAlgorithm")  # type: dict

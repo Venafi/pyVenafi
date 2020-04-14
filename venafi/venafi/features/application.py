@@ -48,7 +48,7 @@ class _ApplicationBase(FeatureBase):
         result = self._auth.websdk.Config.Write.post(
             object_dn=application_dn,
             attribute_data=self._name_value_list({
-                ApplicationAttributes.disabled: "1"
+                ApplicationAttributes.disabled: ["1"]
             })
         ).result
 

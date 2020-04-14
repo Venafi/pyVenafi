@@ -41,7 +41,7 @@ class Config:
                 self.guid = object_dict.get('id')  # type: str
                 self.config_id = None
                 self.name = object_dict.get('name')  # type: str
-                self.parent = object_dict.get('parent')  # type: str
+                self.parent = object_dict.get('parentDn')  # type: str
                 self.revision = None
                 self.type_name = object_dict.get('typeName')  # type: str
 

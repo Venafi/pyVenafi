@@ -181,7 +181,7 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call()
+        self._log_rest_call(method='DELETE')
         response = self._session.delete(url=self._url)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
@@ -201,7 +201,7 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(data=params)
+        self._log_rest_call(method='GET', data=params)
         response = self._session.get(url=self._url, params=params)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
@@ -221,7 +221,7 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(data=data)
+        self._log_rest_call(method='POST', data=data)
         response = self._session.post(url=self._url, data=data)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
@@ -241,7 +241,7 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(data=data)
+        self._log_rest_call(method='PUT', data=data)
         response = self._session.put(url=self._url, data=data)
         self._log_response(response=response)
         if self._is_api_key_invalid(response=response):
@@ -289,7 +289,7 @@ class API:
             prev_frames=prev_frames
         )
 
-    def _log_rest_call(self, data: dict = None, mask_values_with_key: List[str] = None, prev_frames: int = 3):
+    def _log_rest_call(self, method: str, data: dict = None, mask_values_with_key: List[str] = None, prev_frames: int = 3):
         """
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
@@ -301,9 +301,9 @@ class API:
                 )
             else:
                 payload = json.dumps(data, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level, prev_frames=prev_frames)
+            logger.log(f'{method}\nURL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level, prev_frames=prev_frames)
         else:
-            logger.log(f'URL: {self._url}', level=LogLevels.low.level, prev_frames=3)
+            logger.log(f'{method}\nURL: {self._url}', level=LogLevels.low.level, prev_frames=3)
 
     def _log_response(self, response: Response, mask_values_with_key: List[str] = None, prev_frames: int = 3):
         """
