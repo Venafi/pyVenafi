@@ -9,8 +9,11 @@ Features
    credentials/venafi.features.credentials
    custom_fields/venafi.features.custom_fields
    device/venafi.features.device
+   discovery/venafi.features.discovery
    folder/venafi.features.folder
    identity/venafi.features.identity
    objects/venafi.features.objects
    permissions/venafi.features.permissions
+   placement_rules/venafi.features.placement_rules
+   platform/venafi.features.platform
    workflow/venafi.features.workflow
