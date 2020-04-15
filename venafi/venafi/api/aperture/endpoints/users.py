@@ -1,6 +1,4 @@
 from venafi.api.api_base import API, json_response_property
-from venafi.logger import logger, LogLevels
-import json
 
 
 class _Users:
@@ -18,7 +16,6 @@ class _Users:
         @property
         @json_response_property()
         def token(self) -> dict:
-            logger.log('Aperture API Key retrieved.', level=LogLevels.low.level)
             return self._from_json('apiKey')
 
         def post(self, username, password):
@@ -27,12 +24,22 @@ class _Users:
             """
             body = {
                 "username": username,
-                "password": '********'
+                "password": password
             }
-
-            payload = json.dumps(body, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level)
-
-            body['password'] = password
+            self._log_rest_call(
+                method='POST',
+                data=body,
+                mask_values_with_key=[
+                    'password'
+                ],
+                prev_frames=2
+            )
             self.json_response = self._session.post(url=self._url, data=body)
+            self._log_response(
+                response=self.json_response,
+                mask_values_with_key=[
+                    'apiKey'
+                ],
+                prev_frames=2
+            )
             return self

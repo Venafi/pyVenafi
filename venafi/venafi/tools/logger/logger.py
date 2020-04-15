@@ -124,7 +124,7 @@ class Logger:
         self._pending_logs = True
         self._thread_starting_depth = len(self._thread_depth.get(threading.get_ident(), []))
 
-    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None):
+    def wrap(self, level: int = LogLevels.high.level, masked_variables: List = None, is_static: bool = False):
         regexes = "(" + ")|(".join(set(MASK_REGEX_EXPRS + (masked_variables or []))) + ")"
 
         def _wrap(func):
@@ -133,6 +133,8 @@ class Logger:
                 thread_ident = threading.get_ident()
                 if not self._thread_depth.get(thread_ident):
                     self._thread_depth[thread_ident] = []
+                if is_static:
+                    args = args[1:]
 
                 def truncate_depth():
                     indexes = [i for i, e in enumerate(self._thread_depth[thread_ident]) if e == func_id]

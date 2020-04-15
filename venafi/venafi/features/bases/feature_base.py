@@ -4,6 +4,7 @@ from venafi.logger import logger, LogLevels
 from venafi.properties.secret_store import Namespaces
 from venafi.api.authenticate import Authenticate
 import os
+from typing import List, Dict
 
 
 def feature():
@@ -13,7 +14,10 @@ def feature():
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                setattr(cls, attr, logger.wrap(LogLevels.medium.level)(getattr(cls, attr)))
+                if type(cls.__dict__.get(fn.__name__)) is staticmethod:
+                    setattr(cls, attr, logger.wrap(LogLevels.medium.level, is_static=True)(getattr(cls, attr)))
+                else:
+                    setattr(cls, attr, logger.wrap(LogLevels.medium.level)(getattr(cls, attr)))
         return cls
     return decorate
 
@@ -22,6 +26,8 @@ def feature():
 class FeatureBase:
     def __init__(self, auth: Authenticate):
         self._auth = auth
+
+        self._log_not_implemented_warning = self.__log_not_implemented_warning if auth._suppress_not_implemented_warning else self.__no_op
 
     def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None):
         if attributes:
@@ -53,15 +59,19 @@ class FeatureBase:
         logger.log(msg=msg, level=LogLevels.critical.level, prev_frames=2)
 
     @staticmethod
-    def _log_not_implemented_warning(api_type):
+    def __log_not_implemented_warning(api_type):
         logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.medium.level, prev_frames=2)
+
+    @staticmethod
+    def __no_op(*args, **kwargs):
+        pass
 
     @staticmethod
     def _name_type_value(name: str, type: str, value):
         return {'Name': str(name), 'Type': str(type), 'Value': str(value)}
 
     @staticmethod
-    def _name_value_list(attributes: dict, keep_list_values: bool = False):
+    def _name_value_list(attributes: Dict[str, List[str]], keep_list_values: bool = False):
         nvl = []
         for name, value in attributes.items():
             if value is None:
@@ -143,7 +153,7 @@ class FeatureBase:
             )
             return
 
-        def is_expired(self, poll: int = 0.5):
+        def is_expired(self, poll: float = 0.5):
             time.sleep(poll)
             return time.time() >= self.max_time
 

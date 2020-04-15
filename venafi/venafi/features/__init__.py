@@ -7,12 +7,17 @@ from venafi.features.application import A10AXTrafficManager, AmazonAWS, Apache, 
     CitrixNetScaler, ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, JuniperSAS, \
     OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, ApplicationAttributes, \
     ApplicationAttributeValues, ApplicationClassNames
+from venafi.features.discovery import NetworkDiscovery, DiscoveryClassNames, DiscoveryAttributeValues, DiscoveryAttributes
 from venafi.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
     PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
 from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
 from venafi.features.identity import User, Group, IdentityClassNames, IdentityAttributes
 from venafi.features.permissions import Permissions
+from venafi.features.platform import AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager,\
+    CertificatePreEnrollment, CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, \
+    OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes
+from venafi.features.placement_rules import PlacementRules, PlacementRulesAttributeValues
 from venafi.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 from venafi.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
@@ -235,6 +240,18 @@ class _Credential:
         return self._upcred
 
 
+class _Discovery:
+    def __init__(self, auth):
+        self._auth = auth
+
+        self._network = None
+
+    @property
+    def network(self) -> NetworkDiscovery:
+        self._network = self._network or NetworkDiscovery(auth=self._auth)
+        return self._network
+
+
 class _Identity:
     def __init__(self, auth):
         self._auth = auth
@@ -251,6 +268,96 @@ class _Identity:
     def user(self) -> User:
         self._user = self._user or User(self._auth)
         return self._user
+
+
+class _Platforms:
+    def __init__(self, auth):
+        self._auth = auth
+
+        self._auto_layout_manager = None
+        self._bulk_provisioning_manager = None
+        self._ca_import_manager = None
+        self._certificate_manager = None
+        self._certificate_pre_enrollment = None
+        self._certificate_revocation = None
+        self._cloud_instance_monitor = None
+        self._discovery_manager = None
+        self._monitor = None
+        self._onboard_discovery_manager = None
+        self._reporting = None
+        self._ssh_manager = None
+        self._trustnet_manager = None
+        self._validation_manager = None
+
+    @property
+    def auto_layout_manager(self) -> AutoLayoutManager:
+        self._auto_layout_manager = self._auto_layout_manager or AutoLayoutManager(self._auth)
+        return self._auto_layout_manager
+
+    @property
+    def bulk_provisioning_manager(self) -> BulkProvisioningManager:
+        self._bulk_provisioning_manager = self._bulk_provisioning_manager or BulkProvisioningManager(self._auth)
+        return self._bulk_provisioning_manager
+
+    @property
+    def ca_import_manager(self) -> CAImportManager:
+        self._ca_import_manager = self._ca_import_manager or CAImportManager(self._auth)
+        return self._ca_import_manager
+
+    @property
+    def certificate_manager(self) -> CertificateManager:
+        self._certificate_manager = self._certificate_manager or CertificateManager(self._auth)
+        return self._certificate_manager
+
+    @property
+    def certificate_pre_enrollment(self) -> CertificatePreEnrollment:
+        self._certificate_pre_enrollment = self._certificate_pre_enrollment or CertificatePreEnrollment(self._auth)
+        return self._certificate_pre_enrollment
+
+    @property
+    def certificate_revocation(self) -> CertificateRevocation:
+        self._certificate_revocation = self._certificate_revocation or CertificateRevocation(self._auth)
+        return self._certificate_revocation
+
+    @property
+    def cloud_instance_monitor(self) -> CloudInstanceMonitor:
+        self._cloud_instance_monitor = self._cloud_instance_monitor or CloudInstanceMonitor(self._auth)
+        return self._cloud_instance_monitor
+
+    @property
+    def discovery_manager(self) -> DiscoveryManager:
+        self._discovery_manager = self._discovery_manager or DiscoveryManager(self._auth)
+        return self._discovery_manager
+
+    @property
+    def monitor(self) -> Monitor:
+        self._monitor = self._monitor or Monitor(self._auth)
+        return self._monitor
+
+    @property
+    def onboard_discovery_manager(self) -> OnboardDiscoveryManager:
+        self._onboard_discovery_manager = self._onboard_discovery_manager or OnboardDiscoveryManager(self._auth)
+        return self._onboard_discovery_manager
+
+    @property
+    def reporting(self) -> Reporting:
+        self._reporting = self._reporting or Reporting(self._auth)
+        return self._reporting
+
+    @property
+    def ssh_manager(self) -> SSHManager:
+        self._ssh_manager = self._ssh_manager or SSHManager(self._auth)
+        return self._ssh_manager
+
+    @property
+    def trustnet_manager(self) -> TrustNetManager:
+        self._trustnet_manager = self._trustnet_manager or TrustNetManager(self._auth)
+        return self._trustnet_manager
+
+    @property
+    def validation_manager(self) -> ValidationManager:
+        self._validation_manager = self._validation_manager or ValidationManager(self._auth)
+        return self._validation_manager
 
 
 class _Workflow:
@@ -294,9 +401,12 @@ class Features:
         self._credentials = None
         self._custom_fields = None
         self._device = None
+        self._discovery = None
         self._folder = None
         self._identity = None
         self._permissions = None
+        self._placement_rules = None
+        self._platforms = None
         self._workflow = None
 
     @property
@@ -335,6 +445,11 @@ class Features:
         return self._device
 
     @property
+    def discovery(self) -> _Discovery:
+        self._discovery = self._discovery or _Discovery(self._auth)
+        return self._discovery
+
+    @property
     def folder(self) -> Folder:
         self._folder = self._folder or Folder(self._auth)
         return self._folder
@@ -348,6 +463,16 @@ class Features:
     def permissions(self) -> Permissions:
         self._permissions = self._permissions or Permissions(self._auth)
         return self._permissions
+
+    @property
+    def placement_rules(self) -> PlacementRules:
+        self._placement_rules = self._placement_rules or PlacementRules(self._auth)
+        return self._placement_rules
+
+    @property
+    def platforms(self) -> _Platforms:
+        self._platforms = self._platforms or _Platforms(self._auth)
+        return self._platforms
 
     @property
     def workflow(self) -> _Workflow:
@@ -365,8 +490,10 @@ class AttributeNames:
     Credentials = CredentialAttributes
     CustomField = CustomFieldAttributes
     Device = DeviceAttributes
+    Discovery = DiscoveryAttributes
     Folder = FolderAttributes
     Identity = IdentityAttributes
+    Platforms = PlatformsAttributes
     Workflow = WorkflowAttributes
 
 
@@ -375,6 +502,8 @@ class AttributeValues:
     Certificate = CertificateAttributeValues
     CustomField = CustomFieldAttributeValues
     Device = DeviceAttributeValues
+    Discovery = DiscoveryAttributeValues
+    PlacementRules = PlacementRulesAttributeValues
     Workflow = WorkflowAttributeValues
 
 
@@ -383,6 +512,7 @@ class Classes:
     Certificate = CertificateClassNames
     CertificateAuthority = CertificateAuthorityClassNames
     Device = DevicesClassNames
+    Discovery = DiscoveryClassNames
     Folder = FolderClassNames
     Identity = IdentityClassNames
     Workflow = WorkflowClassNames

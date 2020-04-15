@@ -3,6 +3,8 @@ from venafi.api.session import Session
 from venafi.api.aperture.endpoints.application_integration import _ApplicationIntegration
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
+from venafi.api.aperture.endpoints.discovery import _Discovery
+from venafi.api.aperture.endpoints.jobs import _Jobs
 from venafi.api.aperture.endpoints.users import _Users
 
 
@@ -56,6 +58,8 @@ class Aperture:
         self.ApplicationIntegration = _ApplicationIntegration(aperture_obj=self)
         self.ConfigObjects = _ConfigObjects(aperture_obj=self)
         self.CertificateDashboard = _CertificateDashboard(aperture_obj=self)
+        self.Discovery = _Discovery(aperture_obj=self)
+        self.Jobs = _Jobs(aperture_obj=self)
         # endregion Initialize All Aperture Endpoints
 
     def re_authenticate(self, token: str = None):

@@ -29,22 +29,18 @@ class SystemStatus:
                 vplat_dict = {}
 
             self.modules = vplat_dict.get('modules')  # type: list
-            self.time_since_first_seen = from_date_string(vplat_dict.get('timeSinceFirstSeen'))
-            self.time_since_last_seen = from_date_string(vplat_dict.get('timeSinceLastSeen'))
+            self.time_since_first_seen = from_date_string(vplat_dict.get('timeSinceFirstSeen'), duration_format=True)
+            self.time_since_last_seen = from_date_string(vplat_dict.get('timeSinceLastSeen'), duration_format=True)
             self.status = vplat_dict.get('Status')  # type: str
 
-    class Status:
+    class SystemStatus:
         def __init__(self, status_dict: dict):
             if not isinstance(status_dict, dict):
                 status_dict = {}
 
-            self.engine = SystemStatus.Engine(status_dict.get('Engine'))
-            self.status = status_dict.get('Status')  # type: str
-            self.upgrade_start_time = from_date_string(status_dict.get('UpgradeStartTime'))
-            self.upgrade_stop_time = from_date_string(status_dict.get('UpgradeStopTime'))
-            self.tasks_completed = SystemStatus.Task(status_dict.get('TasksCompleted'))
-            self.tasks_pending = SystemStatus.Task(status_dict.get('TasksPending'))
-            self.tasks_running = SystemStatus.Task(status_dict.get('TasksRunning'))
+            self.engine_name = status_dict.get('engineName')  # type: str
+            self.services = SystemStatus.Services(status_dict.get('services'))
+            self.version = status_dict.get('version')  # type: str
 
     class Task:
         def __init__(self, task_dict: dict):
@@ -65,6 +61,19 @@ class SystemStatus:
             self.id = upgrade_info_dict.get('Id')  # type: str
             self.start_time = from_date_string(upgrade_info_dict.get('StartTime'))
             self.versions = upgrade_info_dict.get('Versions')  # type: List[str]
+
+    class UpgradeStatus:
+        def __init__(self, status_dict: dict):
+            if not isinstance(status_dict, dict):
+                status_dict = {}
+
+            self.engine = SystemStatus.Engine(status_dict.get('Engine'))
+            self.status = status_dict.get('Status')  # type: str
+            self.upgrade_start_time = from_date_string(status_dict.get('UpgradeStartTime'))
+            self.upgrade_stop_time = from_date_string(status_dict.get('UpgradeStopTime'))
+            self.tasks_completed = SystemStatus.Task(status_dict.get('TasksCompleted'))
+            self.tasks_pending = SystemStatus.Task(status_dict.get('TasksPending'))
+            self.tasks_running = SystemStatus.Task(status_dict.get('TasksRunning'))
 
     class UpgradeSummary:
         def __init__(self, summary_dict: dict):

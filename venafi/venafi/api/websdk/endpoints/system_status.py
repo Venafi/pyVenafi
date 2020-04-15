@@ -11,18 +11,8 @@ class _SystemStatus(API):
 
     @property
     @json_response_property()
-    def engine_name(self) -> str:
-        return self.json_response('engineName')
-
-    @property
-    @json_response_property()
-    def services(self):
-        return SystemStatus.Services(self.json_response('services'))
-
-    @property
-    @json_response_property()
-    def version(self) -> str:
-        return self.json_response('version')
+    def engines(self):
+        return [SystemStatus.SystemStatus(status) for status in self._from_json()]
 
     def get(self):
         self.json_response = self._get()
@@ -92,7 +82,7 @@ class _SystemStatus(API):
             @property
             @json_response_property()
             def engines(self):
-                return [SystemStatus.Status(engine) for engine in self._from_json(key='Engines')]
+                return [SystemStatus.UpgradeStatus(engine) for engine in self._from_json(key='Engines')]
 
             def get(self, upgrade_id: int = None):
                 params = {

@@ -1,5 +1,3 @@
-import json
-from venafi.logger import logger, LogLevels
 from venafi.api.api_base import API, json_response_property
 
 
@@ -29,6 +27,7 @@ class _Authorize(API):
             "Password": password
         }
         self._log_rest_call(
+            method='POST',
             data=body,
             mask_values_with_key=[
                 'Password'
@@ -93,6 +92,7 @@ class _Authorize(API):
                 'state': state
             }
             self._log_rest_call(
+                method='POST',
                 data=body,
                 mask_values_with_key=[
                     'password'
@@ -156,6 +156,7 @@ class _Authorize(API):
             }
 
             self._log_rest_call(
+                method='POST',
                 data=body,
                 mask_values_with_key=[
                     'refresh_token'

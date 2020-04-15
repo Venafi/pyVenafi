@@ -27,10 +27,12 @@ class _ApplicationBase(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.ClearAttribute.post(
+        result = self._auth.websdk.Config.Write.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.disabled
-        )
+            attribute_data=self._name_value_list({
+                ApplicationAttributes.disabled: ["1"]
+            }, keep_list_values=True)
+        ).result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -45,11 +47,9 @@ class _ApplicationBase(FeatureBase):
         if self._auth.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.Write.post(
+        result = self._auth.websdk.Config.ClearAttribute.post(
             object_dn=application_dn,
-            attribute_data=self._name_value_list({
-                ApplicationAttributes.disabled: "1"
-            })
+            attribute_name=ApplicationAttributes.disabled
         ).result
 
         if result.code != 1:
