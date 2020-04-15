@@ -1,4 +1,4 @@
-from venafi.api.api_base import API, json_response_property
+from venafi.api.api_base import API, APIResponse, json_response_property
 
 
 class _Users:
@@ -9,14 +9,8 @@ class _Users:
         def __init__(self, aperture_obj):
             super().__init__(
                 api_obj=aperture_obj,
-                url='/users/authorize',
-                valid_return_codes=[200]
+                url='/users/authorize'
             )
-
-        @property
-        @json_response_property()
-        def token(self) -> dict:
-            return self._from_json('apiKey')
 
         def post(self, username, password):
             """
@@ -34,12 +28,26 @@ class _Users:
                 ],
                 prev_frames=2
             )
-            self.json_response = self._session.post(url=self._url, data=body)
+            r = self._post(data=body)
             self._log_response(
-                response=self.json_response,
+                response=r,
                 mask_values_with_key=[
                     'apiKey'
                 ],
                 prev_frames=2
             )
-            return self
+
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def token(self) -> dict:
+                    return self._from_json('apiKey')
+
+            return _Response(
+                response=r,
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )

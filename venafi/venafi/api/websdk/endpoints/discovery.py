@@ -1,5 +1,5 @@
 from typing import List 
-from venafi.api.api_base import API, json_response_property
+from venafi.api.api_base import API, APIResponse, json_response_property
 
 
 class _Discovery:
@@ -12,50 +12,27 @@ class _Discovery:
 
     class _Guid(API):
         def __init__(self, guid: str, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url=f'/Discovery/{guid}', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def success(self) -> bool:
-            return self._from_json('Success')
+            super().__init__(api_obj=websdk_obj, url=f'/Discovery/{guid}')
 
         def delete(self):
-            self.json_response = self._delete()
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def success(self) -> bool:
+                    return self._from_json('Success')
+
+            return _Response(
+                response=self._delete(),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _Import(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Discovery/Import', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def created_certificates(self) -> int:
-            return self._from_json('createdCertificates')
-
-        @property
-        @json_response_property()
-        def created_instances(self) -> int:
-            return self._from_json('createdInstances')
-
-        @property
-        @json_response_property()
-        def updated_certificates(self) -> int:
-            return self._from_json('updatedCertificates')
-
-        @property
-        @json_response_property()
-        def updated_instances(self) -> int:
-            return self._from_json('updatedInstances')
-
-        @property
-        @json_response_property()
-        def warnings(self) -> List[str]:
-            return self._from_json('warnings')
-
-        @property
-        @json_response_property()
-        def zone_name(self) -> str:
-            return self._from_json('zoneName')
+            super().__init__(api_obj=websdk_obj, url='/Discovery/Import')
 
         def post(self, endpoints: list, zone_name: str):
             body = {
@@ -63,6 +40,43 @@ class _Discovery:
                 'endpoints': endpoints
             }
 
-            self.json_response = self._post(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def created_certificates(self) -> int:
+                    return self._from_json('createdCertificates')
+
+                @property
+                @json_response_property()
+                def created_instances(self) -> int:
+                    return self._from_json('createdInstances')
+
+                @property
+                @json_response_property()
+                def updated_certificates(self) -> int:
+                    return self._from_json('updatedCertificates')
+
+                @property
+                @json_response_property()
+                def updated_instances(self) -> int:
+                    return self._from_json('updatedInstances')
+
+                @property
+                @json_response_property()
+                def warnings(self) -> List[str]:
+                    return self._from_json('warnings')
+
+                @property
+                @json_response_property()
+                def zone_name(self) -> str:
+                    return self._from_json('zoneName')
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 

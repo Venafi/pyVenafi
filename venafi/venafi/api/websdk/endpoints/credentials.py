@@ -1,5 +1,5 @@
 import time
-from venafi.api.api_base import API, json_response_property
+from venafi.api.api_base import API, APIResponse, json_response_property
 from venafi.properties.response_objects.credential import Credential
 from venafi.tools.helpers.date_converter import from_date_string
 
@@ -16,12 +16,7 @@ class _Credentials:
 
     class _Create(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Credentials/Create', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def result(self):
-            return Credential.Result(self._from_json(key='Result'))
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Create')
 
         def post(self, credential_path: str, friendly_name: str, values: list, password: str = None, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
@@ -37,61 +32,79 @@ class _Credentials:
                 'Contact': contact
             }
 
-            self.json_response = self._post(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def result(self):
+                    return Credential.Result(self._from_json(key='Result'))
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _Delete(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Credentials/Delete', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def result(self):
-            return Credential.Result(self._from_json(key='Result'))
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Delete')
 
         def post(self, credential_path: str):
             body = {
                 'CredentialPath': credential_path
             }
 
-            self.json_response = self._post(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def result(self):
+                    return Credential.Result(self._from_json(key='Result'))
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _Enumerate(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Credentials/Enumerate', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def result(self):
-            return Credential.Result(self._from_json(key='Result'))
-
-        @property
-        @json_response_property()
-        def credential_infos(self):
-            return [Credential.CredentialInfo(cred_info) for cred_info in self._from_json(key='CredentialInfos')]
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Enumerate')
 
         def post(self, credential_path: str, pattern: str = None, recursive: bool = False):
             body = {
                 'CredentialPath': credential_path,
-                'Recursive': recursive
+                'Recursive': recursive,
+                'Pattern': pattern
             }
 
-            if pattern:
-                body.update({'Pattern': pattern})
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
 
-            body = body
-            self.json_response = self._post(data=body)
-            return self
+                @property
+                @json_response_property()
+                def result(self):
+                    return Credential.Result(self._from_json(key='Result'))
+
+                @property
+                @json_response_property()
+                def credential_infos(self):
+                    return [Credential.CredentialInfo(cred_info) for cred_info in self._from_json(key='CredentialInfos')]
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _Rename(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Credentials/Rename', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def result(self):
-            return Credential.Result(self._from_json(key='Result'))
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Rename')
 
         def post(self, credential_path: str, new_credential_path: str):
             body = {
@@ -99,75 +112,85 @@ class _Credentials:
                 'NewCredentialPath': new_credential_path
             }
 
-            self.json_response = self._post(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def result(self):
+                    return Credential.Result(self._from_json(key='Result'))
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _Retrieve(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Credentials/Retrieve', valid_return_codes=[200])
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Retrieve')
 
-        @property
-        @json_response_property()
-        def classname(self) -> str:
-            return self._from_json(key='Classname')
-
-        @property
-        @json_response_property()
-        def description(self) -> str:
-            return self._from_json(key='Description')
-
-        @property
-        @json_response_property()
-        def expiration(self):
-            return from_date_string(self._from_json(key='Expiration'))
-
-        @property
-        @json_response_property()
-        def friendly_name(self) -> str:
-            return self._from_json(key='FriendlyName')
-        
-        @property
-        @json_response_property()
-        def result(self):
-            return Credential.Result(self._from_json(key='Result'))
-        
-        @property
-        @json_response_property()
-        def values(self):
-            return [Credential.NameTypeValue(ntv) for ntv in self._from_json(key='Values')]
-        
         def post(self, credential_path: str):
             body = {
                 'CredentialPath': credential_path
             }
-            
-            self.json_response = self._post(data=body)
-            return self
+
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def classname(self) -> str:
+                    return self._from_json(key='Classname')
+
+                @property
+                @json_response_property()
+                def description(self) -> str:
+                    return self._from_json(key='Description')
+
+                @property
+                @json_response_property()
+                def expiration(self):
+                    return from_date_string(self._from_json(key='Expiration'))
+
+                @property
+                @json_response_property()
+                def friendly_name(self) -> str:
+                    return self._from_json(key='FriendlyName')
+
+                @property
+                @json_response_property()
+                def result(self):
+                    return Credential.Result(self._from_json(key='Result'))
+
+                @property
+                @json_response_property()
+                def values(self):
+                    return [Credential.NameTypeValue(ntv) for ntv in self._from_json(key='Values')]
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _Update(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Credentials/Update', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def result(self):
-            return Credential.Result(self._from_json(key='Result'))
+            super().__init__(api_obj=websdk_obj, url='/Credentials/Update')
 
         def post(self, credential_path: str, friendly_name: str, values: list, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
-            payload = {
+            body = {
                 'CredentialPath': credential_path,
                 'FriendlyName': friendly_name,
-                'Values': values
+                'Values': values,
+                'Description': description,
+                'EncryptionKey': encryption_key,
+                'Shared': shared,
+                'Contact': contact
             }
-            if description:
-                payload.update({'Description': description})
-
-            if encryption_key:
-                payload.update({'EncryptionKey': encryption_key})
-
-            if shared:
-                payload.update({'Shared': shared})
 
             if expiration:
                 exp_date = expiration
@@ -175,13 +198,22 @@ class _Credentials:
                 # Expire in 10 years.
                 exp_date = int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
 
-            payload.update({'Expiration': r'/Date(%s)/' % exp_date})
-            if contact:
-                payload.update({'Contact': contact})
+            body.update({'Expiration': r'/Date(%s)/' % exp_date})
+            
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
 
-            body = payload
-            self.json_response = self._post(data=body)
-            return self
+                @property
+                @json_response_property()
+                def result(self):
+                    return Credential.Result(self._from_json(key='Result'))
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _CyberArk:
         def __init__(self, websdk_obj):
@@ -190,12 +222,7 @@ class _Credentials:
 
         class _Create(API):
             def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Create', valid_return_codes=[200])
-
-            @property
-            @json_response_property()
-            def result(self):
-                return Credential.Result(self._from_json(key='Result'))
+                super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Create')
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):
@@ -210,17 +237,24 @@ class _Credentials:
                     'CredentialsPath': credentials_path
                 }
 
-                self.json_response = self._post(data=body)
-                return self
+                class _Response(APIResponse):
+                    def __init__(self, response, expected_return_codes, api_source):
+                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                    @property
+                    @json_response_property()
+                    def result(self):
+                        return Credential.Result(self._from_json(key='Result'))
+
+                return _Response(
+                    response=self._post(data=body),
+                    expected_return_codes=[200],
+                    api_source=self._api_source
+                )
 
         class _Update(API):
             def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Update', valid_return_codes=[200])
-
-            @property
-            @json_response_property()
-            def result(self):
-                return Credential.Result(self._from_json(key='Result'))
+                super().__init__(api_obj=websdk_obj, url='/Credentials/CyberArk/Update')
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credentials_path: str):
@@ -235,5 +269,17 @@ class _Credentials:
                     'CredentialsPath': credentials_path
                 }
 
-                self.json_response = self._post(data=body)
-                return self
+                class _Response(APIResponse):
+                    def __init__(self, response, expected_return_codes, api_source):
+                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                    @property
+                    @json_response_property()
+                    def result(self):
+                        return Credential.Result(self._from_json(key='Result'))
+
+                return _Response(
+                    response=self._post(data=body),
+                    expected_return_codes=[200],
+                    api_source=self._api_source
+                )

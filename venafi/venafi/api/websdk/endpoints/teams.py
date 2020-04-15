@@ -1,25 +1,15 @@
 from typing import List
-from venafi.api.api_base import API, json_response_property
+from venafi.api.api_base import API, APIResponse, json_response_property
 from venafi.properties.response_objects.identity import Identity
 
 
 class _Teams(API):
     def __init__(self, websdk_obj):
-        super().__init__(api_obj=websdk_obj, url='/Teams', valid_return_codes=[200])
+        super().__init__(api_obj=websdk_obj, url='/Teams')
         self.AddTeamMembers = self._AddTeamMembers(websdk_obj=websdk_obj)
         self.AddTeamOwners = self._AddTeamOwners(websdk_obj=websdk_obj)
         self.DemoteTeamOwners = self._DemoteTeamOwners(websdk_obj=websdk_obj)
         self.RemoveTeamMembers = self._RemoveTeamMembers(websdk_obj=websdk_obj)
-
-    @property
-    @json_response_property()
-    def identity(self):
-        return [Identity.Identity(owner, self._api_type) for owner in self._from_json(key='Owners')]
-
-    @property
-    @json_response_property()
-    def invalid_members(self):
-        return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
 
     def post(self, name: str, owners: list, assets: list = None, description: str = None, members: list = None,
              products: list = None):
@@ -32,27 +22,29 @@ class _Teams(API):
             'Products': products
         }
 
-        self.json_response = self._post(data=body)
-        return self
+        class _Response(APIResponse):
+            def __init__(self, response, expected_return_codes, api_source):
+                super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+            @property
+            @json_response_property()
+            def identity(self):
+                return [Identity.Identity(owner, self._api_source) for owner in self._from_json(key='Owners')]
+
+            @property
+            @json_response_property()
+            def invalid_members(self):
+                return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
+
+        return _Response(
+            response=self._post(data=body),
+            expected_return_codes=[200],
+            api_source=self._api_source
+        )
 
     class _AddTeamMembers(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Teams/AddTeamMembers', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def invalid_members(self):
-            return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-        @property
-        @json_response_property()
-        def members(self):
-            return [Identity.Identity(member, api_type=self._api_type) for member in self._from_json(key='Members')]
-
-        @property
-        @json_response_property()
-        def message(self) -> str:
-            return self._from_json(key='Message')
+            super().__init__(api_obj=websdk_obj, url='/Teams/AddTeamMembers')
 
         def put(self, members: list, team: dict = None, show_members: bool = None):
             body = {
@@ -61,27 +53,34 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            self.json_response = self._put(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def invalid_members(self):
+                    return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
+
+                @property
+                @json_response_property()
+                def members(self):
+                    return [Identity.Identity(member, api_type=self._api_source) for member in self._from_json(key='Members')]
+
+                @property
+                @json_response_property()
+                def message(self) -> str:
+                    return self._from_json(key='Message')
+
+            return _Response(
+                response=self._put(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _AddTeamOwners(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Teams/AddTeamOwners', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def owners(self):
-            return [Identity.Identity(owner, api_type=self._api_type) for owner in self._from_json(key='Owners')]
-
-        @property
-        @json_response_property()
-        def members(self):
-            return [Identity.Identity(member, api_type=self._api_type) for member in self._from_json(key='Members')]
-
-        @property
-        @json_response_property()
-        def message(self) -> str:
-            return self._from_json(key='Message')
+            super().__init__(api_obj=websdk_obj, url='/Teams/AddTeamOwners')
 
         def put(self, owners: list = None, team: dict = None, show_members: bool = None):
             body = {
@@ -90,32 +89,34 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            self.json_response = self._put(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def owners(self):
+                    return [Identity.Identity(owner, api_type=self._api_source) for owner in self._from_json(key='Owners')]
+
+                @property
+                @json_response_property()
+                def members(self):
+                    return [Identity.Identity(member, api_type=self._api_source) for member in self._from_json(key='Members')]
+
+                @property
+                @json_response_property()
+                def message(self) -> str:
+                    return self._from_json(key='Message')
+
+            return _Response(
+                response=self._put(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     class _DemoteTeamOwners(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Teams/DemoteTeamOwners', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def invalid_owners(self):
-            return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
-
-        @property
-        @json_response_property()
-        def owners(self):
-            return [Identity.Identity(owner, api_type=self._api_type) for owner in self._from_json(key='Owners')]
-
-        @property
-        @json_response_property()
-        def members(self):
-            return [Identity.Identity(member, api_type=self._api_type) for member in self._from_json(key='Members')]
-
-        @property
-        @json_response_property()
-        def message(self) -> str:
-            return self._from_json(key='Message')
+            super().__init__(api_obj=websdk_obj, url='/Teams/DemoteTeamOwners')
 
         def put(self, owners: list = None, team: dict = None, show_members: bool = None):
             body = {
@@ -124,8 +125,35 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            self.json_response = self._put(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def invalid_owners(self):
+                    return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
+
+                @property
+                @json_response_property()
+                def owners(self):
+                    return [Identity.Identity(owner, api_type=self._api_source) for owner in self._from_json(key='Owners')]
+
+                @property
+                @json_response_property()
+                def members(self):
+                    return [Identity.Identity(member, api_type=self._api_source) for member in self._from_json(key='Members')]
+
+                @property
+                @json_response_property()
+                def message(self) -> str:
+                    return self._from_json(key='Message')
+
+            return _Response(
+                response=self._put(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
 
     def Prefix(self, prefix='local'):
         return self._Prefix(prefix=prefix, websdk_obj=self._api_obj)
@@ -144,55 +172,60 @@ class _Teams(API):
 
         class _Universal(API):
             def __init__(self, prefix: str, universal: str, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url=f'/Teams/{prefix}/{universal}', valid_return_codes=[200])
-
-            @property
-            @json_response_property()
-            def assets(self) -> List[str]:
-                return self._from_json(key='Assets')
-
-            @property
-            @json_response_property()
-            def description(self) -> str:
-                return self._from_json(key='Description')
-
-            @property
-            @json_response_property()
-            def identity(self):
-                return Identity.Identity(self._from_json(key='ID'), self._api_type)
-
-            @property
-            @json_response_property()
-            def invalid_owners(self):
-                return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
-
-            @property
-            @json_response_property()
-            def invalid_members(self):
-                return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-            @property
-            @json_response_property()
-            def owners(self):
-                return [Identity.Identity(owner, api_type=self._api_type) for owner in self._from_json(key='Owners')]
-
-            @property
-            @json_response_property()
-            def members(self):
-                return [Identity.Identity(member, api_type=self._api_type) for member in self._from_json(key='Members')]
-
-            @property
-            @json_response_property()
-            def products(self) -> List[str]:
-                return self._from_json(key='Products')
+                super().__init__(api_obj=websdk_obj, url=f'/Teams/{prefix}/{universal}')
 
             def delete(self):
-                self.json_response = self._delete()
-                return self
+                
+                class _Response(APIResponse):
+                    def __init__(self, response, expected_return_codes, api_source):
+                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                return _Response(
+                    response=self._delete(),
+                    expected_return_codes=[200],
+                    api_source=self._api_source
+                )
 
             def get(self):
-                self.json_response = self._get()
-                return self
+                class _Response(APIResponse):
+                    def __init__(self, response, expected_return_codes, api_source):
+                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                    @property
+                    @json_response_property()
+                    def assets(self) -> List[str]:
+                        return self._from_json(key='Assets')
+
+                    @property
+                    @json_response_property()
+                    def description(self) -> str:
+                        return self._from_json(key='Description')
+
+                    @property
+                    @json_response_property()
+                    def identity(self):
+                        return Identity.Identity(self._from_json(key='ID'), self._api_source)
+
+                    @property
+                    @json_response_property()
+                    def members(self):
+                        return [Identity.Identity(member, api_type=self._api_source) for member in self._from_json(key='Members')]
+
+                    @property
+                    @json_response_property()
+                    def owners(self):
+                        return [Identity.Identity(owner, api_type=self._api_source) for owner in self._from_json(key='Owners')]
+
+                    @property
+                    @json_response_property()
+                    def products(self) -> List[str]:
+                        return self._from_json(key='Products')
+
+                return _Response(
+                    response=self._get(),
+                    expected_return_codes=[200],
+                    api_source=self._api_source
+                )
 
             def put(self, assets: list, description: str, name: str, owners: list, members: list, products: list):
                 body = {
@@ -204,32 +237,39 @@ class _Teams(API):
                     'Products': products
                 }
 
-                self.json_response = self._put(data=body)
-                return self
+                class _Response(APIResponse):
+                    def __init__(self, response, expected_return_codes, api_source):
+                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                    @property
+                    @json_response_property()
+                    def identity(self):
+                        return Identity.Identity(self._from_json(key='ID'), self._api_source)
+
+                    @property
+                    @json_response_property()
+                    def invalid_owners(self):
+                        return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
+
+                    @property
+                    @json_response_property()
+                    def invalid_members(self):
+                        return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
+
+                    @property
+                    @json_response_property()
+                    def message(self) -> str:
+                        return self._from_json(key='Message')
+
+                return _Response(
+                    response=self._put(data=body),
+                    expected_return_codes=[200],
+                    api_source=self._api_source
+                )
 
     class _RemoveTeamMembers(API):
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Teams/RemoveTeamMembers', valid_return_codes=[200])
-
-        @property
-        @json_response_property()
-        def invalid_members(self):
-            return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-        @property
-        @json_response_property()
-        def members(self):
-            return [Identity.Identity(member, api_type=self._api_type) for member in self._from_json(key='Members')]
-
-        @property
-        @json_response_property()
-        def message(self) -> str:
-            return self._from_json(key='Message')
-
-        @property
-        @json_response_property()
-        def owners(self):
-            return [Identity.Identity(owner, api_type=self._api_type) for owner in self._from_json(key='Owners')]
+            super().__init__(api_obj=websdk_obj, url='/Teams/RemoveTeamMembers')
 
         def put(self, team: dict, members: list = None, show_members: bool = None):
             body = {
@@ -238,5 +278,32 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            self.json_response = self._put(data=body)
-            return self
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def invalid_members(self):
+                    return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
+
+                @property
+                @json_response_property()
+                def members(self):
+                    return [Identity.Identity(member, api_type=self._api_source) for member in self._from_json(key='Members')]
+
+                @property
+                @json_response_property()
+                def message(self) -> str:
+                    return self._from_json(key='Message')
+
+                @property
+                @json_response_property()
+                def owners(self):
+                    return [Identity.Identity(owner, api_type=self._api_source) for owner in self._from_json(key='Owners')]
+
+            return _Response(
+                response=self._put(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
