@@ -1,4 +1,4 @@
-isodate
-jsonpickle==1.2
+isodate==0.6.0
 requests==2.22.0
+jsonpickle==1.2
 python_dateutil==2.8.1
