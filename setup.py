@@ -19,6 +19,7 @@ if __name__ == '__main__':
             'requests',
             'datetime',
             'jsonpickle',
-            'python-dateutil'
+            'python-dateutil',
+            'isodate'
         ],
     )
