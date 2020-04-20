@@ -1,5 +1,4 @@
-from venafi.api.api_base import API, json_response_property
-from venafi.properties.response_objects.config import Config
+from venafi.api.api_base import API, APIResponse
 
 
 class _Jobs:
@@ -22,14 +21,16 @@ class _Jobs:
                 def __init__(self, guid: str, aperture_obj):
                     super().__init__(
                         api_obj=aperture_obj,
-                        url=f'/jobs/networkdiscovery/{guid}/actions',
-                        valid_return_codes=[200]
+                        url=f'/jobs/networkdiscovery/{guid}/actions'
                     )
 
                 def post(self, job_action: str):
                     body = {
                         'jobAction': job_action
                     }
-                    
-                    self.json_response = self._post(data=body)
-                    return self
+
+                    return APIResponse(
+                        response=self._post(data=body),
+                        expected_return_codes=[200],
+                        api_source=self._api_source
+                    )

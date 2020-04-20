@@ -6,7 +6,7 @@ import isodate
 
 def from_date_string(date_string: str, duration_format: bool = False) -> Union[None, datetime]:
     if not date_string:
-        return
+        return None
 
     if duration_format:
         return isodate.parse_duration(datestring=date_string)

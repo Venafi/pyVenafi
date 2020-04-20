@@ -237,7 +237,7 @@ class Certificate(FeatureBase):
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         result = self._auth.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
-        return [result.file, result.ssltls]
+        return [result.file, result.ssl_tls]
 
     def push_to_applications(self, certificate_dn: str, application_dns: List[str] = None):
         """

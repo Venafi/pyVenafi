@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import re
 import json
 from venafi.api.session import Session
@@ -59,7 +59,7 @@ class API:
     validations, logging, re-authentication, and holds the raw response. This
     class MUST be inherited by all API definitions.
     """
-    def __init__(self, api_obj, url: str, valid_return_codes: list):
+    def __init__(self, api_obj, url: str):
         """
         Args:
             api_obj: This is passed down from the API type object (eg. WebSDK, etc.) and
@@ -68,88 +68,13 @@ class API:
                 through these properties this class is able to send and receive requests
                 to TPP.
             url: This is the URL extension from the base URL.
-            valid_return_codes: A list of valid status codes, such as [200, 204].
         """
         self._api_obj = api_obj  # type:
         self._session = api_obj._session  # type: Session
-        self._api_type = api_obj.__class__.__name__.lower()
+        self._api_source = api_obj.__class__.__name__.lower()
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
-        self._valid_return_codes = valid_return_codes
-
-        self._json_response = Response()
-        self._validated = False
-
-    @property
-    def json_response(self):
-        return self._json_response
-
-    @json_response.setter
-    def json_response(self, value):
-        # When set, a new raw response is stored and hasn't been validated, so invalidate.
-        self._validated = False
-        self._json_response = value
-
-    def assert_valid_response(self):
-        """
-        Use this method when no response property is available after an API call or to simply
-        throw an error if the return code is invalid. This simply asserts that a valid response
-        status code was returned by TPP.
-        """
-        if not self._validated:
-            self._validate()
-
-    def is_valid_response(self):
-        """
-        Returns ``True`` when the response is valid, meaning a valid return code was returned by
-        TPP, otherwise ``False``.
-        """
-        try:
-            self._validate()
-            return True
-        except InvalidResponseError:
-            return False
-
-    def _from_json(self, key: str = None, error_key: str = None, return_on_error: type = None):
-        """
-        Returns the particular key within the response dictionary. If no key is provided, then
-        the full response is returned as a dictionary.
-
-        If ``key`` is provided, then it is searched in the response content. It is not case
-        sensitive. If ``key`` is not found, an error is thrown and logged.
-
-        TPP often returns a key with an error message. When an ``error_key`` is provided and an
-        error message is returned an error is thrown and logged with the message provided by TPP.
-
-        Args:
-            key: Key within the top level of the response content.
-            error_key: Error key within the top level of the response content.
-            return_on_error: If an error occurs in retrieving content or accessing a key, this
-                type will be returned instead of throwing an error.
-
-        Returns:
-            If a key is provided, returns the response content at that key. Otherwise, the full
-            response content.
-        """
-        try:
-            result = self.json_response.json()
-        except json.decoder.JSONDecodeError as e:
-            if return_on_error:
-                return return_on_error()
-            raise InvalidResponseError(f'{self.json_response.url} return no content. '
-                                       f'Got status code {self.json_response.status_code}.')
-        if error_key and error_key in result.keys():
-            raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
-        if not key:
-            return result
-        for k in result.keys():
-            if key.lower() == k.lower():
-                return result[k]
-
-        if return_on_error:
-            return return_on_error()
-        raise KeyError(f'{key} was not returned by TPP.')
 
     def _is_api_key_invalid(self, response: Response):
         """
@@ -163,9 +88,9 @@ class API:
             Returns True if the API key expired. Otherwise False.
 
         """
-        if self._api_type == 'websdk':
+        if self._api_source == 'websdk':
             invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
-        elif self._api_type == 'aperture':
+        elif self._api_source == 'aperture':
             invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
         else:
             invalid_api_message_match = False
@@ -249,25 +174,6 @@ class API:
             return self._put(data)
         return response
 
-    def _validate(self):
-        """
-        Validates the current response property by validating that there are expected return codes
-        and that the actual return code is one of the valid return codes. If the return code is
-        invalid, an error is thrown and logged.
-        """
-        self._validated = True
-
-        if not self._valid_return_codes:
-            raise ValueError('No valid return codes were provided, so the response to %s cannot be validated.' % self._url)
-
-        if not isinstance(self.json_response, Response):
-            raise TypeError("Expected response object, but got %s." % type(self.json_response))
-
-        if self.json_response.status_code not in self._valid_return_codes:
-            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
-            raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
-                self.json_response.status_code, str(self._valid_return_codes), error_msg))
-
     def _re_authenticate(self):
         """
         The current API token expired and the session needs to be re-authenticated.
@@ -338,6 +244,107 @@ class API:
             elif isinstance(value, dict):
                 d = self._mask_values_by_key(d, mask_values_with_key=mask_values_with_key)
         return d
+
+
+class APIResponse:
+    def __init__(self, response: Response, expected_return_codes: list, api_source: str):
+        """
+        Args:
+            expected_return_codes: A list of valid status codes, such as [200, 204].
+        """
+        self._api_source = api_source
+        self._valid_return_codes = expected_return_codes
+        self._json_response = response
+        self._validated = False
+
+    @property
+    def json_response(self):
+        return self._json_response
+
+    @json_response.setter
+    def json_response(self, value):
+        # When set, a new raw response is stored and hasn't been validated, so invalidate.
+        self._validated = False
+        self._json_response = value
+
+    def assert_valid_response(self):
+        """
+        Use this method when no response property is available after an API call or to simply
+        throw an error if the return code is invalid. This simply asserts that a valid response
+        status code was returned by TPP.
+        """
+        if not self._validated:
+            self._validate()
+
+    def is_valid_response(self):
+        """
+        Returns ``True`` when the response is valid, meaning a valid return code was returned by
+        TPP, otherwise ``False``.
+        """
+        try:
+            self._validate()
+            return True
+        except InvalidResponseError:
+            return False
+
+    def _from_json(self, key: str = None, error_key: str = None, return_on_error: type = None):
+        """
+        Returns the particular key within the response dictionary. If no key is provided, then
+        the full response is returned as a dictionary.
+
+        If ``key`` is provided, then it is searched in the response content. It is not case
+        sensitive. If ``key`` is not found, an error is thrown and logged.
+
+        TPP often returns a key with an error message. When an ``error_key`` is provided and an
+        error message is returned an error is thrown and logged with the message provided by TPP.
+
+        Args:
+            key: Key within the top level of the response content.
+            error_key: Error key within the top level of the response content.
+            return_on_error: If an error occurs in retrieving content or accessing a key, this
+                type will be returned instead of throwing an error.
+
+        Returns:
+            If a key is provided, returns the response content at that key. Otherwise, the full
+            response content.
+        """
+        try:
+            result = self.json_response.json()
+        except json.decoder.JSONDecodeError as e:
+            if return_on_error:
+                return return_on_error()
+            raise InvalidResponseError(f'{self.json_response.url} return no content. '
+                                       f'Got status code {self.json_response.status_code}.')
+        if error_key and error_key in result.keys():
+            raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
+        if not key:
+            return result
+        for k in result.keys():
+            if key.lower() == k.lower():
+                return result[k]
+
+        if return_on_error:
+            return return_on_error()
+        raise KeyError(f'{key} was not returned by TPP.')
+
+    def _validate(self):
+        """
+        Validates the current response property by validating that there are expected return codes
+        and that the actual return code is one of the valid return codes. If the return code is
+        invalid, an error is thrown and logged.
+        """
+        self._validated = True
+
+        if not self._valid_return_codes:
+            raise ValueError(f'No valid return codes were provided, so the response to {self.json_response.url} '
+                             f'cannot be validated.')
+
+        if self.json_response.status_code not in self._valid_return_codes:
+            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
+            raise InvalidResponseError(
+                f"Received {self.json_response.status_code}, but expected one of {self._valid_return_codes}. "
+                f"Error message is: {error_msg}."
+            )
 
 
 class InvalidResponseError(Exception):
