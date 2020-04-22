@@ -77,7 +77,7 @@ class Certificate(FeatureBase):
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         result = self._auth.websdk.Certificates.Guid(certificate_guid).delete()
-        if not result.success:
+        if not result.is_valid_response():
             certificate_dn = self._auth.websdk.Config.GuidToDn.post(object_guid=certificate_guid).object_dn
             raise FeatureError(f'Could not delete certificate {certificate_dn}.')
 
