@@ -7,17 +7,23 @@ from venafi.properties.response_objects.oauth import OAuth
 class _ApplicationIntegration(API):
     def __init__(self, aperture_obj):
         super().__init__(api_obj=aperture_obj, url='/application-integration')
+        self.Access = self._Access(aperture_obj=aperture_obj)
 
-    def post(self, allowed_identities: List[str], application_id: str, application_name: str, application_scope: dict,
-             description: str, vendor: str, mode: str = "create"):
+    def post(self, application_id: str, application_name: str, application_scope: dict,
+             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
+        use_defaults = grant_validity_days is None
+        renewable = None if use_defaults else bool(access_validity_days is not None)
         body = {
-            'allowedIdentities': allowed_identities,
-            'applicationId'    : application_id,
-            'applicationName'  : application_name,
-            'applicationScope' : application_scope,
-            'description'      : description,
-            'vendor'           : vendor,
-            'mode'             : mode
+            'accessValidityDays'       : access_validity_days if not use_defaults else None,
+            'applicationId'            : application_id,
+            'applicationName'          : application_name,
+            'applicationScope'         : application_scope,
+            'defaultAccessSettingsUsed': use_defaults,
+            'description'              : description,
+            'grantValidityDays'        : grant_validity_days,
+            'mode'                     : 'create',
+            'renewable'                : renewable,
+            'vendor'                   : vendor
         }
 
         class _Response(APIResponse):
@@ -31,19 +37,24 @@ class _ApplicationIntegration(API):
 
         return _Response(
             response=self._post(data=body),
-            expected_return_codes=[200, 204],
+            expected_return_codes=[200, 201, 204],
             api_source=self._api_source
         )
 
-    def put(self, allowed_identities: List[str], application_id: str, application_name: str, description: str, vendor: str,
-            mode: str = "edit"):
+    def put(self, application_id: str, application_name: str, description: str, vendor: str,
+            access_validity_days: int = None, grant_validity_days: int = None):
+        use_defaults = grant_validity_days is None
+        renewable = None if use_defaults else bool(access_validity_days is not None)
         body = {
-            'allowedIdentities': allowed_identities,
-            'applicationId'    : application_id,
-            'applicationName'  : application_name,
-            'description'      : description,
-            'vendor'           : vendor,
-            'mode'             : mode
+            'accessValidityDays'       : access_validity_days if not use_defaults else None,
+            'applicationId'            : application_id,
+            'applicationName'          : application_name,
+            'defaultAccessSettingsUsed': use_defaults,
+            'description'              : description,
+            'grantValidityDays'        : grant_validity_days,
+            'mode'                     : 'create',
+            'renewable'                : renewable,
+            'vendor'                   : vendor
         }
 
         class _Response(APIResponse):
@@ -57,18 +68,38 @@ class _ApplicationIntegration(API):
 
         return _Response(
             response=self._put(data=body),
-            expected_return_codes=[200],
+            expected_return_codes=[200, 201, 204],
             api_source=self._api_source
         )
 
     def ApplicationId(self, id: str):
         return self._ApplicationId(id=id, aperture_obj=self._api_obj)
 
+    class _Access:
+        def __init__(self, aperture_obj):
+            self._aperture_obj = aperture_obj
+
+        def ApplicationId(self, id: str):
+            return self._ApplicationId(id=id, aperture_obj=self._aperture_obj)
+
+        class _ApplicationId(API):
+            def __init__(self, id: str, aperture_obj):
+                super().__init__(api_obj=aperture_obj, url=f'/application-integration/access/?id={id}')
+
+            def put(self, identities: list):
+                body = identities
+
+                return APIResponse(
+                    response=self._put(data=body),
+                    expected_return_codes=[200, 204],
+                    api_source=self._api_source
+                )
+
     class _ApplicationId(API):
         def __init__(self, id: str, aperture_obj):
             super().__init__(
                 api_obj=aperture_obj,
-                url=f'/application-integration/{id}'
+                url=f'/application-integration/?id={id}'
             )
 
         def delete(self):
@@ -86,6 +117,16 @@ class _ApplicationIntegration(API):
             class _Response(APIResponse):
                 def __init__(self, response, expected_return_codes, api_source):
                     super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+
+                @property
+                @json_response_property()
+                def access_granted(self) -> int:
+                    return self._from_json(key='accessGranted')
+
+                @property
+                @json_response_property()
+                def access_validity_days(self) -> int:
+                    return self._from_json(key='accessValidityDays')
 
                 @property
                 @json_response_property()
@@ -109,8 +150,23 @@ class _ApplicationIntegration(API):
 
                 @property
                 @json_response_property()
+                def default_access_settings_used(self) -> bool:
+                    return self._from_json(key='defaultAccessSettingsUsed')
+
+                @property
+                @json_response_property()
                 def description(self) -> str:
                     return self._from_json(key='description')
+
+                @property
+                @json_response_property()
+                def grant_validity_days(self) -> int:
+                    return self._from_json(key='grantValidityDays')
+
+                @property
+                @json_response_property()
+                def renewable(self) -> bool:
+                    return self._from_json(key='renewable')
 
                 @property
                 @json_response_property()

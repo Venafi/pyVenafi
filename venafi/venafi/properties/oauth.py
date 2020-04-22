@@ -38,10 +38,11 @@ class Scope:
             read=read
         )
 
-    def certificate(self, delete: bool = False, discover: bool = False, manage: bool = False,
-                    read: bool = False, revoke: bool = False):
+    def certificate(self, approve: bool = False, delete: bool = False, discover: bool = False,
+                    manage: bool = False, read: bool = False, revoke: bool = False):
         self._scope(
             scope_name='certificate',
+            approve=approve,
             delete=delete,
             discover=discover,
             manage=manage,
@@ -81,9 +82,11 @@ class Scope:
             read=read
         )
 
-    def ssh(self, delete: bool = False, discover: bool = False, manage: bool = False, read: bool = False):
+    def ssh(self, approve: bool = False, delete: bool = False, discover: bool = False,
+            manage: bool = False, read: bool = False):
         self._scope(
             scope_name='ssh',
+            approve=approve,
             delete=delete,
             discover=discover,
             manage=manage,

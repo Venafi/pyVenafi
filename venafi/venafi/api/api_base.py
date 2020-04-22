@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Union
 import re
 import json
 from venafi.api.session import Session
@@ -114,7 +114,7 @@ class API:
             return self._delete()
         return response
 
-    def _get(self, params:dict = None):
+    def _get(self, params: dict = None):
         """
         Performs a GET method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -134,7 +134,7 @@ class API:
             return self._get(params=params)
         return response
 
-    def _post(self, data: dict):
+    def _post(self, data: Union[list, dict]):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -154,7 +154,7 @@ class API:
             return self._post(data=data)
         return response
 
-    def _put(self, data: dict):
+    def _put(self, data: Union[list, dict]):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
