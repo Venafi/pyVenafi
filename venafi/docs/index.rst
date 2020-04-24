@@ -1,7 +1,16 @@
 Welcome to Venafi's documentation!
 ==================================
 
-Available Versions:
+.. toctree::
+   :caption: Contents
 
-* `19.4.0.0 <../19.4.0.0/home.html>`_
-* `20.1.0.0 <../20.1.0.0/home.html>`_
+   rst/venafi
+   rst/getting_started
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
