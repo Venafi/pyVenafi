@@ -6,7 +6,7 @@ class Identity:
 
             if api_type == 'websdk':
                 self.full_name = identity_dict.get('FullName')  # type: str
-                self.is_container = identity_dict.get('IsContainer')  # type: str
+                self.is_container = identity_dict.get('IsContainer')  # type: bool
                 self.is_group = identity_dict.get('IsGroup')  # type: bool
                 self.name = identity_dict.get('Name')  # type: str
                 self.prefix = identity_dict.get('Prefix')  # type: str
@@ -17,7 +17,7 @@ class Identity:
 
             elif api_type == 'aperture':
                 self.full_name = identity_dict.get('fullName')  # type: str
-                self.is_container = identity_dict.get('isContainer')  # type: str
+                self.is_container = identity_dict.get('isContainer')  # type: bool
                 self.is_group = identity_dict.get('isGroup')  # type: bool
                 self.name = identity_dict.get('name')  # type: str
                 self.prefix = ''
