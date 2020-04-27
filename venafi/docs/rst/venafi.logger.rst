@@ -1,3 +1,5 @@
+.. _venafi_logger:
+
 Logger
 ======
 

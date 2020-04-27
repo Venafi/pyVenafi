@@ -3,8 +3,8 @@ The Venafi Logger is a singleton class that enforces all callers to use the same
 instance of the logger. This allows this logger to affect all logging everywhere,
 so be responsible when using it. ``from venafi.logger import logger``
 
-Must-Know Methods
------------------
+Methods
+-------
 
 ``logger.log()``
     Logs the given message with the given level. The level defaults to main
@@ -52,8 +52,8 @@ Must-Know Methods
     methods are converted into "no operations", which when called simply return nothing. A
     ``why`` parameter is available to suggested why the call was made to re-enable logging.
 
-Must-Know Environment Variables
--------------------------------
+Environment Variables
+---------------------
 
 In order to see a complete list of these configurations, see `venafi/tools/logger/config.py`.
 

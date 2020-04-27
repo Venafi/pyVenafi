@@ -4,9 +4,8 @@ Welcome to Venafi's documentation!
 .. toctree::
    :caption: Contents
 
-   all_docs/included/custom/custom.getting_started
-   all_docs/included/venafi
-   all_docs/included/custom/custom.venafi.api
+   rst/venafi
+   rst/getting_started
 
 
 Indices and tables
