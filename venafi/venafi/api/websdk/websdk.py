@@ -1,5 +1,5 @@
 from typing import Union
-from venafi.logger import logger, LogLevels
+from venafi.logger import logger, LogTags
 from venafi.api.session import Session
 from venafi.properties.oauth import Scope
 from venafi.api.websdk.endpoints.authorize import _Authorize
@@ -33,7 +33,7 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'token'])
+    @logger.wrap_func(LogTags.feature, mask_input_regexes=['password', 'token'])
     def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
                  scope: Union[Scope, str] = None, refresh_token: str = None):
         """

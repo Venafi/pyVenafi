@@ -1,23 +1,23 @@
 import inspect
 import time
-from venafi.logger import logger, LogLevels
+from venafi.logger import logger, LogTags
 from venafi.properties.secret_store import Namespaces
 from venafi.api.authenticate import Authenticate
-import os
 from typing import List, Dict
 
 
 def feature():
     def decorate(cls):
-        if int(os.getenv('VENAFI_PY_DOC_IN_PROGRESS', 0)):
-            return cls
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                if type(cls.__dict__.get(fn.__name__)) is staticmethod:
-                    setattr(cls, attr, logger.wrap(LogLevels.medium.level, is_static=True)(getattr(cls, attr)))
+                if type(cls.__dict__.get(fn.__name__)) in {staticmethod, classmethod}:
+                    setattr(cls, attr, logger.wrap_func(
+                        log_tag=LogTags.feature,
+                        is_static_or_classmethod=True
+                    )(getattr(cls, attr)))
                 else:
-                    setattr(cls, attr, logger.wrap(LogLevels.medium.level)(getattr(cls, attr)))
+                    setattr(cls, attr, logger.wrap_func(log_tag=LogTags.feature)(getattr(cls, attr)))
         return cls
     return decorate
 
@@ -56,11 +56,12 @@ class FeatureBase:
 
     @staticmethod
     def _log_warning_message(msg: str):
-        logger.log(msg=msg, level=LogLevels.critical.level, prev_frames=2)
+        logger.log(msg=msg, log_tag=LogTags.critical, num_prev_callers=2)
 
     @staticmethod
     def __log_not_implemented_warning(api_type):
-        logger.log(f'No implementation defined for this method using {api_type}.', level=LogLevels.medium.level, prev_frames=2)
+        logger.log(f'No implementation defined for this method using {api_type}.', log_tag=LogTags.feature,
+                   num_prev_callers=2)
 
     @staticmethod
     def __no_op(*args, **kwargs):
@@ -100,55 +101,23 @@ class FeatureBase:
             if result.code != 0:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
-    @staticmethod
-    def _wait_for_method(method, return_value, timeout: int = 10):
-        maxtime = time.time() + timeout
-        interval = 0.5
-
-        logger.disable_all_logging(
-            level=LogLevels.medium.level,
-            why=f'Running {method.__name__} method with a timeout of {timeout} seconds at {interval} second intervals. '
-                f'Expected output value is "{return_value}".',
-            func_obj=method
-        )
-
-        actual_value = None
-        while time.time() < maxtime:
-            actual_value = method()
-            if actual_value == return_value:
-                lapse = int(timeout - (maxtime - time.time()))
-                logger.enable_all_logging(
-                    level=LogLevels.medium.level,
-                    why=f'{method.__name__} returned "{actual_value}" after {lapse} seconds.',
-                    func_obj=method,
-                    reference_lastlineno=True
-                )
-                return [True, actual_value]
-            time.sleep(interval)
-
-        logger.enable_all_logging(
-            level=LogLevels.critical.level,
-            why=f'{method.__name__} did not return "{actual_value}" after {timeout} seconds.',
-            func_obj=method,
-            reference_lastlineno=True
-        )
-        return [False, actual_value]
-
     class _Timeout:
         def __init__(self, timeout):
             self.timeout = timeout
             self.max_time = timeout + time.time()
 
         def __enter__(self):
-            logger.disable_all_logging(
-                level=LogLevels.medium.level,
+            logger.set_rule(
+                log_tag=LogTags.feature,
+                min_tag_value=LogTags.feature.value,
                 why=f'Disabling all logs during timeout to reduce redundant logging.'
             )
             return self
 
         def __exit__(self, exc_type, exc_val, exc_tb):
-            logger.enable_all_logging(
-                level=LogLevels.medium.level,
+            logger.set_rule(
+                log_tag=LogTags.feature,
+                reset=True,
                 why=f'Enabling all logs after timeout.'
             )
             return
@@ -165,8 +134,8 @@ class _FeatureException(Exception):
     def log(self):
         logger.log(
             msg=self.__str__(),
-            level=LogLevels.critical.level,
-            prev_frames=2
+            log_tag=LogTags.critical,
+            num_prev_callers=2
         )
 
 

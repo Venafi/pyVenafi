@@ -26,7 +26,7 @@ class _Authorize(API):
             mask_values_with_key=[
                 'Password'
             ],
-            prev_frames=2
+            num_prev_callers=2
         )
         r = self._post(data=body)
         self._log_response(
@@ -34,7 +34,7 @@ class _Authorize(API):
             mask_values_with_key=[
                 'APIKey'
             ],
-            prev_frames=2
+            num_prev_callers=2
         )
 
         class _Response(APIResponse):
@@ -74,7 +74,7 @@ class _Authorize(API):
                 mask_values_with_key=[
                     'password'
                 ],
-                prev_frames=2
+                num_prev_callers=2
             )
             r = self._post(data=body)
             self._log_response(
@@ -83,7 +83,7 @@ class _Authorize(API):
                     'access_token',
                     'refresh_token'
                 ],
-                prev_frames=2
+                num_prev_callers=2
             )
 
             class _Response(APIResponse):
@@ -146,7 +146,7 @@ class _Authorize(API):
                 mask_values_with_key=[
                     'refresh_token'
                 ],
-                prev_frames=2
+                num_prev_callers=2
             )
             r = self._post(data=body)
             self._log_response(
@@ -155,7 +155,7 @@ class _Authorize(API):
                     'access_token',
                     'refresh_token'
                 ],
-                prev_frames=2
+                num_prev_callers=2
             )
 
             class _Response(APIResponse):

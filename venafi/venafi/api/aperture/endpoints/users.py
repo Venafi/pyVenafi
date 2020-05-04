@@ -26,7 +26,7 @@ class _Users:
                 mask_values_with_key=[
                     'password'
                 ],
-                prev_frames=2
+                num_prev_callers=2
             )
             r = self._post(data=body)
             self._log_response(
@@ -34,7 +34,7 @@ class _Users:
                 mask_values_with_key=[
                     'apiKey'
                 ],
-                prev_frames=2
+                num_prev_callers=2
             )
 
             class _Response(APIResponse):
