@@ -11,15 +11,16 @@ if __name__ == '__main__':
         },
         description='Venafi Features and API Implementation In Python',
         version=__version__,
-        url='ssh://git@git.eng.venafi.com/spi',
         author='Venafi',
         author_email='spi@venafi.com',
-        keywords=['pip','venafi'],
+        keywords=['venafi'],
         install_requires=[
             'requests',
             'datetime',
             'jsonpickle',
             'python-dateutil',
-            'isodate'
+            'isodate',
+            'Pygments'
         ],
+        include_package_data=True
     )
