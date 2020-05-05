@@ -1,4 +1,4 @@
-from typing import List, Callable, Any
+from typing import List, Callable, Any, Union
 import os
 import sys
 import traceback
@@ -70,12 +70,13 @@ class Logger:
         return self._log_path
 
     @log_path.setter
-    def log_path(self, path: str):
-        if self._log_path is not None or not isinstance(path, str) or self._persistent_logging:
+    def log_path(self, path: Union[Path, str]):
+        if self._log_path is not None or not isinstance(path, (Path, str)) or self._persistent_logging:
             raise ValueError(f'Cannot set log path to "{path}" because it is already set to "{path}".')
-        if not path.endswith('.db'):
+        if not isinstance(path, Path) and not path.endswith('.db'):
             path += '.db'
-        self._log_path = Path(path)
+            path = Path(path)
+        self._log_path = path
         self._persistent_logging = True
 
     @property
