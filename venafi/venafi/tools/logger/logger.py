@@ -66,7 +66,7 @@ class Logger:
         self._threads = {self._main_thread.ident: _LogThread(depth=0)}
 
     @property
-    def log_path(self):
+    def log_path(self) -> Path:
         return self._log_path
 
     @log_path.setter
