@@ -9,6 +9,11 @@ if __name__ == '__main__':
         package_dir={
           '': 'venafi'
         },
+        package_data={'': [
+            'tools/logger/generators/html_gen/*.js',
+            'tools/logger/generators/html_gen/*.css',
+            'tools/logger/sqlite/*.sql'
+        ]},
         description='Venafi Features and API Implementation In Python',
         version=__version__,
         author='Venafi',
@@ -21,6 +26,5 @@ if __name__ == '__main__':
             'python-dateutil',
             'isodate',
             'Pygments'
-        ],
-        include_package_data=True
+        ]
     )
