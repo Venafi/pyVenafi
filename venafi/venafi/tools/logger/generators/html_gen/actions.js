@@ -176,17 +176,7 @@ function searchRegex(text) {
     return new RegExp(expr, params);
 }
 
-function search(search_el_id, tag_toggled=false) {
-    search_el = document.querySelector('#'+search_el_id);
-    text = search_el.value;
-    if(text.length == 0) {
-        if(!tag_toggled) {
-            search_results = document.querySelector('#search-count');
-            search_results.innerHTML = 'Type something to search.';
-        }
-        return;
-    }
-
+function processSearch(text, tag_toggled=false) {
     resetLogBlocks();
     var include_msg_block = document.querySelector('#search-in-msg');
     var include_code_block = document.querySelector('#search-in-code');
@@ -229,7 +219,23 @@ function search(search_el_id, tag_toggled=false) {
     }
 
     search_results = document.querySelector('#search-count');
-    search_results.innerHTML = total_num_results + ' total results match "' + text + '".\n' + shown_num_results + ' results shown.';
+    search_results.innerHTML = total_num_results + ' total results match "' + text + '".<br/>' + shown_num_results + ' results shown.';
+}
+
+function search(search_el_id, tag_toggled=false) {
+    search_el = document.querySelector('#'+search_el_id);
+    search_results = document.querySelector('#search-count');
+    search_results.innerHTML = 'Searching...';
+
+    text = search_el.value;
+    if(text.length == 0) {
+        if(!tag_toggled) {
+            search_results.innerHTML = 'Type something to search.';
+        }
+        return;
+    }
+
+    setTimeout(function () { processSearch(text, tag_toggled); }, 120);
 }
 
 function searchOnEnter(event, search_el_id) {
