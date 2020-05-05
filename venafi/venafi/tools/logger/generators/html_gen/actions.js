@@ -230,7 +230,6 @@ function search(search_el_id, tag_toggled=false) {
 
     search_results = document.querySelector('#search-count');
     search_results.innerHTML = total_num_results + ' total results match "' + text + '".\n' + shown_num_results + ' results shown.';
-    search_el.value = '';
 }
 
 function searchOnEnter(event, search_el_id) {

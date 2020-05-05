@@ -1,6 +1,4 @@
 from typing import List, Dict, Optional, Tuple
-from venafi.tools.logger.generators.bases import Generator, GeneratorType
-from venafi.tools.logger.config import LogTag
 import os
 import shutil
 import re
@@ -9,8 +7,11 @@ from datetime import datetime
 from pygments import highlight
 from pygments.lexers.python import PythonLexer
 from pygments.formatters.html import HtmlFormatter
-from venafi.tools.logger.sqlite.dal import LoggerSql, SelectResult
 import asyncio
+from venafi.tools.logger.sqlite.dal import LoggerSql, SelectResult
+from venafi.tools.logger.generators.bases import Generator, GeneratorType
+from venafi.tools.logger.config import LogTag
+
 
 CSS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/styles.css')
 JS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/actions.js')
@@ -137,16 +138,16 @@ class HtmlLogGenerator(Generator):
         colors = []
         classes = []
         for ll in log_tags.values():
-            colors.append(f'--{ll.name}: {ll.html_color};')
+            colors.append(f'--{ll.alias}: {ll.html_color};')
             classes.append(f"""
-            .{ll.name} {{
-                border-left: var(--{ll.name}) solid 5px;
+            .{ll.alias} {{
+                border-left: var(--{ll.alias}) solid 5px;
                 border-bottom: lightgrey solid 2px;
                 transition: border-bottom 0.2s ease-in-out;
             }}
 
-            .{ll.name}:hover {{
-                border-bottom: var(--{ll.name}) solid 2px;
+            .{ll.alias}:hover {{
+                border-bottom: var(--{ll.alias}) solid 2px;
 
             }}
             """)
@@ -163,22 +164,25 @@ class HtmlLogGenerator(Generator):
 
     @staticmethod
     async def _legend(log_tags: Dict[str, LogTag]):
-        def add_filter(name: str, color: str, value: int):
+        def add_filter(log_tag: LogTag):
             return f"""
             <div class="log-tag fancy-checkbox" 
-                 aria-label="{name}" 
-                 aria-valuetext="{value}"
+                 aria-label="{log_tag.alias}" 
+                 aria-valuetext="{log_tag.value}"
                  onclick="handleLogTagFilter(this)">
                 <label class="switch">
-                    <input id="{name}" type="checkbox" checked>
-                    <span class="slider round" style="background-color: {color}; box-shadow: 0 0 10px {color};"></span>
+                    <input id="{log_tag.alias}" type="checkbox" checked>
+                    <span 
+                        class="slider round" 
+                        style="background-color: {log_tag.html_color}; box-shadow: 0 0 10px {log_tag.html_color};">
+                    </span>
                 </label>
-                <span>{name}</span>
+                <span>{log_tag.name}</span>
             </div>
             """
 
         filters = '\n'.join([
-            add_filter(name=log_tag.name, color=log_tag.html_color, value=log_tag.value)
+            add_filter(log_tag=log_tag)
             for log_tag in log_tags.values()
         ])
         return f"""
@@ -292,7 +296,8 @@ class HtmlLogGenerator(Generator):
                    f'Qualified Name: {le[cols.function_name]}\n' \
                    f'Thread Id: {le[cols.thread_id]}\n' \
                    f'Thread Name: {le[cols.thread_name]}\n' \
-                   f'Timestamp: {le[cols.timestamp]}'
+                   f'Timestamp: {le[cols.timestamp]}\n' \
+                   f'Log Tag: {le[cols.tag_name]}'
 
         logs = [
             f"""
@@ -360,9 +365,9 @@ class HtmlLogGenerator(Generator):
             logs.append(f"""
             <div id='{log_entry_id}' 
                  class="log-entry {display}"
-                 aria-valuetext="{log_tag.name}" 
+                 aria-valuetext="{log_tag.alias}" 
                  aria-label="{log_entry[cols.depth]}">
-                <div class="log-row {log_tag.name}" style="margin-left: {log_entry[cols.depth] * 25}px;">
+                <div class="log-row {log_tag.alias}" style="margin-left: {log_entry[cols.depth] * 25}px;">
                     {expand_btn}
                     <div class="func item-container">
                         <span title="{func_def}">{func_def}</span>
@@ -380,7 +385,7 @@ class HtmlLogGenerator(Generator):
                 </div>
                 <div 
                     class="log-block-container" 
-                    style="border-left: var(--{log_tag.name}) solid 5px; margin-left: {log_entry[cols.depth] * 25}px;"
+                    style="border-left: var(--{log_tag.alias}) solid 5px; margin-left: {log_entry[cols.depth] * 25}px;"
                 >
                     <div id="info-block-{e}" class="info-block log-block hide">
                         <pre>{format_info_block(log_entry)}</pre>
@@ -400,5 +405,5 @@ if __name__ == '__main__':
 
     start = time.time()
     html = HtmlLogGenerator()
-    html.generate('/Users/tyler.spens/PycharmProjects/logger/testing/log_20200503203521.db')
+    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/debug/log_20200505092036600219.db')
     print(time.time() - start)

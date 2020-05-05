@@ -5,6 +5,7 @@ from typing import List
 class LogTag:
     def __init__(self, name: str, value: int, html_color: str = None):
         self.name = name
+        self.alias = ''.join([c.lower() for c in name if c.isalpha()])
         self.value = value
         self.html_color = html_color
 
