@@ -20,22 +20,6 @@ class _Users:
                 "username": username,
                 "password": password
             }
-            self._log_rest_call(
-                method='POST',
-                data=body,
-                mask_values_with_key=[
-                    'password'
-                ],
-                num_prev_callers=2
-            )
-            r = self._post(data=body)
-            self._log_response(
-                response=r,
-                mask_values_with_key=[
-                    'apiKey'
-                ],
-                num_prev_callers=2
-            )
 
             class _Response(APIResponse):
                 def __init__(self, response, expected_return_codes, api_source):
@@ -47,7 +31,7 @@ class _Users:
                     return self._from_json('apiKey')
 
             return _Response(
-                response=r,
+                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['apiKey']),
                 expected_return_codes=[200],
                 api_source=self._api_source
             )

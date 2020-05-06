@@ -97,7 +97,7 @@ class API:
 
         return response.status_code == 401 and invalid_api_message_match
 
-    def _delete(self):
+    def _delete(self, mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
         """
         Performs a DELETE method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -106,15 +106,16 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='DELETE')
+        self._log_rest_call(method='DELETE', mask_values_with_key=mask_input_regexes)
         response = self._session.delete(url=self._url)
-        self._log_response(response=response)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
-            return self._delete()
+            return self._delete(mask_input_regexes=mask_input_regexes, mask_output_regexes=mask_output_regexes)
         return response
 
-    def _get(self, params: dict = None):
+    def _get(self, params: dict = None, mask_input_regexes: List[str] = None,
+             mask_output_regexes: List[str] = None):
         """
         Performs a GET method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -126,15 +127,17 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='GET', data=params)
+        self._log_rest_call(method='GET', data=params, mask_values_with_key=mask_input_regexes)
         response = self._session.get(url=self._url, params=params)
-        self._log_response(response=response)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
-            return self._get(params=params)
+            return self._get(params=params, mask_input_regexes=mask_input_regexes,
+                             mask_output_regexes=mask_output_regexes)
         return response
 
-    def _post(self, data: Union[list, dict]):
+    def _post(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
+              mask_output_regexes: List[str] = None):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -146,15 +149,16 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='POST', data=data)
+        self._log_rest_call(method='POST', data=data, mask_values_with_key=mask_input_regexes)
         response = self._session.post(url=self._url, data=data)
-        self._log_response(response=response)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
-            return self._post(data=data)
+            return self._post(data=data, mask_input_regexes=mask_input_regexes,
+                              mask_output_regexes=mask_output_regexes)
         return response
 
-    def _put(self, data: Union[list, dict]):
+    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -166,12 +170,13 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='PUT', data=data)
+        self._log_rest_call(method='PUT', data=data, mask_values_with_key=mask_input_regexes)
         response = self._session.put(url=self._url, data=data)
-        self._log_response(response=response)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
         if self._is_api_key_invalid(response=response):
             self._re_authenticate()
-            return self._put(data)
+            return self._put(data=data, mask_input_regexes=mask_input_regexes,
+                             mask_output_regexes=mask_output_regexes)
         return response
 
     def _re_authenticate(self):
@@ -195,7 +200,8 @@ class API:
             num_prev_callers=num_prev_callers
         )
 
-    def _log_rest_call(self, method: str, data: dict = None, mask_values_with_key: List[str] = None, num_prev_callers: int = 3):
+    def _log_rest_call(self, method: str, data: dict = None, mask_values_with_key: List[str] = None,
+                       num_prev_callers: int = 3):
         """
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
@@ -219,12 +225,12 @@ class API:
                 num_prev_callers=3
             )
 
-    def _log_response(self, response: Response, mask_values_with_key: List[str] = None, num_prev_callers: int = 3):
+    def _log_response(self, response: Response, mask_values_with_key: List[str] = None,
+                      num_prev_callers: int = 3):
         """
         Logs the URL, response code, and the content returned by TPP.
         This enforces consistency in logging across all API calls.
         """
-
         try:
             data = response.json()
             if mask_values_with_key and isinstance(data, dict):
@@ -246,8 +252,9 @@ class API:
         )
 
     def _mask_values_by_key(self, d: dict, mask_values_with_key: List[str]):
+        regexes = "(" + ")|(".join(mask_values_with_key) + ")"
         for key, value in d.items():
-            if key in mask_values_with_key:
+            if re.match(pattern=regexes, string=key, flags=re.IGNORECASE):
                 d[key] = '********'
             elif isinstance(value, dict):
                 d = self._mask_values_by_key(d, mask_values_with_key=mask_values_with_key)

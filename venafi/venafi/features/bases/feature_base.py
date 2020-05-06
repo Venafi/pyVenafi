@@ -14,10 +14,14 @@ def feature():
                 if type(cls.__dict__.get(fn.__name__)) in {staticmethod, classmethod}:
                     setattr(cls, attr, logger.wrap_func(
                         log_tag=LogTags.feature,
+                        mask_input_regexes=['self', 'cls'],
                         is_static_or_classmethod=True
                     )(getattr(cls, attr)))
                 else:
-                    setattr(cls, attr, logger.wrap_func(log_tag=LogTags.feature)(getattr(cls, attr)))
+                    setattr(cls, attr, logger.wrap_func(
+                        log_tag=LogTags.feature,
+                        mask_input_regexes=['self', 'cls'],
+                    )(getattr(cls, attr)))
         return cls
     return decorate
 

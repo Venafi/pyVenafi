@@ -194,8 +194,6 @@ class Logger:
         log_tag = log_tag or self._log_tags.default
 
         def _wrap(cls):
-            if self._disabled:
-                return cls
             for attr, fn in inspect.getmembers(cls, inspect.isroutine):
                 if callable(getattr(cls, attr)) and not fn.__name__.startswith('__'):
                     if func_regex_exclude:

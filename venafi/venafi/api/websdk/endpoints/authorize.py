@@ -20,22 +20,6 @@ class _Authorize(API):
             "Username": username,
             "Password": password
         }
-        self._log_rest_call(
-            method='POST',
-            data=body,
-            mask_values_with_key=[
-                'Password'
-            ],
-            num_prev_callers=2
-        )
-        r = self._post(data=body)
-        self._log_response(
-            response=r,
-            mask_values_with_key=[
-                'APIKey'
-            ],
-            num_prev_callers=2
-        )
 
         class _Response(APIResponse):
             def __init__(self, response, expected_return_codes, api_source):
@@ -47,7 +31,7 @@ class _Authorize(API):
                 return self._from_json('APIKey')
 
         return _Response(
-            response=r,
+            response=self._post(data=body, mask_input_regexes=['Password'], mask_output_regexes=['APIKey']),
             expected_return_codes=[200],
             api_source=self._api_source
         )
@@ -68,23 +52,6 @@ class _Authorize(API):
                 'username': username,
                 'state': state
             }
-            self._log_rest_call(
-                method='POST',
-                data=body,
-                mask_values_with_key=[
-                    'password'
-                ],
-                num_prev_callers=2
-            )
-            r = self._post(data=body)
-            self._log_response(
-                response=r,
-                mask_values_with_key=[
-                    'access_token',
-                    'refresh_token'
-                ],
-                num_prev_callers=2
-            )
 
             class _Response(APIResponse):
                 def __init__(self, response, expected_return_codes, api_source):
@@ -121,7 +88,7 @@ class _Authorize(API):
                     return self._from_json('token_type')
 
             return _Response(
-                response=r,
+                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['*token*']),
                 expected_return_codes=[200],
                 api_source=self._api_source
             )
@@ -139,24 +106,6 @@ class _Authorize(API):
                 'client_id': client_id,
                 'refresh_token': refresh_token
             }
-
-            self._log_rest_call(
-                method='POST',
-                data=body,
-                mask_values_with_key=[
-                    'refresh_token'
-                ],
-                num_prev_callers=2
-            )
-            r = self._post(data=body)
-            self._log_response(
-                response=r,
-                mask_values_with_key=[
-                    'access_token',
-                    'refresh_token'
-                ],
-                num_prev_callers=2
-            )
 
             class _Response(APIResponse):
                 def __init__(self, response, expected_return_codes, api_source):
@@ -193,7 +142,7 @@ class _Authorize(API):
                     return self._from_json('token_type')
 
             return _Response(
-                response=r,
+                response=self._post(data=body, mask_input_regexes=['token'], mask_output_regexes=['*token*']),
                 expected_return_codes=[200],
                 api_source=self._api_source
             )
