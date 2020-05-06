@@ -12,7 +12,6 @@ from venafi.tools.logger.sqlite.dal import LoggerSql, SelectResult
 from venafi.tools.logger.generators.bases import Generator, GeneratorType
 from venafi.tools.logger.config import LogTag
 
-
 CSS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/styles.css')
 JS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/actions.js')
 

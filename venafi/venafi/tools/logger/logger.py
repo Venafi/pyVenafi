@@ -71,8 +71,9 @@ class Logger:
 
     @log_path.setter
     def log_path(self, path: Union[Path, str]):
-        if self._log_path is not None or not isinstance(path, (Path, str)) or self._persistent_logging:
-            raise ValueError(f'Cannot set log path to "{path}" because it is already set to "{path}".')
+        if self._log_path and os.path.exists(self._log_path):
+            raise ValueError(f'Cannot set log path to "{path}" because it is already set to '
+                             f'"{self._log_path}", which exists.')
         if not isinstance(path, Path) and not path.endswith('.db'):
             path += '.db'
             path = Path(path)
