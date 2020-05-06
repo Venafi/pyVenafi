@@ -33,7 +33,9 @@ class _LogThread:
 
     @mode.setter
     def mode(self, value: str):
-        if value not in (values := {'all', 'persistence', 'console'}):
+        if value == 'current':
+            return
+        elif value not in (values := {'all', 'persistence', 'console'}):
             raise ValueError(f'Cannot set mode to "{value}" because it is invalid.\n'
                              f'Valid modes are {values}')
         self._mode = value
@@ -147,7 +149,7 @@ class Logger:
             except:
                 self.log_exception()
 
-    def set_rule(self, mode: str = 'all', log_tag: LogTag = None, min_tag_value: int = None,
+    def set_rule(self, mode: str = 'current', log_tag: LogTag = None, min_tag_value: int = None,
                  blacklist_tag_names: List[str] = None, blacklist_function: Callable = None,
                  reset: bool = False, why: str = ''):
         if self._disabled:
