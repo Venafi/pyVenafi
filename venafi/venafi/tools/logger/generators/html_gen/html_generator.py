@@ -346,9 +346,7 @@ class HtmlLogGenerator(Generator):
             log_tag = log_tags[log_entry[cols.tag_name]]
             log_entry_id = f'log-entry-{e}'
             msg_block_id = f'msg-block-{e}'
-            code_block_id = f'code-block-{e}'
             info_block_id = f'info-block-{e}'
-            log_group_id = f'log-group-{e}'
 
             display = "hide" if log_entry[cols.depth] > 0 else "show"
             if e < (len(log_entries) - 1) and \
