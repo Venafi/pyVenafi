@@ -2,6 +2,7 @@ from typing import List, Dict, Optional, Tuple
 import os
 import shutil
 import re
+import uuid
 from pathlib import Path
 from datetime import datetime
 from pygments import highlight
@@ -11,7 +12,6 @@ import asyncio
 from venafi.tools.logger.sqlite.dal import LoggerSql, SelectResult
 from venafi.tools.logger.generators.bases import Generator, GeneratorType
 from venafi.tools.logger.config import LogTag
-
 
 CSS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/styles.css')
 JS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/actions.js')
@@ -65,8 +65,8 @@ class HtmlLogGenerator(Generator):
         <html>
             <head>
                 <title>{title}</title>
-                <link rel="stylesheet" type="text/css" href="./{Path(CSS_RESOURCE).stem}.css" />
-                <script type="text/javascript" src="./{Path(JS_RESOURCE).stem}.js"></script>
+                <link rel="stylesheet" type="text/css" href="./resources/{Path(CSS_RESOURCE).stem}.css" />
+                <script type="text/javascript" src="./resources/{Path(JS_RESOURCE).stem}.js"></script>
                 <style>
                     {await self._get_styles(log_tags=log_tags, include_code=include_code)}
                 </style>
@@ -82,13 +82,12 @@ class HtmlLogGenerator(Generator):
                 </div>
                 <!-- Code Blocks -->
                 <div class="hide" id="code-blocks">
-                    {''.join([cb['code'] for cb in code_blocks.values()]) if code_blocks else ''}
+                    {''.join([cb['block'] for cb in code_blocks.values()]) if code_blocks else ''}
                 </div>
                 <!-- Log Entries -->
                 <div id="log-entries">
                     {await self._get_log_entries(log_tags=log_tags, log_entries=log_entries,
-                                                 file_ids={k: v['id'] for k, v in code_blocks.items()}
-                                                 if include_code else None)}
+                                                 code_blocks=code_blocks if include_code else None)}
                 </div>
             </body>
             {'<br/>' * 12}
@@ -97,19 +96,25 @@ class HtmlLogGenerator(Generator):
         # endregion Create HTML File
 
         # region Send Files To Log Directory
+        resources = f'{log_file.parent}/resources'
         file_path = ''
-        for part in str(log_file.parent).split(os.sep):
+        for part in resources.split(os.sep):
             file_path += part + os.sep
             if not os.path.exists(file_path):
                 os.mkdir(file_path)
 
+        if code_blocks:
+            for values in code_blocks.values():
+                with open(f"{resources}/{values['path']}", 'w') as f:
+                    f.write(values['code'])
+
         shutil.copy(
             src=CSS_RESOURCE,
-            dst=f'{log_file.parent}'
+            dst=resources
         )
         shutil.copy(
             src=JS_RESOURCE,
-            dst=f'{log_file.parent}'
+            dst=resources
         )
         with open(f'{log_file.parent}/{log_file.stem}.html', 'w') as f:
             f.write(html)
@@ -270,22 +275,25 @@ class HtmlLogGenerator(Generator):
                 fc += 1
                 file_id = f"file-id-{fc}"
                 codes[fp] = {
-                    'id'  : file_id,
-                    'code': f'''
-                        <div class="code-block hide" id="{file_id}">
+                    'id'   : file_id,
+                    'path' : f'{uuid.uuid3(uuid.NAMESPACE_OID, fp).hex}.html',
+                    'block': f'''
+                        <div class="code-block hide" id="{file_id}" aria-label="resources/{Path(fp).stem}.html">
                             <div class="code-block-controls">
                                 <span class="filepath" title="{le[cols.file_path]}">{le[cols.file_path]}</span>
                                 <button class="close-code" onclick="hideCode('{file_id}')">X</button>
                             </div>
                             <div>
-                                <div class="code">{code_html}</div>
+                                <div class="code"></div>
                             </div>
                         </div>
-                    '''
+                    ''',
+                    'code' : code_html
                 }
         return codes
 
-    async def _get_log_entries(self, log_tags: Dict[str, LogTag], log_entries: SelectResult, file_ids: Dict[str, str]):
+    async def _get_log_entries(self, log_tags: Dict[str, LogTag], log_entries: SelectResult,
+                               code_blocks: Dict[str, Dict[str, str]]):
         cols = self._sql.log_entries
 
         file_names = []
@@ -356,9 +364,11 @@ class HtmlLogGenerator(Generator):
                     <div class="no-exp">-</div>
                 </div>
                 """
-            code_btn = '' if not file_ids else f'''
+            code_block = code_blocks.get(log_entry[cols.file_path])
+            fid, fp = code_block.get('id'), code_block.get('path')
+            code_btn = '' if not code_blocks else f'''
                 <div class="code-btn btn item-container">
-                    <button onclick="showCode('{file_ids.get(log_entry[cols.file_path])}', {log_entry[cols.line_num]})">Code</button>
+                    <button onclick="showCode('{fid}', '{fp}', {log_entry[cols.line_num]})">Code</button>
                 </div>
             '''
             func_def = f'{log_entry[cols.function_name]}:{log_entry[cols.line_num]}'
@@ -405,5 +415,5 @@ if __name__ == '__main__':
 
     start = time.time()
     html = HtmlLogGenerator()
-    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/debug/log_20200505092036600219.db')
+    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/dev/log_20200507093854929926.db')
     print(time.time() - start)
