@@ -364,13 +364,16 @@ class HtmlLogGenerator(Generator):
                     <div class="no-exp">-</div>
                 </div>
                 """
-            code_block = code_blocks.get(log_entry[cols.file_path])
-            fid, fp = code_block.get('id'), code_block.get('path')
-            code_btn = '' if not code_blocks else f'''
-                <div class="code-btn btn item-container">
-                    <button onclick="showCode('{fid}', '{fp}', {log_entry[cols.line_num]})">Code</button>
-                </div>
-            '''
+            if code_blocks:
+                code_block = code_blocks.get(log_entry[cols.file_path])
+                fid, fp = code_block.get('id'), code_block.get('path')
+                code_btn = f'''
+                    <div class="code-btn btn item-container">
+                        <button onclick="showCode('{fid}', '{fp}', {log_entry[cols.line_num]})">Code</button>
+                    </div>
+                '''
+            else:
+                code_btn = ''
             func_def = f'{log_entry[cols.function_name]}:{log_entry[cols.line_num]}'
             logs.append(f"""
             <div id='{log_entry_id}' 
