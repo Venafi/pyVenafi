@@ -139,7 +139,8 @@ async function showCode(file_id, file_name, line_num) {
     code_block = document.querySelector('#'+file_id);
     code_block.classList.replace('hide', 'show');
     code = code_block.querySelector('.code');
-    await loadCode(code, file_name);
+    loadCode(code, file_name);
+    await new Promise(r => setTimeout(r, 10));
     setTimeout(function () { scrollToLineNo(code, line_num); }, 10);
 }
 
