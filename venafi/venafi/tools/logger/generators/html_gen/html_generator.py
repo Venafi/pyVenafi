@@ -296,8 +296,6 @@ class HtmlLogGenerator(Generator):
                                code_blocks: Dict[str, Dict[str, str]]):
         cols = self._sql.log_entries
 
-        file_names = []
-
         def format_info_block(le: dict):
             return f'File: {le[cols.file_path]}\n' \
                    f'Line Number: {le[cols.line_num]}\n' \
