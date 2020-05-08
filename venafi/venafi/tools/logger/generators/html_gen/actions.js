@@ -114,14 +114,22 @@ function showCode(file_id, file_name, line_num) {
     code_block.classList.replace('hide', 'show');
     code = code_block.querySelector('.code');
     code_blocks.scrollTo({top: code.offsetTop, behavior: 'smooth'});
-    code.contentWindow.postMessage(line_num.toString(), "*");
+    if(code.contentDocument && code.contentDocument.documentElement.innerText == "") {
+        code.onload = function() {
+            code.contentWindow.postMessage(line_num.toString(), "*");
+        };
+    } else {
+        code.contentWindow.postMessage(line_num.toString(), "*");
+    }
 }
 
 function hideCode(file_id) {
     code_block = document.querySelector('#'+file_id);
     code_block.classList.replace('show', 'hide');
     code = code_block.querySelector('.code');
-    code.innerHTML = "";
+    if(code.contentDocument) {
+        code.contentDocument.documentElement.innerHTML = "";
+    }
     code_blocks = document.querySelector('#code-blocks');
     if(code_blocks.querySelectorAll('.show').length <= 0) {
         code_blocks.classList.replace('show', 'hide');

@@ -14,6 +14,7 @@ from venafi.tools.logger.sqlite.dal import LoggerSql, SelectResult
 from venafi.tools.logger.generators.bases import Generator, GeneratorType
 from venafi.tools.logger.config import LogTag
 
+PYTHON_CSS = os.path.abspath(f'{os.path.dirname(__file__)}/python.css')
 CSS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/styles.css')
 JS_RESOURCE = os.path.abspath(f'{os.path.dirname(__file__)}/actions.js')
 
@@ -109,6 +110,10 @@ class HtmlLogGenerator(Generator):
                 with open(f"{resources}/{values['path']}", 'w') as f:
                     f.write(values['code'])
 
+        shutil.copy(
+            src=PYTHON_CSS,
+            dst=resources
+        )
         shutil.copy(
             src=CSS_RESOURCE,
             dst=resources
@@ -278,10 +283,9 @@ class HtmlLogGenerator(Generator):
                 code = htmlmin.minify(f"""
                 <html>
                     <head>
-                        <link rel=stylesheet type=text/css href=styles.css>
+                        <link rel="stylesheet" type="text/css" href="python.css">
                         <script>
                             window.addEventListener("message", function(event) {{
-                                console.log(event);
                                 line_num =
                                 Number(event.data);
                                 view_line = line_num > 2 ? line_num - 3 : 0;
@@ -311,7 +315,7 @@ class HtmlLogGenerator(Generator):
                                 <button class="close-code" onclick="hideCode('{file_id}')">X</button>
                             </div>
                             <div>
-                                <iframe class="code" src="./{path}" type="text/html"></iframe>
+                                <object class="code" data="./{path}" type="text/html"></object>
                             </div>
                         </div>
                     ''',
@@ -445,5 +449,5 @@ if __name__ == '__main__':
 
     start = time.time()
     html = HtmlLogGenerator()
-    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/dev/log_20200507135041090761.db')
+    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/dev/log_20200508074400287969.db')
     print(time.time() - start)
