@@ -261,7 +261,7 @@ object.code {
 
 .log-entry > .log-row {
     display: grid;
-    grid-template-columns: 35px 300px auto repeat(var(--log-entry-btns), 80px);
+        grid-template-columns: 35px 300px auto repeat(var(--log-entry-btns), minmax(auto, 80px));
 }
 
 .log-row {
