@@ -195,6 +195,14 @@ input {
     max-height: 80vh;
 }
 
+iframe.code {
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
 .code-block {
     margin: 10px;
     border: lightgrey 2px solid;

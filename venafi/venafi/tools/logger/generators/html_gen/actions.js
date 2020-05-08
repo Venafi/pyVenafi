@@ -107,50 +107,21 @@ function handleLogContent(btn, block_id, hide=null) {
 }
 
 // Handle Code Blocks
-function loadCode(code, file) {
-    if(code.childElementCount <= 0) {
-        var request = new XMLHttpRequest();
-        request.onload = function() {
-            if (request.status >= 200 && request.status < 400) {
-                var resp = request.responseText;
-                code.innerHTML = resp;
-            } else {
-                code.innerHTML = "Error. Could not find file.";
-            }
-        };
-        request.open('GET', 'resources/' + file, true);
-        request.send();
-    }
-}
-
-function scrollToLineNo(code, line_num) {
-    view_line = line_num > 2 ? line_num - 3 : line_num;
-    linenos = code.querySelectorAll('.lineno');
-    if(linenos.length > 0) {
-        linenos.forEach(line => {line.style.backgroundColor = 'transparent';})
-        linenos[line_num-1].style.backgroundColor = 'lightgreen';
-        code.scrollTo({top: linenos[view_line].offsetTop - code.offsetTop, behavior: 'smooth'});
-    }
-}
-
-async function showCode(file_id, file_name, line_num) {
+function showCode(file_id, file_name, line_num) {
     code_blocks = document.querySelector('#code-blocks');
     code_blocks.classList.replace('hide', 'show');
     code_block = document.querySelector('#'+file_id);
     code_block.classList.replace('hide', 'show');
     code = code_block.querySelector('.code');
-    loadCode(code, file_name);
-    await new Promise(r => setTimeout(r, 10));
-    setTimeout(function () { scrollToLineNo(code, line_num); }, 10);
+    code_blocks.scrollTo({top: code.offsetTop, behavior: 'smooth'});
+    code.contentWindow.postMessage(line_num.toString(), "*");
 }
 
 function hideCode(file_id) {
     code_block = document.querySelector('#'+file_id);
     code_block.classList.replace('show', 'hide');
     code = code_block.querySelector('.code');
-    if(code.childElementCount > 0) {
-        code.innerHTML = "";
-    }
+    code.innerHTML = "";
     code_blocks = document.querySelector('#code-blocks');
     if(code_blocks.querySelectorAll('.show').length <= 0) {
         code_blocks.classList.replace('show', 'hide');

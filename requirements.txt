@@ -1,3 +1,4 @@
+htmlmin
 Pygments==2.5.2
 requests==2.22.0
 jsonpickle==1.2

@@ -25,6 +25,7 @@ if __name__ == '__main__':
             'jsonpickle',
             'python-dateutil',
             'isodate',
-            'Pygments'
+            'Pygments',
+            'htmlmin'
         ]
     )

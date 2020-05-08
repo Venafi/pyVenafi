@@ -9,6 +9,7 @@ from pygments import highlight
 from pygments.lexers.python import PythonLexer
 from pygments.formatters.html import HtmlFormatter
 import asyncio
+import htmlmin
 from venafi.tools.logger.sqlite.dal import LoggerSql, SelectResult
 from venafi.tools.logger.generators.bases import Generator, GeneratorType
 from venafi.tools.logger.config import LogTag
@@ -61,12 +62,12 @@ class HtmlLogGenerator(Generator):
         title = title or 'Log Results'
         code_blocks = self._get_code_blocks(log_entries=log_entries,
                                             exclude_files=exclude_files) if include_code else None
-        html = f"""
+        html = htmlmin.minify(f"""
         <html>
             <head>
                 <title>{title}</title>
-                <link rel="stylesheet" type="text/css" href="./resources/{Path(CSS_RESOURCE).stem}.css" />
-                <script type="text/javascript" src="./resources/{Path(JS_RESOURCE).stem}.js"></script>
+                <link rel="stylesheet" type="text/css" href="./{Path(CSS_RESOURCE).stem}.css" />
+                <script type="text/javascript" src="./{Path(JS_RESOURCE).stem}.js"></script>
                 <style>
                     {await self._get_styles(log_tags=log_tags, include_code=include_code)}
                 </style>
@@ -92,11 +93,11 @@ class HtmlLogGenerator(Generator):
             </body>
             {'<br/>' * 12}
         </html>
-        """
+        """, remove_comments=True, remove_empty_space=True)
         # endregion Create HTML File
 
         # region Send Files To Log Directory
-        resources = f'{log_file.parent}/resources'
+        resources = f'{log_file.parent}'
         file_path = ''
         for part in resources.split(os.sep):
             file_path += part + os.sep
@@ -274,27 +275,55 @@ class HtmlLogGenerator(Generator):
                 )
                 fc += 1
                 file_id = f"file-id-{fc}"
+                code = htmlmin.minify(f"""
+                <html>
+                    <head>
+                        <link rel=stylesheet type=text/css href=styles.css>
+                        <script>
+                            window.addEventListener("message", function(event) {{
+                                console.log(event);
+                                line_num =
+                                Number(event.data);
+                                view_line = line_num > 2 ? line_num - 3 : 0;
+                                linenos = document.querySelectorAll('.lineno');
+                                if(linenos.length > 0) {{
+                                    linenos.forEach(line => {{line.style.backgroundColor = 'transparent';}})
+                                    linenos[line_num - 1].style.backgroundColor = 'lightgreen';
+                                    body = document.querySelector('body');
+                                    body.scrollTo({{top: linenos[view_line].offsetTop, behavior: 'smooth'}});
+                                }}
+                            }})
+                        </script>
+                    </head>
+                    <body>
+                        {code_html}
+                    </body>
+                </html>
+                """, remove_empty_space=True)
+                path = f'{uuid.uuid3(uuid.NAMESPACE_OID, fp).hex}.html'
                 codes[fp] = {
                     'id'   : file_id,
-                    'path' : f'{uuid.uuid3(uuid.NAMESPACE_OID, fp).hex}.html',
+                    'path' : path,
                     'block': f'''
-                        <div class="code-block hide" id="{file_id}" aria-label="resources/{Path(fp).stem}.html">
+                        <div class="code-block hide" id="{file_id}" aria-label="{Path(fp).stem}.html">
                             <div class="code-block-controls">
                                 <span class="filepath" title="{le[cols.file_path]}">{le[cols.file_path]}</span>
                                 <button class="close-code" onclick="hideCode('{file_id}')">X</button>
                             </div>
                             <div>
-                                <div class="code"></div>
+                                <iframe class="code" src="./{path}" type="text/html"></iframe>
                             </div>
                         </div>
                     ''',
-                    'code' : code_html
+                    'code' : code
                 }
         return codes
 
     async def _get_log_entries(self, log_tags: Dict[str, LogTag], log_entries: SelectResult,
                                code_blocks: Dict[str, Dict[str, str]]):
         cols = self._sql.log_entries
+
+        file_names = []
 
         def format_info_block(le: dict):
             return f'File: {le[cols.file_path]}\n' \
@@ -344,7 +373,9 @@ class HtmlLogGenerator(Generator):
             log_tag = log_tags[log_entry[cols.tag_name]]
             log_entry_id = f'log-entry-{e}'
             msg_block_id = f'msg-block-{e}'
+            code_block_id = f'code-block-{e}'
             info_block_id = f'info-block-{e}'
+            log_group_id = f'log-group-{e}'
 
             display = "hide" if log_entry[cols.depth] > 0 else "show"
             if e < (len(log_entries) - 1) and \
@@ -414,5 +445,5 @@ if __name__ == '__main__':
 
     start = time.time()
     html = HtmlLogGenerator()
-    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/dev/log_20200507093854929926.db')
+    html.generate('/Users/tyler.spens/PycharmProjects/spitest/logs/dev/log_20200507135041090761.db')
     print(time.time() - start)
