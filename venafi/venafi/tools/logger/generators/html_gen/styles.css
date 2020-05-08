@@ -261,7 +261,7 @@ object.code {
 
 .log-entry > .log-row {
     display: grid;
-    grid-template-columns: 35px 150px auto repeat(var(--log-entry-btns), 80px);
+    grid-template-columns: 35px 300px auto repeat(var(--log-entry-btns), 80px);
 }
 
 .log-row {
@@ -344,13 +344,17 @@ object.code {
     padding: 15px;
     overflow: auto;
     max-height: 400px !important;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 .log-block-container {
     margin: auto;
     padding: 0 10px;
 }
+
 /*-------------------------------------*/
+
 .fancy-checkbox {
     display: grid;
     grid-template-columns: auto auto;
