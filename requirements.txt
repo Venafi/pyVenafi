@@ -1,6 +1,4 @@
-htmlmin
-Pygments==2.5.2
 requests==2.22.0
-jsonpickle==1.2
+dblogging==1.0.1
 isodate==0.6.0
 python_dateutil==2.8.1
