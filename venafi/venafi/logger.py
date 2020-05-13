@@ -83,7 +83,36 @@ In order to see a complete list of these configurations, see `venafi/tools/logge
     generated will automatically open when the main file returns. This should not be set to
     True in cases where the log file is moved after execution.
 """
-from venafi.tools.logger.logger import LogLevels, Logger
-from venafi.tools.logger.config import *
+import os
+from venafi.tools.logger.logger import Logger
+from venafi.tools.logger.config import LogTag, LogTagTemplate
+
+
+class LogTags(LogTagTemplate):
+    api = LogTag(
+        name='API',
+        value=10,
+        html_color='palegoldenrod'
+    )
+
+    feature = LogTag(
+        name='Feature',
+        value=20,
+        html_color='lightcyan'
+    )
+
+    default = LogTag(
+        name='Main',
+        value=30,
+        html_color='hotpink'
+    )
+
+    critical = LogTag(
+        name='Critical',
+        value=90,
+        html_color='red'
+    )
+
 
 logger = Logger()
+logger.log_tags = LogTags

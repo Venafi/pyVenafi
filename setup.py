@@ -9,17 +9,23 @@ if __name__ == '__main__':
         package_dir={
           '': 'venafi'
         },
+        package_data={'': [
+            'tools/logger/generators/html_gen/*.js',
+            'tools/logger/generators/html_gen/*.css',
+            'tools/logger/sqlite/*.sql'
+        ]},
         description='Venafi Features and API Implementation In Python',
         version=__version__,
-        url='ssh://git@git.eng.venafi.com/spi',
         author='Venafi',
         author_email='spi@venafi.com',
-        keywords=['pip','venafi'],
+        keywords=['venafi'],
         install_requires=[
             'requests',
             'datetime',
             'jsonpickle',
             'python-dateutil',
-            'isodate'
-        ],
+            'isodate',
+            'Pygments',
+            'htmlmin'
+        ]
     )

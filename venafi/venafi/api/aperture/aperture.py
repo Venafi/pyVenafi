@@ -1,4 +1,4 @@
-from venafi.logger import logger, LogLevels
+from venafi.logger import logger, LogTags
 from venafi.api.session import Session
 from venafi.api.aperture.endpoints.application_integration import _ApplicationIntegration
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
@@ -14,7 +14,7 @@ class Aperture:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap(LogLevels.medium.level, masked_variables=['password', 'token'])
+    @logger.wrap_func(log_tag=LogTags.feature, mask_input_regexes=['password', 'token'])
     def __init__(self, host: str, username: str, password: str, token: str = None):
         """
         Args:
