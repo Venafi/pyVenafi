@@ -8,3 +8,4 @@ testfile.py
 /venafi/venafi.egg-info
 /dist
 *logfile*.*
+temp/
