@@ -22,10 +22,15 @@ class NetworkDiscovery(FeatureBase):
         Returns:
             Boolean value
         """
-        return len(self._auth.websdk.Config.Read.post(
+        response = self._auth.websdk.Config.Read.post(
             object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.Network.in_progress
-        ).values) == 0
+            attribute_name=DiscoveryAttributes.Network.status
+        )
+        if response.is_valid_response():
+            if len(response.values) > 0:
+                status = response.values[0]
+                return status in {'Pending Execution', 'Running'}
+        return False
 
     def create(self, name: str, hosts: List[str], default_certificate_dn: str, attributes: dict = None,
                automatically_import: bool = False, blackout: Dict[str, List] = None,
