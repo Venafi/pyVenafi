@@ -15,13 +15,14 @@ class Aperture:
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
     @logger.wrap_func(log_tag=LogTags.feature, mask_input_regexes=['password', 'token'])
-    def __init__(self, host: str, username: str, password: str, token: str = None):
+    def __init__(self, host: str, username: str, password: str, token: str = None, cookie: str = None):
         """
         Args:
             host: Hostname or IP Address of TPP
             username: Username
             password: Password
             token: Either an Authorization Token created by Aperture or an OAuth Access Bearer Token.
+            cookie: Older versions of Aperture require the cookie.
         """
         # region Instance Variables
         self._host = host
@@ -44,11 +45,16 @@ class Aperture:
 
         # Update the authorization header to include the API Key token.
         if not token:
-            token = self.Users.Authorize.post(username=username, password=password).token
-            token = f'VENAFI {token}'
+            response = self.Users.Authorize.post(username=username, password=password)
+            token = f'VENAFI {response.token}'
+            cookie =''
+            for c in response.json_response.cookies:
+                cookie = f'{c.name}={c.value}'
         self._token = token
+        self._cookie = cookie
         self._session.headers.update({
-            'Authorization': f'{token}'
+            'Authorization': f'{token}',
+            'Cookie': cookie
         })
         # endregion Authentication
 
