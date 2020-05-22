@@ -22,7 +22,7 @@ class Aperture:
             username: Username
             password: Password
             token: Either an Authorization Token created by Aperture or an OAuth Access Bearer Token.
-            cookie: Older versions of Aperture require the cookie.
+            cookie: Older versions of Aperture require this.
         """
         # region Instance Variables
         self._host = host
