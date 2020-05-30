@@ -2,14 +2,24 @@ import os
 import sys
 from pathlib import Path
 import ftplib
-import asyncio
 from tempfile import NamedTemporaryFile
 from setuptools import sandbox
 from setup import __version__
+import threading
+from typing import List
 
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 MAKE_CMD = 'make' if sys.platform != 'win32' else 'make.bat'
+THREADS = []  # type: List[threading.Thread]
+
+
+def fire_and_forget(f):
+    def wrapped(*args, **kwargs):
+        thread = threading.Thread(target=f, args=args, kwargs=kwargs)
+        THREADS.append(thread)
+        thread.start()
+    return wrapped
 
 
 class UploadFiles:
@@ -18,9 +28,18 @@ class UploadFiles:
         self.ftp.connect(host='10.100.206.19', port=21)
         self.ftp.login(user=r'ftpuser', passwd='newPassw0rd!')
 
+        self.host = '10.100.206.19'
+        self.port = 21
+        self.username = 'ftpuser'
+        self.password = 'newPassw0rd!'
+
     @staticmethod
-    def print_status(msg: str):
+    def print_stage(msg: str):
         print(f'\n>>>>>>>>>>>>>>>>>>>>>>>>> {msg} <<<<<<<<<<<<<<<<<<<<<<<<<\n')
+
+    @staticmethod
+    def print_step(msg: str):
+        print(f'{msg}{" " * 50}', end='\r', flush=True)
 
     @staticmethod
     def gather_pip_reqs():
@@ -46,45 +65,53 @@ class UploadFiles:
         os.system(f'{MAKE_CMD} html')
         os.chdir(cur_dir)
 
-    def send_files(self, path: str, dst: str = None):
-        if dst:
-            self.ftp.cwd('/spi')
+    @fire_and_forget
+    def _send_file(self, src: Path, dst: str):
+        with ftplib.FTP(host=self.host, user=self.username, passwd=self.password) as ftp:
+            ftp.cwd(dst)
+            ftp.storbinary(f'STOR {src.name}', open(str(src), 'rb'))
+
+    def send_files(self, src: str, dst: str):
+        files = []
+        try:
+            self.ftp.cwd(dst)
+        except:
+            self.ftp.cwd('/')
             parts = dst.lstrip(os.path.sep).split(os.path.sep)
             for part in parts:
                 if not part in self.ftp.nlst():
                     self.ftp.mkd(part)
                 self.ftp.cwd(part)
+        for file in os.listdir(src):
+            path = os.path.join(src, file)
+            if os.path.isdir(path):
+                if file not in self.ftp.nlst():
+                    self.ftp.mkd(file)
+                self.send_files(src=path, dst=f'{dst}/{file}')
+                self.ftp.cwd('../')
+            elif os.path.isfile(path):
+                files.append(path)
 
-        path = Path(path)
-        if path.is_dir():
-            print(f'Creating directory {path.name}...')
-            if path.name not in self.ftp.nlst():
-                self.ftp.mkd(path.name)
-            self.ftp.cwd(path.name)
-            for file in os.listdir(path):
-                self.send_files(path=os.path.join(path, file))
-            self.ftp.cwd('../')
-        elif path.is_file():
-            print(f'Copying file {path.name}...')
-            self.ftp.storbinary(f'STOR {path.name}', open(str(path), 'rb'))
+        for file in files:
+            file = Path(file)
+            self.print_step(f'Copying file: \033[94m{file.name}\033[0m')
+            self._send_file(src=file, dst=dst)
 
     def upload(self, include_code: bool, include_pip: bool, include_docs: bool):
         if include_pip:
             self.gather_pip_reqs()
         if include_code:
-            self.print_status('Uploading Venafi package')
+            self.print_stage('Uploading Venafi package')
             sandbox.run_setup(f'{PROJECT_DIR}/setup.py', ['clean', 'sdist'])
-            self.print_status('Send Files Via FTP')
+            self.print_stage('Send Files Via FTP')
             dist_dir = f'{PROJECT_DIR}/dist'
-            for file in os.listdir(dist_dir):
-                self.send_files(os.path.join(dist_dir, file), f'/spi/packages')
+            self.send_files(dist_dir, f'/spi/packages')
         if include_docs:
-            self.print_status('Compile Documentation')
+            self.print_stage('Compile Documentation')
             self.compile_docs()
-            self.print_status('Upload Documentation via FTP')
+            self.print_stage('Upload Documentation via FTP')
             build_dir = f'{PROJECT_DIR}/venafi/docs/_build/'
-            for file in os.listdir(build_dir):
-                self.send_files(os.path.join(build_dir, file), f'/spi/docs/{__version__}')
+            self.send_files(build_dir, f'/spi/docs/{__version__}')
 
 
 def usage():
@@ -135,3 +162,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+    for thread in THREADS:
+        if thread.is_alive():
+            print(f'Waiting for {thread.name} to finish...')
+            thread.join()
