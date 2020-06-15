@@ -1,0 +1,18 @@
+{
+    "vsphere_server": "10.100.200.18",
+    "vsphere_user": "tgunn@vsphere.local",
+    "vsphere_password": "P@ssw0rd!",
+    "vsphere_template_name": "Win2k16-TPP-tmpl",
+    "vsphere_folder": "Templates",
+    "vsphere_dc_name": "VxRail-Datacenter",
+    "vsphere_compute_cluster": "VxRail-Virtual-SAN-Cluster-b11680d9-0e38-4e97-9e52-322e39f6bba4",
+    "vsphere_host": "spi-esx02.venqa.venafi.com",
+    "vsphere_portgroup_name": "VID-206-Customer1",
+    "vsphere_datastore": "VxRail-Virtual-SAN-Datastore-b11680d9-0e38-4e97-9e52-322e39f6bba4",
+    "winadmin_password": "newPassw0rd!",
+    "cpu_num": "4",
+    "mem_size": "8192",
+    "disk_size": "32768",
+    "os_iso_path": "[VxRail-Virtual-SAN-Datastore-b11680d9-0e38-4e97-9e52-322e39f6bba4] cc34b45e-d830-6426-e623-1c34da675688/Microsoft/Windows/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
+    "vmtools_iso_path":"[VxRail-Virtual-SAN-Datastore-b11680d9-0e38-4e97-9e52-322e39f6bba4] cc34b45e-d830-6426-e623-1c34da675688/VMware/VMware-tools-windows-11.1.0-16036546"
+}
