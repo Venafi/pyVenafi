@@ -518,7 +518,10 @@ class Certificate(FeatureBase):
                         return cert
                 cert = self._get(certificate_guid=certificate_guid)
 
-        raise FeatureError.UnexpectedValue(
-            f'Certificate renewal did not reach stage {stage} after {timeout} seconds. The current stage is '
-            f'{cert.processing_details.stage} with status {cert.processing_details.status}.'
-        )
+        if expect_workflow and stage == cert.processing_details.stage:
+            msg = f'After {timeout} seconds certificate renewal reached stage {stage}, but no workflow was issued. ' \
+                  f'The current stage is {cert.processing_details.stage} with status {cert.processing_details.status}.'
+        else:
+            msg = f'Certificate renewal did not reach stage {stage} after {timeout} seconds. The current ' \
+                  f'stage is {cert.processing_details.stage} with status {cert.processing_details.status}.'
+        raise FeatureError.UnexpectedValue(msg)

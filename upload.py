@@ -24,14 +24,20 @@ def fire_and_forget(f):
 
 class UploadFiles:
     def __init__(self):
-        self.ftp = ftplib.FTP()
-        self.ftp.connect(host='10.100.206.19', port=21)
-        self.ftp.login(user=r'ftpuser', passwd='newPassw0rd!')
-
-        self.host = '10.100.206.19'
+        self.host = '10.100.203.5'
         self.port = 21
         self.username = 'ftpuser'
         self.password = 'newPassw0rd!'
+
+        self.ftp = ftplib.FTP()
+        self.ftp.connect(host=self.host, port=self.port)
+        self.ftp.login(user=self.username, passwd=self.password)
+
+    def __del__(self):
+        for thread in THREADS:
+            if thread.is_alive():
+                print(f'Waiting for {thread.name} to finish...')
+                thread.join()
 
     @staticmethod
     def print_stage(msg: str):
@@ -162,7 +168,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    for thread in THREADS:
-        if thread.is_alive():
-            print(f'Waiting for {thread.name} to finish...')
-            thread.join()
