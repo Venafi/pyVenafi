@@ -6,10 +6,13 @@ from tempfile import NamedTemporaryFile
 from setuptools import sandbox
 from setup import __version__
 import threading
+import tqdm
 from typing import List
 
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+PACKAGES_DIR = '/spi/packages'
+DOCS_DIR = f'/spi/docs/{__version__}'
 MAKE_CMD = 'make' if sys.platform != 'win32' else 'make.bat'
 THREADS = []  # type: List[threading.Thread]
 
@@ -33,35 +36,42 @@ class UploadFiles:
         self.ftp.connect(host=self.host, port=self.port)
         self.ftp.login(user=self.username, passwd=self.password)
 
+        self.progress = tqdm.tqdm()
+
     def __del__(self):
         for thread in THREADS:
             if thread.is_alive():
-                print(f'Waiting for {thread.name} to finish...')
-                thread.join()
+                try:
+                    print(f'Waiting for {thread.name} to finish...')
+                    thread.join()
+                except:
+                    pass
 
     @staticmethod
     def print_stage(msg: str):
-        print(f'\n>>>>>>>>>>>>>>>>>>>>>>>>> {msg} <<<<<<<<<<<<<<<<<<<<<<<<<\n')
+        return
+        # print(f'\n>>>>>>>>>>>>>>>>>>>>>>>>> {msg} <<<<<<<<<<<<<<<<<<<<<<<<<\n')
 
     @staticmethod
     def print_step(msg: str):
-        print(f'{msg}{" " * 50}', end='\r', flush=True)
+        return
+        # print(f'{msg}{" " * 50}', end='\r', flush=True)
 
     @staticmethod
     def gather_pip_reqs():
-        print('Gathering PIP requirements...\n')
+        tqdm.tqdm.write(f'Gathering PIP Requirements...\n')
         with NamedTemporaryFile(suffix='.txt', dir=os.curdir) as temp_file:
             os.system(f'pipreqs --save {temp_file.name} {PROJECT_DIR}/venafi/venafi')
             new_reqs = temp_file.readlines()
             with open(os.path.abspath(f'{PROJECT_DIR}/requirements.txt'), 'rb+') as req_file:
                 current_reqs = req_file.readlines()
                 if set(new_reqs) != set(current_reqs):
-                    print('Updating requirements.txt file...\n')
+                    tqdm.tqdm.write('Updating requirements.txt file...\n')
                     req_file.seek(0)
                     req_file.write(b''.join(new_reqs))
                     req_file.truncate()
                 else:
-                    print('\nNo changes to requirements.txt file...\n')
+                    tqdm.tqdm.write('\nNo changes to requirements.txt file...\n')
 
     @staticmethod
     def compile_docs():
@@ -74,10 +84,11 @@ class UploadFiles:
     @fire_and_forget
     def _send_file(self, src: Path, dst: str):
         with ftplib.FTP(host=self.host, user=self.username, passwd=self.password) as ftp:
+            self.print_step(f'Copying file: \033[94m{src.name}\033[0m')
             ftp.cwd(dst)
             ftp.storbinary(f'STOR {src.name}', open(str(src), 'rb'))
 
-    def send_files(self, src: str, dst: str):
+    def send_files(self, src: str, dst: str, progress: tqdm.tqdm):
         files = []
         try:
             self.ftp.cwd(dst)
@@ -88,20 +99,27 @@ class UploadFiles:
                 if not part in self.ftp.nlst():
                     self.ftp.mkd(part)
                 self.ftp.cwd(part)
-        for file in os.listdir(src):
-            path = os.path.join(src, file)
-            if os.path.isdir(path):
-                if file not in self.ftp.nlst():
-                    self.ftp.mkd(file)
-                self.send_files(src=path, dst=f'{dst}/{file}')
-                self.ftp.cwd('../')
-            elif os.path.isfile(path):
-                files.append(path)
 
-        for file in files:
-            file = Path(file)
-            self.print_step(f'Copying file: \033[94m{file.name}\033[0m')
-            self._send_file(src=file, dst=dst)
+        if os.path.isfile(src):
+            self._send_file(src=Path(src), dst=dst)
+            progress.update()
+
+        elif os.path.isdir(src):
+            for file in os.listdir(src):
+                path = os.path.join(src, file)
+                if os.path.isdir(path):
+                    if file not in self.ftp.nlst():
+                        self.ftp.mkd(file)
+                        progress.update()
+                    self.send_files(src=path, dst=f'{dst}/{file}', progress=progress)
+                    self.ftp.cwd('../')
+                elif os.path.isfile(path):
+                    files.append(path)
+
+            for file in files:
+                file = Path(file)
+                self._send_file(src=file, dst=dst)
+                progress.update()
 
     def upload(self, include_code: bool, include_pip: bool, include_docs: bool):
         if include_pip:
@@ -111,13 +129,17 @@ class UploadFiles:
             sandbox.run_setup(f'{PROJECT_DIR}/setup.py', ['clean', 'sdist'])
             self.print_stage('Send Files Via FTP')
             dist_dir = f'{PROJECT_DIR}/dist'
-            self.send_files(dist_dir, f'/spi/packages')
+            num_src_files = sum([len(files) for r, d, files in os.walk(dist_dir)])
+            with tqdm.tqdm(total=num_src_files, desc=f'Uploading Code...') as progress:
+                self.send_files(src=dist_dir, dst=PACKAGES_DIR, progress=progress)
         if include_docs:
             self.print_stage('Compile Documentation')
             self.compile_docs()
             self.print_stage('Upload Documentation via FTP')
             build_dir = f'{PROJECT_DIR}/venafi/docs/_build/'
-            self.send_files(build_dir, f'/spi/docs/{__version__}')
+            num_src_files = sum([len(files) for r, d, files in os.walk(build_dir)])
+            with tqdm.tqdm(total=num_src_files, desc=f'Uploading Documentation') as progress:
+                self.send_files(src=build_dir, dst=DOCS_DIR, progress=progress)
 
 
 def usage():
