@@ -5,6 +5,7 @@ from venafi.properties.response_objects.log import Log
 class _Log(API):
     def __init__(self, websdk_obj):
         super().__init__(api_obj=websdk_obj, url='/Log')
+        self.LogSchema = self._LogSchema(websdk_obj=websdk_obj)
 
     def get(self, component: str = None, from_time: str = None, grouping: int = None, id: int = None,
             limit: int = None, offset: int = None, order: str = None, severity: str = None, text1: str = None,
@@ -85,6 +86,42 @@ class _Log(API):
                 @json_response_property()
                 def log_events(self):
                     return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
+
+            return _Response(
+                response=self._get(),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
+
+    class _LogSchema(API):
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url='Log/LogSchema')
+
+        def get(self):
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(
+                        response=response,
+                        expected_return_codes=expected_return_codes,
+                        api_source=api_source
+                    )
+
+                @property
+                @json_response_property()
+                def log_event_application_definitions(self):
+                    return [Log.LogEventApplicationDefinition(lead) for lead in
+                            self._from_json(key='LogEventApplicationDefinitions')]
+
+                @property
+                @json_response_property()
+                def log_event_definitions(self):
+                    return [Log.LogEventDefinition(led) for led in
+                            self._from_json(key='LogEventDefinitions')]
+
+                @property
+                @json_response_property()
+                def log_result(self) -> int:
+                    return self._from_json(key='LogResult')
 
             return _Response(
                 response=self._get(),

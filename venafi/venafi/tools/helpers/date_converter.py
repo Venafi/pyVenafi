@@ -12,9 +12,12 @@ def from_date_string(date_string: str, duration_format: bool = False) -> Union[N
         return isodate.parse_duration(datestring=date_string)
 
     if 'Date' in date_string:
-        date_as_num = ''.join([c for c in date_string if c.isnumeric() or c == '+'])
+        date_as_num = ''.join([c for c in date_string if c.isnumeric() or c in ('+', '-')])
         if '+' in date_as_num:
             dt, tz = date_as_num.split('+')
+            tz = timezone(timedelta(hours=int(tz) / 100))
+        elif '-' in date_as_num:
+            dt, tz = date_as_num.split('-')
             tz = timezone(timedelta(hours=int(tz)/100))
         else:
             dt, tz = date_as_num, None
