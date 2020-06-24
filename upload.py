@@ -6,7 +6,6 @@ from tempfile import NamedTemporaryFile
 from setuptools import sandbox
 from setup import __version__
 import threading
-import tqdm
 from typing import List
 
 
@@ -15,6 +14,7 @@ PACKAGES_DIR = '/spi/packages'
 DOCS_DIR = f'/spi/docs/{__version__}'
 MAKE_CMD = 'make' if sys.platform != 'win32' else 'make.bat'
 THREADS = []  # type: List[threading.Thread]
+LOCK = threading.Lock()
 
 
 def fire_and_forget(f):
@@ -23,6 +23,18 @@ def fire_and_forget(f):
         THREADS.append(thread)
         thread.start()
     return wrapped
+
+
+class UploadProgress:
+    def __init__(self, total: int):
+        self.total = total
+        self.count = 0
+
+    def update(self, file: str):
+        with LOCK:
+            self.count += 1
+            percent = int(100 * self.count / self.total)
+            print(f'\033[2K[ {percent}% ]: \033[94m{file}\033[0m', end='\r', flush=True)
 
 
 class UploadFiles:
@@ -36,42 +48,37 @@ class UploadFiles:
         self.ftp.connect(host=self.host, port=self.port)
         self.ftp.login(user=self.username, passwd=self.password)
 
-        self.progress = tqdm.tqdm()
-
     def __del__(self):
+        self.verify()
+
+    @staticmethod
+    def verify():
         for thread in THREADS:
             if thread.is_alive():
                 try:
-                    print(f'Waiting for {thread.name} to finish...')
                     thread.join()
                 except:
                     pass
 
     @staticmethod
     def print_stage(msg: str):
-        return
-        # print(f'\n>>>>>>>>>>>>>>>>>>>>>>>>> {msg} <<<<<<<<<<<<<<<<<<<<<<<<<\n')
-
-    @staticmethod
-    def print_step(msg: str):
-        return
-        # print(f'{msg}{" " * 50}', end='\r', flush=True)
+        print(f'\n>>>>>>>>>>>>>>>>>>>>>>>>> {msg} <<<<<<<<<<<<<<<<<<<<<<<<<\n')
 
     @staticmethod
     def gather_pip_reqs():
-        tqdm.tqdm.write(f'Gathering PIP Requirements...\n')
+        print(f'Gathering PIP Requirements...\n')
         with NamedTemporaryFile(suffix='.txt', dir=os.curdir) as temp_file:
             os.system(f'pipreqs --save {temp_file.name} {PROJECT_DIR}/venafi/venafi')
             new_reqs = temp_file.readlines()
             with open(os.path.abspath(f'{PROJECT_DIR}/requirements.txt'), 'rb+') as req_file:
                 current_reqs = req_file.readlines()
                 if set(new_reqs) != set(current_reqs):
-                    tqdm.tqdm.write('Updating requirements.txt file...\n')
+                    print('Updating requirements.txt file...\n')
                     req_file.seek(0)
                     req_file.write(b''.join(new_reqs))
                     req_file.truncate()
                 else:
-                    tqdm.tqdm.write('\nNo changes to requirements.txt file...\n')
+                    print('\nNo changes to requirements.txt file...\n')
 
     @staticmethod
     def compile_docs():
@@ -82,13 +89,13 @@ class UploadFiles:
         os.chdir(cur_dir)
 
     @fire_and_forget
-    def _send_file(self, src: Path, dst: str):
+    def _send_file(self, src: Path, dst: str, progress: UploadProgress):
         with ftplib.FTP(host=self.host, user=self.username, passwd=self.password) as ftp:
-            self.print_step(f'Copying file: \033[94m{src.name}\033[0m')
             ftp.cwd(dst)
             ftp.storbinary(f'STOR {src.name}', open(str(src), 'rb'))
+            progress.update(str(src.relative_to(PROJECT_DIR)))
 
-    def send_files(self, src: str, dst: str, progress: tqdm.tqdm):
+    def send_files(self, src: str, dst: str, progress: UploadProgress):
         files = []
         try:
             self.ftp.cwd(dst)
@@ -101,8 +108,7 @@ class UploadFiles:
                 self.ftp.cwd(part)
 
         if os.path.isfile(src):
-            self._send_file(src=Path(src), dst=dst)
-            progress.update()
+            self._send_file(src=Path(src), dst=dst, progress=progress)
 
         elif os.path.isdir(src):
             for file in os.listdir(src):
@@ -110,7 +116,6 @@ class UploadFiles:
                 if os.path.isdir(path):
                     if file not in self.ftp.nlst():
                         self.ftp.mkd(file)
-                        progress.update()
                     self.send_files(src=path, dst=f'{dst}/{file}', progress=progress)
                     self.ftp.cwd('../')
                 elif os.path.isfile(path):
@@ -118,8 +123,7 @@ class UploadFiles:
 
             for file in files:
                 file = Path(file)
-                self._send_file(src=file, dst=dst)
-                progress.update()
+                self._send_file(src=file, dst=dst, progress=progress)
 
     def upload(self, include_code: bool, include_pip: bool, include_docs: bool):
         if include_pip:
@@ -129,17 +133,17 @@ class UploadFiles:
             sandbox.run_setup(f'{PROJECT_DIR}/setup.py', ['clean', 'sdist'])
             self.print_stage('Send Files Via FTP')
             dist_dir = f'{PROJECT_DIR}/dist'
-            num_src_files = sum([len(files) for r, d, files in os.walk(dist_dir)])
-            with tqdm.tqdm(total=num_src_files, desc=f'Uploading Code...') as progress:
-                self.send_files(src=dist_dir, dst=PACKAGES_DIR, progress=progress)
+            progress = UploadProgress(total=sum([len(files) for r, d, files in os.walk(dist_dir)]))
+            self.send_files(src=dist_dir, dst=PACKAGES_DIR, progress=progress)
+            self.verify()
         if include_docs:
-            self.print_stage('Compile Documentation')
-            self.compile_docs()
+            # self.print_stage('Compile Documentation')
+            # self.compile_docs()
             self.print_stage('Upload Documentation via FTP')
             build_dir = f'{PROJECT_DIR}/venafi/docs/_build/'
-            num_src_files = sum([len(files) for r, d, files in os.walk(build_dir)])
-            with tqdm.tqdm(total=num_src_files, desc=f'Uploading Documentation') as progress:
-                self.send_files(src=build_dir, dst=DOCS_DIR, progress=progress)
+            progress = UploadProgress(total=sum([len(files) for r, d, files in os.walk(build_dir)]))
+            self.send_files(src=build_dir, dst=DOCS_DIR, progress=progress)
+            self.verify()
 
 
 def usage():
