@@ -100,12 +100,6 @@
       "type": "file",
       "source": "file_repo/img_info.txt",
       "destination": "c:\\img_info.txt"
-    },
-    {
-      "type": "windows-shell",
-      "inline": [
-        "c:\\windows\\system32\\sysprep\\sysprep.exe /oobe /generalize /quit /mode:vm"
-      ]
     }
   ]
 }

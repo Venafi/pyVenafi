@@ -14,9 +14,12 @@ $profile = Get-NetConnectionProfile
 Set-NetConnectionProfile -Name $profile.Name -NetworkCategory Private
 
 # Enable WinRM service
-winrm quickconfig -quiet
+Enable-PSRemoting –Force
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
+
+# Enable all connections
+Set-Item –Path WSMan\localhost\Client\TrustedHosts *
 
 # Reset auto logon count
 # https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-logoncount#logoncount-known-issue
