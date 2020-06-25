@@ -1,9 +1,17 @@
 $ErrorActionPreference = "Stop"
+# fix vmware tools install
+# |out-null is used to wait for the process to finish.
+e:\setup64 /x|Out-Null
+$tmp = [System.IO.Path]::GetTempPath()
+cd $tmp
+cd *setup
+msiexec /fa "VMware Tools64.msi" REBOOT=R /norestart |Out-Null
 
+    
 # Switch network connection to private mode
 # Required for WinRM firewall rules
 $profile = Get-NetConnectionProfile
-Set-NetConnectionProfile -Name $profile.Name -NetworkCategory Public
+Set-NetConnectionProfile -Name $profile.Name -NetworkCategory Private
 
 # Enable WinRM service
 winrm quickconfig -quiet

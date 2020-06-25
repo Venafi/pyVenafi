@@ -14,5 +14,5 @@
     "mem_size": "8192",
     "disk_size": "32768",
     "os_iso_path": "[VxRail-Virtual-SAN-Datastore-b11680d9-0e38-4e97-9e52-322e39f6bba4] cc34b45e-d830-6426-e623-1c34da675688/Microsoft/Windows/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
-    "vmtools_iso_path":"[VxRail-Virtual-SAN-Datastore-b11680d9-0e38-4e97-9e52-322e39f6bba4] cc34b45e-d830-6426-e623-1c34da675688/VMware/VMware-tools-windows-11.1.0-16036546"
+    "vmtools_iso_path":"[VxRail-Virtual-SAN-Datastore-b11680d9-0e38-4e97-9e52-322e39f6bba4] cc34b45e-d830-6426-e623-1c34da675688/VMWare/VMware-tools-windows-11.1.0-16036546.iso"
 }
