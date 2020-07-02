@@ -1068,6 +1068,12 @@ class CertificateClassNames:
     client_user_certificate_work = "Client User Certificate Work"
     server_certificate_work = "Server Certificate Work"
     x509_certificate = "X509 Certificate"
+    x509_code_signing_certificate = "X509 Code Signing Certificate"
+    x509_device_certificate = "X509 Device Certificate"
+    x509_intermediate_root_certificate = "X509 Intermediate Root Certificate"
+    x509_root_certificate = "X509 Root Certificate"
+    x509_server_certificate = "X509 Server Certificate"
+    x509_user_certificate = "X509 User Certificate"
 
 # endregion
 

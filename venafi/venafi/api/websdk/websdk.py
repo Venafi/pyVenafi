@@ -10,6 +10,7 @@ from venafi.api.websdk.endpoints.config_schema import _ConfigSchema
 from venafi.api.websdk.endpoints.credentials import _Credentials
 from venafi.api.websdk.endpoints.crypto import _Crypto
 from venafi.api.websdk.endpoints.discovery import _Discovery
+from venafi.api.websdk.endpoints.flow import _Flow
 from venafi.api.websdk.endpoints.identity import _Identity
 from venafi.api.websdk.endpoints.log import _Log
 from venafi.api.websdk.endpoints.metadata import _Metadata
@@ -124,6 +125,7 @@ class WebSDK:
         self.Credentials = _Credentials(self)
         self.Crypto = _Crypto(self)
         self.Discovery = _Discovery(self)
+        self.Flow = _Flow(self)
         self.Identity = _Identity(self)
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)

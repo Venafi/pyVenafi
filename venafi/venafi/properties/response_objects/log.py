@@ -23,3 +23,28 @@ class Log:
             self.value1 = log_event_dict.get('Value1')  # type: int
             self.value2 = log_event_dict.get('Value2')  # type: int
 
+    class LogEventApplicationDefinition:
+        def __init__(self, log_event_app_def_dict: dict):
+            if not isinstance(log_event_app_def_dict, dict):
+                log_event_app_def_dict = {}
+
+            self.application_name = log_event_app_def_dict.get('ApplicationName')  # type: str
+            self.id = log_event_app_def_dict.get('ID')  # type: int
+
+    class LogEventDefinition:
+        def __init__(self, log_event_def_dict: dict):
+            if not isinstance(log_event_def_dict, dict):
+                log_event_def_dict = {}
+
+            self.data_format = log_event_def_dict.get('DataFormat')  # type: str
+            self.data_title = log_event_def_dict.get('DataTitle')  # type: str
+            self.description = log_event_def_dict.get('Description')  # type: str
+            self.grouping_title = log_event_def_dict.get('GroupingTitle')  # type: str
+            self.grouping_type = log_event_def_dict.get('GroupingType')  # type: str
+            self.id = log_event_def_dict.get('ID')  # type: int
+            self.text1_title = log_event_def_dict.get('Text1Title')  # type: str
+            self.text2_title = log_event_def_dict.get('Text2Title')  # type: str
+            self.value1_title = log_event_def_dict.get('Value1Title')  # type: str
+            self.value1_type = log_event_def_dict.get('Value1Type')  # type: str
+            self.value2_title = log_event_def_dict.get('Value2Title')  # type: str
+            self.value2_type = log_event_def_dict.get('Value2Type')  # type: str
