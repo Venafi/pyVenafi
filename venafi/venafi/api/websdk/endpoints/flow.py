@@ -5,12 +5,10 @@ from typing import List
 
 class _Flow:
     def __init__(self, websdk_obj):
-        super().__init__(api_obj=websdk_obj, url='/Flow')
         self.Tickets = self._Tickets(websdk_obj=websdk_obj)
 
     class _Tickets:
         def __init__(self, websdk_obj):
-            super().__init__(api_obj=websdk_obj, url='/Flow/Tickets')
             self.Approve = self._Approve(websdk_obj=websdk_obj)
             self.Count = self._Count(websdk_obj=websdk_obj)
             self.CountApproved = self._CountApproved(websdk_obj=websdk_obj)
@@ -27,12 +25,12 @@ class _Flow:
             def post(self, ticket_id: int = None, ticket_ids: List[int] = None, expires: str = None,
                      comment: str = None, not_before: str = None, use_count: int = None):
                 body = {
-                    'Expires': expires,
-                    'Comment': comment,
+                    'Expires'  : expires,
+                    'Comment'  : comment,
                     'notBefore': not_before,
-                    'TicketId': ticket_id,
+                    'TicketId' : ticket_id,
                     'TicketIds': ticket_ids,
-                    'useCount': use_count
+                    'useCount' : use_count
                 }
 
                 class _Response(APIResponse):
@@ -133,8 +131,8 @@ class _Flow:
 
             def post(self, product_code: int = None, ticket_page_size: int = None, ticket_page_number: int = None):
                 body = {
-                    'ProductCode': product_code,
-                    'TicketPageSize': ticket_page_size,
+                    'ProductCode'     : product_code,
+                    'TicketPageSize'  : ticket_page_size,
                     'TicketPageNumber': ticket_page_number
                 }
 
@@ -213,7 +211,7 @@ class _Flow:
 
             def post(self, ticket_id: int = None, ticket_ids: List[int] = None):
                 body = {
-                    'TicketId': ticket_id,
+                    'TicketId' : ticket_id,
                     'TicketIds': ticket_ids
                 }
 
@@ -253,10 +251,10 @@ class _Flow:
             def post(self, comment: str, rejection_level: int, ticket_id: int = None,
                      ticket_ids: List[int] = None):
                 body = {
-                    'Comment': comment,
+                    'Comment'       : comment,
                     'RejectionLevel': rejection_level,
-                    'TicketId': ticket_id,
-                    'TicketIds': ticket_ids
+                    'TicketId'      : ticket_id,
+                    'TicketIds'     : ticket_ids
                 }
 
                 class _Response(APIResponse):
