@@ -6,6 +6,7 @@ from tempfile import NamedTemporaryFile
 from setuptools import sandbox
 from setup import __version__
 import threading
+import requests
 from typing import List
 
 
@@ -130,6 +131,17 @@ class UploadFiles:
             self.gather_pip_reqs()
         if include_code:
             self.print_stage('Uploading Venafi package')
+            response = requests.get('http://spi.eng.venafi.com/spi/api/latestVersion',
+                                    params={'baseVersion': __version__})
+            response.raise_for_status()
+            last_version_pushed = response.json().get('latestMicro')
+            if __version__ <= last_version_pushed:
+                print(f'FAILURE!!!\nCannot push code because its version must be greater than the micro '
+                      f'version for the relative <major>.<minor> version on the remote server.\n'
+                      f'Please update the __version__ in setup.py.')
+                if include_docs:
+                    print('Skipping documentation...')
+                return
             sandbox.run_setup(f'{PROJECT_DIR}/setup.py', ['clean', 'sdist'])
             self.print_stage('Send Files Via FTP')
             dist_dir = f'{PROJECT_DIR}/dist'
@@ -187,8 +199,8 @@ def main():
     else:
         uf.upload(
             include_code=True,
-            include_pip=True,
-            include_docs=True
+            include_pip=False,
+            include_docs=False
         )
     print('\n')
 
