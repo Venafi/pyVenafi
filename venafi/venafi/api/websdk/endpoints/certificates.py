@@ -11,6 +11,7 @@ class _Certificates(API):
         self.CheckPolicy = self._CheckPolicy(websdk_obj=websdk_obj)
         self.Dissociate = self._Dissociate(websdk_obj=websdk_obj)
         self.Import = self._Import(websdk_obj=websdk_obj)
+        self.Push = self._Push(websdk_obj=websdk_obj)
         self.Renew = self._Renew(websdk_obj=websdk_obj)
         self.Request = self._Request(websdk_obj=websdk_obj)
         self.Reset = self._Reset(websdk_obj=websdk_obj)
@@ -375,6 +376,36 @@ class _Certificates(API):
                 @json_response_property()
                 def private_key_vault_id(self) -> int:
                     return self._from_json(key='PrivateKeyVaultID')
+
+            return _Response(
+                response=self._post(data=body),
+                expected_return_codes=[200],
+                api_source=self._api_source
+            )
+
+    class _Push(API):
+        def __init__(self, websdk_obj):
+            super().__init__(api_obj=websdk_obj, url='Certificates/Push')
+
+        def post(self, certificate_dn: str, application_dn: List[str] = None, push_to_all: bool = False):
+            body = {
+                'ApplicationDN': application_dn,
+                'CertificateDN': certificate_dn,
+                'PushToAll': push_to_all
+            }
+
+            class _Response(APIResponse):
+                def __init__(self, response, expected_return_codes, api_source):
+                    super().__init__(
+                        response=response,
+                        expected_return_codes=expected_return_codes,
+                        api_source=api_source
+                    )
+
+                @property
+                @json_response_property()
+                def success(self) -> bool:
+                    return self._from_json(key='Success')
 
             return _Response(
                 response=self._post(data=body),
