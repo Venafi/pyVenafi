@@ -7,6 +7,7 @@ from setuptools import sandbox
 from setup import __version__
 import threading
 import requests
+import shutil
 from typing import List
 
 
@@ -148,6 +149,7 @@ class UploadFiles:
             progress = UploadProgress(total=sum([len(files) for r, d, files in os.walk(dist_dir)]))
             self.send_files(src=dist_dir, dst=PACKAGES_DIR, progress=progress)
             self.verify()
+            shutil.rmtree(f'{PROJECT_DIR}/dist')
         if include_docs:
             # self.print_stage('Compile Documentation')
             # self.compile_docs()
