@@ -1,4 +1,3 @@
-from typing import List
 from venafi.api.api_base import API, APIResponse, json_response_property
 from venafi.properties.response_objects.identity import Identity
 from venafi.properties.response_objects.oauth import OAuth
@@ -41,18 +40,19 @@ class _ApplicationIntegration(API):
             api_source=self._api_source
         )
 
-    def put(self, application_id: str, application_name: str, description: str, vendor: str,
-            access_validity_days: int = None, grant_validity_days: int = None):
+    def put(self, application_id: str, application_name: str, application_scope: dict,
+            description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
         use_defaults = grant_validity_days is None
         renewable = None if use_defaults else bool(access_validity_days is not None)
         body = {
             'accessValidityDays'       : access_validity_days if not use_defaults else None,
             'applicationId'            : application_id,
             'applicationName'          : application_name,
+            'applicationScope'         : application_scope,
             'defaultAccessSettingsUsed': use_defaults,
             'description'              : description,
             'grantValidityDays'        : grant_validity_days,
-            'mode'                     : 'create',
+            'mode'                     : 'edit',
             'renewable'                : renewable,
             'vendor'                   : vendor
         }
@@ -105,7 +105,8 @@ class _ApplicationIntegration(API):
         def delete(self):
             class _Response(APIResponse):
                 def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    super().__init__(response=response, expected_return_codes=expected_return_codes,
+                                     api_source=api_source)
 
             return _Response(
                 response=self._delete(),
@@ -116,7 +117,8 @@ class _ApplicationIntegration(API):
         def get(self):
             class _Response(APIResponse):
                 def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    super().__init__(response=response, expected_return_codes=expected_return_codes,
+                                     api_source=api_source)
 
                 @property
                 @json_response_property()
