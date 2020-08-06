@@ -184,7 +184,7 @@ class _SystemStatus(API):
                 @property
                 @json_response_property()
                 def version(self) -> str:
-                    return self.json_response('Version')
+                    return self._from_json('Version')
 
             return _Response(
                 response=self._get(),
