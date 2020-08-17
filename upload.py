@@ -136,7 +136,7 @@ class UploadFiles:
                                     params={'baseVersion': __version__})
             response.raise_for_status()
             last_version_pushed = response.json().get('latestMicro')
-            if __version__ <= last_version_pushed:
+            if last_version_pushed and __version__ <= last_version_pushed:
                 print(f'FAILURE!!!\nCannot push code because its version must be greater than the micro '
                       f'version for the relative <major>.<minor> version on the remote server.\n'
                       f'Please update the __version__ in setup.py.')
