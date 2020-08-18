@@ -8,52 +8,52 @@ class Metadata:
             self.metadata_result = ResultCodes.Metadata.get(code, 'Unknown')
 
     class Item:
-        def __init__(self, item_dict: dict):
-            if not isinstance(item_dict, dict):
-                item_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.allowed_characters = item_dict.get('AllowedCharacters')  # type: str
-            self.allowed_values = item_dict.get('AllowedValues')  # type: str
-            self.category = item_dict.get('Category')  # type: str
-            self.classes = item_dict.get('Classes')  # type: list
-            self.configAttribute = item_dict.get('ConfigAttribute')  # type: str
-            self.date_only = item_dict.get('DateOnly')  # type: bool
-            self.default_values = item_dict.get('DefaultValues')  # type: str
-            self.display_after = item_dict.get('DisplayAfter')  # type: str
-            self.dn = item_dict.get('DN')  # type: str
-            self.error_message = item_dict.get('ErrorMessage')  # type: str
-            self.guid = item_dict.get('Guid')  # type: str
-            self.help = item_dict.get('Help')  # type: str
-            self.label = item_dict.get('Label')  # type: str
-            self.localization_table = item_dict.get('LocalizationTable')  # type: str
-            self.localized_help = item_dict.get('LocalizedHelp')  # type: str
-            self.localized_label = item_dict.get('LocalizedLabel')  # type: str
-            self.localized_set = item_dict.get('LocalizedSet')  # type: str
-            self.mandatory = item_dict.get('Mandatory')  # type: bool
-            self.name = item_dict.get('Name')  # type: str
-            self.mask = item_dict.get('Mask')  # type: str
-            self.maximum_length = item_dict.get('MaximumLength')  # type: int
-            self.minimum_length = item_dict.get('MinimumLength')  # type: int
-            self.policyable = item_dict.get('Policyable')  # type: bool
-            self.regular_expression = item_dict.get('RegularExpression')  # type: str
-            self.render_hidden = item_dict.get('RenderHidden')  # type: bool
-            self.render_read_only = item_dict.get('RenderReadOnly')  # type: bool
-            self.single = item_dict.get('Single')  # type: bool
-            self.time_only = item_dict.get('TimeOnly')  # type: bool
-            self.type = item_dict.get('Type')  # type: int
+            self.allowed_characters = response_object.get('AllowedCharacters')  # type: str
+            self.allowed_values = response_object.get('AllowedValues')  # type: str
+            self.category = response_object.get('Category')  # type: str
+            self.classes = response_object.get('Classes')  # type: list
+            self.configAttribute = response_object.get('ConfigAttribute')  # type: str
+            self.date_only = response_object.get('DateOnly')  # type: bool
+            self.default_values = response_object.get('DefaultValues')  # type: str
+            self.display_after = response_object.get('DisplayAfter')  # type: str
+            self.dn = response_object.get('DN')  # type: str
+            self.error_message = response_object.get('ErrorMessage')  # type: str
+            self.guid = response_object.get('Guid')  # type: str
+            self.help = response_object.get('Help')  # type: str
+            self.label = response_object.get('Label')  # type: str
+            self.localization_table = response_object.get('LocalizationTable')  # type: str
+            self.localized_help = response_object.get('LocalizedHelp')  # type: str
+            self.localized_label = response_object.get('LocalizedLabel')  # type: str
+            self.localized_set = response_object.get('LocalizedSet')  # type: str
+            self.mandatory = response_object.get('Mandatory')  # type: bool
+            self.name = response_object.get('Name')  # type: str
+            self.mask = response_object.get('Mask')  # type: str
+            self.maximum_length = response_object.get('MaximumLength')  # type: int
+            self.minimum_length = response_object.get('MinimumLength')  # type: int
+            self.policyable = response_object.get('Policyable')  # type: bool
+            self.regular_expression = response_object.get('RegularExpression')  # type: str
+            self.render_hidden = response_object.get('RenderHidden')  # type: bool
+            self.render_read_only = response_object.get('RenderReadOnly')  # type: bool
+            self.single = response_object.get('Single')  # type: bool
+            self.time_only = response_object.get('TimeOnly')  # type: bool
+            self.type = response_object.get('Type')  # type: int
 
     class Data:
-        def __init__(self, data_dict: dict):
-            if not isinstance(data_dict, dict):
-                data_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.key = Metadata.Item(data_dict.get('Key'))
-            self.value = data_dict.get('Value')  # type: list
+            self.key = Metadata.Item(response_object.get('Key'))
+            self.value = response_object.get('Value')  # type: list
 
     class PolicyItem:
-        def __init__(self, policy_item_dict: dict):
-            if not isinstance(policy_item_dict, dict):
-                policy_item_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.key = policy_item_dict.get('Key')  # type: str
-            self.value = [Metadata.Item(value) for value in policy_item_dict.get('Value')]
+            self.key = response_object.get('Key')  # type: str
+            self.value = [Metadata.Item(value) for value in response_object.get('Value')]

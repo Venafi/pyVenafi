@@ -4,36 +4,32 @@ from venafi.properties.response_objects.pki import PKI
 
 
 class _PKI:
-    def __init__(self, websdk_obj):
-        self.HashiCorp = self._HashiCorp(websdk_obj=websdk_obj)
+    def __init__(self, api_obj):
+        self.HashiCorp = self._HashiCorp(api_obj=api_obj)
 
     class _HashiCorp:
-        def __init__(self, websdk_obj):
-            self.CA = self._CA(websdk_obj=websdk_obj)
+        def __init__(self, api_obj):
+            self.CA = self._CA(api_obj=api_obj)
 
         class _CA(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/HashiCorp/CA')
-                self._websdk_obj = websdk_obj
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/HashiCorp/CA')
+                self._api_obj = api_obj
 
             def Guid(self, guid: str):
-                return self._Guid(guid=guid, websdk_obj=self._websdk_obj)
+                return self._Guid(guid=guid, api_obj=self._api_obj)
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
                     def pkis(self):
                         return [PKI.PKI(pki) for pki in self._from_json(key='pkis')]
 
-                return _Response(
-                    response=self._get(),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._get(), api_source=self._api_source)
 
             def post(self, certificate: dict, folder_dn: str, pki_path: str, roles: List[str],
                      create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
@@ -53,8 +49,8 @@ class _PKI:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -76,33 +72,25 @@ class _PKI:
                     def guid(self) -> str:
                         return self._from_json(key='Guid')
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
             class _Guid(API):
-                def __init__(self, guid: str, websdk_obj):
-                    super().__init__(api_obj=websdk_obj, url=f'/HashiCorp/CA/{guid}')
+                def __init__(self, guid: str, api_obj):
+                    super().__init__(api_obj=api_obj, url=f'/HashiCorp/CA/{guid}')
                     self._guid = guid
-                    self.Renew = self._Renew(guid=guid, websdk_obj=websdk_obj)
+                    self.Renew = self._Renew(guid=guid, api_obj=api_obj)
 
                 def delete(self):
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
-                    return _Response(
-                        response=self._delete(),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._delete(), api_source=self._api_source)
 
                 def get(self):
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
                         @property
                         @json_response_property()
@@ -139,16 +127,12 @@ class _PKI:
                         def roles(self) -> list:
                             return self._from_json(key='Roles')
 
-                    return _Response(
-                        response=self._get(),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._get(), api_source=self._api_source)
 
                 def post(self):
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
                         @property
                         @json_response_property()
@@ -170,11 +154,7 @@ class _PKI:
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 
-                    return _Response(
-                        response=self._post(data={}),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._post(data={}), api_source=self._api_source)
 
                 def put(self, folder_dn: str, pki_path: str, roles: List[str], certificate: dict = None,
                         create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
@@ -194,8 +174,8 @@ class _PKI:
                     }
 
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
                         @property
                         @json_response_property()
@@ -217,20 +197,16 @@ class _PKI:
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 
-                    return _Response(
-                        response=self._put(data=body),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._put(data=body), api_source=self._api_source)
 
                 class _Renew(API):
-                    def __init__(self, guid:str, websdk_obj):
-                        super().__init__(api_obj=websdk_obj, url=f'HashiCorp/{guid}/Renew')
+                    def __init__(self, guid:str, api_obj):
+                        super().__init__(api_obj=api_obj, url=f'HashiCorp/{guid}/Renew')
 
                     def post(self):
                         class _Response(APIResponse):
-                            def __init__(self, response, expected_return_codes, api_source):
-                                super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                            def __init__(self, response, api_source):
+                                super().__init__(response=response, api_source=api_source)
 
                             @property
                             @json_response_property()
@@ -247,16 +223,12 @@ class _PKI:
                             def guid(self) -> str:
                                 return self._from_json(key='Guid')
 
-                        return _Response(
-                            response=self._post(data={}),
-                            expected_return_codes=[200],
-                            api_source=self._api_source
-                        )
+                        return _Response(response=self._post(data={}), api_source=self._api_source)
 
         class _Role(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='HashiCorp/Role')
-                self._websdk_obj = websdk_obj
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='HashiCorp/Role')
+                self._api_obj = api_obj
 
             def post(self, folder_dn: str, role_name: str, city: str = None, country: str = None,
                      enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
@@ -277,8 +249,8 @@ class _PKI:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -290,34 +262,26 @@ class _PKI:
                     def guid(self) -> str:
                         return self._from_json(key='Guid')
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
             def Guid(self, guid: str):
-                return self._Guid(guid=guid, websdk_obj=self._websdk_obj)
+                return self._Guid(guid=guid, api_obj=self._api_obj)
 
             class _Guid(API):
-                def __init__(self, guid: str, websdk_obj):
-                    super().__init__(api_obj=websdk_obj, url=f'HashiCorp/Role/{guid}')
+                def __init__(self, guid: str, api_obj):
+                    super().__init__(api_obj=api_obj, url=f'HashiCorp/Role/{guid}')
 
                 def delete(self):
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
-                    return _Response(
-                        response=self._delete(),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._delete(), api_source=self._api_source)
 
                 def get(self):
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
                         @property
                         @json_response_property()
@@ -384,11 +348,7 @@ class _PKI:
                         def whitelisted_domains(self) -> List[str]:
                             return self._from_json(key='WhitelistedDomains')
 
-                    return _Response(
-                        response=self._get(),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._get(), api_source=self._api_source)
 
                 def put(self, city: str = None, country: str = None,
                         enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
@@ -407,8 +367,8 @@ class _PKI:
                     }
 
                     class _Response(APIResponse):
-                        def __init__(self, response, expected_return_codes, api_source):
-                            super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                        def __init__(self, response, api_source):
+                            super().__init__(response=response, api_source=api_source)
 
                         @property
                         @json_response_property()
@@ -420,8 +380,4 @@ class _PKI:
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 
-                    return _Response(
-                        response=self._put(data=body),
-                        expected_return_codes=[200],
-                        api_source=self._api_source
-                    )
+                    return _Response(response=self._put(data=body), api_source=self._api_source)

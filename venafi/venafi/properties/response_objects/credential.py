@@ -8,15 +8,15 @@ class Credential:
             self.credential_result = ResultCodes.Credential.get(code, 'Unknown')
 
     class CredentialInfo:
-        def __init__(self, cred_info_dict: dict):
-            if not isinstance(cred_info_dict, dict):
-                cred_info_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.class_name = cred_info_dict.get('ClassName')  # type: str
-            self.full_name = cred_info_dict.get('FullName')  # type: str
+            self.class_name = response_object.get('ClassName')  # type: str
+            self.full_name = response_object.get('FullName')  # type: str
 
     class NameTypeValue:
-        def __init__(self, ntv_dict):
-            self.name = ntv_dict.get('Name')  # type: str
-            self.type = ntv_dict.get('Type')  # type: str
-            self.value = ntv_dict.get('Value')  # type: str
+        def __init__(self, response_object):
+            self.name = response_object.get('Name')  # type: str
+            self.type = response_object.get('Type')  # type: str
+            self.value = response_object.get('Value')  # type: str

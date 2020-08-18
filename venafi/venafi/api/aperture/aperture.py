@@ -1,6 +1,7 @@
 from venafi.logger import logger, LogTags
 from venafi.api.session import Session
 from venafi.api.aperture.endpoints.application_integration import _ApplicationIntegration
+from venafi.api.aperture.endpoints.certificates import _Certificates
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
 from venafi.api.aperture.endpoints.discovery import _Discovery
@@ -61,11 +62,12 @@ class Aperture:
         # region Initialize All Aperture Endpoints
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
-        self.ApplicationIntegration = _ApplicationIntegration(aperture_obj=self)
-        self.ConfigObjects = _ConfigObjects(aperture_obj=self)
-        self.CertificateDashboard = _CertificateDashboard(aperture_obj=self)
-        self.Discovery = _Discovery(aperture_obj=self)
-        self.Jobs = _Jobs(aperture_obj=self)
+        self.ApplicationIntegration = _ApplicationIntegration(self)
+        self.Certificates = _Certificates(self)
+        self.ConfigObjects = _ConfigObjects(self)
+        self.CertificateDashboard = _CertificateDashboard(self)
+        self.Discovery = _Discovery(self)
+        self.Jobs = _Jobs(self)
         # endregion Initialize All Aperture Endpoints
 
     def re_authenticate(self, token: str = None):

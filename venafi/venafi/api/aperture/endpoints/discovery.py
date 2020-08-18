@@ -5,12 +5,12 @@ from venafi.properties.response_objects.placement_rules import PlacementRules
 
 
 class _Discovery:
-    def __init__(self, aperture_obj):
-        self.PlacementRules = self._PlacementRules(aperture_obj)
+    def __init__(self, api_obj):
+        self.PlacementRules = self._PlacementRules(api_obj)
 
     class _PlacementRules(API):
-        def __init__(self, aperture_obj):
-            super().__init__(api_obj=aperture_obj, url='discovery/placementrules')
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='discovery/placementrules')
 
         def post(self, name: str, conditions: List[dict], device_location_dn: dict, cert_location_dn: dict = None):
             body = {
@@ -29,8 +29,8 @@ class _Discovery:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
                 @property
                 @json_response_property()
@@ -72,11 +72,7 @@ class _Discovery:
                 def type(self) -> str:
                     return self._from_json(key='type')
 
-            return _Response(
-                response=self._post(data=body),
-                expected_return_codes=[200],
-                api_source=self._api_source
-            )
+            return _Response(response=self._post(data=body), api_source=self._api_source)
 
         def put(self, guid: str, name: str, conditions: List[dict], device_location_dn: dict, cert_location_dn: dict = None):
             body = {
@@ -96,8 +92,8 @@ class _Discovery:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
                 @property
                 @json_response_property()
@@ -139,23 +135,19 @@ class _Discovery:
                 def type(self) -> str:
                     return self._from_json(key='type')
 
-            return _Response(
-                response=self._put(data=body),
-                expected_return_codes=[200],
-                api_source=self._api_source
-            )
+            return _Response(response=self._put(data=body), api_source=self._api_source)
 
         def Guid(self, guid: str):
-            return self._Guid(guid=guid, aperture_obj=self._api_obj)
+            return self._Guid(guid=guid, api_obj=self._api_obj)
 
         class _Guid(API):
-            def __init__(self, guid: str, aperture_obj):
-                super().__init__(api_obj=aperture_obj, url=f'discovery/placementrules/{guid}')
+            def __init__(self, guid: str, api_obj):
+                super().__init__(api_obj=api_obj, url=f'discovery/placementrules/{guid}')
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -202,19 +194,11 @@ class _Discovery:
                     def type(self) -> str:
                         return self._from_json(key='type')
 
-                return _Response(
-                    response=self._get(),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._get(), api_source=self._api_source)
 
             def delete(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
-                return _Response(
-                    response=self._delete(),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._delete(), api_source=self._api_source)

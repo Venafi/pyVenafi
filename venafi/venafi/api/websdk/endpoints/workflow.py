@@ -4,22 +4,22 @@ from venafi.properties.response_objects.worfklow import Workflow
 
 
 class _Workflow:
-    def __init__(self, websdk_obj):
-        self.Ticket = self._Ticket(websdk_obj=websdk_obj)
+    def __init__(self, api_obj):
+        self.Ticket = self._Ticket(api_obj=api_obj)
 
     class _Ticket:
-        def __init__(self, websdk_obj):
-            self.Create = self._Create(websdk_obj=websdk_obj)
-            self.Delete = self._Delete(websdk_obj=websdk_obj)
-            self.Details = self._Details(websdk_obj=websdk_obj)
-            self.Enumerate = self._Enumerate(websdk_obj=websdk_obj)
-            self.Exists = self._Exists(websdk_obj=websdk_obj)
-            self.Status = self._Status(websdk_obj=websdk_obj)
-            self.UpdateStatus = self._UpdateStatus(websdk_obj=websdk_obj)
+        def __init__(self, api_obj):
+            self.Create = self._Create(api_obj=api_obj)
+            self.Delete = self._Delete(api_obj=api_obj)
+            self.Details = self._Details(api_obj=api_obj)
+            self.Enumerate = self._Enumerate(api_obj=api_obj)
+            self.Exists = self._Exists(api_obj=api_obj)
+            self.Status = self._Status(api_obj=api_obj)
+            self.UpdateStatus = self._UpdateStatus(api_obj=api_obj)
 
         class _Create(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Create')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Create')
 
             def post(self, object_dn: str, approvers: list, reason: str, workflow_dn: str, user_data: str = None):
                 body = {
@@ -31,8 +31,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -44,15 +44,11 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
         class _Delete(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Delete')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Delete')
 
             def post(self, guid: str):
                 body = {
@@ -60,23 +56,19 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
         class _Details(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Details')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Details')
 
             def post(self, guid: str):
                 body = {
@@ -84,8 +76,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -97,15 +89,11 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
         class _Enumerate(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Enumerate')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Enumerate')
 
             def post(self, object_dn: str = None, user_data: str = None):
                 body = {
@@ -114,8 +102,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -127,15 +115,11 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
         class _Exists(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Exists')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Exists')
 
             def post(self, guid: str):
                 body = {
@@ -143,23 +127,19 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
         class _Status(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/Status')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Status')
 
             def post(self, guid: str):
                 body = {
@@ -167,8 +147,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
@@ -180,15 +160,11 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)
 
         class _UpdateStatus(API):
-            def __init__(self, websdk_obj):
-                super().__init__(api_obj=websdk_obj, url='/Workflow/Ticket/UpdateStatus')
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/UpdateStatus')
 
             def post(self, guid: str, status: str, explanation: str = None, scheduled_start: str = None, scheduled_stop: str = None):
                 body = {
@@ -200,16 +176,12 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, expected_return_codes, api_source):
-                        super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                    def __init__(self, response, api_source):
+                        super().__init__(response=response, api_source=api_source)
 
                     @property
                     @json_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(
-                    response=self._post(data=body),
-                    expected_return_codes=[200],
-                    api_source=self._api_source
-                )
+                return _Response(response=self._post(data=body), api_source=self._api_source)

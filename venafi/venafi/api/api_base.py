@@ -40,7 +40,7 @@ def json_response_property(return_on_204: type = None):
 
     """
     def pre_validation(func):
-        def wrap(self, *args, **kwargs):
+        def wrap(self: APIResponse, *args, **kwargs):
             if not self._validated:
                 self._validate()
             if return_on_204 and self.json_response.status_code == 204:
@@ -262,13 +262,10 @@ class API:
 
 
 class APIResponse:
-    def __init__(self, response: Response, expected_return_codes: list, api_source: str):
+    def __init__(self, response: Response, api_source: str):
         """
-        Args:
-            expected_return_codes: A list of valid status codes, such as [200, 204].
         """
         self._api_source = api_source
-        self._valid_return_codes = expected_return_codes
         self._json_response = response
         self._validated = False
 
@@ -349,17 +346,7 @@ class APIResponse:
         invalid, an error is thrown and logged.
         """
         self._validated = True
-
-        if not self._valid_return_codes:
-            raise ValueError(f'No valid return codes were provided, so the response to {self.json_response.url} '
-                             f'cannot be validated.')
-
-        if self.json_response.status_code not in self._valid_return_codes:
-            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
-            raise InvalidResponseError(
-                f"Received {self.json_response.status_code}, but expected one of {self._valid_return_codes}. "
-                f"Error message is: {error_msg}."
-            )
+        self.json_response.raise_for_status()
 
 
 class InvalidResponseError(Exception):

@@ -1,33 +1,33 @@
 class ProcessingEngines:
     class Engine:
-        def __init__(self, proc_eng_dict: dict):
-            if not isinstance(proc_eng_dict, dict):
-                proc_eng_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.links = ProcessingEngines.Link(proc_eng_dict.get('_links'))
-            self.engine_dn = proc_eng_dict.get('EngineDN')  # type: str
-            self.engine_guid = proc_eng_dict.get('EngineGuid')  # type: str
-            self.engine_name = proc_eng_dict.get('EngineName')  # type: str
+            self.links = ProcessingEngines.Link(response_object.get('_links'))
+            self.engine_dn = response_object.get('EngineDN')  # type: str
+            self.engine_guid = response_object.get('EngineGuid')  # type: str
+            self.engine_name = response_object.get('EngineName')  # type: str
 
     class Folder:
-        def __init__(self, folder_dict: dict):
-            if not isinstance(folder_dict, dict):
-                folder_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.folder_dn = folder_dict.get('FolderDN')  # type: str
-            self.folder_guid = folder_dict.get('FolderGuid')  # type: str
-            self.folder_name = folder_dict.get('FolderName')  # type: str
+            self.folder_dn = response_object.get('FolderDN')  # type: str
+            self.folder_guid = response_object.get('FolderGuid')  # type: str
+            self.folder_name = response_object.get('FolderName')  # type: str
 
     class Link:
-        def __init__(self, link_dict: dict):
-            if not isinstance(link_dict, dict):
-                link_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.self = ProcessingEngines.Self(link_dict.get('self'))
+            self.self = ProcessingEngines.Self(response_object.get('self'))
 
     class Self:
-        def __init__(self, self_dict: dict):
-            if not isinstance(self_dict, dict):
-                self_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.href = self_dict.get('href')  # type: str
+            self.href = response_object.get('href')  # type: str
