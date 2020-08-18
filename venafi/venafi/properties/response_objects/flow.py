@@ -10,33 +10,33 @@ class Flow:
             self.flow_result = ResultCodes.Flow.get(code, 'Unknown')
 
     class Ticket:
-        def __init__(self, ticket_dict: dict):
-            if not isinstance(ticket_dict, dict):
-                ticket_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.approvals = [Flow.Approval(a) for a in ticket_dict.get('Approvals')]
-            self.approvers = ticket_dict.get('Approvers')  # type: List[str]
-            self.creation_time = from_date_string(ticket_dict.get('CreationTime'))
-            self.environment = [Flow.KeyValue(i) for i in ticket_dict.get('Environment')]
-            self.flow_process_id = ticket_dict.get('FlowProcessId')  # type: int
-            self.id = ticket_dict.get('Id')  # type: int
-            self.identifier = ticket_dict.get('Identifier')  # type: str
-            self.product_code = ticket_dict.get('ProductCode')  # type: int
-            self.remaining_uses = ticket_dict.get('RemainingUses')  # type: int
-            self.required_approvals = ticket_dict.get('RequiredApprovals')  # type: int
+            self.approvals = [Flow.Approval(a) for a in response_object.get('Approvals')]
+            self.approvers = response_object.get('Approvers')  # type: List[str]
+            self.creation_time = from_date_string(response_object.get('CreationTime'))
+            self.environment = [Flow.KeyValue(i) for i in response_object.get('Environment')]
+            self.flow_process_id = response_object.get('FlowProcessId')  # type: int
+            self.id = response_object.get('Id')  # type: int
+            self.identifier = response_object.get('Identifier')  # type: str
+            self.product_code = response_object.get('ProductCode')  # type: int
+            self.remaining_uses = response_object.get('RemainingUses')  # type: int
+            self.required_approvals = response_object.get('RequiredApprovals')  # type: int
 
     class Approval:
-        def __init__(self, approval_dict: dict):
-            if not isinstance(approval_dict, dict):
-                approval_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.approval_time = from_date_string(approval_dict.get('ApprovalTime'))
-            self.universal = approval_dict.get('Universal')  # type: str
+            self.approval_time = from_date_string(response_object.get('ApprovalTime'))
+            self.universal = response_object.get('Universal')  # type: str
 
     class KeyValue:
-        def __init__(self, key_value_dict: dict):
-            if not isinstance(key_value_dict, dict):
-                key_value_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.key = key_value_dict.get('Key')  # type: str
-            self.value = key_value_dict.get('Value')  # type: str
+            self.key = response_object.get('Key')  # type: str
+            self.value = response_object.get('Value')  # type: str

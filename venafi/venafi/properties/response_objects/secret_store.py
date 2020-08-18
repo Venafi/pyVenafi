@@ -8,10 +8,10 @@ class SecretStore:
             self.secret_store_result = ResultCodes.SecretStore.get(code, 'Unknown')
 
     class TypedNameValues:
-        def __init__(self, type_name_value_dict: dict):
-            if not isinstance(type_name_value_dict, dict):
-                type_name_value_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.name= type_name_value_dict.get('Name')  # type: str
-            self.type = type_name_value_dict.get('Type')  # type: str
-            self.value = type_name_value_dict.get('Value')  # type: str
+            self.name= response_object.get('Name')  # type: str
+            self.type = response_object.get('Type')  # type: str
+            self.value = response_object.get('Value')  # type: str

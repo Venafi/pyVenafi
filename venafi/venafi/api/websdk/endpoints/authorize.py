@@ -2,14 +2,14 @@ from venafi.api.api_base import API, APIResponse, json_response_property
 
 
 class _Authorize(API):
-    def __init__(self, websdk_obj):
+    def __init__(self, api_obj):
         super().__init__(
-            api_obj=websdk_obj,
+            api_obj=api_obj,
             url='/Authorize'
         )
 
-        self.OAuth = self._OAuth(websdk_obj=websdk_obj)
-        self.Token = self._Token(websdk_obj=websdk_obj)
+        self.OAuth = self._OAuth(api_obj=api_obj)
+        self.Token = self._Token(api_obj=api_obj)
 
     def post(self, username, password):
         """
@@ -22,8 +22,8 @@ class _Authorize(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response, expected_return_codes, api_source):
-                super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+            def __init__(self, response, api_source):
+                super().__init__(response=response, api_source=api_source)
 
             @property
             @json_response_property()
@@ -32,14 +32,12 @@ class _Authorize(API):
 
         return _Response(
             response=self._post(data=body, mask_input_regexes=['Password'], mask_output_regexes=['APIKey']),
-            expected_return_codes=[200],
-            api_source=self._api_source
-        )
+            api_source=self._api_source)
 
     class _OAuth(API):
-        def __init__(self, websdk_obj):
+        def __init__(self, api_obj):
             super().__init__(
-                api_obj=websdk_obj,
+                api_obj=api_obj,
                 url='/Authorize/OAuth'
             )
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -54,8 +52,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
                 @property
                 @json_response_property()
@@ -89,14 +87,12 @@ class _Authorize(API):
 
             return _Response(
                 response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['*token*']),
-                expected_return_codes=[200],
-                api_source=self._api_source
-            )
+                api_source=self._api_source)
 
     class _Token(API):
-        def __init__(self, websdk_obj):
+        def __init__(self, api_obj):
             super().__init__(
-                api_obj=websdk_obj,
+                api_obj=api_obj,
                 url='/Authorize/Token'
             )
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -108,8 +104,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
                 @property
                 @json_response_property()
@@ -143,6 +139,4 @@ class _Authorize(API):
 
             return _Response(
                 response=self._post(data=body, mask_input_regexes=['token'], mask_output_regexes=['*token*']),
-                expected_return_codes=[200],
-                api_source=self._api_source
-            )
+                api_source=self._api_source)

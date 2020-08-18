@@ -1,9 +1,9 @@
 class PlacementRules:
     class Condition:
-        def __init__(self, condition_dict: dict):
-            if not isinstance(condition_dict, dict):
-                condition_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
                 
-            self.field = condition_dict.get('field')  # type: str
-            self.comparison = condition_dict.get('comparison')  # type: str
-            self.value = condition_dict.get('value')  # type: str
+            self.field = response_object.get('field')  # type: str
+            self.comparison = response_object.get('comparison')  # type: str
+            self.value = response_object.get('value')  # type: str

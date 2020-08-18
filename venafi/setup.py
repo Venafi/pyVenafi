@@ -5,9 +5,9 @@ from setuptools import setup, find_packages
 if __name__ == '__main__':
     setup(
         name='venafi',
-        packages=find_packages(where='venafi', exclude=['docs']),
+        packages=find_packages(where='.', exclude=['docs']),
         package_dir={
-          '': 'venafi'
+          '': '.'
         },
         description='Venafi Features and API Implementation In Python',
         version=__version__,

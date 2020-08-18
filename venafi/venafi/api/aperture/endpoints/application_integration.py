@@ -4,9 +4,9 @@ from venafi.properties.response_objects.oauth import OAuth
 
 
 class _ApplicationIntegration(API):
-    def __init__(self, aperture_obj):
-        super().__init__(api_obj=aperture_obj, url='/application-integration')
-        self.Access = self._Access(aperture_obj=aperture_obj)
+    def __init__(self, api_obj):
+        super().__init__(api_obj=api_obj, url='/application-integration')
+        self.Access = self._Access(api_obj=api_obj)
 
     def post(self, application_id: str, application_name: str, application_scope: dict,
              description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -26,19 +26,15 @@ class _ApplicationIntegration(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response, expected_return_codes, api_source):
-                super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+            def __init__(self, response, api_source):
+                super().__init__(response=response, api_source=api_source)
 
             @property
             @json_response_property()
             def application_id(self) -> str:
                 return self._from_json()
 
-        return _Response(
-            response=self._post(data=body),
-            expected_return_codes=[200, 201, 204],
-            api_source=self._api_source
-        )
+        return _Response(response=self._post(data=body), api_source=self._api_source)
 
     def put(self, application_id: str, application_name: str, application_scope: dict,
             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -58,67 +54,53 @@ class _ApplicationIntegration(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response, expected_return_codes, api_source):
-                super().__init__(response=response, expected_return_codes=expected_return_codes, api_source=api_source)
+            def __init__(self, response, api_source):
+                super().__init__(response=response, api_source=api_source)
 
             @property
             @json_response_property()
             def application_id(self) -> str:
                 return self._from_json()
 
-        return _Response(
-            response=self._put(data=body),
-            expected_return_codes=[200, 201, 204],
-            api_source=self._api_source
-        )
+        return _Response(response=self._put(data=body), api_source=self._api_source)
 
     def ApplicationId(self, id: str):
-        return self._ApplicationId(id=id, aperture_obj=self._api_obj)
+        return self._ApplicationId(id=id, api_obj=self._api_obj)
 
     class _Access:
-        def __init__(self, aperture_obj):
-            self._aperture_obj = aperture_obj
+        def __init__(self, api_obj):
+            self._api_obj = api_obj
 
         def ApplicationId(self, id: str):
-            return self._ApplicationId(id=id, aperture_obj=self._aperture_obj)
+            return self._ApplicationId(id=id, api_obj=self._api_obj)
 
         class _ApplicationId(API):
-            def __init__(self, id: str, aperture_obj):
-                super().__init__(api_obj=aperture_obj, url=f'/application-integration/access/?id={id}')
+            def __init__(self, id: str, api_obj):
+                super().__init__(api_obj=api_obj, url=f'/application-integration/access/?id={id}')
 
             def put(self, identities: list):
                 body = identities
 
-                return APIResponse(
-                    response=self._put(data=body),
-                    expected_return_codes=[200, 204],
-                    api_source=self._api_source
-                )
+                return APIResponse(response=self._put(data=body), api_source=self._api_source)
 
     class _ApplicationId(API):
-        def __init__(self, id: str, aperture_obj):
+        def __init__(self, id: str, api_obj):
             super().__init__(
-                api_obj=aperture_obj,
+                api_obj=api_obj,
                 url=f'/application-integration/?id={id}'
             )
 
         def delete(self):
             class _Response(APIResponse):
-                def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes,
-                                     api_source=api_source)
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
-            return _Response(
-                response=self._delete(),
-                expected_return_codes=[200],
-                api_source=self._api_source
-            )
+            return _Response(response=self._delete(), api_source=self._api_source)
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, expected_return_codes, api_source):
-                    super().__init__(response=response, expected_return_codes=expected_return_codes,
-                                     api_source=api_source)
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
                 @property
                 @json_response_property()
@@ -175,8 +157,4 @@ class _ApplicationIntegration(API):
                 def vendor(self) -> str:
                     return self._from_json(key='vendor')
 
-            return _Response(
-                response=self._get(),
-                expected_return_codes=[200, 204],
-                api_source=self._api_source
-            )
+            return _Response(response=self._get(), api_source=self._api_source)

@@ -1,27 +1,27 @@
 class OAuth:
     class ApplicationScope:
-        def __init__(self, application_scope_dict: dict):
-            if not isinstance(application_scope_dict, dict):
-                application_scope_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.hidden_subsystems = [OAuth.Subsystem(ss) for ss in application_scope_dict.get('hiddenSubsystems', [])]
-            self.subsystems = [OAuth.Subsystem(ss) for ss in application_scope_dict.get('subsystems', [])]
+            self.hidden_subsystems = [OAuth.Subsystem(ss) for ss in response_object.get('hiddenSubsystems', [])]
+            self.subsystems = [OAuth.Subsystem(ss) for ss in response_object.get('subsystems', [])]
 
     class Subsystem:
-        def __init__(self, subsystem_dict: dict):
-            if not isinstance(subsystem_dict, dict):
-                subsystem_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.name = subsystem_dict.get('name')  # type: str
-            self.permissions = OAuth.Permissions(subsystem_dict.get('permissions'))
+            self.name = response_object.get('name')  # type: str
+            self.permissions = OAuth.Permissions(response_object.get('permissions'))
 
     class Permissions:
-        def __init__(self, permissions_dict: dict):
-            if not isinstance(permissions_dict, dict):
-                permissions_dict = {}
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.delete = permissions_dict.get('delete')  # type: bool
-            self.discover = permissions_dict.get('discover')  # type: bool
-            self.manage = permissions_dict.get('manage')  # type: bool
-            self.read = permissions_dict.get('read')  # type: bool
-            self.revoke = permissions_dict.get('revoke')  # type: bool
+            self.delete = response_object.get('delete')  # type: bool
+            self.discover = response_object.get('discover')  # type: bool
+            self.manage = response_object.get('manage')  # type: bool
+            self.read = response_object.get('read')  # type: bool
+            self.revoke = response_object.get('revoke')  # type: bool
