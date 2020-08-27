@@ -43,7 +43,7 @@ class UploadFiles:
     def __init__(self):
         self.host = '10.100.203.5'
         self.port = 21
-        self.username = 'ftpuser'
+        self.username = r'VENSPI\ftpuser'
         self.password = 'newPassw0rd!'
 
         self.ftp = ftplib.FTP()
