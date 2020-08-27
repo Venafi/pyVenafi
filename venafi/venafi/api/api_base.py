@@ -2,7 +2,7 @@ from typing import List, Union
 import re
 import json
 from venafi.api.session import Session
-from requests import Response
+from requests import Response, HTTPError
 from venafi.logger import logger, LogTags
 
 
@@ -214,7 +214,7 @@ class API:
             else:
                 payload = json.dumps(data, indent=4)
             logger.log(
-                msg=f'{method}\nURL: {self._url}\nPARAMETERS: {payload}',
+                msg=f'{method}\nURL: {self._url}\nBODY: {payload}',
                 log_tag=LogTags.api,
                 num_prev_callers=num_prev_callers
             )
@@ -346,7 +346,10 @@ class APIResponse:
         invalid, an error is thrown and logged.
         """
         self._validated = True
-        self.json_response.raise_for_status()
+        try:
+            self.json_response.raise_for_status()
+        except HTTPError as err:
+            raise HTTPError('\n'.join(err.args) + f'\nBODY: {json.dumps(json.loads(err.request.body), indent=4)}')
 
 
 class InvalidResponseError(Exception):
