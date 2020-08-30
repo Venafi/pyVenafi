@@ -349,7 +349,8 @@ class APIResponse:
         try:
             self.json_response.raise_for_status()
         except HTTPError as err:
-            raise HTTPError('\n'.join(err.args) + f'\nBODY: {json.dumps(json.loads(err.request.body), indent=4)}')
+            body = f'\nBODY: {json.dumps(json.loads(err.request.body), indent=4)}' if err.request.body else ''
+            raise HTTPError('\n'.join(err.args) + body)
 
 
 class InvalidResponseError(Exception):
