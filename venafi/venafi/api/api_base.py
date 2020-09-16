@@ -296,7 +296,7 @@ class APIResponse:
         try:
             self._validate()
             return True
-        except InvalidResponseError:
+        except:
             return False
 
     def _from_json(self, key: str = None, error_key: str = None, return_on_error: type = None):
@@ -351,7 +351,7 @@ class APIResponse:
         except HTTPError as err:
             error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
             body = f'\nBODY: {json.dumps(json.loads(err.request.body), indent=4)}' if err.request.body else ''
-            raise HTTPError('\n'.join(err.args) + f"{error_msg}\n{body}")
+            raise InvalidResponseError('\n'.join(err.args) + f"{error_msg}\n{body}")
 
 
 class InvalidResponseError(Exception):
