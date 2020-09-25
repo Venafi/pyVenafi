@@ -1,4 +1,4 @@
-__version__ = "20.3.0.5"
+__version__ = "20.3.0.6"
 
 from setuptools import setup, find_packages
 
