@@ -1,7 +1,5 @@
-import argparse
 from pypsrp.client import Client, DEFAULT_CONFIGURATION_NAME
 from pypsrp.wsman import WinRMTransportError
-from textwrap import dedent
 import os
 
 
@@ -206,12 +204,6 @@ class SqlCloneHost:
 
 
 def main():
-    # parser = argparse.ArgumentParser(description='Generate the basic configuration for automation testing profiles.')
-    # parser.add_argument('action', help='The action to perform.')
-    # parser.add_argument('-i', '--image', required=True, help='The name of the image from which to create a clone.')
-    # parser.add_argument('-c', '--clone', help='The name of the clone.')
-    # args = parser.parse_args()
-
     # region Clear Method
     _clr_cmd = 'cls' if os.name == 'nt' else 'clear'
     clear = lambda: os.system(_clr_cmd)
