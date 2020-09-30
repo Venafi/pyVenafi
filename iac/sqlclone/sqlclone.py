@@ -112,54 +112,42 @@ class SqlCloneHost:
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
         return stdout
 
-    def create_clone(self, image: str, clone: str):
+    def create_clone(self, image: str, clone: str, wait: bool = True):
         print(f'Creating a clone named "{clone}" from image "{self.machine_name}\\{image}...')
         script = f"""
             Connect-SqlClone -ServerUrl {self.url}
             $image = Get-SqlCloneImage -Name {image}
             $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
-            $image | New-SqlClone -Name "{clone}" -Location $sqlServerInstance | Wait-SqlCloneOperation
+            $template = Get-SqlCloneTemplate -Image $image -Name 'Set New Broker'
+            {'$image | New-SqlClone -Name "{clone}" -Location $sqlServerInstance -Template $template' + (' | Wait-SqlCloneOperation' if wait else '')}
         """
         self.session.execute_ps(script=script)
         if not self.does_clone_exists(clone=clone):
             raise SqlCloneException(f'Unable to create {clone} from {image}.')
-        self.set_new_broker_on_clone(clone=clone)
         print(self.sql_connection_properties(db_name=clone))
 
-    def reset_clone(self, clone: str):
+    def reset_clone(self, clone: str, wait: bool = True):
         print(f'Resetting "{clone}"...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
             $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
             $clone = Get-SqlClone -Name "{clone}" -Location $SqlServerInstance
-            Reset-SqlClone -Clone $clone | Wait-SqlCloneOperation
+            {'Reset-SqlClone -Clone $clone' + (' | Wait-SqlCloneOperation' if wait else '')}
         """
         self.session.execute_ps(script=script)
-        self.set_new_broker_on_clone(clone=clone)
 
-    def delete_clone(self, clone: str):
+    def delete_clone(self, clone: str, wait: bool = True):
         print(f'Deleting "{clone}"...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
             $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
             $clone = Get-SqlClone -Name "{clone}" -Location $SqlServerInstance
-            Remove-SqlClone -Clone $clone | Wait-SqlCloneOperation
+            {'Remove-SqlClone -Clone $clone' + (' | Wait-SqlCloneOperation' if wait else '')}
+
         """
         self.session.execute_ps(script=script)
         if self.does_clone_exists(clone=clone, should_exist=False):
             raise SqlCloneException(f'Unable to delete {clone}.')
-
-    def set_new_broker_on_clone(self, clone: str):
-        print(f'Setting a new broker for "{clone}"...')
-        script = f"""
-            $ServerInstance = "{self.sql_instance}"
-            $query = "ALTER DATABASE [`$(DbName)] SET NEW_BROKER WITH ROLLBACK IMMEDIATE"
-            $params = "DbName={clone}"
-            $result = Invoke-Sqlcmd -ServerInstance $ServerInstance -Database "{clone}" `
-                -Query $query -Variable $params -Username "sa" -Password "P@ssw0rd!"
-        """
-        stdout, stderr, has_errors = self.session.execute_ps(script=script)
-        return stdout
 
     def does_clone_exists(self, clone: str, should_exist=True):
         if should_exist:
