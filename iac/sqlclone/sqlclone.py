@@ -1,11 +1,23 @@
 from pypsrp.client import Client, DEFAULT_CONFIGURATION_NAME
 from pypsrp.wsman import WinRMTransportError
 import os
+from datetime import datetime, timezone
+import json
 
 
-def _format_ps_cmd(cmd: str, params: dict = None):
-    args = " ".join([f"-{k} {v}" for k, v in params.items() if v is not None])
-    return f'{cmd} {args}'
+def convert_bytes(size):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if size < 1024.0:
+            return "%3.1f %s" % (size, x)
+        size /= 1024.0
+
+    return size
+
+
+def convert_from_json_date(dt: str, utc: bool = False):
+    dt = ''.join((d for d in dt if d.isdigit()))
+    dt = datetime.fromtimestamp(float(dt[:10]), tz=timezone.utc if utc else None)
+    return dt.strftime('%d %b %Y %I:%M %p')
 
 
 class PowerShell(Client):
@@ -63,102 +75,141 @@ class SqlCloneException(Exception):
 
 
 class SqlCloneHost:
-    def __init__(self, ip_address: str, machine_name: str, sql_instance: str, server_username: str,
-                 server_password: str, db_username: str, db_password: str, url: str, port: int = 1433):
+    def __init__(self, ip_address: str, username: str, password: str, url: str):
         self.ip_address = ip_address
-        self.port = port
-        self.machine_name = machine_name
-        self.sql_instance = sql_instance
-        self.server_username = server_username
-        self.server_password = server_password
-        self.db_username = db_username
-        self.db_password = db_password
+        self.username = username
+        self.password = password
         self.url = url
+
+
+class SqlCloneSession:
+    def __init__(self, sql_clone_host: SqlCloneHost):
+        self.url = sql_clone_host.url
         self.session = PowerShell(
-            server=ip_address,
-            username=server_username,
-            password=server_password
+            server=sql_clone_host.ip_address,
+            username=sql_clone_host.username,
+            password=sql_clone_host.password
         )
 
-    def sql_connection_properties(self, db_name: str):
-        properties = '\n'.join([f"{k} = {v}" for k, v in {
-            'Host'    : self.ip_address,
-            'Port'    : self.port,
-            'DB Name' : db_name,
-            'Username': self.db_username,
-            'Password': self.db_password
-        }.items()])
-        return "\n".join([
-            f"--------- Connection Details ---------",
-            f"{properties.strip()}"
-        ])
-
-    def list_images(self, name_only: bool = False):
-        print(f'Retrieving images from {self.machine_name}...')
+    def sql_connection_properties(self, location_id: str, clone: str):
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
-            {'Get-SqlCloneImage | Select-Object Name' if name_only else 'Get-SqlCloneImage'}
+            $instance = Get-SqlCloneSqlServerInstance | Where-Object {{$_.Id -eq {location_id}}}
+            Resolve-DnsName $instance.ServerAddress -DnsOnly | ConvertTo-Json
+        """
+        stdout, stderr, has_errors = self.session.execute_ps(script=script)
+        details = json.loads(stdout)
+        if isinstance(details, list):
+            details = details[0]
+
+        properties = '\n'.join([f"{k} = {v}" for k, v in {
+            'HostName'      : details['Name'],
+            'IP Address'    : details['IP4Address'],
+            'Port'          : 1433,
+            'DB Name'       : clone
+        }.items()])
+        return properties.strip()
+
+    def list_machines(self, name_only: bool = False):
+        script = f"""
+            Connect-SqlClone -ServerUrl "{self.url}"
+            {'Get-SqlCloneMachine | Select-Object MachineName' if name_only else 'Get-SqlCloneMachine'}
         """
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
         return stdout
 
-    def list_clones(self, image: str, name_only: bool = False):
+    def get_machines(self) -> list:
+        script = f"""
+            Connect-SqlClone -ServerUrl "{self.url}"
+            Get-SqlCloneMachine | ConvertTo-Json
+        """
+        stdout, stderr, has_errors = self.session.execute_ps(script=script)
+        return json.loads(stdout)
+
+    def list_images(self) -> list:
+        print(f'Retrieving images...')
+        script = f"""
+            Connect-SqlClone -ServerUrl "{self.url}"
+            Get-SqlCloneImage | ConvertTo-Json
+        """
+        stdout, stderr, has_errors = self.session.execute_ps(script=script)
+        images = json.loads(stdout)
+        if not isinstance(images, list):
+            images = [images]
+        for image in images:
+            image = self.normalize_image_details(image)
+        return images
+
+    def list_clones(self, image: str) -> list:
         print(f'Retrieving clones from {image}...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
             $image = Get-SqlCloneImage -Name "{image}"
-            Get-SqlClone | Where-Object {{$_.ParentImageId -eq $image.Id}} {'| Select-Object Name' if name_only else ''}
+            Get-SqlClone | Where-Object {{$_.ParentImageId -eq $image.Id}} | ConvertTo-Json
         """
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
-        return stdout
+        clones = json.loads(stdout)
+        if not isinstance(clones, list):
+            clones = [clones]
+        for clone in clones:
+            clone = self.normalize_clone_details(clone, image)
+        return clones
 
-    def create_clone(self, image: str, clone: str, wait: bool = True):
-        print(f'Creating a clone named "{clone}" from image "{self.machine_name}\\{image}...')
+    def create_clone(self, machine: str, image: str, clone: str, wait: bool = True):
+        print(f'Creating a clone named "{clone}" from image "{image}" on "{machine}"...')
+        template = "Set New Broker"
+        if not self.does_template_exist(image=image, template=template):
+            self.create_template(
+                image=image,
+                name=template,
+                sql="""
+                    EXEC('ALTER DATABASE [' + @SQLClone_CloneName + '] SET NEW_BROKER WITH ROLLBACK IMMEDIATE')
+                """
+            )
+
         script = f"""
             Connect-SqlClone -ServerUrl {self.url}
             $image = Get-SqlCloneImage -Name {image}
-            $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
-            $template = Get-SqlCloneTemplate -Image $image -Name 'Set New Broker'
-            {'$image | New-SqlClone -Name "{clone}" -Location $sqlServerInstance -Template $template' + (' | Wait-SqlCloneOperation' if wait else '')}
+            $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{machine}"
+            $template = Get-SqlCloneTemplate -Image $image -Name "{template}"
+            {f'$image | New-SqlClone -Name "{clone}" -Location $sqlServerInstance -Template $template' + (' | Wait-SqlCloneOperation' if wait else '')}
         """
         self.session.execute_ps(script=script)
-        if not self.does_clone_exists(clone=clone):
+        if not self.does_clone_exists(image=image, clone=clone):
             raise SqlCloneException(f'Unable to create {clone} from {image}.')
-        print(self.sql_connection_properties(db_name=clone))
 
-    def reset_clone(self, clone: str, wait: bool = True):
+    def reset_clone(self, image: str, clone: str, wait: bool = True):
         print(f'Resetting "{clone}"...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
-            $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
-            $clone = Get-SqlClone -Name "{clone}" -Location $SqlServerInstance
+            $image = Get-SqlCloneImage -Name "{image}"
+            $clone = Get-SqlClone -Name "{clone}" -Image $image
             {'Reset-SqlClone -Clone $clone' + (' | Wait-SqlCloneOperation' if wait else '')}
         """
         self.session.execute_ps(script=script)
 
-    def delete_clone(self, clone: str, wait: bool = True):
+    def delete_clone(self, image: str, clone: str, wait: bool = True):
         print(f'Deleting "{clone}"...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
-            $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
-            $clone = Get-SqlClone -Name "{clone}" -Location $SqlServerInstance
+            $image = Get-SqlCloneImage -Name "{image}"
+            $clone = Get-SqlClone -Name "{clone}" -Image $image
             {'Remove-SqlClone -Clone $clone' + (' | Wait-SqlCloneOperation' if wait else '')}
-
         """
         self.session.execute_ps(script=script)
-        if self.does_clone_exists(clone=clone, should_exist=False):
+        if self.does_clone_exists(image=image, clone=clone, should_exist=False):
             raise SqlCloneException(f'Unable to delete {clone}.')
 
-    def does_clone_exists(self, clone: str, should_exist=True):
+    def does_clone_exists(self, image: str, clone: str, should_exist=True):
         if should_exist:
-            print(f"Validating that {clone} exists...")
+            print(f'Validating that "{clone}" exists under "{image}"...')
         else:
-            print(f"Validating that {clone} does not exist...")
+            print(f'Validating that "{clone}" does not exist under "{image}"...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
-            $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
+            $image = Get-SqlCloneImage -Name "{image}"
             try {{
-                $clone = Get-SqlClone -Name "{clone}" -Location $SqlServerInstance
+                $clone = Get-SqlClone -Name "{clone}" -Image $image
                 if(!$clone) {{
                     return $false
                 }}
@@ -170,25 +221,82 @@ class SqlCloneHost:
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
         return eval(stdout)
 
-    def get_clone(self, clone: str):
-        print(f'Retrieving {clone}...')
+    @staticmethod
+    def normalize_image_details(image_details: dict):
+        image_details['CreatedDate'] = convert_from_json_date(image_details['CreatedDate'])
+        image_details['CreatedDateUtc'] = convert_from_json_date(image_details['CreatedDateUtc'], utc=True)
+        image_details['SizeInBytes'] = convert_bytes(image_details['SizeInBytes'])
+        return image_details
+
+    @staticmethod
+    def normalize_clone_details(clone_details: dict, image: str):
+        clone_details['CreatedDate'] = convert_from_json_date(clone_details['CreatedDate'])
+        clone_details['CreatedDateUtc'] = convert_from_json_date(clone_details['CreatedDateUtc'], utc=True)
+        clone_details['SizeInBytes'] = convert_bytes(clone_details['SizeInBytes'])
+        clone_details['Image Name'] = image
+        return clone_details
+
+    def get_clone(self, image: str, clone: str):
+        print(f'Retrieving {clone} from {image}...')
         script = f"""
             Connect-SqlClone -ServerUrl "{self.url}"
-            $SqlServerInstance = Get-SqlCloneSqlServerInstance -MachineName "{self.machine_name}"
-            Get-SqlClone -Name "{clone}" -Location $SqlServerInstance
+            $image = Get-SqlCloneImage -Name "{image}"
+            Get-SqlClone -Name "{clone}" -Image $image | ConvertTo-Json
         """
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
         if not stdout:
             print(f'{clone} does not exist.')
-        else:
-            print('\n'.join([
-                '------------ Clone Details -----------',
-                stdout.strip(),
+            return
+
+        clone_details = json.loads(stdout)
+        if not isinstance(clone_details, dict):
+            if isinstance(clone_details, (list, tuple)):
+                print(f'Expected only one clone with the name "{clone}", but found {len(clone_details)} instances instead.')
+            else:
+                print(f'An unknown error occurred in getting "{clone}".')
+            return
+        clone_details = self.normalize_clone_details(clone_details, image)
+        properties = self.sql_connection_properties(
+            location_id=clone_details['LocationId'],
+            clone=clone
+        )
+        print('\n'.join([
+            '------------ Clone Details -----------',
+            "\n".join([f'{k}: {v}' for k, v in clone_details.items()]),
+        ]))
+        print('\n')
+        print( "\n".join([
+                f"--------- Connection Details ---------",
+                f"{properties.strip()}"
             ]))
-            print('\n')
-            print(self.sql_connection_properties(db_name=clone))
         return stdout
 
+    def does_template_exist(self, image: str, template: str):
+        print(f'Validating that the template "{template}" exists...')
+        script = f"""
+            Connect-SqlClone -ServerUrl "{self.url}"
+            try {{
+                $image = Get-SqlCloneImage -Name "{image}"
+                $template = Get-SqlCloneTemplate -Name "{template}" -Image $image
+                if(!$template) {{
+                    return $false
+                }}
+                return $true
+            }} catch {{
+                return $false
+            }}
+        """
+        stdout, stderr, has_errors = self.session.execute_ps(script=script)
+        return eval(stdout)
+
+    def create_template(self, image: str, name: str, sql: str):
+        print(f'Creating new template {name} on {image}...')
+        script = f"""
+            Connect-SqlClone -ServerUrl "{self.url}"
+            $image = Get-SqlCloneImage -Name "{image}"
+            New-SqlCloneTemplate -Name "{name}" -Image $image -Modifications (New-SqlCloneSqlScript -Sql "{sql.strip()}")
+        """
+        self.session.execute_ps(script=script)
 
 
 def main():
@@ -197,115 +305,106 @@ def main():
     clear = lambda: os.system(_clr_cmd)
     # endregion Clear Method
 
-    def print_options(opts):
-        for e, img in enumerate(opts):
-            print(f'    {e + 1}. {img}')
+    def get_option(msg: str, opts: list):
+        while True:
+            print(msg)
+            for e, img in enumerate(opts):
+                print(f'    {e + 1}. {img}')
+            try:
+                i = int(input('\nChoice: ')) - 1
+                return opts[i].strip()
+            except KeyboardInterrupt:
+                exit(1)
+            except:
+                clear()
 
     # region Initialize SqlCloneHost
-    sqlclone_host = SqlCloneHost(
-        ip_address='10.100.209.16',
-        machine_name='SQLCLONE',
-        sql_instance='SQLCLONE',
-        server_username=r'VENSPI\Administrator',
-        server_password='P@ssw0rd!',
-        db_username='sa',
-        db_password='P@ssw0rd!',
-        url=f'http://10.100.209.16'
-    )
+    clear()
+
+    hosts = {
+        'SQLCLONE.venspi.eng.venafi.com': SqlCloneHost(ip_address='10.100.209.16',
+                     username=r'VENSPI\Administrator', password='P@ssw0rd!', url=f'http://10.100.209.16')
+    }
+
+    host = get_option('Choose a SQL Clone server.', list(hosts.keys()))
+    sqlclone_host = SqlCloneSession(hosts[host])
     # endregion Initialize SqlCloneHost
 
     clear()
 
     # region Get Execution Method
-    options = {
-        'Create A New Clone'               : sqlclone_host.create_clone,
-        'Reset A Clone'                    : sqlclone_host.reset_clone,
-        'Delete A Clone'                   : sqlclone_host.delete_clone,
-        'Show Clone Details'               : sqlclone_host.get_clone,
-        'List Clones From A Specific Image': sqlclone_host.list_clones,
-        'List Images'                      : sqlclone_host.list_images,
-    }
+    options = [
+        'Create A Clone',
+        'Reset A Clone',
+        'Delete A Clone',
+        'Show Clone Details',
+        'List Clones',
+        'List Images',
+    ]
 
-    method = None
-    while method is None:
-        print('What would you like to do?')
-        print_options(options.keys())
-        index = input('Choice: ')
-        try:
-            key = list(options)[int(index) - 1]
-            method = options[key]
-        except:
-            clear()
+    task = get_option('What would you like to do?', options)
     # endregion Get Execution Method
 
     clear()
 
+    # region Get Image
     # region Method = List Images (No Inputs Required)
-    if method == sqlclone_host.list_images:
-        print(sqlclone_host.list_images())
+    images = sqlclone_host.list_images()
+    if task == 'List Images':
+        clear()
+        print(f'------------- Images On {host} -------------\n')
+        for image in images:
+            print('\n'.join(f"{k}: {v}" for k, v in image.items()))
+            print('\n\t-------------\n')
         return
     # endregion Method = List Images (No Inputs Required)
-
-    # region Get Image
-    image = None
-    images = sqlclone_host.list_images(name_only=True).strip().split('\n')[2:]
-    while image is None:
-        print('Choose an image.')
-        print_options(images)
-        index = input('Choice: ')
-        try:
-            index = int(index) - 1
-            image = images[index]
-        except:
-            clear()
+    image = get_option('Choose an image.', sorted([i['Name'] for i in images]))
     # endregion Get Image
 
     clear()
 
     # region Get Clone
-    clone = None
-
     # region Method = List Clones
-    if method == sqlclone_host.list_clones:
+    if task == 'List Clones':
         clones = sqlclone_host.list_clones(image=image)
+        clear()
         if not clones:
-            print('There are no clones on this image. Exiting.')
+            print('There are no clones on this image.')
             return
-        print(clones)
+        print(f'------------- Clones Created From {image} -------------\n')
+        for clone in clones:
+            print('\n'.join(f"{k}: {v}" for k, v in clone.items()))
+            print('\n\t-------------\n')
         return
     # endregion Method = List Clones
 
-    elif method != sqlclone_host.create_clone:
-        clones = sqlclone_host.list_clones(image=image, name_only=True).strip().split('\n')[2:]
+    # region Specify Clone Name
+    if task != 'Create A Clone':
+        clones = sqlclone_host.list_clones(image=image)
         if not clones:
-            print('There are no clones on this image. Exiting.')
+            print('There are no clones on this image.')
             return
-
-        while clone is None:
-            print('Choose a clone.')
-            print_options(clones)
-            index = input('Choice: ')
-            try:
-                index = int(index) - 1
-                clone = clones[index]
-            except:
-                clear()
+        clone = get_option('Choose a clone.', sorted([c['Name'] for c in clones]))
     else:
         print('Provide the name of the clone you would like to create.')
         clone = input('Name: ')
+    # endregion Specify Clone Name
     # endregion Get Clone
 
     clear()
 
-
-    if method == sqlclone_host.create_clone:
-        method(image=image, clone=clone)
-
-    elif method == sqlclone_host.list_clones:
-        method(image=image)
-
+    if task == 'Create A Clone':
+        machines = sqlclone_host.get_machines()
+        machine = get_option('Choose a machine to store the clone.', sorted([m['MachineName'] for m in machines]))
+        sqlclone_host.create_clone(machine=machine, image=image, clone=clone)
+    elif task == 'Show Clone Details':
+        sqlclone_host.get_clone(image=image, clone=clone)
+    elif task == 'Reset A Clone':
+        sqlclone_host.reset_clone(image=image, clone=clone)
+    elif task == 'Delete A Clone':
+        sqlclone_host.delete_clone(image=image, clone=clone)
     else:
-        method(clone=clone)
+        raise Exception(f'Uh-oh. Not sure what to do about {task}.')
 
 
 if __name__ == '__main__':
