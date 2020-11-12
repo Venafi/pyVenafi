@@ -16,7 +16,8 @@ from venafi.features.identity import User, Group, IdentityClassNames, IdentityAt
 from venafi.features.permissions import Permissions
 from venafi.features.platform import AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager,\
     CertificatePreEnrollment, CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, \
-    OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes
+    OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes, \
+    PlatformsClassNames
 from venafi.features.placement_rules import PlacementRules, PlacementRulesAttributeValues
 from venafi.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
@@ -515,6 +516,7 @@ class Classes:
     Discovery = DiscoveryClassNames
     Folder = FolderClassNames
     Identity = IdentityClassNames
+    Platforms = PlatformsClassNames
     Workflow = WorkflowClassNames
 
 # endregion

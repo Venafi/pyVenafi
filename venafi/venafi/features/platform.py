@@ -1,5 +1,5 @@
 from typing import List, Dict
-from venafi.properties.config import PlatformsAttributes
+from venafi.properties.config import PlatformsAttributes, PlatformsClassNames
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 

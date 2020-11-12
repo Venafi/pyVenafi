@@ -1780,7 +1780,26 @@ class PlacementRulesAttributeValues:
 
 # endregion Placement Rules
 
+
 # region Platforms
+class PlatformsClassNames:
+    auto_layout_manager = "Auto Layout Manager"
+    bulk_provisioning_manager = "Bulk Provisioning Manager"
+    ca_import_manager = "CA Import Manager"
+    certificate_manager = "Certificate Manager"
+    certificate_pre_enrollment = "Certificate Pre-Enrollment"
+    certificate_revocation = "Certificate Revocation"
+    cloud_instance_monitor = "Cloud Instance Monitor"
+    discovery_manager = "Discovery"
+    key_manager = "Key Manager"
+    monitoring_module = "Monitor"
+    onboard_discovery_manager = "Onboard Discovery Manager"
+    reporter_service_module = "Reporting"
+    ssh_manager = "SSH Manager"
+    trust_net_manager = "TrustNet Manager"
+    validation_manager = "Validation Manager"
+
+
 class _PlatformsAttributes:
     acme_fqdn = "ACME FQDN"
     address_range = "Address Range"
