@@ -1,6 +1,6 @@
 from typing import List, Union
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
-from venafi.properties.response_objects.config import Config, ResultCodes
+from venafi.properties.response_objects.config import Config
 
 
 class _AttributeValue:
@@ -220,14 +220,17 @@ class Objects(FeatureBase):
         """
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                value = self._read(
+                result, attr = self._read(
                     object_dn=object_dn,
                     attribute_name=attribute_name,
                     include_policy_values=include_policy_values
                 )
-                if value.values:
-                    return value
+                if result.code != 1:
+                    continue
+                if attr and attr.values:
+                    return attr
 
+        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
         raise TimeoutError(f'Could not read {attribute_name} on {object_dn} because it did not exist '
                            f'after {timeout} seconds.')
 
@@ -353,14 +356,17 @@ class Objects(FeatureBase):
 
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                attr = self._read(
+                result, attr = self._read(
                     object_dn=object_dn,
                     attribute_name=attribute_name,
                     include_policy_values=include_policy_values
                 )
-                if any([True for value in attr.values if str(value).lower() == attribute_value.lower()]):
+                if result.code != 1:
+                    continue
+                if attr and any([True for value in attr.values if str(value).lower() == attribute_value.lower()]):
                     return attr
 
+        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
         raise FeatureError.TimeoutError(method=self.wait_for, expected_value=attribute_value,
                                         actual_value=attr.values, timeout=timeout)
 
@@ -414,18 +420,10 @@ class Objects(FeatureBase):
                 object_dn=object_dn,
                 attribute_name=attribute_name
             )
-            result = resp.result
-            if result.code != 1:
-                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
-
-            return _AttributeValue(values=resp.values, locked=resp.locked)
+            return resp.result, _AttributeValue(values=resp.values, locked=resp.locked)
         else:
             resp = self._auth.websdk.Config.Read.post(
                 object_dn=object_dn,
                 attribute_name=attribute_name
             )
-            result = resp.result
-            if result.code != 1:
-                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
-
-            return _AttributeValue(values=resp.values, locked=False)
+            return resp.result, _AttributeValue(values=resp.values, locked=False)

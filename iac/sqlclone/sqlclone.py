@@ -124,7 +124,10 @@ class SqlCloneSession:
             Get-SqlCloneMachine | ConvertTo-Json
         """
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
-        return json.loads(stdout)
+        result = json.loads(stdout)
+        if not isinstance(result, list):
+            result = [result]
+        return result
 
     def list_images(self) -> list:
         print(f'Retrieving images...')
@@ -148,6 +151,8 @@ class SqlCloneSession:
             Get-SqlClone | Where-Object {{$_.ParentImageId -eq $image.Id}} | ConvertTo-Json
         """
         stdout, stderr, has_errors = self.session.execute_ps(script=script)
+        if not stdout:
+            return []
         clones = json.loads(stdout)
         if not isinstance(clones, list):
             clones = [clones]
@@ -318,93 +323,108 @@ def main():
             except:
                 clear()
 
-    # region Initialize SqlCloneHost
-    clear()
-
-    hosts = {
-        'SQLCLONE.venspi.eng.venafi.com': SqlCloneHost(ip_address='10.100.209.16',
-                     username=r'VENSPI\Administrator', password='P@ssw0rd!', url=f'http://10.100.209.16')
-    }
-
-    host = get_option('Choose a SQL Clone server.', list(hosts.keys()))
-    sqlclone_host = SqlCloneSession(hosts[host])
-    # endregion Initialize SqlCloneHost
-
-    clear()
-
-    # region Get Execution Method
-    options = [
-        'Create A Clone',
-        'Reset A Clone',
-        'Delete A Clone',
-        'Show Clone Details',
-        'List Clones',
-        'List Images',
-    ]
-
-    task = get_option('What would you like to do?', options)
-    # endregion Get Execution Method
-
-    clear()
-
-    # region Get Image
-    # region Method = List Images (No Inputs Required)
-    images = sqlclone_host.list_images()
-    if task == 'List Images':
+    def run():
+        # region Initialize SqlCloneHost
         clear()
-        print(f'------------- Images On {host} -------------\n')
-        for image in images:
-            print('\n'.join(f"{k}: {v}" for k, v in image.items()))
-            print('\n\t-------------\n')
-        return
-    # endregion Method = List Images (No Inputs Required)
-    image = get_option('Choose an image.', sorted([i['Name'] for i in images]))
-    # endregion Get Image
 
-    clear()
+        hosts = {
+            'SQLCLONE.venspi.eng.venafi.com':
+                SqlCloneHost(
+                    ip_address='10.100.209.16', username=r'VENSPI\Administrator',
+                    password='P@ssw0rd!', url=f'http://10.100.209.16'
+                )
+        }
 
-    # region Get Clone
-    # region Method = List Clones
-    if task == 'List Clones':
-        clones = sqlclone_host.list_clones(image=image)
+        host = get_option('Choose a SQL Clone server.', list(hosts.keys()))
+        sqlclone_host = SqlCloneSession(hosts[host])
+        # endregion Initialize SqlCloneHost
+
         clear()
-        if not clones:
-            print('There are no clones on this image.')
+
+        # region Get Execution Method
+        options = [
+            'Create A Clone',
+            'Reset A Clone',
+            'Delete A Clone',
+            'Show Clone Details',
+            'List Clones',
+            'List Images',
+        ]
+
+        task = get_option('What would you like to do?', options)
+        # endregion Get Execution Method
+
+        clear()
+
+        # region Get Image
+        # region Method = List Images (No Inputs Required)
+        images = sqlclone_host.list_images()
+        if task == 'List Images':
+            clear()
+            print(f'------------- Images On {host} -------------\n')
+            for image in images:
+                print('\n'.join(f"{k}: {v}" for k, v in image.items()))
+                print('\n\t-------------\n')
             return
-        print(f'------------- Clones Created From {image} -------------\n')
-        for clone in clones:
-            print('\n'.join(f"{k}: {v}" for k, v in clone.items()))
-            print('\n\t-------------\n')
+        # endregion Method = List Images (No Inputs Required)
+        image = get_option('Choose an image.', sorted([i['Name'] for i in images]))
+        # endregion Get Image
+
+        clear()
+
+        # region Get Clone
+        # region Method = List Clones
+        if task == 'List Clones':
+            clones = sqlclone_host.list_clones(image=image)
+            clear()
+            if not clones:
+                print('There are no clones on this image.')
+                return
+            print(f'------------- Clones Created From {image} -------------\n')
+            for clone in clones:
+                print('\n'.join(f"{k}: {v}" for k, v in clone.items()))
+                print('\n\t-------------\n')
+            return
+        # endregion Method = List Clones
+
+        # region Specify Clone Name
+        if task != 'Create A Clone':
+            clones = sqlclone_host.list_clones(image=image)
+            if not clones:
+                print('There are no clones on this image.')
+                return
+            clone = get_option('Choose a clone.', sorted([c['Name'] for c in clones]))
+        else:
+            print('Provide the name of the clone you would like to create.')
+            clone = input('Name: ')
+        # endregion Specify Clone Name
+        # endregion Get Clone
+
+        clear()
+
+        if task == 'Create A Clone':
+            machines = sqlclone_host.get_machines()
+            machine = get_option('Choose a machine to store the clone.', sorted([m['MachineName'] for m in machines]))
+            sqlclone_host.create_clone(machine=machine, image=image, clone=clone)
+        elif task == 'Show Clone Details':
+            sqlclone_host.get_clone(image=image, clone=clone)
+        elif task == 'Reset A Clone':
+            sqlclone_host.reset_clone(image=image, clone=clone)
+        elif task == 'Delete A Clone':
+            sqlclone_host.delete_clone(image=image, clone=clone)
+        else:
+            raise Exception(f'Uh-oh. Not sure what to do about {task}.')
+
         return
-    # endregion Method = List Clones
 
-    # region Specify Clone Name
-    if task != 'Create A Clone':
-        clones = sqlclone_host.list_clones(image=image)
-        if not clones:
-            print('There are no clones on this image.')
-            return
-        clone = get_option('Choose a clone.', sorted([c['Name'] for c in clones]))
-    else:
-        print('Provide the name of the clone you would like to create.')
-        clone = input('Name: ')
-    # endregion Specify Clone Name
-    # endregion Get Clone
-
-    clear()
-
-    if task == 'Create A Clone':
-        machines = sqlclone_host.get_machines()
-        machine = get_option('Choose a machine to store the clone.', sorted([m['MachineName'] for m in machines]))
-        sqlclone_host.create_clone(machine=machine, image=image, clone=clone)
-    elif task == 'Show Clone Details':
-        sqlclone_host.get_clone(image=image, clone=clone)
-    elif task == 'Reset A Clone':
-        sqlclone_host.reset_clone(image=image, clone=clone)
-    elif task == 'Delete A Clone':
-        sqlclone_host.delete_clone(image=image, clone=clone)
-    else:
-        raise Exception(f'Uh-oh. Not sure what to do about {task}.')
+    while True:
+        run()
+        print('\n')
+        again = get_option('Continue?', ['Yes', 'No'])
+        if again == 'Yes':
+            continue
+        else:
+            break
 
 
 if __name__ == '__main__':
