@@ -79,7 +79,7 @@ class _ApplicationBase(FeatureBase):
         certificate_dn = response.values[0]
         return self._auth.websdk.Config.IsValid.post(object_dn=certificate_dn).object
 
-    def get_stage(self, application_dn: str):
+    def _get_stage(self, application_dn: str):
         """
         Returns the current processing stage of the application object.
 
@@ -98,6 +98,18 @@ class _ApplicationBase(FeatureBase):
         )
 
         return int(response.values[0]) if response.values else None
+
+    def get_stage(self, application_dn: str):
+        """
+        Returns the current processing stage of the application object.
+
+        Args:
+            application_dn: Absolute path to the Application object.
+
+        Returns:
+            The current stage if it exists. Otherwise, returns ``None``.
+        """
+        self._get_stage(application_dn=application_dn)
 
     def get_status(self, application_dn: str):
         """
@@ -119,7 +131,7 @@ class _ApplicationBase(FeatureBase):
 
         return response.values[0] if response.values else None
 
-    def is_in_error(self, application_dn: str):
+    def _is_in_error(self, application_dn: str):
         """
         Returns ``True`` if the application object is in an error state.
 
@@ -183,10 +195,10 @@ class _ApplicationBase(FeatureBase):
             application_last_pushed_on = from_date_string(response.values[0])
             return application_last_pushed_on >= certificate_last_renewed_time
 
-        stage = self.get_stage(application_dn=application_dn)
+        stage = self._get_stage(application_dn=application_dn)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                if self.is_in_error(application_dn=application_dn):
+                if self._is_in_error(application_dn=application_dn):
                     break
                 elif not stage:
                     if not _certificate_is_installed():
@@ -195,7 +207,7 @@ class _ApplicationBase(FeatureBase):
                             f'but the application is not in a processing status.'
                         )
                     return
-                stage = self.get_stage(application_dn=application_dn)
+                stage = self._get_stage(application_dn=application_dn)
 
         raise FeatureError.UnexpectedValue(
             f'Certificate installation failed on "{application_dn}".\n'
