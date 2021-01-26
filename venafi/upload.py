@@ -10,10 +10,9 @@ import requests
 import shutil
 from typing import List
 
-
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 PACKAGES_DIR = '/spi/packages'
-DOCS_DIR = f'/spi/docs/{__version__}'
+DOCS_DIR = f'/spi/docs/{"".join(__version__.split(".")[:2])}.0.0'
 MAKE_CMD = 'make' if sys.platform != 'win32' else 'make.bat'
 THREADS = []  # type: List[threading.Thread]
 LOCK = threading.Lock()
@@ -24,6 +23,7 @@ def fire_and_forget(f):
         thread = threading.Thread(target=f, args=args, kwargs=kwargs)
         THREADS.append(thread)
         thread.start()
+
     return wrapped
 
 
@@ -85,7 +85,7 @@ class UploadFiles:
     @staticmethod
     def compile_docs():
         cur_dir = os.curdir
-        os.chdir(f'{PROJECT_DIR}/venafi/docs')
+        os.chdir(f'{PROJECT_DIR}/docs')
         os.system(f'{MAKE_CMD} clean')
         os.system(f'{MAKE_CMD} html')
         os.chdir(cur_dir)
@@ -151,10 +151,10 @@ class UploadFiles:
             self.verify()
             shutil.rmtree(f'{PROJECT_DIR}/dist')
         if include_docs:
-            # self.print_stage('Compile Documentation')
-            # self.compile_docs()
+            self.print_stage('Compile Documentation')
+            self.compile_docs()
             self.print_stage('Upload Documentation via FTP')
-            build_dir = f'{PROJECT_DIR}/venafi/docs/_build/'
+            build_dir = f'{PROJECT_DIR}/docs/_build/'
             progress = UploadProgress(total=sum([len(files) for r, d, files in os.walk(build_dir)]))
             self.send_files(src=build_dir, dst=DOCS_DIR, progress=progress)
             self.verify()
