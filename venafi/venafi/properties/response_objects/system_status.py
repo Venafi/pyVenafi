@@ -7,13 +7,13 @@ class SystemStatus:
         def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):
                 response_object = {}
-                
+
             self.dn = response_object.get('DN')  # type: str
             self.display_name = response_object.get('DisplayName')  # type: str
             self.guid = response_object.get('Guid')  # type: str
             self.id = response_object.get('Id')  # type: int
             self.name = response_object.get('Name')  # type: str
-    
+
     class Services:
         def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):
@@ -29,7 +29,8 @@ class SystemStatus:
                 response_object = {}
 
             self.modules = response_object.get('modules')  # type: list
-            self.time_since_first_seen = from_date_string(response_object.get('timeSinceFirstSeen'), duration_format=True)
+            self.time_since_first_seen = from_date_string(response_object.get('timeSinceFirstSeen'),
+                                                          duration_format=True)
             self.time_since_last_seen = from_date_string(response_object.get('timeSinceLastSeen'), duration_format=True)
             self.status = response_object.get('Status')  # type: str
 
@@ -46,7 +47,7 @@ class SystemStatus:
         def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):
                 response_object = {}
-                
+
             self.display_name = response_object.get('DisplayName')  # type: str
             self.name = response_object.get('Name')  # type: str
             self.start_time = from_date_string(response_object.get('StartTime'))
@@ -71,9 +72,9 @@ class SystemStatus:
             self.status = response_object.get('Status')  # type: str
             self.upgrade_start_time = from_date_string(response_object.get('UpgradeStartTime'))
             self.upgrade_stop_time = from_date_string(response_object.get('UpgradeStopTime'))
-            self.tasks_completed = SystemStatus.Task(response_object.get('TasksCompleted'))
-            self.tasks_pending = SystemStatus.Task(response_object.get('TasksPending'))
-            self.tasks_running = SystemStatus.Task(response_object.get('TasksRunning'))
+            self.tasks_completed = [SystemStatus.Task(t) for t in response_object.get('TasksCompleted', [])]
+            self.tasks_pending = [SystemStatus.Task(t) for t in response_object.get('TasksPending', [])]
+            self.tasks_running = [SystemStatus.Task(t) for t in response_object.get('TasksRunning', [])]
 
     class UpgradeSummary:
         def __init__(self, response_object: dict):
