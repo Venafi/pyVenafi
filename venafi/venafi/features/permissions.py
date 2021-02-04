@@ -4,8 +4,8 @@ from venafi.properties.response_objects.permissions import Permissions as PermRe
 
 @feature()
 class Permissions(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def delete(self, object_dn: str, identity_prefixed_universal: str):
         """
@@ -16,20 +16,20 @@ class Permissions(FeatureBase):
             object_dn: Absolute path to the object to which permissions will be granted.
             identity_prefixed_universal: The prefixed name of the Identity object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
         if not current_permissions:
             return
 
-        object_guid = self._auth.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
+        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
             ptype, pname = prefix.split('+', 1)
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
         else:
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.delete()
         result.assert_valid_response()
@@ -47,16 +47,16 @@ class Permissions(FeatureBase):
         Returns:
             Effective Permissions object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        object_guid = self._auth.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
+        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
             ptype, pname = prefix.split('+', 1)
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
         else:
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.Effective.get()
         return result.effective_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
@@ -76,16 +76,16 @@ class Permissions(FeatureBase):
         Returns:
             Explicit Permissions object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        object_guid = self._auth.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
+        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
             ptype, pname = prefix.split('+', 1)
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
         else:
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.get()
         return result.explicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
@@ -102,16 +102,16 @@ class Permissions(FeatureBase):
         Returns:
             Implicit Permissions object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        object_guid = self._auth.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
+        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
             ptype, pname = prefix.split('+', 1)
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
         else:
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         result = api.get()
         return result.implicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
@@ -129,14 +129,14 @@ class Permissions(FeatureBase):
         Returns:
             List of Identity objects.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        object_guid = self._auth.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        principals = self._auth.websdk.Permissions.Object.Guid(object_guid).get().principals
+        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
+        principals = self._api.websdk.Permissions.Object.Guid(object_guid).get().principals
 
         principals = [
-            self._auth.websdk.Identity.Validate.post(identity={'PrefixedUniversal': principal}).identity
+            self._api.websdk.Identity.Validate.post(identity={'PrefixedUniversal': principal}).identity
             for principal in principals
         ]
 
@@ -171,16 +171,16 @@ class Permissions(FeatureBase):
             is_view_allowed: Allows ability to view the name of all subordinate objects to ``object_dn``.
             is_write_allowed: Allows editing of subordinate objects to ``object_dn``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        object_guid = self._auth.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
+        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
             ptype, pname = prefix.split('+', 1)
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
         else:
-            api = self._auth.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
 
         current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
 

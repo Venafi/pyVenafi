@@ -5,19 +5,19 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 
 
 class _CredentialBase(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def _create(self, name: str, parent_folder: str, friendly_name: str, values: List[dict], expiration: int, description: str,
                 encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         dn = f'{parent_folder}\\{name}'
 
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         expiration = int((datetime.now() + timedelta(expiration * (365 / 12))).timestamp() * 1000)
 
-        result = self._auth.websdk.Credentials.Create.post(
+        result = self._api.websdk.Credentials.Create.post(
             credential_path=dn,
             friendly_name=friendly_name,
             values=values,
@@ -31,7 +31,7 @@ class _CredentialBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
-        response = self._auth.websdk.Config.IsValid.post(object_dn=dn)
+        response = self._api.websdk.Config.IsValid.post(object_dn=dn)
         result = response.result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -44,10 +44,10 @@ class _CredentialBase(FeatureBase):
         Args:
             credential_dn: Absolute path to the credential object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Credentials.Delete.post(credential_path=credential_dn).result
+        result = self._api.websdk.Credentials.Delete.post(credential_path=credential_dn).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
@@ -58,8 +58,8 @@ class AmazonCredential(_CredentialBase):
     This feature provides high-level interaction with TPP Amazon Credentials.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
 
     def create_adfs(self, name: str, parent_folder: str, adfs_credential_dn: str, adfs_url: str, role: str, expiration: int = 6,
                 description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
@@ -146,8 +146,8 @@ class CertificateCredential(_CredentialBase):
     This feature provides high-level interaction with TPP Certificate Credentials.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
 
     def create(self, name: str, parent_folder_dn: str, certificate: str, password: str = None, expiration: int = 6,
                description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
@@ -193,8 +193,8 @@ class GenericCredential(_CredentialBase):
     This feature provides high-level interaction with TPP Generic Credentials.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
 
     def create(self, name: str, parent_folder_dn: str, generic: str, password: str = None, expiration: int = 6,
                description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
@@ -239,8 +239,8 @@ class PasswordCredential(_CredentialBase):
     This feature provides high-level interaction with TPP Password Credentials.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
 
     def create(self, name: str, parent_folder_dn: str, password: str, expiration: int = 6,
                description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
@@ -283,8 +283,8 @@ class PrivateKeyCredential(_CredentialBase):
     This feature provides high-level interaction with TPP PrivateKey Credentials.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
 
     def create(self, name: str, parent_folder_dn: str, private_key: str, username: str, expiration: int = 6,
                description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
@@ -328,8 +328,8 @@ class UsernamePasswordCredential(_CredentialBase):
     """
     This feature provides high-level interaction with TPP Username/Password Credentials.
     """
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
 
     def create(self, name: str, parent_folder_dn: str, username: str, password: str, expiration: int = 6,
                description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
@@ -353,12 +353,12 @@ class UsernamePasswordCredential(_CredentialBase):
         """
         dn = f'{parent_folder_dn}\\{name}'
 
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         expiration = int((datetime.now() + timedelta(expiration * (365/12))).timestamp() * 1000)
 
-        result = self._auth.websdk.Credentials.Create.post(
+        result = self._api.websdk.Credentials.Create.post(
             credential_path=dn,
             friendly_name='UsernamePassword',
             values=[
@@ -375,7 +375,7 @@ class UsernamePasswordCredential(_CredentialBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
-        response = self._auth.websdk.Config.IsValid.post(object_dn=dn)
+        response = self._api.websdk.Config.IsValid.post(object_dn=dn)
         result = response.result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)

@@ -4,8 +4,8 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 
 
 class _Platforms(FeatureBase):
-    def __init__(self, auth, module: str):
-        super().__init__(auth=auth)
+    def __init__(self, api, module: str):
+        super().__init__(api=api)
         self._engines_dn = r'\VED\Engines'
         self._module = module
 
@@ -20,7 +20,7 @@ class _Platforms(FeatureBase):
         Returns:
             Return ``True`` if the module is enabled on the platform, otherwise ``False``.
         """
-        engines = self._auth.websdk.SystemStatus.get().engines
+        engines = self._api.websdk.SystemStatus.get().engines
         for engine in engines:
             if engine.engine_name.lower() == engine_name.lower():
                 if self._module in engine.services.vplatform.modules:
@@ -49,12 +49,12 @@ class _Platforms(FeatureBase):
             attributes: Dictionary of attributes and attribute values to update.
             engine_names: List of platform, or engine, names.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        engine_names = engine_names or [engine.engine_name for engine in self._auth.websdk.ProcessingEngines.get().engines]
+        engine_names = engine_names or [engine.engine_name for engine in self._api.websdk.ProcessingEngines.get().engines]
         for engine_name in engine_names:
-            response = self._auth.websdk.Config.Write.post(
+            response = self._api.websdk.Config.Write.post(
                 object_dn=self._module_dn(engine_name=engine_name),
                 attribute_data=self._name_value_list(attributes, keep_list_values=True)
             )
@@ -66,8 +66,8 @@ class AutoLayoutManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP Auto Layout Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Auto Layout Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='Auto Layout Manager')
 
 
 @feature()
@@ -75,8 +75,8 @@ class BulkProvisioningManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP Bulk Provisioning Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Bulk Provisioning Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='Bulk Provisioning Manager')
 
 
 @feature()
@@ -84,8 +84,8 @@ class CAImportManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP CA Import Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='CA Import Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='CA Import Manager')
 
 
 @feature()
@@ -93,8 +93,8 @@ class CertificateManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP Certificate Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Certificate Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='Certificate Manager')
 
 
 @feature()
@@ -102,8 +102,8 @@ class CertificatePreEnrollment(_Platforms):
     """
     This feature provides high-level interaction with the TPP ficate Pre-Enrollment Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Certificate Pre-Enrollment')
+    def __init__(self, api):
+        super().__init__(api=api, module='Certificate Pre-Enrollment')
 
 
 @feature()
@@ -111,8 +111,8 @@ class CertificateRevocation(_Platforms):
     """
     This feature provides high-level interaction with the TPP Certificate Revocation Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Certificate Revocation')
+    def __init__(self, api):
+        super().__init__(api=api, module='Certificate Revocation')
 
 
 @feature()
@@ -120,8 +120,8 @@ class CloudInstanceMonitor(_Platforms):
     """
     This feature provides high-level interaction with the TPP Cloud Instance Monitor Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Cloud Instance Monitor')
+    def __init__(self, api):
+        super().__init__(api=api, module='Cloud Instance Monitor')
 
 
 @feature()
@@ -129,8 +129,8 @@ class DiscoveryManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP Discovery Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Discovery')
+    def __init__(self, api):
+        super().__init__(api=api, module='Discovery')
 
 
 @feature()
@@ -138,8 +138,8 @@ class Monitor(_Platforms):
     """
     This feature provides high-level interaction with the TPP Monitor module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Monitor')
+    def __init__(self, api):
+        super().__init__(api=api, module='Monitor')
 
 
 @feature()
@@ -147,8 +147,8 @@ class OnboardDiscoveryManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP OnBoard Discovery Manager Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Onboard Discovery Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='Onboard Discovery Manager')
 
 
 @feature()
@@ -156,8 +156,8 @@ class Reporting(_Platforms):
     """
     This feature provides high-level interaction with the TPP Reporting module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Reporting')
+    def __init__(self, api):
+        super().__init__(api=api, module='Reporting')
 
 
 @feature()
@@ -165,8 +165,8 @@ class SSHManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP SSH Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='SSH Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='SSH Manager')
 
 
 @feature()
@@ -174,8 +174,8 @@ class TrustNetManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP TrustNet Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='TrustNet Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='TrustNet Manager')
 
 
 @feature()
@@ -183,5 +183,5 @@ class ValidationManager(_Platforms):
     """
     This feature provides high-level interaction with the TPP Validation Manager module.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth, module='Validation Manager')
+    def __init__(self, api):
+        super().__init__(api=api, module='Validation Manager')

@@ -4,8 +4,8 @@ from venafi.tools.helpers.date_converter import from_date_string
 
 
 class _ApplicationBase(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def delete(self, application_dn: str):
         """
@@ -24,10 +24,10 @@ class _ApplicationBase(FeatureBase):
         Args:
             application_dn:  Absolute path to the Application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.Write.post(
+        result = self._api.websdk.Config.Write.post(
             object_dn=application_dn,
             attribute_data=self._name_value_list({
                 ApplicationAttributes.disabled: ["1"]
@@ -44,10 +44,10 @@ class _ApplicationBase(FeatureBase):
         Args:
             application_dn:  Absolute path to the Application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.ClearAttribute.post(
+        result = self._api.websdk.Config.ClearAttribute.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.disabled
         ).result
@@ -65,10 +65,10 @@ class _ApplicationBase(FeatureBase):
         Returns:
             Config Object of the certificate object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Config.Read.post(
+        response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.certificate
         )
@@ -77,7 +77,7 @@ class _ApplicationBase(FeatureBase):
             return None
 
         certificate_dn = response.values[0]
-        return self._auth.websdk.Config.IsValid.post(object_dn=certificate_dn).object
+        return self._api.websdk.Config.IsValid.post(object_dn=certificate_dn).object
 
     def _get_stage(self, application_dn: str):
         """
@@ -89,10 +89,10 @@ class _ApplicationBase(FeatureBase):
         Returns:
             The current stage if it exists. Otherwise, returns ``None``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Config.Read.post(
+        response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.stage
         )
@@ -121,10 +121,10 @@ class _ApplicationBase(FeatureBase):
         Returns:
             The current status if it exists. Otherwise, returns ``None``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Config.Read.post(
+        response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.status
         )
@@ -141,7 +141,7 @@ class _ApplicationBase(FeatureBase):
         Returns:
             Boolean
         """
-        response = self._auth.websdk.Config.Read.post(
+        response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.in_error
         )
@@ -161,10 +161,10 @@ class _ApplicationBase(FeatureBase):
             application_dn: Absolute path to the Application object.
             timeout: Timeout in seconds.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        certificate_dn = self._auth.websdk.Config.Read.post(
+        certificate_dn = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.certificate
         )
@@ -172,7 +172,7 @@ class _ApplicationBase(FeatureBase):
             raise FeatureError.UnexpectedValue(
                 f'There is no certificate associated to "{application_dn}" in TPP.'
             )
-        response = self._auth.websdk.Config.Read.post(
+        response = self._api.websdk.Config.Read.post(
             object_dn=certificate_dn.values[0],
             attribute_name=CertificateAttributes.last_renewed_on
         )
@@ -185,7 +185,7 @@ class _ApplicationBase(FeatureBase):
         certificate_last_renewed_time = from_date_string(response.values[0])
 
         def _certificate_is_installed():
-            response = self._auth.websdk.Config.Read.post(
+            response = self._api.websdk.Config.Read.post(
                 object_dn=application_dn,
                 attribute_name=ApplicationAttributes.last_pushed_on
             )
@@ -222,8 +222,8 @@ class A10AXTrafficManager(_ApplicationBase):
     This feature provides high-level interaction with TPP A10 AX Traffic Manager Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -237,7 +237,7 @@ class A10AXTrafficManager(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -259,8 +259,8 @@ class Adaptable(_ApplicationBase):
     This feature provides high-level interaction with TPP Adaptable Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -274,7 +274,7 @@ class Adaptable(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -296,8 +296,8 @@ class AmazonAWS(_ApplicationBase):
     This feature provides high-level interaction with TPP Amazon AWS Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -311,7 +311,7 @@ class AmazonAWS(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -333,8 +333,8 @@ class Apache(_ApplicationBase):
     This feature provides high-level interaction with TPP Apache Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -349,7 +349,7 @@ class Apache(_ApplicationBase):
             Config object representation of the application object.
 
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -371,8 +371,8 @@ class AzureKeyVault(_ApplicationBase):
     This feature provides high-level interaction with TPP Azure Key Vault Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -386,7 +386,7 @@ class AzureKeyVault(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -408,8 +408,8 @@ class Basic(_ApplicationBase):
     This feature provides high-level interaction with TPP Basic Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -423,7 +423,7 @@ class Basic(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -451,10 +451,10 @@ class Basic(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.MutateObject.post(
+        result = self._api.websdk.Config.MutateObject.post(
             object_dn=basic_application_dn,
             class_name=new_class_name
         )
@@ -462,13 +462,13 @@ class Basic(_ApplicationBase):
 
         if attributes:
             attributes = {k: ([str(v)] if not isinstance(v, list) else v) for k, v in attributes.items()}
-            result = self._auth.websdk.Config.Write.post(
+            result = self._api.websdk.Config.Write.post(
                 object_dn=basic_application_dn,
                 attribute_data=self._name_value_list(attributes, keep_list_values=True)
             )
             result.assert_valid_response()
 
-        new_object = self._auth.websdk.Config.IsValid.post(object_dn=basic_application_dn).object
+        new_object = self._api.websdk.Config.IsValid.post(object_dn=basic_application_dn).object
         if new_object.type_name != new_class_name:
             raise FeatureError.UnexpectedValue(
                 f'Unable to convert Basic App "{basic_application_dn}" to {new_class_name}. '
@@ -483,8 +483,8 @@ class BlueCoatSSLVA(_ApplicationBase):
     This feature provides high-level interaction with TPP BlueCoat SSLVA Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -498,7 +498,7 @@ class BlueCoatSSLVA(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -520,8 +520,8 @@ class CAPI(_ApplicationBase):
     This feature provides high-level interaction with TPP CAPI Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -535,7 +535,7 @@ class CAPI(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -557,8 +557,8 @@ class CitrixNetScaler(_ApplicationBase):
     This feature provides high-level interaction with TPP CAPI Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -572,7 +572,7 @@ class CitrixNetScaler(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -594,8 +594,8 @@ class ConnectDirect(_ApplicationBase):
     This feature provides high-level interaction with TPP Connect:Direct Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -609,7 +609,7 @@ class ConnectDirect(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -631,8 +631,8 @@ class F5AuthenticationBundle(_ApplicationBase):
     This feature provides high-level interaction with TPP F5 Authentication Bundle Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, bundle_file_name: str, attributes: dict = None):
         """
@@ -647,7 +647,7 @@ class F5AuthenticationBundle(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -668,8 +668,8 @@ class F5LTMAdvanced(_ApplicationBase):
     This feature provides high-level interaction with TPP F5 LTM Advanced Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -683,7 +683,7 @@ class F5LTMAdvanced(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -705,8 +705,8 @@ class IBMDataPower(_ApplicationBase):
     This feature provides high-level interaction with TPP IBM DataPower Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -720,7 +720,7 @@ class IBMDataPower(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -742,8 +742,8 @@ class IBMGSK(_ApplicationBase):
     This feature provides high-level interaction with TPP IBM GSK Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -757,7 +757,7 @@ class IBMGSK(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -779,8 +779,8 @@ class ImpervaMX(_ApplicationBase):
     This feature provides high-level interaction with TPP Imperva MX Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -794,7 +794,7 @@ class ImpervaMX(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -816,8 +816,8 @@ class JKS(_ApplicationBase):
     This feature provides high-level interaction with TPP JKS Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -831,7 +831,7 @@ class JKS(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -853,8 +853,8 @@ class JuniperSAS(_ApplicationBase):
     This feature provides high-level interaction with TPP Juniper SAS Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -868,7 +868,7 @@ class JuniperSAS(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -890,8 +890,8 @@ class OracleIPlanet(_ApplicationBase):
     This feature provides high-level interaction with TPP Oracle iPlanet Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -905,7 +905,7 @@ class OracleIPlanet(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -927,8 +927,8 @@ class PaloAltoNetworkFW(_ApplicationBase):
     This feature provides high-level interaction with TPP Palo Alto Network FW Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -942,7 +942,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -964,8 +964,8 @@ class PEM(_ApplicationBase):
     This feature provides high-level interaction with TPP PEM Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -979,7 +979,7 @@ class PEM(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -1001,8 +1001,8 @@ class PKCS11(_ApplicationBase):
     This feature provides high-level interaction with TPP PKCS11 Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -1016,7 +1016,7 @@ class PKCS11(_ApplicationBase):
         Returns:
             Config Object representing the PKCS11 object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
         attributes = attributes or {}
         attributes.update({
@@ -1036,8 +1036,8 @@ class PKCS12(_ApplicationBase):
     This feature provides high-level interaction with TPP PKCS #12 Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -1051,7 +1051,7 @@ class PKCS12(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -1073,8 +1073,8 @@ class RiverbedSteelHead(_ApplicationBase):
     This feature provides high-level interaction with TPP Riverbed SteelHead Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -1088,7 +1088,7 @@ class RiverbedSteelHead(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -1110,8 +1110,8 @@ class TealeafPCA(_ApplicationBase):
     This feature provides high-level interaction with TPP Tealeaf PCA Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -1125,7 +1125,7 @@ class TealeafPCA(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}
@@ -1147,8 +1147,8 @@ class VAMnShield(_ApplicationBase):
     This feature provides high-level interaction with TPP VAM nShield Application objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
@@ -1162,7 +1162,7 @@ class VAMnShield(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = attributes or {}

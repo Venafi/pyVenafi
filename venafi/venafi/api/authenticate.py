@@ -19,7 +19,7 @@ class Authenticate:
     """
     def __init__(self, host: str, username: str, password: str, preference='websdk', application_id: str = None,
                  scope: Union[Scope, str] = None, websdk_token: str = None, aperture_token: str = None,
-                 suppress_not_implemented_warning: bool = True):
+                 suppress_not_implemented_warning: bool = True, version: str = None):
         """
         Authenticates the given user to WebSDK and Aperture. The only supported method for authentication at
         this time is with a username and password.
@@ -50,6 +50,7 @@ class Authenticate:
             suppress_not_implemented_warning: If `True` then features not exercising one of the API types will
                 not log a warning stating so. This can greatly reduce the amount of logs and should be rarely
                 used. To enable the warnings, set this to `False`.
+            version: Version of the TPP server.
         """
         self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token,
                              application_id=application_id, scope=scope)
@@ -67,6 +68,7 @@ class Authenticate:
         self._application_id = application_id
         self._scope = scope
         self._suppress_not_implemented_warning = suppress_not_implemented_warning
+        self._version = '.'.join(version.split('.')[:2])
 
     @property
     def host(self):
@@ -112,7 +114,8 @@ class Authenticate:
                 password=password or self._password,
                 preference=preference or self.preference,
                 application_id=application_id or self._application_id,
-                scope=scope or self._scope
+                scope=scope or self._scope,
+                version=self._version
             )
         else:
             if preference:

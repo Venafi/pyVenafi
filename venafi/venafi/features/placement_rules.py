@@ -8,8 +8,8 @@ class PlacementRules(FeatureBase):
     """
     This feature provides high-level interaction with TPP Placement Rule objects.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
         self._layout_rules_dn = r'\VED\Layout Root\Rules'
 
     @staticmethod
@@ -67,16 +67,16 @@ class PlacementRules(FeatureBase):
         Returns:
             Config object of the placement rule.
         """
-        if self._auth.preference == ApiPreferences.websdk:
+        if self._api.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
-        response = self._auth.aperture.Discovery.PlacementRules.post(
+        response = self._api.aperture.Discovery.PlacementRules.post(
             name=name,
             conditions=conditions,
             device_location_dn=device_location_dn,
             cert_location_dn=certificate_location_dn
         )
-        rule = self._auth.websdk.Config.IsValid.post(object_guid=response.guid)
+        rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
         return rule.object
 
     def delete(self, guid: str):
@@ -86,10 +86,10 @@ class PlacementRules(FeatureBase):
         Args:
             guid: GUID of the placement rule.
         """
-        if self._auth.preference == ApiPreferences.websdk:
+        if self._api.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
-        response = self._auth.aperture.Discovery.PlacementRules.Guid(guid=guid).delete()
+        response = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).delete()
         response.assert_valid_response()
 
     def update(self, guid: str, conditions: List[Dict] = None, device_location_dn: str = None, certificate_location_dn: str = None):
@@ -131,18 +131,18 @@ class PlacementRules(FeatureBase):
         Returns:
             Config object of the placement rule.
         """
-        if self._auth.preference == ApiPreferences.websdk:
+        if self._api.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
-        rule = self._auth.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
-        response = self._auth.aperture.Discovery.PlacementRules.put(
+        rule = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
+        response = self._api.aperture.Discovery.PlacementRules.put(
             guid=rule.guid,
             name=rule.name,
             conditions=conditions or [c.__dict__ for c in rule.conditions],
             device_location_dn=device_location_dn or rule.device_location.dn,
             cert_location_dn=certificate_location_dn or rule.cert_location.dn
         )
-        rule = self._auth.websdk.Config.IsValid.post(object_guid=response.guid)
+        rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
         return rule.object
 
     def get(self, guid: str):
@@ -153,9 +153,9 @@ class PlacementRules(FeatureBase):
         Returns:
             Placement rule attributes.
         """
-        if self._auth.preference == ApiPreferences.websdk:
+        if self._api.preference == ApiPreferences.websdk:
             self._log_not_implemented_warning(ApiPreferences.websdk)
 
-        response = self._auth.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
+        response = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
         response.assert_valid_response()
         return response

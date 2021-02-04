@@ -8,8 +8,8 @@ from venafi.properties.secret_store import KeyNames, Namespaces, VaultTypes
 
 
 class _WorkflowBase(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def delete(self, workflow_dn: str):
         """
@@ -23,7 +23,7 @@ class _WorkflowBase(FeatureBase):
 
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None):
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         workflow = self._config_create(
@@ -49,7 +49,7 @@ class _WorkflowBase(FeatureBase):
         rule = f'{driver_str}{stage_str}{injection_command_str}{approvers_str}{reason_code_str}'.encode('utf-8')
         rule = base64.b64encode(rule)
 
-        vault_id = self._auth.websdk.SecretStore.Add.post(
+        vault_id = self._api.websdk.SecretStore.Add.post(
             base_64_data=rule.decode('utf-8'),
             vault_type=VaultTypes.blob,
             owner=workflow.dn,
@@ -57,7 +57,7 @@ class _WorkflowBase(FeatureBase):
             namespace=Namespaces.config
         ).vault_id
 
-        self._auth.websdk.Config.AddValue.post(
+        self._api.websdk.Config.AddValue.post(
             object_dn=workflow.dn,
             attribute_name=WorkflowAttributes.rule_vault_id,
             value=vault_id
@@ -68,8 +68,8 @@ class _WorkflowBase(FeatureBase):
 
 @feature()
 class AdaptableWorkflow(_WorkflowBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_content: bytes,
                approver_guids: List[str] = None, reason_code: int = None, use_approvers_from_powershell_script: bool = False,
@@ -119,7 +119,7 @@ class AdaptableWorkflow(_WorkflowBase):
         Returns:
             Config Object of the workflow.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if approver_guids:
@@ -139,10 +139,10 @@ class AdaptableWorkflow(_WorkflowBase):
             attributes=attributes
         )
 
-        add_value = lambda x, y, z: self._auth.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
+        add_value = lambda x, y, z: self._api.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
         add_value(workflow.dn, WorkflowAttributes.Adaptable.powershell_script, powershell_script_name)
 
-        vault_id = self._auth.websdk.SecretStore.Add.post(
+        vault_id = self._api.websdk.SecretStore.Add.post(
             base_64_data=self._calculate_hash(powershell_script_content),
             keyname=KeyNames.software_default,
             vault_type=VaultTypes.blob,
@@ -150,7 +150,7 @@ class AdaptableWorkflow(_WorkflowBase):
             owner=workflow.dn
         ).vault_id
 
-        self._auth.websdk.Config.WriteDn.post(
+        self._api.websdk.Config.WriteDn.post(
             object_dn=workflow.dn,
             attribute_name=WorkflowAttributes.Adaptable.powershell_script_hash_vault_id,
             values=[vault_id]
@@ -204,8 +204,8 @@ class RC:
 
 @feature()
 class ReasonCode(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
         self._workflow_dn = r'\VED\Workflow Tickets'
 
@@ -221,10 +221,10 @@ class ReasonCode(FeatureBase):
         Returns:
             List of ``code``, ``name``, and ``description``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.AddValue.post(
+        result = self._api.websdk.Config.AddValue.post(
             object_dn=self._workflow_dn,
             attribute_name=WorkflowAttributes.Standard.approval_reason,
             value=f'{code},{name},{description}'
@@ -243,10 +243,10 @@ class ReasonCode(FeatureBase):
             code: An integer code.
             name: Name of the result code.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result_codes = self._auth.websdk.Config.ReadDn.post(
+        result_codes = self._api.websdk.Config.ReadDn.post(
             object_dn=self._workflow_dn,
             attribute_name=WorkflowAttributes.Standard.approval_reason
         ).values
@@ -257,7 +257,7 @@ class ReasonCode(FeatureBase):
         search_string = f'{code},{name}' if name else f'{code}'
         for rc in result_codes:
             if search_string in rc:
-                result = self._auth.websdk.Config.RemoveDnValue.post(
+                result = self._api.websdk.Config.RemoveDnValue.post(
                     object_dn=self._workflow_dn,
                     attribute_name=WorkflowAttributes.Standard.approval_reason,
                     value=rc
@@ -267,8 +267,8 @@ class ReasonCode(FeatureBase):
 
 @feature()
 class StandardWorkflow(_WorkflowBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, stage: int, injection_command: str = None, application_class_name: str = None,
                approver_guids: List[str] = None, macro: str = None, reason_code: int = None, attributes: dict = None):
@@ -300,7 +300,7 @@ class StandardWorkflow(_WorkflowBase):
         Returns:
             Config Object of the workflow.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if approver_guids:
@@ -327,8 +327,8 @@ class StandardWorkflow(_WorkflowBase):
 
 @feature()
 class Ticket(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
         self._workflow_ticket_dn = r'\VED\Workflow Tickets'
 
     @staticmethod
@@ -350,10 +350,10 @@ class Ticket(FeatureBase):
         Returns:
             Workflow ticket name.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Workflow.Ticket.Create.post(
+        response = self._api.websdk.Workflow.Ticket.Create.post(
             object_dn=object_dn,
             workflow_dn=workflow_dn,
             approvers=[
@@ -372,10 +372,10 @@ class Ticket(FeatureBase):
         Args:
             ticket_name: Name of the workflow ticket.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Workflow.Ticket.Delete.post(guid=ticket_name).result
+        result = self._api.websdk.Workflow.Ticket.Delete.post(guid=ticket_name).result
         self._validate_result_code(result)
 
     def details(self, ticket_name: str):
@@ -388,10 +388,10 @@ class Ticket(FeatureBase):
         Returns:
             Ticket Details object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Workflow.Ticket.Details.post(guid=ticket_name)
+        response = self._api.websdk.Workflow.Ticket.Details.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
         return response.details
 
@@ -405,10 +405,10 @@ class Ticket(FeatureBase):
         Returns:
             ``True`` when a particular workflow exists, otherwise ``False``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
+        result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
     def get(self, object_dn: str, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
@@ -429,17 +429,17 @@ class Ticket(FeatureBase):
         Returns:
             List of Config Objects
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         def get_tickets():
-            ticket_names = self._auth.websdk.Workflow.Ticket.Enumerate.post(
+            ticket_names = self._api.websdk.Workflow.Ticket.Enumerate.post(
                 object_dn=object_dn,
                 user_data=user_data
             ).guids
 
             return [
-                self._auth.websdk.Config.IsValid.post(
+                self._api.websdk.Config.IsValid.post(
                     object_dn=f'{self._workflow_ticket_dn}\\{ticket_name}'
                 ).object
                 for ticket_name in ticket_names
@@ -479,10 +479,10 @@ class Ticket(FeatureBase):
         Returns:
             The current status of a workflow ticket.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Workflow.Ticket.Status.post(guid=ticket_name)
+        response = self._api.websdk.Workflow.Ticket.Status.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
         return response.status
 
@@ -499,10 +499,10 @@ class Ticket(FeatureBase):
             scheduled_start: Date/time to continue the approval process.
             scheduled_stop:  Date/time to expire the approval process.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Workflow.Ticket.UpdateStatus.post(
+        result = self._api.websdk.Workflow.Ticket.UpdateStatus.post(
             guid=ticket_name,
             status=status,
             explanation=explanation,

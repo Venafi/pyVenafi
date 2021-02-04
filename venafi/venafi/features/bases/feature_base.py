@@ -28,10 +28,10 @@ def feature():
 
 @feature()
 class FeatureBase:
-    def __init__(self, auth: Authenticate):
-        self._auth = auth
+    def __init__(self, api: Authenticate):
+        self._api = api
 
-        self._log_not_implemented_warning = self.__log_not_implemented_warning if auth._suppress_not_implemented_warning else self.__no_op
+        self._log_not_implemented_warning = self.__log_not_implemented_warning if api._suppress_not_implemented_warning else self.__no_op
 
     def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None):
         if attributes:
@@ -39,10 +39,10 @@ class FeatureBase:
 
         dn = f'{parent_folder_dn}\\{name}'
 
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        ca = self._auth.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
+        ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
 
         result = ca.result
         if result.code != 1:
@@ -51,10 +51,10 @@ class FeatureBase:
         return ca.object
 
     def _config_delete(self, object_dn, recursive: bool = False):
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
+        result = self._api.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
@@ -92,18 +92,24 @@ class FeatureBase:
         return nvl
 
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        owners = self._auth.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
+        owners = self._api.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
         result = owners.result
         if result.code != 0:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
         for vault_id in owners.vault_ids:
-            result = self._auth.websdk.SecretStore.Delete.post(vault_id=vault_id).result
+            result = self._api.websdk.SecretStore.Delete.post(vault_id=vault_id).result
             if result.code != 0:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
+
+    def _enforce_version(self, minimum: str = '', maximum: str = ''):
+        if minimum and self._api._version < minimum:
+            raise ValueError(f'Incompatible version. This feature requires at least TPP {minimum}.')
+        if maximum and self._api._version > maximum:
+            raise ValueError(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
 
     class _Timeout:
         def __init__(self, timeout):

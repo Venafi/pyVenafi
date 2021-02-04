@@ -12,7 +12,7 @@ from typing import List
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 PACKAGES_DIR = '/spi/packages'
-DOCS_DIR = f'/spi/docs/{"".join(__version__.split(".")[:2])}.0.0'
+DOCS_DIR = f'/spi/docs'
 MAKE_CMD = 'make' if sys.platform != 'win32' else 'make.bat'
 THREADS = []  # type: List[threading.Thread]
 LOCK = threading.Lock()
