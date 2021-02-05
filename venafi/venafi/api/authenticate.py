@@ -52,6 +52,9 @@ class Authenticate:
                 used. To enable the warnings, set this to `False`.
             version: Version of the TPP server.
         """
+        if version[:4] <= "19.4":
+            application_id = None
+            scope = None
         self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token,
                              application_id=application_id, scope=scope)
         if self.websdk._oauth is not None and not aperture_token:

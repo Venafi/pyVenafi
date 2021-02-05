@@ -7,6 +7,7 @@ from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashb
 from venafi.api.aperture.endpoints.discovery import _Discovery
 from venafi.api.aperture.endpoints.jobs import _Jobs
 from venafi.api.aperture.endpoints.users import _Users
+from venafi.api.aperture.endpoints.version import _Version
 
 
 class Aperture:
@@ -68,6 +69,7 @@ class Aperture:
         self.CertificateDashboard = _CertificateDashboard(self)
         self.Discovery = _Discovery(self)
         self.Jobs = _Jobs(self)
+        self.Version = _Version(self)
         # endregion Initialize All Aperture Endpoints
 
     def re_authenticate(self, token: str = None):
