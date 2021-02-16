@@ -67,8 +67,7 @@ The API Response Object
 Each call to an API yields an ``APIResponse`` object, or a direct derivative of that object. The
 response object contains the following data:
 
-* a list of valid return codes for the specific API.
-* helper methods to validate against the list of valid return codes.
+* a helper method to validate a valid return code.
 * the raw JSON response from Python's ``requests`` library.
 * a property for each value returned in the response body.
 
@@ -124,18 +123,18 @@ Then:
         1  response = api.websdk.Metadata.Get.post(dn="\\VED\\Policy\\Certificates\\MyCert")
         2  guids = [data.key.guid for data in response.data]
         3  if response.is_valid_response():
-        4      logger.log(f'URL: {response.json_response.url}\n'
-        5                 f'Status Code: {response.json_response.status_code}\n')
-        6      body = response.json_response.json()
-        7  else:
-        8      response.assert_valid_response()
+        4      body = response.json_response.json()
+        5      logger.log(f"URL: {response.json_response.url}\n"
+        6                 f"Status Code: {response.json_response.status_code}\n"
+        7                 f"Data: {body['Data']}")
+        8  else:
+        9      response.assert_valid_response()
 
 
 * **Line 2:**
 
-    The response object returned is a Python Object representation of the actual response body. In
-    other words, each property of the response body is a Python instance property. Using the raw response one
-    could use
+    `response` has a property `data` that is a Pythonic representation of the actual body of the API response. Using
+    the raw response one could use this instead:
 
     ``guids = [data['Key']['Guid'] for data in response.json_response.json()['Data']]``
 
@@ -143,22 +142,23 @@ Then:
     has a few advantages:
 
     #. When accessing a property from a response object for the first time, an automatic validation of the return
-       codes occurs. If the status code is different than the expected status code(s), then an error is raised. This
+       codes occurs. If the status code is not a valid response then an error is raised. This
        ensures success of the APIs as they are used. If this is undesired, then use ``response.json_response``.
     #. When using an IDE with auto-completion the properties show up. Also, this facilitates refactoring.
-    #. Because there are multiple API types that have similar APIs, the object returned is consistent across all APIs.
+    #. The object returned is consistent across all APIs. For example, a Config Object returned by Aperture is not the
+       same as the one returned by WebSDK, but the
 
 * **Line 3:**
 
     Not all APIs return body content, so to validate the API ``is_valid_response()`` can be called to obtain a boolean
     type.
 
-* **Lines 4-6:**
+* **Lines 4-7:**
 
     The raw response can be accessed via ``response.json_response``. This object is the response object created by Python's
     ``requests`` library.
 
-* **Line 8:**
+* **Line 9:**
 
     Not all APIs return body content, so to validate the API ``is_valid_response()`` can be called to raise an error if the
     expected status code was not returned.

@@ -11,15 +11,11 @@ Using Features
 Initializing The Features Object
 ''''''''''''''''''''''''''''''''
 
-The ``Features`` object consumes the ``Authenticate`` object, which holds the user's authenticated
-sessions to all API sources. This object grants higher-level access to the underlying APIs that
-accomplish a function within Trust Protection Platform (TPP). The advantage of this layer of code
-over using direct APIs are these:
-
-* No matter how the APIs changes or how the API sources change, the ``Features`` will not change
-  unless an entire feature within the product is deprecated.
-* Feature functions are composed of one and sometimes multiple API calls. Each function validates
-  the success of each API response within the function and responds appropriately.
+The ``Features`` class requires an ``Authenticate`` object, which holds the user's authenticated
+sessions to all API sources. ``Features`` provides a simpler interface to TPP to accomplish tasks
+at a higher level of abstraction, such as creating an Adaptable Workflow object or managing TPP
+Platforms. No matter how the APIs changes or how the API sources change, the ``Features`` will
+not change unless an entire feature within the product is deprecated.
 
 Here is an example of how to initialize the ``Features`` object.
 
@@ -27,7 +23,6 @@ Here is an example of how to initialize the ``Features`` object.
 
     from venafi import Authenticate, Features
 
-    # Authenticate to all API sources.
     api = Authenticate(
         host='tppserver.mycompany.com',
         username='username12',
@@ -36,19 +31,17 @@ Here is an example of how to initialize the ``Features`` object.
         application_id='SomeOAuthApplication',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
-    # Access the features by providing the authenticated sessions to the Features class.
     features = Features(api)
 
 Config and Identity Objects
 '''''''''''''''''''''''''''
 
-All users and groups in TPP are Identity objects in the product. All other objects are Config objects.
+All users and groups in TPP are Identity objects in the product. Most all other objects are Config objects.
 The ``Features`` layer of the product uses object distinguished names (DNs), GUIDs, and other object
 identifiers to perform a function against an object.
 
-When creating objects and identities the Config and Identity objects are returned, respectively.
-
-Getter methods are available to get a Config or Identity object.
+When creating objects and identities the Config and Identity objects are returned, respectively. An Identity
+or Config Object can be acquired with a DN or GUID of that object using `features.objects.get(...)`.
 
 :Config Object:
     + ``absolute_guid``: GUID identifier of the object and its ancestral GUIDs until the root GUID (\\VED).

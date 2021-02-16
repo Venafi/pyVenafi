@@ -9,44 +9,28 @@ Authentication
 
 .. note::
    The user authenticating to TPP must have sufficient rights to make WebSDK calls. This includes ensuring the user has
-   the right to use the WebSDK. If using OAuth authentication, the user must also have rights to use the specified
-   Application Integration, which can be verified and updated throught the Aperture UI.
+   the right to use the WebSDK. If using OAuth authentication, the user must also have rights to use the desired
+   Application Integration, which can be configured via the Aperture UI.
 
 
 The ``Authenticate`` class creates an object that provides access to all WebSDK APIs and some Aperture APIs. When creating
-the object the user is authenticated to **both** API sources.
+the object the user is authenticated to **both** API sources. See :ref:`Authenticating To A Single API Source
+<single-api-authentication>` for avoiding authentication to both API sources.
 
 A ``preference`` can be specified as either *websdk* (default) or *aperture*. The preference is used by the ``Features`` object
 to specify which API will be tried first to execute the feature method.
 
 A ``scope`` must be provided as well as the ``application_id`` in order to use OAuth authentication. The authentication must be
-created through the Aperture UI prior to using OAuth authentication through the WebSDK API.
+created through the Aperture UI prior to using OAuth authentication through the WebSDK API. See Venafi's WebSDK documentation
+for formatting the scope.
 
-Authentication Without OAuth
-""""""""""""""""""""""""""""
-.. warning::
-   The use of *https://<tpp_host>/vedsdk/Authorize* has been deprecated as of TPP 20.1.x. While it is still functional, it is advised
-   that you use the OAuth function to authenticate.
-
-.. code-block:: python
-
-    from venafi import Authenticate
-
-    # This approach is deprecated but still valid.
-    api = Authenticate(
-        host='tppserver.mycompany.com',
-        username='username12',
-        password='passw0rd!@#$',
-        preference='websdk'
-    )
 
 Authentication With OAuth
 """""""""""""""""""""""""
 
 .. code-block:: python
 
-    from venafi import Authenticate
-
+    from venafi import Authenticate, Features
 
     api = Authenticate(
         host='tppserver.mycompany.com',
@@ -56,9 +40,34 @@ Authentication With OAuth
         application_id='SomeOAuthApplication',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
+    features = Features(api)
+
+Authentication Without OAuth
+""""""""""""""""""""""""""""
+.. warning::
+   The use of *https://<tpp_host>/vedsdk/Authorize* has been deprecated as of TPP 20.1 and is required beyond 21.1. While it is
+   still functional, it is advised that you use the OAuth function to authenticate.
+
+.. code-block:: python
+
+    from venafi import Authenticate, Features
+
+    # This approach is deprecated but still valid until 21.1.
+    api = Authenticate(
+        host='tppserver.mycompany.com',
+        username='username12',
+        password='passw0rd!@#$',
+        preference='websdk'
+    )
+    features = Features(api)
+
+.. _single-api-authentication:
 
 Authenticating To A Single API Source
 """""""""""""""""""""""""""""""""""""
+
+.. note::
+   The Features class cannot be initialized without the Authenticate object.
 
 .. code-block:: python
 

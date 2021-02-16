@@ -8,4 +8,3 @@ API Reference
 
    features/venafi.features
    api/venafi.api
-   venafi.logger
