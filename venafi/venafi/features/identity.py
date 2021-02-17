@@ -5,8 +5,8 @@ from venafi.properties.rights import SubSystemTypes
 
 
 class _IdentityBase(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
         self._identity_dn = r'\VED\Identity'
 
     def allow_aperture_user_search(self, prefixed_universal: str):
@@ -16,10 +16,10 @@ class _IdentityBase(FeatureBase):
         Args:
             prefixed_universal: The prefixed universal GUID of the Identity object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Rights.Add.post(
+        result = self._api.websdk.Rights.Add.post(
             subsystem=SubSystemTypes.aperture,
             rights_object='local',
             universal_id=prefixed_universal,
@@ -35,10 +35,10 @@ class _IdentityBase(FeatureBase):
             prefixed_universal: The prefixed universal GUID of the Identity object.
         """
 
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        ved_guid = self._auth.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
+        ved_guid = self._api.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
 
         admin_rights = [
             [SubSystemTypes.config, ved_guid, 'AllPrivileges'],
@@ -48,7 +48,7 @@ class _IdentityBase(FeatureBase):
         ]
         for rights in admin_rights:
             subsystem, rights_object, rights_value = rights
-            result = self._auth.websdk.Rights.Add.post(
+            result = self._api.websdk.Rights.Add.post(
                 subsystem=subsystem,
                 rights_object=rights_object,
                 universal_id=prefixed_universal,
@@ -66,10 +66,10 @@ class _IdentityBase(FeatureBase):
         Returns:
 
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Rights.Add.post(
+        result = self._api.websdk.Rights.Add.post(
             subsystem=SubSystemTypes.websdk,
             rights_object='Sessions',
             universal_id=prefixed_universal,
@@ -105,7 +105,7 @@ class _IdentityBase(FeatureBase):
         Returns:
             List of Identity objects for each identity found.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         identity_type = 0
@@ -116,7 +116,7 @@ class _IdentityBase(FeatureBase):
         if is_distribution_group:
             identity_type += IdentityAttributes.Types.distribution_group
 
-        result = self._auth.websdk.Identity.Browse.post(
+        result = self._api.websdk.Identity.Browse.post(
             filter=name,
             limit=limit,
             identity_type=identity_type
@@ -134,10 +134,10 @@ class _IdentityBase(FeatureBase):
         Returns:
             ``True`` if the Identity exists, otherwise ``False``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Identity.Validate.post(
+        response = self._api.websdk.Identity.Validate.post(
             identity=self._identity_dict(prefixed_name=prefixed_name)
         )
         response.assert_valid_response()
@@ -155,10 +155,10 @@ class _IdentityBase(FeatureBase):
         Returns:
             List of Identity objects for each group.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        memberships = self._auth.websdk.Identity.GetMemberships.post(
+        memberships = self._api.websdk.Identity.GetMemberships.post(
             identity=self._identity_dict(prefixed_name=prefixed_name)
         ).identities
 
@@ -174,10 +174,10 @@ class _IdentityBase(FeatureBase):
         Returns:
             List of Rights objects.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        return self._auth.websdk.Rights.Get.post(universal_id=prefixed_universal).rights
+        return self._api.websdk.Rights.Get.post(universal_id=prefixed_universal).rights
 
     def read_attribute(self, prefixed_name: str, attribute_name: str):
         """
@@ -190,10 +190,10 @@ class _IdentityBase(FeatureBase):
         Returns:
             List of attribute values.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Identity.ReadAttribute.post(
+        result = self._api.websdk.Identity.ReadAttribute.post(
             identity=self._identity_dict(prefixed_name=prefixed_name),
             attribute_name=attribute_name
         )
@@ -206,10 +206,10 @@ class _IdentityBase(FeatureBase):
         Args:
             prefixed_universal: The prefixed universal GUID of the Identity object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Rights.Remove.post(
+        result = self._api.websdk.Rights.Remove.post(
             subsystem=SubSystemTypes.aperture,
             rights_object='local',
             universal_id=prefixed_universal
@@ -223,10 +223,10 @@ class _IdentityBase(FeatureBase):
         Args:
             prefixed_universal: The prefixed universal GUID of the Identity object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        ved_guid = self._auth.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
+        ved_guid = self._api.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
 
         admin_rights = [
             [SubSystemTypes.config, ved_guid],
@@ -236,7 +236,7 @@ class _IdentityBase(FeatureBase):
         ]
         for rights in admin_rights:
             subsystem, rights_object, rights_value = rights
-            result = self._auth.websdk.Rights.Remove.post(
+            result = self._api.websdk.Rights.Remove.post(
                 subsystem=subsystem,
                 rights_object=rights_object,
                 universal_id=prefixed_universal
@@ -250,10 +250,10 @@ class _IdentityBase(FeatureBase):
         Args:
             prefixed_universal: The prefixed universal GUID of the Identity object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Rights.Remove.post(
+        result = self._api.websdk.Rights.Remove.post(
             subsystem=SubSystemTypes.websdk,
             rights_object='Sessions',
             universal_id=prefixed_universal
@@ -275,10 +275,10 @@ class _IdentityBase(FeatureBase):
         Returns:
             If validated, the Identity object. Otherwise an error is thrown.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        identity = self._auth.websdk.Identity.Validate.post(
+        identity = self._api.websdk.Identity.Validate.post(
             identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
         ).identity
 
@@ -310,8 +310,8 @@ class _IdentityBase(FeatureBase):
 
 @feature()
 class User(_IdentityBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, password: str, email_address: str, add_master_admin: bool = False,
                allow_aperture_user_search: bool = False, allow_websdk_access: bool = False,
@@ -334,7 +334,7 @@ class User(_IdentityBase):
         Returns:
             Identity object of the user.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = {
@@ -351,7 +351,7 @@ class User(_IdentityBase):
 
         if add_to_everyone_group:
             everyone_group = self.validate(prefixed_name='local:Everyone')
-            response = self._auth.websdk.Identity.AddGroupMembers.put(
+            response = self._api.websdk.Identity.AddGroupMembers.put(
                 group=self._identity_dict(prefixed_name=everyone_group.prefixed_name),
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
             )
@@ -376,20 +376,20 @@ class User(_IdentityBase):
         Args:
             prefixed_name: The prefixed name of the Identity object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         user = self.validate(prefixed_name=prefixed_name)
 
         groups = self.get_memberships(prefixed_name=user.prefixed_name)
         for group in groups:
-            result = self._auth.websdk.Identity.RemoveGroupMembers.put(
+            result = self._api.websdk.Identity.RemoveGroupMembers.put(
                 group=self._identity_dict(prefixed_name=group.prefixed_name),
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
             )
             result.assert_valid_response()
 
-        result = self._auth.websdk.Rights.Remove.post(
+        result = self._api.websdk.Rights.Remove.post(
             universal_id=user.prefixed_universal
         )
         result.assert_valid_response()
@@ -438,10 +438,10 @@ class User(_IdentityBase):
         Returns:
             Identity object of the user.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Identity.SetPassword.post(
+        response = self._api.websdk.Identity.SetPassword.post(
             identity=self._identity_dict(prefixed_name=prefixed_name),
             old_password=old_password,
             password=new_password
@@ -451,8 +451,8 @@ class User(_IdentityBase):
 
 @feature()
 class Group(_IdentityBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def add_members(self, group_prefixed_name: str, member_prefixed_names: List[str]):
         """
@@ -465,10 +465,10 @@ class Group(_IdentityBase):
         Returns:
             List of Identity objects for each member.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Identity.AddGroupMembers.put(
+        result = self._api.websdk.Identity.AddGroupMembers.put(
             group=self._identity_dict(prefixed_name=group_prefixed_name),
             members=[
                 self._identity_dict(prefixed_name=member_prefixed_name)
@@ -503,7 +503,7 @@ class Group(_IdentityBase):
         Returns:
             Identity object of the user.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if not name.startswith('local:'):
@@ -511,7 +511,7 @@ class Group(_IdentityBase):
         if not isinstance(member_prefixed_names, list):
             member_prefixed_names = []
 
-        result = self._auth.websdk.Identity.AddGroup.post(
+        result = self._api.websdk.Identity.AddGroup.post(
             name=self._identity_dict(prefixed_name=name),
             members=[
                 self._identity_dict(prefixed_name=member_prefixed_name)
@@ -545,11 +545,11 @@ class Group(_IdentityBase):
         Args:
             prefixed_universal: The prefixed universal GUID of the group.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         prefix, universal = prefixed_universal.split(':', 1)
-        result = self._auth.websdk.Identity.Group.Prefix(prefix).Principal(universal).delete()
+        result = self._api.websdk.Identity.Group.Prefix(prefix).Principal(universal).delete()
         result.assert_valid_response()
 
     def find(self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = True):
@@ -596,10 +596,10 @@ class Group(_IdentityBase):
         Returns:
             List of Identity objects for each member of the group.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Identity.GetMembers.post(
+        result = self._api.websdk.Identity.GetMembers.post(
             identity=self._identity_dict(prefixed_name=group_prefixed_name),
             resolve_nested=int(resolve_nested)
         )
@@ -618,10 +618,10 @@ class Group(_IdentityBase):
             List of Identity objects for each remaining member. If no members remain, then
             the list is empty.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Identity.RemoveGroupMembers.put(
+        result = self._api.websdk.Identity.RemoveGroupMembers.put(
             group=self._identity_dict(prefixed_name=group_prefixed_name),
             members=[
                 self._identity_dict(prefixed_name=member_prefixed_name)
@@ -643,13 +643,13 @@ class Group(_IdentityBase):
         Returns:
             Identity object with the new group name.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if not new_group_name.startswith('local:'):
             new_group_name = new_group_name.lstrip('local:')
 
-        result = self._auth.websdk.Identity.RenameGroup.put(
+        result = self._api.websdk.Identity.RenameGroup.put(
             group=self._identity_dict(prefixed_name=group_prefixed_name),
             new_group_name=new_group_name
         )

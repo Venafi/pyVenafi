@@ -1,0 +1,17 @@
+class CertificateDashboard:
+    class Status:
+        distrusted_symantec = 'DistrustedSymantec'
+        expiring_soon = 'ExpiringSoon'
+        failed_validation = 'FailedValidation'
+        in_error = 'InError'
+        local_dual_control = 'LocalDualControl'
+        long_term_expired = 'LongTermExpired'
+        no_owner_assigned = 'NoOwnerAssigned'
+        pending_my_approval = 'PendingMyApproval'
+        revocation_failed = 'RevocationFailed'
+        short_term_expired = 'ShortTermExpired'
+        unapproved_issuer = 'UnapprovedIssuer'
+        unsafe_validity_period = 'UnsafeValidityPeriod'
+        waiting_for_csr = 'WaitingForCsr'
+        weak_key = 'WeakKey'
+        weak_signing_algorithm = 'WeakSigningAlgorithm'

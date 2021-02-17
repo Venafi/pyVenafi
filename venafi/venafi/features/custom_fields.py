@@ -9,8 +9,8 @@ class CustomField(FeatureBase):
     This feature provides high-level interaction with TPP Custom Field objects.
     """
 
-    def __init__(self, auth):
-        super().__init__(auth)
+    def __init__(self, api):
+        super().__init__(api)
         self._metadata_root_dn = r'\VED\Metadata Root'
 
     @staticmethod
@@ -102,7 +102,7 @@ class CustomField(FeatureBase):
             Metadata Item object.
 
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         item = {
@@ -134,7 +134,7 @@ class CustomField(FeatureBase):
             'Type': data_type
         }
 
-        response = self._auth.websdk.Metadata.DefineItem.post(item=item)
+        response = self._api.websdk.Metadata.DefineItem.post(item=item)
         self._validate_result_code(response.result)
         return response.item
 
@@ -148,10 +148,10 @@ class CustomField(FeatureBase):
             remove_data: If ``True``, then deletes the custom field regardless of data existing on the custom field
                 on any object that implements it.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Metadata.UndefineItem.post(
+        response = self._api.websdk.Metadata.UndefineItem.post(
             item_guid=custom_field_guid,
             remove_data=remove_data
         )
@@ -169,12 +169,12 @@ class CustomField(FeatureBase):
         Returns:
             Metadata Item object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if custom_field_name:
             custom_field_dn = f'{self._metadata_root_dn}\\{custom_field_name}'
-        response = self._auth.websdk.Metadata.LoadItem.post(dn=custom_field_dn)
+        response = self._api.websdk.Metadata.LoadItem.post(dn=custom_field_dn)
         self._validate_result_code(result=response.result)
         return response.item
 
@@ -185,10 +185,10 @@ class CustomField(FeatureBase):
         Returns:
             List of Metadata Item objects.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Metadata.Items.get()
+        response = self._api.websdk.Metadata.Items.get()
         self._validate_result_code(response.result)
         return response.items
 
@@ -206,10 +206,10 @@ class CustomField(FeatureBase):
                 * policy_dn: Absolute path to the policy locking the values.
                 * values: List of values.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Metadata.ReadEffectiveValues.post(
+        response = self._api.websdk.Metadata.ReadEffectiveValues.post(
             dn=object_dn,
             item_guid=custom_field_guid
         )
@@ -237,10 +237,10 @@ class CustomField(FeatureBase):
                 * locked: Boolean. If ``True``, the ``values`` are locked by the policy.
                 * values: List of values.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Metadata.ReadPolicy.post(
+        response = self._api.websdk.Metadata.ReadPolicy.post(
             dn=folder_dn,
             item_guid=custom_field_guid,
             obj_type=class_name
@@ -296,7 +296,7 @@ class CustomField(FeatureBase):
         Returns:
             Metadata Item object.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         listify = lambda x: [x] if x and not isinstance(x, list) else x
@@ -329,7 +329,7 @@ class CustomField(FeatureBase):
             'TimeOnly': listify(time_only),
             'Type': listify(data_type)
         }
-        response = self._auth.websdk.Metadata.UpdateItem.post(
+        response = self._api.websdk.Metadata.UpdateItem.post(
             update={
                 "DN": custom_field_dn,
                 "Data": self._name_value_list(attributes=item, keep_list_values=True)
@@ -349,10 +349,10 @@ class CustomField(FeatureBase):
             values: List of values to write to ``object_dn``.
             keep_existing: If ``True``, all other custom fields remain unaffected.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Metadata.Set.post(
+        response = self._api.websdk.Metadata.Set.post(
             dn=object_dn,
             guid_data=self._guid_data_list({custom_field_guid: values}),
             keep_existing=keep_existing
@@ -371,10 +371,10 @@ class CustomField(FeatureBase):
             values: List of values to write to ``object_dn``.
             locked: If ``True``, all subordinate objects inherit and cannot modify the ``values``.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        response = self._auth.websdk.Metadata.SetPolicy.post(
+        response = self._api.websdk.Metadata.SetPolicy.post(
             dn=folder_dn,
             config_class=class_name,
             guid_data=self._guid_data_list({custom_field_guid: values}),

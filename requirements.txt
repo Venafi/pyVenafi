@@ -1,3 +1,4 @@
-jsonpickle==1.2
-requests==2.22.0
+isodate==0.6.0
+dblogging==1.0.9
+requests==2.24.0
 python_dateutil==2.8.1

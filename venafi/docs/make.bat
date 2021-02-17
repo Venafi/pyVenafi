@@ -1,5 +1,7 @@
 @ECHO OFF
 
+set VENAFI_PY_DOC_IN_PROGRESS=1
+
 pushd %~dp0
 
 REM Command file for Sphinx documentation

@@ -1,89 +1,86 @@
 """
-The Venafi Logger is a singleton class that enforces all callers to use the same
-instance of the logger. This allows this logger to affect all logging everywhere,
-so be responsible when using it. ``from venafi.logger import logger``
+Logging is not enabled by default. It must be explicitly enabled by importing it
+and calling ``start()`` at the beginning of the program. The logger has
+custom-defined log tags:
 
-Must-Know Methods
------------------
+    * **API:** Only used for WebSDK and Aperture API calls.
+    * **Feature:** Only used for feature methods that call the APIs.
+    * **Main:** Not used in this code. This is meant to be used by the programmer.
+      This value can be overridden.
+    * **Critical:** Used during exceptions.
 
-``logger.log()``
-    Logs the given message with the given level. The level defaults to main
-    and should only be changed if either the message is critical or an API or Feature
-    log is being written. If the message is critical, use
-    ``logger.log(msg=msg, level=LogLevels.critical)``
+Examples Of Using The Logger
+''''''''''''''''''''''''''''
 
-``logger.log_exception()``
-    Logs exceptions caught in Python. This MUST be used wherever the
-    main file exists in a try/except clause. This is because it is not designed to listen
-    to the program for exceptions. It is, instead, designed to explicitly log errors. Here
-    is an example:
+**Using The Logger As Is**
 
-    .. code-block:: python
+.. code-block:: python
 
-        from venafi.logger import logger
-        # Other imports here
+    from venafi import logger
 
-        def main():
-            # Execute stuff here.
-            return
+    logger.log_path = f'{log_dir}/my_logs.db'
+    logger.start()
 
-        if __name__ == '__main__':
-            try:
-                main()
-            except Exception as e:
-                # No need to pass e because log_exception() uses `inspect` to find the
-                # exception in the stack trace.
-                logger.log_exception()
-                raise
-            finally:
-                # Create the html file from the JSON log file.
-                logger.log_to_html()
+    with logger.generate('html', title = 'My Logs'):
+        # Do stuff here. After this context is complete an HTML file is generated
+        # with the given title in the same location as the db log file.
+        ...
 
-``logger.enable_all_logging()``
-    Enables all logging given that the directive was given at a higher log level then the directive
-    given to disable the logging in the first place. For example, if logging was disabled at the
-    Feature level, then it cannot be enabled at the API level because it is a lower level then the
-    Feature level. Only the Feature level and higher (such as Main and Critical) can re-enable all
-    logging. A ``why`` parameter is available to suggested why the call was made to re-enable logging.
 
-``logger.disable_all_logging()``
-    Disable all logging at the level that the directive was given. If the directive is
-    given at a level lower then the current disabled log level, then it is ignored. All log
-    methods are converted into "no operations", which when called simply return nothing. A
-    ``why`` parameter is available to suggested why the call was made to re-enable logging.
+**Customizing Log Tags**
 
-Must-Know Environment Variables
--------------------------------
+.. code-block:: python
 
-In order to see a complete list of these configurations, see `venafi/tools/logger/config.py`.
+    from venafi import logger, LogTags, LogTag
 
-``VENAFI_PY_LOGGING_ENABLED``
-    Defaults to ``True``.
-    Must be one of True or False (case insensitive). If disabled, all logging will be disabled
-    permanently. This can enhance performance as every log method becomes a "no operation".
-``VENAFI_PY_LOG_DIR``
-    Defaults to 'venafi/tools/logger/logs'.
-    Must be the absolute path to the log directory. If the log directory does not exist, the
-    logger will create it.
-``VENAFI_PY_LOG_FILENAME``
-    Defaults to 'venafi_py_logfile'.
-    The logger will always append a timestamp to the name of the log file. This is the name
-    of the JSON and HTML log files.
-``VENAFI_PY_LOG_LEVEL``
-    Defaults to ``LogLevels.api``.
-    All message at and above this level are logged to the console. This does not affect logs
-    to the JSON file as those can be manually filtered or filtered in the provided HTML generator.
-``VENAFI_PY_LOG_TO_JSON``
-    Defaults to ``True``.
-    Must be one of True or False (case insensitive). If this is False, then VENAFI_PY_OPEN_HTML
-    has not effect.
-``VENAFI_PY_OPEN_HTML``
-    Defaults to ``False``.
-    Must be one of True or False (case insensitive). If this is True, the HTML file that is
-    generated will automatically open when the main file returns. This should not be set to
-    True in cases where the log file is moved after execution.
+    class CustomLogTags(LogTags):
+        custom_tag = LogTag(
+            name='Custom Tag',
+            value=75,
+            html_color='#88FF00'
+        )
+
+    logger.log_path = f'{log_dir}/my_logs.db'
+    logger.log_tags = CustomLogTags
+    logger.start()
+
+Refer to the dblogging documentation for further customization.
+
 """
-from venafi.tools.logger.logger import LogLevels, Logger
-from venafi.tools.logger.config import *
+from dblogging.logger import Logger
+from dblogging.config import LogTag, LogTagTemplate
+
+
+class LogTags(LogTagTemplate):
+    #: * **Name** - API
+    #: * **Value** - 10
+    api = LogTag(
+        name='API',
+        value=10,
+        html_color='palegoldenrod'
+    )
+    #: * **Name** - Feature
+    #: * **Value** - 20
+    feature = LogTag(
+        name='Feature',
+        value=20,
+        html_color='lightcyan'
+    )
+    #: * **Name** - Main
+    #: * **Value** - 30
+    default = LogTag(
+        name='Main',
+        value=30,
+        html_color='hotpink'
+    )
+    #: * **Name** - Critical
+    #: * **Value** - 40
+    critical = LogTag(
+        name='Critical',
+        value=90,
+        html_color='red'
+    )
+
 
 logger = Logger()
+logger.log_tags = LogTags

@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Union
 import re
 import json
 from venafi.api.session import Session
-from requests import Response
-from venafi.logger import logger, LogLevels
+from requests import Response, HTTPError
+from venafi.logger import logger, LogTags
 
 
 def json_response_property(return_on_204: type = None):
@@ -40,7 +40,7 @@ def json_response_property(return_on_204: type = None):
 
     """
     def pre_validation(func):
-        def wrap(self, *args, **kwargs):
+        def wrap(self: APIResponse, *args, **kwargs):
             if not self._validated:
                 self._validate()
             if return_on_204 and self.json_response.status_code == 204:
@@ -59,7 +59,7 @@ class API:
     validations, logging, re-authentication, and holds the raw response. This
     class MUST be inherited by all API definitions.
     """
-    def __init__(self, api_obj, url: str, valid_return_codes: list):
+    def __init__(self, api_obj, url: str):
         """
         Args:
             api_obj: This is passed down from the API type object (eg. WebSDK, etc.) and
@@ -68,15 +68,205 @@ class API:
                 through these properties this class is able to send and receive requests
                 to TPP.
             url: This is the URL extension from the base URL.
-            valid_return_codes: A list of valid status codes, such as [200, 204].
         """
         self._api_obj = api_obj  # type:
         self._session = api_obj._session  # type: Session
-        self._api_type = api_obj.__class__.__name__.lower()
+        self._api_source = api_obj.__class__.__name__.lower()
+        if not url.startswith('/'):
+            url = '/' + url
         self._url = self._api_obj._base_url + url
-        self._valid_return_codes = valid_return_codes
 
-        self._json_response = Response()
+    def _is_api_key_invalid(self, response: Response):
+        """
+        Uses a regular expression to search the response text for an indication that the API key
+        is expired.
+
+        Args:
+            response: The raw response object.
+
+        Returns:
+            Returns True if the API key expired. Otherwise False.
+
+        """
+        if self._api_source == 'websdk':
+            invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
+        elif self._api_source == 'aperture':
+            invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
+        else:
+            invalid_api_message_match = False
+
+        return response.status_code == 401 and invalid_api_message_match
+
+    def _delete(self, mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
+        """
+        Performs a DELETE method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Returns:
+            Returns the raw JSON response.
+        """
+        self._log_rest_call(method='DELETE', mask_values_with_key=mask_input_regexes)
+        response = self._session.delete(url=self._url)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._delete(mask_input_regexes=mask_input_regexes, mask_output_regexes=mask_output_regexes)
+        return response
+
+    def _get(self, params: dict = None, mask_input_regexes: List[str] = None,
+             mask_output_regexes: List[str] = None):
+        """
+        Performs a GET method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Args:
+            params: A dictionary of URL parameters to append to the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
+        self._log_rest_call(method='GET', data=params, mask_values_with_key=mask_input_regexes)
+        response = self._session.get(url=self._url, params=params)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._get(params=params, mask_input_regexes=mask_input_regexes,
+                             mask_output_regexes=mask_output_regexes)
+        return response
+
+    def _post(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
+              mask_output_regexes: List[str] = None):
+        """
+        Performs a POST method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Args:
+            data: A dictionary of data to send with the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
+        self._log_rest_call(method='POST', data=data, mask_values_with_key=mask_input_regexes)
+        response = self._session.post(url=self._url, data=data)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._post(data=data, mask_input_regexes=mask_input_regexes,
+                              mask_output_regexes=mask_output_regexes)
+        return response
+
+    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
+        """
+        Performs a POST method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate using the re-authentication method provided
+        by ``api_obj``. Otherwise, the raw response is returned.
+
+        Args:
+            data: A dictionary of data to send with the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
+        self._log_rest_call(method='PUT', data=data, mask_values_with_key=mask_input_regexes)
+        response = self._session.put(url=self._url, data=data)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._put(data=data, mask_input_regexes=mask_input_regexes,
+                             mask_output_regexes=mask_output_regexes)
+        return response
+
+    def _re_authenticate(self):
+        """
+        The current API token expired and the session needs to be re-authenticated.
+        """
+        logger.log(
+            msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
+            log_tag=LogTags.api
+        )
+        self._api_obj.re_authenticate()
+        self._session = self._api_obj._session
+
+    def _log_api_deprecated_warning(self, alternate_api: str = None, num_prev_callers=2):
+        msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
+        if alternate_api:
+            msg += f'\nUse {alternate_api} instead.'
+        logger.log(
+            msg=msg,
+            log_tag=LogTags.critical,
+            num_prev_callers=num_prev_callers
+        )
+
+    def _log_rest_call(self, method: str, data: dict = None, mask_values_with_key: List[str] = None,
+                       num_prev_callers: int = 3):
+        """
+        Logs the URL and any additional data. This enforces consistency in logging across all API calls.
+        """
+        if data:
+            if mask_values_with_key:
+                payload = json.dumps(
+                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
+                    indent=4
+                )
+            else:
+                payload = json.dumps(data, indent=4)
+            logger.log(
+                msg=f'{method}\nURL: {self._url}\nBODY: {payload}',
+                log_tag=LogTags.api,
+                num_prev_callers=num_prev_callers
+            )
+        else:
+            logger.log(
+                msg=f'{method}\nURL: {self._url}',
+                log_tag=LogTags.api,
+                num_prev_callers=3
+            )
+
+    def _log_response(self, response: Response, mask_values_with_key: List[str] = None,
+                      num_prev_callers: int = 3):
+        """
+        Logs the URL, response code, and the content returned by TPP.
+        This enforces consistency in logging across all API calls.
+        """
+        try:
+            data = response.json()
+            if mask_values_with_key and isinstance(data, dict):
+                pretty_json = json.dumps(
+                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
+                    indent=4
+                )
+            else:
+                pretty_json = json.dumps(data, indent=4)
+        except json.JSONDecodeError:
+            pretty_json = response.text or response.reason or 'No Content'
+        except:
+            pretty_json = 'No Content'
+
+        logger.log(
+            msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}',
+            log_tag=LogTags.api,
+            num_prev_callers=num_prev_callers
+        )
+
+    def _mask_values_by_key(self, d: dict, mask_values_with_key: List[str]):
+        regexes = "(" + ")|(".join(mask_values_with_key) + ")"
+        for key, value in d.items():
+            if re.match(pattern=regexes, string=key, flags=re.IGNORECASE):
+                d[key] = '********'
+            elif isinstance(value, dict):
+                d = self._mask_values_by_key(d, mask_values_with_key=mask_values_with_key)
+        return d
+
+
+class APIResponse:
+    def __init__(self, response: Response, api_source: str):
+        """
+        """
+        self._api_source = api_source
+        self._json_response = response
         self._validated = False
 
     @property
@@ -106,7 +296,7 @@ class API:
         try:
             self._validate()
             return True
-        except InvalidResponseError:
+        except:
             return False
 
     def _from_json(self, key: str = None, error_key: str = None, return_on_error: type = None):
@@ -149,104 +339,6 @@ class API:
             return return_on_error()
         raise KeyError(f'{key} was not returned by TPP.')
 
-    def _is_api_key_invalid(self, response: Response):
-        """
-        Uses a regular expression to search the response text for an indication that the API key
-        is expired.
-
-        Args:
-            response: The raw response object.
-
-        Returns:
-            Returns True if the API key expired. Otherwise False.
-
-        """
-        if self._api_type == 'websdk':
-            invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
-        elif self._api_type == 'aperture':
-            invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
-        else:
-            invalid_api_message_match = False
-
-        return response.status_code == 401 and invalid_api_message_match
-
-    def _delete(self):
-        """
-        Performs a DELETE method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
-
-        Returns:
-            Returns the raw JSON response.
-        """
-        self._log_rest_call()
-        response = self._session.delete(url=self._url)
-        self._log_response(response=response)
-        if self._is_api_key_invalid(response=response):
-            self._re_authenticate()
-            return self._delete()
-        return response
-
-    def _get(self, params:dict = None):
-        """
-        Performs a GET method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
-
-        Args:
-            params: A dictionary of URL parameters to append to the URL.
-
-        Returns:
-            Returns the raw JSON response.
-        """
-        self._log_rest_call(data=params)
-        response = self._session.get(url=self._url, params=params)
-        self._log_response(response=response)
-        if self._is_api_key_invalid(response=response):
-            self._re_authenticate()
-            return self._get(params=params)
-        return response
-
-    def _post(self, data: dict):
-        """
-        Performs a POST method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
-
-        Args:
-            data: A dictionary of data to send with the URL.
-
-        Returns:
-            Returns the raw JSON response.
-        """
-        self._log_rest_call(data=data)
-        response = self._session.post(url=self._url, data=data)
-        self._log_response(response=response)
-        if self._is_api_key_invalid(response=response):
-            self._re_authenticate()
-            return self._post(data=data)
-        return response
-
-    def _put(self, data: dict):
-        """
-        Performs a POST method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
-
-        Args:
-            data: A dictionary of data to send with the URL.
-
-        Returns:
-            Returns the raw JSON response.
-        """
-        self._log_rest_call(data=data)
-        response = self._session.put(url=self._url, data=data)
-        self._log_response(response=response)
-        if self._is_api_key_invalid(response=response):
-            self._re_authenticate()
-            return self._put(data)
-        return response
-
     def _validate(self):
         """
         Validates the current response property by validating that there are expected return codes
@@ -254,88 +346,12 @@ class API:
         invalid, an error is thrown and logged.
         """
         self._validated = True
-
-        if not self._valid_return_codes:
-            raise ValueError('No valid return codes were provided, so the response to %s cannot be validated.' % self._url)
-
-        if not isinstance(self.json_response, Response):
-            raise TypeError("Expected response object, but got %s." % type(self.json_response))
-
-        if self.json_response.status_code not in self._valid_return_codes:
-            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
-            raise InvalidResponseError("Received %s, but expected one of %s. Error message is: %s" % (
-                self.json_response.status_code, str(self._valid_return_codes), error_msg))
-
-    def _re_authenticate(self):
-        """
-        The current API token expired and the session needs to be re-authenticated.
-        """
-        logger.log(
-            msg=f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-            level=LogLevels.low.level
-        )
-        self._api_obj.re_authenticate()
-        self._session = self._api_obj._session
-
-    def _log_api_deprecated_warning(self, alternate_api: str = None, prev_frames=2):
-        msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
-        if alternate_api:
-            msg += f'\nUse {alternate_api} instead.'
-        logger.log(
-            msg=msg,
-            level=LogLevels.critical.level,
-            prev_frames=prev_frames
-        )
-
-    def _log_rest_call(self, data: dict = None, mask_values_with_key: List[str] = None, prev_frames: int = 3):
-        """
-        Logs the URL and any additional data. This enforces consistency in logging across all API calls.
-        """
-        if data:
-            if mask_values_with_key:
-                payload = json.dumps(
-                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
-                    indent=4
-                )
-            else:
-                payload = json.dumps(data, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level, prev_frames=prev_frames)
-        else:
-            logger.log(f'URL: {self._url}', level=LogLevels.low.level, prev_frames=3)
-
-    def _log_response(self, response: Response, mask_values_with_key: List[str] = None, prev_frames: int = 3):
-        """
-        Logs the URL, response code, and the content returned by TPP.
-        This enforces consistency in logging across all API calls.
-        """
-
         try:
-            data = response.json()
-            if mask_values_with_key and isinstance(data, dict):
-                pretty_json = json.dumps(
-                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
-                    indent=4
-                )
-            else:
-                pretty_json = json.dumps(data, indent=4)
-        except json.JSONDecodeError:
-            pretty_json = response.text or response.reason or 'No Content'
-        except:
-            pretty_json = 'No Content'
-
-        logger.log(
-            msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}',
-            level=LogLevels.low.level,
-            prev_frames=prev_frames
-        )
-
-    def _mask_values_by_key(self, d: dict, mask_values_with_key: List[str]):
-        for key, value in d.items():
-            if key in mask_values_with_key:
-                d[key] = '********'
-            elif isinstance(value, dict):
-                d = self._mask_values_by_key(d, mask_values_with_key=mask_values_with_key)
-        return d
+            self.json_response.raise_for_status()
+        except HTTPError as err:
+            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
+            body = json.dumps(json.loads(err.request.body), indent=4) if err.request.body else ''
+            raise InvalidResponseError('\n'.join(err.args) + f"\nERROR:{error_msg}\nCONTENT: {body}")
 
 
 class InvalidResponseError(Exception):

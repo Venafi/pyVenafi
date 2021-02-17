@@ -4,8 +4,8 @@ from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPre
 
 
 class _CertificateAuthorityBase(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def delete(self, object_dn: str):
         """
@@ -26,8 +26,8 @@ class AdaptableCA(_CertificateAuthorityBase):
     """
     This feature provides high-level interaction with TPP Adaptable Certificate Authority objects.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, powershell_script: str, username_credential_dn: str = None,
                certificate_credential_dn: str = None, secondary_credential_dn: str = None, attributes: dict = None):
@@ -70,8 +70,8 @@ class MSCA(_CertificateAuthorityBase):
     """
     This feature provides high-level interaction with TPP Microsoft Certificate Authority objects.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, hostname: str, service_name: str, credential_dn: str,
                template: str, attributes: dict = None):
@@ -112,8 +112,8 @@ class SelfSignedCA(_CertificateAuthorityBase):
     """
     This feature provides high-level interaction with TPP Self-Signed Certificate Authority objects.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """

@@ -1,6 +1,6 @@
 from typing import List, Union
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
-from venafi.properties.response_objects.config import Config, ResultCodes
+from venafi.properties.response_objects.config import Config
 
 
 class _AttributeValue:
@@ -16,8 +16,8 @@ class Objects(FeatureBase):
     the authenticated session has permission to do so. This is very useful for validating that TPP Objects
     are configured as desired and getting information about each desired object.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def clear(self, object_dn: str, attributes: Union[dict, List[str]]):
         """
@@ -72,12 +72,12 @@ class Objects(FeatureBase):
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if isinstance(attributes, list):
             for attribute_name in attributes:
-                result = self._auth.websdk.Config.ClearAttribute.post(
+                result = self._api.websdk.Config.ClearAttribute.post(
                     object_dn=object_dn,
                     attribute_name=attribute_name
                 ).result
@@ -91,7 +91,7 @@ class Objects(FeatureBase):
                     values = [values]
 
                 for value in values:
-                    result = self._auth.websdk.Config.RemoveDnValue.post(
+                    result = self._api.websdk.Config.RemoveDnValue.post(
                         object_dn=object_dn,
                         attribute_name=name,
                         value=value
@@ -119,10 +119,10 @@ class Objects(FeatureBase):
             2. Attribute Values: A list of all values corresponding to the given attribute name.
             3. Locked: A boolean representing whether or not the returned values are locked.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self._auth.websdk.Config.FindPolicy.post(
+        resp = self._api.websdk.Config.FindPolicy.post(
             object_dn=object_dn,
             class_name=class_name,
             attribute_name=attribute_name
@@ -153,17 +153,17 @@ class Objects(FeatureBase):
         Returns:
             Config Object
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if not (object_dn or object_guid):
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
-        obj = self._auth.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
+        obj = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
         if obj.result.code == 400 and not raise_error_if_not_exists:
             # The object doesn't exist, but just return an empty object.
-            return Config.Object(object_dict={}, api_type=self._auth.preference)
+            return Config.Object(response_object={}, api_type=self._api.preference)
         return obj.object
 
     def read(self, object_dn: str, attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
@@ -220,14 +220,17 @@ class Objects(FeatureBase):
         """
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                value = self._read(
+                result, attr = self._read(
                     object_dn=object_dn,
                     attribute_name=attribute_name,
                     include_policy_values=include_policy_values
                 )
-                if value.values:
-                    return value
+                if result.code != 1:
+                    continue
+                if attr and attr.values:
+                    return attr
 
+        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
         raise TimeoutError(f'Could not read {attribute_name} on {object_dn} because it did not exist '
                            f'after {timeout} seconds.')
 
@@ -256,10 +259,10 @@ class Objects(FeatureBase):
             A list of NameValue objects having ``name`` and ``values`` properties corresponding to each
             attribute name and attribute value.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        resp = self._auth.websdk.Config.ReadAll.post(object_dn=object_dn)
+        resp = self._api.websdk.Config.ReadAll.post(object_dn=object_dn)
 
         result = resp.result
         if result.code != 1:
@@ -281,13 +284,16 @@ class Objects(FeatureBase):
         if not new_object_dn.startswith('\\VED'):
             raise FeatureError.InvalidFormat(f'"{new_object_dn}" must be an absolute path starting from \\VED.')
 
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        result = self._auth.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn).result
+        response = self._api.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn)
+        result = response.result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+        return self.get(object_dn=new_object_dn, raise_error_if_not_exists=True)
 
     def update(self, object_dn: str, attributes: dict):
         """
@@ -317,11 +323,11 @@ class Objects(FeatureBase):
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         for name, value in attributes.items():
-            result = self._auth.websdk.Config.AddValue.post(
+            result = self._api.websdk.Config.AddValue.post(
                 object_dn=object_dn,
                 attribute_name=name,
                 value=value,
@@ -350,14 +356,17 @@ class Objects(FeatureBase):
 
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                attr = self._read(
+                result, attr = self._read(
                     object_dn=object_dn,
                     attribute_name=attribute_name,
                     include_policy_values=include_policy_values
                 )
-                if any([True for value in attr.values if str(value).lower() == attribute_value.lower()]):
+                if result.code != 1:
+                    continue
+                if attr and any([True for value in attr.values if str(value).lower() == attribute_value.lower()]):
                     return attr
 
+        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
         raise FeatureError.TimeoutError(method=self.wait_for, expected_value=attribute_value,
                                         actual_value=attr.values, timeout=timeout)
 
@@ -389,12 +398,12 @@ class Objects(FeatureBase):
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         attributes = {k: ([v] if not isinstance(v, list) else v) for k, v in attributes.items()}
 
-        result = self._auth.websdk.Config.Write.post(
+        result = self._api.websdk.Config.Write.post(
             object_dn=object_dn,
             attribute_data=self._name_value_list(attributes, keep_list_values=True)
         ).result
@@ -403,26 +412,18 @@ class Objects(FeatureBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def _read(self, object_dn: str, attribute_name: str, include_policy_values: bool):
-        if self._auth.preference == ApiPreferences.aperture:
+        if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
         if include_policy_values is True:
-            resp = self._auth.websdk.Config.ReadEffectivePolicy.post(
+            resp = self._api.websdk.Config.ReadEffectivePolicy.post(
                 object_dn=object_dn,
                 attribute_name=attribute_name
             )
-            result = resp.result
-            if result.code != 1:
-                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
-
-            return _AttributeValue(values=resp.values, locked=resp.locked)
+            return resp.result, _AttributeValue(values=resp.values, locked=resp.locked)
         else:
-            resp = self._auth.websdk.Config.Read.post(
+            resp = self._api.websdk.Config.Read.post(
                 object_dn=object_dn,
                 attribute_name=attribute_name
             )
-            result = resp.result
-            if result.code != 1:
-                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
-
-            return _AttributeValue(values=resp.values, locked=False)
+            return resp.result, _AttributeValue(values=resp.values, locked=False)

@@ -1,16 +1,11 @@
-Welcome to Venafi's documentation!
-==================================
+SPI Team Libraries
+==================
 
 .. toctree::
-   :caption: Contents
+   :maxdepth: 1
 
-   all_docs/included/custom/custom.getting_started
-   all_docs/included/venafi
-   all_docs/included/custom/custom.venafi.api
-
-
-Indices and tables
-==================
+   rst/getting_started
+   rst/venafi
 
 * :ref:`genindex`
 * :ref:`modindex`

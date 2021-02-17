@@ -1,25 +1,16 @@
-from venafi.api.api_base import API, json_response_property
-from venafi.logger import logger, LogLevels
-import json
+from venafi.api.api_base import API, APIResponse, json_response_property
 
 
 class _Users:
-    def __init__(self, aperture_obj):
-        self.Authorize = self._Authorize(aperture_obj=aperture_obj)
+    def __init__(self, api_obj):
+        self.Authorize = self._Authorize(api_obj=api_obj)
 
     class _Authorize(API):
-        def __init__(self, aperture_obj):
+        def __init__(self, api_obj):
             super().__init__(
-                api_obj=aperture_obj,
-                url='/users/authorize',
-                valid_return_codes=[200]
+                api_obj=api_obj,
+                url='/users/authorize'
             )
-
-        @property
-        @json_response_property()
-        def token(self) -> dict:
-            logger.log('Aperture API Key retrieved.', level=LogLevels.low.level)
-            return self._from_json('apiKey')
 
         def post(self, username, password):
             """
@@ -27,12 +18,18 @@ class _Users:
             """
             body = {
                 "username": username,
-                "password": '********'
+                "password": password
             }
 
-            payload = json.dumps(body, indent=4)
-            logger.log(f'URL: {self._url}\nPARAMETERS: {payload}', level=LogLevels.low.level)
+            class _Response(APIResponse):
+                def __init__(self, response, api_source):
+                    super().__init__(response=response, api_source=api_source)
 
-            body['password'] = password
-            self.json_response = self._session.post(url=self._url, data=body)
-            return self
+                @property
+                @json_response_property()
+                def token(self) -> dict:
+                    return self._from_json('apiKey')
+
+            return _Response(
+                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['apiKey']),
+                api_source=self._api_source)

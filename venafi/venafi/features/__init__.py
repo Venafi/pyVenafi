@@ -2,17 +2,23 @@ from venafi.features.bases.feature_base import FeatureBase
 from venafi.features.objects import Objects
 from venafi.features.folder import Folder, FolderAttributes, FolderClassNames
 from venafi.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, CertificateClassNames
-from venafi.features.device import Device, DeviceAttributes, DevicesClassNames
+from venafi.features.device import Device, DeviceAttributes, DevicesClassNames, DeviceAttributeValues
 from venafi.features.application import A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, \
     CitrixNetScaler, ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, JuniperSAS, \
     OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, ApplicationAttributes, \
     ApplicationAttributeValues, ApplicationClassNames
+from venafi.features.discovery import NetworkDiscovery, DiscoveryClassNames, DiscoveryAttributeValues, DiscoveryAttributes
 from venafi.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
     PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
 from venafi.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
 from venafi.features.identity import User, Group, IdentityClassNames, IdentityAttributes
 from venafi.features.permissions import Permissions
+from venafi.features.platform import AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager,\
+    CertificatePreEnrollment, CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, \
+    OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes, \
+    PlatformsClassNames
+from venafi.features.placement_rules import PlacementRules, PlacementRulesAttributeValues
 from venafi.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 from venafi.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
@@ -20,8 +26,8 @@ from venafi.features.custom_fields import CustomField, CustomFieldAttributes, Cu
 
 # region Features
 class _Application:
-    def __init__(self, auth):
-        self._auth = auth
+    def __init__(self, api):
+        self._api = api
 
         self._a10_ax_traffic_manager = None
         self._amazon_aws = None
@@ -50,128 +56,128 @@ class _Application:
 
     @property
     def a10_ax_traffic_manager(self) -> A10AXTrafficManager:
-        self._a10_ax_traffic_manager = self._a10_ax_traffic_manager or A10AXTrafficManager(self._auth)
+        self._a10_ax_traffic_manager = self._a10_ax_traffic_manager or A10AXTrafficManager(self._api)
         return self._a10_ax_traffic_manager
 
     @property
     def amazon_aws(self) -> AmazonAWS:
-        self._amazon_aws = self._amazon_aws or AmazonAWS(self._auth)
+        self._amazon_aws = self._amazon_aws or AmazonAWS(self._api)
         return self._amazon_aws
 
     @property
     def apache(self) -> Apache:
-        self._apache = self._apache or Apache(self._auth)
+        self._apache = self._apache or Apache(self._api)
         return self._apache
 
     @property
     def azure_key_vault(self) -> AzureKeyVault:
-        self._azure_key_vault = self._azure_key_vault or AzureKeyVault(self._auth)
+        self._azure_key_vault = self._azure_key_vault or AzureKeyVault(self._api)
         return self._azure_key_vault
 
     @property
     def basic(self) -> Basic:
-        self._basic = self._basic or Basic(self._auth)
+        self._basic = self._basic or Basic(self._api)
         return self._basic
 
     @property
     def blue_coat_sslva(self) -> BlueCoatSSLVA:
-        self._blue_coat_sslva = self._blue_coat_sslva or BlueCoatSSLVA(self._auth)
+        self._blue_coat_sslva = self._blue_coat_sslva or BlueCoatSSLVA(self._api)
         return self._blue_coat_sslva
 
     @property
     def capi(self) -> CAPI:
-        self._capi = self._capi or CAPI(self._auth)
+        self._capi = self._capi or CAPI(self._api)
         return self._capi
 
     @property
     def citrix_net_scaler(self) -> CitrixNetScaler:
-        self._citrix_net_scaler = self._citrix_net_scaler or CitrixNetScaler(self._auth)
+        self._citrix_net_scaler = self._citrix_net_scaler or CitrixNetScaler(self._api)
         return self._citrix_net_scaler
 
     @property
     def connect_direct(self) -> ConnectDirect:
-        self._connect_direct = self._connect_direct or ConnectDirect(self._auth)
+        self._connect_direct = self._connect_direct or ConnectDirect(self._api)
         return self._connect_direct
 
     @property
     def f5_authentication_bundle(self) -> F5AuthenticationBundle:
-        self._f5_authentication_bundle = self._f5_authentication_bundle or F5AuthenticationBundle(self._auth)
+        self._f5_authentication_bundle = self._f5_authentication_bundle or F5AuthenticationBundle(self._api)
         return self._f5_authentication_bundle
 
     @property
     def f5_ltm_advanced(self) -> F5LTMAdvanced:
-        self._f5_ltm_advanced = self._f5_ltm_advanced or F5LTMAdvanced(self._auth)
+        self._f5_ltm_advanced = self._f5_ltm_advanced or F5LTMAdvanced(self._api)
         return self._f5_ltm_advanced
 
     @property
     def ibm_datapower(self) -> IBMDataPower:
-        self._ibm_datapower = self._ibm_datapower or IBMDataPower(self._auth)
+        self._ibm_datapower = self._ibm_datapower or IBMDataPower(self._api)
         return self._ibm_datapower
 
     @property
     def ibm_gsk(self) -> IBMGSK:
-        self._ibm_gsk = self._ibm_gsk or IBMGSK(self._auth)
+        self._ibm_gsk = self._ibm_gsk or IBMGSK(self._api)
         return self._ibm_gsk
 
     @property
     def imperva_mx(self) -> ImpervaMX:
-        self._imperva_mx = self._imperva_mx or ImpervaMX(self._auth)
+        self._imperva_mx = self._imperva_mx or ImpervaMX(self._api)
         return self._imperva_mx
 
     @property
     def jks(self) -> JKS:
-        self._jks = self._jks or JKS(self._auth)
+        self._jks = self._jks or JKS(self._api)
         return self._jks
 
     @property
     def juniper_sas(self) -> JuniperSAS:
-        self._juniper_sas = self._juniper_sas or JuniperSAS(self._auth)
+        self._juniper_sas = self._juniper_sas or JuniperSAS(self._api)
         return self._juniper_sas
 
     @property
     def oracle_iplanet(self) -> OracleIPlanet:
-        self._oracle_iplanet = self._oracle_iplanet or OracleIPlanet(self._auth)
+        self._oracle_iplanet = self._oracle_iplanet or OracleIPlanet(self._api)
         return self._oracle_iplanet
 
     @property
     def palo_alto_network_fw(self) -> PaloAltoNetworkFW:
-        self._palo_alto_network_fw = self._palo_alto_network_fw or PaloAltoNetworkFW(self._auth)
+        self._palo_alto_network_fw = self._palo_alto_network_fw or PaloAltoNetworkFW(self._api)
         return self._palo_alto_network_fw
 
     @property
     def pem(self) -> PEM:
-        self._pem = self._pem or PEM(self._auth)
+        self._pem = self._pem or PEM(self._api)
         return self._pem
 
     @property
     def pkcs11(self) -> PKCS11:
-        self._pkcs11 = self._pkcs11 or PKCS11(self._auth)
+        self._pkcs11 = self._pkcs11 or PKCS11(self._api)
         return self._pkcs11
 
     @property
     def pkcs12(self) -> PKCS12:
-        self._pkcs12 = self._pkcs12 or PKCS12(self._auth)
+        self._pkcs12 = self._pkcs12 or PKCS12(self._api)
         return self._pkcs12
 
     @property
     def riverbed_steel_head(self) -> RiverbedSteelHead:
-        self._riverbed_steel_head = self._riverbed_steel_head or RiverbedSteelHead(self._auth)
+        self._riverbed_steel_head = self._riverbed_steel_head or RiverbedSteelHead(self._api)
         return self._riverbed_steel_head
 
     @property
     def tealeaf_pca(self) -> TealeafPCA:
-        self._tealeaf_pca = self._tealeaf_pca or TealeafPCA(self._auth)
+        self._tealeaf_pca = self._tealeaf_pca or TealeafPCA(self._api)
         return self._tealeaf_pca
 
     @property
     def vamnshield(self) -> VAMnShield:
-        self._vamnshield = self._vamnshield or VAMnShield(self._auth)
+        self._vamnshield = self._vamnshield or VAMnShield(self._api)
         return self._vamnshield
 
 
 class _CertificateAuthority:
-    def __init__(self, auth):
-        self._auth = auth
+    def __init__(self, api):
+        self._api = api
 
         self._adaptable = None
         self._msca = None
@@ -179,23 +185,23 @@ class _CertificateAuthority:
 
     @property
     def adaptable(self) -> AdaptableCA:
-        self._adaptable = self._adaptable or AdaptableCA(self._auth)
+        self._adaptable = self._adaptable or AdaptableCA(self._api)
         return self._adaptable
 
     @property
     def msca(self) -> MSCA:
-        self._msca = self._msca or MSCA(self._auth)
+        self._msca = self._msca or MSCA(self._api)
         return self._msca
 
     @property
     def self_signed(self) -> SelfSignedCA:
-        self._self_signed = self._self_signed or SelfSignedCA(self._auth)
+        self._self_signed = self._self_signed or SelfSignedCA(self._api)
         return self._self_signed
 
 
 class _Credential:
-    def __init__(self, auth):
-        self._auth = auth
+    def __init__(self, api):
+        self._api = api
 
         self._amazon = None
         self._certificate = None
@@ -206,56 +212,158 @@ class _Credential:
 
     @property
     def amazon(self) -> AmazonCredential:
-        self._amazon = self._amazon or AmazonCredential(self._auth)
+        self._amazon = self._amazon or AmazonCredential(self._api)
         return self._amazon
 
     @property
     def certificate(self) -> CertificateCredential:
-        self._certificate = self._certificate or CertificateCredential(self._auth)
+        self._certificate = self._certificate or CertificateCredential(self._api)
         return self._certificate
 
     @property
     def generic(self) -> GenericCredential:
-        self._generic = self._generic or GenericCredential(self._auth)
+        self._generic = self._generic or GenericCredential(self._api)
         return self._generic
 
     @property
     def password(self) -> PasswordCredential:
-        self._password = self._password or PasswordCredential(self._auth)
+        self._password = self._password or PasswordCredential(self._api)
         return self._password
 
     @property
     def private_key(self) -> PrivateKeyCredential:
-        self._private_key = self._private_key or PrivateKeyCredential(self._auth)
+        self._private_key = self._private_key or PrivateKeyCredential(self._api)
         return self._private_key
 
     @property
     def username_password(self) -> UsernamePasswordCredential:
-        self._upcred = self._upcred or UsernamePasswordCredential(self._auth)
+        self._upcred = self._upcred or UsernamePasswordCredential(self._api)
         return self._upcred
 
 
+class _Discovery:
+    def __init__(self, api):
+        self._api = api
+
+        self._network = None
+
+    @property
+    def network(self) -> NetworkDiscovery:
+        self._network = self._network or NetworkDiscovery(api=self._api)
+        return self._network
+
+
 class _Identity:
-    def __init__(self, auth):
-        self._auth = auth
+    def __init__(self, api):
+        self._api = api
 
         self._group = None
         self._user = None
 
     @property
     def group(self) -> Group:
-        self._group = self._group or Group(self._auth)
+        self._group = self._group or Group(self._api)
         return self._group
 
     @property
     def user(self) -> User:
-        self._user = self._user or User(self._auth)
+        self._user = self._user or User(self._api)
         return self._user
 
 
+class _Platforms:
+    def __init__(self, api):
+        self._api = api
+
+        self._auto_layout_manager = None
+        self._bulk_provisioning_manager = None
+        self._ca_import_manager = None
+        self._certificate_manager = None
+        self._certificate_pre_enrollment = None
+        self._certificate_revocation = None
+        self._cloud_instance_monitor = None
+        self._discovery_manager = None
+        self._monitor = None
+        self._onboard_discovery_manager = None
+        self._reporting = None
+        self._ssh_manager = None
+        self._trustnet_manager = None
+        self._validation_manager = None
+
+    @property
+    def auto_layout_manager(self) -> AutoLayoutManager:
+        self._auto_layout_manager = self._auto_layout_manager or AutoLayoutManager(self._api)
+        return self._auto_layout_manager
+
+    @property
+    def bulk_provisioning_manager(self) -> BulkProvisioningManager:
+        self._bulk_provisioning_manager = self._bulk_provisioning_manager or BulkProvisioningManager(self._api)
+        return self._bulk_provisioning_manager
+
+    @property
+    def ca_import_manager(self) -> CAImportManager:
+        self._ca_import_manager = self._ca_import_manager or CAImportManager(self._api)
+        return self._ca_import_manager
+
+    @property
+    def certificate_manager(self) -> CertificateManager:
+        self._certificate_manager = self._certificate_manager or CertificateManager(self._api)
+        return self._certificate_manager
+
+    @property
+    def certificate_pre_enrollment(self) -> CertificatePreEnrollment:
+        self._certificate_pre_enrollment = self._certificate_pre_enrollment or CertificatePreEnrollment(self._api)
+        return self._certificate_pre_enrollment
+
+    @property
+    def certificate_revocation(self) -> CertificateRevocation:
+        self._certificate_revocation = self._certificate_revocation or CertificateRevocation(self._api)
+        return self._certificate_revocation
+
+    @property
+    def cloud_instance_monitor(self) -> CloudInstanceMonitor:
+        self._cloud_instance_monitor = self._cloud_instance_monitor or CloudInstanceMonitor(self._api)
+        return self._cloud_instance_monitor
+
+    @property
+    def discovery_manager(self) -> DiscoveryManager:
+        self._discovery_manager = self._discovery_manager or DiscoveryManager(self._api)
+        return self._discovery_manager
+
+    @property
+    def monitor(self) -> Monitor:
+        self._monitor = self._monitor or Monitor(self._api)
+        return self._monitor
+
+    @property
+    def onboard_discovery_manager(self) -> OnboardDiscoveryManager:
+        self._onboard_discovery_manager = self._onboard_discovery_manager or OnboardDiscoveryManager(self._api)
+        return self._onboard_discovery_manager
+
+    @property
+    def reporting(self) -> Reporting:
+        self._reporting = self._reporting or Reporting(self._api)
+        return self._reporting
+
+    @property
+    def ssh_manager(self) -> SSHManager:
+        self._ssh_manager = self._ssh_manager or SSHManager(self._api)
+        return self._ssh_manager
+
+    @property
+    def trustnet_manager(self) -> TrustNetManager:
+        self._trustnet_manager = self._trustnet_manager or TrustNetManager(self._api)
+        return self._trustnet_manager
+
+    @property
+    def validation_manager(self) -> ValidationManager:
+        self._validation_manager = self._validation_manager or ValidationManager(self._api)
+        return self._validation_manager
+
+
 class _Workflow:
-    def __init__(self, auth):
-        self._auth = auth
+    def __init__(self, api):
+        self._api = api
 
         self._adaptable = None
         self._reason_code = None
@@ -264,28 +372,28 @@ class _Workflow:
 
     @property
     def adaptable(self) -> AdaptableWorkflow:
-        self._adaptable = self._adaptable or AdaptableWorkflow(self._auth)
+        self._adaptable = self._adaptable or AdaptableWorkflow(self._api)
         return self._adaptable
 
     @property
     def reason_code(self) -> ReasonCode:
-        self._reason_code = self._reason_code or ReasonCode(self._auth)
+        self._reason_code = self._reason_code or ReasonCode(self._api)
         return self._reason_code
 
     @property
     def standard(self) -> StandardWorkflow:
-        self._standard = self._standard or StandardWorkflow(self._auth)
+        self._standard = self._standard or StandardWorkflow(self._api)
         return self._standard
 
     @property
     def ticket(self) -> Ticket:
-        self._ticket = self._ticket or Ticket(self._auth)
+        self._ticket = self._ticket or Ticket(self._api)
         return self._ticket
 
 
 class Features:
-    def __init__(self, auth):
-        self._auth = auth
+    def __init__(self, api):
+        self._api = api
         
         self._applications = None
         self._objects = None
@@ -294,64 +402,82 @@ class Features:
         self._credentials = None
         self._custom_fields = None
         self._device = None
+        self._discovery = None
         self._folder = None
         self._identity = None
         self._permissions = None
+        self._placement_rules = None
+        self._platforms = None
         self._workflow = None
 
     @property
     def application(self) -> _Application:
-        self._applications = self._applications or _Application(self._auth)
+        self._applications = self._applications or _Application(self._api)
         return self._applications
 
     @property
     def objects(self) -> Objects:
-        self._objects = self._objects or Objects(self._auth)
+        self._objects = self._objects or Objects(self._api)
         return self._objects
 
     @property
     def certificate(self) -> Certificate:
-        self._certificate = self._certificate or Certificate(self._auth)
+        self._certificate = self._certificate or Certificate(self._api)
         return self._certificate
 
     @property
     def certificate_authority(self) -> _CertificateAuthority:
-        self._ca = self._ca or _CertificateAuthority(self._auth)
+        self._ca = self._ca or _CertificateAuthority(self._api)
         return self._ca
 
     @property
     def credential(self) -> _Credential:
-        self._credentials = self._credentials or _Credential(self._auth)
+        self._credentials = self._credentials or _Credential(self._api)
         return self._credentials
 
     @property
     def custom_fields(self) -> CustomField:
-        self._custom_fields = self._custom_fields or CustomField(self._auth)
+        self._custom_fields = self._custom_fields or CustomField(self._api)
         return self._custom_fields
 
     @property
     def device(self) -> Device:
-        self._device = self._device or Device(self._auth)
+        self._device = self._device or Device(self._api)
         return self._device
 
     @property
+    def discovery(self) -> _Discovery:
+        self._discovery = self._discovery or _Discovery(self._api)
+        return self._discovery
+
+    @property
     def folder(self) -> Folder:
-        self._folder = self._folder or Folder(self._auth)
+        self._folder = self._folder or Folder(self._api)
         return self._folder
 
     @property
     def identity(self) -> _Identity:
-        self._identity = self._identity or _Identity(self._auth)
+        self._identity = self._identity or _Identity(self._api)
         return self._identity
 
     @property
     def permissions(self) -> Permissions:
-        self._permissions = self._permissions or Permissions(self._auth)
+        self._permissions = self._permissions or Permissions(self._api)
         return self._permissions
 
     @property
+    def placement_rules(self) -> PlacementRules:
+        self._placement_rules = self._placement_rules or PlacementRules(self._api)
+        return self._placement_rules
+
+    @property
+    def platforms(self) -> _Platforms:
+        self._platforms = self._platforms or _Platforms(self._api)
+        return self._platforms
+
+    @property
     def workflow(self) -> _Workflow:
-        self._workflow = self._workflow or _Workflow(self._auth)
+        self._workflow = self._workflow or _Workflow(self._api)
         return self._workflow
 
 # endregion
@@ -365,8 +491,10 @@ class AttributeNames:
     Credentials = CredentialAttributes
     CustomField = CustomFieldAttributes
     Device = DeviceAttributes
+    Discovery = DiscoveryAttributes
     Folder = FolderAttributes
     Identity = IdentityAttributes
+    Platforms = PlatformsAttributes
     Workflow = WorkflowAttributes
 
 
@@ -374,6 +502,9 @@ class AttributeValues:
     Application = ApplicationAttributeValues
     Certificate = CertificateAttributeValues
     CustomField = CustomFieldAttributeValues
+    Device = DeviceAttributeValues
+    Discovery = DiscoveryAttributeValues
+    PlacementRules = PlacementRulesAttributeValues
     Workflow = WorkflowAttributeValues
 
 
@@ -382,8 +513,10 @@ class Classes:
     Certificate = CertificateClassNames
     CertificateAuthority = CertificateAuthorityClassNames
     Device = DevicesClassNames
+    Discovery = DiscoveryClassNames
     Folder = FolderClassNames
     Identity = IdentityClassNames
+    Platforms = PlatformsClassNames
     Workflow = WorkflowClassNames
 
 # endregion

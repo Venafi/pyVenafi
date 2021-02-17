@@ -510,7 +510,7 @@ class _ApplicationAttributeValuesBase:
     class ProtectionType:
         module = 'Module'
         ocs = 'OCS'
-        softcard = 'softcard'
+        softcard = 'Softcard'
 
 
 class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
@@ -666,11 +666,10 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
 
     class PKCS11:
         class ImportCertificatesIntoHsm:
-            zero = 0
             no = 'No'
             import_certificate_only = 'Import Certificate Only'
-            import_certificate_and_chain = 'Import Certificate And Chain'
-            import_certificate_with_intermediate_certificates = 'Import Certificate With Intermediate Certificates'
+            import_certificate_and_chain = 'Import Certificate and Chain'
+            import_certificate_with_intermediate_certificates = 'Import Certificate with Intermediate certificates'
 
         class LabelFormat:
             date_with_cn = 'Date with CN'
@@ -771,7 +770,7 @@ class CertificateAttributes:
     approved_issuer = "Approved Issuer"
     approver = "Approver"
     certificate_authority = "Certificate Authority"
-    certificate_download__pbes2_algorithm = "Certificate Download: PBES2 Algorithm"
+    certificate_download_pbes2_algorithm = "Certificate Download: PBES2 Algorithm"
     certificate_process_validator = "Certificate Process Validator"
     certificate_vault_id = "Certificate Vault Id"
     city = "City"
@@ -1069,6 +1068,12 @@ class CertificateClassNames:
     client_user_certificate_work = "Client User Certificate Work"
     server_certificate_work = "Server Certificate Work"
     x509_certificate = "X509 Certificate"
+    x509_code_signing_certificate = "X509 Code Signing Certificate"
+    x509_device_certificate = "X509 Device Certificate"
+    x509_intermediate_root_certificate = "X509 Intermediate Root Certificate"
+    x509_root_certificate = "X509 Root Certificate"
+    x509_server_certificate = "X509 Server Certificate"
+    x509_user_certificate = "X509 User Certificate"
 
 # endregion
 
@@ -1582,9 +1587,112 @@ class DeviceAttributes(_DeviceAttributesBase):
         ssh_version = "SSH Version"
 
 
+class DeviceAttributeValues:
+    class OSType:
+        aix = 'OS_AIX'
+        automatic = 'OS_AUTO'
+        hpux = 'OS_HPUX'
+        linux = 'OS_LINUX'
+        router = 'OS_ROUTER'
+        solaris = 'OS_SOLARIS'
+        windows = 'OS_WINDOWS'
+        z_os = 'OS_zOS'
+
+    class ConnectionMethod:
+        agent = 'Agent'
+        agentless = 'Agentless'
+
+
 class DevicesClassNames:
     device = 'Device'
     jump_server = 'Jump Server'
+
+# endregion
+
+
+# region Discovery
+class DiscoveryAttributes:
+    address_range = "Address Range"
+    company_name = "Company Name"
+    contact = "Contact"
+    created_by = "Created By"
+    description = "Description"
+    disabled = "Disabled"
+    driver_name = "Driver Name"
+    escalation_contact = "Escalation Contact"
+    guid = "GUID"
+    managed_by = "Managed By"
+    metadata = "Metadata"
+    migration_task = "Migration Task"
+    pendo_eula_version = "Pendo EULA Version"
+    pendo_optional_data_collection = "Pendo Optional Data Collection"
+    protection_key = "Protection Key"
+    reference = "Reference"
+    schema_version = "Schema Version"
+    timeout = "Timeout"
+    usage_tracking = "Usage Tracking"
+    use_company_name_for_analytics = "Use Company Name for Analytics"
+    version = "Version"
+    workflow = "Workflow"
+    workflow_block = "Workflow Block"
+
+    class Network:
+        address_parsing_errors = "Address Parsing Errors"
+        automatically_import = "Automatically Import"
+        blackout = "Blackout"
+        certificate_instances_found = "Certificate Instances Found"
+        certificate_location_dn = "Certificate Location DN"
+        certificates_already_known = "Certificates Already Known"
+        certificates_excluded = "Certificates Excluded"
+        certificates_found = "Certificates Found"
+        completed = "Completed"
+        completed_assignments = "Completed Assignments"
+        completed_scans = "Completed Scans"
+        configuration = "Configuration"
+        connect_excluded = "Connect Excluded"
+        connect_succeeded = "Connect Succeeded"
+        creation_date = "Creation Date"
+        days_of_month = "Days Of Month"
+        days_of_week = "Days Of Week"
+        days_of_year = "Days Of Year"
+        device_location_dn = "Device Location DN"
+        discovery_exclusion_dn = "Discovery Exclusion DN"
+        hour = "Hour"
+        in_progress = "In Progress"
+        keys_already_known = "Keys Already Known"
+        keys_excluded = "Keys Excluded"
+        keys_found = "Keys Found"
+        minute = "Minute"
+        new_certificate_instances_found = "New Certificate Instances Found"
+        new_certificates_found = "New Certificates Found"
+        new_ssh_servers_found = "New SSH Servers Found"
+        placement_preview = "Placement Preview"
+        placement_rule = "Placement Rule"
+        placement_summary = "Placement Summary"
+        priority = "Priority"
+        report_dn = "Report DN"
+        reschedule = "Reschedule"
+        resolve_host = "Resolve Host"
+        ssh_servers_found = "SSH Servers Found"
+        start_time = "Start Time"
+        started = "Started"
+        status = "Status"
+        stop_time = "Stop Time"
+        total_assignments = "Total Assignments"
+        utc = "UTC"
+        window_days_of_month = "Window Days of Month"
+        window_days_of_week = "Window Days of Week"
+        window_end = "Window End"
+        window_start = "Window Start"
+        work_units = "Work Units"
+
+
+class DiscoveryAttributeValues:
+    pass
+
+
+class DiscoveryClassNames:
+    network_discovery = 'Discovery'
 
 # endregion
 
@@ -1636,6 +1744,358 @@ class IdentityAttributes:
         distribution_group = 8
 
 # endregion
+
+
+# region Placement Rules
+class PlacementRulesAttributeValues:
+    class Field:
+        cert_expired = "CertificateExpired"
+        cert_self_signed = "CertificateSelfSigned"
+        city = "L"
+        common_name = "CN"
+        country = "C"
+        domain_component = "DC"
+        hostname = "HostName"
+        ipaddress = "IPAddress"
+        issuer_dn = "IssuerDN"
+        operating_system = "OperatingSystem"
+        organization = "O"
+        org_unit = "OU"
+        port = "Port"
+        san = "SubjectAltNameDNS"
+        server_version = "ServerVersion"
+        state = "S"
+        support_ssh1 = "SupportsSsHv1"
+        support_ssh2 = "SupportsSsHv2"
+
+    class Condition:
+        contains = "Contains"
+        ends_with = "EndsWith"
+        inside = "In"
+        is_false = "IsFalse"
+        is_true = "IsTrue"
+        matches = "Matches"
+        matches_regex = "MatchesRegex"
+        starts_with = "StartsWith"
+
+# endregion Placement Rules
+
+
+# region Platforms
+class PlatformsClassNames:
+    auto_layout_manager = "Auto Layout Manager"
+    bulk_provisioning_manager = "Bulk Provisioning Manager"
+    ca_import_manager = "CA Import Manager"
+    certificate_manager = "Certificate Manager"
+    certificate_pre_enrollment = "Certificate Pre-Enrollment"
+    certificate_revocation = "Certificate Revocation"
+    cloud_instance_monitor = "Cloud Instance Monitor"
+    discovery_manager = "Discovery"
+    key_manager = "Key Manager"
+    monitoring_module = "Monitor"
+    onboard_discovery_manager = "Onboard Discovery Manager"
+    reporter_service_module = "Reporting"
+    ssh_manager = "SSH Manager"
+    trust_net_manager = "TrustNet Manager"
+    validation_manager = "Validation Manager"
+
+
+class _PlatformsAttributes:
+    acme_fqdn = "ACME FQDN"
+    address_range = "Address Range"
+    allowed_protocol_version = "Allowed Protocol Version"
+    aperture_fqdn = "Aperture FQDN"
+    authserver_fqdn = "AuthServer FQDN"
+    bypass_proxy_on_local = "Bypass Proxy on Local"
+    capabilities__asymmetric_key_generation = "Capabilities: Asymmetric Key Generation"
+    certificate_origin = "Certificate Origin"
+    certificate_verification = "Certificate Verification"
+    certificate_verification_log_warnings = "Certificate Verification Log Warnings"
+    check_crl = "Check CRL"
+    client_enrollment_require_windows_authentication = "Client Enrollment Require Windows Authentication"
+    contact = "Contact"
+    created_by = "Created By"
+    current_upgrade_task = "Current Upgrade Task"
+    description = "Description"
+    disable_triggers = "Disable Triggers"
+    disabled = "Disabled"
+    display_name = "Display Name"
+    driver_arguments = "Driver Arguments"
+    driver_name = "Driver Name"
+    escalation_contact = "Escalation Contact"
+    est_options = "Est Options"
+    guid = "GUID"
+    heartbeat_interval = "Heartbeat Interval"
+    hsm_fqdn = "HSM FQDN"
+    interval = "Interval"
+    log_debug = "Log Debug"
+    log_server = "Log Server"
+    log_target = "Log Target"
+    managed_by = "Managed By"
+    maximum_above_normal_priority_threads = "Maximum Above Normal Priority Threads"
+    maximum_below_normal_priority_threads = "Maximum Below Normal Priority Threads"
+    maximum_highest_priority_threads = "Maximum Highest Priority Threads"
+    maximum_low_priority_threads = "Maximum Low Priority Threads"
+    maximum_normal_priority_threads = "Maximum Normal Priority Threads"
+    maximum_threads = "Maximum Threads"
+    metadata = "Metadata"
+    migration_task = "Migration Task"
+    minimum_threads = "Minimum Threads"
+    operational_certificate_dn = "Operational Certificate DN"
+    options = "Options"
+    pending_migration_task = "Pending Migration Task"
+    portal_fqdn = "Portal FQDN"
+    private_key_vault_id = "Private Key Vault Id"
+    proxy_credential = "Proxy Credential"
+    proxy_host = "Proxy Host"
+    proxy_port = "Proxy Port"
+    proxy_use_host_configuration = "Proxy Use Host Configuration"
+    reference = "Reference"
+    scep_allowed_identities = "Scep Allowed Identities"
+    scep_certificate_authority = "Scep Certificate Authority"
+    scep_challenge_password = "Scep Challenge Password"
+    scep_encryption_certificate_authority = "Scep Encryption Certificate Authority"
+    scep_encryption_ra_certificate = "Scep Encryption RA Certificate"
+    scep_fqdn = "SCEP FQDN"
+    scep_instant_retries_client_user_agent = "Scep Instant Retries Client User Agent"
+    scep_intune_application_id = "Scep Intune Application Id"
+    scep_intune_application_secret = "Scep Intune Application Secret"
+    scep_intune_authentication_authority_resource_url = "Scep Intune Authentication Authority Resource URL"
+    scep_intune_challenge_password_sanity_check_disabled = "Scep Intune Challenge Password Sanity Check Disabled"
+    scep_intune_graph_resource_url = "Scep Intune Graph Resource URL"
+    scep_intune_http_connection_lease_timeout = "Scep Intune Http Connection Lease Timeout"
+    scep_intune_http_connection_limit = "Scep Intune Http Connection Limit"
+    scep_intune_http_timeout = "Scep Intune Http Timeout"
+    scep_intune_provider_name_and_version = "Scep Intune Provider Name And Version"
+    scep_intune_resource_url = "Scep Intune Resource URL"
+    scep_intune_tenant_name = "Scep Intune Tenant Name"
+    scep_intune_validation_attempts = "Scep Intune Validation Attempts"
+    scep_maximum_ndes_challenges = "Scep Maximum Ndes Challenges"
+    scep_ndes_challenge_validity = "Scep Ndes Challenge Validity"
+    scep_object_container = "Scep Object Container"
+    scep_options = "Scep Options"
+    scep_ra_certificate = "Scep RA Certificate"
+    scep_signing_certificate_authority = "Scep Signing Certificate Authority"
+    scep_signing_ra_certificate = "Scep Signing RA Certificate"
+    start_time = "Start Time"
+    started_by = "Started By"
+    upgrade_details = "Upgrade Details"
+    upgrade_status = "Upgrade Status"
+    user_agent_windows_authentication_enabled = "User Agent Windows Authentication Enabled"
+    vedclient_fqdn = "VEDClient FQDN"
+    webadmin_fqdn = "WebAdmin FQDN"
+    websdk_fqdn = "WebSDK FQDN"
+    window_end = "Window End"
+    window_start = "Window Start"
+    workflow = "Workflow"
+    workflow_block = "Workflow Block"
+    zone_contact = "Zone Contact"
+    zone_description = "Zone Description"
+
+
+class PlatformsAttributes(_PlatformsAttributes):
+    class BulkProvisioningManager:
+        retry_interval = "Retry Interval"
+
+    class CertificateManager:
+        cdp_aia_verification_disabled = "CDP AIA Verification Disabled"
+        escalation_notice_interval = "Escalation Notice Interval"
+        escalation_notice_start = "Escalation Notice Start"
+        expiration_notice_interval = "Expiration Notice Interval"
+        expiration_notice_start = "Expiration Notice Start"
+        maximum_threads = "Maximum Threads"
+        minimum_threads = "Minimum Threads"
+        renewal_window = "Renewal Window"
+        renewal_window_event = "Renewal Window Event"
+        revocation_check_disabled = "Revocation Check Disabled"
+        service_module_classes = "Service Module Classes"
+        start_time = "Start Time"
+        trust_store_management_disabled = "Trust Store Management Disabled"
+
+    class CertificateRevocation:
+        ca_issuer_monitor_disabled = "CA Issuer Monitor Disabled"
+        ocsp_concurrent_connection_limit = "OCSP Concurrent Connection Limit"
+        ocsp_concurrent_request_limit = "OCSP Concurrent Request Limit"
+
+    class CloudInstanceMonitor:
+        certificate_cleanup_options = "Certificate Cleanup Options"
+        certificate_relocation_policy_dn = "Certificate Relocation Policy DN"
+        cleanup_after = "Cleanup After"
+        cloud_region = "Cloud Region"
+        last_run = "Last Run"
+        policydn = "PolicyDN"
+
+    class DiscoveryManager:
+        connection_timeout = "Connection Timeout"
+        delay = "Delay"
+        load_percentage = "Load Percentage"
+        max_work_units = "Max Work Units"
+        maximum_threads = "Maximum Threads"
+        minimum_threads = "Minimum Threads"
+        placement_disabled = "Placement Disabled"
+        timeout = "Timeout"
+        window_days_of_week = "Window Days of Week"
+        window_end = "Window End"
+        window_start = "Window Start"
+
+    class Monitor:
+        escalation_notice_interval = "Escalation Notice Interval"
+        escalation_notice_start = "Escalation Notice Start"
+        expiration_notice_interval = "Expiration Notice Interval"
+        expiration_notice_start = "Expiration Notice Start"
+
+    class Reporting:
+        host = "Host"
+        log_delivery = "Log Delivery"
+        max_running_reports = "Max Running Reports"
+        report_execution_timeout = "Report Execution Timeout"
+        report_max_source_record_count = "Report Max Source Record Count"
+        secure = "Secure"
+        sender = "Sender"
+        smtp_credentials = "SMTP Credentials"
+
+    class SSHManager:
+        escalation_notice_interval = "Escalation Notice Interval"
+        escalation_notice_start = "Escalation Notice Start"
+        expiration_notice_interval = "Expiration Notice Interval"
+        expiration_notice_start = "Expiration Notice Start"
+        renewal_window = "Renewal Window"
+        renewal_window_event = "Renewal Window Event"
+
+    class TrustNetManager:
+        api_key = "API Key"
+        blackout = "Blackout"
+        certificate_location_dn = "Certificate Location DN"
+        certificate_receive_url = "Certificate Receive URL"
+        certificate_send_url = "Certificate Send URL"
+        company_id = "Company Id"
+        day_interval = "Day Interval"
+        days_of_month = "Days Of Month"
+        days_of_week = "Days Of Week"
+        days_of_year = "Days Of Year"
+        dsn = "DSN"
+        filter_by_issuer = "Filter By Issuer"
+        filter_by_policy = "Filter By Policy"
+        hour = "Hour"
+        hour_interval = "Hour Interval"
+        last_blacklist_task = "Last Blacklist Task"
+        last_pull_certificate_task = "Last Pull Certificate Task"
+        last_pull_domain_pattern_task = "Last Pull Domain Pattern Task"
+        last_pull_reputation_task = "Last Pull Reputation Task"
+        last_pull_widgets_task = "Last Pull Widgets Task"
+        last_push_certificate_task = "Last Push Certificate Task"
+        last_trustnet_operation = "Last TrustNet Operation"
+        minute = "Minute"
+        priority = "Priority"
+        pull_certificates_batch_id = "Pull Certificates Batch ID"
+        push_certificates_batch_id = "Push Certificates Batch ID"
+        push_inclusion = "Push Inclusion"
+        push_issuer_certificates_batch_id = "Push Issuer Certificates Batch ID"
+        reschedule = "Reschedule"
+        search_patterns = "Search Patterns"
+        size_limit = "Size Limit"
+        start_time = "Start Time"
+        stop_time = "Stop Time"
+        subscriber_email = "Subscriber Email"
+        timeout = "Timeout"
+        totp_seed_vault_id = "Totp Seed Vault Id"
+        trustnet_enabled = "TrustNet Enabled"
+        uri = "URI"
+        utc = "UTC"
+
+    class ValidationManager:
+        start_time = "Start Time"
+
+    class VenafiPlatform:
+        acme_fqdn = "ACME FQDN"
+        address_range = "Address Range"
+        allowed_protocol_version = "Allowed Protocol Version"
+        aperture_fqdn = "Aperture FQDN"
+        authserver_fqdn = "AuthServer FQDN"
+        bypass_proxy_on_local = "Bypass Proxy on Local"
+        capabilities_asymmetric_key_generation = "Capabilities: Asymmetric Key Generation"
+        certificate_origin = "Certificate Origin"
+        certificate_verification = "Certificate Verification"
+        certificate_verification_log_warnings = "Certificate Verification Log Warnings"
+        check_crl = "Check CRL"
+        client_enrollment_require_windows_authentication = "Client Enrollment Require Windows Authentication"
+        contact = "Contact"
+        created_by = "Created By"
+        current_upgrade_task = "Current Upgrade Task"
+        dbo_vault_id = "Dbo Vault Id"
+        description = "Description"
+        disable_triggers = "Disable Triggers"
+        disabled = "Disabled"
+        display_name = "Display Name"
+        escalation_contact = "Escalation Contact"
+        est_options = "Est Options"
+        guid = "GUID"
+        heartbeat_interval = "Heartbeat Interval"
+        hsm_fqdn = "HSM FQDN"
+        interval = "Interval"
+        log_debug = "Log Debug"
+        log_server = "Log Server"
+        log_target = "Log Target"
+        managed_by = "Managed By"
+        maximum_above_normal_priority_threads = "Maximum Above Normal Priority Threads"
+        maximum_below_normal_priority_threads = "Maximum Below Normal Priority Threads"
+        maximum_highest_priority_threads = "Maximum Highest Priority Threads"
+        maximum_low_priority_threads = "Maximum Low Priority Threads"
+        maximum_normal_priority_threads = "Maximum Normal Priority Threads"
+        maximum_threads = "Maximum Threads"
+        metadata = "Metadata"
+        migration_task = "Migration Task"
+        minimum_threads = "Minimum Threads"
+        operational_certificate_dn = "Operational Certificate DN"
+        options = "Options"
+        pending_migration_task = "Pending Migration Task"
+        portal_fqdn = "Portal FQDN"
+        private_key_vault_id = "Private Key Vault Id"
+        proxy_credential = "Proxy Credential"
+        proxy_host = "Proxy Host"
+        proxy_port = "Proxy Port"
+        proxy_use_host_configuration = "Proxy Use Host Configuration"
+        reference = "Reference"
+        scep_allowed_identities = "Scep Allowed Identities"
+        scep_certificate_authority = "Scep Certificate Authority"
+        scep_challenge_password = "Scep Challenge Password"
+        scep_encryption_certificate_authority = "Scep Encryption Certificate Authority"
+        scep_encryption_ra_certificate = "Scep Encryption RA Certificate"
+        scep_fqdn = "SCEP FQDN"
+        scep_instant_retries_client_user_agent = "Scep Instant Retries Client User Agent"
+        scep_intune_application_id = "Scep Intune Application Id"
+        scep_intune_application_secret = "Scep Intune Application Secret"
+        scep_intune_authentication_authority_resource_url = "Scep Intune Authentication Authority Resource URL"
+        scep_intune_challenge_password_sanity_check_disabled = "Scep Intune Challenge Password Sanity Check Disabled"
+        scep_intune_graph_resource_url = "Scep Intune Graph Resource URL"
+        scep_intune_http_connection_lease_timeout = "Scep Intune Http Connection Lease Timeout"
+        scep_intune_http_connection_limit = "Scep Intune Http Connection Limit"
+        scep_intune_http_timeout = "Scep Intune Http Timeout"
+        scep_intune_provider_name_and_version = "Scep Intune Provider Name And Version"
+        scep_intune_resource_url = "Scep Intune Resource URL"
+        scep_intune_tenant_name = "Scep Intune Tenant Name"
+        scep_intune_validation_attempts = "Scep Intune Validation Attempts"
+        scep_maximum_ndes_challenges = "Scep Maximum Ndes Challenges"
+        scep_ndes_challenge_validity = "Scep Ndes Challenge Validity"
+        scep_object_container = "Scep Object Container"
+        scep_options = "Scep Options"
+        scep_ra_certificate = "Scep RA Certificate"
+        scep_signing_certificate_authority = "Scep Signing Certificate Authority"
+        scep_signing_ra_certificate = "Scep Signing RA Certificate"
+        start_time = "Start Time"
+        upgrade_details = "Upgrade Details"
+        upgrade_status = "Upgrade Status"
+        user_agent_windows_authentication_enabled = "User Agent Windows Authentication Enabled"
+        vedclient_fqdn = "VEDClient FQDN"
+        webadmin_fqdn = "WebAdmin FQDN"
+        websdk_fqdn = "WebSDK FQDN"
+        window_end = "Window End"
+        window_start = "Window Start"
+        workflow = "Workflow"
+        workflow_block = "Workflow Block"
+        zone_contact = "Zone Contact"
+        zone_description = "Zone Description"
+# endregion Platforms
 
 
 # region Workflow

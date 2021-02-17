@@ -1,25 +1,37 @@
 class Identity:
     class Identity:
-        def __init__(self, identity_dict: dict):
-            if not isinstance(identity_dict, dict):
-                identity_dict = {}
+        def __init__(self, response_object: dict, api_type: str):
+            if not isinstance(response_object, dict):
+                response_object = {}
 
-            self.full_name = identity_dict.get('FullName')  # type: str
-            self.is_container = identity_dict.get('IsContainer')  # type: str
-            self.is_group = identity_dict.get('IsGroup')  # type: bool
-            self.name = identity_dict.get('Name')  # type: str
-            self.prefix = identity_dict.get('Prefix')  # type: str
-            self.prefixed_name = identity_dict.get('PrefixedName')  # type: str
-            self.prefixed_universal = identity_dict.get('PrefixedUniversal')  # type: str
-            self.type = identity_dict.get('Type')  # type: str
-            self.universal = identity_dict.get('Universal')  # type: str
+            if api_type == 'websdk':
+                self.full_name = response_object.get('FullName')  # type: str
+                self.is_container = response_object.get('IsContainer')  # type: bool
+                self.is_group = response_object.get('IsGroup')  # type: bool
+                self.name = response_object.get('Name')  # type: str
+                self.prefix = response_object.get('Prefix')  # type: str
+                self.prefixed_name = response_object.get('PrefixedName')  # type: str
+                self.prefixed_universal = response_object.get('PrefixedUniversal')  # type: str
+                self.type = response_object.get('Type')  # type: str
+                self.universal = response_object.get('Universal')  # type: str
 
-    class InvalidMembers:
-        def __init__(self, invalid_members_dict: dict):
-            if not isinstance(invalid_members_dict, dict):
-                invalid_members_dict = {}
+            elif api_type == 'aperture':
+                self.full_name = response_object.get('fullName')  # type: str
+                self.is_container = response_object.get('isContainer')  # type: bool
+                self.is_group = response_object.get('isGroup')  # type: bool
+                self.name = response_object.get('name')  # type: str
+                self.prefix = ''
+                self.prefixed_name = response_object.get('prefixedName')  # type: str
+                self.prefixed_universal = response_object.get('id')  # type: str
+                self.type = ''
+                self.universal = ''
 
-            self.prefix = invalid_members_dict.get('Prefix')  # type: str
-            self.prefixed_name = invalid_members_dict.get('PrefixedName')  # type: str
-            self.prefixed_universal = invalid_members_dict.get('PrefixedUniversal')  # type: str
-            self.universal = invalid_members_dict.get('Universal')  # type: str
+    class InvalidIdentity:
+        def __init__(self, response_object: dict):
+            if not isinstance(response_object, dict):
+                response_object = {}
+
+            self.prefix = response_object.get('Prefix')  # type: str
+            self.prefixed_name = response_object.get('PrefixedName')  # type: str
+            self.prefixed_universal = response_object.get('PrefixedUniversal')  # type: str
+            self.universal = response_object.get('Universal')  # type: str

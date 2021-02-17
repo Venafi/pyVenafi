@@ -277,6 +277,21 @@ class ResultCodes:
         1073741824: 'RetryLater'
     }
 
+    Flow = {
+        0: 'Success',
+        1: 'InsufficientPermission',
+        2: 'TicketNotFound',
+        3: 'FailedToEnumerateTickets',
+        4: 'FailedToApproveTickets',
+        5: 'FailedToRejectTickets',
+        6: 'FailedToCreateTicket',
+        7: 'FailedToGetTicket',
+        8: 'FailedToDeleteTicket',
+        9: 'FailedToUseTicket',
+        10:'NoTicketUsesRemain',
+        11:'FailedToUpdateTickets'
+    }
+
     Metadata = {
          0: 'Success',
          1: 'InvalidConfigObject',

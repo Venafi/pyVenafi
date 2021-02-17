@@ -1,10 +1,10 @@
-from venafi.properties.config import DevicesClassNames, DeviceAttributes
+from venafi.properties.config import DevicesClassNames, DeviceAttributes, DeviceAttributeValues
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
 
 
 class _DeviceBase(FeatureBase):
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def delete(self, object_dn: str):
         """
@@ -22,8 +22,8 @@ class Device(_DeviceBase):
     """
     This feature provides high-level interaction with TPP device objects.
     """
-    def __init__(self, auth):
-        super().__init__(auth=auth)
+    def __init__(self, api):
+        super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
         """
