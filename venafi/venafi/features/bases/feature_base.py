@@ -1,5 +1,6 @@
 import inspect
 import time
+import os
 from venafi.logger import logger, LogTags
 from venafi.properties.secret_store import Namespaces
 from venafi.api.authenticate import Authenticate
@@ -8,6 +9,8 @@ from typing import List, Dict
 
 def feature():
     def decorate(cls):
+        if int(os.getenv('VENAFI_PY_DOC_IN_PROGRESS', 0)):
+            return cls
         for attr, fn in inspect.getmembers(cls, inspect.isroutine):
             # Only public methods are decorated.
             if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
@@ -23,6 +26,7 @@ def feature():
                         mask_input_regexes=['self', 'cls'],
                     )(getattr(cls, attr)))
         return cls
+
     return decorate
 
 
@@ -42,7 +46,8 @@ class FeatureBase:
         if self._api.preference == ApiPreferences.aperture:
             self._log_not_implemented_warning(ApiPreferences.aperture)
 
-        ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=config_class, name_attribute_list=attributes or [])
+        ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=config_class,
+                                                 name_attribute_list=attributes or [])
 
         result = ca.result
         if result.code != 1:
@@ -155,7 +160,8 @@ class FeatureError(_FeatureException):
 
     class InvalidAPIPreference(_FeatureException):
         def __init__(self, api_pref):
-            super().__init__(f'"{api_pref}" is not a valid API preference. Valid preferences are "websdk" and "aperture".')
+            super().__init__(
+                f'"{api_pref}" is not a valid API preference. Valid preferences are "websdk" and "aperture".')
 
     class InvalidFormat(_FeatureException):
         pass
@@ -166,7 +172,8 @@ class FeatureError(_FeatureException):
 
     class TimeoutError(_FeatureException):
         def __init__(self, method, expected_value, actual_value, timeout: int):
-            super().__init__(f'{method.__name__} did not return {expected_value} in {timeout} seconds. Got {actual_value} instead.')
+            super().__init__(
+                f'{method.__name__} did not return {expected_value} in {timeout} seconds. Got {actual_value} instead.')
 
     class UnexpectedValue(_FeatureException):
         pass

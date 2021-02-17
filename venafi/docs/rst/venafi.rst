@@ -4,7 +4,7 @@ API Reference
 =============
 
 .. toctree::
-   :caption: API Reference
+   :maxdepth: 1
 
    features/venafi.features
    api/venafi.api

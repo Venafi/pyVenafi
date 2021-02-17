@@ -2,6 +2,7 @@ Credentials
 ===========
 
 .. toctree::
+   :maxdepth: 1
 
    venafi.features.credentials.amazon
    venafi.features.credentials.certificate

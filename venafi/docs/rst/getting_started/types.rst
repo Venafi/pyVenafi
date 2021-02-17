@@ -3,9 +3,8 @@
 Types
 =====
 
-Python 3 supports typing, which enables a developer to suggest what types a variable ought to be. This
-module ships with ``Types``, which contains a large set of types. The most common types are ``Config.Object``
-and ``Identity.Identity``. Here is an example.
+This module has a ``Types`` class for type hinting. The most common types are ``Config.Object`` and
+``Identity.Identity``. Here is an example.
 
 .. code-block:: python
 
@@ -15,6 +14,5 @@ and ``Identity.Identity``. Here is an example.
 	some_object_to_be_defined_later = None  # type: Optional[Types.Config.Object]
 	some_identity_to_be_defined_later = None  # type: Optional[Types.Identity.Identity]
 
-	def do_something(ident: Types.Identity.Identity, obj: Types.Config.Object) -> Types.Certificate.CertificateDetails:
+	def do_something(ident: 'Types.Identity.Identity', obj: 'Types.Config.Object') -> 'Types.Certificate.CertificateDetails':
 		...
-

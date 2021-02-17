@@ -72,7 +72,7 @@ class UploadFiles:
         with NamedTemporaryFile(suffix='.txt', dir=os.curdir) as temp_file:
             os.system(f'pipreqs --save {temp_file.name} {PROJECT_DIR}/venafi')
             new_reqs = temp_file.readlines()
-            with open(os.path.abspath(f'{PROJECT_DIR}/requirements.txt'), 'rb+') as req_file:
+            with open(os.path.abspath(f'{PROJECT_DIR}/../requirements.txt'), 'rb+') as req_file:
                 current_reqs = req_file.readlines()
                 if set(new_reqs) != set(current_reqs):
                     print('Updating requirements.txt file...\n')

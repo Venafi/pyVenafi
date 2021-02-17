@@ -2,6 +2,7 @@ Platforms
 =========
 
 .. toctree::
+   :maxdepth: 1
 
    venafi.features.platform.AutoLayoutManager
    venafi.features.platform.BulkProvisioningManager

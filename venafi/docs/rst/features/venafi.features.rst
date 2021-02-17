@@ -4,6 +4,7 @@ Features
 ========
 
 .. toctree::
+   :maxdepth: 1
 
    application/venafi.features.application
    certificate/venafi.features.certificate

@@ -2,6 +2,7 @@ Applications
 ============
 
 .. toctree::
+   :maxdepth: 1
 
    venafi.features.application.a10axtrafficmanager
    venafi.features.application.adaptable
