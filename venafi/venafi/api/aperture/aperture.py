@@ -1,6 +1,7 @@
 from venafi.logger import logger, LogTags
 from venafi.api.session import Session
 from venafi.api.aperture.endpoints.application_integration import _ApplicationIntegration
+from venafi.api.aperture.endpoints.approvers import _Approvers
 from venafi.api.aperture.endpoints.certificates import _Certificates
 from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
 from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
@@ -64,6 +65,7 @@ class Aperture:
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
         self.ApplicationIntegration = _ApplicationIntegration(self)
+        self.Approvers = _Approvers(self)
         self.Certificates = _Certificates(self)
         self.ConfigObjects = _ConfigObjects(self)
         self.CertificateDashboard = _CertificateDashboard(self)
