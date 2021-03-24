@@ -1,5 +1,5 @@
 from venafi.properties.config import ApplicationClassNames, ApplicationAttributes, ApplicationAttributeValues, CertificateAttributes
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 from venafi.tools.helpers.date_converter import from_date_string
 
 
@@ -24,9 +24,6 @@ class _ApplicationBase(FeatureBase):
         Args:
             application_dn:  Absolute path to the Application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.Write.post(
             object_dn=application_dn,
             attribute_data=self._name_value_list({
@@ -44,9 +41,6 @@ class _ApplicationBase(FeatureBase):
         Args:
             application_dn:  Absolute path to the Application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.ClearAttribute.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.disabled
@@ -65,9 +59,6 @@ class _ApplicationBase(FeatureBase):
         Returns:
             Config Object of the certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.certificate
@@ -89,9 +80,6 @@ class _ApplicationBase(FeatureBase):
         Returns:
             The current stage if it exists. Otherwise, returns ``None``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.stage
@@ -121,9 +109,6 @@ class _ApplicationBase(FeatureBase):
         Returns:
             The current status if it exists. Otherwise, returns ``None``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.status
@@ -161,9 +146,6 @@ class _ApplicationBase(FeatureBase):
             application_dn: Absolute path to the Application object.
             timeout: Timeout in seconds.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         certificate_dn = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
             attribute_name=ApplicationAttributes.certificate
@@ -237,9 +219,6 @@ class A10AXTrafficManager(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appa10axtm'
@@ -274,9 +253,6 @@ class Adaptable(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appadaptable'
@@ -311,9 +287,6 @@ class AmazonAWS(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appamazon'
@@ -349,9 +322,6 @@ class Apache(_ApplicationBase):
             Config object representation of the application object.
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appapache'
@@ -386,9 +356,6 @@ class AzureKeyVault(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appazurekeyvault'
@@ -423,9 +390,6 @@ class Basic(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appbasic'
@@ -451,9 +415,6 @@ class Basic(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.MutateObject.post(
             object_dn=basic_application_dn,
             class_name=new_class_name
@@ -498,9 +459,6 @@ class BlueCoatSSLVA(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appBlueCoat'
@@ -535,9 +493,6 @@ class CAPI(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appcapi'
@@ -572,9 +527,6 @@ class CitrixNetScaler(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appnetscaler'
@@ -609,9 +561,6 @@ class ConnectDirect(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appConnectDirect'
@@ -647,9 +596,6 @@ class F5AuthenticationBundle(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.F5AuthenticationBundle.advanced_settings_bundle_name: bundle_file_name
@@ -683,9 +629,6 @@ class F5LTMAdvanced(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appf5ltmadvanced'
@@ -720,9 +663,6 @@ class IBMDataPower(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appdatapower'
@@ -757,9 +697,6 @@ class IBMGSK(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appgsk'
@@ -794,9 +731,6 @@ class ImpervaMX(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appimpervamx'
@@ -831,9 +765,6 @@ class JKS(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appjks'
@@ -868,9 +799,6 @@ class JuniperSAS(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appjuniper'
@@ -905,9 +833,6 @@ class OracleIPlanet(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appiplanet'
@@ -942,9 +867,6 @@ class PaloAltoNetworkFW(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appPaloAlto'
@@ -979,9 +901,6 @@ class PEM(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appPem'
@@ -1016,8 +935,6 @@ class PKCS11(_ApplicationBase):
         Returns:
             Config Object representing the PKCS11 object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'apppkcs11'
@@ -1051,9 +968,6 @@ class PKCS12(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'apppkcs12'
@@ -1088,9 +1002,6 @@ class RiverbedSteelHead(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appriverbedsteelhead'
@@ -1125,9 +1036,6 @@ class TealeafPCA(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'apptealeafpca'
@@ -1162,9 +1070,6 @@ class VAMnShield(_ApplicationBase):
         Returns:
             Config object representation of the application object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = attributes or {}
         attributes.update({
             ApplicationAttributes.driver_name: 'appvamnshield'

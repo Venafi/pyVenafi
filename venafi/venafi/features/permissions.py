@@ -1,4 +1,4 @@
-from venafi.features.bases.feature_base import FeatureBase, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, feature
 from venafi.properties.response_objects.permissions import Permissions as PermResponseObj
 
 
@@ -16,9 +16,6 @@ class Permissions(FeatureBase):
             object_dn: Absolute path to the object to which permissions will be granted.
             identity_prefixed_universal: The prefixed name of the Identity object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
         if not current_permissions:
             return
@@ -47,9 +44,6 @@ class Permissions(FeatureBase):
         Returns:
             Effective Permissions object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
@@ -76,9 +70,6 @@ class Permissions(FeatureBase):
         Returns:
             Explicit Permissions object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
@@ -102,9 +93,6 @@ class Permissions(FeatureBase):
         Returns:
             Implicit Permissions object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:
@@ -129,9 +117,6 @@ class Permissions(FeatureBase):
         Returns:
             List of Identity objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         principals = self._api.websdk.Permissions.Object.Guid(object_guid).get().principals
 
@@ -171,9 +156,6 @@ class Permissions(FeatureBase):
             is_view_allowed: Allows ability to view the name of all subordinate objects to ``object_dn``.
             is_write_allowed: Allows editing of subordinate objects to ``object_dn``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
         prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
         if '+' in prefix:

@@ -1,6 +1,5 @@
-from typing import List
 from venafi.properties.config import CertificateAuthorityClassNames, CertificateAuthorityAttributes
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, feature
 
 
 class _CertificateAuthorityBase(FeatureBase):

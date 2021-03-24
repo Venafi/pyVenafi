@@ -1,7 +1,7 @@
 from typing import List
-from venafi.api.api_base import API, APIResponse, json_response_property
-from venafi.properties.response_objects.config import Config
-from venafi.properties.response_objects.placement_rules import PlacementRules
+from venafi.plugins.api.api_base import API, APIResponse, json_response_property
+from venafi.plugins.properties.response_objects.config import Config
+from venafi.plugins.properties.response_objects.placement_rules import PlacementRules
 
 
 class _Discovery:

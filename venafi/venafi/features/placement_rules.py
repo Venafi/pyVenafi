@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 from venafi.properties.config import PlacementRulesAttributeValues
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, feature
 
 
 @feature()
@@ -67,17 +67,16 @@ class PlacementRules(FeatureBase):
         Returns:
             Config object of the placement rule.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Discovery.PlacementRules.post(
-            name=name,
-            conditions=conditions,
-            device_location_dn=device_location_dn,
-            cert_location_dn=certificate_location_dn
-        )
-        rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
-        return rule.object
+        # TODO
+        # response = self._api.aperture.Discovery.PlacementRules.post(
+        #     name=name,
+        #     conditions=conditions,
+        #     device_location_dn=device_location_dn,
+        #     cert_location_dn=certificate_location_dn
+        # )
+        # rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
+        # return rule.object
+        pass
 
     def delete(self, guid: str):
         """
@@ -86,11 +85,10 @@ class PlacementRules(FeatureBase):
         Args:
             guid: GUID of the placement rule.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).delete()
-        response.assert_valid_response()
+        # TODO:
+        # response = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).delete()
+        # response.assert_valid_response()
+        pass
 
     def update(self, guid: str, conditions: List[Dict] = None, device_location_dn: str = None, certificate_location_dn: str = None):
         """
@@ -131,19 +129,18 @@ class PlacementRules(FeatureBase):
         Returns:
             Config object of the placement rule.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        rule = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
-        response = self._api.aperture.Discovery.PlacementRules.put(
-            guid=rule.guid,
-            name=rule.name,
-            conditions=conditions or [c.__dict__ for c in rule.conditions],
-            device_location_dn=device_location_dn or rule.device_location.dn,
-            cert_location_dn=certificate_location_dn or rule.cert_location.dn
-        )
-        rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
-        return rule.object
+        # TODO
+        # rule = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
+        # response = self._api.aperture.Discovery.PlacementRules.put(
+        #     guid=rule.guid,
+        #     name=rule.name,
+        #     conditions=conditions or [c.__dict__ for c in rule.conditions],
+        #     device_location_dn=device_location_dn or rule.device_location.dn,
+        #     cert_location_dn=certificate_location_dn or rule.cert_location.dn
+        # )
+        # rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
+        # return rule.object
+        pass
 
     def get(self, guid: str):
         """
@@ -153,9 +150,11 @@ class PlacementRules(FeatureBase):
         Returns:
             Placement rule attributes.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
-        response.assert_valid_response()
-        return response
+        # TODO
+        # if self._api.preference == ApiPreferences.websdk:
+        #     self._log_not_implemented_warning(ApiPreferences.websdk)
+        #
+        # response = self._api.aperture.Discovery.PlacementRules.Guid(guid=guid).get()
+        # response.assert_valid_response()
+        # return response
+        pass

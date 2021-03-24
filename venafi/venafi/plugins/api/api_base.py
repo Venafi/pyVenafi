@@ -90,6 +90,8 @@ class API:
         """
         if self._api_source == 'websdk':
             invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
+        elif self._api_source == 'aperture':
+            invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
         else:
             invalid_api_message_match = False
 

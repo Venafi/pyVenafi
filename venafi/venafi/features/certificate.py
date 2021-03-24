@@ -1,6 +1,6 @@
 from typing import List
 from venafi.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 @feature()
@@ -13,9 +13,6 @@ class Certificate(FeatureBase):
         super().__init__(api)
 
     def _get(self, certificate_guid: str):
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Guid(certificate_guid).get()
         result.assert_valid_response()
 
@@ -30,9 +27,6 @@ class Certificate(FeatureBase):
             application_dns: A list of absolute paths to each application object.
             push_to_new: If True, the certificate will be pushed to the application once associated.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if not isinstance(application_dns, list):
             application_dns = [application_dns]
 
@@ -73,9 +67,6 @@ class Certificate(FeatureBase):
         Args:
             certificate_guid: GUID of the certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Guid(certificate_guid).delete()
         if not result.is_valid_response():
             certificate_dn = self._api.websdk.Config.GuidToDn.post(object_guid=certificate_guid).object_dn
@@ -130,9 +121,6 @@ class Certificate(FeatureBase):
                 Otherwise retain only the Device DN and its children. Use this option to completely remove the application
                 object and corresponding device objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Dissociate.post(
             certificate_dn=certificate_dn,
             application_dn=application_dns,
@@ -173,9 +161,6 @@ class Certificate(FeatureBase):
             * File Format
             * File name
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if vault_id:
             result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
                 format=format,
@@ -212,9 +197,6 @@ class Certificate(FeatureBase):
         Returns:
             A list of historical certificates related to the certificate GUID.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
             exclude_expired=exclude_expired,
             exclude_revoked=exclude_revoked
@@ -233,9 +215,6 @@ class Certificate(FeatureBase):
             File and SSL/TLS validation results for each of the applications
             associated to the certificate GUID.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
         return [result.file, result.ssl_tls]
 
@@ -246,9 +225,6 @@ class Certificate(FeatureBase):
             certificate_dn: Absolute path to the certificate object.
             application_dns: A list of application DNs to push certificates.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if not application_dns:
             application_dns = self._api.websdk.Config.ReadDn.post(
                 object_dn=certificate_dn,
@@ -277,9 +253,6 @@ class Certificate(FeatureBase):
             Certificate details regarding the request and renewal.
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         certificate_guid = self._api.websdk.Config.DnToGuid.post(object_dn=certificate_dn).guid
         current_thumbprint = self.details(certificate_guid=certificate_guid).thumbprint
 
@@ -296,9 +269,6 @@ class Certificate(FeatureBase):
         Args:
             certificate_dn: Absolute path to the certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=False)
 
         result.assert_valid_response()
@@ -313,9 +283,6 @@ class Certificate(FeatureBase):
         Args:
             certificate_dn: Absolute path to the certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate_dn)
         result.assert_valid_response()
 
@@ -327,9 +294,6 @@ class Certificate(FeatureBase):
         Args:
             certificate_dn: Absolute path to the certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=True)
 
         result.assert_valid_response()
@@ -353,9 +317,6 @@ class Certificate(FeatureBase):
         Returns:
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Revoke.post(
             certificate_dn=certificate_dn,
             comments=comments,
@@ -394,9 +355,6 @@ class Certificate(FeatureBase):
         Returns:
             Config object representing the (new) certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if certificate_authority_attributes:
             certificate_authority_attributes = self._name_value_list(attributes=certificate_authority_attributes)
 
@@ -426,9 +384,6 @@ class Certificate(FeatureBase):
         """
         if not isinstance(certificate_dns, list):
             certificate_dns = [certificate_dns]
-
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
 
         result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
         return result

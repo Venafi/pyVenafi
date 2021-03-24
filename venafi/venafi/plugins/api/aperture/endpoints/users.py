@@ -1,4 +1,4 @@
-from venafi.api.api_base import API, APIResponse, json_response_property
+from venafi.plugins.api.api_base import API, APIResponse, json_response_property
 
 
 class _Users:
