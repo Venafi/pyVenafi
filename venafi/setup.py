@@ -6,6 +6,7 @@ if __name__ == '__main__':
     setup(
         name='venafi',
         packages=find_packages(where='.', exclude=['docs']),
+        # packages=find_packages(where='.', exclude=['docs', '*plugins*']), # Use this line to exclude the plugins.
         package_dir={
           '': '.'
         },
