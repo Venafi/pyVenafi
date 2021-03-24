@@ -3,7 +3,6 @@ import re
 import json
 from venafi.api.session import Session
 from requests import Response, HTTPError
-from requests.exceptions import ConnectionError
 from venafi.logger import logger, LogTags
 
 
@@ -76,7 +75,6 @@ class API:
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
-        self.retries = 3
 
     def _is_api_key_invalid(self, response: Response):
         """
@@ -92,6 +90,8 @@ class API:
         """
         if self._api_source == 'websdk':
             invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
+        elif self._api_source == 'aperture':
+            invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
         else:
             invalid_api_message_match = False
 
@@ -107,20 +107,12 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(method='DELETE', mask_values_with_key=mask_input_regexes)
-        retried = 0
-        exc = None
-        while retried < self.retries:
-            try:
-                response = self._session.delete(url=self._url)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
-                if self._is_api_key_invalid(response=response):
-                    self._re_authenticate()
-                    return self._delete(mask_input_regexes=mask_input_regexes, mask_output_regexes=mask_output_regexes)
-                return response
-            except (ConnectionResetError, ConnectionError) as e:
-                exc = e
-            retried += 1
-        raise exc
+        response = self._session.delete(url=self._url)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._delete(mask_input_regexes=mask_input_regexes, mask_output_regexes=mask_output_regexes)
+        return response
 
     def _get(self, params: dict = None, mask_input_regexes: List[str] = None,
              mask_output_regexes: List[str] = None):
@@ -136,21 +128,13 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(method='GET', data=params, mask_values_with_key=mask_input_regexes)
-        retried = 0
-        exc = None
-        while retried < self.retries:
-            try:
-                response = self._session.get(url=self._url, params=params)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
-                if self._is_api_key_invalid(response=response):
-                    self._re_authenticate()
-                    return self._get(params=params, mask_input_regexes=mask_input_regexes,
-                                     mask_output_regexes=mask_output_regexes)
-                return response
-            except (ConnectionResetError, ConnectionError) as e:
-                exc = e
-            retried += 1
-        raise exc
+        response = self._session.get(url=self._url, params=params)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._get(params=params, mask_input_regexes=mask_input_regexes,
+                             mask_output_regexes=mask_output_regexes)
+        return response
 
     def _post(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
               mask_output_regexes: List[str] = None):
@@ -166,21 +150,13 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(method='POST', data=data, mask_values_with_key=mask_input_regexes)
-        retried = 0
-        exc = None
-        while retried < self.retries:
-            try:
-                response = self._session.post(url=self._url, data=data)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
-                if self._is_api_key_invalid(response=response):
-                    self._re_authenticate()
-                    return self._post(data=data, mask_input_regexes=mask_input_regexes,
-                                      mask_output_regexes=mask_output_regexes)
-                return response
-            except (ConnectionResetError, ConnectionError) as e:
-                exc = e
-            retried += 1
-        raise exc
+        response = self._session.post(url=self._url, data=data)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._post(data=data, mask_input_regexes=mask_input_regexes,
+                              mask_output_regexes=mask_output_regexes)
+        return response
 
     def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
         """
@@ -195,21 +171,13 @@ class API:
             Returns the raw JSON response.
         """
         self._log_rest_call(method='PUT', data=data, mask_values_with_key=mask_input_regexes)
-        retried = 0
-        exc = None
-        while retried < self.retries:
-            try:
-                response = self._session.put(url=self._url, data=data)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
-                if self._is_api_key_invalid(response=response):
-                    self._re_authenticate()
-                    return self._put(data=data, mask_input_regexes=mask_input_regexes,
-                                     mask_output_regexes=mask_output_regexes)
-                return response
-            except (ConnectionResetError, ConnectionError) as e:
-                exc = e
-            retried += 1
-        raise exc
+        response = self._session.put(url=self._url, data=data)
+        self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+        if self._is_api_key_invalid(response=response):
+            self._re_authenticate()
+            return self._put(data=data, mask_input_regexes=mask_input_regexes,
+                             mask_output_regexes=mask_output_regexes)
+        return response
 
     def _re_authenticate(self):
         """

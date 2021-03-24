@@ -1,5 +1,5 @@
 from typing import List, Union
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 from venafi.properties.response_objects.config import Config
 
 
@@ -72,9 +72,6 @@ class Objects(FeatureBase):
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if isinstance(attributes, list):
             for attribute_name in attributes:
                 result = self._api.websdk.Config.ClearAttribute.post(
@@ -119,9 +116,6 @@ class Objects(FeatureBase):
             2. Attribute Values: A list of all values corresponding to the given attribute name.
             3. Locked: A boolean representing whether or not the returned values are locked.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         resp = self._api.websdk.Config.FindPolicy.post(
             object_dn=object_dn,
             class_name=class_name,
@@ -153,9 +147,6 @@ class Objects(FeatureBase):
         Returns:
             Config Object
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if not (object_dn or object_guid):
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
@@ -259,9 +250,6 @@ class Objects(FeatureBase):
             A list of NameValue objects having ``name`` and ``values`` properties corresponding to each
             attribute name and attribute value.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         resp = self._api.websdk.Config.ReadAll.post(object_dn=object_dn)
 
         result = resp.result
@@ -283,9 +271,6 @@ class Objects(FeatureBase):
             raise FeatureError.InvalidFormat(f'"{object_dn}" must be an absolute path starting from \\VED.')
         if not new_object_dn.startswith('\\VED'):
             raise FeatureError.InvalidFormat(f'"{new_object_dn}" must be an absolute path starting from \\VED.')
-
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
 
         response = self._api.websdk.Config.RenameObject.post(object_dn=object_dn, new_object_dn=new_object_dn)
         result = response.result
@@ -323,9 +308,6 @@ class Objects(FeatureBase):
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         for name, value in attributes.items():
             result = self._api.websdk.Config.AddValue.post(
                 object_dn=object_dn,
@@ -398,9 +380,6 @@ class Objects(FeatureBase):
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         attributes = {k: ([v] if not isinstance(v, list) else v) for k, v in attributes.items()}
 
         result = self._api.websdk.Config.Write.post(
@@ -412,9 +391,6 @@ class Objects(FeatureBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def _read(self, object_dn: str, attribute_name: str, include_policy_values: bool):
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if include_policy_values is True:
             resp = self._api.websdk.Config.ReadEffectivePolicy.post(
                 object_dn=object_dn,

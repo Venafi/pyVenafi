@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List
 from venafi.properties.config import CredentialAttributes
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 class _CredentialBase(FeatureBase):
@@ -11,9 +11,6 @@ class _CredentialBase(FeatureBase):
     def _create(self, name: str, parent_folder: str, friendly_name: str, values: List[dict], expiration: int, description: str,
                 encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         dn = f'{parent_folder}\\{name}'
-
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
 
         expiration = int((datetime.now() + timedelta(expiration * (365 / 12))).timestamp() * 1000)
 
@@ -44,9 +41,6 @@ class _CredentialBase(FeatureBase):
         Args:
             credential_dn: Absolute path to the credential object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Credentials.Delete.post(credential_path=credential_dn).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
@@ -352,9 +346,6 @@ class UsernamePasswordCredential(_CredentialBase):
 
         """
         dn = f'{parent_folder_dn}\\{name}'
-
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
 
         expiration = int((datetime.now() + timedelta(expiration * (365/12))).timestamp() * 1000)
 

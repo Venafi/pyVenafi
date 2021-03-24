@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
 from venafi.properties.config import DiscoveryAttributes, DiscoveryAttributeValues, DiscoveryClassNames
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 @feature()
@@ -98,9 +98,6 @@ class NetworkDiscovery(FeatureBase):
             Config object of the discovery job.
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         ports = ','.join(list(map(str, ports))) if ports else \
             "22,80,443-449,465,563,636,695,981-995,1311,1920,2083,2087,2096,2211,2484,2949,3268,3269,3414," \
             "4712,4843,5223,5358,6619,6679,6697,7002,8080,8222,8243,8333,8443,8878,8881,8882,9043,9090," \
@@ -149,9 +146,6 @@ class NetworkDiscovery(FeatureBase):
         Args:
             job_guid: GUID of the discovery job.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Discovery.Guid(guid=job_guid).delete()
         response.assert_valid_response()
 
@@ -163,9 +157,6 @@ class NetworkDiscovery(FeatureBase):
         Returns:
             Config object of the discovery job.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         return self._api.websdk.Config.IsValid.post(object_dn=f'{self._discovery_dn}\\{name}').object
 
     def schedule(self, name: str, hour: Union[str, int], days_of_week: List[str] = None,
@@ -180,9 +171,6 @@ class NetworkDiscovery(FeatureBase):
             days_of_month: Days of the month without leading zeros.
             days_of_year: Days of the year in "MM/DD" format without leading zeros (i.e. 1/23, 10/3).
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         hour = str(hour)
         if not isinstance(hour, list):
             hour = [hour]
@@ -211,9 +199,6 @@ class NetworkDiscovery(FeatureBase):
         Args:
             name: Name of the discovery job.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         job_dn = f'{self._discovery_dn}\\{name}'
         for attribute_name in {
             DiscoveryAttributes.Network.hour,
@@ -244,9 +229,6 @@ class NetworkDiscovery(FeatureBase):
             friday: List of hours without leading zeros to restrict processing on Friday.
             saturday: List of hours without leading zeros to restrict processing on Saturday.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         blackout = []
         for e, day in enumerate([sunday, monday, tuesday, wednesday, thursday, friday, saturday]):
             if day:
@@ -268,21 +250,20 @@ class NetworkDiscovery(FeatureBase):
         Args:
             job_guid: GUID of the discovery job.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='runNow')
-        response.assert_valid_response()
-
-        job_dn = self._api.websdk.Config.GuidToDn.post(object_guid=job_guid).object_dn
-        with self._Timeout(timeout=10) as to:
-            while not to.is_expired():
-                if self._is_in_progress(job_dn=job_dn):
-                    return
-
-        raise FeatureError.UnexpectedValue(
-            f'Expected the job "{job_dn}" to start progress, but it did not.'
-        )
+        # TODO
+        # response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='runNow')
+        # response.assert_valid_response()
+        #
+        # job_dn = self._api.websdk.Config.GuidToDn.post(object_guid=job_guid).object_dn
+        # with self._Timeout(timeout=10) as to:
+        #     while not to.is_expired():
+        #         if self._is_in_progress(job_dn=job_dn):
+        #             return
+        #
+        # raise FeatureError.UnexpectedValue(
+        #     f'Expected the job "{job_dn}" to start progress, but it did not.'
+        # )
+        pass
 
     def cancel(self, job_guid: str):
         """
@@ -291,11 +272,10 @@ class NetworkDiscovery(FeatureBase):
         Args:
             job_guid: GUID of the discovery job.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='abort')
-        response.assert_valid_response()
+        # TODO:
+        # response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='abort')
+        # response.assert_valid_response()
+        pass
 
     def pause(self, job_guid: str):
         """
@@ -304,11 +284,10 @@ class NetworkDiscovery(FeatureBase):
         Args:
             job_guid: GUID of the discovery job.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='pause')
-        response.assert_valid_response()
+        # TODO
+        # response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='pause')
+        # response.assert_valid_response()
+        pass
 
     def resume(self, job_guid: str):
         """
@@ -317,11 +296,10 @@ class NetworkDiscovery(FeatureBase):
         Args:
             job_guid: GUID of the discovery job.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='resume')
-        response.assert_valid_response()
+        # TODO
+        # response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='resume')
+        # response.assert_valid_response()
+        pass
 
     def place_results(self, job_guid: str):
         """
@@ -330,20 +308,16 @@ class NetworkDiscovery(FeatureBase):
         Args:
             job_guid: GUID of the discovery job.
         """
-        if self._api.preference == ApiPreferences.websdk:
-            self._log_not_implemented_warning(ApiPreferences.websdk)
-
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='importResults')
-        response.assert_valid_response()
+        # TODO:
+        # response = self._api.aperture.Jobs.NetworkDiscovery.Guid(guid=job_guid).Actions.post(job_action='importResults')
+        # response.assert_valid_response()
+        pass
 
     def get_all_jobs(self):
         """
         Returns:
             List of all network discovery jobs.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         jobs = self._api.websdk.Config.FindObjectsOfClass.post(
             class_name='Discovery',
             object_dn=self._discovery_dn

@@ -3,7 +3,7 @@ import hashlib
 from typing import List
 from datetime import datetime
 from venafi.properties.config import WorkflowClassNames, WorkflowAttributes, WorkflowAttributeValues
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 from venafi.properties.secret_store import KeyNames, Namespaces, VaultTypes
 
 
@@ -23,9 +23,6 @@ class _WorkflowBase(FeatureBase):
 
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None):
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         workflow = self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
@@ -119,9 +116,6 @@ class AdaptableWorkflow(_WorkflowBase):
         Returns:
             Config Object of the workflow.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if approver_guids:
             approvers = ','.join(approver_guids)
         elif use_approvers_from_powershell_script:
@@ -221,9 +215,6 @@ class ReasonCode(FeatureBase):
         Returns:
             List of ``code``, ``name``, and ``description``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.AddValue.post(
             object_dn=self._workflow_dn,
             attribute_name=WorkflowAttributes.Standard.approval_reason,
@@ -243,9 +234,6 @@ class ReasonCode(FeatureBase):
             code: An integer code.
             name: Name of the result code.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result_codes = self._api.websdk.Config.ReadDn.post(
             object_dn=self._workflow_dn,
             attribute_name=WorkflowAttributes.Standard.approval_reason
@@ -300,9 +288,6 @@ class StandardWorkflow(_WorkflowBase):
         Returns:
             Config Object of the workflow.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if approver_guids:
             approvers = ','.join(approver_guids)
         elif macro:
@@ -350,9 +335,6 @@ class Ticket(FeatureBase):
         Returns:
             Workflow ticket name.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Workflow.Ticket.Create.post(
             object_dn=object_dn,
             workflow_dn=workflow_dn,
@@ -372,9 +354,6 @@ class Ticket(FeatureBase):
         Args:
             ticket_name: Name of the workflow ticket.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Workflow.Ticket.Delete.post(guid=ticket_name).result
         self._validate_result_code(result)
 
@@ -388,9 +367,6 @@ class Ticket(FeatureBase):
         Returns:
             Ticket Details object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Workflow.Ticket.Details.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
         return response.details
@@ -405,9 +381,6 @@ class Ticket(FeatureBase):
         Returns:
             ``True`` when a particular workflow exists, otherwise ``False``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
@@ -429,9 +402,6 @@ class Ticket(FeatureBase):
         Returns:
             List of Config Objects
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         def get_tickets():
             ticket_names = self._api.websdk.Workflow.Ticket.Enumerate.post(
                 object_dn=object_dn,
@@ -479,9 +449,6 @@ class Ticket(FeatureBase):
         Returns:
             The current status of a workflow ticket.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Workflow.Ticket.Status.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
         return response.status
@@ -499,9 +466,6 @@ class Ticket(FeatureBase):
             scheduled_start: Date/time to continue the approval process.
             scheduled_stop:  Date/time to expire the approval process.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Workflow.Ticket.UpdateStatus.post(
             guid=ticket_name,
             status=status,

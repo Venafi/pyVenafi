@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
 from venafi.properties.config import CustomFieldAttributes, CustomFieldAttributeValues
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 @feature()
@@ -102,9 +102,6 @@ class CustomField(FeatureBase):
             Metadata Item object.
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         item = {
             'AllowedCharacters': allowed_characters,
             'AllowedValues': allowed_values,
@@ -148,9 +145,6 @@ class CustomField(FeatureBase):
             remove_data: If ``True``, then deletes the custom field regardless of data existing on the custom field
                 on any object that implements it.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Metadata.UndefineItem.post(
             item_guid=custom_field_guid,
             remove_data=remove_data
@@ -169,9 +163,6 @@ class CustomField(FeatureBase):
         Returns:
             Metadata Item object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if custom_field_name:
             custom_field_dn = f'{self._metadata_root_dn}\\{custom_field_name}'
         response = self._api.websdk.Metadata.LoadItem.post(dn=custom_field_dn)
@@ -185,9 +176,6 @@ class CustomField(FeatureBase):
         Returns:
             List of Metadata Item objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Metadata.Items.get()
         self._validate_result_code(response.result)
         return response.items
@@ -206,9 +194,6 @@ class CustomField(FeatureBase):
                 * policy_dn: Absolute path to the policy locking the values.
                 * values: List of values.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Metadata.ReadEffectiveValues.post(
             dn=object_dn,
             item_guid=custom_field_guid
@@ -237,9 +222,6 @@ class CustomField(FeatureBase):
                 * locked: Boolean. If ``True``, the ``values`` are locked by the policy.
                 * values: List of values.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Metadata.ReadPolicy.post(
             dn=folder_dn,
             item_guid=custom_field_guid,
@@ -296,9 +278,6 @@ class CustomField(FeatureBase):
         Returns:
             Metadata Item object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         listify = lambda x: [x] if x and not isinstance(x, list) else x
 
         item = {
@@ -349,9 +328,6 @@ class CustomField(FeatureBase):
             values: List of values to write to ``object_dn``.
             keep_existing: If ``True``, all other custom fields remain unaffected.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Metadata.Set.post(
             dn=object_dn,
             guid_data=self._guid_data_list({custom_field_guid: values}),
@@ -371,9 +347,6 @@ class CustomField(FeatureBase):
             values: List of values to write to ``object_dn``.
             locked: If ``True``, all subordinate objects inherit and cannot modify the ``values``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         response = self._api.websdk.Metadata.SetPolicy.post(
             dn=folder_dn,
             config_class=class_name,

@@ -1,5 +1,5 @@
 from typing import List, Union
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 from venafi.properties.config import FolderClassNames, FolderAttributes
 
 
@@ -20,9 +20,6 @@ class Folder(FeatureBase):
             folder_dn: Absolute path to the folder object.
             workflow_dn: Absolute path to the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.AddValue.post(
             object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow,
@@ -40,9 +37,6 @@ class Folder(FeatureBase):
             folder_dn: Absolute path to the folder object.
             workflow_dn: Absolute path to the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.AddValue.post(
             object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow_block,
@@ -103,9 +97,6 @@ class Folder(FeatureBase):
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if isinstance(attributes, list):
             for attribute_name in attributes:
                 result = self._api.websdk.Config.ClearPolicyAttribute.post(
@@ -149,16 +140,12 @@ class Folder(FeatureBase):
         Returns:
             Config object representing the folder.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            return self._api.aperture.ConfigObjects.Policies.post(name=name, container=parent_folder_dn).object
-
-        if self._api.preference == ApiPreferences.websdk:
-            return self._config_create(
-                name=name,
-                parent_folder_dn=parent_folder_dn,
-                config_class=FolderClassNames.policy,
-                attributes=attributes
-            )
+        return self._config_create(
+            name=name,
+            parent_folder_dn=parent_folder_dn,
+            config_class=FolderClassNames.policy,
+            attributes=attributes
+        )
 
     def delete(self, folder_dn: str, recursive: bool = True):
         """
@@ -169,9 +156,6 @@ class Folder(FeatureBase):
             folder_dn: Absolute path to the folder.
             recursive: If True, delete all sub-folders, etc., from config and secret store.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if recursive:
             # Must delete all of the secrets first.
             response = self._api.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
@@ -192,9 +176,6 @@ class Folder(FeatureBase):
         Args:
             folder_guid: GUID of the folder.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
     def get_engines(self, folder_guid: str):
@@ -204,9 +185,6 @@ class Folder(FeatureBase):
         Args:
             folder_guid: GUID of the folder.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
 
     def search(self, object_name_pattern: str = '*', object_types: List[str] = None, recursive: bool = True,
@@ -240,9 +218,6 @@ class Folder(FeatureBase):
         Returns:
             A list of Config Objects representing the objects found.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if object_types:
             objects = self._api.websdk.Config.FindObjectsOfClass.post(
                 classes=object_types,
@@ -273,9 +248,6 @@ class Folder(FeatureBase):
             append_engines: If True, append `engine_guids` to the current list on the folder. Otherwise
                 overwrite the current setting.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if append_engines:
             current_engines = self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
             engine_guids.extend([engine.engine_guid for engine in current_engines])
@@ -315,9 +287,6 @@ class Folder(FeatureBase):
             boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
             be returned.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         resp = self._api.websdk.Config.ReadPolicy.post(
             object_dn=folder_dn,
             class_name=class_name,
@@ -338,9 +307,6 @@ class Folder(FeatureBase):
             folder_dn: Absolute path to the folder object.
             workflow_dn: Absolute path to the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow,
@@ -357,9 +323,6 @@ class Folder(FeatureBase):
             folder_dn: Absolute path to the folder object.
             workflow_dn: Absolute path to the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow_block,
@@ -406,9 +369,6 @@ class Folder(FeatureBase):
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         for name, values in attributes.items():
             if not isinstance(values, list):
                 values = [values]
@@ -458,9 +418,6 @@ class Folder(FeatureBase):
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         for name, value in attributes.items():
             result = self._api.websdk.Config.AddPolicyValue.post(
                 object_dn=folder_dn,

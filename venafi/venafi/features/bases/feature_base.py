@@ -42,13 +42,8 @@ class FeatureBase:
             attributes = self._name_value_list(attributes=attributes)
 
         dn = f'{parent_folder_dn}\\{name}'
-
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=config_class,
                                                  name_attribute_list=attributes or [])
-
         result = ca.result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -56,9 +51,6 @@ class FeatureBase:
         return ca.object
 
     def _config_delete(self, object_dn, recursive: bool = False):
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -97,9 +89,6 @@ class FeatureBase:
         return nvl
 
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         owners = self._api.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
         result = owners.result
         if result.code != 0:
@@ -158,11 +147,6 @@ class FeatureError(_FeatureException):
     def __init__(self, msg):
         super().__init__(msg)
 
-    class InvalidAPIPreference(_FeatureException):
-        def __init__(self, api_pref):
-            super().__init__(
-                f'"{api_pref}" is not a valid API preference. Valid preferences are "websdk" and "aperture".')
-
     class InvalidFormat(_FeatureException):
         pass
 
@@ -177,8 +161,3 @@ class FeatureError(_FeatureException):
 
     class UnexpectedValue(_FeatureException):
         pass
-
-
-class ApiPreferences:
-    websdk = 'websdk'
-    aperture = 'aperture'
