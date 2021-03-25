@@ -1,8 +1,9 @@
-from venafi.api.api_base import API as _API, APIResponse, json_response_property, InvalidResponseError
+from venafi.api.api_base import *
+del globals()['API'] # We want to rename this and inherit it.
+from venafi.api.api_base import API as _API
 import re
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from venafi.api.api_base import Session
     from requests import Response
 
 
