@@ -3,7 +3,6 @@ import re
 import json
 from venafi.api.session import Session
 from requests import Response, HTTPError
-from requests.exceptions import ConnectionError
 from venafi.logger import logger, LogTags
 
 
@@ -182,7 +181,8 @@ class API:
             retried += 1
         raise exc
 
-    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
+    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
+             mask_output_regexes: List[str] = None):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate using the re-authentication method provided
@@ -354,7 +354,7 @@ class APIResponse:
         """
         try:
             result = self.json_response.json()
-        except json.decoder.JSONDecodeError as e:
+        except json.decoder.JSONDecodeError:
             if return_on_error:
                 return return_on_error()
             raise InvalidResponseError(f'{self.json_response.url} return no content. '
