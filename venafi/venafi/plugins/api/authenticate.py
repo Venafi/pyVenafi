@@ -1,10 +1,9 @@
-from typing import Union
-from venafi.properties.oauth import Scope
-from venafi.api.websdk.websdk import WebSDK
 from venafi.plugins.api.aperture.aperture import Aperture
+from venafi.api.authenticate import Authenticate as _Authenticate
 
 
-class Authenticate:
+
+class Authenticate(_Authenticate):
     """
     Authenticates WebSDK and Aperture API sessions.
 
@@ -17,9 +16,7 @@ class Authenticate:
     to WebSDK and log a message that Aperture could not be used. It should be noted that more support
     is provided by WebSDK, which is the default.
     """
-    def __init__(self, host: str, username: str, password: str, preference='websdk', application_id: str = None,
-                 scope: Union[Scope, str] = None, websdk_token: str = None, aperture_token: str = None,
-                 suppress_not_implemented_warning: bool = True, version: str = ''):
+    def __init__(self, *args, preference='websdk', aperture_token: str = None, **kwargs):
         """
         Authenticates the given user to WebSDK and Aperture. The only supported method for authentication at
         this time is with a username and password.
@@ -52,52 +49,24 @@ class Authenticate:
                 used. To enable the warnings, set this to `False`.
             version: Version of the TPP server.
         """
-        if version and version[:4] <= "19.4":
-            application_id = None
-            scope = None
-            self._version = '.'.join(version.split('.')[:2])
-        else:
-            self._version = ''
-        self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token,
-                             application_id=application_id, scope=scope)
+        super().__init__(*args, **kwargs)
         if self.websdk._oauth is not None and not aperture_token:
-            self.aperture = Aperture(host=host, username=username, password=password, token=self.websdk._token)
+            self.aperture = Aperture(
+                host=self.host,
+                username=self.username,
+                password=self.password,
+                token=self.websdk._token
+            )
         else:
-            self.aperture = Aperture(host=host, username=username, password=password, token=aperture_token)
+            self.aperture = Aperture(
+                host=self.host,
+                username=self.username,
+                password=self.password,
+                token=aperture_token
+            )
         self.preference = preference.lower()
         if self.preference not in {'websdk', 'aperture'}:
             raise ValueError('Invalid preference. Must be one of "websdk" or "aperture".')
-
-        self._host = host
-        self._username = username
-        self._password = password
-        self._application_id = application_id
-        self._scope = scope
-        self._suppress_not_implemented_warning = suppress_not_implemented_warning
-
-    @property
-    def host(self):
-        return self._host
-
-    @property
-    def username(self):
-        return self._username
-
-    @property
-    def password(self):
-        return self._password
-
-    def copy(self):
-        return Authenticate(
-            host=self._host,
-            username=self._username,
-            password=self._password,
-            preference=self.preference,
-            websdk_token=self.websdk._token,
-            aperture_token=self.aperture._token,
-            application_id=self._application_id,
-            scope=self._scope
-        )
 
     def re_authenticate(self, host: str = None, username: str = None, password: str = None, preference=None,
                         application_id: str = None, scope: str = None):

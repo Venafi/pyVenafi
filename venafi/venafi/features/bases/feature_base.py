@@ -35,8 +35,6 @@ class FeatureBase:
     def __init__(self, api: Authenticate):
         self._api = api
 
-        self._log_not_implemented_warning = self.__log_not_implemented_warning if api._suppress_not_implemented_warning else self.__no_op
-
     def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None):
         if attributes:
             attributes = self._name_value_list(attributes=attributes)
