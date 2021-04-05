@@ -13,15 +13,15 @@ class _Crypto:
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def keynames(self) -> List[str]:
                     return self._from_json('Keynames')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
     class _DefaultKey(API):
         def __init__(self, api_obj):
@@ -29,12 +29,12 @@ class _Crypto:
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def default_key(self) -> str:
                     return self._from_json('DefaultKey')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())

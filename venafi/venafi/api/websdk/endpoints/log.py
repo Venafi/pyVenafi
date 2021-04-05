@@ -27,15 +27,15 @@ class _Log(API):
         }
         
         class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+            def __init__(self, response):
+                super().__init__(response=response)
 
             @property
             @json_response_property()
             def log_events(self):
                 return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
 
-        return _Response(response=self._get(params=params), api_source=self._api_source)
+        return _Response(response=self._get(params=params))
 
     def post(self, component: str, id: int, grouping: int = None, severity: int = None, source_ip: str = None,
              text1: str = None, text2: str = None, value1: str = None, value2: str = None):
@@ -52,15 +52,15 @@ class _Log(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+            def __init__(self, response):
+                super().__init__(response=response)
 
             @property
             @json_response_property()
             def log_result(self) -> int:
                 return self._from_json('LogResult')
 
-        return _Response(response=self._post(data=body), api_source=self._api_source)
+        return _Response(response=self._post(data=body))
 
     def Guid(self, guid: str):
         return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -71,15 +71,15 @@ class _Log(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def log_events(self):
                     return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
     class _LogSchema(API):
         def __init__(self, api_obj):
@@ -87,8 +87,8 @@ class _Log(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -107,4 +107,4 @@ class _Log(API):
                 def log_result(self) -> int:
                     return self._from_json(key='LogResult')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())

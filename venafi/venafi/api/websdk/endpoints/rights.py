@@ -21,7 +21,7 @@ class _Rights:
                 'RightsValue': rights_value
             }
 
-            return APIResponse(response=self._post(data=body), api_source=self._api_source)
+            return APIResponse(response=self._post(data=body))
 
     class _Get(API):
         def __init__(self, api_obj):
@@ -33,22 +33,22 @@ class _Rights:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def rights(self):
                     return [Rights.Rights(rights) for rights in self._from_json('Rights')]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Refresh(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Rights/Refresh')
 
         def get(self):
-            return APIResponse(response=self._get(), api_source=self._api_source)
+            return APIResponse(response=self._get())
 
     class _Remove(API):
         def __init__(self, api_obj):
@@ -61,4 +61,4 @@ class _Rights:
                 "UniversalID": universal_id
             }
 
-            return APIResponse(response=self._post(data=body), api_source=self._api_source)
+            return APIResponse(response=self._post(data=body))

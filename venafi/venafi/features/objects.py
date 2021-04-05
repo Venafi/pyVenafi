@@ -154,7 +154,7 @@ class Objects(FeatureBase):
         obj = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
         if obj.result.code == 400 and not raise_error_if_not_exists:
             # The object doesn't exist, but just return an empty object.
-            return Config.Object(response_object={}, api_type=self._api.preference)
+            return Config.Object(response_object={})
         return obj.object
 
     def read(self, object_dn: str, attribute_name: str, include_policy_values: bool = False, timeout: int = 10):

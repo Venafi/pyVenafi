@@ -1,6 +1,7 @@
 from venafi.api.api_base import *
 del globals()['API'] # We want to rename this and inherit it.
-from venafi.api.api_base import API as _API
+del globals()['APIResponse']  # We want to rename this and inherit it.
+from venafi.api.api_base import API as _API, APIResponse as _APIResponse
 import re
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -24,6 +25,7 @@ class API(_API):
             url: This is the URL extension from the base URL.
         """
         super().__init__(api_obj=api_obj, url=url)
+        self._api_source = api_obj.__class__.__name__.lower()
 
     def _is_api_key_invalid(self, response: 'Response'):
         """
@@ -45,3 +47,9 @@ class API(_API):
             invalid_api_message_match = False
 
         return response.status_code == 401 and invalid_api_message_match
+
+
+class APIResponse(_APIResponse):
+    def __init__(self, response: Response, api_source: str):
+        super().__init__(response=response)
+        self._api_source = api_source

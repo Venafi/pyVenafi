@@ -37,8 +37,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -50,7 +50,7 @@ class _SecretStore:
                 def vault_id(self) -> int:
                     return self._from_json(key='VaultID')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Associate(API):
         def __init__(self, api_obj):
@@ -66,15 +66,15 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Delete(API):
         def __init__(self, api_obj):
@@ -86,15 +86,15 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Dissociate(API):
         def __init__(self, api_obj):
@@ -110,15 +110,15 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _EncryptionKeysInUse(API):
         def __init__(self, api_obj):
@@ -126,8 +126,8 @@ class _SecretStore:
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -139,7 +139,7 @@ class _SecretStore:
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
     class _Lookup(API):
         def __init__(self, api_obj):
@@ -147,8 +147,8 @@ class _SecretStore:
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -160,7 +160,7 @@ class _SecretStore:
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
     class _LookupAllAssociationsbyVaultid(API):
         def __init__(self, api_obj):
@@ -172,8 +172,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -185,7 +185,7 @@ class _SecretStore:
                 def typed_name_values(self):
                     return [SecretStore.TypedNameValues(tnv) for tnv in self._from_json('TypedNameValues')]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _LookupByAssociation(API):
         def __init__(self, api_obj):
@@ -200,8 +200,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -213,7 +213,7 @@ class _SecretStore:
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _LookupAssociationbyVaultID(API):
         def __init__(self, api_obj):
@@ -226,8 +226,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -239,7 +239,7 @@ class _SecretStore:
                 def value(self) -> str:
                     return self._from_json(key='Value')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _LookupByOwner(API):
         def __init__(self, api_obj):
@@ -253,8 +253,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -266,7 +266,7 @@ class _SecretStore:
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _LookupByVaultType(API):
         def __init__(self, api_obj):
@@ -278,8 +278,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -291,7 +291,7 @@ class _SecretStore:
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Mutate(API):
         def __init__(self, api_obj):
@@ -304,15 +304,15 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _OrphanLookup(API):
         def __init__(self, api_obj):
@@ -324,8 +324,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -337,7 +337,7 @@ class _SecretStore:
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _OwnerAdd(API):
         def __init__(self, api_obj):
@@ -351,15 +351,15 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _OwnerDelete(API):
         def __init__(self, api_obj):
@@ -373,15 +373,15 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _OwnerLookup(API):
         def __init__(self, api_obj):
@@ -394,8 +394,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -407,7 +407,7 @@ class _SecretStore:
                 def owners(self) -> List[str]:
                     return self._from_json(key='Owners')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -419,8 +419,8 @@ class _SecretStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -437,4 +437,4 @@ class _SecretStore:
                 def vault_type(self) -> str:
                     return self._from_json(key='VaultType')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

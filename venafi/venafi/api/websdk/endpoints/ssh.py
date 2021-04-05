@@ -61,8 +61,8 @@ class _SSH:
             
             
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -74,7 +74,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddHostPrivateKey(API):
         def __init__(self, api_obj):
@@ -89,8 +89,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -107,7 +107,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddKnownHostKey(API):
         def __init__(self, api_obj):
@@ -123,8 +123,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -136,7 +136,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddSelfServiceKey(API):
         def __init__(self, api_obj):
@@ -153,8 +153,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -176,7 +176,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddSelfServiceAuthorizedKey(API):
         def __init__(self, api_obj):
@@ -198,8 +198,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -221,7 +221,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddSelfServicePrivateKey(API):
         def __init__(self, api_obj):
@@ -238,8 +238,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -256,7 +256,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddUserPrivateKey(API):
         def __init__(self, api_obj):
@@ -273,8 +273,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -291,7 +291,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ApproveKeyOperation(API):
         def __init__(self, api_obj):
@@ -304,15 +304,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _CancelKeyOperation(API):
         def __init__(self, api_obj):
@@ -324,15 +324,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _CancelRotation(API):
         def __init__(self, api_obj):
@@ -344,15 +344,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ChangePrivateKeyPassphrase(API):
         def __init__(self, api_obj):
@@ -365,15 +365,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ConfirmSelfServiceKeyInstallation(API):
         def __init__(self, api_obj):
@@ -385,15 +385,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _DeleteUnmatchedKeyset(API):
         def __init__(self, api_obj):
@@ -405,15 +405,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Devices(API):
         def __init__(self, api_obj):
@@ -427,15 +427,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def data(self):
                     return [SSH.DeviceData(d) for d in self._from_json('Data')]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _EditSelfServiceAuthorizedKey(API):
         def __init__(self, api_obj):
@@ -455,15 +455,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ExportSelfServiceKey(API):
         def __init__(self, api_obj):
@@ -477,8 +477,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -490,7 +490,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ExportSelfServicePrivateKey(API):
         def __init__(self, api_obj):
@@ -504,8 +504,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -527,7 +527,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ImportAuthorizedKey(API):
         def __init__(self, api_obj):
@@ -543,8 +543,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -556,7 +556,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ImportKeyUsageData(API):
         def __init__(self, api_obj):
@@ -568,15 +568,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('SshWebResponse'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ImportPrivateKey(API):
         def __init__(self, api_obj):
@@ -593,8 +593,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -606,7 +606,7 @@ class _SSH:
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _EditKeyOptions(API):
         def __init__(self, api_obj):
@@ -623,15 +623,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _KeyDetails(API):
         def __init__(self, api_obj):
@@ -643,15 +643,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def key_data(self):
                     return [SSH.KeyData(d) for d in self._from_json('KeyData')]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _KeysetDetails(API):
         def __init__(self, api_obj):
@@ -664,8 +664,8 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -737,7 +737,7 @@ class _SSH:
                 def violation_status(self):
                     return self._from_json('ViolationStatus')
 
-            return _Response(response=self._get(params=params), api_source=self._api_source)
+            return _Response(response=self._get(params=params))
 
         def post(self, keyset_filter: list, load_key_data: bool = None, offset: int = None, page_size: int = None):
             body = {
@@ -748,15 +748,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def data(self):
                     return [SSH.KeyData(key) for key in self._from_json('Data')][0]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _KeyUsage(API):
         def __init__(self, api_obj):
@@ -771,15 +771,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def data(self):
                     return [SSH.KeyUsageData(key) for key in self._from_json('Data')]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _MoveKeysetsToPolicy(API):
         def __init__(self, api_obj):
@@ -792,15 +792,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RejectKeyOperation(API):
         def __init__(self, api_obj):
@@ -813,15 +813,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RemoveKey(API):
         def __init__(self, api_obj):
@@ -833,15 +833,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RetryKeyOperation(API):
         def __init__(self, api_obj):
@@ -853,15 +853,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RetryRotation(API):
         def __init__(self, api_obj):
@@ -873,15 +873,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Rotate(API):
         def __init__(self, api_obj):
@@ -894,15 +894,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _SetUnmatchedKeysetPassPhrase(API):
         def __init__(self, api_obj):
@@ -915,15 +915,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _SkipKeyRotation(API):
         def __init__(self, api_obj):
@@ -935,15 +935,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _TestDeviceConnection(API):
         def __init__(self, api_obj):
@@ -955,15 +955,15 @@ class _SSH:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def connection_results(self):
                     return [SSH.ConnectionResult(result) for result in self._from_json()]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Widget:
         def __init__(self, api_obj):
@@ -981,8 +981,8 @@ class _SSH:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -1014,7 +1014,7 @@ class _SSH:
                     def very_small_key(self) -> int:
                         return self._from_json('VerySmallKey')
 
-                return _Response(response=self._get(params=params), api_source=self._api_source)
+                return _Response(response=self._get(params=params))
 
         class _PolicyViolations(API):
             def __init__(self, api_obj):
@@ -1022,8 +1022,8 @@ class _SSH:
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -1080,7 +1080,7 @@ class _SSH:
                     def root_access(self):
                         return self._from_json('RootAccess')
 
-                return _Response(response=self._get(), api_source=self._api_source)
+                return _Response(response=self._get())
 
         class _Stats(API):
             def __init__(self, api_obj):
@@ -1092,12 +1092,12 @@ class _SSH:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def name_value_pairs(self) -> dict:
                         return self._from_json()
 
-                return _Response(response=self._get(params=params), api_source=self._api_source)
+                return _Response(response=self._get(params=params))

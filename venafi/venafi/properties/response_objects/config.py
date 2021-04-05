@@ -17,7 +17,7 @@ class Config:
 
 
     class Object:
-        def __init__(self, response_object: dict, api_type: str):
+        def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):
                 response_object = {}
 
@@ -31,7 +31,7 @@ class Config:
             self.type_name = response_object.get('TypeName')  # type: str
 
     class Policy:
-        def __init__(self, response_object: dict, api_type: str):
+        def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):
                 response_object = {}
 
