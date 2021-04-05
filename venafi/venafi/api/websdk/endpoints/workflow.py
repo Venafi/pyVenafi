@@ -31,8 +31,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -44,7 +44,7 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Delete(API):
             def __init__(self, api_obj):
@@ -56,15 +56,15 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Details(API):
             def __init__(self, api_obj):
@@ -76,8 +76,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -89,7 +89,7 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Enumerate(API):
             def __init__(self, api_obj):
@@ -102,8 +102,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -115,7 +115,7 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Exists(API):
             def __init__(self, api_obj):
@@ -127,15 +127,15 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Status(API):
             def __init__(self, api_obj):
@@ -147,8 +147,8 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -160,7 +160,7 @@ class _Workflow:
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _UpdateStatus(API):
             def __init__(self, api_obj):
@@ -176,12 +176,12 @@ class _Workflow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))

@@ -34,8 +34,8 @@ class _Flow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -47,7 +47,7 @@ class _Flow:
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Count(API):
             def __init__(self, api_obj):
@@ -55,8 +55,8 @@ class _Flow:
 
             def post(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -73,7 +73,7 @@ class _Flow:
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
-                return _Response(response=self._post(data={}), api_source=self._api_source)
+                return _Response(response=self._post(data={}))
 
         class _CountApproved(API):
             def __init__(self, api_obj):
@@ -81,8 +81,8 @@ class _Flow:
 
             def post(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -99,7 +99,7 @@ class _Flow:
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
-                return _Response(response=self._post(data={}), api_source=self._api_source)
+                return _Response(response=self._post(data={}))
 
         class _Enumerate(API):
             def __init__(self, api_obj):
@@ -113,8 +113,8 @@ class _Flow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -131,7 +131,7 @@ class _Flow:
                     def tickets(self):
                         return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _EnumerateApproved(API):
             def __init__(self, api_obj):
@@ -145,8 +145,8 @@ class _Flow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -163,7 +163,7 @@ class _Flow:
                     def tickets(self):
                         return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Load(API):
             def __init__(self, api_obj):
@@ -176,8 +176,8 @@ class _Flow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -194,7 +194,7 @@ class _Flow:
                     def tickets(self):
                         return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Reject(API):
             def __init__(self, api_obj):
@@ -210,8 +210,8 @@ class _Flow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -228,7 +228,7 @@ class _Flow:
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
         class _Update(API):
             def __init__(self, api_obj):
@@ -246,8 +246,8 @@ class _Flow:
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -259,4 +259,4 @@ class _Flow:
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))

@@ -33,15 +33,15 @@ class _Client(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+            def __init__(self, response):
+                super().__init__(response=response)
 
             @property
             @json_response_property(return_on_204=list)
             def clients(self):
-                return [Client.Client(client, self._api_source) for client in self._from_json()]
+                return [Client.Client(client) for client in self._from_json()]
 
-        return _Response(response=self._get(params=params), api_source=self._api_source)
+        return _Response(response=self._get(params=params))
 
     class _Delete(API):
         def __init__(self, api_obj):
@@ -54,8 +54,8 @@ class _Client(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -67,7 +67,7 @@ class _Client(API):
                 def errors(self) -> List[str]:
                     return self._from_json(key='Errors')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Details(API):
         def __init__(self, api_obj):
@@ -96,15 +96,15 @@ class _Client(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property(return_on_204=list)
                 def details(self):
-                    return [Client.ClientDetails(client, self._api_source) for client in self._from_json()]
+                    return [Client.ClientDetails(client) for client in self._from_json()]
 
-            return _Response(response=self._get(params=params), api_source=self._api_source)
+            return _Response(response=self._get(params=params))
 
     class _Work(API):
         def __init__(self, api_obj):
@@ -112,12 +112,12 @@ class _Client(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property(return_on_204=list)
                 def works(self):
-                    return [Client.Work(work, self._api_source) for work in self._from_json()]
+                    return [Client.Work(work) for work in self._from_json()]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())

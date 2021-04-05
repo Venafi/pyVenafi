@@ -35,8 +35,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -58,7 +58,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Find(API):
         def __init__(self, api_obj):
@@ -72,8 +72,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -83,14 +83,14 @@ class _Metadata(API):
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json('Objects')]
+                    return [Config.Object(obj) for obj in self._from_json('Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _FindItem(API):
         def __init__(self, api_obj):
@@ -102,8 +102,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -120,7 +120,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Get(API):
         def __init__(self, api_obj):
@@ -133,8 +133,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -151,7 +151,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetItemGuids(API):
         def __init__(self, api_obj):
@@ -163,8 +163,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -181,7 +181,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetItems(API):
         def __init__(self, api_obj):
@@ -193,8 +193,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -211,7 +211,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetItemsForClass(API):
         def __init__(self, api_obj):
@@ -223,8 +223,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -241,7 +241,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetPolicyItems(API):
         def __init__(self, api_obj):
@@ -253,8 +253,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -271,7 +271,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Items(API):
         def __init__(self, api_obj):
@@ -279,8 +279,8 @@ class _Metadata(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -297,7 +297,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
     class _LoadItem(API):
         def __init__(self, api_obj):
@@ -309,8 +309,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -327,7 +327,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _LoadItemGuid(API):
         def __init__(self, api_obj):
@@ -339,8 +339,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -357,7 +357,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadEffectiveValues(API):
         def __init__(self, api_obj):
@@ -370,8 +370,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -393,7 +393,7 @@ class _Metadata(API):
                 def values(self) -> List[str]:
                     return self._from_json('Values')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadPolicy(API):
         def __init__(self, api_obj):
@@ -407,8 +407,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -425,7 +425,7 @@ class _Metadata(API):
                 def values(self) -> List[str]:
                     return self._from_json('Values')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Set(API):
         def __init__(self, api_obj):
@@ -439,8 +439,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -452,7 +452,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _SetPolicy(API):
         def __init__(self, api_obj):
@@ -467,8 +467,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -480,7 +480,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _UndefineItem(API):
         def __init__(self, api_obj):
@@ -493,8 +493,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -506,7 +506,7 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _UpdateItem(API):
         def __init__(self, api_obj):
@@ -519,8 +519,8 @@ class _Metadata(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -532,4 +532,4 @@ class _Metadata(API):
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

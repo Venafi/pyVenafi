@@ -58,11 +58,6 @@ class FeatureBase:
         logger.log(msg=msg, log_tag=LogTags.critical, num_prev_callers=2)
 
     @staticmethod
-    def __log_not_implemented_warning(api_type):
-        logger.log(f'No implementation defined for this method using {api_type}.', log_tag=LogTags.feature,
-                   num_prev_callers=2)
-
-    @staticmethod
     def __no_op(*args, **kwargs):
         pass
 

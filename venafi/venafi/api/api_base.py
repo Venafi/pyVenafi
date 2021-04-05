@@ -39,6 +39,7 @@ def json_response_property(return_on_204: type = None):
     Returns: Key of response content returned by TPP.
 
     """
+
     def pre_validation(func):
         def wrap(self: APIResponse, *args, **kwargs):
             if not self._validated:
@@ -49,7 +50,9 @@ def json_response_property(return_on_204: type = None):
                 else:
                     return return_on_204
             return func(self, *args, **kwargs)
+
         return wrap
+
     return pre_validation
 
 
@@ -59,6 +62,7 @@ class API:
     validations, logging, re-authentication, and holds the raw response. This
     class MUST be inherited by all API definitions.
     """
+
     def __init__(self, api_obj, url: str):
         """
         Args:
@@ -71,7 +75,6 @@ class API:
         """
         self._api_obj = api_obj  # type:
         self._session = api_obj._session  # type: Session
-        self._api_source = api_obj.__class__.__name__.lower()
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
@@ -89,12 +92,7 @@ class API:
             Returns True if the API key expired. Otherwise False.
 
         """
-        if self._api_source == 'websdk':
-            invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
-        else:
-            invalid_api_message_match = False
-
-        return response.status_code == 401 and invalid_api_message_match
+        return response.status_code == 401 and bool(re.match('.*API key.*is not valid.*', response.text))
 
     def _delete(self, mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
         """
@@ -294,10 +292,9 @@ class API:
 
 
 class APIResponse:
-    def __init__(self, response: Response, api_source: str):
+    def __init__(self, response: Response):
         """
         """
-        self._api_source = api_source
         self._json_response = response
         self._validated = False
 

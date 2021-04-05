@@ -22,8 +22,8 @@ class _Authorize(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+            def __init__(self, response):
+                super().__init__(response=response)
 
             @property
             @json_response_property()
@@ -31,8 +31,7 @@ class _Authorize(API):
                 return self._from_json('APIKey')
 
         return _Response(
-            response=self._post(data=body, mask_input_regexes=['Password'], mask_output_regexes=['APIKey']),
-            api_source=self._api_source)
+            response=self._post(data=body, mask_input_regexes=['Password'], mask_output_regexes=['APIKey']))
 
     class _OAuth(API):
         def __init__(self, api_obj):
@@ -52,8 +51,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -86,8 +85,7 @@ class _Authorize(API):
                     return self._from_json('token_type')
 
             return _Response(
-                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['*token*']),
-                api_source=self._api_source)
+                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['*token*']))
 
     class _Token(API):
         def __init__(self, api_obj):
@@ -104,8 +102,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -138,5 +136,4 @@ class _Authorize(API):
                     return self._from_json('token_type')
 
             return _Response(
-                response=self._post(data=body, mask_input_regexes=['token'], mask_output_regexes=['*token*']),
-                api_source=self._api_source)
+                response=self._post(data=body, mask_input_regexes=['token'], mask_output_regexes=['*token*']))
