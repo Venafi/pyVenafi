@@ -97,8 +97,7 @@ class API:
     def _delete(self, mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
         """
         Performs a DELETE method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Returns:
             Returns the raw JSON response.
@@ -123,8 +122,7 @@ class API:
              mask_output_regexes: List[str] = None):
         """
         Performs a GET method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Args:
             params: A dictionary of URL parameters to append to the URL.
@@ -152,8 +150,7 @@ class API:
               mask_output_regexes: List[str] = None):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Args:
             data: A dictionary of data to send with the URL.
@@ -180,9 +177,8 @@ class API:
     def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
              mask_output_regexes: List[str] = None):
         """
-        Performs a POST method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        Performs a PUT method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Args:
             data: A dictionary of data to send with the URL.

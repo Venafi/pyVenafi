@@ -24,7 +24,6 @@ Here is an example of how to initialize the ``Features`` object.
         host='tppserver.mycompany.com',
         username='username12',
         password='passw0rd!@#$',
-        preference='websdk',
         application_id='SomeOAuthApplication',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )

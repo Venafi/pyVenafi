@@ -8,4 +8,3 @@ API
    venafi.api.authenticate
    venafi.api.session
    venafi.api.websdk
-   venafi.api.aperture
