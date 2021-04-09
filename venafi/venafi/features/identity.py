@@ -1,4 +1,5 @@
 from typing import List
+from venafi.vtypes import Identity
 from venafi.properties.config import IdentityClassNames, IdentityAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 from venafi.properties.rights import SubSystemTypes
@@ -9,27 +10,27 @@ class _IdentityBase(FeatureBase):
         super().__init__(api=api)
         self._identity_dn = r'\VED\Identity'
 
-    def allow_aperture_user_search(self, prefixed_universal: str):
+    def allow_aperture_user_search(self, identity: 'Identity.Identity'):
         """
         Grants Aperture User Search permission to a user or group.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
         """
         result = self._api.websdk.Rights.Add.post(
             subsystem=SubSystemTypes.aperture,
             rights_object='local',
-            universal_id=prefixed_universal,
+            universal_id=identity.prefixed_universal,
             rights_value='Impersonate'
         )
         result.assert_valid_response()
 
-    def add_master_admin(self, prefixed_universal: str):
+    def add_master_admin(self, identity: 'Identity.Identity'):
         """
         Grants Master Admin privileges to a user or group in TPP.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
         """
 
         ved_guid = self._api.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
@@ -45,17 +46,17 @@ class _IdentityBase(FeatureBase):
             result = self._api.websdk.Rights.Add.post(
                 subsystem=subsystem,
                 rights_object=rights_object,
-                universal_id=prefixed_universal,
+                universal_id=identity.prefixed_universal,
                 rights_value=rights_value
             )
             result.assert_valid_response()
 
-    def allow_websdk_access(self, prefixed_universal: str):
+    def allow_websdk_access(self, identity: 'Identity.Identity'):
         """
         Grants WebSDK access to a user or group.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
 
         Returns:
 
@@ -63,7 +64,7 @@ class _IdentityBase(FeatureBase):
         result = self._api.websdk.Rights.Add.post(
             subsystem=SubSystemTypes.websdk,
             rights_object='Sessions',
-            universal_id=prefixed_universal,
+            universal_id=identity.prefixed_universal,
             rights_value='Allowed'
         )
         result.assert_valid_response()
@@ -111,10 +112,9 @@ class _IdentityBase(FeatureBase):
         )
         return result.identities
 
-    def exists(self, prefixed_name: str = None):
+    def exists(self, prefixed_name: str):
         """
-        Validates that a user or group exists in TPP and returns a boolean value. To enforce that
-        a user or group exists by throwing an error if it does not, use :meth:`validate`.
+        Validates that a user or group exists in TPP and returns a boolean value.
 
         Args:
             prefixed_name: The prefixed name of the Identity object.
@@ -130,71 +130,93 @@ class _IdentityBase(FeatureBase):
             return response.identity.prefixed_name == prefixed_name
         return False
 
-    def get_memberships(self, prefixed_name: str = None):
+    def get(self, prefixed_name: str = None, prefixed_universal: str = None):
+        """
+        Get a user or group in TPP. An error is raised if the identity does not exist.
+
+        One of ``prefixed_name`` or ``prefixed_universal`` must be provided.
+
+        Args:
+            prefixed_name: The prefixed name of the Identity object.
+            prefixed_universal: The prefixed universal GUID of the Identity object.
+
+        Returns:
+            An Identity object of the user or group.
+        """
+        identity = self._api.websdk.Identity.Validate.post(
+            identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
+        ).identity
+
+        return identity
+
+    def get_memberships(self, identity: 'Identity.Identity'):
         """
         Finds all groups to which a user or group belongs.
 
         Args:
-            prefixed_name: The prefixed name of the Identity object.
+            identity: Identity object of the user or group.
 
         Returns:
             List of Identity objects for each group.
         """
         memberships = self._api.websdk.Identity.GetMemberships.post(
-            identity=self._identity_dict(prefixed_name=prefixed_name)
+            identity=self._identity_dict(
+                prefixed_name=identity.prefixed_name,
+                prefixed_universal=identity.prefixed_universal
+            )
         ).identities
 
         return memberships
 
-    def get_rights(self, prefixed_universal: str):
+    def get_rights(self, identity: 'Identity.Identity'):
         """
         Returns all of the special rights granted to a user or group.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
 
         Returns:
             List of Rights objects.
         """
-        return self._api.websdk.Rights.Get.post(universal_id=prefixed_universal).rights
+        return self._api.websdk.Rights.Get.post(universal_id=identity.prefixed_universal).rights
 
-    def read_attribute(self, prefixed_name: str, attribute_name: str):
+    def read_attribute(self, identity: 'Identity.Identity', attribute_name: str):
         """
         Returns the value associated to the given ``attribute_name``.
 
         Args:
-            prefixed_name: The prefixed name of the Identity object.
+            identity: Identity object of the user or group.
             attribute_name: The name of the attribute.
 
         Returns:
             List of attribute values.
         """
         result = self._api.websdk.Identity.ReadAttribute.post(
-            identity=self._identity_dict(prefixed_name=prefixed_name),
+            identity=self._identity_dict(prefixed_name=identity.prefixed_name),
             attribute_name=attribute_name
         )
         return result.attributes
 
-    def remove_aperture_user_search(self, prefixed_universal: str):
+    def remove_aperture_user_search(self, identity: 'Identity.Identity'):
         """
         Removes Aperture User Search permission from a user or group.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
         """
         result = self._api.websdk.Rights.Remove.post(
             subsystem=SubSystemTypes.aperture,
             rights_object='local',
-            universal_id=prefixed_universal
+            universal_id=identity.prefixed_universal
         )
         result.assert_valid_response()
 
-    def remove_master_admin(self, prefixed_universal: str):
+    def remove_master_admin(self, identity: 'Identity.Identity'):
         """
         Removes Master Admin privileges from a user or group.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
         """
         ved_guid = self._api.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
 
@@ -209,44 +231,23 @@ class _IdentityBase(FeatureBase):
             result = self._api.websdk.Rights.Remove.post(
                 subsystem=subsystem,
                 rights_object=rights_object,
-                universal_id=prefixed_universal
+                universal_id=identity.prefixed_universal
             )
             result.assert_valid_response()
 
-    def remove_websdk_access(self, prefixed_universal: str):
+    def remove_websdk_access(self, identity: 'Identity.Identity'):
         """
         Removes WebSDK Access from a user or group.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            identity: Identity object of the user or group.
         """
         result = self._api.websdk.Rights.Remove.post(
             subsystem=SubSystemTypes.websdk,
             rights_object='Sessions',
-            universal_id=prefixed_universal
+            universal_id=identity.prefixed_universal
         )
         result.assert_valid_response()
-
-    def validate(self, prefixed_name: str = None, prefixed_universal: str = None):
-        """
-        Validates that a user or group exists in TPP. If it does, then the Identity object is
-        returned. Otherwise an error is thrown. If throwing an error is not desired, use
-        :meth:`exists` to obtain a boolean value.
-
-        One of ``prefixed_name`` or ``prefixed_universal`` must be provided.
-
-        Args:
-            prefixed_name: The prefixed name of the Identity object.
-            prefixed_universal: The prefixed universal GUID of the Identity object.
-
-        Returns:
-            If validated, the Identity object. Otherwise an error is thrown.
-        """
-        identity = self._api.websdk.Identity.Validate.post(
-            identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
-        ).identity
-
-        return identity
 
     @staticmethod
     def _identity_dict(prefixed_name: str = None, prefixed_universal: str = None):
@@ -307,11 +308,11 @@ class User(_IdentityBase):
             config_class=IdentityClassNames.user,
             attributes=attributes,
         )
-        user = self.validate(prefixed_name=f'local:{user.name}')
-        self.set_password(prefixed_name=user.prefixed_name, new_password=password)
+        user = self.get(prefixed_name=f'local:{user.name}')
+        self.set_password(user=user, new_password=password)
 
         if add_to_everyone_group:
-            everyone_group = self.validate(prefixed_name='local:Everyone')
+            everyone_group = self.get(prefixed_name='local:Everyone')
             response = self._api.websdk.Identity.AddGroupMembers.put(
                 group=self._identity_dict(prefixed_name=everyone_group.prefixed_name),
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
@@ -319,27 +320,25 @@ class User(_IdentityBase):
             response.assert_valid_response()
 
         if add_master_admin:
-            self.add_master_admin(prefixed_universal=user.prefixed_universal)
+            self.add_master_admin(identity=user)
 
         if allow_aperture_user_search:
-            self.allow_aperture_user_search(prefixed_universal=user.prefixed_universal)
+            self.allow_aperture_user_search(identity=user)
 
         if allow_websdk_access:
-            self.allow_websdk_access(prefixed_universal=user.prefixed_universal)
+            self.allow_websdk_access(identity=user)
 
         return user
 
-    def delete(self, prefixed_name: str):
+    def delete(self, user: 'Identity.Identity'):
         """
         Deletes the user from the Local Identity Provider. The user is removed from all local groups and
         has all rights removed.
 
         Args:
-            prefixed_name: The prefixed name of the Identity object.
+            user: Identity object of the user.
         """
-        user = self.validate(prefixed_name=prefixed_name)
-
-        groups = self.get_memberships(prefixed_name=user.prefixed_name)
+        groups = self.get_memberships(identity=user)
         for group in groups:
             result = self._api.websdk.Identity.RemoveGroupMembers.put(
                 group=self._identity_dict(prefixed_name=group.prefixed_name),
@@ -383,13 +382,13 @@ class User(_IdentityBase):
             is_user=True
         )
 
-    def set_password(self, prefixed_name: str, new_password: str, old_password: str = None):
+    def set_password(self, user: 'Identity.Identity', new_password: str, old_password: str = None):
         """
-        Sets the password for a local user. If the user did not have a previous password, then
+        Sets the ``new_password`` for a local user. If the user did not have a previous password, then
         the ``old_password`` is not required.
 
         Args:
-            prefixed_name: The prefixed name of the Identity object.
+            user: Identity object of the user.
             new_password: The new password for the user.
             old_password: The old password for the user. Required only if it exists.
 
@@ -397,7 +396,7 @@ class User(_IdentityBase):
             Identity object of the user.
         """
         response = self._api.websdk.Identity.SetPassword.post(
-            identity=self._identity_dict(prefixed_name=prefixed_name),
+            identity=self._identity_dict(prefixed_name=user.prefixed_name),
             old_password=old_password,
             password=new_password
         )
@@ -409,19 +408,19 @@ class Group(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def add_members(self, group_prefixed_name: str, member_prefixed_names: List[str]):
+    def add_members(self, group: 'Identity.Identity', member_prefixed_names: List[str]):
         """
         Adds members to a local group.
 
         Args:
-            group_prefixed_name: The prefixed name of the group.
+            group: Identity object of the group.
             member_prefixed_names: List of prefixed universal names of each member.
 
         Returns:
             List of Identity objects for each member.
         """
         result = self._api.websdk.Identity.AddGroupMembers.put(
-            group=self._identity_dict(prefixed_name=group_prefixed_name),
+            group=self._identity_dict(prefixed_name=group.prefixed_name),
             members=[
                 self._identity_dict(prefixed_name=member_prefixed_name)
                 for member_prefixed_name in member_prefixed_names
@@ -432,7 +431,7 @@ class Group(_IdentityBase):
         if member_prefixed_names and result.invalid_members:
             im = "\n\t".join([m.prefixed_name for m in result.invalid_members])
             raise FeatureError.UnexpectedValue(
-                f'Unable to add these members to the group "{group_prefixed_name}":\n\t{im}'
+                f'Unable to add these members to the group "{group.prefixed_name}":\n\t{im}'
             )
 
         return result.members
@@ -475,27 +474,25 @@ class Group(_IdentityBase):
             )
 
         group = result.identity
-
         if master_admin_group:
-            self.add_master_admin(prefixed_universal=group.prefixed_universal)
+            self.add_master_admin(identity=group)
 
         if allow_websdk_access:
-            self.allow_websdk_access(prefixed_universal=group.prefixed_universal)
+            self.allow_websdk_access(identity=group)
 
         if allow_aperture_user_search:
-            self.allow_aperture_user_search(prefixed_universal=group.prefixed_universal)
+            self.allow_aperture_user_search(identity=group)
 
         return group
 
-    def delete(self, prefixed_universal: str):
+    def delete(self, group: 'Identity.Identity'):
         """
         Deletes a group, but not its members. All group permissions and privileges are deleted.
 
         Args:
-            prefixed_universal: The prefixed universal GUID of the group.
+            group: Identity object of the user or group.
         """
-        prefix, universal = prefixed_universal.split(':', 1)
-        result = self._api.websdk.Identity.Group.Prefix(prefix).Principal(universal).delete()
+        result = self._api.websdk.Identity.Group.Prefix(group.prefix).Principal(group.universal).delete()
         result.assert_valid_response()
 
     def find(self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = True):
@@ -511,7 +508,7 @@ class Group(_IdentityBase):
 
             .. code-block::python
 
-            cool_groups = self.features.identity.group.find(name='CoolGroup', limit=2)
+                cool_groups = self.features.identity.group.find(name='CoolGroup', limit=2)
 
         Args:
             name: String of characters contained within the names to be found.
@@ -530,31 +527,31 @@ class Group(_IdentityBase):
             is_user=False
         )
 
-    def get_members(self, group_prefixed_name: str, resolve_nested: bool = False):
+    def get_members(self, group: 'Identity.Identity', resolve_nested: bool = False):
         """
         Finds all members of a group. If ``resolve_nested`` is ``True``, then members of groups within this group, etc.,
         are included in the result.
 
         Args:
-            group_prefixed_name: The prefixed universal GUID of the group.
+            group: Identity object of the group.
             resolve_nested: If ``True``, returns members of nested groups within this group.
 
         Returns:
             List of Identity objects for each member of the group.
         """
         result = self._api.websdk.Identity.GetMembers.post(
-            identity=self._identity_dict(prefixed_name=group_prefixed_name),
+            identity=self._identity_dict(prefixed_name=group.prefixed_name),
             resolve_nested=int(resolve_nested)
         )
 
         return result.identities
 
-    def remove_members(self, group_prefixed_name: str, member_prefixed_names: List[str]):
+    def remove_members(self, group: 'Identity.Identity', member_prefixed_names: List[str]):
         """
         Removes members from a local group.
 
         Args:
-            group_prefixed_name: The prefixed name of the group.
+            group: Identity object of the group.
             member_prefixed_names: List of prefixed universal names of each member.
 
         Returns:
@@ -562,7 +559,7 @@ class Group(_IdentityBase):
             the list is empty.
         """
         result = self._api.websdk.Identity.RemoveGroupMembers.put(
-            group=self._identity_dict(prefixed_name=group_prefixed_name),
+            group=self._identity_dict(prefixed_name=group.prefixed_name),
             members=[
                 self._identity_dict(prefixed_name=member_prefixed_name)
                 for member_prefixed_name in member_prefixed_names
@@ -572,12 +569,12 @@ class Group(_IdentityBase):
 
         return result.members
 
-    def rename(self, group_prefixed_name: str, new_group_name: str):
+    def rename(self, group: 'Identity.Identity', new_group_name: str):
         """
         Renames a local group. The `"local:"` prefix is not required.
 
         Args:
-            group_prefixed_name: Name of the local group.
+            group: Identity object of the group.
             new_group_name: New name of the group. No prefix required.
 
         Returns:
@@ -587,7 +584,7 @@ class Group(_IdentityBase):
             new_group_name = new_group_name.lstrip('local:')
 
         result = self._api.websdk.Identity.RenameGroup.put(
-            group=self._identity_dict(prefixed_name=group_prefixed_name),
+            group=self._identity_dict(prefixed_name=group.prefixed_name),
             new_group_name=new_group_name
         )
 

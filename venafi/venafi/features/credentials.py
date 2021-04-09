@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from typing import List
+from venafi.vtypes import Config
 from venafi.properties.config import CredentialAttributes
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
@@ -8,9 +9,9 @@ class _CredentialBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def _create(self, name: str, parent_folder: str, friendly_name: str, values: List[dict], expiration: int, description: str,
+    def _create(self, name: str, parent_folder_dn: str, friendly_name: str, values: List[dict], expiration: int, description: str,
                 encryption_key: str = None, shared: bool = False, contact: List[str] = None):
-        dn = f'{parent_folder}\\{name}'
+        dn = f'{parent_folder_dn}\\{name}'
 
         expiration = int((datetime.now() + timedelta(expiration * (365 / 12))).timestamp() * 1000)
 
@@ -34,14 +35,14 @@ class _CredentialBase(FeatureBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
         return response.object
 
-    def delete(self, credential_dn: str):
+    def delete(self, credential: 'Config.Object'):
         """
         Deletes the credential object.
 
         Args:
-            credential_dn: Absolute path to the credential object.
+            credential: Config object of the credential object.
         """
-        result = self._api.websdk.Credentials.Delete.post(credential_path=credential_dn).result
+        result = self._api.websdk.Credentials.Delete.post(credential_path=credential.dn).result
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
@@ -55,14 +56,14 @@ class AmazonCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def create_adfs(self, name: str, parent_folder: str, adfs_credential_dn: str, adfs_url: str, role: str, expiration: int = 6,
+    def create_adfs(self, name: str, parent_folder_dn: str, adfs_credential_dn: str, adfs_url: str, role: str, expiration: int = 6,
                 description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         """
         Creates a Local Amazon Credential object in TPP. By default, the credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder: Absolute path to the parent folder of the credential object.
+            parent_folder_dn: Absolute path to the parent folder of the credential object.
             adfs_credential_dn: Absolute path to the ADFS credential object in TPP.
             adfs_url: ADFS URL.
             role: Role.
@@ -83,7 +84,7 @@ class AmazonCredential(_CredentialBase):
         ]
         return self._create(
             name=name,
-            parent_folder=parent_folder,
+            parent_folder_dn=parent_folder_dn,
             friendly_name='Amazon',
             values=values,
             expiration=expiration,
@@ -93,14 +94,14 @@ class AmazonCredential(_CredentialBase):
             contact=contact
         )
 
-    def create_local(self, name: str, parent_folder: str, access_key: str, secret_key: str, role: str = None, external_id: str = None,
+    def create_local(self, name: str, parent_folder_dn: str, access_key: str, secret_key: str, role: str = None, external_id: str = None,
                expiration: int = 6, description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None):
         """
         Creates a Local Amazon Credential object in TPP. By default, the credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder: Absolute path to the parent folder of the credential object.
+            parent_folder_dn: Absolute path to the parent folder of the credential object.
             access_key: Access Key.
             secret_key: Secret Key.
             role: Role.
@@ -123,7 +124,7 @@ class AmazonCredential(_CredentialBase):
         ]
         return self._create(
             name=name,
-            parent_folder=parent_folder,
+            parent_folder_dn=parent_folder_dn,
             friendly_name='Amazon',
             values=values,
             expiration=expiration,
@@ -170,7 +171,7 @@ class CertificateCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder=parent_folder_dn,
+            parent_folder_dn=parent_folder_dn,
             friendly_name='Certificate',
             values=values,
             expiration=expiration,
@@ -216,7 +217,7 @@ class GenericCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder=parent_folder_dn,
+            parent_folder_dn=parent_folder_dn,
             friendly_name='Generic',
             values=values,
             expiration=expiration,
@@ -260,7 +261,7 @@ class PasswordCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder=parent_folder_dn,
+            parent_folder_dn=parent_folder_dn,
             friendly_name='Password',
             values=values,
             expiration=expiration,
@@ -306,7 +307,7 @@ class PrivateKeyCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder=parent_folder_dn,
+            parent_folder_dn=parent_folder_dn,
             friendly_name='PrivateKey',
             values=values,
             expiration=expiration,

@@ -1,4 +1,5 @@
 from typing import List, Dict, Union
+from venafi.vtypes import Config
 from venafi.properties.config import CustomFieldAttributes, CustomFieldAttributeValues
 from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
@@ -135,37 +136,49 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.item
 
-    def delete(self, custom_field_guid: str, remove_data: bool = True):
+    def delete(self, custom_field: 'Config.Object', remove_data: bool = True):
         """
         Deletes a custom field and all instances of it, including policy settings. If ``remove_data = False``, then
         an exception will be raised if there is existing data for the custom field on any object.
 
         Args:
-            custom_field_guid: GUID of the custom field
+            custom_field: Config object of the custom field
             remove_data: If ``True``, then deletes the custom field regardless of data existing on the custom field
                 on any object that implements it.
         """
         response = self._api.websdk.Metadata.UndefineItem.post(
-            item_guid=custom_field_guid,
+            item_guid=custom_field.guid,
             remove_data=remove_data
         )
         self._validate_result_code(response.result)
 
-    def get(self, custom_field_dn: str = None, custom_field_name: str = None):
+    def get(self, name: str = None):
         """
-        Fetches the data associated to a custom field object itself. One of ``custom_field_dn`` or
-        ``custom_field_name`` is required.
+        Fetches the config object a custom field object.
 
         Args:
-            custom_field_dn: Absolute path to the custom field object.
-            custom_field_name: The name of the custom field object.
+            name: The name of the custom field object.
+
+        Returns:
+            Config object of the custom field.
+        """
+        response = self._api.websdk.Config.IsValid.post(
+            object_dn=f'{self._metadata_root_dn}\\{name}'
+        )
+        return response.object
+
+    def get_item_details(self, custom_field: 'Config.Object' = None):
+        """
+        Fetches the item details of a custom field object according to the data
+        returned by the WebSDK API "POST Metadata/LoadItem".
+
+        Args:
+            custom_field: The name of the custom field object.
 
         Returns:
             Metadata Item object.
         """
-        if custom_field_name:
-            custom_field_dn = f'{self._metadata_root_dn}\\{custom_field_name}'
-        response = self._api.websdk.Metadata.LoadItem.post(dn=custom_field_dn)
+        response = self._api.websdk.Metadata.LoadItem.post(dn=custom_field.dn)
         self._validate_result_code(result=response.result)
         return response.item
 
@@ -180,13 +193,13 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.items
 
-    def read(self, object_dn: str, custom_field_guid: str):
+    def read(self, obj: 'Config.Object', custom_field: 'Config.Object'):
         """
         Reads the actual value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
         Args:
-            object_dn: Absolute path to the object having the custom field.
-            custom_field_guid: GUID of the custom field object.
+            obj: Config object of the object having the custom field.
+            custom_field: Config object of the custom field.
 
         Returns:
             EffectiveValues object:
@@ -195,8 +208,8 @@ class CustomField(FeatureBase):
                 * values: List of values.
         """
         response = self._api.websdk.Metadata.ReadEffectiveValues.post(
-            dn=object_dn,
-            item_guid=custom_field_guid
+            dn=obj.dn,
+            item_guid=custom_field.guid
         )
         self._validate_result_code(response.result)
 
@@ -208,13 +221,13 @@ class CustomField(FeatureBase):
 
         return EffectiveValues()
 
-    def read_policy(self, folder_dn: str, custom_field_guid: str, class_name: str):
+    def read_policy(self, folder: 'Config.Object', custom_field: 'Config.Object', class_name: str):
         """
         Reads the policy value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
         Args:
-            folder_dn: Absolute path to the folder.
-            custom_field_guid: GUID of the custom field object.
+            folder: Config object of the folder.
+            custom_field: Config object of the custom field object.
             class_name: Object class.
 
         Returns:
@@ -223,8 +236,8 @@ class CustomField(FeatureBase):
                 * values: List of values.
         """
         response = self._api.websdk.Metadata.ReadPolicy.post(
-            dn=folder_dn,
-            item_guid=custom_field_guid,
+            dn=folder.dn,
+            item_guid=custom_field.guid,
             obj_type=class_name
         )
         self._validate_result_code(response.result)
@@ -236,10 +249,10 @@ class CustomField(FeatureBase):
 
         return PolicyValues()
 
-    def update(self, custom_field_dn: str, allowed_characters: List[str] = None, allowed_values: List[str] = None, category: str = None,
-               classes: list = None, data_type: int = None, date_only: bool = None, default_values: str = None,
-               display_after: str = None, error_message: str = None, help_text: str = None, label: str = None,
-               localization_table: str = None, localized_help: str = None, localized_label: str = None,
+    def update(self, custom_field: 'Config.Object', allowed_characters: List[str] = None, allowed_values: List[str] = None,
+               category: str = None, classes: list = None, data_type: int = None, date_only: bool = None,
+               default_values: str = None, display_after: str = None, error_message: str = None, help_text: str = None,
+               label: str = None, localization_table: str = None, localized_help: str = None, localized_label: str = None,
                localized_set: str = None, mandatory: bool = None, mask: str = None, maximum_length: int = None,
                minimum_length: int = None, name: str = None, policyable: bool = None, regular_expression: str = None,
                render_hidden: bool = None, render_read_only: bool = None, single: bool = None, time_only: bool = None):
@@ -248,7 +261,7 @@ class CustomField(FeatureBase):
         property. Property values are not reset to their defaults.
 
         Args:
-            custom_field_dn: Absolute path to the metadata object.
+            custom_field: Config object of the metadata object.
             label: The label text for the custom field.
             name: The name of the custom field object.
             classes: The classes that this field applies to.
@@ -310,47 +323,49 @@ class CustomField(FeatureBase):
         }
         response = self._api.websdk.Metadata.UpdateItem.post(
             update={
-                "DN": custom_field_dn,
+                "DN": custom_field.dn,
                 "Data": self._name_value_list(attributes=item, keep_list_values=True)
             }
         )
         self._validate_result_code(response.result)
-        return self.get(custom_field_dn=custom_field_dn)
+        return self.get_item_details(custom_field=custom_field)
 
-    def write(self, object_dn: str, custom_field_guid: str, values: List, keep_existing: bool = True):
+    def write(self, obj: 'Config.Object', custom_field: 'Config.Object', values: List, keep_existing: bool = True):
         """
-        Writes a set of values to a custom field on the specified ``object_dn``. If ``keep_existing = False``,
-        then all custom fields related to the ``object_dn`` are reset to their default values.
+        Writes a set of values to a custom field on the specified ``obj``. If ``keep_existing = False``,
+        then all custom fields related to the ``obj`` are reset to their default values.
 
         Args:
-            object_dn: Absolute path to the object with the custom field.
-            custom_field_guid: GUID of the custom field object.
+            obj: Config object of the object with the custom field.
+            custom_field: Config object of the custom field object.
             values: List of values to write to ``object_dn``.
             keep_existing: If ``True``, all other custom fields remain unaffected.
         """
         response = self._api.websdk.Metadata.Set.post(
-            dn=object_dn,
-            guid_data=self._guid_data_list({custom_field_guid: values}),
+            dn=obj.dn,
+            guid_data=self._guid_data_list({custom_field.guid: values}),
             keep_existing=keep_existing
         )
         self._validate_result_code(result=response.result)
 
-    def write_policy(self, folder_dn: str, class_name: str, custom_field_guid: str, values: List, locked: bool = False):
+    def write_policy(self, folder: 'Config.Object', custom_field: 'Config.Object', class_name: str,
+                     values: List, locked: bool = False):
         """
-        Writes a set of values to a custom field on the specified ``folder_dn``. The custom field MUST be policyable.
+        Writes a set of values to a custom field on the specified ``folder``. The custom field MUST be policyable.
         To ensure, use :meth:``get`` to get the current settings and verify that ``policyable=True``. If not, use
         :meth:``update`` to update the custom field with ``policyable=True``.
 
         Args:
-            folder_dn: Absolute path to the object with the custom field.
-            custom_field_guid: GUID of the custom field object.
-            values: List of values to write to ``object_dn``.
+            folder: Config object of the folder.
+            custom_field: Config object of the custom field object.
+            class_name: Name of the object class.
+            values: List of values to write to ``obj``.
             locked: If ``True``, all subordinate objects inherit and cannot modify the ``values``.
         """
         response = self._api.websdk.Metadata.SetPolicy.post(
-            dn=folder_dn,
+            dn=folder.dn,
             config_class=class_name,
-            guid_data=self._guid_data_list({custom_field_guid: values}),
+            guid_data=self._guid_data_list({custom_field.guid: values}),
             locked=locked
         )
         self._validate_result_code(result=response.result)

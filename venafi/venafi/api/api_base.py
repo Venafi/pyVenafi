@@ -112,7 +112,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._delete(mask_input_regexes=mask_input_regexes, mask_output_regexes=mask_output_regexes)
+                    return self._session.delete(url=self._url)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -141,8 +141,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._get(params=params, mask_input_regexes=mask_input_regexes,
-                                     mask_output_regexes=mask_output_regexes)
+                    return self._session.get(url=self._url, params=params)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -171,8 +170,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._post(data=data, mask_input_regexes=mask_input_regexes,
-                                      mask_output_regexes=mask_output_regexes)
+                    return self._session.post(url=self._url, data=data)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -201,8 +199,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._put(data=data, mask_input_regexes=mask_input_regexes,
-                                     mask_output_regexes=mask_output_regexes)
+                    self._session.put(url=self._url, data=data)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e

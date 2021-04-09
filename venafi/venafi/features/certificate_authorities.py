@@ -1,3 +1,4 @@
+from venafi.vtypes import Config
 from venafi.properties.config import CertificateAuthorityClassNames, CertificateAuthorityAttributes
 from venafi.features.bases.feature_base import FeatureBase, feature
 
@@ -6,18 +7,18 @@ class _CertificateAuthorityBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, object_dn: str):
+    def delete(self, certificate_authority: 'Config.Object'):
         """
         Deletes the Certificate Authority object from TPP, including all of the secrets associated to it.
 
         Args:
-            object_dn: Absolute path to the CA object.
+            certificate_authority: Config object of the CA object.
 
         Returns:
 
         """
-        self._secret_store_delete(object_dn=object_dn)
-        self._config_delete(object_dn=object_dn)
+        self._secret_store_delete(object_dn=certificate_authority.dn)
+        self._config_delete(object_dn=certificate_authority.dn)
 
 
 @feature()
