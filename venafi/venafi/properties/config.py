@@ -1658,6 +1658,7 @@ class DiscoveryAttributes:
         device_location_dn = "Device Location DN"
         discovery_exclusion_dn = "Discovery Exclusion DN"
         hour = "Hour"
+        import_results_now = "Import Results Now"
         in_progress = "In Progress"
         keys_already_known = "Keys Already Known"
         keys_excluded = "Keys Excluded"
@@ -1674,6 +1675,7 @@ class DiscoveryAttributes:
         reschedule = "Reschedule"
         resolve_host = "Resolve Host"
         ssh_servers_found = "SSH Servers Found"
+        start_now = "Start Now"
         start_time = "Start Time"
         started = "Started"
         status = "Status"
@@ -1747,6 +1749,12 @@ class IdentityAttributes:
 
 
 # region Placement Rules
+class PlacementRulesClassNames:
+    layout_rule_base = 'Layout Rule Base'
+
+class PlacementRulesAttributeNames:
+    rule = 'Rule'
+
 class PlacementRulesAttributeValues:
     class Field:
         cert_expired = "CertificateExpired"
@@ -1777,6 +1785,10 @@ class PlacementRulesAttributeValues:
         matches = "Matches"
         matches_regex = "MatchesRegex"
         starts_with = "StartsWith"
+
+    class RuleType:
+        certificate = 'X509 Certificate'
+        ssh = 'SSH'
 
 # endregion Placement Rules
 

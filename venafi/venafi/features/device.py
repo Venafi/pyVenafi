@@ -1,20 +1,21 @@
+from venafi.vtypes import Config
 from venafi.properties.config import DevicesClassNames, DeviceAttributes, DeviceAttributeValues
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
+from venafi.features.bases.feature_base import FeatureBase, feature
 
 
 class _DeviceBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, object_dn: str):
+    def delete(self, device: 'Config.Object'):
         """
         Deletes the device object specified. Since there are no secret store data attached to this object,
         only a config delete is performed.
 
         Args:
-            object_dn: Absolute path to the device object.
+            device: Config object of to the device object.
         """
-        self._config_delete(object_dn=object_dn)
+        self._config_delete(object_dn=device.dn)
 
 
 @feature()
@@ -32,8 +33,6 @@ class Device(_DeviceBase):
         Args:
             name: Name of the device object .
             parent_folder_dn: Absolute path to the parent folder of the device object.
-            hostname: DNS or IP Address of the device.
-            credential_dn: Absolute path to the credential object for this device.
             attributes: List of attributes pertaining to the device object.
 
         Returns:

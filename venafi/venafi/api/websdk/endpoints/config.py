@@ -1000,7 +1000,7 @@ class _Config:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/WriteDn')
 
-        def post(self, object_dn: str, attribute_name: str, values: str):
+        def post(self, object_dn: str, attribute_name: str, values: List[str]):
             body = {
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
