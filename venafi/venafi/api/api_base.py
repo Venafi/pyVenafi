@@ -3,6 +3,7 @@ import re
 import json
 from venafi.api.session import Session
 from requests import Response, HTTPError
+from requests.exceptions import ConnectionError
 from venafi.logger import logger, LogTags
 
 
