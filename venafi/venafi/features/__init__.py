@@ -18,7 +18,8 @@ from venafi.features.platform import AutoLayoutManager, BulkProvisioningManager,
     CertificatePreEnrollment, CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, \
     OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes, \
     PlatformsClassNames
-from venafi.features.placement_rules import PlacementRules, PlacementRulesAttributeValues
+from venafi.features.placement_rules import PlacementRules, PlacementRulesAttributeNames, PlacementRulesAttributeValues, \
+    PlacementRulesClassNames, PlacementRuleCondition
 from venafi.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 from venafi.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
@@ -406,6 +407,7 @@ class Features:
         self._folder = None
         self._identity = None
         self._permissions = None
+        self._placement_rule_condition = None
         self._placement_rules = None
         self._platforms = None
         self._workflow = None
@@ -466,6 +468,11 @@ class Features:
         return self._permissions
 
     @property
+    def placement_rule_condition(self) -> PlacementRuleCondition:
+        self._placement_rule_condition = self._placement_rule_condition or PlacementRuleCondition()
+        return self._placement_rule_condition
+
+    @property
     def placement_rules(self) -> PlacementRules:
         self._placement_rules = self._placement_rules or PlacementRules(self._api)
         return self._placement_rules
@@ -494,6 +501,7 @@ class AttributeNames:
     Discovery = DiscoveryAttributes
     Folder = FolderAttributes
     Identity = IdentityAttributes
+    PlacementRules = PlacementRulesAttributeNames
     Platforms = PlatformsAttributes
     Workflow = WorkflowAttributes
 
@@ -516,6 +524,7 @@ class Classes:
     Discovery = DiscoveryClassNames
     Folder = FolderClassNames
     Identity = IdentityClassNames
+    PlacementRules = PlacementRulesClassNames
     Platforms = PlatformsClassNames
     Workflow = WorkflowClassNames
 

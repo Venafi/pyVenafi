@@ -11,11 +11,8 @@ Using Features
 Initializing The Features Object
 ''''''''''''''''''''''''''''''''
 
-The ``Features`` class requires an ``Authenticate`` object, which holds the user's authenticated
-sessions to all API sources. ``Features`` provides a simpler interface to TPP to accomplish tasks
-at a higher level of abstraction, such as creating an Adaptable Workflow object or managing TPP
-Platforms. No matter how the APIs changes or how the API sources change, the ``Features`` will
-not change unless an entire feature within the product is deprecated.
+``Features`` provides a simpler interface to TPP to accomplish tasks at a higher level of abstraction, such as
+creating an Adaptable Workflow object or managing TPP Platforms.
 
 Here is an example of how to initialize the ``Features`` object.
 
@@ -27,7 +24,6 @@ Here is an example of how to initialize the ``Features`` object.
         host='tppserver.mycompany.com',
         username='username12',
         password='passw0rd!@#$',
-        preference='websdk',
         application_id='SomeOAuthApplication',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
@@ -47,10 +43,10 @@ or Config Object can be acquired with a DN or GUID of that object using `feature
     + ``absolute_guid``: GUID identifier of the object and its ancestral GUIDs until the root GUID (\\VED).
     + ``dn``: Absolute path to the object.
     + ``guid``: GUID identifier of the object.
-    + ``config_id``: Config identifier number of the object. ``None`` when using Aperture API.
+    + ``config_id``: Config identifier number of the object.
     + ``name``: Name of the object.
     + ``parent``: Absolute path to the parent object.
-    + ``revision``: The revision number of the last object change. ``None`` when using Aperture API.
+    + ``revision``: The revision number of the last object change.
     + ``type_name``: The object class name.
 
 Example:
@@ -70,11 +66,11 @@ Example:
     + ``is_container``: ``True`` if this object is a container, otherwise ``False``.
     + ``is_group``: ``True`` if this object is a group, otherwise ``False``.
     + ``name``: The friendly name, account, or group name.
-    + ``universal``: The Universal Unique ID that identifies a user or group identity. ``None`` when using Aperture API.
-    + ``prefix``: The identity provider prefix that manages the account or group Name. ``None`` when using Aperture API.
+    + ``universal``: The Universal Unique ID that identifies a user or group identity.
+    + ``prefix``: The identity provider prefix that manages the account or group Name.
     + ``prefixed_name``: ``prefix + name``. *Example: local:admin*
     + ``prefixed_universal``: ``prefix + universal``. *Example: local:{f32b5c37-c2d7-49aa-9ef4-2d38954a8b9b}*
-    + ``type``: The category that describes the identity. ``None`` when using Aperture API.
+    + ``type``: The category that describes the identity.
 
         * 0: Undefined
         * 1: User object

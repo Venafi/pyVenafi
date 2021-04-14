@@ -1,4 +1,4 @@
-from venafi.api.api_base import API, APIResponse
+from venafi.plugins.api.api_base import API, APIResponse
 
 
 class _Jobs:

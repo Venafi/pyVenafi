@@ -31,8 +31,8 @@ class _Certificates(API):
         }.update(filters or {})
 
         class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+            def __init__(self, response):
+                super().__init__(response=response)
 
             @property
             @json_response_property()
@@ -62,7 +62,7 @@ class _Certificates(API):
             def total_count(self) -> int:
                 return self._from_json(key='TotalCount')
 
-        return _Response(response=self._get(params=params), api_source=self._api_source)
+        return _Response(response=self._get(params=params))
 
     class _Associate(API):
         def __init__(self, api_obj):
@@ -76,15 +76,15 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _CheckPolicy(API):
         def __init__(self, api_obj):
@@ -97,8 +97,8 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -110,7 +110,7 @@ class _Certificates(API):
                 def policy(self):
                     return Certificate.Policy(self._from_json(key='Policy'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Dissociate(API):
         def __init__(self, api_obj):
@@ -124,15 +124,15 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Guid(API):
         def __init__(self, guid: str, api_obj):
@@ -143,20 +143,20 @@ class _Certificates(API):
 
         def delete(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._delete(), api_source=self._api_source)
+            return _Response(response=self._delete())
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -228,7 +228,7 @@ class _Certificates(API):
                 def validation_details(self):
                     return Certificate.ValidationDetails(self._from_json(key='ValidationDetails'))
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
         def put(self, attribute_data: [dict]):
             body = {
@@ -236,15 +236,15 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> str:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._put(data=body), api_source=self._api_source)
+            return _Response(response=self._put(data=body))
 
         class _PreviousVersions(API):
             def __init__(self, guid: str, api_obj):
@@ -261,8 +261,8 @@ class _Certificates(API):
                 }
                 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -274,7 +274,7 @@ class _Certificates(API):
                     def previous_versions(self):
                         return [Certificate.PreviousVersions(version) for version in self._from_json(key='PreviousVersions')]
 
-                return _Response(response=self._get(params=params), api_source=self._api_source)
+                return _Response(response=self._get(params=params))
 
         class _ValidationResults(API):
             def __init__(self, guid: str, api_obj):
@@ -286,8 +286,8 @@ class _Certificates(API):
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property(return_on_204=list)
@@ -299,7 +299,7 @@ class _Certificates(API):
                     def ssl_tls(self):
                         return [Certificate.SslTls(s) for s in self._from_json(key='SslTls')]
 
-                return _Response(response=self._get(), api_source=self._api_source)
+                return _Response(response=self._get())
 
     class _Import(API):
         def __init__(self, api_obj):
@@ -318,8 +318,8 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -341,7 +341,7 @@ class _Certificates(API):
                 def private_key_vault_id(self) -> int:
                     return self._from_json(key='PrivateKeyVaultID')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Push(API):
         def __init__(self, api_obj):
@@ -355,15 +355,15 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Renew(API):
         def __init__(self, api_obj):
@@ -377,15 +377,15 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Request(API):
         def __init__(self, api_obj):
@@ -427,8 +427,8 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -440,7 +440,7 @@ class _Certificates(API):
                 def guid(self) -> str:
                     return self._from_json(key='Guid')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Reset(API):
         def __init__(self, api_obj):
@@ -453,8 +453,8 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -476,7 +476,7 @@ class _Certificates(API):
                 def revocation_reset_completed(self) -> bool:
                     return self._from_json(key='RevocationResetCompleted')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -496,7 +496,7 @@ class _Certificates(API):
                 'RootFirstOrder': root_first_order
             }
 
-            return APIResponse(response=self._get(params=params), api_source=self._api_source)
+            return APIResponse(response=self._get(params=params))
 
         def post(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
                  include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -513,8 +513,8 @@ class _Certificates(API):
             }
             
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -531,10 +531,10 @@ class _Certificates(API):
                 def format(self) -> str:
                     return self._from_json(key='Format')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
         def VaultId(self, vault_id: int):
-            return self._VaultId(vault_id, self._api_source)
+            return self._VaultId(vault_id=vault_id, api_obj=self._api_obj)
 
         class _VaultId(API):
             def __init__(self, vault_id: int, api_obj):
@@ -554,7 +554,7 @@ class _Certificates(API):
                     'RootFirstOrder': root_first_order
                 }
 
-                return APIResponse(response=self._get(params=params), api_source=self._api_source)
+                return APIResponse(response=self._get(params=params))
 
             def post(self, format: str, friendly_name: str, include_chain: bool = False,
                      include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -570,8 +570,8 @@ class _Certificates(API):
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -588,7 +588,7 @@ class _Certificates(API):
                     def format(self) -> str:
                         return self._from_json(key='Format')
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return _Response(response=self._post(data=body))
 
     class _Retry(API):
         def __init__(self, api_obj):
@@ -600,15 +600,15 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Revoke(API):
         def __init__(self, api_obj):
@@ -625,8 +625,8 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -643,7 +643,7 @@ class _Certificates(API):
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Validate(API):
         def __init__(self, api_obj):
@@ -656,8 +656,8 @@ class _Certificates(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -679,4 +679,4 @@ class _Certificates(API):
                 def warnings(self) -> List[str]:
                     return self._from_json(key='Warnings')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

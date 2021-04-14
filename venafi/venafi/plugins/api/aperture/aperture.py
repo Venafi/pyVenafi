@@ -1,14 +1,14 @@
 from venafi.logger import logger, LogTags
 from venafi.api.session import Session
-from venafi.api.aperture.endpoints.application_integration import _ApplicationIntegration
-from venafi.api.aperture.endpoints.approvers import _Approvers
-from venafi.api.aperture.endpoints.certificates import _Certificates
-from venafi.api.aperture.endpoints.configobjects import _ConfigObjects
-from venafi.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
-from venafi.api.aperture.endpoints.discovery import _Discovery
-from venafi.api.aperture.endpoints.jobs import _Jobs
-from venafi.api.aperture.endpoints.users import _Users
-from venafi.api.aperture.endpoints.version import _Version
+from venafi.plugins.api.aperture.endpoints.application_integration import _ApplicationIntegration
+from venafi.plugins.api.aperture.endpoints.approvers import _Approvers
+from venafi.plugins.api.aperture.endpoints.certificates import _Certificates
+from venafi.plugins.api.aperture.endpoints.configobjects import _ConfigObjects
+from venafi.plugins.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
+from venafi.plugins.api.aperture.endpoints.discovery import _Discovery
+from venafi.plugins.api.aperture.endpoints.jobs import _Jobs
+from venafi.plugins.api.aperture.endpoints.users import _Users
+from venafi.plugins.api.aperture.endpoints.version import _Version
 
 
 class Aperture:

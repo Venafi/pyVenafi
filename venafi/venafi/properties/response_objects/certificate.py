@@ -169,16 +169,12 @@ class Certificate:
             self.values = response_object.get('Values')  # type: List[str]
 
     class _SANS:
-        def __init__(self, response_object: dict, api_type: str):
+        def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):
                 response_object = {}
 
-            if api_type.lower() == 'websdk':
-                self.dns = response_object.get('DNS')  # type: str
-                self.ip = response_object.get('IP')  # type: str
-
-            elif api_type.lower() == 'aperture':
-                pass
+            self.dns = response_object.get('DNS')  # type: str
+            self.ip = response_object.get('IP')  # type: str
 
     class _X509:
         def __init__(self, response_object: dict):

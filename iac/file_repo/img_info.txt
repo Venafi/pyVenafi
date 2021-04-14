@@ -1,3 +1,0 @@
-Engineering Infrastructure provided Windows Server 2016 template
-Please read https://link.eng.venafi.com/template before use!
-Build date: ${BuildDate} Rev: ${GitHash}

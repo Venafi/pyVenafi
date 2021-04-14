@@ -10,15 +10,15 @@ class _SystemStatus(API):
 
     def get(self):
         class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+            def __init__(self, response):
+                super().__init__(response=response)
 
             @property
             @json_response_property()
             def engines(self):
                 return [SystemStatus.SystemStatus(status) for status in self._from_json()]
 
-        return _Response(response=self._get(), api_source=self._api_source)
+        return _Response(response=self._get())
 
     class _Upgrade:
         def __init__(self, api_obj):
@@ -40,8 +40,8 @@ class _SystemStatus(API):
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
@@ -78,7 +78,7 @@ class _SystemStatus(API):
                     def tasks_running(self):
                         return [SystemStatus.Task(task) for task in self._from_json(key='TasksRunning')]
 
-                return _Response(response=self._get(params=params), api_source=self._api_source)
+                return _Response(response=self._get(params=params))
 
         class _Engines(API):
             def __init__(self, api_obj):
@@ -90,15 +90,15 @@ class _SystemStatus(API):
                 }
 
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def engines(self):
                         return [SystemStatus.UpgradeStatus(engine) for engine in self._from_json(key='Engines')]
 
-                return _Response(response=self._get(params=params), api_source=self._api_source)
+                return _Response(response=self._get(params=params))
 
         class _History(API):
             def __init__(self, api_obj):
@@ -106,15 +106,15 @@ class _SystemStatus(API):
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def upgrade_history(self):
                         return [SystemStatus.UpgradeInfo(info) for info in self._from_json(key='UpgradeHistory')]
 
-                return _Response(response=self._get(), api_source=self._api_source)
+                return _Response(response=self._get())
 
         class _Status(API):
             def __init__(self, api_obj):
@@ -122,15 +122,15 @@ class _SystemStatus(API):
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def upgrade_in_progress(self) -> bool:
                         return self._from_json(key='UpgradeInProgress')
 
-                return _Response(response=self._get(), api_source=self._api_source)
+                return _Response(response=self._get())
 
         class _Summary(API):
             def __init__(self, api_obj):
@@ -138,15 +138,15 @@ class _SystemStatus(API):
 
             def get(self):
                 class _Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
+                    def __init__(self, response):
+                        super().__init__(response=response)
 
                     @property
                     @json_response_property()
                     def upgrade_summary(self):
                         return SystemStatus.UpgradeSummary(self._from_json(key='UpgradeSummary'))
 
-                return _Response(response=self._get(), api_source=self._api_source)
+                return _Response(response=self._get())
 
     class _Version(API):
         def __init__(self, api_obj):
@@ -154,12 +154,12 @@ class _SystemStatus(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def version(self) -> str:
                     return self._from_json('Version')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())

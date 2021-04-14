@@ -4,21 +4,13 @@ Trust Protection Platform APIs
 ==============================
 
 .. note::
-    The Venafi module allows a user to authenticate to all available API sources. All WebSDK APIs are
-    accessible via this module, but only certain Aperture APIs. Refer to the source code for a list of
-    Aperture APIs as they are not documented here.
-
-    Refer to the `official Venafi WebSDK documentation <https://docs.venafi.com/contentindex .php>`_
+    Refer to the `official Venafi WebSDK documentation <https://docs.venafi.com/contentindex.php>`_
     as the official documentation of the Venafi WebSDK API.
-
-    Refer to :ref:`authentication` for information on authenticating to the API sources.
-
-    Refer to :ref:`api` for more details on how the APIs operate in this module.
 
 Calling An API
 ''''''''''''''
 
-The API layer is structured to follow the pattern of the target endpoint URL followed by the RESTful method.
+The APIs are accessible using the pattern of the target endpoint URL followed by the RESTful method.
 
 For example::
 
@@ -46,7 +38,6 @@ Then:
         host='tppserver.mycompany.com',
         username='username12',
         password='passw0rd!@#$',
-        preference='websdk',
         application_id='SomeOAuthApplication',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
@@ -59,7 +50,6 @@ Then:
         }],
         workflow_dn="\\VED\\Policy\\Workflows\\WF for Stage 0"
     )
-
 
 The API Response Object
 '''''''''''''''''''''''
@@ -138,15 +128,9 @@ Then:
 
     ``guids = [data['Key']['Guid'] for data in response.json_response.json()['Data']]``
 
-    but the data can be, and should be, accessed by the properties like in the example above. Using the properties
-    has a few advantages:
-
-    #. When accessing a property from a response object for the first time, an automatic validation of the return
-       codes occurs. If the status code is not a valid response then an error is raised. This
-       ensures success of the APIs as they are used. If this is undesired, then use ``response.json_response``.
-    #. When using an IDE with auto-completion the properties show up. Also, this facilitates refactoring.
-    #. The object returned is consistent across all APIs. For example, a Config Object returned by Aperture is not the
-       same as the one returned by WebSDK, but the
+    When accessing a property from a response object for the first time, an automatic validation of the return codes occurs.
+    If the status code is not a valid response then an error is raised. This ensures success of the APIs as they are used. If
+    this is undesired, then use ``response.json_response``.
 
 * **Line 3:**
 

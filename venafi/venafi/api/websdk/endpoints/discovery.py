@@ -16,15 +16,15 @@ class _Discovery:
 
         def delete(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def success(self) -> bool:
                     return self._from_json('Success')
 
-            return _Response(response=self._delete(), api_source=self._api_source)
+            return _Response(response=self._delete())
 
     class _Import(API):
         def __init__(self, api_obj):
@@ -37,8 +37,8 @@ class _Discovery:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -70,5 +70,5 @@ class _Discovery:
                 def zone_name(self) -> str:
                     return self._from_json('zoneName')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 

@@ -53,15 +53,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
                     
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddPolicyValue(API):
         def __init__(self, api_obj):
@@ -77,15 +77,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddValue(API):
         def __init__(self, api_obj):
@@ -99,15 +99,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ClearAttribute(API):
         def __init__(self, api_obj):
@@ -120,15 +120,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ClearPolicyAttribute(API):
         def __init__(self, api_obj):
@@ -142,15 +142,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ContainableClasses(API):
         def __init__(self, api_obj):
@@ -162,8 +162,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -175,7 +175,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _CountObjects(API):
         def __init__(self, api_obj):
@@ -190,8 +190,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -203,7 +203,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Create(API):
         def __init__(self, api_obj):
@@ -217,20 +217,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def object(self):
-                    return Config.Object(self._from_json(key='Object'), self._api_source)
+                    return Config.Object(self._from_json(key='Object'))
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _DefaultDN(API):
         def __init__(self, api_obj):
@@ -242,8 +242,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -255,7 +255,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Delete(API):
         def __init__(self, api_obj):
@@ -268,15 +268,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _DnToGuid(API):
         def __init__(self, api_obj):
@@ -288,8 +288,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -316,7 +316,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Enumerate(API):
         def __init__(self, api_obj):
@@ -330,20 +330,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json(key='Objects')]
+                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _EnumerateAll(API):
         def __init__(self, api_obj):
@@ -355,20 +355,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json(key='Objects')]
+                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _EnumerateObjectsDerivedFrom(API):
         def __init__(self, api_obj):
@@ -382,20 +382,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json(key='Objects')]
+                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _EnumeratePolicies(API):
         def __init__(self, api_obj):
@@ -407,20 +407,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def policies(self):
-                    return [Config.Policy(obj, self._api_source) for obj in self._from_json(key='Policies')]
+                    return [Config.Policy(obj) for obj in self._from_json(key='Policies')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Find(API):
         def __init__(self, api_obj):
@@ -433,20 +433,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json(key='Objects')]
+                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _FindContainers(API):
         def __init__(self, api_obj):
@@ -459,20 +459,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json(key='Objects')]
+                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _FindObjectsOfClass(API):
         def __init__(self, api_obj):
@@ -490,20 +490,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def objects(self):
-                    return [Config.Object(obj, self._api_source) for obj in self._from_json(key='Objects')]
+                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _FindPolicy(API):
         def __init__(self, api_obj):
@@ -517,8 +517,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -540,7 +540,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetHighestRevision(API):
         def __init__(self, api_obj):
@@ -553,8 +553,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -566,7 +566,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetRevision(API):
         def __init__(self, api_obj):
@@ -578,8 +578,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -591,7 +591,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GuidToDn(API):
         def __init__(self, api_obj):
@@ -603,8 +603,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -631,7 +631,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _IdInfo(API):
         def __init__(self, api_obj):
@@ -643,8 +643,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -671,7 +671,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _IsValid(API):
         def __init__(self, api_obj):
@@ -686,20 +686,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def object(self):
-                    return Config.Object(self._from_json(key='Object'), self._api_source)
+                    return Config.Object(self._from_json(key='Object'))
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _MutateObject(API):
         def __init__(self, api_obj):
@@ -712,15 +712,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Read(API):
         def __init__(self, api_obj):
@@ -733,8 +733,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -756,7 +756,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadAll(API):
         def __init__(self, api_obj):
@@ -768,20 +768,20 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def name_values(self):
-                    return [Config.NameValues(nv, self._api_source) for nv in self._from_json(key='NameValues')]
+                    return [Config.NameValues(nv) for nv in self._from_json(key='NameValues')]
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadDn(API):
         def __init__(self, api_obj):
@@ -794,8 +794,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -807,7 +807,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadDnReferences(API):
         def __init__(self, api_obj):
@@ -821,8 +821,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -834,7 +834,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadEffectivePolicy(API):
         def __init__(self, api_obj):
@@ -847,8 +847,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -875,7 +875,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _ReadPolicy(API):
         def __init__(self, api_obj):
@@ -889,8 +889,8 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -907,7 +907,7 @@ class _Config:
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RemoveDnValue(API):
         def __init__(self, api_obj):
@@ -921,15 +921,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))                    
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RemovePolicyValue(API):
         def __init__(self, api_obj):
@@ -944,15 +944,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RenameObject(API):
         def __init__(self, api_obj):
@@ -965,15 +965,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Write(API):
         def __init__(self, api_obj):
@@ -986,21 +986,21 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _WriteDn(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/WriteDn')
 
-        def post(self, object_dn: str, attribute_name: str, values: str):
+        def post(self, object_dn: str, attribute_name: str, values: List[str]):
             body = {
                 "ObjectDN": object_dn,
                 "AttributeName": attribute_name,
@@ -1008,15 +1008,15 @@ class _Config:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _WritePolicy(API):
         def __init__(self, api_obj):
@@ -1032,12 +1032,12 @@ class _Config:
             }
             
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return Config.Result(self._from_json(key='Result'))
             
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

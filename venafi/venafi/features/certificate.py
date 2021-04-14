@@ -1,6 +1,7 @@
 from typing import List
+from venafi.vtypes import Config
 from venafi.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 @feature()
@@ -12,33 +13,27 @@ class Certificate(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def _get(self, certificate_guid: str):
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Guid(certificate_guid).get()
+    def _get(self, certificate: 'Config.Object'):
+        result = self._api.websdk.Certificates.Guid(certificate.guid).get()
         result.assert_valid_response()
 
         return result
 
-    def associate_application(self, certificate_dn: str, application_dns: list, push_to_new: bool = False):
+    def associate_application(self, certificate: 'Config.Object', application_dns: List[str], push_to_new: bool = False):
         """
         Associate an application object to a certificate.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
             application_dns: A list of absolute paths to each application object.
             push_to_new: If True, the certificate will be pushed to the application once associated.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if not isinstance(application_dns, list):
             application_dns = [application_dns]
 
         assert self._api.websdk.Certificates.Associate.post(
             application_dn=application_dns,
-            certificate_dn=certificate_dn,
+            certificate_dn=certificate.dn,
             push_to_new=push_to_new
         ).success
 
@@ -64,29 +59,25 @@ class Certificate(FeatureBase):
             attributes=attributes
         )
 
-    def delete(self, certificate_guid: str):
+    def delete(self, certificate: 'Config.Object'):
         """
         Deletes the certificate object from TPP.
 
         .. note:: This method does not affect the actual certificate installed on any application.
 
         Args:
-            certificate_guid: GUID of the certificate object.
+            certificate: Config object of the certificate.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Guid(certificate_guid).delete()
+        result = self._api.websdk.Certificates.Guid(certificate.guid).delete()
         if not result.is_valid_response():
-            certificate_dn = self._api.websdk.Config.GuidToDn.post(object_guid=certificate_guid).object_dn
-            raise FeatureError(f'Could not delete certificate {certificate_dn}.')
+            raise FeatureError(f'Could not delete certificate {certificate.dn}.')
 
-    def details(self, certificate_guid: str):
+    def details(self, certificate: 'Config.Object'):
         """
         Returns details of the actual certificate and not the renewal settings for the object.
 
         Args:
-            certificate_guid: GUID of the certificate object.
+            certificate: Config object of the certificate.
 
         Returns:
             A single object with these properties:
@@ -117,39 +108,35 @@ class Certificate(FeatureBase):
             * ValidFrom
             * ValidTo
         """
-        return self._get(certificate_guid=certificate_guid).certificate_details
+        return self._get(certificate=certificate).certificate_details
 
-    def dissociate_application(self, certificate_dn: str, application_dns: list, delete_orphans: bool = False):
+    def dissociate_application(self, certificate: 'Config.Object', application_dns: List[str], delete_orphans: bool = False):
         """
         Associate an application object to a certificate.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
             application_dns: A list of absolute paths to each application object.
             delete_orphans: Delete the Application DN. Only delete the corresponding Device DN when it has no child objects.
                 Otherwise retain only the Device DN and its children. Use this option to completely remove the application
                 object and corresponding device objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Dissociate.post(
-            certificate_dn=certificate_dn,
+            certificate_dn=certificate.dn,
             application_dn=application_dns,
             delete_orphans=delete_orphans
         )
         result.assert_valid_response()
 
-    def download(self, certificate_dn: str, format: str, friendly_name: str = None, include_chain: bool = False,
-                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
-                 root_first_order: bool = False, vault_id: int = None):
+    def download(self, format: str, certificate: 'Config.Object' = None, friendly_name: str = None,
+                 include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
+                 password: str = None, root_first_order: bool = False, vault_id: int = None):
         """
         Downloads a certificate and returns the encoded content, filename, and format as a single object. If ``vault_id``
         is provided, then that specific version of a certificate is downloaded. This is particularly useful when
         trying to download historical certificates.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
             format: One of the following:
                 * Base64
                 * Base64 (PKCS #8)
@@ -157,6 +144,7 @@ class Certificate(FeatureBase):
                 * JKS
                 * PKCS #7
                 * PKCS #12
+            certificate: Config object of the certificate. Not required if using vault id.
             friendly_name: Label or alias for the given format.
             include_chain: Include parent or root chain.
             include_private_key: Include the private key.
@@ -165,7 +153,7 @@ class Certificate(FeatureBase):
             root_first_order: If True, show root certificate first, followed by intermediate, and finally the
                 end entity certificate.
             vault_id: If provided, downloads the certificate with the given Vault ID. Use this when trying
-                to download historical certificates.
+                to download historical certificates. Not required if using certificate config object.
 
         Returns:
             A single object with these properties:
@@ -173,9 +161,6 @@ class Certificate(FeatureBase):
             * File Format
             * File name
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if vault_id:
             result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
                 format=format,
@@ -188,7 +173,7 @@ class Certificate(FeatureBase):
             )
         else:
             result = self._api.websdk.Certificates.Retrieve.post(
-                certificate_dn=certificate_dn,
+                certificate_dn=certificate.dn,
                 format=format,
                 friendly_name=friendly_name,
                 include_chain=include_chain,
@@ -200,151 +185,122 @@ class Certificate(FeatureBase):
 
         return result
 
-    def get_previous_versions(self, certificate_guid: str, exclude_expired: bool = False, exclude_revoked: bool = False):
+    def get_previous_versions(self, certificate: 'Config.Object', exclude_expired: bool = False, exclude_revoked: bool = False):
         """
         Returns all of the historical certificates and their details related to the given certificate GUID.
 
         Args:
-            certificate_guid: GUID of the certificate object.
+            certificate: Config object of the certificate.
             exclude_expired: If True, do not include expired certificates.
             exclude_revoked: If True, do not include revoked certificates.
 
         Returns:
             A list of historical certificates related to the certificate GUID.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
+        result = self._api.websdk.Certificates.Guid(certificate.guid).PreviousVersions.get(
             exclude_expired=exclude_expired,
             exclude_revoked=exclude_revoked
         )
         return result.previous_versions
 
-    def get_validation_results(self, certificate_guid: str):
+    def get_validation_results(self, certificate: 'Config.Object'):
         """
         Returns the file and SSL/TLS validation results for each of the applications
-        associated to the certificate GUID.
+        associated to the certificate.
 
         Args:
-            certificate_guid: GUID of the certificate.
+            certificate: Config object of the certificate.
 
         Returns:
             File and SSL/TLS validation results for each of the applications
-            associated to the certificate GUID.
+            associated to the certificate.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
+        result = self._api.websdk.Certificates.Guid(certificate.guid).ValidationResults.get()
         return [result.file, result.ssl_tls]
 
-    def push_to_applications(self, certificate_dn: str, application_dns: List[str] = None):
+    def push_to_applications(self, certificate: 'Config.Object', application_dns: List[str] = None):
         """
-        Push the active certificate of the Certificate DN to the given Application DNs.
-        Args:
-            certificate_dn: Absolute path to the certificate object.
-            application_dns: A list of application DNs to push certificates.
-        """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
+        Push the active certificate to the given Application DNs.
 
+        Args:
+            certificate: Config object of the certificate.
+            application_dns: A list of application DNs.
+        """
         if not application_dns:
             application_dns = self._api.websdk.Config.ReadDn.post(
-                object_dn=certificate_dn,
+                object_dn=certificate.dn,
                 attribute_name=CertificateAttributes.consumers
             ).values
 
         self.associate_application(
-            certificate_dn=certificate_dn,
+            certificate=certificate,
             application_dns=application_dns,
             push_to_new=True
         )
 
-    def renew(self, certificate_dn: str, csr: str = None, reenable: bool = False):
+    def renew(self, certificate: 'Config.Object', csr: str = None, re_enable: bool = False):
         """
         Renews or requests a certificate.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
             csr: If provided, uploads the PKCS10 CSR to TPP to send to the CA. If not provided, TPP generates the CSR.
-            reenable: The action to control a previously disabled certificate:
+            re_enable: The action to control a previously disabled certificate:
                 If False, do not renew a previously disabled certificate.
-                If True, lear the Disabled attribute, reenable, and then renew the certificate (in this request).
-                Reuse the same CertificateDN, that is also known as a Certificate object.
+                If True, clear the Disabled attribute, re-enable, and then renew the certificate (in this request).
 
         Returns:
             Certificate details regarding the request and renewal.
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        certificate_guid = self._api.websdk.Config.DnToGuid.post(object_dn=certificate_dn).guid
-        current_thumbprint = self.details(certificate_guid=certificate_guid).thumbprint
-
-        result = self._api.websdk.Certificates.Renew.post(certificate_dn=certificate_dn, pkcs10=csr, reenable=reenable)
+        current_thumbprint = self.details(certificate=certificate).thumbprint
+        result = self._api.websdk.Certificates.Renew.post(certificate_dn=certificate.dn, pkcs10=csr, reenable=re_enable)
         result.assert_valid_response()
-
         return current_thumbprint
 
-    def reset(self, certificate_dn: str):
+    def reset(self, certificate: 'Config.Object'):
         """
-        Resets the certificate to a non-processing state. Technically, the stage in "none". No attempt
-        to reprocess the certificate renewal is made.
+        Resets the certificate to a non-processing state. No attempt to reprocess the certificate renewal is made.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=False)
-
+        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate.dn, restart=False)
         result.assert_valid_response()
-
         if not result.processing_reset_completed:
-            raise FeatureError.UnexpectedValue(f'Processing reset was not completed for {certificate_dn}.')
+            raise FeatureError.UnexpectedValue(f'Processing reset was not completed for {certificate.dn}.')
 
-    def retry_from_current_stage(self, certificate_dn: str):
+    def retry_from_current_stage(self, certificate: 'Config.Object'):
         """
         Retries renewal from the current processing stage of the certificate.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate_dn)
+        result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate.dn)
         result.assert_valid_response()
 
-    def retry_from_stage_0(self, certificate_dn: str):
+    def retry_from_stage_0(self, certificate: 'Config.Object'):
         """
         Retries renewal from stage 0. This clears all current processing data and restarts
         processing.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=True)
-
+        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate.dn, restart=True)
         result.assert_valid_response()
-
         if not result.restart_completed:
-            raise FeatureError.UnexpectedValue('Restart renewal from stage 0 was not triggered.')
+            raise FeatureError.UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate.dn}.')
 
-    def revoke(self, certificate_dn: str, comments: str = None, disable: bool = None,
+    def revoke(self, certificate: 'Config.Object', comments: str = None, disable: bool = None,
                reason: int = None, thumbprint: str = None):
         """
         Revokes the certificate. If a thumbprint is provided, then the particular historical certificate
-        associated to the certificate DN whose thumbprint matches will be revoked.
+        associated to the certificate having that thumbprint will be revoked.
 
         Args:
-            certificate_dn: Absolute path to the certificate object.
+            certificate: Config object of the certificate.
             comments: Any comments to include in the revoke request.
             disable: If True, disables the certificate object.
             reason: Reason for revoking.
@@ -353,22 +309,17 @@ class Certificate(FeatureBase):
         Returns:
 
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Certificates.Revoke.post(
-            certificate_dn=certificate_dn,
+            certificate_dn=certificate.dn,
             comments=comments,
             disable=disable,
             reason=reason,
             thumbprint=thumbprint
         )
         result.assert_valid_response()
-        try:
-            assert result.success is True  # TPP may not return "Success", which will throw an error.
-        except:
+        if result.success is not True:
             raise FeatureError.UnexpectedValue(
-                f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
+                f'Cannot revoke {certificate.dn} due to this error:\n{result.error}.'
             )
 
     def upload(self, certificate_data: str, parent_folder_dn: str, certificate_authority_attributes: dict = None, name: str = None,
@@ -394,9 +345,6 @@ class Certificate(FeatureBase):
         Returns:
             Config object representing the (new) certificate object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if certificate_authority_attributes:
             certificate_authority_attributes = self._name_value_list(attributes=certificate_authority_attributes)
 
@@ -409,31 +357,23 @@ class Certificate(FeatureBase):
             private_key_data=private_key_data,
             reconcile=reconcile
         )
-
         result.assert_valid_response()
-
         return self._api.websdk.Config.IsValid.post(object_dn=result.certificate_dn).object
 
-    def validate(self, certificate_dns: List[str]):
+    def validate(self, certificates: 'List[Config.Object]'):
         """
         Validates the certificate on all applications associated to certificate that are not disabled.
 
         Args:
-            certificate_dns: List of certificate DNs to validate.
+            certificates: List of certificate config objects to validate.
 
         Returns:
             Validation results.
         """
-        if not isinstance(certificate_dns, list):
-            certificate_dns = [certificate_dns]
-
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
+        result = self._api.websdk.Certificates.Validate.post(certificate_dns=[c.dn for c in certificates])
         return result
 
-    def wait_for_enrollment_to_complete(self, certificate_guid: str, current_thumbprint: str, timeout: int = 60):
+    def wait_for_enrollment_to_complete(self, certificate: 'Config.Object', current_thumbprint: str, timeout: int = 60):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
@@ -441,41 +381,18 @@ class Certificate(FeatureBase):
         provisioning stage. If the certificate management type is set to *Provisioning*, use the application feature
         :meth:`venafi.venafi.features.application._ApplicationBase`.
 
+        See TPP WebSDK documentation "GET Certificate/<GUID>" for details on what is returned. Only the "CertificateDetails"
+        is returned.
+
         Args:
-            certificate_guid: GUID of the certificate object.
+            certificate: Config object of the certificate.
             current_thumbprint: Thumbprint of the `current` certificate object.
             timeout: Timeout in seconds before raising an error.
 
         Returns:
-            A single object with these properties:
-            * C (Country)
-            * CN (Common Name)
-            * EnhancedKeyUsage
-            * Issuer
-            * KeyAlgorithm
-            * KeySize
-            * KeyUsage
-            * L (City or Location)
-            * O (Organization)
-            * OU (Organizational Units)
-            * PublicKeyHash
-            * S (State)
-            * SKIKeyIdentifier (Subject Key Identifier)
-            * Serial
-            * SignatureAlgorithm
-            * SignatureAlgorithmOID
-            * StoreAdded
-            * Subject
-            * SubjectAltNameDNS
-            * SubjectAltNameEmail
-            * SubjectAltNameIp
-            * SubjectAltNameUpn
-            * SubjectAltNameUri
-            * Thumbprint
-            * ValidFrom
-            * ValidTo
+            Certificate details object.
         """
-        cert = self._get(certificate_guid=certificate_guid)
+        cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
                 cert.assert_valid_response()
@@ -484,20 +401,20 @@ class Certificate(FeatureBase):
                     return cert.certificate_details
                 elif cert.processing_details.in_error:
                     break
-                cert = self._get(certificate_guid=certificate_guid)
+                cert = self._get(certificate=certificate)
 
         raise FeatureError.UnexpectedValue(
             f'Certificate renewal for "{cert.dn}" encountered an error at stage {cert.processing_details.stage} with '
             f'status "{cert.processing_details.status}".'
         )
 
-    def wait_for_stage(self, certificate_guid: str, stage: int, expect_workflow: bool = True, timeout: int = 60):
+    def wait_for_stage(self, certificate: 'Config.Object', stage: int, expect_workflow: bool = True, timeout: int = 60):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of
-        ``timeout`` seconds. If the timeout is reached, an error is thrown.
+        ``timeout`` seconds. If the timeout is reached, an error is raised.
 
         Args:
-            certificate_guid: GUID of the certificate object.
+            certificate: Config object of the certificate.
             stage: Stage at which to return
             expect_workflow: If ``True``, validates that a Ticket DN has been issued to the certificate.
             timeout: Timeout in seconds before throwing an error.
@@ -505,7 +422,7 @@ class Certificate(FeatureBase):
         Returns:
             Certificate and processing details.
         """
-        cert = self._get(certificate_guid=certificate_guid)
+        cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
                 if cert.processing_details.in_error is True:
@@ -516,7 +433,7 @@ class Certificate(FeatureBase):
                             return cert
                     elif not expect_workflow and cert.processing_details.stage >= stage:
                         return cert
-                cert = self._get(certificate_guid=certificate_guid)
+                cert = self._get(certificate=certificate)
 
         if expect_workflow and stage == cert.processing_details.stage:
             msg = f'After {timeout} seconds certificate renewal reached stage {stage}, but no workflow was issued. ' \

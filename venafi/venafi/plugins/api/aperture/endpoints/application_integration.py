@@ -1,6 +1,6 @@
-from venafi.api.api_base import API, APIResponse, json_response_property
-from venafi.properties.response_objects.identity import Identity
-from venafi.properties.response_objects.oauth import OAuth
+from venafi.plugins.api.api_base import API, APIResponse, json_response_property
+from venafi.plugins.properties.response_objects.identity import Identity
+from venafi.plugins.properties.response_objects.oauth import OAuth
 
 
 class _ApplicationIntegration(API):

@@ -1,4 +1,5 @@
-from venafi.features.bases.feature_base import FeatureBase, ApiPreferences, feature
+from venafi.vtypes import Config, Identity
+from venafi.features.bases.feature_base import FeatureBase, feature
 from venafi.properties.response_objects.permissions import Permissions as PermResponseObj
 
 
@@ -7,116 +8,96 @@ class Permissions(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, object_dn: str, identity_prefixed_universal: str):
+    def delete(self, obj: 'Config.Object', identity: 'Identity.Identity'):
         """
-        Deletes all explicit permissions granted to a user or group on the ``object_dn``. All implicit permissions,
+        Deletes all explicit permissions granted to a user or group on the ``obj``. All implicit permissions,
         i.e. those that are inherited from group memberships and parent folders, are unaffected.
 
         Args:
-            object_dn: Absolute path to the object to which permissions will be granted.
-            identity_prefixed_universal: The prefixed name of the Identity object.
+            obj: Config object of the object to act on.
+            identity: Identity object of the user or group.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
+        current_permissions = self.get_explicit(obj=obj, identity=identity)
         if not current_permissions:
             return
 
-        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
-        if '+' in prefix:
-            ptype, pname = prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+        if '+' in identity.prefix:
+            ptype, pname = identity.prefix.split('+', 1)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
         result = api.delete()
         result.assert_valid_response()
 
-    def get_effective(self, object_dn: str, identity_prefixed_universal: str):
+    def get_effective(self, obj: 'Config.Object', identity: 'Identity.Identity'):
         """
-        Returns the `effective` permissions of a user or group on the ``object_dn``. Effective permissions are the
+        Returns the `effective` permissions of a user or group on the ``obj``. Effective permissions are the
         permissions that are `effectively` enforced by TPP. All Master Admin, implicit, and explicit permissions
         are taken into account to evaluate the final effective permissions of a user or group.
 
         Args:
-            object_dn: Absolute path to the object to which permissions will be granted.
-            identity_prefixed_universal: The prefixed name of the Identity object.
+            obj: Config object of the object to act on.
+            identity: Identity object of the user or group.
 
         Returns:
             Effective Permissions object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
-        if '+' in prefix:
-            ptype, pname = prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+        if '+' in identity.prefix:
+            ptype, pname = identity.prefix.split('+', 1)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
         result = api.Effective.get()
         return result.effective_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
-    def get_explicit(self, object_dn: str, identity_prefixed_universal: str):
+    def get_explicit(self, obj: 'Config.Object', identity: 'Identity.Identity'):
         """
-        Returns the `explicit` permissions of a user or group on the ``object_dn``. Explicit permissions are the
+        Returns the `explicit` permissions of a user or group on the ``obj``. Explicit permissions are the
         permissions that are `explicitly` granted to a user or group on a particular object. A user or group may
         have permissions to the object via `implicit` permissions, which are permissions inherited from other
         folders and group memberships. Implicit permissions are ignored. To get implicit permissions, use
         :meth:`get_implicit`.
 
         Args:
-            object_dn: Absolute path to the object to which permissions will be granted.
-            identity_prefixed_universal: The prefixed name of the Identity object.
+            obj: Config object of the object to act on.
+            identity: Identity object of the user or group.
 
         Returns:
             Explicit Permissions object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
-        if '+' in prefix:
-            ptype, pname = prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+        if '+' in identity.prefix:
+            ptype, pname = identity.prefix.split('+', 1)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
         result = api.get()
         return result.explicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
-    def get_implicit(self, object_dn: str, identity_prefixed_universal: str):
+    def get_implicit(self, obj: 'Config.Object', identity: 'Identity.Identity'):
         """
-        Returns the `implicit` permissions of a user or group on the ``object_dn``. Implicit permissions are permissions
+        Returns the `implicit` permissions of a user or group on the ``obj``. Implicit permissions are permissions
         inherited from other folders and group memberships. To get explicit permissions, use :meth:`get_explicit`.
 
         Args:
-            object_dn: Absolute path to the object to which permissions will be granted.
-            identity_prefixed_universal: The prefixed name of the Identity object.
+            obj: Config object of the object to act on.
+            identity: Identity object of the user or group.
 
         Returns:
             Implicit Permissions object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
-        if '+' in prefix:
-            ptype, pname = prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+        if '+' in identity.prefix:
+            ptype, pname = identity.prefix.split('+', 1)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
         result = api.get()
         return result.implicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
-    def list_identities(self, object_dn: str):
+    def list_identities(self, obj: 'Config.Object'):
         """
         Returns a list of Identity objects that have `explicit` permissions to the object. Explicit permissions are the
         permissions that are `explicitly` granted to a user or group on a particular object. A user or group may
@@ -124,16 +105,12 @@ class Permissions(FeatureBase):
         folders and group memberships. Implicit permissions are ignored.
 
         Args:
-            object_dn: Absolute path to the object to which permissions will be granted.
+            obj: Config object of the object to act on.
 
         Returns:
             List of Identity objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        principals = self._api.websdk.Permissions.Object.Guid(object_guid).get().principals
+        principals = self._api.websdk.Permissions.Object.Guid(obj.guid).get().principals
 
         principals = [
             self._api.websdk.Identity.Validate.post(identity={'PrefixedUniversal': principal}).identity
@@ -142,7 +119,7 @@ class Permissions(FeatureBase):
 
         return principals
 
-    def update(self, object_dn: str, identity_prefixed_universal: str, is_associate_allowed: bool = None, is_create_allowed: bool = None,
+    def update(self, obj: 'Config.Object', identity: 'Identity.Identity', is_associate_allowed: bool = None, is_create_allowed: bool = None,
                is_delete_allowed: bool = None, is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
                is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
                is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
@@ -151,8 +128,8 @@ class Permissions(FeatureBase):
         Grants the specified permissions to a user or group identity.
 
         Args:
-            object_dn: Absolute path to the object to which permissions will be granted.
-            identity_prefixed_universal: The prefixed name of the Identity object.
+            obj: Config object of the object to act on.
+            identity: Identity object of the user or group.
             is_associate_allowed: Allows associating/dissociating applications to certificates and pushing certificates
                 to the associated applications.
             is_create_allowed: Allows creating subordinate objects to the ``object_dn``. Also grants View permission.
@@ -171,18 +148,13 @@ class Permissions(FeatureBase):
             is_view_allowed: Allows ability to view the name of all subordinate objects to ``object_dn``.
             is_write_allowed: Allows editing of subordinate objects to ``object_dn``.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        object_guid = self._api.websdk.Config.DnToGuid.post(object_dn=object_dn).guid
-        prefix, universal = identity_prefixed_universal.split(':', 1)  # type: str, str
-        if '+' in prefix:
-            ptype, pname = prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype(ptype).Pname(pname).Principal(universal)
+        if '+' in identity.prefix:
+            ptype, pname = identity.prefix.split('+', 1)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(object_guid).Ptype().Principal(universal)
+            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
-        current_permissions = self.get_explicit(object_dn=object_dn, identity_prefixed_universal=identity_prefixed_universal)
+        current_permissions = self.get_explicit(obj=obj, identity=identity)
 
         if bool([y for x, y in current_permissions.__dict__.items() if not x.startswith('_') and y is not None]):
             method = api.put

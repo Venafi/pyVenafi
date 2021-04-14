@@ -26,8 +26,8 @@ class _X509CertificateStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -44,7 +44,7 @@ class _X509CertificateStore:
                 def vault_id(self) -> int:
                     return self.json_response('VaultId')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Lookup(API):
         def __init__(self, api_obj):
@@ -59,8 +59,8 @@ class _X509CertificateStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -82,7 +82,7 @@ class _X509CertificateStore:
                 def result(self):
                     return SecretStore.Result(self.json_response('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _LookupExpiring(API):
         def __init__(self, api_obj):
@@ -95,8 +95,8 @@ class _X509CertificateStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -108,7 +108,7 @@ class _X509CertificateStore:
                 def result(self):
                     return SecretStore.Result(self.json_response('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Remove(API):
         def __init__(self, api_obj):
@@ -122,15 +122,15 @@ class _X509CertificateStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def result(self):
                     return SecretStore.Result(self.json_response('Result'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -142,8 +142,8 @@ class _X509CertificateStore:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -160,4 +160,4 @@ class _X509CertificateStore:
                 def typed_name_values(self):
                     return SecretStore.TypedNameValues(self.json_response('TypedNameValues'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

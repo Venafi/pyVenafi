@@ -1,5 +1,6 @@
 from typing import List, Union
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.vtypes import Config
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 from venafi.properties.config import FolderClassNames, FolderAttributes
 
 
@@ -11,47 +12,41 @@ class Folder(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def apply_workflow(self, folder_dn: str, workflow_dn: str):
+    def apply_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
         """
         Applies a workflow to a folder and all of its subordinate objects. However, a subordinate folder
         may block the workflow.
 
         Args:
-            folder_dn: Absolute path to the folder object.
-            workflow_dn: Absolute path to the workflow object.
+            folder: Config object of the folder object.
+            workflow: Config object of the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.AddValue.post(
-            object_dn=folder_dn,
+            object_dn=folder.dn,
             attribute_name=FolderAttributes.workflow,
-            value=workflow_dn
+            value=workflow.dn
         )
 
         result.assert_valid_response()
 
-    def block_workflow(self, folder_dn: str, workflow_dn: str):
+    def block_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
         """
         Blocks a workflow on a folder and all of its subordinate objects. This prevents any parent folders from
         enforcing a workflow on this folder and its subordinate objects.
 
         Args:
-            folder_dn: Absolute path to the folder object.
-            workflow_dn: Absolute path to the workflow object.
+            folder: Config object of the folder object.
+            workflow: Config object of the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.AddValue.post(
-            object_dn=folder_dn,
+            object_dn=folder.dn,
             attribute_name=FolderAttributes.workflow_block,
-            value=workflow_dn
+            value=workflow.dn
         )
 
         result.assert_valid_response()
 
-    def clear_policy(self, folder_dn: str, class_name: str, attributes: Union[dict, List[str]]):
+    def clear_policy(self, folder: 'Config.Object', class_name: str, attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the policy attribute name along with all of its values
         on a folder. If ``attributes`` are provided, then only the corresponding policy attribute values
@@ -63,18 +58,19 @@ class Folder(FeatureBase):
 
             .. code-block:: python
 
-                from venafi import logger, Authenticate, Features, Attributes, \\
+                from venafi import logger, Authenticate, Features, AttributeNames, \\
                     AttributeValues, Classes
 
-                auth = Authenticate(# params here)
-                features = Features(auth)
+                api = Authenticate(# params here)
+                features = Features(api)
 
+                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
                 features.folder.clear_all_policy_values(
-                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    folder=folder,
                     class_name=Classes.Certificate.x509_certificate,
                     attributes=[
-                        Attributes.Certificate.management_type,
-                        Attributes.Certificate.organization
+                        AttributeNames.Certificate.management_type,
+                        AttributeNames.Certificate.organization
                     ]
                 )
 
@@ -82,34 +78,32 @@ class Folder(FeatureBase):
 
         .. code-block:: python
 
-                from venafi import logger, Authenticate, Features, Attributes, \\
+                from venafi import logger, Authenticate, Features, AttributeNames, \\
                     AttributeValues, Classes
 
-                auth = Authenticate(# params here)
-                features = Features(auth)
+                api = Authenticate(# params here)
+                features = Features(api)
 
+                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
                 features.folder.clear_policy_value(
-                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    folder=folder,
                     class_name=Classes.Certificate.x509_certificate,
                     attributes={
-                        Attributes.Certificate.organizational_unit: 'Venafi'
+                        AttributeNames.Certificate.organizational_unit: 'Venafi'
                     }
                 )
 
         Args:
-            folder_dn: Absolute path to the folder enforcing the policy.
+            folder: Config object of the folder object.
             class_name: TPP Class Name for the attributes being locked.
             attributes: Either a list of attribute names or a dictionary of attribute
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if isinstance(attributes, list):
             for attribute_name in attributes:
                 result = self._api.websdk.Config.ClearPolicyAttribute.post(
-                    object_dn=folder_dn,
+                    object_dn=folder.dn,
                     attribute_name=attribute_name,
                     class_name=class_name
                 ).result
@@ -124,7 +118,7 @@ class Folder(FeatureBase):
 
                 for value in values:
                     result = self._api.websdk.Config.RemovePolicyValue.post(
-                        object_dn=folder_dn,
+                        object_dn=folder.dn,
                         class_name=class_name,
                         attribute_name=name,
                         value=value
@@ -149,32 +143,25 @@ class Folder(FeatureBase):
         Returns:
             Config object representing the folder.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            return self._api.aperture.ConfigObjects.Policies.post(name=name, container=parent_folder_dn).object
+        return self._config_create(
+            name=name,
+            parent_folder_dn=parent_folder_dn,
+            config_class=FolderClassNames.policy,
+            attributes=attributes
+        )
 
-        if self._api.preference == ApiPreferences.websdk:
-            return self._config_create(
-                name=name,
-                parent_folder_dn=parent_folder_dn,
-                config_class=FolderClassNames.policy,
-                attributes=attributes
-            )
-
-    def delete(self, folder_dn: str, recursive: bool = True):
+    def delete(self, folder: 'Config.Object', recursive: bool = True):
         """
         Deletes the folder. The folder is, by default, deleted recursively. All objects deleted will be deleted from config
         and secret store.
 
         Args:
-            folder_dn: Absolute path to the folder.
+            folder: Config object of the folder.
             recursive: If True, delete all sub-folders, etc., from config and secret store.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if recursive:
             # Must delete all of the secrets first.
-            response = self._api.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
+            response = self._api.websdk.Config.Enumerate.post(object_dn=folder.dn, recursive=True)
             result = response.result
             if result.code != 1:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -183,31 +170,25 @@ class Folder(FeatureBase):
             for child in all_child_dns:
                 self._secret_store_delete(object_dn=child.dn)
 
-        self._config_delete(object_dn=folder_dn, recursive=recursive)
+        self._config_delete(object_dn=folder.dn, recursive=recursive)
 
-    def delete_engines(self, folder_guid: str):
+    def delete_engines(self, folder: 'Config.Object'):
         """
         Deletes the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
         Args:
-            folder_guid: GUID of the folder.
+            folder: Config object of the folder object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
+        return self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).delete()
 
-        return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
-
-    def get_engines(self, folder_guid: str):
+    def get_engines(self, folder: 'Config.Object'):
         """
         Gets the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
         Args:
-            folder_guid: GUID of the folder.
+            folder: Config object of the folder object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
-        return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
+        return self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).get().engines
 
     def search(self, object_name_pattern: str = '*', object_types: List[str] = None, recursive: bool = True,
                starting_dn: str = None):
@@ -226,23 +207,23 @@ class Folder(FeatureBase):
 
                 from venafi import Authenticate, Features
 
-                auth = Authenticate(# params here)
-                features = Features(auth)
+                api = Authenticate(# params here)
+                features = Features(api)
 
-                objects = features.folder.search(object_name_pattern='*some_object*.com', starting_dn='\\\VED\\\Policy\\\Certificates')
+                objects = features.folder.search(
+                    object_name_pattern='*some_object*.com',
+                    starting_dn='\\\VED\\\Policy\\\Certificates'
+                )
 
         Args:
             object_name_pattern: A regular expression
-            object_types: List of TPP Object Typse (also called a Config Classes)
+            object_types: List of TPP Object Types (also called a Config Classes)
             recursive: Search sub-folders when True
-            starting_dn: Parent folder to all desired results
+            starting_dn: Parent folder DN to begin search
 
         Returns:
             A list of Config Objects representing the objects found.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         if object_types:
             objects = self._api.websdk.Config.FindObjectsOfClass.post(
                 classes=object_types,
@@ -263,26 +244,24 @@ class Folder(FeatureBase):
 
         return objects
 
-    def set_engines(self, folder_guid: str, engine_guids: List[str], append_engines: bool = False):
+    def set_engines(self, folder: 'Config.Object', engines: 'List[Config.Object]', append_engines: bool = False):
         """
         Sets the desired TPP engine(s) to exclusively do work for all objects contained in the folder.
 
         Args:
-            folder_guid: GUID of the folder.
-            engine_guids: List of engine GUIDs listed in TPP.
-            append_engines: If True, append `engine_guids` to the current list on the folder. Otherwise
+            folder: Config object of the folder object.
+            engines: List of engine config objects listed in TPP.
+            append_engines: If True, append `engines` to the current list on the folder. Otherwise
                 overwrite the current setting.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
+        engine_guids = [e.guid for e in engines]
         if append_engines:
-            current_engines = self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
+            current_engines = self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).get().engines
             engine_guids.extend([engine.engine_guid for engine in current_engines])
-        result = self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).put(engine_guids)
+        result = self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).put(engine_guids=engine_guids)
         result.assert_valid_response()
 
-    def read_policy(self, folder_dn: str, class_name: str, attribute_name: str):
+    def read_policy(self, folder: 'Config.Object', class_name: str, attribute_name: str):
         """
         Reads policy settings for the given folder, class name, and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether or not the
@@ -293,20 +272,21 @@ class Folder(FeatureBase):
 
             .. code-block:: python
 
-                from venafi import logger, Authenticate, Features, Attributes, \\
+                from venafi import logger, Authenticate, Features, AttributeNames, \\
                     AttributeValues, Classes
 
-                auth = Authenticate(# params here)
-                features = Features(auth)
+                api = Authenticate(# params here)
+                features = Features(api)
 
+                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
                 values, locked = features.folder.read_policy(
-                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                    folder=folder,
                     class_name=Classes.Certificate.x509_certificate,
-                    attribute_name=Attributes.Certificate.management_type
+                    attribute_name=AttributeNames.Certificate.management_type
                 )
 
         Args:
-            folder_dn: Absolute path to the folder enforcing the policy.
+            folder: Config object of the folder object.
             class_name: TPP Class Name for the attributes being locked.
             attribute_name: The attribute name.
 
@@ -315,11 +295,8 @@ class Folder(FeatureBase):
             boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
             be returned.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         resp = self._api.websdk.Config.ReadPolicy.post(
-            object_dn=folder_dn,
+            object_dn=folder.dn,
             class_name=class_name,
             attribute_name=attribute_name
         )
@@ -330,45 +307,39 @@ class Folder(FeatureBase):
 
         return [resp.values, resp.locked]
 
-    def remove_workflow(self, folder_dn: str, workflow_dn: str):
+    def remove_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
         """
         Removes an applied workflow from a folder.
 
         Args:
-            folder_dn: Absolute path to the folder object.
-            workflow_dn: Absolute path to the workflow object.
+            folder: Config object of the folder object.
+            workflow: Config object of the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.RemoveDnValue.post(
-            object_dn=folder_dn,
+            object_dn=folder.dn,
             attribute_name=FolderAttributes.workflow,
-            value=workflow_dn
+            value=workflow.dn
         )
 
         result.assert_valid_response()
 
-    def remove_blocked_workflow(self, folder_dn: str, workflow_dn: str):
+    def remove_blocked_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
         """
         Removes a blocked workflow from a folder.
 
         Args:
-            folder_dn: Absolute path to the folder object.
-            workflow_dn: Absolute path to the workflow object.
+            folder: Config object of the folder object.
+            workflow: Config object of the workflow object.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         result = self._api.websdk.Config.RemoveDnValue.post(
-            object_dn=folder_dn,
+            object_dn=folder.dn,
             attribute_name=FolderAttributes.workflow_block,
-            value=workflow_dn
+            value=workflow.dn
         )
 
         result.assert_valid_response()
 
-    def write_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+    def write_policy(self, folder: 'Config.Object', class_name: str, attributes: dict, locked: bool):
         """
         Sets policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
@@ -383,38 +354,36 @@ class Folder(FeatureBase):
 
             .. code-block:: python
 
-                from venafi import logger, Authenticate, Features, Attributes, \\
+                from venafi import logger, Authenticate, Features, AttributeNames, \\
                     AttributeValues, Classes
 
-                auth = Authenticate(# params here)
-                features = Features(auth)
+                api = Authenticate(# params here)
+                features = Features(api)
 
-                features.folder.add_policy(
-                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
+                features.folder.write_policy(
+                    folder=folder,
                     class_name=Classes.Certificate.x509_certificate,
                     attributes={
-                        Attributes.Certificate.management_type: 'Enrollment',
-                        Attributes.Certificate.organization: 'Venafi'
+                        AttributeNames.Certificate.management_type: 'Enrollment',
+                        AttributeNames.Certificate.organization: 'Venafi'
                     },
                     locked=True
                 )
 
         Args:
-            folder_dn: Absolute path to the folder enforcing the policy.
+            folder: Config object of the folder object.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         for name, values in attributes.items():
             if not isinstance(values, list):
                 values = [values]
 
             result = self._api.websdk.Config.WritePolicy.post(
-                object_dn=folder_dn,
+                object_dn=folder.dn,
                 class_name=class_name,
                 attribute_name=name,
                 values=values,
@@ -424,7 +393,7 @@ class Folder(FeatureBase):
             if result.code != 1:
                 FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-    def update_policy(self, folder_dn: str, class_name: str, attributes: dict, locked: bool):
+    def update_policy(self, folder: 'Config.Object', class_name: str, attributes: dict, locked: bool):
         """
         Updates policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
@@ -435,35 +404,33 @@ class Folder(FeatureBase):
 
             .. code-block:: python
 
-                from venafi import logger, Authenticate, Features, Attributes, \\
+                from venafi import logger, Authenticate, Features, AttributeNames, \\
                     AttributeValues, Classes
 
-                auth = Authenticate(# params here)
-                features = Features(auth)
+                api = Authenticate(# params here)
+                features = Features(api)
 
-                features.folder.add_policy(
-                    folder_dn='\\\VED\\\Policy\\\MyPolicy',
+                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
+                features.folder.update_policy(
+                    folder=folder
                     class_name=Classes.Certificate.x509_certificate,
                     attributes={
-                        Attributes.Certificate.management_type: 'Enrollment',
-                        Attributes.Certificate.organization: 'Venafi'
+                        AttributeNames.Certificate.management_type: 'Enrollment',
+                        AttributeNames.Certificate.organization: 'Venafi'
                     },
                     locked=True
                 )
 
         Args:
-            folder_dn: Absolute path to the folder enforcing the policy.
+            folder: Config object of the folder object.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         for name, value in attributes.items():
             result = self._api.websdk.Config.AddPolicyValue.post(
-                object_dn=folder_dn,
+                object_dn=folder.dn,
                 class_name=class_name,
                 attribute_name=name,
                 value=value,

@@ -40,6 +40,7 @@ def json_response_property(return_on_204: type = None):
     Returns: Key of response content returned by TPP.
 
     """
+
     def pre_validation(func):
         def wrap(self: APIResponse, *args, **kwargs):
             if not self._validated:
@@ -50,7 +51,9 @@ def json_response_property(return_on_204: type = None):
                 else:
                     return return_on_204
             return func(self, *args, **kwargs)
+
         return wrap
+
     return pre_validation
 
 
@@ -60,6 +63,7 @@ class API:
     validations, logging, re-authentication, and holds the raw response. This
     class MUST be inherited by all API definitions.
     """
+
     def __init__(self, api_obj, url: str):
         """
         Args:
@@ -72,7 +76,6 @@ class API:
         """
         self._api_obj = api_obj  # type:
         self._session = api_obj._session  # type: Session
-        self._api_source = api_obj.__class__.__name__.lower()
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
@@ -90,20 +93,12 @@ class API:
             Returns True if the API key expired. Otherwise False.
 
         """
-        if self._api_source == 'websdk':
-            invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
-        elif self._api_source == 'aperture':
-            invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
-        else:
-            invalid_api_message_match = False
-
-        return response.status_code == 401 and invalid_api_message_match
+        return response.status_code == 401 and bool(re.match('.*API key.*is not valid.*', response.text))
 
     def _delete(self, mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
         """
         Performs a DELETE method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Returns:
             Returns the raw JSON response.
@@ -117,7 +112,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._delete(mask_input_regexes=mask_input_regexes, mask_output_regexes=mask_output_regexes)
+                    return self._session.delete(url=self._url)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -128,8 +123,7 @@ class API:
              mask_output_regexes: List[str] = None):
         """
         Performs a GET method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Args:
             params: A dictionary of URL parameters to append to the URL.
@@ -146,8 +140,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._get(params=params, mask_input_regexes=mask_input_regexes,
-                                     mask_output_regexes=mask_output_regexes)
+                    return self._session.get(url=self._url, params=params)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -158,8 +151,7 @@ class API:
               mask_output_regexes: List[str] = None):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Args:
             data: A dictionary of data to send with the URL.
@@ -176,19 +168,18 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._post(data=data, mask_input_regexes=mask_input_regexes,
-                                      mask_output_regexes=mask_output_regexes)
+                    return self._session.post(url=self._url, data=data)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
             retried += 1
         raise exc
 
-    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
+    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
+             mask_output_regexes: List[str] = None):
         """
-        Performs a POST method request. If the response suggests the API Key is expired, then
-        a single attempt is made to re-authenticate using the re-authentication method provided
-        by ``api_obj``. Otherwise, the raw response is returned.
+        Performs a PUT method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
 
         Args:
             data: A dictionary of data to send with the URL.
@@ -205,8 +196,7 @@ class API:
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._put(data=data, mask_input_regexes=mask_input_regexes,
-                                     mask_output_regexes=mask_output_regexes)
+                    self._session.put(url=self._url, data=data)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -296,10 +286,9 @@ class API:
 
 
 class APIResponse:
-    def __init__(self, response: Response, api_source: str):
+    def __init__(self, response: Response):
         """
         """
-        self._api_source = api_source
         self._json_response = response
         self._validated = False
 
@@ -356,7 +345,7 @@ class APIResponse:
         """
         try:
             result = self.json_response.json()
-        except json.decoder.JSONDecodeError as e:
+        except json.decoder.JSONDecodeError:
             if return_on_error:
                 return return_on_error()
             raise InvalidResponseError(f'{self.json_response.url} return no content. '

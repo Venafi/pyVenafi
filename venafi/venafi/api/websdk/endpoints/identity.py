@@ -30,13 +30,13 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identity(self):
-                    return Identity.Identity(self._from_json('ID'), self._api_source)
+                    return Identity.Identity(self._from_json('ID'))
 
                 @property
                 @json_response_property()
@@ -48,7 +48,7 @@ class _Identity:
                 def message(self) -> str:
                     return self._from_json(key='Message', return_on_error=str)
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _AddGroupMembers(API):
         def __init__(self, api_obj):
@@ -62,8 +62,8 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -73,14 +73,14 @@ class _Identity:
                 @property
                 @json_response_property()
                 def members(self):
-                    return [Identity.Identity(m, self._api_source) for m in self._from_json('Members', return_on_error=list)]
+                    return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
                 @property
                 @json_response_property()
                 def message(self) -> str:
                     return self._from_json('Message')
 
-            return _Response(response=self._put(data=body), api_source=self._api_source)
+            return _Response(response=self._put(data=body))
 
     class _Browse(API):
         def __init__(self, api_obj):
@@ -94,15 +94,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identities(self):
-                    return [Identity.Identity(i, self._api_source) for i in self._from_json(key='Identities', return_on_error=list)]
+                    return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetAssociatedEntries(API):
         def __init__(self, api_obj):
@@ -114,15 +114,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identities(self):
-                    return [Identity.Identity(i, self._api_source) for i in self._from_json(key='Identities', return_on_error=list)]
+                    return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetMembers(API):
         def __init__(self, api_obj):
@@ -135,15 +135,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identities(self):
-                    return [Identity.Identity(i, self._api_source) for i in self._from_json(key='Identities', return_on_error=list)]
+                    return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _GetMemberships(API):
         def __init__(self, api_obj):
@@ -155,15 +155,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identities(self):
-                    return [Identity.Identity(i, self._api_source) for i in self._from_json(key='Identities', return_on_error=list)]
+                    return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Group:
         def __init__(self, api_obj):
@@ -186,15 +186,15 @@ class _Identity:
 
                 def delete(self):
                     class _Response(APIResponse):
-                        def __init__(self, response, api_source):
-                            super().__init__(response=response, api_source=api_source)
+                        def __init__(self, response):
+                            super().__init__(response=response)
 
                         @property
                         @json_response_property()
                         def message(self) -> str:
                             return self._from_json('Message')
 
-                    return _Response(response=self._delete(), api_source=self._api_source)
+                    return _Response(response=self._delete())
 
     class _ReadAttribute(API):
         def __init__(self, api_obj):
@@ -207,15 +207,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def attributes(self) -> List[str]:
                     return self._from_json(key='Attributes')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _RemoveGroupMembers(API):
         def __init__(self, api_obj):
@@ -229,8 +229,8 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -240,14 +240,14 @@ class _Identity:
                 @property
                 @json_response_property()
                 def members(self):
-                    return [Identity.Identity(m, self._api_source) for m in self._from_json('Members', return_on_error=list)]
+                    return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
                 @property
                 @json_response_property()
                 def message(self) -> str:
                     return self._from_json('Message')
 
-            return _Response(response=self._put(data=body), api_source=self._api_source)
+            return _Response(response=self._put(data=body))
 
     class _RemoveGroupOwners(API):
         def __init__(self, api_obj):
@@ -261,13 +261,13 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def members(self):
-                    return [Identity.Identity(m, self._api_source) for m in self._from_json('Members', return_on_error=list)]
+                    return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
                 @property
                 @json_response_property()
@@ -277,9 +277,9 @@ class _Identity:
                 @property
                 @json_response_property()
                 def owners(self):
-                    return [Identity.Identity(m, self._api_source) for m in self._from_json('Owners', return_on_error=list)]
+                    return [Identity.Identity(m) for m in self._from_json('Owners', return_on_error=list)]
 
-            return _Response(response=self._put(data=body), api_source=self._api_source)
+            return _Response(response=self._put(data=body))
 
     class _RenameGroup(API):
         def __init__(self, api_obj):
@@ -292,15 +292,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identity(self):
-                    return Identity.Identity(self._from_json('ID'), self._api_source)
+                    return Identity.Identity(self._from_json('ID'))
 
-            return _Response(response=self._put(data=body), api_source=self._api_source)
+            return _Response(response=self._put(data=body))
 
     class _Self(API):
         def __init__(self, api_obj):
@@ -308,15 +308,15 @@ class _Identity:
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identities(self):
-                    return [Identity.Identity(i, self._api_source) for i in self._from_json(key='Identities')]
+                    return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return _Response(response=self._get())
 
     class _SetPassword(API):
         def __init__(self, api_obj):
@@ -330,15 +330,15 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identity(self):
-                    return Identity.Identity(self._from_json('ID'), self._api_source)
+                    return Identity.Identity(self._from_json('ID'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))
 
     class _Validate(API):
         def __init__(self, api_obj):
@@ -350,12 +350,12 @@ class _Identity:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def identity(self):
-                    return Identity.Identity(self._from_json('ID'), self._api_source)
+                    return Identity.Identity(self._from_json('ID'))
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

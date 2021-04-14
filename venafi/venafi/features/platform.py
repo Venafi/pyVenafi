@@ -1,6 +1,6 @@
 from typing import List, Dict
 from venafi.properties.config import PlatformsAttributes, PlatformsClassNames
-from venafi.features.bases.feature_base import FeatureBase, FeatureError, ApiPreferences, feature
+from venafi.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 class _Platforms(FeatureBase):
@@ -49,9 +49,6 @@ class _Platforms(FeatureBase):
             attributes: Dictionary of attributes and attribute values to update.
             engine_names: List of platform, or engine, names.
         """
-        if self._api.preference == ApiPreferences.aperture:
-            self._log_not_implemented_warning(ApiPreferences.aperture)
-
         engine_names = engine_names or [engine.engine_name for engine in self._api.websdk.ProcessingEngines.get().engines]
         for engine_name in engine_names:
             response = self._api.websdk.Config.Write.post(

@@ -14,8 +14,8 @@ class _Stats:
         def post(self):
             
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
@@ -27,7 +27,7 @@ class _Stats:
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
-            return _Response(response=self._post(data={}), api_source=self._api_source)
+            return _Response(response=self._post(data={}))
 
     class _Query(API):
         def __init__(self, api_obj):
@@ -48,12 +48,12 @@ class _Stats:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, response):
+                    super().__init__(response=response)
 
                 @property
                 @json_response_property()
                 def results(self):
                     return [Stats.Result(result) for result in self._from_json(key='Results')]
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return _Response(response=self._post(data=body))

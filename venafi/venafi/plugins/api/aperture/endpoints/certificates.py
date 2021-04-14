@@ -1,7 +1,7 @@
 from typing import List, Dict
-from venafi.api.api_base import API, APIResponse, json_response_property
-from venafi.properties.certificate_inventory import Field, Filter
-from venafi.properties.response_objects.certificate_inventory import CertificateDetails
+from venafi.plugins.api.api_base import API, APIResponse, json_response_property
+from venafi.plugins.properties.certificate_inventory import Field, Filter
+from venafi.plugins.properties.response_objects.certificate_inventory import CertificateDetails
 
 
 class _Certificates:
