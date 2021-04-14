@@ -22,7 +22,7 @@ class Authenticate:
             password: Password
             application_id: Application ID of the OAuth API Application Integration. Must supply ``scope``.
             scope: Scope of the OAuth API Application Integration to be used. Must supply ``application_id``.
-            websdk_token: Either the X-Venafi-API-Key or an OAuth Access Bearer Token
+            websdk_token: Either the X-Venafi-API-Key or an OAuth Access Bearer Token.
             version: Version of the TPP server.
         """
         if version and version[:4] <= "19.4":
