@@ -2,7 +2,6 @@ from venafi.plugins.api.aperture.aperture import Aperture
 from venafi.api.authenticate import Authenticate as _Authenticate
 
 
-
 class Authenticate(_Authenticate):
     """
     Authenticates WebSDK and Aperture API sessions.
