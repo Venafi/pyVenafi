@@ -1,4 +1,4 @@
-#PyTPP Documentation
+# PyTPP Documentation
 
 This is a Python package for Trust Protection Platform (TPP). It provides an interface to the TPP WebSDK API
 and a feature layer abstraction that provides a higher-level interface to TPP. The feature layer 
@@ -7,10 +7,10 @@ that handles all the dirty work of calling and validating the APIs under the hoo
 
 This package is used by Venafi in testing and is actively under constant development. 
 
-##Requirements
+## Requirements
 * Python >= 3.8
 
-##Installation
+## Installation
 **PIP**
 
 ``pip install pytpp``
@@ -19,7 +19,7 @@ This package is used by Venafi in testing and is actively under constant develop
 
 ``git clone https://coolsolutions.venafi.com/spi/pytpp.git``
 
-##Getting Started
+## Getting Started
 
 ---
 **NOTE**
@@ -29,7 +29,7 @@ and OAuth credentials are not supported in the feature layer. The WebSDK APIs ar
 
 ---
 
-**Initializing The API and Feature Objects**
+#### Initializing The API and Feature Objects
 
 ```python
 from venafi import Authenticate, Features
@@ -53,7 +53,7 @@ api = Authenticate(
 features = Features(api)
 ```
 
-**Using The WebSDK API**
+#### Using The WebSDK API
 
 The path of the URL for the WebSDK API is translated to Python by following this format: 
 *Given*: POST Config/Create
@@ -94,7 +94,7 @@ folder = response.object # The Config Object returned by the API
 print(folder.dn)  # The DN attribute within the Config Object returned by the API
 ```
 
-**Using The Features**
+#### Using The Features
 
 Features are abstractions of WebSDK APIs to give a higher-level logical interface to TPP, such as creating discovery jobs and running them. 
 
@@ -133,7 +133,7 @@ features.certificate.wait_for_enrollment_to_complete(certificate=certificate, cu
 features.certificate.download(certificate=certificate, ...)
 ```
 
-**Logging**
+#### Logging
 
 See [dblogging](https://pypi.org/project/dblogging/) for details on the logging module used. Logging can be sent to 
 the console, stored in a SQLite database, both, or neither. By default the logger is inactive. If persistent logs to
