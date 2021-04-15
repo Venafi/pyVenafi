@@ -9,3 +9,6 @@ venafi.egg-info
 /venafi/dist
 *logfile*.*
 */temp
+server
+venafi/venafi/plugins
+venafi/venafi/upload.py
