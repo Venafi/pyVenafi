@@ -2,10 +2,10 @@
 venv/
 *.pyc
 testfile.py
-/venafi/tools/logger/logs/
 /test/
-/venafi/docs/_build/
-venafi.egg-info
-/venafi/dist
+/pytpp/docs/_build/
+*.egg-info
+*/dist
+*/logs
 *logfile*.*
 */temp

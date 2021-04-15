@@ -26,7 +26,7 @@ def docs(path='index.html'):
 
 @app.route('/spi/api/latestVersion', methods=['GET'])
 def get_latest_version():
-    get_version_from_filename = lambda x: os.path.basename(x.replace('venafi-', '').replace('.tar.gz', ''))
+    get_version_from_filename = lambda x: os.path.basename(x.replace('pytpp-', '').replace('.tar.gz', ''))
     all_versions = glob.glob(f'{PACKAGES_PATH}/*')
     if not all_versions:
         return flask.abort(400, 'No packages available.')
