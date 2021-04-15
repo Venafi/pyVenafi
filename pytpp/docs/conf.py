@@ -46,9 +46,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'all_docs/excluded/*.rst
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-html_logo = os.path.abspath('_static/logo.png')
-html_favicon = os.path.abspath('_static/favicon.png')
 
 html_theme = "sphinx_rtd_theme"
 html_theme_path = ["_themes", ]

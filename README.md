@@ -1,5 +1,7 @@
 # PyTPP Documentation
 
+See the full documentation [here](https://pytpp.readthedocs.io/en/latest).
+
 This is a Python package for Trust Protection Platform (TPP). It provides an interface to the TPP WebSDK API
 and a feature layer abstraction that provides a higher-level interface to TPP. The feature layer 
 abstraction provides intuitive feature methods, such as ``folder.create()`` and ``network.discovery.run()``,
