@@ -1,19 +1,26 @@
-__version__ = "0.1"
+__version__ = "0.2"
 
 from setuptools import setup, find_packages
+import os
+
+with open(os.path.join(os.path.dirname(__file__), '../README.md')) as f:
+    long_description = f.read()
 
 if __name__ == '__main__':
     setup(
-        name='venafi',
+        name='pytpp',
         packages=find_packages(where='.', exclude=['docs', '*plugins*']), # Use this line to exclude the plugins.
         package_dir={
-          '': '.'
+            '': '.'
         },
-        description='Venafi Features and API Implementation In Python',
+        description='Venafi TPP Features and WebSDK API In Python',
+        long_description=long_description,
+        long_description_content_type='text/markdown',
+        url='https://coolsolutions.venafi.com/spi/pytpp',
         version=__version__,
-        author='Venafi',
+        author='Venafi SPI Team',
         author_email='spi@venafi.com',
-        keywords=['venafi'],
+        keywords=['pytpp'],
         install_requires=[
             'requests',
             'datetime',
@@ -21,5 +28,13 @@ if __name__ == '__main__':
             'python-dateutil',
             'isodate',
             'dblogging'
+        ],
+        classifiers=[
+            'Development Status :: 4 - Beta',
+            'Intended Audience :: Developers',
+            'License :: OSI Approved :: MIT License',
+            'Natural Language :: English',
+            'Programming Language :: Python :: 3.8',
+            'Topic :: Software Development :: Libraries :: Python Modules',
         ]
     )
