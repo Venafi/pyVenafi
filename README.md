@@ -32,7 +32,7 @@ and OAuth credentials are not supported in the feature layer. The WebSDK APIs ar
 #### Initializing The API and Feature Objects
 
 ```python
-from venafi import Authenticate, Features
+from pytpp import Authenticate, Features
 
 # With OAuth
 api = Authenticate(
@@ -65,7 +65,7 @@ The response body returned by TPP is also translated to Python. For example:
 *Then*: Access the DN -> ``response.object.dn`` 
 
 ```python
-from venafi import Authenticate, AttributeNames, AttributeValues, Classes
+from pytpp import Authenticate, AttributeNames, AttributeValues, Classes
 
 # With OAuth
 api = Authenticate(
@@ -101,7 +101,7 @@ Features are abstractions of WebSDK APIs to give a higher-level logical interfac
 Using the above example for creating a folder:
 
 ```python
-from venafi import Authenticate, Features
+from pytpp import Authenticate, Features
 
 
 api = Authenticate(...)
@@ -119,7 +119,7 @@ This layer uses Config and Identity objects because some APIs require a DN and o
 objects. All create and get methods returned the Config and Identity object associated to the query.
 
 ```python
-from venafi import Authenticate, Features
+from pytpp import Authenticate, Features
 
 
 api = Authenticate(...)
@@ -142,7 +142,7 @@ the SQLite database, you can visualize the results in HTML. See the *dblogging* 
 **Console Output Only**
 
 ```python
-from venafi import logger
+from pytpp import logger
 
 logger.set_mode(mode='console') # Not necessary because it is set to this mode by default.
 logger.start()
@@ -153,7 +153,7 @@ logger.start()
 Logs can persist in a SQLite database.
 
 ```python
-from venafi import logger
+from pytpp import logger
 
 logger.set_mode(mode='persistence') # No console output, just the SQLite DB.
 logger.log_path = '/path/to/logs/folder'
@@ -163,7 +163,7 @@ logger.start()
 **Both Console And Persistent Logs**
 
 ```python
-from venafi import logger
+from pytpp import logger
 
 logger.set_mode(mode='all') # Not necessary because setting the log_path implies this.
 logger.log_path = '/path/to/logs/folder'
@@ -176,7 +176,7 @@ Sometimes logging can be too verbose, especially when iterating through many Web
 is a timeout period during which many calls are issued to check for a condition to break a loop. 
 
 ```python
-from venafi import logger
+from pytpp import logger
 
 with logger.disabled(why='Cuz I want to.'):
     # Nothing is logged in this context block.
@@ -186,7 +186,7 @@ with logger.disabled(why='Cuz I want to.'):
 **Logging Custom Messages**
 
 ```python
-from venafi import logger
+from pytpp import logger
 
 # Start the logger
 # Do stuff...
