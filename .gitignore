@@ -5,7 +5,8 @@ testfile.py
 /test/
 /pytpp/docs/_build/
 *.egg-info
-*/dist
+/dist
 */logs
 *logfile*.*
 */temp
+/package_pypi.sh

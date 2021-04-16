@@ -72,7 +72,7 @@ class UploadFiles:
         with NamedTemporaryFile(suffix='.txt', dir=os.curdir) as temp_file:
             os.system(f'pipreqs --save {temp_file.name} {PROJECT_DIR}/pytpp')
             new_reqs = temp_file.readlines()
-            with open(os.path.abspath(f'{PROJECT_DIR}/../requirements.txt'), 'rb+') as req_file:
+            with open(os.path.abspath(f'{PROJECT_DIR}/requirements.txt'), 'rb+') as req_file:
                 current_reqs = req_file.readlines()
                 if set(new_reqs) != set(current_reqs):
                     print('Updating requirements.txt file...\n')
@@ -85,7 +85,7 @@ class UploadFiles:
     @staticmethod
     def compile_docs():
         cur_dir = os.curdir
-        os.chdir(f'{PROJECT_DIR}/docs')
+        os.chdir(f'{PROJECT_DIR}/pytpp/docs')
         os.system(f'{MAKE_CMD} clean')
         os.system(f'{MAKE_CMD} html')
         os.chdir(cur_dir)
@@ -154,7 +154,7 @@ class UploadFiles:
             self.print_stage('Compile Documentation')
             self.compile_docs()
             self.print_stage('Upload Documentation via FTP')
-            build_dir = f'{PROJECT_DIR}/docs/_build/'
+            build_dir = f'{PROJECT_DIR}/pytpp/docs/_build/'
             progress = UploadProgress(total=sum([len(files) for r, d, files in os.walk(build_dir)]))
             self.send_files(src=build_dir, dst=DOCS_DIR, progress=progress)
             self.verify()
