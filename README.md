@@ -1,6 +1,6 @@
 # PyTPP Documentation
 
-See the full documentation [here](https://pytpp.readthedocs.io/en/latest).
+See the full documentation [here](https://pytpp.readthedocs.io).
 
 This is a Python package for Trust Protection Platform (TPP). It provides an interface to the TPP WebSDK API
 and a feature layer abstraction that provides a higher-level interface to TPP. The feature layer 
