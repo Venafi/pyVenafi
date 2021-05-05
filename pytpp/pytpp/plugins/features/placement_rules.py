@@ -1,91 +1,102 @@
-from typing import List
+from typing import TYPE_CHECKING, List, Union
+if TYPE_CHECKING:
+    from pytpp.plugins import Authenticate
+import json
 from pytpp.vtypes import Config
-from pytpp.properties.config import PlacementRulesAttributeNames, PlacementRulesAttributeValues, \
-    PlacementRulesClassNames
-from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.bases.feature_base import feature
+from pytpp.features.placement_rules import PlacementRules as _OriginalPlacementRules, \
+    PlacementRuleCondition as _OriginalPlacementRuleCondition
 
 
 @feature()
-class PlacementRuleCondition:
+class PlacementRuleCondition(_OriginalPlacementRuleCondition):
     def __init__(self):
         pass
 
     @property
     def city(self):
-        return self._Operators(field='Certificate.City')
+        return self._Operators(field='L')
 
     @property
     def common_name(self):
-        return self._Operators(field='Certificate.CN')
+        return self._Operators(field='CN')
 
     @property
     def country(self):
-        return self._Operators(field='Certificate.C')
+        return self._Operators(field='C')
 
     @property
     def domain_component(self):
-        return self._Operators(field='Certificate.DC')
+        return self._Operators(field='DC')
 
     @property
     def expired(self):
-        return self._Operators(field='Certificate.Expired')
+        return self._Operators(field='CertificateExpired')
 
     @property
     def hostname(self):
-        return self._Operators(field='Discovery.Hostname')
+        return self._Operators(field='HostName')
 
     @property
     def ip_address(self):
-        return self._Operators(field='Discovery.Address')
+        return self._Operators(field='IPAddress')
 
     @property
     def issuer_dn(self):
-        return self._Operators(field='Certificate.Issuer')
+        return self._Operators(field='IssuerDN')
 
     @property
     def operating_system(self):
-        return self._Operators(field='Discovery.OS')
+        return self._Operators(field='OperatingSystem')
 
     @property
     def organization(self):
-        return self._Operators(field='Certificate.O')
+        return self._Operators(field='O')
 
     @property
     def organizational_unit(self):
-        return self._Operators(field='Certificate.OU')
+        return self._Operators(field='OU')
 
     @property
     def port(self):
-        return self._Operators(field='Discovery.Port')
+        return self._Operators(field='Port')
 
     @property
     def san(self):
-        return self._Operators(field='Certificate.SANDNS')
+        return self._Operators(field='SubjectAltNameDNS')
 
     @property
     def self_signed(self):
-        return self._Operators(field='Certificate.SelfSigned')
+        return self._Operators(field='CertificateSelfSigned')
 
     @property
     def server_version(self):
-        return self._Operators(field='SSH.ServerVersion')
+        return self._Operators(field='ServerVersion')
 
     @property
     def state(self):
-        return self._Operators(field='Certificate.State')
+        return self._Operators(field='S')
 
     @property
     def supports_ssh_v1(self):
-        return self._Operators(field='SSH.Version', force_value='1')
+        return self._Operators(field='SupportsSsHv1')
 
     @property
     def supports_ssh_v2(self):
-        return self._Operators(field='SSH.Version', force_value='2')
+        return self._Operators(field='SupportsSsHv2')
 
     class _Operators:
         def __init__(self, field: str, force_value: str = None):
             self._field = field
             self._forced_value = force_value
+
+        @staticmethod
+        def _condition(field: str, comparison: str, value: str):
+            return json.dumps({
+                'field': field,
+                'comparison': comparison,
+                'value': value
+            })
 
         def matches(self, value: str):
             """
@@ -94,7 +105,11 @@ class PlacementRuleCondition:
 
             Returns: Condition string for the Placement Rule to be created.
             """
-            return f'{self._field} == "{value}"'
+            return self._condition(
+                field=self._field,
+                comparison='Matches',
+                value=value
+            )
 
         def in_list(self, values: List[str]):
             """
@@ -103,7 +118,11 @@ class PlacementRuleCondition:
 
             Returns: Condition string for the Placement Rule to be created.
             """
-            return f"{self._field} in [{','.join(map(str, values))}]"
+            return self._condition(
+                field=self._field,
+                comparison='In',
+                value=','.join(map(str, values))
+            )
 
         def starts_with(self, value: str):
             """
@@ -112,7 +131,11 @@ class PlacementRuleCondition:
 
             Returns: Condition string for the Placement Rule to be created.
             """
-            return f'{self._field} > "{value}"'
+            return self._condition(
+                field=self._field,
+                comparison='StartsWith',
+                value=value
+            )
 
         def ends_with(self, value: str):
             """
@@ -121,7 +144,11 @@ class PlacementRuleCondition:
 
             Returns: Condition string for the Placement Rule to be created.
             """
-            return f'{self._field} < "{value}"'
+            return self._condition(
+                field=self._field,
+                comparison='EndsWith',
+                value=value
+            )
 
         def contains(self, value: str):
             """
@@ -130,7 +157,11 @@ class PlacementRuleCondition:
 
             Returns: Condition string for the Placement Rule to be created.
             """
-            return f'{self._field} like "{value}"'
+            return self._condition(
+                field=self._field,
+                comparison='Contains',
+                value=value
+            )
 
         def matches_regex(self, value: str):
             """
@@ -139,51 +170,45 @@ class PlacementRuleCondition:
 
             Returns: Condition string for the Placement Rule to be created.
             """
-            return f'{self._field} @= "{value}"'
+            return self._condition(
+                field=self._field,
+                comparison='MatchesRegex',
+                value=value
+            )
 
         def is_true(self):
             """
             Returns: Condition string for the Placement Rule to be created.
             """
-            if self._forced_value:
-                return f"{self._field} == {self._forced_value}"
-            return f"{self._field} == 1"
+            return self._condition(
+                field=self._field,
+                comparison='IsTrue',
+                value=""
+            )
 
         def is_false(self):
             """
             Returns: Condition string for the Placement Rule to be created.
             """
-            if self._forced_value:
-                return f"{self._field} != {self._forced_value}"
-            return f"{self._field} == 0"
+            return self._condition(
+                field=self._field,
+                comparison='IsFalse',
+                value=""
+            )
 
 
 @feature()
-class PlacementRules(FeatureBase):
+class PlacementRules(_OriginalPlacementRules):
     """
     This feature provides high-level interaction with TPP Placement Rule objects.
     """
-    def __init__(self, api):
+
+    def __init__(self, api: 'Authenticate'):
         super().__init__(api=api)
-        self._layout_rules_dn = r'\VED\Layout Root\Rules'
+        if TYPE_CHECKING:
+            self._api = api
 
-    @staticmethod
-    def _format_rule_attribute(conditions: List[str], device_location_dn: str,
-                               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
-        """
-        Formats the rule attribute on the Placement Rule object.
-        """
-        context = 'CONTEXT\n\tDiscovery'
-        rule_types = f"FOR\n\t{','.join(('Device', rule_type))}"
-        conditions = f"IF\n\t{' && '.join(conditions)}"
-        locations = [f'Location[Device]={device_location_dn}']
-        if certificate_location_dn:
-            locations.append(f'Location[X509 Certificate Base]={certificate_location_dn}')
-        locations = f"THEN\n\t" + '\n\t'.join(locations)
-
-        return f"{context}\n{rule_types}\n{conditions}\n{locations}\nEND"
-
-    def create(self, name: str, conditions: List[str], device_location_dn: str,
+    def create(self, name: str, conditions: List[Union[str, dict]], device_location_dn: str,
                certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
         """
         Creates a placement rule.
@@ -215,21 +240,15 @@ class PlacementRules(FeatureBase):
         Returns:
             Config object of the placement rule.
         """
-        rule_attr = self._format_rule_attribute(
+        conditions = [json.loads(c) for c in conditions]
+        response = self._api.aperture.Discovery.PlacementRules.post(
+            name=name,
             conditions=conditions,
             device_location_dn=device_location_dn,
-            certificate_location_dn=certificate_location_dn,
-            rule_type=rule_type
+            cert_location_dn=certificate_location_dn
         )
-        rule = self._config_create(
-            name=name,
-            parent_folder_dn=self._layout_rules_dn,
-            attributes={
-                PlacementRulesAttributeNames.rule: rule_attr
-            },
-            config_class=PlacementRulesClassNames.layout_rule_base
-        )
-        return rule
+        rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
+        return rule.object
 
     def delete(self, rule: 'Config.Object'):
         """
@@ -238,7 +257,7 @@ class PlacementRules(FeatureBase):
         Args:
             rule: Config object of the placement rule.
         """
-        response = self._config_delete(object_dn=rule.dn)
+        response = self._api.aperture.Discovery.PlacementRules.Guid(guid=rule.guid).delete()
         response.assert_valid_response()
 
     def update(self, rule: 'Config.Object', conditions: List[str] = None, device_location_dn: str = None,
@@ -272,61 +291,14 @@ class PlacementRules(FeatureBase):
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
         """
-        current_attr = self._api.websdk.Config.Read.post(
-            object_dn=rule.dn,
-            attribute_name=PlacementRulesAttributeNames.rule
-        ).values[0]
-        new_conditions = conditions or []
-        new_certificate_dn = certificate_location_dn or ''
-        new_device_dn = device_location_dn or ''
-        get_conditions = get_locations = False
-        for line in current_attr.splitlines():
-            if line.strip() == 'IF':
-                if not conditions:
-                    get_conditions = True
-                get_locations = False
-            elif line.strip() == 'THEN':
-                get_conditions = False
-                if not(new_certificate_dn and new_device_dn):
-                    get_locations = True
-            elif line.strip() == 'END':
-                break
-            elif get_conditions:
-                new_conditions = line.strip().split(' && ')
-                get_conditions = False
-            elif get_locations:
-                if 'Location[Device]' in line and not new_device_dn:
-                    new_device_dn = line.split('=', 1)[-1].strip()
-                elif 'Location[X509 Certificate Base]' in line and not new_certificate_dn:
-                    new_certificate_dn = line.split('=', 1)[-1].strip()
-
-        if rule_type == PlacementRulesAttributeValues.RuleType.ssh:
-            new_certificate_dn = None
-
-        rule_attr = self._format_rule_attribute(
-            conditions=new_conditions,
-            device_location_dn=new_device_dn,
-            certificate_location_dn=new_certificate_dn,
-            rule_type=rule_type
+        conditions = [json.loads(c) for c in conditions]
+        rule = self._api.aperture.Discovery.PlacementRules.Guid(guid=rule.guid).get()
+        response = self._api.aperture.Discovery.PlacementRules.put(
+            guid=rule.guid,
+            name=rule.name,
+            conditions=conditions or [c.__dict__ for c in rule.conditions],
+            device_location_dn=device_location_dn or rule.device_location.dn,
+            cert_location_dn=certificate_location_dn or rule.cert_location.dn
         )
-        response = self._api.websdk.Config.WriteDn.post(
-            object_dn=rule.dn,
-            attribute_name=PlacementRulesAttributeNames.rule,
-            values=[
-                rule_attr
-            ]
-        )
-        response.assert_valid_response()
-
-    def get(self, name: str):
-        """
-        Args:
-            name: Name of the placement rule.
-
-        Returns:
-            Config object of the placement rule.
-        """
-        rule = self._api.websdk.Config.IsValid.post(
-            object_dn=f'{self._layout_rules_dn}\\{name}'
-        )
+        rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
         return rule.object
