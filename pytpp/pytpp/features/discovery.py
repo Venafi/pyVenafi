@@ -243,21 +243,23 @@ class NetworkDiscovery(FeatureBase):
         )
         response.assert_valid_response()
 
-    def run_now(self, job: 'Config.Object'):
+    def run_now(self, job: 'Config.Object', timeout: int = 60):
         """
         Runs a job despite any scheduling. This does not return until the job is processing, or has a `Processing` Attribute.
 
         Args:
             job: Config object of the discovery job.
+            timeout: Timeout in seconds within which the job should start.
         """
-        response = self._api.websdk.Config.WriteDn.post(
+        response = self._api.websdk.Config.Write.post(
             object_dn=job.dn,
-            attribute_name='Start Now',
-            values=['1']
+            attribute_data=self._name_value_list({
+                DiscoveryAttributes.Network.start_now: ['1']
+            })
         )
         response.assert_valid_response()
 
-        with self._Timeout(timeout=10) as to:
+        with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
                 if self._is_in_progress(job=job):
                     return
