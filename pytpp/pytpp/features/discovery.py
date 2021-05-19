@@ -13,12 +13,13 @@ class NetworkDiscovery(FeatureBase):
         super().__init__(api=api)
         self._discovery_dn = r'\VED\Discovery'
 
-    def _is_in_progress(self, job: 'Config.Object'):
+    def _is_in_progress(self, job: 'Config.Object', check_placement: bool = False):
         """
         Returns a boolean value according to whether a job is currently in progress or not.
 
         Args:
             job: Config object of the discovery job.
+            check_placement: If `True`, account for placement.
 
         Returns:
             Boolean value
@@ -27,10 +28,13 @@ class NetworkDiscovery(FeatureBase):
             object_dn=job.dn,
             attribute_name=DiscoveryAttributes.Network.status
         )
+        in_progress_states = ['Pending Execution', 'Running']
+        if check_placement:
+            in_progress_states.append('Pending Import')
         if response.is_valid_response():
             if len(response.values) > 0:
                 status = response.values[0]
-                return status in {'Pending Execution', 'Running'}
+                return status in in_progress_states
         return False
 
     def create(self, name: str, hosts: List[str], default_certificate_dn: str, attributes: dict = None,
@@ -336,20 +340,22 @@ class NetworkDiscovery(FeatureBase):
 
         return jobs.objects
 
-    def wait_for_job_to_finish(self, job: 'Config.Object', check_interval: int = 5, timeout: int = 300):
+    def wait_for_job_to_finish(self, job: 'Config.Object', check_interval: int = 5, timeout: int = 300,
+                               wait_for_placement: bool = False):
         """
-        Waits for the `Processing` attribute to disappear from the discovery job. An error is
-        raised if the timeout is exceeded. A timeout is necessary to prevent an infinite loop.
-        It is usually wise to buffer this value significantly to allow the job to complete.
+        Waits for the `Status` attribute to have a value other than `Pending Execution` and `Running`
+        on the discovery job. If `wait_for_placement=True`, also waits for `Status` to not have a value
+        of `Pending Import`. An error is raised if the timeout is exceeded.
 
         Args:
             job: Config object of the discovery job.
-            check_interval: Time interval in seconds to validate that the job finished.
-            timeout: Timeout value to wait for the job to finish.
+            check_interval: Poll interval in seconds to validate that the job finished.
+            timeout: Timeout in seconds to wait for the job to finish.
+            wait_for_placement: If `True`, wait for placement to finish.
         """
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired(poll=check_interval):
-                if not self._is_in_progress(job=job):
+                if not self._is_in_progress(job=job, check_placement=wait_for_placement):
                     return
 
         status = self._api.websdk.Config.Read.post(
