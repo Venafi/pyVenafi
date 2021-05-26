@@ -73,12 +73,15 @@ class API:
                 to TPP.
             url: This is the URL extension from the base URL.
         """
-        self._api_obj = api_obj  # type:
-        self._session = api_obj._session  # type: Session
+        self._api_obj = api_obj
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
         self.retries = 3
+
+    @property
+    def _session(self) -> 'Session':
+        return self._api_obj._session
 
     def _is_api_key_invalid(self, response: Response):
         """
@@ -211,7 +214,6 @@ class API:
             log_tag=LogTags.api
         )
         self._api_obj.re_authenticate()
-        self._session = self._api_obj._session
 
     def _log_api_deprecated_warning(self, alternate_api: str = None, num_prev_callers=2):
         msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
