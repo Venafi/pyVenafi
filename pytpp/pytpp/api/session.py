@@ -7,10 +7,11 @@ class Session:
     This class is responsible for holding the appropriate headers to authenticate each
     request. It also removes all null values from all data sent to TPP.
     """
-    def __init__(self, headers: dict):
+    def __init__(self, headers: dict, proxies: dict = None):
         self.headers = headers
         self.requests = requests
         self.requests.packages.urllib3.disable_warnings()
+        self.proxies = proxies or {}
 
     def post(self, url: str, data: dict, verify: bool = False):
         """
@@ -25,7 +26,8 @@ class Session:
             Returns the raw response returned by the server.
         """
         data = self._remove_null_values_from_dictionary(d=data)
-        return self.requests.post(url=url, data=json.dumps(data), headers=self.headers, verify=verify)
+        return self.requests.post(url=url, data=json.dumps(data), headers=self.headers,
+                                  verify=verify, proxies=self.proxies)
 
     def get(self, url: str, params: dict = None, verify: bool = False):
         """
@@ -40,7 +42,8 @@ class Session:
             Returns the raw response returned by the server.
         """
         params = self._remove_null_values_from_dictionary(d=params)
-        return self.requests.get(url=url, params=params, headers=self.headers, verify=verify)
+        return self.requests.get(url=url, params=params, headers=self.headers,
+                                 verify=verify, proxies=self.proxies)
 
     def delete(self, url: str, verify: bool = False):
         """
@@ -53,7 +56,7 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.delete(url, headers=self.headers, verify=verify)
+        return self.requests.delete(url, headers=self.headers, verify=verify, proxies=self.proxies)
 
     def put(self, url: str, data: dict, verify: bool = False):
         """
@@ -68,7 +71,8 @@ class Session:
             Returns the raw response returned by the server.
         """
         data = self._remove_null_values_from_dictionary(d=data)
-        return self.requests.put(url=url, data=json.dumps(data), headers=self.headers, verify=verify)
+        return self.requests.put(url=url, data=json.dumps(data), headers=self.headers,
+                                 verify=verify, proxies=self.proxies)
 
     def _remove_null_values_from_dictionary(self, d: dict):
         """

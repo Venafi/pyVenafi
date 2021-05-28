@@ -36,7 +36,7 @@ class WebSDK:
     """
     @logger.wrap_func(LogTags.feature, mask_input_regexes=['password', 'token'])
     def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
-                 scope: Union[Scope, str] = None, refresh_token: str = None):
+                 scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None):
         """
         Authenticates the given user to WebSDK. The only supported method for authentication at this time
         is with a username and password. Either an OAuth bearer token can be obtained, which requires
@@ -55,6 +55,7 @@ class WebSDK:
             token: Either the X-Venafi-API-Key or an OAuth Access Bearer Token
             application_id: Application ID of the OAuth API Application Integration. Must supply ``scope``.
             scope: Scope of the OAuth API Application Integration to be used. Must supply ``application_id``.
+            proxies: An OrderedDict used by the python Requests library.
         """
         # region Instance Variables
         self._host = host
@@ -70,7 +71,10 @@ class WebSDK:
 
         # region Authentication
         # This is used by the endpoints to authorize the API writes.
-        self._session = Session(headers={'Content-Type': 'application/json'})
+        self._session = Session(
+            headers={'Content-Type': 'application/json'},
+            proxies=proxies
+        )
 
         # Authorize the WebSDK session and store the API token.
         self.Authorize = _Authorize(self)

@@ -8,7 +8,8 @@ class Authenticate:
     Authenticates to TPP WebSDK.
     """
     def __init__(self, host: str, username: str, password: str, application_id: str = None,
-                 scope: Union[Scope, str] = None, websdk_token: str = None, version: str = ''):
+                 scope: Union[Scope, str] = None, websdk_token: str = None, version: str = '',
+                 proxies: dict = None):
         """
         For WebSDK, either an OAuth bearer token can be obtained, which requires both an Application ID and scope
         to be supplied, or the X-Venafi-API-Key can be obtained, which has been deprecated since TPP version 20.1.
@@ -24,6 +25,7 @@ class Authenticate:
             scope: Scope of the OAuth API Application Integration to be used. Must supply ``application_id``.
             websdk_token: Either the X-Venafi-API-Key or an OAuth Access Bearer Token.
             version: Version of the TPP server.
+            proxies: An OrderedDict used by the python Requests library.
         """
         if version and version[:4] <= "19.4":
             application_id = None
@@ -32,7 +34,7 @@ class Authenticate:
         else:
             self._version = ''
         self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token,
-                             application_id=application_id, scope=scope)
+                             application_id=application_id, scope=scope, proxies=proxies)
 
         self._host = host
         self._username = username
