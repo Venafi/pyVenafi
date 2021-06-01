@@ -54,21 +54,23 @@ class Authenticate(_Authenticate):
                 host=self.host,
                 username=self.username,
                 password=self.password,
-                token=self.websdk._token
+                token=self.websdk._token,
+                proxies=self._proxies
             )
         else:
             self.aperture = Aperture(
                 host=self.host,
                 username=self.username,
                 password=self.password,
-                token=aperture_token
+                token=aperture_token,
+                proxies=self._proxies
             )
         self.preference = preference.lower()
         if self.preference not in {'websdk', 'aperture'}:
             raise ValueError('Invalid preference. Must be one of "websdk" or "aperture".')
 
     def re_authenticate(self, host: str = None, username: str = None, password: str = None, preference=None,
-                        application_id: str = None, scope: str = None):
+                        application_id: str = None, scope: str = None, proxies: dict = None):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
 
@@ -79,6 +81,7 @@ class Authenticate(_Authenticate):
             preference: 'websdk' or 'aperture'
             application_id: Application ID applicable to OAuth. Must supply ``scope``.
             scope: Scope within the Application. Must supply ``application_id``.
+            proxies: An OrderedDict used by the python Requests library.
         """
         if any([host, username, password, application_id, scope]):
             self.__init__(
@@ -88,7 +91,8 @@ class Authenticate(_Authenticate):
                 preference=preference or self.preference,
                 application_id=application_id or self._application_id,
                 scope=scope or self._scope,
-                version=self._version
+                version=self._version,
+                proxies=self._proxies
             )
         else:
             if preference:

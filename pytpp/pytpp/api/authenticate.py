@@ -41,6 +41,7 @@ class Authenticate:
         self._password = password
         self._application_id = application_id
         self._scope = scope
+        self._proxies = proxies
 
     @property
     def host(self):
@@ -55,7 +56,7 @@ class Authenticate:
         return self._password
 
     def re_authenticate(self, host: str = None, username: str = None, password: str = None,
-                        application_id: str = None, scope: str = None):
+                        application_id: str = None, scope: str = None, proxies: dict = None):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
 
@@ -65,6 +66,7 @@ class Authenticate:
             password: Password
             application_id: Application ID applicable to OAuth. Must supply ``scope``.
             scope: Scope within the Application. Must supply ``application_id``.
+            proxies: An OrderedDict used by the python Requests library.
         """
         if any([host, username, password, application_id, scope]):
             self.__init__(
@@ -73,7 +75,8 @@ class Authenticate:
                 password=password or self._password,
                 application_id=application_id or self._application_id,
                 scope=scope or self._scope,
-                version=self._version
+                version=self._version,
+                proxies=self._proxies
             )
         else:
             self.websdk.re_authenticate()

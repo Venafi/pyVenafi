@@ -64,6 +64,7 @@ class WebSDK:
         self._application_id = application_id
         self._oauth = None
         self._token = None
+        self._proxies = proxies
 
         # This is used by the endpoints to avoid redundancy.
         self._base_url = f'https://{host}/vedsdk'
@@ -73,7 +74,7 @@ class WebSDK:
         # This is used by the endpoints to authorize the API writes.
         self._session = Session(
             headers={'Content-Type': 'application/json'},
-            proxies=proxies
+            proxies=self._proxies
         )
 
         # Authorize the WebSDK session and store the API token.
@@ -158,11 +159,13 @@ class WebSDK:
                 password=self._password,
                 application_id=self._application_id,
                 scope=self._oauth.scope,
-                refresh_token=self._oauth.refresh_token
+                refresh_token=self._oauth.refresh_token,
+                proxies=self._proxies
             )
         else:
             self.__init__(
                 host=self._host,
                 username=self._username,
-                password=self._password
+                password=self._password,
+                proxies=self._proxies
             )
