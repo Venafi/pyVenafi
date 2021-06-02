@@ -1,4 +1,4 @@
-__version__ = "0.4.6"
+__version__ = "0.4.7"
 
 from setuptools import setup, find_packages
 import os
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         version=__version__,
         author='Venafi SPI Team',
         author_email='spi@venafi.com',
-        keywords=['pytpp'],
+        keywords=['pytpp', 'venafi', 'tpp', 'trust protection platform', 'vcert'],
         install_requires=[
             'requests',
             'datetime',

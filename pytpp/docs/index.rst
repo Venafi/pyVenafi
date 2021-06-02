@@ -187,8 +187,9 @@ is a timeout period during which many calls are issued to check for a condition 
 .. code-block:: python
 
     from pytpp import logger
+    from pytpp.logger import LogTags
 
-    with logger.disabled(why='Cuz I want to.'):
+    with logger.rule(min_tag_value=LogTags.critical, why='Cuz I want to.'):
         # Nothing is logged in this context block.
         ...
 
