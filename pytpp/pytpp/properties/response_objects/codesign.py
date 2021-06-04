@@ -7,7 +7,7 @@ class CodeSign:
     class ResultCode:
         def __init__(self, code: int):
             self.code = code  # type: int
-            self.client_result = ResultCodes.CodeSign.get(code, 'Unknown')
+            self.codesign_result = ResultCodes.CodeSign.get(code, 'Unknown')
 
     class Items:
         def __init__(self, response_object: dict):
