@@ -7,9 +7,10 @@ class Authenticate:
     """
     Authenticates to TPP WebSDK.
     """
-    def __init__(self, host: str, username: str, password: str, application_id: str = None,
+    def __init__(self, host: str, username: str = None, password: str = None, application_id: str = None,
                  scope: Union[Scope, str] = None, websdk_token: str = None, version: str = '',
-                 proxies: dict = None):
+                 proxies: dict = None, certificate_path: str = None, key_file_path: str = None,
+                 verify_ssl: bool = False):
         """
         For WebSDK, either an OAuth bearer token can be obtained, which requires both an Application ID and scope
         to be supplied, or the X-Venafi-API-Key can be obtained, which has been deprecated since TPP version 20.1.
@@ -26,6 +27,9 @@ class Authenticate:
             websdk_token: Either the X-Venafi-API-Key or an OAuth Access Bearer Token.
             version: Version of the TPP server.
             proxies: An OrderedDict used by the python Requests library.
+            certificate_path: Absolute path to the public certificate file.
+            key_file_path: Absolute path to the private key file.
+            verify_ssl: If ``True``, verify the SSL certificate of the target endpoints.
         """
         if version and version[:4] <= "19.4":
             application_id = None
@@ -34,7 +38,9 @@ class Authenticate:
         else:
             self._version = ''
         self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token,
-                             application_id=application_id, scope=scope, proxies=proxies)
+                             application_id=application_id, scope=scope, proxies=proxies,
+                             certificate_path=certificate_path, key_file_path=key_file_path,
+                             verify_ssl=verify_ssl)
 
         self._host = host
         self._username = username

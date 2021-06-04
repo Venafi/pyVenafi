@@ -5,24 +5,27 @@ from pytpp.properties.oauth import Scope
 from pytpp.api.websdk.endpoints.authorize import _Authorize
 from pytpp.api.websdk.endpoints.certificates import _Certificates
 from pytpp.api.websdk.endpoints.client import _Client
+from pytpp.api.websdk.endpoints.codesign import _Codesign
 from pytpp.api.websdk.endpoints.config import _Config
 from pytpp.api.websdk.endpoints.config_schema import _ConfigSchema
 from pytpp.api.websdk.endpoints.credentials import _Credentials
 from pytpp.api.websdk.endpoints.crypto import _Crypto
 from pytpp.api.websdk.endpoints.discovery import _Discovery
 from pytpp.api.websdk.endpoints.flow import _Flow
+from pytpp.api.websdk.endpoints.hsm_api import _HSMAPI
 from pytpp.api.websdk.endpoints.identity import _Identity
 from pytpp.api.websdk.endpoints.log import _Log
 from pytpp.api.websdk.endpoints.metadata import _Metadata
 from pytpp.api.websdk.endpoints.permissions import _Permissions
 from pytpp.api.websdk.endpoints.pki import _PKI
+from pytpp.api.websdk.endpoints.preferences import _Preferences
 from pytpp.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from pytpp.api.websdk.endpoints.revoke import _Revoke
 from pytpp.api.websdk.endpoints.rights import _Rights
-from pytpp.api.websdk.endpoints.ssh import _SSH
-from pytpp.api.websdk.endpoints.system_status import _SystemStatus
 from pytpp.api.websdk.endpoints.secret_store import _SecretStore
+from pytpp.api.websdk.endpoints.ssh import _SSH
 from pytpp.api.websdk.endpoints.stats import _Stats
+from pytpp.api.websdk.endpoints.system_status import _SystemStatus
 from pytpp.api.websdk.endpoints.teams import _Teams
 from pytpp.api.websdk.endpoints.workflow import _Workflow
 from pytpp.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
@@ -36,7 +39,8 @@ class WebSDK:
     """
     @logger.wrap_func(LogTags.feature, mask_input_regexes=['password', 'token'])
     def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
-                 scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None):
+                 scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
+                 certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False):
         """
         Authenticates the given user to WebSDK. The only supported method for authentication at this time
         is with a username and password. Either an OAuth bearer token can be obtained, which requires
@@ -56,6 +60,9 @@ class WebSDK:
             application_id: Application ID of the OAuth API Application Integration. Must supply ``scope``.
             scope: Scope of the OAuth API Application Integration to be used. Must supply ``application_id``.
             proxies: An OrderedDict used by the python Requests library.
+            certificate_path: Absolute path to the public certificate file.
+            key_file_path: Absolute path to the private key file.
+            verify_ssl: If ``True``, verify the SSL certificate of the target endpoints.
         """
         # region Instance Variables
         self._host = host
@@ -73,8 +80,9 @@ class WebSDK:
         # region Authentication
         # This is used by the endpoints to authorize the API writes.
         self._session = Session(
-            headers={'Content-Type': 'application/json'},
-            proxies=self._proxies
+            headers={'Content-Type': 'application/json'}, proxies=self._proxies,
+            certificate_path=certificate_path, key_file_path=key_file_path,
+            verify_ssl=verify_ssl
         )
 
         # Authorize the WebSDK session and store the API token.
@@ -88,12 +96,18 @@ class WebSDK:
                 elif isinstance(scope, Scope):
                     scope = scope.to_string()
 
-                oauth = self.Authorize.OAuth.post(
-                    client_id=application_id,
-                    username=username,
-                    password=password,
-                    scope=scope
-                )
+                if certificate_path and key_file_path:
+                    oauth = self.Authorize.Certificate.post(
+                        client_id=application_id,
+                        scope=scope
+                    )
+                else:
+                    oauth = self.Authorize.OAuth.post(
+                        client_id=application_id,
+                        username=username,
+                        password=password,
+                        scope=scope
+                    )
                 self._oauth = oauth
                 token = oauth.access_token
             else:
@@ -115,9 +129,9 @@ class WebSDK:
         else:
             self._token = token
             authorization_header = {
-                'X-Venafi-API-Key': f'{self._token}'
+                'X-Venafi-API-Key': self._token
             }
-        self._session.headers.update(authorization_header)
+        self._session.update_headers(authorization_header)
         # endregion Authentication
 
         # region Initialize All WebSDK Endpoints
@@ -125,17 +139,20 @@ class WebSDK:
         # the authorization token, and the re-authentication method.
         self.Certificates = _Certificates(self)
         self.Client = _Client(self)
+        self.Codesign = _Codesign(self)
         self.Config = _Config(self)
         self.ConfigSchema = _ConfigSchema(self)
         self.Credentials = _Credentials(self)
         self.Crypto = _Crypto(self)
         self.Discovery = _Discovery(self)
         self.Flow = _Flow(self)
+        self.HSMAPI = _HSMAPI(self)
         self.Identity = _Identity(self)
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)
         self.Permissions = _Permissions(self)
         self.PKI = _PKI(self)
+        self.Preferences = _Preferences(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
         self.Rights = _Rights(self)

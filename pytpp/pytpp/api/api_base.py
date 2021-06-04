@@ -97,7 +97,8 @@ class API:
         """
         return response.status_code == 401 and bool(re.match('.*API key.*is not valid.*', response.text))
 
-    def _delete(self, mask_input_regexes: List[str] = None, mask_output_regexes: List[str] = None):
+    def _delete(self, params: dict = None, mask_input_regexes: List[str] = None,
+                mask_output_regexes: List[str] = None):
         """
         Performs a DELETE method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
@@ -105,16 +106,16 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='DELETE', mask_values_with_key=mask_input_regexes)
+        self._log_rest_call(method='DELETE', data=params, mask_values_with_key=mask_input_regexes)
         retried = 0
         exc = None
         while retried < self.retries:
             try:
-                response = self._session.delete(url=self._url)
+                response = self._session.delete(url=self._url, params=params)
                 self._log_response(response=response, mask_values_with_key=mask_output_regexes)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
-                    return self._session.delete(url=self._url)
+                    return self._session.delete(url=self._url, params=params)
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e

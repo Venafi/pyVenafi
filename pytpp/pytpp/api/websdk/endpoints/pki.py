@@ -10,6 +10,7 @@ class _PKI:
     class _HashiCorp:
         def __init__(self, api_obj):
             self.CA = self._CA(api_obj=api_obj)
+            self.Role = self._Role(api_obj=api_obj)
 
         class _CA(API):
             def __init__(self, api_obj):

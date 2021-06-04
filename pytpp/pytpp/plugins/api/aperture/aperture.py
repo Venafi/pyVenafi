@@ -61,8 +61,8 @@ class Aperture:
                 cookie = f'{c.name}={c.value}'
         self._token = token
         self._cookie = cookie
-        self._session.headers.update({
-            'Authorization': f'{token}',
+        self._session.update_headers({
+            'Authorization': token,
             'Cookie': cookie
         })
         # endregion Authentication

@@ -951,7 +951,7 @@ class _SSH:
 
         def post(self, device_guids: List[str]):
             body = {
-                'DeviceGuids': device_guids
+                'deviceGuids': device_guids
             }
 
             class _Response(APIResponse):
