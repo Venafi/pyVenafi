@@ -54,17 +54,19 @@ class Session:
         params = self._remove_null_values_from_dictionary(d=params)
         return self.requests.get(url=url, params=params, **self.request_kwargs)
 
-    def delete(self, url: str):
+    def delete(self, url: str, params: dict = None):
         """
         Sends a DELETE request to the given URL.
 
         Args:
             url: URL endpoint
+            params: Dictionary of parameters to append to the URL
 
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.delete(url, **self.request_kwargs)
+        params = self._remove_null_values_from_dictionary(d=params)
+        return self.requests.delete(url, params=params, **self.request_kwargs)
 
     def put(self, url: str, data: dict):
         """
