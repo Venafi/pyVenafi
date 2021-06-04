@@ -22,10 +22,10 @@ from pytpp.api.websdk.endpoints.preferences import _Preferences
 from pytpp.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from pytpp.api.websdk.endpoints.revoke import _Revoke
 from pytpp.api.websdk.endpoints.rights import _Rights
-from pytpp.api.websdk.endpoints.ssh import _SSH
-from pytpp.api.websdk.endpoints.system_status import _SystemStatus
 from pytpp.api.websdk.endpoints.secret_store import _SecretStore
+from pytpp.api.websdk.endpoints.ssh import _SSH
 from pytpp.api.websdk.endpoints.stats import _Stats
+from pytpp.api.websdk.endpoints.system_status import _SystemStatus
 from pytpp.api.websdk.endpoints.teams import _Teams
 from pytpp.api.websdk.endpoints.workflow import _Workflow
 from pytpp.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
