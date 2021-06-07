@@ -2,7 +2,7 @@ import flask
 import os
 import glob
 from pathlib import Path
-from packaging import version as Version
+from packaging.version import Version
 
 PACKAGES_PATH = os.path.abspath(r'C:\SPI\spi\packages')
 DOCS_PATH = os.path.abspath(r'C:\SPI\spi\docs')
@@ -28,7 +28,7 @@ def docs(path='index.html'):
 @app.route('/spi/api/latestVersion', methods=['GET'])
 def get_latest_version():
     get_version_from_filename = lambda x: os.path.basename(x.replace('pytpp-dev-', '').replace('.tar.gz', ''))
-    all_versions = [Version.parse(get_version_from_filename(x)) for x in glob.glob(f'{PACKAGES_PATH}/pytpp-dev*')]
+    all_versions = [Version(get_version_from_filename(x)) for x in glob.glob(f'{PACKAGES_PATH}/pytpp-dev*')]
     if not all_versions:
         return flask.abort(400, 'No packages available.')
 
