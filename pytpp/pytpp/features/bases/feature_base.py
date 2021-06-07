@@ -5,6 +5,7 @@ from pytpp.logger import logger, LogTags
 from pytpp.properties.secret_store import Namespaces
 from pytpp.api.authenticate import Authenticate
 from typing import List, Dict
+from packaging import version as Version
 
 
 def feature():
@@ -93,9 +94,9 @@ class FeatureBase:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
     def _enforce_version(self, minimum: str = '', maximum: str = ''):
-        if minimum and self._api._version < minimum:
+        if minimum and self._api._version < Version.parse(minimum):
             raise ValueError(f'Incompatible version. This feature requires at least TPP {minimum}.')
-        if maximum and self._api._version > maximum:
+        if maximum and self._api._version > Version.parse(maximum):
             raise ValueError(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
 
     class _Timeout:
