@@ -28,7 +28,8 @@ class _Certificates(API):
             'Limit': limit,
             'Offset': offset,
             'OptionalFields': optional_fields
-        }.update(filters or {})
+        }
+        params.update(filters or {})
 
         class _Response(APIResponse):
             def __init__(self, response):
