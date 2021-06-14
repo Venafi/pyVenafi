@@ -1,4 +1,5 @@
-isodate==0.6.0
+packaging==19.2
 dblogging==1.1.0
+isodate==0.6.0
 requests==2.24.0
 python_dateutil==2.8.1

@@ -1,4 +1,4 @@
-__version__ = "0.4.9"
+__version__ = "0.4.10"
 
 from setuptools import setup, find_packages
 import os
@@ -27,7 +27,8 @@ if __name__ == '__main__':
             'jsonpickle',
             'python-dateutil',
             'isodate',
-            'dblogging'
+            'dblogging',
+            'packaging'
         ],
         classifiers=[
             'Development Status :: 4 - Beta',
