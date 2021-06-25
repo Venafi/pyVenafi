@@ -5,6 +5,7 @@ from pytpp.plugins.api.aperture.endpoints.approvers import _Approvers
 from pytpp.plugins.api.aperture.endpoints.certificates import _Certificates
 from pytpp.plugins.api.aperture.endpoints.configobjects import _ConfigObjects
 from pytpp.plugins.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
+from pytpp.plugins.api.aperture.endpoints.device import _Device
 from pytpp.plugins.api.aperture.endpoints.discovery import _Discovery
 from pytpp.plugins.api.aperture.endpoints.jobs import _Jobs
 from pytpp.plugins.api.aperture.endpoints.users import _Users
@@ -75,6 +76,7 @@ class Aperture:
         self.Certificates = _Certificates(self)
         self.ConfigObjects = _ConfigObjects(self)
         self.CertificateDashboard = _CertificateDashboard(self)
+        self.Device = _Device(self)
         self.Discovery = _Discovery(self)
         self.Jobs = _Jobs(self)
         self.Version = _Version(self)
