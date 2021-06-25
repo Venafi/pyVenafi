@@ -1,6 +1,6 @@
 from pytpp.vtypes import Config
 from pytpp.properties.config import DevicesClassNames, DeviceAttributes, DeviceAttributeValues
-from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
 class _DeviceBase(FeatureBase):
@@ -45,3 +45,29 @@ class Device(_DeviceBase):
             config_class=DevicesClassNames.device,
             attributes=attributes
         )
+
+    def get(self, device_dn: str):
+        response = self._api.websdk.Config.IsValid.post(object_dn=device_dn)
+
+        if response.result.code != 1:
+            raise FeatureError.InvalidResultCode(code=response.result.code,
+                                                 code_description=response.result.credential_result)
+        return response.object
+
+    def scan_for_ssh_keys(self, device: 'Config.Object' = None, device_dn: str = None):
+        if len([x for x in [device, device_dn] if x not in [None, False]]) != 1:
+            raise FeatureError.InvalidFormat(
+                "Must specify one (and only one) of: device,device_dn")
+
+        dn = device_dn or device.dn
+
+        result = self._api.websdk.Config.Write.post(
+            object_dn=dn,
+            attribute_data=[{"Name": "Agentless Discovery To Do",
+                            "Value": "1"}]
+        ).result
+
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+

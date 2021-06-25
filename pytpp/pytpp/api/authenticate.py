@@ -1,7 +1,7 @@
 from typing import Union
 from pytpp.properties.oauth import Scope
 from pytpp.api.websdk.websdk import WebSDK
-from packaging.version import Version
+from packaging.version import Version, parse
 
 
 class Authenticate:
@@ -32,7 +32,7 @@ class Authenticate:
             key_file_path: Absolute path to the private key file.
             verify_ssl: If ``True``, verify the SSL certificate of the target endpoints.
         """
-        self._version = Version(version)
+        self._version = parse(version)
         if self._version <= Version('19.4'):
             application_id = None
             scope = None
