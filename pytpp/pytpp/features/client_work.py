@@ -1,7 +1,7 @@
 import datetime
 import time
-from typing import List
-
+from typing import List, Union
+from pytpp.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.config import ClientWorkAttributeValues, ClientWorkAttributes, ClientWorkClassNames
 
@@ -11,32 +11,30 @@ class _ClientWorkBase(FeatureBase):
         super().__init__(api)
         self._work_base_dn = r'\VED\Clients\Work'
 
-    def delete(self, name: str):
+    def delete(self, work: Union['Config.Object', str]):
         """
         Deletes a client work
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         response = self._api.websdk.Config.Delete.post(fr'{self._work_base_dn}\{name}')
 
         if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(code=response.result.code,
-                                                 code_description=response.result.credential_result)
+            raise FeatureError.InvalidResultCode(
+                code=response.result.code,
+                code_description=response.result.credential_result
+            )
 
-    def disable(self, name: str):
+    def disable(self, work: Union['Config.Object', str]):
         """
         Disables a client work
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         result = self._api.websdk.Config.Write.post(
             object_dn=fr'{self._work_base_dn}\{name}',
             attribute_data=self._name_value_list({
@@ -47,16 +45,14 @@ class _ClientWorkBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def enable(self, name: str):
+    def enable(self, work: Union['Config.Object', str]):
         """
         Enables a client work
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         result = self._api.websdk.Config.ClearAttribute.post(
             object_dn=fr'{self._work_base_dn}\{name}',
             attribute_name=ClientWorkAttributes.AgentConnectivity.disabled
@@ -70,23 +66,16 @@ class _ClientWorkBase(FeatureBase):
         Gets a client work and returns a config object
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
 
         Returns:
             Config object representing a client work
         """
-        response = self._api.websdk.Config.IsValid.post(object_dn=fr'{self._work_base_dn}\{name}')
-
-        if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(code=response.result.code,
-                                                 code_description=response.result.credential_result)
-        return response.object
+        return self._get_config_object(object_dn=fr'{self._work_base_dn}\{name}')
 
     def list(self):
         """
         Gets a list of all client work
-
-        Args:
 
         Returns:
             A list of config objects representing all of the client work
@@ -104,26 +93,25 @@ class AgentConnectivity(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, name: str, start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, randomize_minutes: int = 0):
         """
         Schedules the Agent Connectivity work to run
 
-            Note:  Only one of daily, hourly, days_of_week or days_of_month can be set.
+        .. note::
+            Only one of daily, hourly, days_of_week or days_of_month can be set.
 
         Args:
-            name: The name of the client work
+            work: The Config.Object or name of the client work
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
             days_of_week: Runs the client work on specific days of the week. It is a Zero-based index of the days of the week (i.e. Sunday = '0').
             days_of_month: Runs the client work on specific days of the month.
             randomize_minutes: Randomize the given minutes for agent check-in to the server
-
-        Returns:
-
         """
+        name = self._get_config_name(work)
 
         attributes = {
             ClientWorkAttributes.AgentConnectivity.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
@@ -172,21 +160,21 @@ class AgentConnectivity(_ClientWorkBase):
 
     def create(self, name: str, server_url: str = "", proxy_url: str = "", proxy_credentials: str = "",
                log_threshold: str = ClientWorkAttributeValues.AgentConnectivity.LogThreshold.info,
-               **kwargs):
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates an Agent Connectivity client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             server_url: (optional) specify the server url
             proxy_url: (optional) specify the proxy url
             proxy_credentials: (optional) specify the proxy credentials
             log_threshold: (optional) set the log threshold, defaults to INFO
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
         attributes = {
             ClientWorkAttributes.AgentConnectivity.created_by   : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
             ClientWorkAttributes.AgentConnectivity.interval     : 0,
@@ -200,20 +188,22 @@ class AgentConnectivity(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.agent_connectivity,
-                                   attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.agent_connectivity,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
-    def unschedule(self, name: str):
+    def unschedule(self, work: Union['Config.Object', str]):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         for attribute_name in {
             ClientWorkAttributes.AgentConnectivity.start_time,
             ClientWorkAttributes.AgentConnectivity.schedule_type,
@@ -232,12 +222,13 @@ class AgentUpgrade(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, **kwargs):
+    def create(self, name: str, get_if_already_exists: bool = True, **kwargs):
         """
         Creates an Agent Upgrade client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -248,9 +239,13 @@ class AgentUpgrade(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.agent_upgrade,
-                                   attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.agent_connectivity,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
 
 @feature()
@@ -258,23 +253,24 @@ class CertificateDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, placement_folder_dn: str, share_mode: int = 2, **kwargs):
+    def create(self, name: str, placement_folder_dn: str, share_mode: int = 2,
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a Certificate Device Placement client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             placement_folder_dn: The folder's dn to place devices
             share_mode: (optional) specify how newly discovered devices are de-duplicated
                 0: search the entire policy tree
                 1: search the devices folder
                 2: search the devices folder and any sub-folders
                 3: create a duplicate device
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
         attributes = {
             ClientWorkAttributes.CertificateDevicePlacement.created_by            : ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
             ClientWorkAttributes.CertificateDevicePlacement.device_object_location: placement_folder_dn
@@ -297,9 +293,13 @@ class CertificateDevicePlacement(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.certificate_device_placement,
-                                   attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.agent_connectivity,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
 
 @feature()
@@ -307,17 +307,18 @@ class CertificateDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, name: str, start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0,
                  full_scan: bool = False):
         """
         Schedules the Certificate Discovery work to run
 
-            Note:  Only one of daily, hourly, on_receipt, days_of_week or days_of_month can be set.
+        .. note::
+			Only one of daily, hourly, on_receipt, days_of_week or days_of_month can be set.
 
         Args:
-            name: The name of the client work
+            work: The Config.Object or name of the client work
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -326,11 +327,8 @@ class CertificateDiscovery(_ClientWorkBase):
             days_of_month: Runs the client work on specific days of the month.
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
             full_scan: Reset the cache and perform a full scan (resend all the data to the server)
-
-        Returns:
-
         """
-
+        name = self._get_config_name(work)
         attributes = {
             ClientWorkAttributes.CertificateDiscovery.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
             ClientWorkAttributes.CertificateDiscovery.interval  : randomize_minutes
@@ -383,33 +381,23 @@ class CertificateDiscovery(_ClientWorkBase):
         response.assert_valid_response()
 
     def create(self,
-               name: str,
-               certificate_location_dn: str,
-               recursive_paths: List[str] = None,
-               non_recursive_paths: List[str] = None,
+               name: str, certificate_location_dn: str, recursive_paths: List[str] = None, non_recursive_paths: List[str] = None,
                max_filesize: str = ClientWorkAttributeValues.CertificateDiscovery.MaxFilesize.less_than_10k,
-               pkcs12_extensions: List[
-                   str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs12_extensions,
-               pkcs7_extensions: List[
-                   str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs7_extensions,
-               pem_extensions: List[
-                   str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pem_extensions,
-               ibmcms_extensions: List[
-                   str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_ibmcms_extensions,
-               jks_jceks_extensions: List[
-                   str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_jks_jceks_extensions,
-               iplanet_extensions: List[
-                   str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_iplanet_extensions,
-               exclude_recursive_paths: List[str] = None,
-               exclude_non_recursive_paths: List[str] = None,
-               exclude_file_patterns: List[str] = None,
-               scan_mounted_file_systems: bool = False,
-               log_threshold: str = ClientWorkAttributeValues.CertificateDiscovery.LogThreshold.info, **kwargs):
+               pkcs12_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs12_extensions,
+               pkcs7_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs7_extensions,
+               pem_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pem_extensions,
+               ibmcms_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_ibmcms_extensions,
+               jks_jceks_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_jks_jceks_extensions,
+               iplanet_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_iplanet_extensions,
+               exclude_recursive_paths: List[str] = None, exclude_non_recursive_paths: List[str] = None,
+               exclude_file_patterns: List[str] = None, scan_mounted_file_systems: bool = False,
+               log_threshold: str = ClientWorkAttributeValues.CertificateDiscovery.LogThreshold.info,
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a Certificate Discovery client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             certificate_location_dn: The folder's dn to place the certificates
             recursive_paths: (optional) A list of file paths to recursively search for new certificates
             non_recursive_paths: (optional) A lit of file paths to search for new certificates
@@ -425,11 +413,11 @@ class CertificateDiscovery(_ClientWorkBase):
             exclude_file_patterns: (optional) A list of file patterns to exclude from discovery
             scan_mounted_file_systems: (optional) Scan file systems mounted via NFS/CIFS/NTFS junction points (defaults to False)
             log_threshold: (optional) set the logging level (defaults to INFO)
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
         attributes = {
             ClientWorkAttributes.CertificateDiscovery.created_by                 : ClientWorkAttributeValues.CertificateDiscovery.CreatedBy.websdk,
             ClientWorkAttributes.CertificateDiscovery.certificate_location_dn    : certificate_location_dn,
@@ -475,25 +463,24 @@ class CertificateDiscovery(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        ca = self._api.websdk.Config.Create.post(object_dn=fr'{self._work_base_dn}\{name}', class_name=ClientWorkClassNames.certificate_discovery,
-                                                 name_attribute_list=self._name_value_list(attributes=attributes, keep_list_values=True))
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.certificate_discovery,
+            attributes=attributes,
+            keep_list_values=True,
+            get_if_already_exists=get_if_already_exists
+        )
 
-        return ca.object
 
-
-    def unschedule(self, name: str):
+    def unschedule(self, work: Union['Config.Object', str]):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         for attribute_name in {
             ClientWorkAttributes.CertificateDiscovery.start_time,
             ClientWorkAttributes.CertificateDiscovery.schedule_type,
@@ -519,12 +506,12 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
                authentication_credentials_dn: str = None, authenticate_only_by_password: bool = False,
                revoke_previous_version: bool = False,
                identity_verification: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.IdentityVerification.valid,
-               trusted_certs_and_cas: List[str] = None, **kwargs):
+               trusted_certs_and_cas: List[str] = None, get_if_already_exists: bool = False, **kwargs):
         """
         Creates a Certificate Enrollment Via EST Protocol client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             certificate_container_dn: The folder's dn to create certificates
             naming_pattern: The object naming pattern (IE. $CSR.CN$)
             ca_template_dn: The Certificate Authority Template to use
@@ -540,11 +527,11 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
             revoke_previous_version: (optional) Revoke previous versions of the certificate (defaults to False)
             identity_verification: (optional) Proof of Possession
             trusted_certs_and_cas: (optional) A List of Certificate Authorities and Certificates to trust
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
         attributes = {
             ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.created_by                                 : ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.CreatedBy.websdk,
             ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.certificate_container                      : certificate_container_dn,
@@ -576,16 +563,14 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        ca = self._api.websdk.Config.Create.post(object_dn=fr'{self._work_base_dn}\{name}',
-                                                 class_name=ClientWorkClassNames.certificate_enrollment_via_est_protocol,
-                                                 name_attribute_list=self._name_value_list(attributes=attributes,
-                                                                                           keep_list_values=True))
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return ca.object
-
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.certificate_enrollment_via_est_protocol,
+            attributes=attributes,
+            keep_list_values=True,
+            get_if_already_exists=get_if_already_exists
+        )
 
 
 @feature()
@@ -593,17 +578,18 @@ class CertificateInstallation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, name: str, start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         Schedules the Certificate Installation work to run
 
-            Note:  Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
+        .. note::
+			Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
 
         Args:
-            name: The name of the client work
+            work: The Config.Object or name of the client work
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -612,11 +598,8 @@ class CertificateInstallation(_ClientWorkBase):
             days_of_month: Runs the client work on specific days of the month.
             every_x_minutes: Runs the client work every 1,5,15 or 30 minutes. (Must be one of 1, 5, 15 or 30)
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
-
-        Returns:
-
         """
-
+        name = self._get_config_name(work)
         attributes = {
             ClientWorkAttributes.CertificateInstallation.interval: randomize_minutes
         }
@@ -686,15 +669,15 @@ class CertificateInstallation(_ClientWorkBase):
         )
         response.assert_valid_response()
 
-    def create(self, name: str,
-               log_threshold: str = ClientWorkAttributeValues.CertificateInstallation.LogThreshold.info,
-               **kwargs):
+    def create(self, name: str, log_threshold: str = ClientWorkAttributeValues.CertificateInstallation.LogThreshold.info,
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a Certificate Installation client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             log_threshold: (optional) set the logging level (defaults to INFO)
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -708,20 +691,22 @@ class CertificateInstallation(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.certificate_installation,
-                                   attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.certificate_installation,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
-    def unschedule(self, name: str):
+    def unschedule(self, work: Union['Config.Object', str]):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         for attribute_name in {
             ClientWorkAttributes.CertificateInstallation.start_time,
             ClientWorkAttributes.CertificateInstallation.schedule_type,
@@ -741,13 +726,12 @@ class DeviceCertificateCreation(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, certificate_container_dn: str, ca_template_dn: str, contacts: List[str],
-               description: str = None,
-               naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
-               organization: str = None,
+               description: str = None, naming_pattern: str = "$Client.DNSName$",
+               common_name: str = "$Client.DNSName$", organization: str = None,
                organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
                country: str = None, subject_alternative_names: bool = False, automatic_renewal: bool = True,
-               renewal_days_before: int = 30,
-               key_bit_strength: int = 2048, allow_certificate_sharing: bool = False, **kwargs):
+               renewal_days_before: int = 30, key_bit_strength: int = 2048, allow_certificate_sharing: bool = False,
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a Device Certificate Creation client work
 
@@ -769,6 +753,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
             renewal_days_before: days before expiration for automatic renewal (defaults to 30)
             key_bit_strength: key size of the certificates (defaults to 2048)
             allow_certificate_sharing: allow sharing with mobile devices (default sto False)
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -800,16 +785,14 @@ class DeviceCertificateCreation(_ClientWorkBase):
         if automatic_renewal: attributes[
             ClientWorkAttributes.DeviceCertificateCreation.renewal_window] = renewal_days_before
 
-        ca = self._api.websdk.Config.Create.post(object_dn=fr'{self._work_base_dn}\{name}',
-                                                 class_name=ClientWorkClassNames.device_certificate_creation,
-                                                 name_attribute_list=self._name_value_list(attributes=attributes,
-                                                                                           keep_list_values=True))
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return ca.object
-
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.device_certificate_creation,
+            attributes=attributes,
+            keep_list_values=True,
+            get_if_already_exists=get_if_already_exists
+        )
 
 
 @feature()
@@ -818,15 +801,13 @@ class DynamicProvisioning(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, certificate_container_dn: str, ca_template_dn: str, contacts: List[str],
-               description: str = None,
-               naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
-               organization: str = None,
-               organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
-               country: str = None, subject_alternative_names: str = "$Client.DNSname$",
+               description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
+               organization: str = None, organizational_unit: List[str] = None, city_locality: str = None,
+               state_province: str = None, country: str = None, subject_alternative_names: str = "$Client.DNSname$",
                capi_keystore: bool = False, capi_friendly_name: str = "", capi_trustee: str = "",
                key_bit_strength: int = 2048, retry_interval: int = 15,
                log_threshold: str = ClientWorkAttributeValues.DynamicProvisioning.LogThreshold.info,
-               **kwargs):
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a Dynamic Provisioning client work
 
@@ -850,7 +831,7 @@ class DynamicProvisioning(_ClientWorkBase):
             key_bit_strength: (optional) key size for the certificate (defaults to 2048)
             retry_interval: (optional) An interval in minutes (15, 30, 45, 60) for the agent to retry
             log_threshold: (optional) Set the logging level (defaults to INFO)
-
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -884,15 +865,14 @@ class DynamicProvisioning(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        ca = self._api.websdk.Config.Create.post(object_dn=fr'{self._work_base_dn}\{name}',
-                                                 class_name=ClientWorkClassNames.dynamic_provisioning,
-                                                 name_attribute_list=self._name_value_list(attributes=attributes,
-                                                                                           keep_list_values=True))
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return ca.object
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.dynamic_provisioning,
+            attributes=attributes,
+            keep_list_values=True,
+            get_if_already_exists=get_if_already_exists
+        )
 
 
 @feature()
@@ -902,7 +882,7 @@ class SSHDevicePlacement(_ClientWorkBase):
 
     def create(self, name: str, devices_folder_dn: str,
                share_mode: str = ClientWorkAttributeValues.SSHDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders,
-               **kwargs):
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a SSH Device Placement client work
 
@@ -914,6 +894,7 @@ class SSHDevicePlacement(_ClientWorkBase):
                     "SpecifiedFolderOnly" : search the devices folder
                     "SpecifiedFolderAndSubFolders" : search the devices folder and all sub-folders
                     "None" : create a duplicate device
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -927,9 +908,13 @@ class SSHDevicePlacement(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.ssh_device_placement,
-                                   attributes=attributes)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.ssh_device_placement,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
 
 @feature()
@@ -937,17 +922,18 @@ class SSHDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, name: str, start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_30_minutes: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, randomize_minutes: int = 0, full_scan: bool = False):
         """
         Schedules the SSH Discovery work to run
 
-            Note:  Only one of daily, hourly, on_receipt, every_30_minutes, days_of_week or days_of_month can be set.
+        .. note::
+			Only one of daily, hourly, on_receipt, every_30_minutes, days_of_week or days_of_month can be set.
 
         Args:
-            name: The name of the client work
+            work: The Config.Object or name of the client work
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -957,11 +943,8 @@ class SSHDiscovery(_ClientWorkBase):
             days_of_month: Runs the client work on specific days of the month.
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
             full_scan: Reset the cache and perform a full scan (resend all the data to the server)
-
-        Returns:
-
         """
-
+        name = self._get_config_name(work)
         attributes = {
             ClientWorkAttributes.SSHDiscovery.interval: randomize_minutes
         }
@@ -1022,7 +1005,8 @@ class SSHDiscovery(_ClientWorkBase):
                user_or_host_paths: List[str] = None, exclude_paths: List[str] = None, scan_mounted_fs: bool = False,
                minimize_resources: bool = False,
                max_filesize: int = ClientWorkAttributeValues.SSHDiscovery.MaxFilesize.less_than_1MB,
-               log_threshold: str = ClientWorkAttributeValues.SSHDiscovery.LogThreshold.info, **kwargs):
+               log_threshold: str = ClientWorkAttributeValues.SSHDiscovery.LogThreshold.info,
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a SSH Discovery client work
 
@@ -1037,6 +1021,7 @@ class SSHDiscovery(_ClientWorkBase):
             minimize_resources: (optional) Minimizes resource usage during scan (defaults to False)
             max_filesize: (optional) Ignore files larger than this size (defaults to 1MB)
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -1071,27 +1056,24 @@ class SSHDiscovery(_ClientWorkBase):
         if len(user_paths) > 0: attributes[ClientWorkAttributes.SSHDiscovery.ssh_scanner_user_path]: user_paths
 
         attributes.update(kwargs)
+        
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.ssh_discovery,
+            attributes=attributes,
+            keep_list_values=True,
+            get_if_already_exists=get_if_already_exists
+        )
 
-        ca = self._api.websdk.Config.Create.post(object_dn=fr'{self._work_base_dn}\{name}',
-                                                 class_name=ClientWorkClassNames.ssh_discovery,
-                                                 name_attribute_list=self._name_value_list(attributes=attributes,
-                                                                                           keep_list_values=True))
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return ca.object
-
-    def unschedule(self, name: str):
+    def unschedule(self, work: Union['Config.Object', str]):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         for attribute_name in {
             ClientWorkAttributes.SSHDiscovery.start_time,
             ClientWorkAttributes.SSHDiscovery.schedule_type,
@@ -1110,26 +1092,24 @@ class SSHKeyUsage(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, name: str, start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         Schedules the SSH KeyUsage work to run
 
-            Note:  Only one of daily, hourly, on_receipt, or every_x_minutes can be set.
+        .. note::
+			Only one of daily, hourly, on_receipt, or every_x_minutes can be set.
 
         Args:
-            name: The name of the client work
+            work: The Config.Object or name of the client work
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
             on_receipt: Runs the client work on_receipt
             every_x_minutes: Runs the client work every: 1, 5, 15 or 30 minutes
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
-
-        Returns:
-
         """
-
+        name = self._get_config_name(work)
         attributes = {
             ClientWorkAttributes.SSHKeyUsage.interval: randomize_minutes
         }
@@ -1185,14 +1165,15 @@ class SSHKeyUsage(_ClientWorkBase):
 
     def create(self, name: str, limit_cache_size: int = 50000,
                log_threshold: str = ClientWorkAttributeValues.SSHKeyUsage.LogThreshold.info,
-               **kwargs):
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a SSH Key Usage Creation client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             limit_cache_size: maximum items in the cache
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -1206,21 +1187,23 @@ class SSHKeyUsage(_ClientWorkBase):
         }
 
         attributes.update(kwargs)
+        
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.ssh_key_usage,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.ssh_key_usage,
-                                   attributes=attributes)
-
-    def unschedule(self, name: str):
+    def unschedule(self, work: Union['Config.Object', str]):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         for attribute_name in {
             ClientWorkAttributes.SSHKeyUsage.start_time,
             ClientWorkAttributes.SSHKeyUsage.schedule_type,
@@ -1239,17 +1222,18 @@ class SSHRemediation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, name: str, start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         Schedules the SSH Remediation work to run
 
-            Note:  Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
+        .. note::
+			Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
 
         Args:
-            name: The name of the client work
+            work: The Config.Object or name of the client work
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -1258,11 +1242,8 @@ class SSHRemediation(_ClientWorkBase):
             days_of_month: Runs the client work on specific days of the month.
             every_x_minutes: Runs the client work every: 1, 5, 15 or 30 minutes
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
-
-        Returns:
-
         """
-
+        name = self._get_config_name(work)
         attributes = {
             ClientWorkAttributes.SSHRemediation.interval: randomize_minutes
         }
@@ -1331,13 +1312,14 @@ class SSHRemediation(_ClientWorkBase):
         response.assert_valid_response()
 
     def create(self, name: str, log_threshold: str = ClientWorkAttributeValues.SSHRemediation.LogThreshold.info,
-               **kwargs):
+               get_if_already_exists: bool = True, **kwargs):
         """
         Creates a SSH Remediation client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -1350,21 +1332,23 @@ class SSHRemediation(_ClientWorkBase):
         }
 
         attributes.update(kwargs)
+        
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.ssh_remediation,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
-        return self._config_create(parent_folder_dn=self._work_base_dn, name=name,
-                                   config_class=ClientWorkClassNames.ssh_remediation,
-                                   attributes=attributes)
-
-    def unschedule(self, name: str):
+    def unschedule(self, work: Union['Config.Object', str]):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
         Args:
-            name: The name of the client work
-
-        Returns:
-
+            work: The Config.Object or name of the client work
         """
+        name = self._get_config_name(work)
         for attribute_name in {
             ClientWorkAttributes.SSHRemediation.start_time,
             ClientWorkAttributes.SSHRemediation.schedule_type,
@@ -1405,12 +1389,12 @@ class UserCertificateCreation(_ClientWorkBase):
                lifecycle_groups: List[str] = None, lifecycle_revoke_cert: bool = False,
                lifecycle_disable_cert: bool = False,
                portal_friendly_name: str = None, portal_icon: int = 0, portal_download_limit: int = 3,
-               portal_instructions: str = None, **kwargs):
+               portal_instructions: str = None, get_if_already_exists: bool = True, **kwargs):
         """
         Creates a User Certificate Creation client work
 
         Args:
-            name: The name of the client work
+            name: The name of the client work.
             certificate_container_dn: folder dn to create certificates in
             ca_template_dn: Certificate Authority dn to use
             contacts: List of identity prefixed universal GUIDs. (IE: contacts = [user1.guid, user2.guid])
@@ -1449,6 +1433,7 @@ class UserCertificateCreation(_ClientWorkBase):
                                     3 - VPN
             portal_download_limit: (optional) limit the number of portal downloads
             portal_instructions: (optional) text of portal download instructions
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
@@ -1512,12 +1497,11 @@ class UserCertificateCreation(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        ca = self._api.websdk.Config.Create.post(object_dn=fr'{self._work_base_dn}\{name}',
-                                                 class_name=ClientWorkClassNames.user_certificate_creation,
-                                                 name_attribute_list=self._name_value_list(attributes=attributes,
-                                                                                           keep_list_values=True))
-        result = ca.result
-        if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-        return ca.object
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._work_base_dn,
+            config_class=ClientWorkClassNames.user_certificate_creation,
+            attributes=attributes,
+            keep_list_values=True,
+            get_if_already_exists=get_if_already_exists
+        )

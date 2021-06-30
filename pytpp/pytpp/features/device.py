@@ -1,3 +1,4 @@
+from typing import Union
 from pytpp.vtypes import Config
 from pytpp.properties.config import DevicesClassNames, DeviceAttributes, DeviceAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
@@ -7,7 +8,7 @@ class _DeviceBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, device: 'Config.Object'):
+    def delete(self, device: Union['Config.Object', str]):
         """
         Deletes the device object specified. Since there are no secret store data attached to this object,
         only a config delete is performed.
@@ -15,7 +16,8 @@ class _DeviceBase(FeatureBase):
         Args:
             device: Config object of to the device object.
         """
-        self._config_delete(object_dn=device.dn)
+        dn = self._get_dn(device)
+        self._config_delete(object_dn=dn)
 
 
 @feature()
@@ -54,13 +56,12 @@ class Device(_DeviceBase):
                                                  code_description=response.result.credential_result)
         return response.object
 
-    def scan_for_ssh_keys(self, device: 'Config.Object' = None, device_dn: str = None):
-        if len([x for x in [device, device_dn] if x not in [None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
-                "Must specify one (and only one) of: device,device_dn")
-
-        dn = device_dn or device.dn
-
+    def scan_for_ssh_keys(self, device: Union['Config.Object', str]):
+        """
+        Args:
+            device: Config.Object, DN, or GUID of the device object in TPP.
+        """
+        dn = self._get_dn(device)
         result = self._api.websdk.Config.Write.post(
             object_dn=dn,
             attribute_data=[{"Name": "Agentless Discovery To Do",

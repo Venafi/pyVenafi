@@ -143,11 +143,10 @@ class _IdentityBase(FeatureBase):
         Returns:
             An Identity object of the user or group.
         """
-        identity = self._api.websdk.Identity.Validate.post(
-            identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
-        ).identity
-
-        return identity
+        return self._get_identity_object(
+            prefixed_name=prefixed_name,
+            prefixed_universal=prefixed_universal
+        )
 
     def get_memberships(self, identity: 'Identity.Identity'):
         """
@@ -248,29 +247,6 @@ class _IdentityBase(FeatureBase):
             universal_id=identity.prefixed_universal
         )
         result.assert_valid_response()
-
-    @staticmethod
-    def _identity_dict(prefixed_name: str = None, prefixed_universal: str = None):
-        """
-        Creates an ID object to write to the Identity APIs.
-
-        Args:
-            prefixed_name: The prefixed name of the Identity object.
-            prefixed_universal: The prefixed universal GUID of the Identity object.
-
-        Returns:
-            {
-                'PrefixedUniversal': ``prefixed_universal``,
-                'PrefixedName': ``prefixed_name``
-            }
-        """
-
-        d = {}
-        if prefixed_name:
-            d.update({'PrefixedName': prefixed_name})
-        if prefixed_universal:
-            d.update({'PrefixedUniversal': prefixed_universal})
-        return d
 
 
 @feature()

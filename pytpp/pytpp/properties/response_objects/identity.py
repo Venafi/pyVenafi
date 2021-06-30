@@ -11,7 +11,6 @@ class Identity:
             self.type = response_object.get('Type')  # type: str
             self.universal = response_object.get('Universal')  # type: str
 
-
     class InvalidIdentity:
         def __init__(self, response_object: dict):
             if not isinstance(response_object, dict):

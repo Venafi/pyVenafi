@@ -13,12 +13,10 @@ class _CertificateAuthorityBase(FeatureBase):
 
         Args:
             certificate_authority: Config object of the CA object.
-
-        Returns:
-
         """
-        self._secret_store_delete(object_dn=certificate_authority.dn)
-        self._config_delete(object_dn=certificate_authority.dn)
+        certificate_authority_dn = self._get_dn(certificate_authority)
+        self._secret_store_delete(object_dn=certificate_authority_dn)
+        self._config_delete(object_dn=certificate_authority_dn)
 
 
 @feature()
@@ -30,7 +28,8 @@ class AdaptableCA(_CertificateAuthorityBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, powershell_script: str, username_credential_dn: str = None,
-               certificate_credential_dn: str = None, secondary_credential_dn: str = None, attributes: dict = None):
+               certificate_credential_dn: str = None, secondary_credential_dn: str = None, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates a Microsoft Certificate Authority object.
 
@@ -44,10 +43,10 @@ class AdaptableCA(_CertificateAuthorityBase):
                 ``username_credential_dn`` is given.
             secondary_credential_dn: Absolute path to the secondary credential object.
             attributes: Additional attributes associated to the CA object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the certificate authority.
-
         """
         attributes = attributes or {}
         attributes.update({
@@ -61,7 +60,8 @@ class AdaptableCA(_CertificateAuthorityBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=CertificateAuthorityClassNames.adaptable_ca,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -74,7 +74,8 @@ class MSCA(_CertificateAuthorityBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, hostname: str, service_name: str, credential_dn: str,
-               template: str, attributes: dict = None):
+               template: str, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates a Microsoft Certificate Authority object.
 
@@ -86,10 +87,10 @@ class MSCA(_CertificateAuthorityBase):
             credential_dn: Absolute path to the credential object.
             template: Name of the CA template.
             attributes: Additional attributes associated to the CA object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the certificate authority.
-
         """
         attributes = attributes or {}
         attributes.update({
@@ -103,7 +104,8 @@ class MSCA(_CertificateAuthorityBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=CertificateAuthorityClassNames.microsoft_ca,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -115,7 +117,8 @@ class SelfSignedCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates a Self-Signed Certificate Authority object.
 
@@ -123,10 +126,10 @@ class SelfSignedCA(_CertificateAuthorityBase):
             name: Name of the CA object.
             parent_folder_dn: Absolute path to the parent folder of the CA object.
             attributes: Additional attributes associated to the CA object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the certificate authority.
-
         """
         attributes = attributes or {}
         attributes.update({
@@ -136,5 +139,6 @@ class SelfSignedCA(_CertificateAuthorityBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=CertificateAuthorityClassNames.self_signed_ca,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )

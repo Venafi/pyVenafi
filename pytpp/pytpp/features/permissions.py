@@ -43,6 +43,8 @@ class Permissions(FeatureBase):
         Returns:
             Effective Permissions object.
         """
+        config_obj = self._get_config_object(...)
+        ident = self._get_identity_object(...)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
             api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
