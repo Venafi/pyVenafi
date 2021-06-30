@@ -132,35 +132,30 @@ class FeatureBase:
         logger.log(f'Getting prefixed name from prefixed GUID: {identity}')
         return self._get_identity_object(prefixed_name=identity).prefixed_universal
 
-    def _get_dn(self, obj: Union[Config.Object, str]):
+    def _get_dn(self, obj: Union[Config.Object, str], parent_dn: str = None):
         if isinstance(obj, Config.Object):
             return obj.dn
         if self._is_obj_guid(obj):
             logger.log(f'Getting DN from GUID: {obj}')
             return self._get_config_object(object_guid=obj).dn
+        if parent_dn and not obj.startswith(parent_dn):
+            obj = parent_dn.rstrip('\\') + f'\\{obj}'
         if not obj.startswith(r'\VED'):
             return '\\VED\\' + obj.strip("\\")
         else:
             return obj
 
-    def _get_guid(self, obj: Union[Config.Object, str]):
+    def _get_guid(self, obj: Union[Config.Object, str], parent_dn: str = None):
         if isinstance(obj, Config.Object):
             return obj.guid
         if self._is_obj_guid(obj):
             return obj
-        logger.log(f'Getting GUID from DN: {obj}')
+        if parent_dn and not obj.startswith(parent_dn):
+            obj = parent_dn.rstrip('\\') + f'\\{obj}'
         if not obj.startswith(r'\VED'):
             obj = '\\VED\\' + obj.strip("\\")
+        logger.log(f'Getting GUID from DN: {obj}')
         return self._get_config_object(object_dn=obj).guid
-
-    def _get_config_name(self, obj: Union[Config.Object, str]):
-        if isinstance(obj, Config.Object):
-            return obj.name
-        if self._is_obj_guid(obj):
-            return self._get_config_object(object_guid=obj).name
-        if '\\' in obj:
-            return obj.rsplit('\\', maxsplit=1)[-1]
-        return obj
 
     @staticmethod
     def _log_warning_message(msg: str):
@@ -201,11 +196,14 @@ class FeatureBase:
             if result.code != 0:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
-    def _enforce_version(self, minimum: str = '', maximum: str = ''):
-        if minimum and self._api._version < Version(minimum):
-            raise ValueError(f'Incompatible version. This feature requires at least TPP {minimum}.')
-        if maximum and self._api._version > Version(maximum):
-            raise ValueError(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
+    def _is_version_compatible(self, minimum: str = '', maximum: str = ''):
+        if minimum and self._api._tpp_version <= Version(minimum):
+            logger.log(f'Incompatible version. This feature requires at least TPP {minimum}.')
+            return False
+        if maximum and self._api._tpp_version >= Version(maximum):
+            logger.log(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
+            return False
+        return True
 
     class _Timeout:
         def __init__(self, timeout):

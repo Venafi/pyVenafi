@@ -18,8 +18,8 @@ class _ClientWorkBase(FeatureBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
-        response = self._api.websdk.Config.Delete.post(fr'{self._work_base_dn}\{name}')
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
+        response = self._api.websdk.Config.Delete.post(work_dn)
 
         if response.result.code != 1:
             raise FeatureError.InvalidResultCode(
@@ -34,9 +34,9 @@ class _ClientWorkBase(FeatureBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         result = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list({
                 ClientWorkAttributes.AgentConnectivity.disabled: ["1"]
             }, keep_list_values=True)
@@ -52,9 +52,9 @@ class _ClientWorkBase(FeatureBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         result = self._api.websdk.Config.ClearAttribute.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_name=ClientWorkAttributes.AgentConnectivity.disabled
         ).result
 
@@ -71,7 +71,7 @@ class _ClientWorkBase(FeatureBase):
         Returns:
             Config object representing a client work
         """
-        return self._get_config_object(object_dn=fr'{self._work_base_dn}\{name}')
+        return self._get_config_object(object_dn=rf'{self._work_base_dn}\{name}')
 
     def list(self):
         """
@@ -111,7 +111,7 @@ class AgentConnectivity(_ClientWorkBase):
             days_of_month: Runs the client work on specific days of the month.
             randomize_minutes: Randomize the given minutes for agent check-in to the server
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
 
         attributes = {
             ClientWorkAttributes.AgentConnectivity.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
@@ -153,7 +153,7 @@ class AgentConnectivity(_ClientWorkBase):
                 "Error in Schedule: must supply at one of (daily, hourly, days_of_week, days_of_month)")
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list(attributes, True)
         )
         response.assert_valid_response()
@@ -203,7 +203,7 @@ class AgentConnectivity(_ClientWorkBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
             ClientWorkAttributes.AgentConnectivity.start_time,
             ClientWorkAttributes.AgentConnectivity.schedule_type,
@@ -212,7 +212,7 @@ class AgentConnectivity(_ClientWorkBase):
             ClientWorkAttributes.AgentConnectivity.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=fr'{self._work_base_dn}\{name}',
+                object_dn=work_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 
@@ -328,7 +328,7 @@ class CertificateDiscovery(_ClientWorkBase):
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
             full_scan: Reset the cache and perform a full scan (resend all the data to the server)
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
             ClientWorkAttributes.CertificateDiscovery.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
             ClientWorkAttributes.CertificateDiscovery.interval  : randomize_minutes
@@ -375,7 +375,7 @@ class CertificateDiscovery(_ClientWorkBase):
                 "Error in Schedule: must supply at one of (daily, hourly, days_of_week, days_of_month)")
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list(attributes, True)
         )
         response.assert_valid_response()
@@ -480,7 +480,7 @@ class CertificateDiscovery(_ClientWorkBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
             ClientWorkAttributes.CertificateDiscovery.start_time,
             ClientWorkAttributes.CertificateDiscovery.schedule_type,
@@ -489,7 +489,7 @@ class CertificateDiscovery(_ClientWorkBase):
             ClientWorkAttributes.CertificateDiscovery.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=fr'{self._work_base_dn}\{name}',
+                object_dn=work_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 
@@ -599,7 +599,7 @@ class CertificateInstallation(_ClientWorkBase):
             every_x_minutes: Runs the client work every 1,5,15 or 30 minutes. (Must be one of 1, 5, 15 or 30)
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
             ClientWorkAttributes.CertificateInstallation.interval: randomize_minutes
         }
@@ -664,7 +664,7 @@ class CertificateInstallation(_ClientWorkBase):
                 "Error in Schedule: must supply at one of (daily,hourly,on_receipt,days_of_week,days_of_month,every_x_minutes)")
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
@@ -706,7 +706,7 @@ class CertificateInstallation(_ClientWorkBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
             ClientWorkAttributes.CertificateInstallation.start_time,
             ClientWorkAttributes.CertificateInstallation.schedule_type,
@@ -715,7 +715,7 @@ class CertificateInstallation(_ClientWorkBase):
             ClientWorkAttributes.CertificateInstallation.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=fr'{self._work_base_dn}\{name}',
+                object_dn=work_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 
@@ -944,7 +944,7 @@ class SSHDiscovery(_ClientWorkBase):
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
             full_scan: Reset the cache and perform a full scan (resend all the data to the server)
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
             ClientWorkAttributes.SSHDiscovery.interval: randomize_minutes
         }
@@ -995,7 +995,7 @@ class SSHDiscovery(_ClientWorkBase):
                 "Error in Schedule: must supply one of (daily,hourly,on_receipt,every_30_minutes,days_of_week,days_of_month)")
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list(attributes, True)
         )
         response.assert_valid_response()
@@ -1073,7 +1073,7 @@ class SSHDiscovery(_ClientWorkBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
             ClientWorkAttributes.SSHDiscovery.start_time,
             ClientWorkAttributes.SSHDiscovery.schedule_type,
@@ -1082,7 +1082,7 @@ class SSHDiscovery(_ClientWorkBase):
             ClientWorkAttributes.SSHDiscovery.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=fr'{self._work_base_dn}\{name}',
+                object_dn=work_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 
@@ -1109,7 +1109,7 @@ class SSHKeyUsage(_ClientWorkBase):
             every_x_minutes: Runs the client work every: 1, 5, 15 or 30 minutes
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
             ClientWorkAttributes.SSHKeyUsage.interval: randomize_minutes
         }
@@ -1158,7 +1158,7 @@ class SSHKeyUsage(_ClientWorkBase):
                 "Error in Schedule: must supply one of (daily, hourly, on_receipt, every_x_minutes)")
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
@@ -1203,7 +1203,7 @@ class SSHKeyUsage(_ClientWorkBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
             ClientWorkAttributes.SSHKeyUsage.start_time,
             ClientWorkAttributes.SSHKeyUsage.schedule_type,
@@ -1212,7 +1212,7 @@ class SSHKeyUsage(_ClientWorkBase):
             ClientWorkAttributes.SSHKeyUsage.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=fr'{self._work_base_dn}\{name}',
+                object_dn=work_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 
@@ -1243,7 +1243,7 @@ class SSHRemediation(_ClientWorkBase):
             every_x_minutes: Runs the client work every: 1, 5, 15 or 30 minutes
             randomize_minutes: Randomize the given minutes for agent to send data back to the server
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
             ClientWorkAttributes.SSHRemediation.interval: randomize_minutes
         }
@@ -1306,7 +1306,7 @@ class SSHRemediation(_ClientWorkBase):
                 "Error in Schedule: must supply one of (daily,hourly,on_receipt,days_of_week,days_of_month,every_x_minutes)")
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._work_base_dn}\{name}',
+            object_dn=work_dn,
             attribute_data=self._name_value_list(attributes, True)
         )
         response.assert_valid_response()
@@ -1348,7 +1348,7 @@ class SSHRemediation(_ClientWorkBase):
         Args:
             work: The Config.Object or name of the client work
         """
-        name = self._get_config_name(work)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
             ClientWorkAttributes.SSHRemediation.start_time,
             ClientWorkAttributes.SSHRemediation.schedule_type,
@@ -1357,7 +1357,7 @@ class SSHRemediation(_ClientWorkBase):
             ClientWorkAttributes.SSHRemediation.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=fr'{self._work_base_dn}\{name}',
+                object_dn=work_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 

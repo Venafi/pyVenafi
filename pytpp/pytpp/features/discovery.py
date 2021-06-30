@@ -13,18 +13,19 @@ class NetworkDiscovery(FeatureBase):
         super().__init__(api=api)
         self._discovery_dn = r'\VED\Discovery'
 
-    def _is_in_progress(self, job: 'Config.Object'):
+    def _is_in_progress(self, job: Union['Config.Object', str]):
         """
         Returns a boolean value according to whether a job is currently in progress or not.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
 
         Returns:
             Boolean value
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.Read.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_name=DiscoveryAttributes.Network.status
         )
         in_progress_states = ['Pending Execution', 'Running']
@@ -39,7 +40,8 @@ class NetworkDiscovery(FeatureBase):
                contacts: List[str] = None, days_of_week: List[str] = None, days_of_month: List[str] = None,
                days_of_year: List[str] = None, description: str = None, exclusion_dns: List[str] = None,
                hour: int = None, placement_rule_guids: List[str] = None, ports: List[Union[str, int]] = None,
-               priority: int = None, reschedule: bool = True, resolve_host: bool = True, utc: str = '1'):
+               priority: int = None, reschedule: bool = True, resolve_host: bool = True, utc: str = '1',
+               get_if_already_exists: bool = True):
         """
         Creates a network discovery job.
 
@@ -95,6 +97,7 @@ class NetworkDiscovery(FeatureBase):
             reschedule: When ``True``, the job will run again on the next scheduled interval.
             resolve_host: Resolve the hostname when ``True``.
             utc: UTC offset.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object of the discovery job.
@@ -138,17 +141,19 @@ class NetworkDiscovery(FeatureBase):
             name=name,
             parent_folder_dn=self._discovery_dn,
             config_class=DiscoveryClassNames.network_discovery,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
-    def delete(self, job: 'Config.Object'):
+    def delete(self, job: Union['Config.Object', str]):
         """
         Deletes the discovery job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
         """
-        response = self._api.websdk.Discovery.Guid(guid=job.guid).delete()
+        job_guid = self._get_guid(job, parent_dn=self._discovery_dn)
+        response = self._api.websdk.Discovery.Guid(guid=job_guid).delete()
         response.assert_valid_response()
 
     def get(self, name: str):
@@ -159,20 +164,21 @@ class NetworkDiscovery(FeatureBase):
         Returns:
             Config object of the discovery job.
         """
-        return self._api.websdk.Config.IsValid.post(object_dn=f'{self._discovery_dn}\\{name}').object
+        return self._get_config_object(object_dn=f'{self._discovery_dn}\\{name}')
 
-    def schedule(self, job: 'Config.Object', hour: Union[str, int], days_of_week: List[str] = None,
+    def schedule(self, job: Union['Config.Object', str], hour: Union[str, int], days_of_week: List[str] = None,
                  days_of_month: List[str] = None, days_of_year: List[str] = None):
         """
         Schedules an existing job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
             hour: 24-hour UTC hour format (i.e. 20 = 8PM UTC).
             days_of_week: Zero-based index of the days of the week (i.e. Sunday = '0').
             days_of_month: Days of the month without leading zeros.
             days_of_year: Days of the year in "MM/DD" format without leading zeros (i.e. 1/23, 10/3).
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         hour = str(hour)
         if not isinstance(hour, list):
             hour = [hour]
@@ -189,18 +195,19 @@ class NetworkDiscovery(FeatureBase):
             attributes[DiscoveryAttributes.Network.days_of_year] = days_of_year
 
         response = self._api.websdk.Config.Write.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_data=self._name_value_list(attributes, keep_list_values=True)
         )
         response.assert_valid_response()
 
-    def unschedule(self, job: 'Config.Object'):
+    def unschedule(self, job: Union['Config.Object', str]):
         """
         Removes a schedule from a job. This does not delete the job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         for attribute_name in {
             DiscoveryAttributes.Network.hour,
             DiscoveryAttributes.Network.days_of_year,
@@ -209,11 +216,11 @@ class NetworkDiscovery(FeatureBase):
             DiscoveryAttributes.Network.reschedule
         }:
             self._api.websdk.Config.ClearAttribute.post(
-                object_dn=job.dn,
+                object_dn=job_dn,
                 attribute_name=attribute_name
             ).assert_valid_response()
 
-    def blackout_schedule(self, job: 'Config.Object', sunday: List[Union[str, int]] = None, monday: List[Union[str, int]] = None,
+    def blackout_schedule(self, job: Union['Config.Object', str], sunday: List[Union[str, int]] = None, monday: List[Union[str, int]] = None,
                           tuesday: List[Union[str, int]] = None, wednesday: List[Union[str, int]] = None,
                           thursday: List[Union[str, int]] = None, friday: List[Union[str, int]] = None,
                           saturday: List[Union[str, int]] = None):
@@ -221,7 +228,7 @@ class NetworkDiscovery(FeatureBase):
         Times of the week to restrict a discovery job from processing.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
             sunday: List of hours without leading zeros to restrict processing on Sunday.
             monday: List of hours without leading zeros to restrict processing on Monday.
             tuesday: List of hours without leading zeros to restrict processing on Tuesday.
@@ -230,6 +237,7 @@ class NetworkDiscovery(FeatureBase):
             friday: List of hours without leading zeros to restrict processing on Friday.
             saturday: List of hours without leading zeros to restrict processing on Saturday.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         blackout = []
         for e, day in enumerate([sunday, monday, tuesday, wednesday, thursday, friday, saturday]):
             if day:
@@ -239,21 +247,22 @@ class NetworkDiscovery(FeatureBase):
             DiscoveryAttributes.Network.blackout: blackout
         }
         response = self._api.websdk.Config.Write.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_data=self._name_value_list(attributes, keep_list_values=True)
         )
         response.assert_valid_response()
 
-    def run_now(self, job: 'Config.Object', timeout: int = 60):
+    def run_now(self, job: Union['Config.Object', str], timeout: int = 60):
         """
         Runs a job despite any scheduling. This does not return until the job is processing, or has a `Processing` Attribute.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
             timeout: Timeout in seconds within which the job should start.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.Write.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_data=self._name_value_list({
                 DiscoveryAttributes.Network.start_now: ['1']
             })
@@ -266,64 +275,69 @@ class NetworkDiscovery(FeatureBase):
                     return
 
         raise FeatureError.UnexpectedValue(
-            f'Expected the job "{job.dn}" to start progress, but it did not.'
+            f'Expected the job "{job_dn}" to start progress, but it did not.'
         )
 
-    def cancel(self, job: 'Config.Object'):
+    def cancel(self, job: Union['Config.Object', str]):
         """
         Cancels a currently running job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_name=DiscoveryAttributes.Network.status,
             values=['Canceled']
         )
         response.assert_valid_response()
 
-    def pause(self, job: 'Config.Object'):
+    def pause(self, job: Union['Config.Object', str]):
         """
         Pauses a currently running job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_name=DiscoveryAttributes.Network.status,
             values=['Paused']
         )
         response.assert_valid_response()
 
-    def resume(self, job: 'Config.Object'):
+    def resume(self, job: Union['Config.Object', str]):
         """
         Resumes a currently paused job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_name=DiscoveryAttributes.Network.status,
             values=['Pending']
         )
         response.assert_valid_response()
 
-    def place_results(self, job: 'Config.Object'):
+    def place_results(self, job: Union['Config.Object', str]):
         """
         Places the results of the discovery job according to the placement rules.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
         """
-        response = self._api.websdk.Config.WriteDn.post(
-            object_dn=job.dn,
-            attribute_name=DiscoveryAttributes.Network.import_results_now,
-            values=['1']
-        )
-        response.assert_valid_response()
+        if self._is_version_compatible(maximum="20.4"):
+            job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
+            response = self._api.websdk.Config.WriteDn.post(
+                object_dn=job_dn,
+                attribute_name=DiscoveryAttributes.Network.import_results_now,
+                values=['1']
+            )
+            response.assert_valid_response()
 
     def get_all_jobs(self):
         """
@@ -337,26 +351,27 @@ class NetworkDiscovery(FeatureBase):
 
         return jobs.objects
 
-    def wait_for_job_to_finish(self, job: 'Config.Object', check_interval: int = 5, timeout: int = 300):
+    def wait_for_job_to_finish(self, job: Union['Config.Object', str], check_interval: int = 5, timeout: int = 300):
         """
         Waits for the `Status` attribute to have a value other than `Pending Execution` and `Running`
         on the discovery job. An error is raised if the timeout is exceeded.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
             check_interval: Poll interval in seconds to validate that the job finished.
             timeout: Timeout in seconds to wait for the job to finish.
         """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired(poll=check_interval):
                 if not self._is_in_progress(job=job):
                     return
 
         status = self._api.websdk.Config.Read.post(
-            object_dn=job.dn,
+            object_dn=job_dn,
             attribute_name=DiscoveryAttributes.Network.status
         ).values[0]
         raise FeatureError.UnexpectedValue(
-            f'Expected Network Discovery Job "{job.dn}" to finish within {timeout} seconds, but it is still '
+            f'Expected Network Discovery Job "{job_dn}" to finish within {timeout} seconds, but it is still '
             f'running. It has a status of "{status}."'
         )

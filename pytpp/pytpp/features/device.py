@@ -49,12 +49,7 @@ class Device(_DeviceBase):
         )
 
     def get(self, device_dn: str):
-        response = self._api.websdk.Config.IsValid.post(object_dn=device_dn)
-
-        if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(code=response.result.code,
-                                                 code_description=response.result.credential_result)
-        return response.object
+        return self._get_config_object(object_dn=device_dn)
 
     def scan_for_ssh_keys(self, device: Union['Config.Object', str]):
         """

@@ -20,9 +20,9 @@ class ClientGroups(FeatureBase):
             group: The Config.Object or name of the client group.
             work_name: The name of the work
         """
-        name = self._get_config_name(group)
+        group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         response = self._api.websdk.Config.Write.post(
-            object_dn=fr'{self._group_base_dn}\{name}',
+            object_dn=group_dn,
             attribute_data=self._name_value_list({
                 ClientGroupsAttributes.assigned_work: [fr'{self._work_base_dn}\{work_name}']
             })
@@ -32,20 +32,19 @@ class ClientGroups(FeatureBase):
             raise FeatureError.InvalidResultCode(code=response.result.code,
                                                  code_description=response.result.credential_result)
 
-    def create(self, group: Union['Config.Object', str], agent_type: str = ClientGroupsAttributeValues.AgentType.agentless,
+    def create(self, name: str, agent_type: str = ClientGroupsAttributeValues.AgentType.agentless,
                get_if_already_exists: bool = True):
         """
         Creates a client group
 
         Args:
-            group: The Config.Object or name of the client group.
+            name: The name of the client group.
             agent_type: The type of the client group
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the client group.
         """
-        name = self._get_config_name(group)
         if agent_type == ClientGroupsAttributeValues.AgentType.agent_installed:
             attributes = {
                 ClientGroupsAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
@@ -89,20 +88,19 @@ class ClientGroups(FeatureBase):
         Args:
             group: The Config.Object or name of the client group.
         """
-        name = self._get_config_name(group)
-        self._config_delete(object_dn=fr'{self._group_base_dn}\{name}')
+        group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
+        self._config_delete(object_dn=group_dn)
 
-    def get(self, group: Union['Config.Object', str]):
+    def get(self, name: str):
         """
         Gets a client group by name and returns a config object
 
         Args:
-            group: The Config.Object or name of the client group.
+            name: The name of the client group.
 
         Returns:
             Config object representing the client group.
         """
-        name = self._get_config_name(group)
         return self._get_config_object(object_dn=fr'{self._group_base_dn}\{name}')
 
     def list(self):
@@ -134,9 +132,9 @@ class ClientGroups(FeatureBase):
         Returns:
             A list of config object representing the client groups.
         """
-        name = self._get_config_name(group)
+        group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         response = self._api.websdk.Config.RemoveDnValue.post(
-            object_dn=fr'{self._group_base_dn}\{name}',
+            object_dn=group_dn,
             attribute_name=ClientGroupsAttributes.assigned_work,
             value=fr'{self._work_base_dn}\{work_name}'
         )
