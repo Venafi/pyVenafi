@@ -1362,8 +1362,6 @@ class SSHRemediation(_ClientWorkBase):
             ).assert_valid_response()
 
 
-
-
 @feature()
 class UserCertificateCreation(_ClientWorkBase):
     def __init__(self, api):

@@ -9,6 +9,8 @@ Features
    application/pytpp.features.application
    certificate/pytpp.features.certificate
    certificate_authorities/pytpp.features.certificate_authorities
+   client_groups/pytpp.features.client_groups
+   client_work/pytpp.features.client_work
    credentials/pytpp.features.credentials
    custom_fields/pytpp.features.custom_fields
    device/pytpp.features.device
