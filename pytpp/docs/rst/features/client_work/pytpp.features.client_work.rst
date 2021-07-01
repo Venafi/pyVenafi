@@ -1,80 +1,19 @@
 Client Work
 ===========
 
-.. autoclass:: pytpp.features.client_work.AgentConnectivity
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
+.. toctree::
+   :maxdepth: 1
 
-.. autoclass:: pytpp.features.client_work.AgentUpgrade
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.CertificateDevicePlacement
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.CertificateDiscovery
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.CertificateEnrollmentViaESTProtocol
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.CertificateInstallation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.DeviceCertificateCreation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.DynamicProvisioning
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.SSHDevicePlacement
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.SSHDiscovery
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.SSHKeyUsage
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.SSHRemediation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
-
-.. autoclass:: pytpp.features.client_work.UserCertificateCreation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :inherited-members:
+   pytpp.features.client_work.agent_connectivity
+   pytpp.features.client_work.agent_upgrade
+   pytpp.features.client_work.certificate_device_placement
+   pytpp.features.client_work.certificate_discovery
+   pytpp.features.client_work.certificate_enrollment_via_est_protocol
+   pytpp.features.client_work.certificate_installation
+   pytpp.features.client_work.device_certificate_creation
+   pytpp.features.client_work.dynamic_provisioning
+   pytpp.features.client_work.ssh_device_placement
+   pytpp.features.client_work.ssh_discovery
+   pytpp.features.client_work.ssh_key_usage
+   pytpp.features.client_work.ssh_remediation
+   pytpp.features.client_work.user_certificate_creation
