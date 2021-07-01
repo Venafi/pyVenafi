@@ -18,7 +18,7 @@ class Folder(FeatureBase):
         may block the workflow.
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             workflow: Config.Object or name of the workflow object.
         """
         folder_dn = self._get_dn(folder)
@@ -37,7 +37,7 @@ class Folder(FeatureBase):
         enforcing a workflow on this folder and its subordinate objects.
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             workflow: Config.Object or name of the workflow object.
         """
         folder_dn = self._get_dn(folder)
@@ -98,7 +98,7 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attributes: Either a list of attribute names or a dictionary of attribute
                 name/value pairs where the name is the attribute name and the value
@@ -208,7 +208,7 @@ class Folder(FeatureBase):
         Gets the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
         """
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
@@ -273,7 +273,7 @@ class Folder(FeatureBase):
         Sets the desired TPP engine(s) to exclusively do work for all objects contained in the folder.
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             engines: List of engine Config.Objects or engine names listed in TPP.
             append_engines: If True, append `engines` to the current list on the folder. Otherwise
                 overwrite the current setting.
@@ -311,7 +311,7 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attribute_name: The attribute name.
 
@@ -338,7 +338,7 @@ class Folder(FeatureBase):
         Removes an applied workflow from a folder.
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             workflow: Config.Object or name of the workflow object.
         """
         folder_dn = self._get_dn(folder)
@@ -356,7 +356,7 @@ class Folder(FeatureBase):
         Removes a blocked workflow from a folder.
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             workflow: Config.Object or name of the workflow object.
         """
         folder_dn = self._get_dn(folder)
@@ -402,7 +402,7 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
@@ -453,7 +453,7 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config.Object or DN of the folder.object.
+            folder: Config.Object or DN of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.

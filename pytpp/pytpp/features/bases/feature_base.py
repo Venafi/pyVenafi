@@ -126,7 +126,7 @@ class FeatureBase:
 
     def _get_prefixed_universal(self, identity: Union[Identity.Identity, str]):
         if isinstance(identity, Identity.Identity):
-            return identity.prefixed_name
+            return identity.prefixed_universal
         if self._is_prefixed_universal(identity):
             return identity
         logger.log(f'Getting prefixed name from prefixed GUID: {identity}')
@@ -139,7 +139,7 @@ class FeatureBase:
             logger.log(f'Getting DN from GUID: {obj}')
             return self._get_config_object(object_guid=obj).dn
         if parent_dn and not obj.startswith(parent_dn):
-            obj = parent_dn.rstrip('\\') + f'\\{obj}'
+            obj = parent_dn.rstrip('\\') + '\\' + obj.rstrip('\\')
         if not obj.startswith(r'\VED'):
             return '\\VED\\' + obj.strip("\\")
         else:
