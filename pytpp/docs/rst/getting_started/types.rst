@@ -4,7 +4,8 @@ Types
 =====
 
 This module has a ``Types`` class for type hinting. The most common types are ``Config.Object`` and
-``Identity.Identity``. Here is an example.
+``Identity.Identity``. Here is an example. Be sure to type in a string or comment because these types
+are ``None`` at runtime.
 
 .. code-block:: python
 

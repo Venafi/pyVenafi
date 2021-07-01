@@ -1,3 +1,4 @@
+from typing import Union
 from pytpp.vtypes import Config, Identity
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.properties.response_objects.permissions import Permissions as PermResponseObj
@@ -8,7 +9,15 @@ class Permissions(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, obj: 'Config.Object', identity: 'Identity.Identity'):
+    def _get_obj_and_identity(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str]):
+        if isinstance(obj, str):
+            obj = self._get_config_object(obj)
+        if isinstance(identity, str):
+            identity = self._get_identity_object(identity)
+        return obj, identity
+
+
+    def delete(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str]):
         """
         Deletes all explicit permissions granted to a user or group on the ``obj``. All implicit permissions,
         i.e. those that are inherited from group memberships and parent folders, are unaffected.
@@ -17,6 +26,7 @@ class Permissions(FeatureBase):
             obj: Config object of the object to act on.
             identity: Identity object of the user or group.
         """
+        obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         current_permissions = self.get_explicit(obj=obj, identity=identity)
         if not current_permissions:
             return
@@ -30,7 +40,7 @@ class Permissions(FeatureBase):
         result = api.delete()
         result.assert_valid_response()
 
-    def get_effective(self, obj: 'Config.Object', identity: 'Identity.Identity'):
+    def get_effective(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str]):
         """
         Returns the `effective` permissions of a user or group on the ``obj``. Effective permissions are the
         permissions that are `effectively` enforced by TPP. All Master Admin, implicit, and explicit permissions
@@ -43,8 +53,7 @@ class Permissions(FeatureBase):
         Returns:
             Effective Permissions object.
         """
-        config_obj = self._get_config_object(...)
-        ident = self._get_identity_object(...)
+        obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
             api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
@@ -54,7 +63,7 @@ class Permissions(FeatureBase):
         result = api.Effective.get()
         return result.effective_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
-    def get_explicit(self, obj: 'Config.Object', identity: 'Identity.Identity'):
+    def get_explicit(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str]):
         """
         Returns the `explicit` permissions of a user or group on the ``obj``. Explicit permissions are the
         permissions that are `explicitly` granted to a user or group on a particular object. A user or group may
@@ -69,6 +78,7 @@ class Permissions(FeatureBase):
         Returns:
             Explicit Permissions object.
         """
+        obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
             api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
@@ -78,7 +88,7 @@ class Permissions(FeatureBase):
         result = api.get()
         return result.explicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
-    def get_implicit(self, obj: 'Config.Object', identity: 'Identity.Identity'):
+    def get_implicit(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str]):
         """
         Returns the `implicit` permissions of a user or group on the ``obj``. Implicit permissions are permissions
         inherited from other folders and group memberships. To get explicit permissions, use :meth:`get_explicit`.
@@ -90,6 +100,7 @@ class Permissions(FeatureBase):
         Returns:
             Implicit Permissions object.
         """
+        obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
             api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
@@ -99,7 +110,7 @@ class Permissions(FeatureBase):
         result = api.get()
         return result.implicit_permissions if result.is_valid_response() else PermResponseObj.Permissions({})
 
-    def list_identities(self, obj: 'Config.Object'):
+    def list_identities(self, obj: Union['Config.Object', str]):
         """
         Returns a list of Identity objects that have `explicit` permissions to the object. Explicit permissions are the
         permissions that are `explicitly` granted to a user or group on a particular object. A user or group may
@@ -112,6 +123,7 @@ class Permissions(FeatureBase):
         Returns:
             List of Identity objects.
         """
+        obj = self._get_config_object(obj)
         principals = self._api.websdk.Permissions.Object.Guid(obj.guid).get().principals
 
         principals = [
@@ -121,7 +133,7 @@ class Permissions(FeatureBase):
 
         return principals
 
-    def update(self, obj: 'Config.Object', identity: 'Identity.Identity', is_associate_allowed: bool = None, is_create_allowed: bool = None,
+    def update(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str], is_associate_allowed: bool = None, is_create_allowed: bool = None,
                is_delete_allowed: bool = None, is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
                is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
                is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
@@ -150,6 +162,7 @@ class Permissions(FeatureBase):
             is_view_allowed: Allows ability to view the name of all subordinate objects to ``object_dn``.
             is_write_allowed: Allows editing of subordinate objects to ``object_dn``.
         """
+        obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
             api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)

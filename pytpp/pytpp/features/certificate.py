@@ -55,7 +55,6 @@ class Certificate(FeatureBase):
 
         Returns:
             Config object representing the certificate object.
-
         """
         return self._config_create(
             name=name,

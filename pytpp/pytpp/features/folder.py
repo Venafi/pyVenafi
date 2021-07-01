@@ -12,41 +12,45 @@ class Folder(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def apply_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
+    def apply_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
         """
         Applies a workflow to a folder and all of its subordinate objects. However, a subordinate folder
         may block the workflow.
 
         Args:
-            folder: Config object of the folder object.
-            workflow: Config object of the workflow object.
+            folder: Config.Object or DN of the folder.object.
+            workflow: Config.Object or name of the workflow object.
         """
+        folder_dn = self._get_dn(folder)
+        workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.AddValue.post(
-            object_dn=folder.dn,
+            object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow,
-            value=workflow.dn
+            value=workflow_dn
         )
 
         result.assert_valid_response()
 
-    def block_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
+    def block_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
         """
         Blocks a workflow on a folder and all of its subordinate objects. This prevents any parent folders from
         enforcing a workflow on this folder and its subordinate objects.
 
         Args:
-            folder: Config object of the folder object.
-            workflow: Config object of the workflow object.
+            folder: Config.Object or DN of the folder.object.
+            workflow: Config.Object or name of the workflow object.
         """
+        folder_dn = self._get_dn(folder)
+        workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.AddValue.post(
-            object_dn=folder.dn,
+            object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow_block,
-            value=workflow.dn
+            value=workflow_dn
         )
 
         result.assert_valid_response()
 
-    def clear_policy(self, folder: 'Config.Object', class_name: str, attributes: Union[dict, List[str]]):
+    def clear_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the policy attribute name along with all of its values
         on a folder. If ``attributes`` are provided, then only the corresponding policy attribute values
@@ -94,16 +98,17 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config object of the folder object.
+            folder: Config.Object or DN of the folder.object.
             class_name: TPP Class Name for the attributes being locked.
             attributes: Either a list of attribute names or a dictionary of attribute
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
+        folder_dn = self._get_dn(folder)
         if isinstance(attributes, list):
             for attribute_name in attributes:
                 result = self._api.websdk.Config.ClearPolicyAttribute.post(
-                    object_dn=folder.dn,
+                    object_dn=folder_dn,
                     attribute_name=attribute_name,
                     class_name=class_name
                 ).result
@@ -118,7 +123,7 @@ class Folder(FeatureBase):
 
                 for value in values:
                     result = self._api.websdk.Config.RemovePolicyValue.post(
-                        object_dn=folder.dn,
+                        object_dn=folder_dn,
                         class_name=class_name,
                         attribute_name=name,
                         value=value
@@ -129,7 +134,8 @@ class Folder(FeatureBase):
         else:
             raise TypeError(f'Expected attributes to be of type List[str] or Dict, but got {type(attributes)} instead.')
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates a Folder, or Policy, object in TPP.
 
@@ -139,6 +145,7 @@ class Folder(FeatureBase):
             attributes: Attributes pertaining to the folder itself and NOT any of the policyable options.
                 In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
                 options on the folder, use :meth:`write_policy`.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the folder.
@@ -147,21 +154,23 @@ class Folder(FeatureBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=FolderClassNames.policy,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
-    def delete(self, folder: 'Config.Object', recursive: bool = True):
+    def delete(self, folder: Union['Config.Object', str], recursive: bool = True):
         """
         Deletes the folder. The folder is, by default, deleted recursively. All objects deleted will be deleted from config
         and secret store.
 
         Args:
-            folder: Config object of the folder.
+            folder: Config.Object or DN of the folder.
             recursive: If True, delete all sub-folders, etc., from config and secret store.
         """
+        folder_dn = self._get_dn(folder)
         if recursive:
             # Must delete all of the secrets first.
-            response = self._api.websdk.Config.Enumerate.post(object_dn=folder.dn, recursive=True)
+            response = self._api.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
             result = response.result
             if result.code != 1:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
@@ -172,23 +181,37 @@ class Folder(FeatureBase):
 
         self._config_delete(object_dn=folder.dn, recursive=recursive)
 
-    def delete_engines(self, folder: 'Config.Object'):
+    def delete_engines(self, folder: Union['Config.Object', str]):
         """
         Deletes the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
         Args:
-            folder: Config object of the folder object.
+            folder: Config.Object or DN of the folder.
         """
-        return self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).delete()
+        folder_guid = self._get_guid(folder)
+        return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
-    def get_engines(self, folder: 'Config.Object'):
+    def get(self, folder_dn: str):
+        """
+        Creates a Folder, or Policy, object in TPP.
+
+        Args:
+            folder_dn: DN of the folder.
+
+        Returns:
+            Config object representing the folder.
+        """
+        return self._get_config_object(object_dn=folder_dn)
+
+    def get_engines(self, folder: Union['Config.Object', str]):
         """
         Gets the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
         Args:
-            folder: Config object of the folder object.
+            folder: Config.Object or DN of the folder.object.
         """
-        return self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).get().engines
+        folder_guid = self._get_guid(folder)
+        return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
 
     def search(self, object_name_pattern: str = '*', object_types: List[str] = None, recursive: bool = True,
                starting_dn: str = None):
@@ -244,24 +267,26 @@ class Folder(FeatureBase):
 
         return objects
 
-    def set_engines(self, folder: 'Config.Object', engines: 'List[Config.Object]', append_engines: bool = False):
+    def set_engines(self, folder: Union['Config.Object', str], engines: Union['List[Config.Object]', List[str]],
+                    append_engines: bool = False):
         """
         Sets the desired TPP engine(s) to exclusively do work for all objects contained in the folder.
 
         Args:
-            folder: Config object of the folder object.
-            engines: List of engine config objects listed in TPP.
+            folder: Config.Object or DN of the folder.object.
+            engines: List of engine Config.Objects or engine names listed in TPP.
             append_engines: If True, append `engines` to the current list on the folder. Otherwise
                 overwrite the current setting.
         """
-        engine_guids = [e.guid for e in engines]
+        folder_guid = self._get_guid(folder)
+        engine_guids = [self._get_guid(e, parent_dn=r'\VED\Engines') for e in engines]
         if append_engines:
-            current_engines = self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).get().engines
+            current_engines = self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
             engine_guids.extend([engine.engine_guid for engine in current_engines])
-        result = self._api.websdk.ProcessingEngines.Folder.Guid(folder.guid).put(engine_guids=engine_guids)
+        result = self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).put(engine_guids=engine_guids)
         result.assert_valid_response()
 
-    def read_policy(self, folder: 'Config.Object', class_name: str, attribute_name: str):
+    def read_policy(self, folder: Union['Config.Object', str], class_name: str, attribute_name: str):
         """
         Reads policy settings for the given folder, class name, and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether or not the
@@ -286,7 +311,7 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config object of the folder object.
+            folder: Config.Object or DN of the folder.object.
             class_name: TPP Class Name for the attributes being locked.
             attribute_name: The attribute name.
 
@@ -295,8 +320,9 @@ class Folder(FeatureBase):
             boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
             be returned.
         """
+        folder_dn = self._get_dn(folder)
         resp = self._api.websdk.Config.ReadPolicy.post(
-            object_dn=folder.dn,
+            object_dn=folder_dn,
             class_name=class_name,
             attribute_name=attribute_name
         )
@@ -307,39 +333,43 @@ class Folder(FeatureBase):
 
         return [resp.values, resp.locked]
 
-    def remove_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
+    def remove_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
         """
         Removes an applied workflow from a folder.
 
         Args:
-            folder: Config object of the folder object.
-            workflow: Config object of the workflow object.
+            folder: Config.Object or DN of the folder.object.
+            workflow: Config.Object or name of the workflow object.
         """
+        folder_dn = self._get_dn(folder)
+        workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.RemoveDnValue.post(
-            object_dn=folder.dn,
+            object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow,
-            value=workflow.dn
+            value=workflow_dn
         )
 
         result.assert_valid_response()
 
-    def remove_blocked_workflow(self, folder: 'Config.Object', workflow: 'Config.Object'):
+    def remove_blocked_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
         """
         Removes a blocked workflow from a folder.
 
         Args:
-            folder: Config object of the folder object.
-            workflow: Config object of the workflow object.
+            folder: Config.Object or DN of the folder.object.
+            workflow: Config.Object or name of the workflow object.
         """
+        folder_dn = self._get_dn(folder)
+        workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.RemoveDnValue.post(
-            object_dn=folder.dn,
+            object_dn=folder_dn,
             attribute_name=FolderAttributes.workflow_block,
-            value=workflow.dn
+            value=workflow_dn
         )
 
         result.assert_valid_response()
 
-    def write_policy(self, folder: 'Config.Object', class_name: str, attributes: dict, locked: bool):
+    def write_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: dict, locked: bool):
         """
         Sets policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
@@ -372,18 +402,19 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config object of the folder object.
+            folder: Config.Object or DN of the folder.object.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
+        folder_dn = self._get_dn(folder)
         for name, values in attributes.items():
             if not isinstance(values, list):
                 values = [values]
 
             result = self._api.websdk.Config.WritePolicy.post(
-                object_dn=folder.dn,
+                object_dn=folder_dn,
                 class_name=class_name,
                 attribute_name=name,
                 values=values,
@@ -393,7 +424,7 @@ class Folder(FeatureBase):
             if result.code != 1:
                 FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-    def update_policy(self, folder: 'Config.Object', class_name: str, attributes: dict, locked: bool):
+    def update_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: dict, locked: bool):
         """
         Updates policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
@@ -422,15 +453,16 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            folder: Config object of the folder object.
+            folder: Config.Object or DN of the folder.object.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
             locked: Enforces the policy on all subordinate folders and objects.
         """
+        folder_dn = self._get_dn(folder)
         for name, value in attributes.items():
             result = self._api.websdk.Config.AddPolicyValue.post(
-                object_dn=folder.dn,
+                object_dn=folder_dn,
                 class_name=class_name,
                 attribute_name=name,
                 value=value,

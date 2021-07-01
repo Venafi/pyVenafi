@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pytpp.vtypes import Config
 from pytpp.properties.config import PlacementRulesAttributeNames, PlacementRulesAttributeValues, \
     PlacementRulesClassNames
@@ -184,7 +184,8 @@ class PlacementRules(FeatureBase):
         return f"{context}\n{rule_types}\n{conditions}\n{locations}\nEND"
 
     def create(self, name: str, conditions: List[str], device_location_dn: str,
-               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
+               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate',
+               get_if_already_exists: bool = True):
         """
         Creates a placement rule.
 
@@ -211,6 +212,7 @@ class PlacementRules(FeatureBase):
             certificate_location_dn: Absolute path to folder that should received all certificate objects that apply to this
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object of the placement rule.
@@ -227,21 +229,23 @@ class PlacementRules(FeatureBase):
             attributes={
                 PlacementRulesAttributeNames.rule: rule_attr
             },
-            config_class=PlacementRulesClassNames.layout_rule_base
+            config_class=PlacementRulesClassNames.layout_rule_base,
+            get_if_already_exists=get_if_already_exists
         )
         return rule
 
-    def delete(self, rule: 'Config.Object'):
+    def delete(self, rule: Union['Config.Object', str]):
         """
         Deletes a placement rule.
 
         Args:
-            rule: Config object of the placement rule.
+            rule: Config.Object or name of the placement rule.
         """
-        response = self._config_delete(object_dn=rule.dn)
+        rule_dn = self._get_dn(rule, parent_dn=self._layout_rules_dn)
+        response = self._config_delete(object_dn=rule_dn)
         response.assert_valid_response()
 
-    def update(self, rule: 'Config.Object', conditions: List[str] = None, device_location_dn: str = None,
+    def update(self, rule: Union['Config.Object', str], conditions: List[str] = None, device_location_dn: str = None,
                certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
         """
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten
@@ -263,7 +267,7 @@ class PlacementRules(FeatureBase):
                 )
 
         Args:
-            rule: Config object of the placement rule.
+            rule: Config.Object or name of the placement rule.
             conditions: The conditional logic that defines the rule. This will overwrite the existing rules.
                         Use ``:meth:`pytpp.features.placement_rules.PlacementRuleCondition`` to create a list of rules.
             device_location_dn: Absolute path to folder that should received all device and application objects that apply to
@@ -272,8 +276,9 @@ class PlacementRules(FeatureBase):
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
         """
+        rule_dn = self._get_dn(rule, parent_dn=self._layout_rules_dn)
         current_attr = self._api.websdk.Config.Read.post(
-            object_dn=rule.dn,
+            object_dn=rule_dn,
             attribute_name=PlacementRulesAttributeNames.rule
         ).values[0]
         new_conditions = conditions or []
@@ -310,7 +315,7 @@ class PlacementRules(FeatureBase):
             rule_type=rule_type
         )
         response = self._api.websdk.Config.WriteDn.post(
-            object_dn=rule.dn,
+            object_dn=rule_dn,
             attribute_name=PlacementRulesAttributeNames.rule,
             values=[
                 rule_attr
@@ -326,7 +331,6 @@ class PlacementRules(FeatureBase):
         Returns:
             Config object of the placement rule.
         """
-        rule = self._api.websdk.Config.IsValid.post(
+        return self._get_config_object(
             object_dn=f'{self._layout_rules_dn}\\{name}'
         )
-        return rule.object

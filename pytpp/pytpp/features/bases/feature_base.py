@@ -261,9 +261,3 @@ class FeatureError(_FeatureException):
 
     class UnexpectedValue(_FeatureException):
         pass
-
-"""
-pytpp.features.certificate.get('\VED\Policy\...')
-pytpp.features.perrmissions.assign(policy='\VED\Policy', identity='local:tyler')
-pytpp.features.perrmissions.assign(policy='{12341234}', identity='local:tyler')
-"""

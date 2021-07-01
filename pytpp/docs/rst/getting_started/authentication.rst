@@ -41,6 +41,14 @@ Authentication
         username='username12',
         password='passw0rd!@#$'
     )
+    # Certificate Authentication
+    api = Authenticate(
+        host='tppserver.mycompany.com',
+        application_id='SomeOAuthApplication',
+        scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage",
+        certificate_path='/path/to/certificate.pem',
+        key_file_path='/path/to/certificate.key'
+    )
 
     features = Features(api)
 

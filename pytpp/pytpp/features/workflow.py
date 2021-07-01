@@ -1,6 +1,6 @@
 import base64
 import hashlib
-from typing import List
+from typing import List, Union
 from datetime import datetime
 from pytpp.vtypes import Config, Identity
 from pytpp.properties.config import WorkflowClassNames, WorkflowAttributes, WorkflowAttributeValues
@@ -12,23 +12,26 @@ class _WorkflowBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, workflow: 'Config.Object'):
+    def delete(self, workflow: Union['Config.Object', str]):
         """
         Deletes a workflow.
 
         Args:
-            workflow: Config object of the workflow object.
+            workflow: Config.Object or DN of the workflow object.
         """
-        self._secret_store_delete(object_dn=workflow.dn)
-        self._config_delete(object_dn=workflow.dn)
+        workflow_dn = self._get_dn(workflow)
+        self._secret_store_delete(object_dn=workflow_dn)
+        self._config_delete(object_dn=workflow_dn)
 
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
-                application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None):
+                application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,
+                get_if_already_exists: bool = True):    
         workflow = self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=WorkflowClassNames.workflow if not is_adaptable else WorkflowClassNames.adaptable_workflow,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
         if is_adaptable:
@@ -70,8 +73,8 @@ class AdaptableWorkflow(_WorkflowBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_content: bytes,
-               approvers: 'List[Identity.Identity]' = None, reason_code: int = None,
-               use_approvers_from_powershell_script: bool = False, attributes: dict = None):
+               approvers: Union['List[Identity.Identity]', List[str]] = None, reason_code: int = None,
+               use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
         located on the TPP server(s) that will process this workflow. The ``powershell_script_content`` is the content of the
@@ -114,6 +117,8 @@ class AdaptableWorkflow(_WorkflowBase):
             use_approvers_from_powershell_script: If ``True`` and no ``approvers`` is supplied, then set the
                 workflow to use the approvers defined by the script.
             attributes: Additional attributes to apply to the workflow object.
+            get_if_already_exists: If the objects already exists, it is modified according to these parameters. Else
+                and exception is raised..
         Returns:
             Config Object of the workflow.
         """
@@ -131,7 +136,8 @@ class AdaptableWorkflow(_WorkflowBase):
             stage=stage,
             approvers=wf_approvers,
             reason_code=reason_code,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
         add_value = lambda x, y, z: self._api.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
@@ -260,7 +266,8 @@ class StandardWorkflow(_WorkflowBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder_dn: str, stage: int, injection_command: str = None, application_class_name: str = None,
-               approvers: 'List[Identity.Identity]' = None, macro: str = None, reason_code: int = None, attributes: dict = None):
+               approvers: Union['List[Identity.Identity]', str] = None, macro: str = None, reason_code: int = None, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates a Standard Workflow object.
 
@@ -285,6 +292,9 @@ class StandardWorkflow(_WorkflowBase):
             macro: TPP Approver Macro.
             reason_code: Integer reason code.
             attributes: Additional attributes to apply to the workflow object.
+            get_if_already_exists: If the objects already exists, it is modified according to these parameters. Else
+                and exception is raised.
+            
         Returns:
             Config Object of the workflow.
         """
@@ -304,7 +314,8 @@ class StandardWorkflow(_WorkflowBase):
             application_class_name=application_class_name,
             approvers=wf_approvers,
             reason_code=reason_code,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
         return workflow
@@ -321,28 +332,34 @@ class Ticket(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
-    def create(self, obj: 'Config.Object', workflow: 'Config.Object', approvers: 'List[Identity.Identity]', 
-               reason: str, user_data: str = None):
+    def create(self, obj: Union['Config.Object', str], workflow: Union['Config.Object', str],
+               approvers: Union['List[Identity.Identity]', List[str]], reason: Union[RC, int, str],
+               user_data: str = None):
         """
         Creates a workflow ticket on ``obj`` if the object is in a state to received a workflow ticket.
 
         Args:
-            obj: Config object of the object requiring a workflow ticket.
-            workflow: Config object of the Workflow object DN that blocks the workflow.
-            approvers: List of identity objects for each approver.
-            reason: Integer reason code.
+            obj: Config.Object or DN of the object requiring a workflow ticket.
+            workflow: Config.Object or DN of the workflow object.
+            approvers: List of Identity.Identity or prefixed names for each approver.
+            reason: RC or integer reason code.
             user_data: User data.
 
         Returns:
             Workflow ticket name.
         """
+        obj_dn = self._get_dn(obj)
+        workflow_dn = self._get_dn(workflow)
+        approver_prefixed_names = [
+            {'PrefixedName': self._get_prefixed_name(a)} for a in approvers
+        ]
+        if isinstance(reason, RC):
+            reason = reason.code
         response = self._api.websdk.Workflow.Ticket.Create.post(
-            object_dn=obj.dn,
-            workflow_dn=workflow.dn,
-            approvers=[
-                {'PrefixedName': a.prefixed_name} for a in approvers
-            ],
-            reason=reason,
+            object_dn=obj_dn,
+            workflow_dn=workflow_dn,
+            approvers=approver_prefixed_names,
+            reason=int(reason),
             user_data=user_data
         )
         self._validate_result_code(response.result)
@@ -385,7 +402,7 @@ class Ticket(FeatureBase):
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def get(self, obj: 'Config.Object', user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
+    def get(self, obj: Union['Config.Object', str], user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
         """
         Gets all tickets associated to ``obj``. If the minimum expected number of tickets do not
         appear on the ``obj``, then a warning is logged and whatever was found is returned and no
@@ -403,16 +420,15 @@ class Ticket(FeatureBase):
         Returns:
             List of Config Objects
         """
+        obj_dn = self._get_dn(obj)
         def get_tickets():
             ticket_names = self._api.websdk.Workflow.Ticket.Enumerate.post(
-                object_dn=obj.dn,
+                object_dn=obj_dn,
                 user_data=user_data
             ).guids
 
             return [
-                self._api.websdk.Config.IsValid.post(
-                    object_dn=f'{self._workflow_ticket_dn}\\{ticket_name}'
-                ).object
+                self._get_config_object(object_dn=f'{self._workflow_ticket_dn}\\{ticket_name}')
                 for ticket_name in ticket_names
             ]
 
@@ -425,7 +441,7 @@ class Ticket(FeatureBase):
                         return tickets
 
             self._log_warning_message(
-                msg=f'The expected number of tickets on {obj.dn} was '
+                msg=f'The expected number of tickets on {obj_dn} was '
                     f'{expected_num_tickets}, but {len(tickets)} tickets were '
                     f'found instead.'
             )
@@ -434,7 +450,7 @@ class Ticket(FeatureBase):
             tickets = get_tickets()
             if len(tickets) < expected_num_tickets:
                 self._log_warning_message(
-                    msg=f'The expected number of tickets on {obj.dn} was '
+                    msg=f'The expected number of tickets on {obj_dn} was '
                         f'{expected_num_tickets}, but {len(tickets)} tickets were '
                         f'found instead.'
                 )

@@ -28,7 +28,8 @@ class Device(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates a Device object in TPP.
 
@@ -36,6 +37,7 @@ class Device(_DeviceBase):
             name: Name of the device object .
             parent_folder_dn: Absolute path to the parent folder of the device object.
             attributes: List of attributes pertaining to the device object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the device.
@@ -45,7 +47,8 @@ class Device(_DeviceBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=DevicesClassNames.device,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
     def get(self, device_dn: str):
