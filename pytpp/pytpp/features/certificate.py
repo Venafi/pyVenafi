@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pytpp.vtypes import Config
 from pytpp.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
@@ -13,13 +13,15 @@ class Certificate(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def _get(self, certificate: 'Config.Object'):
-        result = self._api.websdk.Certificates.Guid(certificate.guid).get()
+    def _get(self, certificate: Union['Config.Object', str]):
+        certificate_guid = self._get_guid(certificate)
+        result = self._api.websdk.Certificates.Guid(certificate_guid).get()
         result.assert_valid_response()
 
         return result
 
-    def associate_application(self, certificate: 'Config.Object', application_dns: List[str], push_to_new: bool = False):
+    def associate_application(self, certificate: Union['Config.Object', str], application_dns: List[str], 
+                              push_to_new: bool = False):
         """
         Associate an application object to a certificate.
 
@@ -28,16 +30,18 @@ class Certificate(FeatureBase):
             application_dns: A list of absolute paths to each application object.
             push_to_new: If True, the certificate will be pushed to the application once associated.
         """
+        certificate_dn = self._get_dn(certificate)
         if not isinstance(application_dns, list):
             application_dns = [application_dns]
 
         assert self._api.websdk.Certificates.Associate.post(
             application_dn=application_dns,
-            certificate_dn=certificate.dn,
+            certificate_dn=certificate_dn,
             push_to_new=push_to_new
         ).success
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates the config object that represents the certificate.
 
@@ -47,19 +51,20 @@ class Certificate(FeatureBase):
             name: Name of the Certificate object.
             parent_folder_dn: Absolute path to the parent folder of the certificate object.
             attributes: Additional attributes that define this certificate.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the certificate object.
-
         """
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=CertificateClassNames.x509_certificate,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
-    def delete(self, certificate: 'Config.Object'):
+    def delete(self, certificate: Union['Config.Object', str]):
         """
         Deletes the certificate object from TPP.
 
@@ -68,11 +73,13 @@ class Certificate(FeatureBase):
         Args:
             certificate: Config object of the certificate.
         """
-        result = self._api.websdk.Certificates.Guid(certificate.guid).delete()
+        certificate_guid = self._get_guid(certificate)
+        result = self._api.websdk.Certificates.Guid(certificate_guid).delete()
         if not result.is_valid_response():
-            raise FeatureError(f'Could not delete certificate {certificate.dn}.')
+            certificate_dn = self._get_dn(certificate)
+            raise FeatureError(f'Could not delete certificate {certificate_dn}.')
 
-    def details(self, certificate: 'Config.Object'):
+    def details(self, certificate: Union['Config.Object', str]):
         """
         Returns details of the actual certificate and not the renewal settings for the object.
 
@@ -110,7 +117,8 @@ class Certificate(FeatureBase):
         """
         return self._get(certificate=certificate).certificate_details
 
-    def dissociate_application(self, certificate: 'Config.Object', application_dns: List[str], delete_orphans: bool = False):
+    def dissociate_application(self, certificate: Union['Config.Object', str], application_dns: List[str],
+                               delete_orphans: bool = False):
         """
         Associate an application object to a certificate.
 
@@ -121,14 +129,15 @@ class Certificate(FeatureBase):
                 Otherwise retain only the Device DN and its children. Use this option to completely remove the application
                 object and corresponding device objects.
         """
+        certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Dissociate.post(
-            certificate_dn=certificate.dn,
+            certificate_dn=certificate_dn,
             application_dn=application_dns,
             delete_orphans=delete_orphans
         )
         result.assert_valid_response()
 
-    def download(self, format: str, certificate: 'Config.Object' = None, friendly_name: str = None,
+    def download(self, format: str, certificate: Union['Config.Object', str] = None, friendly_name: str = None,
                  include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
                  password: str = None, root_first_order: bool = False, vault_id: int = None):
         """
@@ -172,8 +181,9 @@ class Certificate(FeatureBase):
                 root_first_order=root_first_order
             )
         else:
+            certificate_dn = self._get_dn(certificate)
             result = self._api.websdk.Certificates.Retrieve.post(
-                certificate_dn=certificate.dn,
+                certificate_dn=certificate_dn,
                 format=format,
                 friendly_name=friendly_name,
                 include_chain=include_chain,
@@ -185,7 +195,19 @@ class Certificate(FeatureBase):
 
         return result
 
-    def get_previous_versions(self, certificate: 'Config.Object', exclude_expired: bool = False, exclude_revoked: bool = False):
+    def get(self, certificate_dn:str):
+        """
+        Returns the config object of the certificate DN.
+
+        Args:
+            certificate_dn: DN of the certificate object.
+
+        Returns:
+            Config Object of the certificate.
+        """
+        return self._get_config_object(object_dn=certificate_dn)
+
+    def get_previous_versions(self, certificate: Union['Config.Object', str], exclude_expired: bool = False, exclude_revoked: bool = False):
         """
         Returns all of the historical certificates and their details related to the given certificate GUID.
 
@@ -197,13 +219,14 @@ class Certificate(FeatureBase):
         Returns:
             A list of historical certificates related to the certificate GUID.
         """
-        result = self._api.websdk.Certificates.Guid(certificate.guid).PreviousVersions.get(
+        certificate_guid = self._get_guid(certificate)
+        result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
             exclude_expired=exclude_expired,
             exclude_revoked=exclude_revoked
         )
         return result.previous_versions
 
-    def get_validation_results(self, certificate: 'Config.Object'):
+    def get_validation_results(self, certificate: Union['Config.Object', str]):
         """
         Returns the file and SSL/TLS validation results for each of the applications
         associated to the certificate.
@@ -215,10 +238,11 @@ class Certificate(FeatureBase):
             File and SSL/TLS validation results for each of the applications
             associated to the certificate.
         """
-        result = self._api.websdk.Certificates.Guid(certificate.guid).ValidationResults.get()
+        certificate_guid = self._get_guid(certificate)
+        result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
         return [result.file, result.ssl_tls]
 
-    def push_to_applications(self, certificate: 'Config.Object', application_dns: List[str] = None):
+    def push_to_applications(self, certificate: Union['Config.Object', str], application_dns: List[str] = None):
         """
         Push the active certificate to the given Application DNs.
 
@@ -227,8 +251,9 @@ class Certificate(FeatureBase):
             application_dns: A list of application DNs.
         """
         if not application_dns:
+            certificate_dn = self._get_dn(certificate)
             application_dns = self._api.websdk.Config.ReadDn.post(
-                object_dn=certificate.dn,
+                object_dn=certificate_dn,
                 attribute_name=CertificateAttributes.consumers
             ).values
 
@@ -238,7 +263,7 @@ class Certificate(FeatureBase):
             push_to_new=True
         )
 
-    def renew(self, certificate: 'Config.Object', csr: str = None, re_enable: bool = False):
+    def renew(self, certificate: Union['Config.Object', str], csr: str = None, re_enable: bool = False):
         """
         Renews or requests a certificate.
 
@@ -253,34 +278,37 @@ class Certificate(FeatureBase):
             Certificate details regarding the request and renewal.
 
         """
+        certificate = self._get_config_object(certificate)
         current_thumbprint = self.details(certificate=certificate).thumbprint
         result = self._api.websdk.Certificates.Renew.post(certificate_dn=certificate.dn, pkcs10=csr, reenable=re_enable)
         result.assert_valid_response()
         return current_thumbprint
 
-    def reset(self, certificate: 'Config.Object'):
+    def reset(self, certificate: Union['Config.Object', str]):
         """
         Resets the certificate to a non-processing state. No attempt to reprocess the certificate renewal is made.
 
         Args:
             certificate: Config object of the certificate.
         """
-        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate.dn, restart=False)
+        certificate_dn = self._get_dn(certificate)
+        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=False)
         result.assert_valid_response()
         if not result.processing_reset_completed:
-            raise FeatureError.UnexpectedValue(f'Processing reset was not completed for {certificate.dn}.')
+            raise FeatureError.UnexpectedValue(f'Processing reset was not completed for {certificate_dn}.')
 
-    def retry_from_current_stage(self, certificate: 'Config.Object'):
+    def retry_from_current_stage(self, certificate: Union['Config.Object', str]):
         """
         Retries renewal from the current processing stage of the certificate.
 
         Args:
             certificate: Config object of the certificate.
         """
-        result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate.dn)
+        certificate_dn = self._get_dn(certificate)
+        result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate_dn)
         result.assert_valid_response()
 
-    def retry_from_stage_0(self, certificate: 'Config.Object'):
+    def retry_from_stage_0(self, certificate: Union['Config.Object', str]):
         """
         Retries renewal from stage 0. This clears all current processing data and restarts
         processing.
@@ -288,12 +316,13 @@ class Certificate(FeatureBase):
         Args:
             certificate: Config object of the certificate.
         """
-        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate.dn, restart=True)
+        certificate_dn = self._get_dn(certificate)
+        result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=True)
         result.assert_valid_response()
         if not result.restart_completed:
-            raise FeatureError.UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate.dn}.')
+            raise FeatureError.UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate_dn}.')
 
-    def revoke(self, certificate: 'Config.Object', comments: str = None, disable: bool = None,
+    def revoke(self, certificate: Union['Config.Object', str], comments: str = None, disable: bool = None,
                reason: int = None, thumbprint: str = None):
         """
         Revokes the certificate. If a thumbprint is provided, then the particular historical certificate
@@ -309,8 +338,9 @@ class Certificate(FeatureBase):
         Returns:
 
         """
+        certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Revoke.post(
-            certificate_dn=certificate.dn,
+            certificate_dn=certificate_dn,
             comments=comments,
             disable=disable,
             reason=reason,
@@ -319,7 +349,7 @@ class Certificate(FeatureBase):
         result.assert_valid_response()
         if result.success is not True:
             raise FeatureError.UnexpectedValue(
-                f'Cannot revoke {certificate.dn} due to this error:\n{result.error}.'
+                f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
             )
 
     def upload(self, certificate_data: str, parent_folder_dn: str, certificate_authority_attributes: dict = None, name: str = None,
@@ -370,10 +400,11 @@ class Certificate(FeatureBase):
         Returns:
             Validation results.
         """
-        result = self._api.websdk.Certificates.Validate.post(certificate_dns=[c.dn for c in certificates])
+        certificate_dns = [self._get_dn(certificate) for certificate in certificates]
+        result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
         return result
 
-    def wait_for_enrollment_to_complete(self, certificate: 'Config.Object', current_thumbprint: str, timeout: int = 60):
+    def wait_for_enrollment_to_complete(self, certificate: Union['Config.Object', str], current_thumbprint: str, timeout: int = 60):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
@@ -408,7 +439,7 @@ class Certificate(FeatureBase):
             f'status "{cert.processing_details.status}".'
         )
 
-    def wait_for_stage(self, certificate: 'Config.Object', stage: int, expect_workflow: bool = True, timeout: int = 60):
+    def wait_for_stage(self, certificate: Union['Config.Object', str], stage: int, expect_workflow: bool = True, timeout: int = 60):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of
         ``timeout`` seconds. If the timeout is reached, an error is raised.

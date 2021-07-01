@@ -10,6 +10,7 @@ class _Teams(API):
         self.AddTeamOwners = self._AddTeamOwners(api_obj=api_obj)
         self.DemoteTeamOwners = self._DemoteTeamOwners(api_obj=api_obj)
         self.RemoveTeamMembers = self._RemoveTeamMembers(api_obj=api_obj)
+        self.RenameTeam = self._RenameTeam(api_obj=api_obj)
 
     def post(self, name: str, owners: list, assets: list = None, description: str = None, members: list = None,
              products: list = None):
@@ -273,5 +274,31 @@ class _Teams(API):
                 @json_response_property()
                 def owners(self):
                     return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
+
+            return _Response(response=self._put(data=body))
+
+    class _RenameTeam(API):
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='Teams/RenameTeam')
+
+        def put(self, team: str, new_team_name: str):
+            body = {
+                'Team'       : team,
+                'NewTeamName': new_team_name
+            }
+
+            class _Response(APIResponse):
+                def __init__(self, response):
+                    super().__init__(response=response)
+
+                @property
+                @json_response_property()
+                def identity(self):
+                    return Identity.Identity(self._from_json(key='ID'))
+
+                @property
+                @json_response_property()
+                def message(self) -> str:
+                    return self._from_json(key='Message')
 
             return _Response(response=self._put(data=body))

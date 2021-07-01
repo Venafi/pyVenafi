@@ -1,3 +1,4 @@
+from typing import Union
 from pytpp.vtypes import Config
 from pytpp.properties.config import ApplicationClassNames, ApplicationAttributes, ApplicationAttributeValues, CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
@@ -8,25 +9,27 @@ class _ApplicationBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, application: 'Config.Object'):
+    def delete(self, application: Union['Config.Object', str]):
         """
         Deletes an Application object.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
         """
-        self._secret_store_delete(object_dn=application.dn)
-        self._config_delete(object_dn=application.dn)
+        application_dn = self._get_dn(application)
+        self._secret_store_delete(object_dn=application_dn)
+        self._config_delete(object_dn=application_dn)
 
-    def disable(self, application: 'Config.Object'):
+    def disable(self, application: Union['Config.Object', str]):
         """
         Disables all processing and provisioning of the application.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
         """
+        application_dn = self._get_dn(application)
         result = self._api.websdk.Config.Write.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_data=self._name_value_list({
                 ApplicationAttributes.disabled: ["1"]
             }, keep_list_values=True)
@@ -35,33 +38,47 @@ class _ApplicationBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def enable(self, application: 'Config.Object'):
+    def enable(self, application: Union['Config.Object', str]):
         """
         Enables all processing and provisioning of the application.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
         """
+        application_dn = self._get_dn(application)
         result = self._api.websdk.Config.ClearAttribute.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_name=ApplicationAttributes.disabled
         ).result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def get_associated_certificate(self, application: 'Config.Object'):
+    def get(self, application_dn: str):
+        """
+        Returns the config object of the application DN.
+
+        Args:
+            application_dn: DN of the application object.
+
+        Returns:
+            Config Object of the application.
+        """
+        return self._get_config_object(object_dn=application_dn)
+
+    def get_associated_certificate(self, application: Union['Config.Object', str]):
         """
         Returns the Certificate object associated to the Application object.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
 
         Returns:
             Config Object of the certificate object.
         """
+        application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_name=ApplicationAttributes.certificate
         )
 
@@ -71,70 +88,73 @@ class _ApplicationBase(FeatureBase):
         certificate_dn = response.values[0]
         return self._api.websdk.Config.IsValid.post(object_dn=certificate_dn).object
 
-    def _get_stage(self, application: 'Config.Object'):
+    def _get_stage(self, application: Union['Config.Object', str]):
         """
         Returns the current processing stage of the application object.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
 
         Returns:
             The current stage if it exists. Otherwise, returns ``None``.
         """
+        application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_name=ApplicationAttributes.stage
         )
 
         return int(response.values[0]) if response.values else None
 
-    def get_stage(self, application: 'Config.Object'):
+    def get_stage(self, application: Union['Config.Object', str]):
         """
         Returns the current processing stage of the application object.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
 
         Returns:
             The current stage if it exists. Otherwise, returns ``None``.
         """
         self._get_stage(application=application)
 
-    def get_status(self, application: 'Config.Object'):
+    def get_status(self, application: Union['Config.Object', str]):
         """
         Returns the current processing status of the application object.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
 
         Returns:
             The current status if it exists. Otherwise, returns ``None``.
         """
+        application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_name=ApplicationAttributes.status
         )
 
         return response.values[0] if response.values else None
 
-    def _is_in_error(self, application: 'Config.Object'):
+    def _is_in_error(self, application: Union['Config.Object', str]):
         """
         Returns ``True`` if the application object is in an error state.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
 
         Returns:
             Boolean
         """
+        application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_name=ApplicationAttributes.in_error
         )
 
         return bool(response.values[0]) if response.values else False
 
-    def wait_for_installation_to_complete(self, application: 'Config.Object', timeout: int = 60):
+    def wait_for_installation_to_complete(self, application: Union['Config.Object', str], timeout: int = 60):
         """
         Waits for the application object's "Last Pushed On" attribute to be a date greater than
         or equal to the "Last Renewed On" date on the associated certificate. If the certificate
@@ -144,16 +164,17 @@ class _ApplicationBase(FeatureBase):
         ``push_to_new=True``.
 
         Args:
-            application: Config object of the Application object.
+            application: Config object or DN of the Application object.
             timeout: Timeout in seconds.
         """
+        application_dn = self._get_dn(application)
         certificate_dn = self._api.websdk.Config.Read.post(
-            object_dn=application.dn,
+            object_dn=application_dn,
             attribute_name=ApplicationAttributes.certificate
         )
         if not certificate_dn.values:
             raise FeatureError.UnexpectedValue(
-                f'There is no certificate associated to "{application.dn}" in TPP.'
+                f'There is no certificate associated to "{application_dn}" in TPP.'
             )
         response = self._api.websdk.Config.Read.post(
             object_dn=certificate_dn.values[0],
@@ -163,13 +184,13 @@ class _ApplicationBase(FeatureBase):
         if not response.values:
             raise FeatureError.UnexpectedValue(
                 f'Cannot validate that the certificate "{certificate_dn}" is installed on the application '
-                f'"{application.dn}" as it seems that the certificate has never been renewed.'
+                f'"{application_dn}" as it seems that the certificate has never been renewed.'
             )
         certificate_last_renewed_time = from_date_string(response.values[0])
 
         def _certificate_is_installed():
             resp = self._api.websdk.Config.Read.post(
-                object_dn=application.dn,
+                object_dn=application_dn,
                 attribute_name=ApplicationAttributes.last_pushed_on
             )
 
@@ -186,14 +207,14 @@ class _ApplicationBase(FeatureBase):
                 elif not stage:
                     if not _certificate_is_installed():
                         raise FeatureError.UnexpectedValue(
-                            f'Expected a certificate to be installed on "{application.dn}", '
+                            f'Expected a certificate to be installed on "{application_dn}", '
                             f'but the application is not in a processing status.'
                         )
                     return
                 stage = self._get_stage(application=application)
 
         raise FeatureError.UnexpectedValue(
-            f'Certificate installation failed on "{application.dn}".\n'
+            f'Certificate installation failed on "{application_dn}".\n'
             f'Stage: {stage}\n'
             f'Status: {self.get_status(application=application)}'
         )
@@ -208,7 +229,8 @@ class A10AXTrafficManager(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an A10 AX Traffic Manager application object.
 
@@ -216,6 +238,7 @@ class A10AXTrafficManager(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -229,7 +252,8 @@ class A10AXTrafficManager(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.a10_ax_traffic_manager,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -242,7 +266,8 @@ class Adaptable(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Adaptable application object.
 
@@ -250,6 +275,7 @@ class Adaptable(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -263,7 +289,8 @@ class Adaptable(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.adaptable_app,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -276,7 +303,8 @@ class AmazonAWS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an Amazon AWS application object.
 
@@ -284,6 +312,7 @@ class AmazonAWS(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -297,7 +326,8 @@ class AmazonAWS(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.amazon_app,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -310,7 +340,8 @@ class Apache(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an Apache application object.
 
@@ -318,6 +349,7 @@ class Apache(_ApplicationBase):
             name: Name of the Apache application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -332,7 +364,8 @@ class Apache(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.apache,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -345,7 +378,8 @@ class AzureKeyVault(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an Azure Key Vault application object.
 
@@ -353,6 +387,7 @@ class AzureKeyVault(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -366,7 +401,8 @@ class AzureKeyVault(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.azure_key_vault,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -379,7 +415,8 @@ class Basic(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Basic application object.
 
@@ -387,6 +424,7 @@ class Basic(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -400,7 +438,8 @@ class Basic(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.basic,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
     def convert(self, basic_application_dn: str, new_class_name: str, attributes: dict = None):
@@ -448,7 +487,8 @@ class BlueCoatSSLVA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a BlueCoat SSLVA application object.
 
@@ -456,6 +496,7 @@ class BlueCoatSSLVA(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -469,7 +510,8 @@ class BlueCoatSSLVA(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.blue_coat_sslva,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -482,7 +524,8 @@ class CAPI(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a CAPI application object.
 
@@ -490,6 +533,7 @@ class CAPI(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -503,7 +547,8 @@ class CAPI(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.capi,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -516,7 +561,8 @@ class CitrixNetScaler(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a CAPI application object.
 
@@ -524,6 +570,7 @@ class CitrixNetScaler(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -537,7 +584,8 @@ class CitrixNetScaler(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.net_scaler,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -550,7 +598,8 @@ class ConnectDirect(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Connect:Direct application object.
 
@@ -558,6 +607,7 @@ class ConnectDirect(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -571,7 +621,8 @@ class ConnectDirect(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.connect_direct,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -584,7 +635,8 @@ class F5AuthenticationBundle(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, bundle_file_name: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, bundle_file_name: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a F5 Authentication Bundle application object.
 
@@ -593,6 +645,7 @@ class F5AuthenticationBundle(_ApplicationBase):
             parent_folder_dn: Absolute path to the parent folder of the application object.
             bundle_file_name: Name of the bundle file.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -605,7 +658,8 @@ class F5AuthenticationBundle(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.f5_authentication_bundle,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -618,7 +672,8 @@ class F5LTMAdvanced(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a F5 LTM Advanced application object.
 
@@ -626,6 +681,7 @@ class F5LTMAdvanced(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -639,7 +695,8 @@ class F5LTMAdvanced(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.f5_ltm_advanced,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -652,7 +709,8 @@ class IBMDataPower(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an IBM DataPower application object.
 
@@ -660,6 +718,7 @@ class IBMDataPower(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -673,7 +732,8 @@ class IBMDataPower(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.data_power,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -686,7 +746,8 @@ class IBMGSK(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an IBM GSK application object.
 
@@ -694,6 +755,7 @@ class IBMGSK(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -707,7 +769,8 @@ class IBMGSK(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.gsk,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -720,7 +783,8 @@ class ImpervaMX(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates an Imperva MX application object.
 
@@ -728,6 +792,7 @@ class ImpervaMX(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -741,7 +806,8 @@ class ImpervaMX(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.imperva_mx,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -754,7 +820,8 @@ class JKS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a JKS application object.
 
@@ -762,6 +829,7 @@ class JKS(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -775,7 +843,8 @@ class JKS(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.jks,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -788,7 +857,8 @@ class JuniperSAS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Juniper SAS application object.
 
@@ -796,6 +866,7 @@ class JuniperSAS(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -809,7 +880,8 @@ class JuniperSAS(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.juniper_sas,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -822,7 +894,8 @@ class OracleIPlanet(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Oracle iPlanet application object.
 
@@ -830,6 +903,7 @@ class OracleIPlanet(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -843,7 +917,8 @@ class OracleIPlanet(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.iplanet,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -856,7 +931,8 @@ class PaloAltoNetworkFW(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Palo Alto Network FW application object.
 
@@ -864,6 +940,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -877,7 +954,8 @@ class PaloAltoNetworkFW(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.palo_alto_network_fw,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -890,7 +968,8 @@ class PEM(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a PEM application object.
 
@@ -898,6 +977,7 @@ class PEM(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -911,7 +991,8 @@ class PEM(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.pem,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -924,7 +1005,8 @@ class PKCS11(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a PKCS11 application object.
 
@@ -932,6 +1014,7 @@ class PKCS11(_ApplicationBase):
             name: Name of the Apache application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config Object representing the PKCS11 object.
@@ -944,7 +1027,8 @@ class PKCS11(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.pkcs11,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -957,7 +1041,8 @@ class PKCS12(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a PKCS #12 application object.
 
@@ -965,6 +1050,7 @@ class PKCS12(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -978,7 +1064,8 @@ class PKCS12(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.pkcs12,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -991,7 +1078,8 @@ class RiverbedSteelHead(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Riverbed SteelHead application object.
 
@@ -999,6 +1087,7 @@ class RiverbedSteelHead(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -1012,7 +1101,8 @@ class RiverbedSteelHead(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.riverbed_steel_head,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -1025,7 +1115,8 @@ class TealeafPCA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a Tealeaf PCA application object.
 
@@ -1033,6 +1124,7 @@ class TealeafPCA(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -1046,7 +1138,8 @@ class TealeafPCA(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.tealeaf_pca,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )
 
 
@@ -1059,7 +1152,8 @@ class VAMnShield(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+               get_if_already_exists: bool = True):
         """
         Creates a VAM nShield application object.
 
@@ -1067,6 +1161,7 @@ class VAMnShield(_ApplicationBase):
             name: Name of the application object.
             parent_folder_dn: Absolute path to the parent folder of the application object.
             attributes: Additional attributes pertaining to the application object.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representation of the application object.
@@ -1080,5 +1175,6 @@ class VAMnShield(_ApplicationBase):
             name=name,
             parent_folder_dn=parent_folder_dn,
             config_class=ApplicationClassNames.vam_nshield,
-            attributes=attributes
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
         )

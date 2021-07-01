@@ -1,11 +1,62 @@
 from pytpp.api.api_base import API, APIResponse, json_response_property
 from pytpp.properties.response_objects.flow import Flow
+from pytpp.properties.response_objects.codesign import CodeSign
 from typing import List
 
 
 class _Flow:
     def __init__(self, api_obj):
+        self.Actions = self._Actions(api_obj=api_obj)
         self.Tickets = self._Tickets(api_obj=api_obj)
+
+    class _Actions:
+        def __init__(self, api_obj):
+            self.CodeSign = self._CodeSign(api_obj=api_obj)
+
+        class _CodeSign:
+            def __init__(self, api_obj):
+                self.PreQualify = self._PreQualify(api_obj=api_obj)
+
+            class _PreQualify:
+                def __init__(self, api_obj):
+                    self.Create = self._Create(api_obj=api_obj)
+
+                class _Create(API):
+                    def __init__(self, api_obj):
+                        super().__init__(api_obj=api_obj, url='Flow/Actions/CodeSign/PreQualify/Create')
+
+                    def post(self, comment: str, data: str, dn: str, user: str, hours: int = None,
+                             single_use: bool = None):
+                        body = {
+                            'Comment': comment,
+                            'Data': data,
+                            'Dn': dn,
+                            'Hours': hours,
+                            'SingleUse': single_use,
+                            'User': user
+                        }
+
+                        class _Response(APIResponse):
+                            def __init__(self, response):
+                                super().__init__(response=response)
+
+                            @property
+                            @json_response_property()
+                            def error(self) -> str:
+                                return self._from_json(key='Error')
+
+                            @property
+                            @json_response_property()
+                            def result(self):
+                                return CodeSign.ResultCode(self._from_json(key='Result'))
+
+                            @property
+                            @json_response_property()
+                            def success(self) -> bool:
+                                return self._from_json(key='Success')
+
+                        return _Response(response=self._post(data=body))
+
 
     class _Tickets:
         def __init__(self, api_obj):

@@ -1,5 +1,4 @@
 from typing import List, Union
-from pytpp.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.response_objects.config import Config
 
@@ -18,7 +17,7 @@ class Objects(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def clear(self, obj: 'Config.Object', attributes: Union[dict, List[str]]):
+    def clear(self, obj: Union['Config.Object', str], attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the DN attribute name along with all of its values.
         If ``attributes`` are provided, then only the corresponding policy attribute values
@@ -66,15 +65,16 @@ class Objects(FeatureBase):
                 )
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             attributes: Either a list of attribute names or a dictionary of attribute
                 name/value pairs where the name is the attribute name and the value
                 is the attribute value.
         """
+        obj_dn = self._get_dn(obj)
         if isinstance(attributes, list):
             for attribute_name in attributes:
                 result = self._api.websdk.Config.ClearAttribute.post(
-                    object_dn=obj.dn,
+                    object_dn=obj_dn,
                     attribute_name=attribute_name
                 ).result
 
@@ -88,7 +88,7 @@ class Objects(FeatureBase):
 
                 for value in values:
                     result = self._api.websdk.Config.RemoveDnValue.post(
-                        object_dn=obj.dn,
+                        object_dn=obj_dn,
                         attribute_name=name,
                         value=value
                     ).result
@@ -98,14 +98,14 @@ class Objects(FeatureBase):
         else:
             raise TypeError(f'Expected attributes to be of type "list[str]" or "dict", but got {type(attributes)} instead.')
 
-    def find_policy(self, obj: 'Config.Object', class_name: str, attribute_name: str):
+    def find_policy(self, obj: Union['Config.Object', str], class_name: str, attribute_name: str):
         """
         Returns the folder that suggests or locks a particular attribute value to the specified object.
         A tuple of 3 elements is returned where the first element is the absolute path to the folder that
         specifies the attribute values, the attribute values, and whether those values are locked or not.
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             class_name: TPP Class Name of TPP Object.
             attribute_name: Name of the attribute.
 
@@ -115,8 +115,9 @@ class Objects(FeatureBase):
             2. Attribute Values: A list of all values corresponding to the given attribute name.
             3. Locked: A boolean representing whether or not the returned values are locked.
         """
+        obj_dn = self._get_dn(obj)
         resp = self._api.websdk.Config.FindPolicy.post(
-            object_dn=obj.dn,
+            object_dn=obj_dn,
             class_name=class_name,
             attribute_name=attribute_name
         )
@@ -146,17 +147,13 @@ class Objects(FeatureBase):
         Returns:
             Config Object
         """
-        if not (object_dn or object_guid):
-            raise ValueError(
-                'Must supply either an Object DN or Object GUID, but neither was provided.'
-            )
-        obj = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
-        if obj.result.code == 400 and not raise_error_if_not_exists:
-            # The object doesn't exist, but just return an empty object.
-            return Config.Object(response_object={})
-        return obj.object
+        return self._get_config_object(
+            object_dn=object_dn,
+            object_guid=object_guid,
+            raise_error_if_not_exists=raise_error_if_not_exists
+        )
 
-    def read(self, obj: 'Config.Object', attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
+    def read(self, obj: Union['Config.Object', str], attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
         """
         Reads attributes on the given TPP Object and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether
@@ -196,7 +193,7 @@ class Objects(FeatureBase):
                 )
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             attribute_name: The attribute name.
             include_policy_values: If ``True``, the effective value(s) are returned.
                 Otherwise only values assigned to the DN explicitly are returned.
@@ -219,11 +216,12 @@ class Objects(FeatureBase):
                 if attr and attr.values:
                     return attr
 
-        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-        raise TimeoutError(f'Could not read {attribute_name} on {obj.dn} because it did not exist '
+        obj_dn = self._get_dn(obj)
+        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+        raise TimeoutError(f'Could not read {attribute_name} on {obj_dn} because it did not exist '
                            f'after {timeout} seconds.')
 
-    def read_all(self, obj: 'Config.Object'):
+    def read_all(self, obj: Union['Config.Object', str]):
         """
         Reads all attributes on the given TPP Object.
 
@@ -240,13 +238,14 @@ class Objects(FeatureBase):
                 values, locked = features.folder.read_all(obj=obj)
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
 
         Returns:
             A list of NameValue objects having ``name`` and ``values`` properties corresponding to each
             attribute name and attribute value.
         """
-        resp = self._api.websdk.Config.ReadAll.post(object_dn=obj.dn)
+        obj_dn = self._get_dn(obj)
+        resp = self._api.websdk.Config.ReadAll.post(object_dn=obj_dn)
 
         result = resp.result
         if result.code != 1:
@@ -254,19 +253,20 @@ class Objects(FeatureBase):
 
         return resp.name_values
 
-    def rename(self, obj: 'Config.Object', new_object_dn: str):
+    def rename(self, obj: Union['Config.Object', str], new_object_dn: str):
         """
         Renames an object DN. This method requires two absolute paths, the old one and the new one. This
         method also effectively moves objects from one folder to another.
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             new_object_dn: Absolute path to the new object location.
         """
+        obj_dn = self._get_dn(obj)
         if not new_object_dn.startswith('\\VED'):
             raise FeatureError.InvalidFormat(f'"{new_object_dn}" must be an absolute path starting from \\VED.')
 
-        response = self._api.websdk.Config.RenameObject.post(object_dn=obj.dn, new_object_dn=new_object_dn)
+        response = self._api.websdk.Config.RenameObject.post(object_dn=obj_dn, new_object_dn=new_object_dn)
         result = response.result
 
         if result.code != 1:
@@ -274,7 +274,7 @@ class Objects(FeatureBase):
 
         return self.get(object_dn=new_object_dn, raise_error_if_not_exists=True)
 
-    def update(self, obj: 'Config.Object', attributes: dict):
+    def update(self, obj: Union['Config.Object', str], attributes: dict):
         """
         Updates attributes on an object. If the attribute is locked TPP will simply ignore the request. To avoid
         any confusion, it would be wise to consider validating the policy settings to ensure the desired attribute
@@ -298,13 +298,14 @@ class Objects(FeatureBase):
                 )
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
+        obj_dn = self._get_dn(obj)
         for name, value in attributes.items():
             result = self._api.websdk.Config.AddValue.post(
-                object_dn=obj.dn,
+                object_dn=obj_dn,
                 attribute_name=name,
                 value=value,
             ).result
@@ -312,14 +313,14 @@ class Objects(FeatureBase):
             if result.code != 1:
                 raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def wait_for(self, obj: 'Config.Object', attribute_name: str, attribute_value: str, include_policy_values: bool = False,
+    def wait_for(self, obj: Union['Config.Object', str], attribute_name: str, attribute_value: str, include_policy_values: bool = False,
                  timeout: int = 10):
         """
         Waits for the ``attribute_name`` to have the ``attribute_value`` on the object_dn for the timeout period. A
         TimeoutError is thrown if the ``attribute_name`` does not have the ``attribute_value``.
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             attribute_name: The name of the attribute.
             attribute_value: The expected value to the ``attribute_name``.
             include_policy_values: If ``True``, the effective value(s) are returned.
@@ -329,7 +330,6 @@ class Objects(FeatureBase):
         Returns:
             Values of the given ``attribute_name`` for the given ``object_dn``.
         """
-
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
                 result, attr = self._read(
@@ -346,7 +346,7 @@ class Objects(FeatureBase):
         raise FeatureError.TimeoutError(method=self.wait_for, expected_value=attribute_value,
                                         actual_value=attr.values, timeout=timeout)
 
-    def write(self, obj: 'Config.Object', attributes: dict):
+    def write(self, obj: Union['Config.Object', str], attributes: dict):
         """
         Writes new attributes on an object. If the attribute is locked TPP will simply ignore the request. To avoid
         any confusion, it would be wise to consider validating the policy settings to ensure the desired attribute
@@ -370,30 +370,32 @@ class Objects(FeatureBase):
                 )
 
         Args:
-            obj: Config object of the TPP Object.
+            obj: Config.Object or DN of the TPP Object.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
+        obj_dn = self._get_dn(obj)
         attributes = {k: ([v] if not isinstance(v, list) else v) for k, v in attributes.items()}
 
         result = self._api.websdk.Config.Write.post(
-            object_dn=obj.dn,
+            object_dn=obj_dn,
             attribute_data=self._name_value_list(attributes, keep_list_values=True)
         ).result
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def _read(self, obj: 'Config.Object', attribute_name: str, include_policy_values: bool):
+    def _read(self, obj: Union['Config.Object', str], attribute_name: str, include_policy_values: bool):
+        obj_dn = self._get_dn(obj)
         if include_policy_values is True:
             resp = self._api.websdk.Config.ReadEffectivePolicy.post(
-                object_dn=obj.dn,
+                object_dn=obj_dn,
                 attribute_name=attribute_name
             )
             return resp.result, _AttributeValue(values=resp.values, locked=resp.locked)
         else:
             resp = self._api.websdk.Config.Read.post(
-                object_dn=obj.dn,
+                object_dn=obj_dn,
                 attribute_name=attribute_name
             )
             return resp.result, _AttributeValue(values=resp.values, locked=False)

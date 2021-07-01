@@ -36,6 +36,8 @@ class Stats:
             if not isinstance(response_object, dict):
                 response_object = {}
 
+            self.count = response_object.get('Count', 0)  # type: int
+            self.sum_value = response_object.get('SumValue', 0)  # type: int
             self.tag_a = response_object.get('TagA')  # type: str
             self.tag_b = response_object.get('TagB')  # type: str
             self.tag_c = response_object.get('TagC')  # type: str

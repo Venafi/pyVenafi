@@ -32,9 +32,10 @@ Here is an example of how to initialize the ``Features`` object.
 Config and Identity Objects
 '''''''''''''''''''''''''''
 
-All users and groups in TPP are Identity objects in the product. Most all other objects are Config objects.
-The ``Features`` layer of the product uses object distinguished names (DNs), GUIDs, and other object
-identifiers to perform a function against an object.
+This documentation refers to `Config.Object` to `Identity.Identity` types. All users and groups in TPP
+are Identity.Identity objects in the product. All other objects are Config.Object objects. The ``Features``
+layer of this package uses object distinguished names (DNs), GUIDs, and other object identifiers to perform
+a function against an object.
 
 When creating objects and identities the Config and Identity objects are returned, respectively. An Identity
 or Config Object can be acquired with a DN or GUID of that object using `features.objects.get(...)`.

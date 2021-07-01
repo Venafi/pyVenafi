@@ -1,6 +1,12 @@
 from pytpp.features.bases.feature_base import FeatureBase
 from pytpp.features.objects import Objects
 from pytpp.features.folder import Folder, FolderAttributes, FolderClassNames
+from pytpp.features.client_groups import ClientGroups, ClientGroupsClassNames, ClientGroupsAttributes, ClientGroupsAttributeValues
+from pytpp.features.client_work import AgentConnectivity, AgentUpgrade, CertificateDevicePlacement, \
+    CertificateDiscovery, CertificateEnrollmentViaESTProtocol, CertificateInstallation, ClientWorkClassNames, \
+    ClientWorkAttributes, \
+    ClientWorkAttributeValues, DynamicProvisioning, SSHDevicePlacement, SSHDiscovery, SSHKeyUsage, SSHRemediation, \
+    UserCertificateCreation
 from pytpp.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, CertificateClassNames
 from pytpp.features.device import Device, DeviceAttributes, DevicesClassNames, DeviceAttributeValues
 from pytpp.features.application import A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, \
@@ -23,6 +29,7 @@ from pytpp.features.placement_rules import PlacementRules, PlacementRulesAttribu
 from pytpp.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 from pytpp.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
+
 
 
 # region Features
@@ -198,6 +205,92 @@ class _CertificateAuthority:
     def self_signed(self) -> SelfSignedCA:
         self._self_signed = self._self_signed or SelfSignedCA(self._api)
         return self._self_signed
+
+
+class _ClientWork:
+    def __init__(self, api):
+        self._api = api
+        self._agent_connectivity = None
+        self._agent_upgrade = None
+        self._certificate_device_placement = None
+        self._certificate_discovery = None
+        self._certificate_enrollment_via_est_protocol = None
+        self._certificate_installation = None
+        self._device_certificate_creation = None
+        self._dynamic_provisioning = None
+        self._ssh_device_placement = None
+        self._ssh_discovery = None
+        self._ssh_key_usage = None
+        self._ssh_remediation = None
+        self._user_certificate_creation = None
+
+    @property
+    def agent_connectivity(self) -> AgentConnectivity:
+        self._agent_connectivity = self._agent_connectivity or AgentConnectivity(self._api)
+        return self._agent_connectivity
+
+    @property
+    def agent_upgrade(self) -> AgentUpgrade:
+        self._agent_upgrade = self._agent_upgrade or AgentUpgrade(self._api)
+        return self._agent_upgrade
+
+    @property
+    def certificate_device_placement(self) -> CertificateDevicePlacement:
+        self._certificate_device_placement = self._certificate_device_placement or CertificateDevicePlacement(self._api)
+        return self._certificate_device_placement
+
+    @property
+    def certificate_discovery(self) -> CertificateDiscovery:
+        self._certificate_discovery = self._certificate_discovery or CertificateDiscovery(self._api)
+        return self._certificate_discovery
+
+    @property
+    def certificate_enrollment_via_est_protocol(self) -> CertificateEnrollmentViaESTProtocol:
+        self._certificate_enrollment_via_est_protocol = self._certificate_enrollment_via_est_protocol or CertificateEnrollmentViaESTProtocol(
+            self._api)
+        return self._certificate_enrollment_via_est_protocol
+
+    @property
+    def certificate_installation(self) -> CertificateInstallation:
+        self._certificate_installation = self._certificate_installation or CertificateInstallation(
+            self._api)
+        return self._certificate_installation
+
+    @property
+    def dynamic_provisioning(self) -> DynamicProvisioning:
+        self._dynamic_provisioning = self._dynamic_provisioning or DynamicProvisioning(
+            self._api)
+        return self._dynamic_provisioning
+
+    @property
+    def ssh_device_placement(self) -> SSHDevicePlacement:
+        self._ssh_device_placement = self._ssh_device_placement or SSHDevicePlacement(
+            self._api)
+        return self._ssh_device_placement
+
+    @property
+    def ssh_discovery(self) -> SSHDiscovery:
+        self._ssh_discovery = self._ssh_discovery or SSHDiscovery(
+            self._api)
+        return self._ssh_discovery
+
+    @property
+    def ssh_key_usage(self) -> SSHKeyUsage:
+        self._ssh_key_usage = self._ssh_key_usage or SSHKeyUsage(
+            self._api)
+        return self._ssh_key_usage
+
+    @property
+    def ssh_remediation(self) -> SSHRemediation:
+        self._ssh_remediation = self._ssh_remediation or SSHRemediation(
+            self._api)
+        return self._ssh_remediation
+
+    @property
+    def user_certificate_creation(self) -> UserCertificateCreation:
+        self._user_certificate_creation = self._user_certificate_creation or UserCertificateCreation(
+            self._api)
+        return self._user_certificate_creation
 
 
 class _Credential:
@@ -400,6 +493,8 @@ class Features:
         self._objects = None
         self._ca = None
         self._certificate = None
+        self._client_groups = None
+        self._client_work = None
         self._credentials = None
         self._custom_fields = None
         self._device = None
@@ -431,6 +526,16 @@ class Features:
     def certificate_authority(self) -> _CertificateAuthority:
         self._ca = self._ca or _CertificateAuthority(self._api)
         return self._ca
+
+    @property
+    def client_groups(self) -> ClientGroups:
+        self._client_groups = self._client_groups or ClientGroups(self._api)
+        return self._client_groups
+
+    @property
+    def client_work(self) -> _ClientWork:
+        self._client_work = self._client_work or _ClientWork(self._api)
+        return self._client_work
 
     @property
     def credential(self) -> _Credential:
@@ -495,6 +600,8 @@ class AttributeNames:
     Application = ApplicationAttributes
     Certificate = CertificateAttributes
     CertificateAuthority = CertificateAuthorityAttributes
+    ClientGroups = ClientGroupsAttributes
+    ClientWork = ClientWorkAttributes
     Credentials = CredentialAttributes
     CustomField = CustomFieldAttributes
     Device = DeviceAttributes
@@ -509,6 +616,8 @@ class AttributeNames:
 class AttributeValues:
     Application = ApplicationAttributeValues
     Certificate = CertificateAttributeValues
+    ClientGroups = ClientGroupsAttributeValues
+    ClientWork = ClientWorkAttributeValues
     CustomField = CustomFieldAttributeValues
     Device = DeviceAttributeValues
     Discovery = DiscoveryAttributeValues
@@ -520,6 +629,8 @@ class Classes:
     Application = ApplicationClassNames
     Certificate = CertificateClassNames
     CertificateAuthority = CertificateAuthorityClassNames
+    ClientGroups = ClientGroupsClassNames
+    ClientWork = ClientWorkClassNames
     Device = DevicesClassNames
     Discovery = DiscoveryClassNames
     Folder = FolderClassNames
