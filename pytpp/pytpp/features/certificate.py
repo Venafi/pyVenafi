@@ -1,6 +1,4 @@
 from typing import List, Union
-
-import pytpp.properties.response_objects.config
 from pytpp.vtypes import Config
 from pytpp.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
