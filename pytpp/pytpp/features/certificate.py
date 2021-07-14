@@ -1,4 +1,6 @@
 from typing import List, Union
+
+import pytpp.properties.response_objects.config
 from pytpp.vtypes import Config
 from pytpp.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
@@ -278,8 +280,8 @@ class Certificate(FeatureBase):
             Certificate details regarding the request and renewal.
 
         """
-        certificate = self._get_config_object(certificate)
-        current_thumbprint = self.details(certificate=certificate).thumbprint
+        certificate = self._get(certificate)
+        current_thumbprint = certificate.certificate_details.thumbprint
         result = self._api.websdk.Certificates.Renew.post(certificate_dn=certificate.dn, pkcs10=csr, reenable=re_enable)
         result.assert_valid_response()
         return current_thumbprint
