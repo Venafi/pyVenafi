@@ -66,6 +66,10 @@ class FeatureBase:
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
+        if isinstance(object_dn, Config.Object):
+            return object_dn
+        if isinstance(object_guid, Config.Object):
+            return object_guid
         obj = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
         if obj.result.code == 400 and not raise_error_if_not_exists:
             # The object doesn't exist, but just return an empty object.
@@ -73,6 +77,16 @@ class FeatureBase:
         return obj.object
 
     def _get_identity_object(self, prefixed_name: str = None, prefixed_universal: str = None):
+
+        if not (prefixed_name or prefixed_universal):
+            raise ValueError(
+                'Must supply either an prefixed_name or prefixed_universal, but neither was provided.'
+            )
+        if isinstance(prefixed_name, Identity.Identity):
+            return prefixed_name
+        if isinstance(prefixed_universal, Identity.Identity):
+            return prefixed_universal
+
         identity = self._api.websdk.Identity.Validate.post(
             identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
         ).identity
