@@ -378,13 +378,13 @@ class UsernamePasswordCredential(_CredentialBase):
 
         """
         values = [
-            self._name_type_value(name='Username', type='String', value=username),
-            self._name_type_value(name='Password', type='String', value=password)
+            self._name_type_value(name='Username', type='string', value=username),
+            self._name_type_value(name='Password', type='string', value=password)
         ]
         return self._create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            friendly_name='PrivateKey',
+            friendly_name='UsernamePassword',
             values=values,
             expiration=expiration,
             description=description,
