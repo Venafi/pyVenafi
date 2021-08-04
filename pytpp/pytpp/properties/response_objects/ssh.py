@@ -76,10 +76,10 @@ class SSH:
             self.last_rotation_date = from_date_string(response_object.get('LastRotationDate'))
             self.last_used = from_date_string(response_object.get('LastUsed'))
             self.length = response_object.get('Length')  # type: int
-            self.private_keys = [SSH.KeyData(data) for data in response_object.get('PrivateKeys')]
+            self.private_keys = [SSH.KeyData(data) for data in response_object.get('PrivateKeys')] if 'PrivateKeys' in response_object.keys() else []
             self.process_error = response_object.get('ProcessError')  # type: str
             self.process_status = response_object.get('ProcessStatus')  # type: str
-            self.public_keys = [SSH.KeyData(data) for data in response_object.get('PublicKeys')]
+            self.public_keys = [SSH.KeyData(data) for data in response_object.get('PublicKeys')] if 'PublicKeys' in response_object.keys() else []
             self.rotation_stage = response_object.get('RotationStage')  # type: int
             self.type = response_object.get('Type')  # type: str
             self.violation_status = response_object.get('ViolationStatus')  # type: list
