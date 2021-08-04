@@ -42,6 +42,7 @@ class SSH:
             self.algorithm = response_object.get('Algorithm')  # type: str
             self.allowed_source_restriction = response_object.get('AllowedSourceRestriction')  # type: List[str]
             self.approver = response_object.get('Approver')  # type: List[str]
+            self.comment = response_object.get('Comment')  # type: str
             self.denied_source_restriction = response_object.get('DeniedSourceRestriction')  # type: List[str]
             self.device_guid = response_object.get('DeviceGuid')  # type: str
             self.filepath = response_object.get('Filepath')  # type: str
@@ -49,8 +50,8 @@ class SSH:
             self.format = response_object.get('Format')  # type: str
             self.is_encrypted = response_object.get('IsEncrypted')  # type: bool
             self.key_id = response_object.get('KeyId')  # type: int
-            self.keysetid = response_object.get('Keysetid')  # type: str
-            self.last_used = from_date_string(response_object.get('Last Used'))
+            self.keysetid = response_object.get('KeysetId')  # type: str
+            self.last_used = from_date_string(response_object.get('LastUsed'))
             self.length = response_object.get('Length')  # type: int
             self.notes = response_object.get('Notes')  # type: str
             self.options = response_object.get('Options')  # type: List[str]
@@ -71,9 +72,9 @@ class SSH:
             self.algorithm = response_object.get('Algorithm')  # type: str
             self.fingerprint_md5 = response_object.get('FingerprintMD5')  # type: str
             self.fingerprint_sha256 = response_object.get('FingerprintSHA256')  # type: str
-            self.keysetid = response_object.get('Keysetid')  # type: str
+            self.keysetid = response_object.get('KeysetId')  # type: str
             self.last_rotation_date = from_date_string(response_object.get('LastRotationDate'))
-            self.last_used = from_date_string(response_object.get('Last Used')) 
+            self.last_used = from_date_string(response_object.get('LastUsed'))
             self.length = response_object.get('Length')  # type: int
             self.private_keys = [SSH.KeyData(data) for data in response_object.get('PrivateKeys')]
             self.process_error = response_object.get('ProcessError')  # type: str
@@ -81,7 +82,6 @@ class SSH:
             self.public_keys = [SSH.KeyData(data) for data in response_object.get('PublicKeys')]
             self.rotation_stage = response_object.get('RotationStage')  # type: int
             self.type = response_object.get('Type')  # type: str
-            self.username = response_object.get('Username')  # type: str
             self.violation_status = response_object.get('ViolationStatus')  # type: list
 
     class KeyUsageData:

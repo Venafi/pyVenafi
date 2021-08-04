@@ -739,7 +739,7 @@ class _SSH:
 
             return _Response(response=self._get(params=params))
 
-        def post(self, keyset_filter: list, load_key_data: bool = None, offset: int = None, page_size: int = None):
+        def post(self, keyset_filter: list = [], load_key_data: bool = None, offset: int = None, page_size: int = None):
             body = {
                 'KeysetFilter': keyset_filter,
                 'LoadKeyData': load_key_data,
@@ -754,7 +754,7 @@ class _SSH:
                 @property
                 @json_response_property()
                 def data(self):
-                    return [SSH.KeyData(key) for key in self._from_json('Data')][0]
+                    return [SSH.KeySetData(key) for key in self._from_json('Data')]
 
             return _Response(response=self._post(data=body))
 
