@@ -1207,9 +1207,19 @@ class PKCS11ApplicationGroup(FeatureBase):
         for attribute in attributes:
             if attribute.name in group_attributes.keys():
                 group_attributes[attribute.name] = attribute.values
-        self._config_create(
+
+        app_group = self._config_create(
             name=f'{certificate.name} - Pkcs11 App Group',
             parent_folder_dn=certificate.parent,
             config_class=ApplicationGroupClassNames.pkcs11_application_group,
             attributes=group_attributes
         )
+        result = self._api.websdk.Config.WriteDn.post(
+            object_dn=certificate.dn,
+            attribute_name=CertificateAttributes.application_group_dn,
+            values=[app_group.dn]
+        ).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+        return app_group
+
