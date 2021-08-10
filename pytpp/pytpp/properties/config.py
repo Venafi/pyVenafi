@@ -748,6 +748,55 @@ class ApplicationClassNames:
     vam_nshield = "VAM nShield"
     vam_cavium = "VamCavium"
 
+
+class ApplicationGroupClassNames:
+    apache_application_group = 'Apache Application Group'
+    pkcs11_application_group = 'PKCS11 Application Group'
+
+
+class _ApplicationGroupAttributesBase:
+    certificate = "Certificate"
+    common_data_location = "Common Data Location"
+    common_data_vault_id = "Common Data Vault Id"
+    enrollment_application_dn = "Enrollment Application DN"
+    primary_application_dn = "Primary Application DN"
+    private_key_stub_vault_id = "Private Key Stub Vault Id"
+
+
+class ApplicationGroupAttributes(_ApplicationGroupAttributesBase):
+    class Apache:
+        client_tools_path = "Client Tools Path"
+        ocs_identifier = "OCS Identifier"
+        partition_password_credential = "Partition Password Credential"
+        private_key_label = "Private Key Label"
+        private_key_location = "Private Key Location"
+        protection_type = "Protection Type"
+        softcard_identifier = "Softcard Identifier"
+
+    class PKCS11:
+        hsm_cka_label_format = "HSM:CKA LABEL Format"
+        hsm_csr_subject_dn = "HSM:CSR Subject DN"
+        hsm_embed_sans_in_csr = "HSM:Embed SANs in CSR"
+        hsm_import_certificate = "HSM:Import Certificate"
+        hsm_issued_id = "HSM:Issued ID"
+        hsm_issued_label = "HSM:Issued Label"
+        hsm_kpblob = "HSM:KPBlob"
+        hsm_last_issued_id = "HSM:Last Issued ID"
+        hsm_last_issued_kpblob = "HSM:Last Issued KPBlob"
+        hsm_last_issued_label = "HSM:Last Issued Label"
+        hsm_pkcs11attributes = "HSM:PKCS11Attributes"
+        hsm_protection_type = "HSM:Protection Type"
+        hsm_requested_cka_label = "HSM:Requested CKA LABEL"
+        hsm_requested_ecdh = "HSM:Requested ECDH"
+        hsm_requested_usecase = "HSM:Requested Usecase"
+        hsm_reverse_subject_dn = "HSM:Reverse Subject DN"
+        hsm_tmp_issued_cblob = "HSM:TMP Issued CBlob"
+        hsm_tmp_issued_id = "HSM:TMP Issued ID"
+        hsm_tmp_issued_kpblob = "HSM:TMP Issued KPBlob"
+        hsm_token_label = "HSM:Token Label"
+        hsm_token_password = "HSM:Token Password"
+
+
 # endregion
 
 
@@ -1075,6 +1124,7 @@ class CertificateClassNames:
     x509_server_certificate = "X509 Server Certificate"
     x509_user_certificate = "X509 User Certificate"
 
+
 # endregion
 
 
@@ -1309,6 +1359,7 @@ class CertificateAuthorityClassNames:
     xolphin_ca = "Xolphin CA"
     zos_ca = "zOS CA"
 
+
 # endregion
 
 
@@ -1323,6 +1374,7 @@ class CertificateTrustStoreClassNames:
     palo_alto_network_fw_trust_store = "Palo Alto Network FW Trust Store"
     pem_trust_store = "PEM Trust Store"
     pkcs_12_trust_store = "PKCS#12 Trust Store"
+
 
 # endregion
 
@@ -1348,28 +1400,33 @@ class ClientGroupsAttributes:
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
+
 class ClientGroupsAttributeValues:
     class CreatedBy:
         websdk = 'Web SDK'
+
     class AgentType:
         agent_installed = 'AgentInstalled'
         agentless = 'NoAgent'
         certificate_enrollment = 'EntMob'
         deploy_user_and_device_certificates = 'Enrollment'
+
     class DefaultRules:
         agent_installed = 'ClientType == VenafiAgent'
         agentless = 'ClientType == Agentless'
         certificate_enrollment = 'ClientType == Est'
         deploy_user_and_device_certificates = '((ClientType In ["AgentJuniorUser","Portal"]))'
 
+
 class ClientGroupsClassNames:
     group = "Client Group"
+
 
 # endregion
 
 # region Client Work
 class ClientWorkAttributes:
-    #AgentConnectivity = 'Client Agent Configuration Work'
+    # AgentConnectivity = 'Client Agent Configuration Work'
     class AgentConnectivity:
         agent_cert_trust_bundle = "Agent Cert Trust Bundle"
         contact = "Contact"
@@ -1398,6 +1455,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # AgentUpgrade = 'Client Agent Automatic Upgrade Work'
     class AgentUpgrade:
         contact = "Contact"
@@ -1418,6 +1476,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # CertificateDevicePlacement = 'Server Agent Cert Device Placement Work'
     class CertificateDevicePlacement:
         contact = "Contact"
@@ -1434,6 +1493,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # CertificateDiscovery = 'Client Certificate Discovery Work'
     class CertificateDiscovery:
         certificate_location_dn = "Certificate Location DN"
@@ -1471,6 +1531,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # CertificateEnrollmentViaESTProtocol = 'Network Device Certificate Work'
     class CertificateEnrollmentViaESTProtocol:
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
@@ -1741,6 +1802,7 @@ class ClientWorkAttributes:
         xolphin_ca_postbox = "Xolphin CA:Postbox"
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
+
     # CertificateInstallation = 'Certificate Provisioning Work'
     class CertificateInstallation:
         contact = "Contact"
@@ -1761,6 +1823,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # DeviceCertificateCreation = 'Client Certificate Work'
     class DeviceCertificateCreation:
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
@@ -2014,6 +2077,7 @@ class ClientWorkAttributes:
         xolphin_ca_postbox = "Xolphin CA:Postbox"
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
+
     # DynamicProvisioning = 'Server Certificate Work'
     class DynamicProvisioning:
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
@@ -2323,6 +2387,7 @@ class ClientWorkAttributes:
         xolphin_ca_postbox = "Xolphin CA:Postbox"
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
+
     # SSHDevicePlacement = 'Server Agent SSH Device Placement Work'
     class SSHDevicePlacement:
         contact = "Contact"
@@ -2339,6 +2404,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # SSHDiscovery = 'Client Agent SSH Discovery Work'
     class SSHDiscovery:
         clear_cache_timestamp = "Clear Cache Timestamp"
@@ -2368,6 +2434,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # SSHKeyUsage = 'Client Agent SSH Key Usage Work'
     class SSHKeyUsage:
         contact = "Contact"
@@ -2389,6 +2456,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # SSHRemediation = 'Client Agent SSH Provisioning Work'
     class SSHRemediation:
         contact = "Contact"
@@ -2409,6 +2477,7 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # UserCertificateCreation = 'Client User Certificate Work'
     class UserCertificateCreation:
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
@@ -2680,6 +2749,7 @@ class ClientWorkAttributes:
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
+
 class ClientWorkAttributeValues:
     class AgentConnectivity:
         class ScheduleType:
@@ -2687,6 +2757,7 @@ class ClientWorkAttributeValues:
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             hourly = "IntervalHours"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2695,22 +2766,28 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class CreatedBy:
             websdk = "Web SDK"
+
     class AgentUpgrade:
         class CreatedBy:
             websdk = "Web SDK"
+
     class CertificateDevicePlacement:
         class CreatedBy:
             websdk = "Web SDK"
+
         class DeviceSharedMode:
-            whole_tree     = "WholeTree"
+            whole_tree = "WholeTree"
             devices_folder = "SpecifiedFolderOnly"
             devices_folder_and_sub_folders = "SpecifiedFolderAndSubFolders"
             duplicate_device = "None"
+
     class CertificateDiscovery:
         class CreatedBy:
             websdk = "Web SDK"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2719,18 +2796,21 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class ScheduleType:
             daily = "Daily"
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             hourly = "IntervalHours"
             on_receipt = "OnReceipt"
+
         class MaxFilesize:
-            less_than_10k  = "10240"
+            less_than_10k = "10240"
             less_than_100k = "102400"
-            less_than_1MB  = "1048576"
+            less_than_1MB = "1048576"
             less_than_10MB = "10485760"
             no_limit = "0"
+
         class Extensions:
             default_pkcs12_extensions = [".p12", ".pfx"]
             default_pkcs7_extensions = [".p7b", ".p7c", ".p7"]
@@ -2738,23 +2818,29 @@ class ClientWorkAttributeValues:
             default_ibmcms_extensions = [".kdb"]
             default_jks_jceks_extensions = [".jck", ".jceks", ".jks", "cacerts"]
             default_iplanet_extensions = [".db"]
+
     class CertificateEnrollmentViaESTProtocol:
         class CreatedBy:
             websdk = "Web SDK"
+
         class ValidationType:
             basic = 0
             strict = 1
+
         class RevocationStatusCheck:
             disabled = 0
             accept_when_unknown = 1
             reject_when_unknown = 2
+
         class IdentityVerification:
             disable = 1
             valid = 3
             valid_or_missing = 2
+
     class CertificateInstallation:
         class CreatedBy:
             websdk = "Web SDK"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2763,6 +2849,7 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class ScheduleType:
             daily = "Daily"
             hourly = "IntervalHours"
@@ -2770,12 +2857,15 @@ class ClientWorkAttributeValues:
             days_of_week = "DaysOfWeek"
             on_receipt = "OnReceipt"
             every_x_minutes = "IntervalMinutes"
+
     class DeviceCertificateCreation:
         class CreatedBy:
             websdk = "Web SDK"
+
     class DynamicProvisioning:
         class CreatedBy:
             websdk = "Web SDK"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2784,19 +2874,24 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class ApplicationType:
             capi = "CAPI"
+
     class SSHDevicePlacement:
         class CreatedBy:
             websdk = "Web SDK"
+
         class DeviceSharedMode:
             whole_tree = "WholeTree"
             devices_folder = "SpecifiedFolderOnly"
             devices_folder_and_sub_folders = "SpecifiedFolderAndSubFolders"
             duplicate_device = "None"
+
     class SSHDiscovery:
         class CreatedBy:
             websdk = "Web SDK"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2805,11 +2900,13 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class MaxFilesize:
             less_than_10k = "10240"
             less_than_100k = "102400"
             less_than_1MB = "1048576"
             less_than_10MB = "10485760"
+
         class ScheduleType:
             daily = "Daily"
             days_of_month = "DaysOfMonth"
@@ -2817,9 +2914,11 @@ class ClientWorkAttributeValues:
             hourly = "IntervalHours"
             on_receipt = "OnReceipt"
             every_30_minutes = "IntervalMinutes"
+
     class SSHKeyUsage:
         class CreatedBy:
             websdk = "Web SDK"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2828,14 +2927,17 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class ScheduleType:
             daily = "Daily"
             hourly = "IntervalHours"
             on_receipt = "OnReceipt"
             every_x_minutes = "IntervalMinutes"
+
     class SSHRemediation:
         class CreatedBy:
             websdk = "Web SDK"
+
         class LogThreshold:
             alert = "Alert"
             critical = "Critical"
@@ -2844,6 +2946,7 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
+
         class ScheduleType:
             daily = "Daily"
             hourly = "IntervalHours"
@@ -2851,9 +2954,11 @@ class ClientWorkAttributeValues:
             days_of_week = "DaysOfWeek"
             on_receipt = "OnReceipt"
             every_x_minutes = "IntervalMinutes"
+
     class UserCertificateCreation:
         class CreatedBy:
             websdk = "Web SDK"
+
         class DefaultValues:
             all_values = {'baslh': 'bash'}
             naming_pattern = '$Identity[$Client.Identity$, "userPrincipalName"]$'
@@ -2866,7 +2971,6 @@ class ClientWorkAttributeValues:
             user_email = '$IdentityEmail[$Client.Identity$]$'
             subject_alt_names_email = '$IdentityEmail[$Client.Identity$]$'
             subject_alt_names_upn = '$Identity[$Client.Identity$,"userPrincipalName"]$'
-
 
 
 class ClientWorkClassNames:
@@ -2884,11 +2988,13 @@ class ClientWorkClassNames:
     ssh_remediation = 'Client Agent SSH Provisioning Work'
     user_certificate_creation = 'Client User Certificate Work'
 
+
 # endregion
 
 # region Cloud Instance Monitoring
 class CloudInstanceMonitoringClassNames:
     aws_ec2_instance_monitor = 'AWS EC2 Instance Monitor'
+
 
 # endregion
 
@@ -2965,6 +3071,7 @@ class CredentialClassNames:
     private_key_credential = "Private Key Credential"
     username_password_credential = "Username Password Credential"
 
+
 # endregion
 
 
@@ -3023,6 +3130,7 @@ class CustomFieldAttributeValues:
         list = 2
         date_time = 4
         identity = 5
+
 
 # endregion
 
@@ -3166,6 +3274,7 @@ class DevicesClassNames:
     device = 'Device'
     jump_server = 'Jump Server'
 
+
 # endregion
 
 
@@ -3255,6 +3364,7 @@ class DiscoveryAttributeValues:
 class DiscoveryClassNames:
     network_discovery = 'Discovery'
 
+
 # endregion
 
 
@@ -3289,6 +3399,7 @@ class FolderAttributes:
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
+
 # endregion
 
 
@@ -3304,6 +3415,7 @@ class IdentityAttributes:
         security_group = 2
         distribution_group = 8
 
+
 # endregion
 
 
@@ -3311,8 +3423,10 @@ class IdentityAttributes:
 class PlacementRulesClassNames:
     layout_rule_base = 'Layout Rule Base'
 
+
 class PlacementRulesAttributeNames:
     rule = 'Rule'
+
 
 class PlacementRulesAttributeValues:
     class Field:
@@ -3348,6 +3462,7 @@ class PlacementRulesAttributeValues:
     class RuleType:
         certificate = 'X509 Certificate'
         ssh = 'SSH'
+
 
 # endregion Placement Rules
 
@@ -3666,6 +3781,8 @@ class PlatformsAttributes(_PlatformsAttributes):
         workflow_block = "Workflow Block"
         zone_contact = "Zone Contact"
         zone_description = "Zone Description"
+
+
 # endregion Platforms
 
 
