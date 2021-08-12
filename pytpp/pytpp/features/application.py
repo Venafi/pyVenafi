@@ -1194,6 +1194,7 @@ class PKCS11ApplicationGroup(FeatureBase):
         attributes = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
         group_attributes = {
             ApplicationGroupAttributes.PKCS11.hsm_cka_label_format  : '',
+            ApplicationGroupAttributes.PKCS11.hsm_requested_cka_label: None,
             ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr : '',
             ApplicationGroupAttributes.PKCS11.hsm_import_certificate: '',
             ApplicationGroupAttributes.PKCS11.hsm_protection_type   : '',
@@ -1202,7 +1203,7 @@ class PKCS11ApplicationGroup(FeatureBase):
             ApplicationGroupAttributes.PKCS11.hsm_token_label       : '',
             ApplicationGroupAttributes.PKCS11.hsm_token_password    : '',
             ApplicationGroupAttributes.certificate                  : certificate.dn,
-            ApplicationGroupAttributes.enrollment_application_dn    : application_dns[0]
+            ApplicationGroupAttributes.enrollment_application_dn    : application_dns[0],
         }
         for attribute in attributes:
             if attribute.name in group_attributes.keys():
