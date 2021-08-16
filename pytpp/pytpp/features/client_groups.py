@@ -91,17 +91,18 @@ class ClientGroups(FeatureBase):
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         self._config_delete(object_dn=group_dn)
 
-    def get(self, name: str):
+    def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
         Gets a client group by name and returns a config object
 
         Args:
             name: The name of the client group.
+            raise_error_if_not_exists: Raise an exception if the client group does not exist.
 
         Returns:
             Config object representing the client group.
         """
-        return self._get_config_object(object_dn=fr'{self._group_base_dn}\{name}')
+        return self._get_config_object(object_dn=fr'{self._group_base_dn}\{name}', raise_error_if_not_exists=raise_error_if_not_exists)
 
     def list(self):
         """

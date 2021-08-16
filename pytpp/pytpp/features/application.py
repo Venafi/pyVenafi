@@ -6,6 +6,7 @@ from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.tools.helpers.date_converter import from_date_string
 
 
+# region Applications
 class _ApplicationBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -55,17 +56,18 @@ class _ApplicationBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def get(self, application_dn: str):
+    def get(self, application_dn: str, raise_error_if_not_exists: bool = True):
         """
         Returns the config object of the application DN.
 
         Args:
             application_dn: DN of the application object.
+            raise_error_if_not_exists: Raise an exception if the application DN does not exist.
 
         Returns:
             Config Object of the application.
         """
-        return self._get_config_object(object_dn=application_dn)
+        return self._get_config_object(object_dn=application_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
     def get_associated_certificate(self, application: Union['Config.Object', str]):
         """
@@ -1179,6 +1181,43 @@ class VAMnShield(_ApplicationBase):
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
+# endregion Applications
+
+# region Application Groups
+@feature()
+class ApacheApplicationGroup(FeatureBase):
+    def __init__(self, api):
+        super().__init__(api=api)
+
+    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str]):
+        application_dns = []
+        for application in applications:
+            application_dns.append(self._get_dn(application))
+        certificate = self._get_config_object(object_dn=certificate)
+        attributes = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
+        group_attributes = {
+            ApplicationGroupAttributes.Apache.client_tools_path: '',
+            ApplicationGroupAttributes.common_data_location: '',
+            ApplicationGroupAttributes.common_data_vault_id: ''
+        }
+        for attribute in attributes:
+            if attribute.name in group_attributes.keys():
+                group_attributes[attribute.name] = attribute.values
+
+        app_group = self._config_create(
+            name=f'{certificate.name} - Apache App Group',
+            parent_folder_dn=certificate.parent,
+            config_class=ApplicationGroupClassNames.pkcs11_application_group,
+            attributes=group_attributes
+        )
+        result = self._api.websdk.Config.WriteDn.post(
+            object_dn=certificate.dn,
+            attribute_name=CertificateAttributes.application_group_dn,
+            values=[app_group.dn]
+        ).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+        return app_group
 
 
 @feature()
@@ -1193,17 +1232,17 @@ class PKCS11ApplicationGroup(FeatureBase):
         certificate = self._get_config_object(object_dn=certificate)
         attributes = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
         group_attributes = {
-            ApplicationGroupAttributes.PKCS11.hsm_cka_label_format  : '',
+            ApplicationGroupAttributes.PKCS11.hsm_cka_label_format   : '',
             ApplicationGroupAttributes.PKCS11.hsm_requested_cka_label: None,
-            ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr : '',
-            ApplicationGroupAttributes.PKCS11.hsm_import_certificate: '',
-            ApplicationGroupAttributes.PKCS11.hsm_protection_type   : '',
-            ApplicationGroupAttributes.PKCS11.hsm_requested_usecase : '',
-            ApplicationGroupAttributes.PKCS11.hsm_reverse_subject_dn: '',
-            ApplicationGroupAttributes.PKCS11.hsm_token_label       : '',
-            ApplicationGroupAttributes.PKCS11.hsm_token_password    : '',
-            ApplicationGroupAttributes.certificate                  : certificate.dn,
-            ApplicationGroupAttributes.enrollment_application_dn    : application_dns[0],
+            ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr  : '',
+            ApplicationGroupAttributes.PKCS11.hsm_import_certificate : '',
+            ApplicationGroupAttributes.PKCS11.hsm_protection_type    : '',
+            ApplicationGroupAttributes.PKCS11.hsm_requested_usecase  : '',
+            ApplicationGroupAttributes.PKCS11.hsm_reverse_subject_dn : '',
+            ApplicationGroupAttributes.PKCS11.hsm_token_label        : '',
+            ApplicationGroupAttributes.PKCS11.hsm_token_password     : '',
+            ApplicationGroupAttributes.certificate                   : certificate.dn,
+            ApplicationGroupAttributes.enrollment_application_dn     : application_dns[0],
         }
         for attribute in attributes:
             if attribute.name in group_attributes.keys():
@@ -1223,4 +1262,4 @@ class PKCS11ApplicationGroup(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
         return app_group
-
+# endregion Application Groups

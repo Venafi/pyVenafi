@@ -45,17 +45,18 @@ class _CredentialBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
 
-    def get(self, credential_dn: str):
+    def get(self, credential_dn: str, raise_error_if_not_exists: bool = True):
         """
         Gets the credential Config.Object from TPP.
 
         Args:
             credential_dn: DN of the credential object.
+            raise_error_if_not_exists: Raise an exception if the credential DN does not exist.
 
         Returns:
             Config object of the credential object.
         """
-        return self._get_config_object(object_dn=credential_dn)
+        return self._get_config_object(object_dn=credential_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
 
 @feature()

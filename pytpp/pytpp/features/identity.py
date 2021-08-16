@@ -129,7 +129,7 @@ class _IdentityBase(FeatureBase):
             return response.identity.prefixed_name == prefixed_name
         return False
 
-    def get(self, prefixed_name: str = None, prefixed_universal: str = None):
+    def get(self, prefixed_name: str = None, prefixed_universal: str = None, raise_error_if_not_exists: bool = True):
         """
         Get a user or group in TPP. An error is raised if the identity does not exist.
 
@@ -138,13 +138,15 @@ class _IdentityBase(FeatureBase):
         Args:
             prefixed_name: The prefixed name of the Identity object.
             prefixed_universal: The prefixed universal GUID of the Identity object.
+            raise_error_if_not_exists: Raise an exception if the identity does not exist.
 
         Returns:
             An Identity object of the user or group.
         """
         return self._get_identity_object(
             prefixed_name=prefixed_name,
-            prefixed_universal=prefixed_universal
+            prefixed_universal=prefixed_universal,
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def get_memberships(self, identity: Union['Identity.Identity', str]):

@@ -195,17 +195,18 @@ class Certificate(FeatureBase):
 
         return result
 
-    def get(self, certificate_dn:str):
+    def get(self, certificate_dn: str, raise_error_if_not_exists: bool = False):
         """
         Returns the config object of the certificate DN.
 
         Args:
             certificate_dn: DN of the certificate object.
+            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
 
         Returns:
             Config Object of the certificate.
         """
-        return self._get_config_object(object_dn=certificate_dn)
+        return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
     def get_previous_versions(self, certificate: Union['Config.Object', str], exclude_expired: bool = False, exclude_revoked: bool = False):
         """
