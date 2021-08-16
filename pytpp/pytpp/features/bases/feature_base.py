@@ -76,8 +76,8 @@ class FeatureBase:
             return Config.Object(response_object={})
         return obj.object
 
-    def _get_identity_object(self, prefixed_name: str = None, prefixed_universal: str = None):
-
+    def _get_identity_object(self, prefixed_name: str = None, prefixed_universal: str = None,
+                             raise_error_if_not_exists: bool = True):
         if not (prefixed_name or prefixed_universal):
             raise ValueError(
                 'Must supply either an prefixed_name or prefixed_universal, but neither was provided.'
@@ -87,10 +87,16 @@ class FeatureBase:
         if isinstance(prefixed_universal, Identity.Identity):
             return prefixed_universal
 
-        identity = self._api.websdk.Identity.Validate.post(
+        result = self._api.websdk.Identity.Validate.post(
             identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
-        ).identity
-
+        )
+        if result.is_valid_response() and result.json_response.content:
+            identity = result.identity
+        elif raise_error_if_not_exists:
+            target = prefixed_name or prefixed_universal
+            raise FeatureError(f'Could not find identity "{target}".')
+        else:
+            identity = Identity.Identity(response_object={})
         return identity
 
     @staticmethod

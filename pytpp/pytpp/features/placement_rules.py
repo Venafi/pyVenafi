@@ -323,14 +323,16 @@ class PlacementRules(FeatureBase):
         )
         response.assert_valid_response()
 
-    def get(self, name: str):
+    def get(self, name: str, raise_error_if_not_exists: bool = False):
         """
         Args:
             name: Name of the placement rule.
+            raise_error_if_not_exists: Raise an exception if the placement rule does not exist.
 
         Returns:
             Config object of the placement rule.
         """
         return self._get_config_object(
-            object_dn=f'{self._layout_rules_dn}\\{name}'
+            object_dn=f'{self._layout_rules_dn}\\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists
         )

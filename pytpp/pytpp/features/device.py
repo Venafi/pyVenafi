@@ -31,7 +31,7 @@ class Device(_DeviceBase):
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Device object in TPP.
+        Creates a device object in TPP.
 
         Args:
             name: Name of the device object .
@@ -51,11 +51,23 @@ class Device(_DeviceBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def get(self, device_dn: str):
-        return self._get_config_object(object_dn=device_dn)
+    def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
+        """
+        Fetches the config object a device object.
+
+        Args:
+            device_dn: DN of the device object.
+            raise_error_if_not_exists: Raise an exception if the device DN does not exist.
+
+        Returns:
+            Config object representing the device.
+        """
+        return self._get_config_object(object_dn=device_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
     def scan_for_ssh_keys(self, device: Union['Config.Object', str]):
         """
+        Submits Agentless discovery work for the given device.
+
         Args:
             device: Config.Object, DN, or GUID of the device object in TPP.
         """
@@ -68,5 +80,3 @@ class Device(_DeviceBase):
 
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
-
-
