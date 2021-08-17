@@ -323,7 +323,7 @@ class PlacementRules(FeatureBase):
         )
         response.assert_valid_response()
 
-    def get(self, name: str, raise_error_if_not_exists: bool = False):
+    def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
         Args:
             name: Name of the placement rule.

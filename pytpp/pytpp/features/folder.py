@@ -191,7 +191,7 @@ class Folder(FeatureBase):
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
-    def get(self, folder_dn: str, raise_error_if_not_exists: bool = False):
+    def get(self, folder_dn: str, raise_error_if_not_exists: bool = True):
         """
         Returns the config object of the folder DN.
 

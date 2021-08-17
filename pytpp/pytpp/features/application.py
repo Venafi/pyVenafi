@@ -1189,25 +1189,40 @@ class ApacheApplicationGroup(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str]):
+    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
+               common_data_location: str = None, attributes: dict = None):
         application_dns = []
         for application in applications:
             application_dns.append(self._get_dn(application))
         certificate = self._get_config_object(object_dn=certificate)
-        attributes = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
+        default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
+        if not common_data_location:
+            hsm = next(attr.values[0] for attr in default_attrs if attr.name == ApplicationAttributes.Apache.private_key_location)
+            if hsm == ApplicationAttributeValues.Apache.PrivateKeyLocation.thales_nshield_hsm:
+                common_data_location = '/opt/nfast/bin'
+            elif hsm == ApplicationAttributeValues.Apache.PrivateKeyLocation.gemalto_safe_net_hsm:
+                common_data_location = '/usr/safenet/lunaclient/bin'
         group_attributes = {
-            ApplicationGroupAttributes.Apache.client_tools_path: '',
-            ApplicationGroupAttributes.common_data_location: '',
-            ApplicationGroupAttributes.common_data_vault_id: ''
+            ApplicationGroupAttributes.Apache.client_tools_path            : None,
+            ApplicationGroupAttributes.Apache.partition_password_credential: None,
+            ApplicationGroupAttributes.Apache.protection_type              : None,
+            ApplicationGroupAttributes.Apache.softcard_identifier          : None,
+            ApplicationGroupAttributes.Apache.private_key_label            : None,
+            ApplicationGroupAttributes.common_data_location                : common_data_location,
+            ApplicationGroupAttributes.certificate                         : certificate.dn,
+            ApplicationGroupAttributes.enrollment_application_dn           : application_dns[0],
         }
-        for attribute in attributes:
+        for attribute in default_attrs:
             if attribute.name in group_attributes.keys():
                 group_attributes[attribute.name] = attribute.values
+
+        if attributes:
+            group_attributes.update(attributes)
 
         app_group = self._config_create(
             name=f'{certificate.name} - Apache App Group',
             parent_folder_dn=certificate.parent,
-            config_class=ApplicationGroupClassNames.pkcs11_application_group,
+            config_class=ApplicationGroupClassNames.apache_application_group,
             attributes=group_attributes
         )
         result = self._api.websdk.Config.WriteDn.post(
@@ -1225,28 +1240,31 @@ class PKCS11ApplicationGroup(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str]):
+    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
+               attributes: dict = None):
         application_dns = []
         for application in applications:
             application_dns.append(self._get_dn(application))
         certificate = self._get_config_object(object_dn=certificate)
-        attributes = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
+        default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
         group_attributes = {
-            ApplicationGroupAttributes.PKCS11.hsm_cka_label_format   : '',
+            ApplicationGroupAttributes.PKCS11.hsm_cka_label_format   : None,
             ApplicationGroupAttributes.PKCS11.hsm_requested_cka_label: None,
-            ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr  : '',
-            ApplicationGroupAttributes.PKCS11.hsm_import_certificate : '',
-            ApplicationGroupAttributes.PKCS11.hsm_protection_type    : '',
-            ApplicationGroupAttributes.PKCS11.hsm_requested_usecase  : '',
-            ApplicationGroupAttributes.PKCS11.hsm_reverse_subject_dn : '',
-            ApplicationGroupAttributes.PKCS11.hsm_token_label        : '',
-            ApplicationGroupAttributes.PKCS11.hsm_token_password     : '',
+            ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr  : None,
+            ApplicationGroupAttributes.PKCS11.hsm_import_certificate : None,
+            ApplicationGroupAttributes.PKCS11.hsm_protection_type    : None,
+            ApplicationGroupAttributes.PKCS11.hsm_requested_usecase  : None,
+            ApplicationGroupAttributes.PKCS11.hsm_reverse_subject_dn : None,
+            ApplicationGroupAttributes.PKCS11.hsm_token_label        : None,
+            ApplicationGroupAttributes.PKCS11.hsm_token_password     : None,
             ApplicationGroupAttributes.certificate                   : certificate.dn,
             ApplicationGroupAttributes.enrollment_application_dn     : application_dns[0],
         }
-        for attribute in attributes:
+        for attribute in default_attrs:
             if attribute.name in group_attributes.keys():
                 group_attributes[attribute.name] = attribute.values
+        if attributes:
+            group_attributes.update(attributes)
 
         app_group = self._config_create(
             name=f'{certificate.name} - Pkcs11 App Group',

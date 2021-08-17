@@ -795,10 +795,7 @@ class ApplicationGroupAttributes(_ApplicationGroupAttributesBase):
         hsm_tmp_issued_kpblob = "HSM:TMP Issued KPBlob"
         hsm_token_label = "HSM:Token Label"
         hsm_token_password = "HSM:Token Password"
-
-
 # endregion
-
 
 # region Certificate
 class CertificateAttributes:
@@ -1127,7 +1124,6 @@ class CertificateClassNames:
 
 # endregion
 
-
 # region Certificate Authority
 class _CertificateAuthorityAttributesBase:
     additional_field = "Additional Field"
@@ -1361,7 +1357,6 @@ class CertificateAuthorityClassNames:
 
 
 # endregion
-
 
 # region Certificate Trust Store
 class CertificateTrustStoreClassNames:
@@ -2998,7 +2993,6 @@ class CloudInstanceMonitoringClassNames:
 
 # endregion
 
-
 # region Credential
 class _CredentialAttributesBase:
     contact = "Contact"
@@ -3074,7 +3068,6 @@ class CredentialClassNames:
 
 # endregion
 
-
 # region Custom Field
 class _CustomFieldAttributes:
     allowed_values = "Allowed Values"
@@ -3133,7 +3126,6 @@ class CustomFieldAttributeValues:
 
 
 # endregion
-
 
 # region Device
 class _DeviceAttributesBase:
@@ -3277,7 +3269,6 @@ class DevicesClassNames:
 
 # endregion
 
-
 # region Discovery
 class DiscoveryAttributes:
     address_range = "Address Range"
@@ -3367,7 +3358,6 @@ class DiscoveryClassNames:
 
 # endregion
 
-
 # region Folder
 class FolderClassNames:
     policy = 'Policy'
@@ -3402,7 +3392,6 @@ class FolderAttributes:
 
 # endregion
 
-
 # region Identity
 class IdentityClassNames:
     user = 'USER'
@@ -3417,7 +3406,6 @@ class IdentityAttributes:
 
 
 # endregion
-
 
 # region Placement Rules
 class PlacementRulesClassNames:
@@ -3465,7 +3453,6 @@ class PlacementRulesAttributeValues:
 
 
 # endregion Placement Rules
-
 
 # region Platforms
 class PlatformsClassNames:
@@ -3784,7 +3771,6 @@ class PlatformsAttributes(_PlatformsAttributes):
 
 
 # endregion Platforms
-
 
 # region Workflow
 class _WorkflowAttributes:

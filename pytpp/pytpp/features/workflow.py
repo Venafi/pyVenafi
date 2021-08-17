@@ -23,7 +23,7 @@ class _WorkflowBase(FeatureBase):
         self._secret_store_delete(object_dn=workflow_dn)
         self._config_delete(object_dn=workflow_dn)
 
-    def get(self, workflow_dn: str, raise_error_if_not_exists: bool = False):
+    def get(self, workflow_dn: str, raise_error_if_not_exists: bool = True):
         """
         Returns the config object of the folder DN.
 
