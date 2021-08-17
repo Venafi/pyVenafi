@@ -18,7 +18,7 @@ from pytpp.features.application import A10AXTrafficManager, AmazonAWS, Apache, A
     OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, \
     ApplicationAttributes, \
     ApplicationAttributeValues, ApplicationClassNames, ApplicationGroupAttributes, ApplicationGroupClassNames, \
-    PKCS11ApplicationGroup
+    PKCS11ApplicationGroup, ApacheApplicationGroup
 from pytpp.features.discovery import NetworkDiscovery, DiscoveryClassNames, DiscoveryAttributeValues, \
     DiscoveryAttributes
 from pytpp.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
@@ -193,7 +193,13 @@ class _ApplicationGroup:
     def __init__(self, api):
         self._api = api
 
+        self._apache = None
         self._pkcs11 = None
+
+    @property
+    def apache(self) -> ApacheApplicationGroup:
+        self._apache = self._apache or ApacheApplicationGroup(self._api)
+        return self._apache
 
     @property
     def pkcs11(self) -> PKCS11ApplicationGroup:

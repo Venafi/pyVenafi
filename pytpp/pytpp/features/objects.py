@@ -133,7 +133,7 @@ class Objects(FeatureBase):
 
         return Policy()
 
-    def get(self, object_dn: str = None, object_guid: str = None, raise_error_if_not_exists: bool = False):
+    def get(self, object_dn: str = None, object_guid: str = None, raise_error_if_not_exists: bool = True):
         """
         Converts an Object DN or Object GUID into a Config Object and returns it. Only
         one of the parameters is required.

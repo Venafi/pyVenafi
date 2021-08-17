@@ -40,8 +40,7 @@ class Certificate(FeatureBase):
             push_to_new=push_to_new
         ).success
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates the config object that represents the certificate.
 
@@ -195,7 +194,7 @@ class Certificate(FeatureBase):
 
         return result
 
-    def get(self, certificate_dn: str, raise_error_if_not_exists: bool = False):
+    def get(self, certificate_dn: str, raise_error_if_not_exists: bool = True):
         """
         Returns the config object of the certificate DN.
 
