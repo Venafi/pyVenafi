@@ -34,11 +34,13 @@ class Certificate(FeatureBase):
         if not isinstance(application_dns, list):
             application_dns = [application_dns]
 
-        assert self._api.websdk.Certificates.Associate.post(
+        result = self._api.websdk.Certificates.Associate.post(
             application_dn=application_dns,
             certificate_dn=certificate_dn,
             push_to_new=push_to_new
-        ).success
+        )
+        if not result.success:
+            raise FeatureError(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
 
     def create(self, name: str, parent_folder_dn: str, attributes: dict = None, get_if_already_exists: bool = True):
         """
