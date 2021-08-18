@@ -108,7 +108,8 @@ class Objects(FeatureBase):
         Returns:
             A boolean of the existence of the given ``object_dn``.
         """
-        result = self._api.websdk.Config.IsValid.post(object_dn=object_dn)
+        dn = self._get_dn(obj=object_dn)
+        result = self._api.websdk.Config.IsValid.post(object_dn=dn)
         return result.is_valid_response() and result.result.code == 1
 
     def find_policy(self, obj: Union['Config.Object', str], class_name: str, attribute_name: str):
