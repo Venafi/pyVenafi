@@ -98,6 +98,19 @@ class Objects(FeatureBase):
         else:
             raise TypeError(f'Expected attributes to be of type "list[str]" or "dict", but got {type(attributes)} instead.')
 
+    def exists(self, object_dn: str = None):
+        """
+        Returns a boolean of the existence of the given object DN.
+
+        Args:
+            object_dn: The object DN to check.
+
+        Returns:
+            A boolean of the existence of the given ``object_dn``.
+        """
+        result = self._api.websdk.Config.IsValid.post(object_dn=object_dn)
+        return result.is_valid_response() and result.result.code == 1
+
     def find_policy(self, obj: Union['Config.Object', str], class_name: str, attribute_name: str):
         """
         Returns the folder that suggests or locks a particular attribute value to the specified object.
