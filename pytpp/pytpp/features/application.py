@@ -67,7 +67,11 @@ class _ApplicationBase(FeatureBase):
         Returns:
             Config Object of the application.
         """
-        return self._get_config_object(object_dn=application_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=application_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(ApplicationClassNames)
+        )
 
     def get_associated_certificate(self, application: Union['Config.Object', str]):
         """
@@ -1225,7 +1229,11 @@ class _ApplicationGroupBase(FeatureBase):
         Returns:
             Config Object of the application group.
         """
-        return self._get_config_object(object_dn=application_group_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=application_group_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(ApplicationGroupClassNames)
+        )
 
     def get_applications_in_group(self, application_group: Union['Config.Object', str]):
         consumer_dns, certificate_dn = self._get_applications_in_group(application_group=application_group)

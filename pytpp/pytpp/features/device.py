@@ -62,7 +62,11 @@ class Device(_DeviceBase):
         Returns:
             Config object representing the device.
         """
-        return self._get_config_object(object_dn=device_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=device_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(DevicesClassNames)
+        )
 
     def scan_for_ssh_keys(self, device: Union['Config.Object', str]):
         """

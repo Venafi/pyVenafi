@@ -34,7 +34,11 @@ class _WorkflowBase(FeatureBase):
         Returns:
             Config object representing the workflow.
         """
-        return self._get_config_object(object_dn=workflow_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=workflow_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(WorkflowClassNames)
+        )
 
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,

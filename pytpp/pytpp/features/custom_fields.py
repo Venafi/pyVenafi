@@ -166,7 +166,10 @@ class CustomField(FeatureBase):
         Returns:
             Config object of the custom field.
         """
-        return self._get_config_object(object_dn=f'{self._metadata_root_dn}\\{name}', raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=f'{self._metadata_root_dn}\\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists
+        )
 
     def get_item_details(self, custom_field: Union['Config.Object', str] = None):
         """

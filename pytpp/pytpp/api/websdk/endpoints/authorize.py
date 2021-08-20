@@ -33,7 +33,7 @@ class _Authorize(API):
                 return self._from_json('APIKey')
 
         return _Response(
-            response=self._post(data=body, mask_input_regexes=['Password'], mask_output_regexes=['APIKey']))
+            response=self._post(data=body))
 
     class _Certificate(API):
         def __init__(self, api_obj):
@@ -90,7 +90,7 @@ class _Authorize(API):
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
-            return _Response(response=self._post(data=body, mask_output_regexes=['*token*']))
+            return _Response(response=self._post(data=body))
 
     class _Integrated(API):
         def __init__(self, api_obj):
@@ -150,8 +150,7 @@ class _Authorize(API):
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
-            return _Response(response=self._post(data=body, mask_input_regexes=['password'],
-                                                 mask_output_regexes = ['*token*']))
+            return _Response(response=self._post(data=body))
 
     class _OAuth(API):
         def __init__(self, api_obj):
@@ -202,7 +201,7 @@ class _Authorize(API):
                     return self._from_json('token_type')
 
             return _Response(
-                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['*token*']))
+                response=self._post(data=body))
 
     class _Token(API):
         def __init__(self, api_obj):
@@ -249,8 +248,7 @@ class _Authorize(API):
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
-            return _Response(response=self._post(data=body, mask_input_regexes=['*token*'],
-                                                 mask_output_regexes=['*token*']))
+            return _Response(response=self._post(data=body))
 
     class _Verify(API):
         def __init__(self, api_obj):

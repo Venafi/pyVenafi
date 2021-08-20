@@ -207,7 +207,8 @@ class Certificate(FeatureBase):
         Returns:
             Config Object of the certificate.
         """
-        return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists,
+                                       valid_class_names=list(CertificateClassNames))
 
     def get_previous_versions(self, certificate: Union['Config.Object', str], exclude_expired: bool = False, exclude_revoked: bool = False):
         """

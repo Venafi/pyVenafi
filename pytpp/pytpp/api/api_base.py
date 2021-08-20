@@ -97,8 +97,7 @@ class API:
         """
         return response.status_code == 401 and bool(re.match('.*API key.*is not valid.*', response.text))
 
-    def _delete(self, params: dict = None, mask_input_regexes: List[str] = None,
-                mask_output_regexes: List[str] = None):
+    def _delete(self, params: dict = None):
         """
         Performs a DELETE method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
@@ -106,13 +105,13 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='DELETE', data=params, mask_values_with_key=mask_input_regexes)
+        self._log_rest_call(method='DELETE', data=params)
         retried = 0
         exc = None
         while retried < self.retries:
             try:
                 response = self._session.delete(url=self._url, params=params)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+                self._log_response(response=response)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
                     return self._session.delete(url=self._url, params=params)
@@ -122,8 +121,7 @@ class API:
             retried += 1
         raise exc
 
-    def _get(self, params: dict = None, mask_input_regexes: List[str] = None,
-             mask_output_regexes: List[str] = None):
+    def _get(self, params: dict = None):
         """
         Performs a GET method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
@@ -134,13 +132,13 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='GET', data=params, mask_values_with_key=mask_input_regexes)
+        self._log_rest_call(method='GET', data=params)
         retried = 0
         exc = None
         while retried < self.retries:
             try:
                 response = self._session.get(url=self._url, params=params)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+                self._log_response(response=response)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
                     return self._session.get(url=self._url, params=params)
@@ -150,8 +148,7 @@ class API:
             retried += 1
         raise exc
 
-    def _post(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
-              mask_output_regexes: List[str] = None):
+    def _post(self, data: Union[list, dict]):
         """
         Performs a POST method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
@@ -162,13 +159,13 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='POST', data=data, mask_values_with_key=mask_input_regexes)
+        self._log_rest_call(method='POST', data=data)
         retried = 0
         exc = None
         while retried < self.retries:
             try:
                 response = self._session.post(url=self._url, data=data)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+                self._log_response(response=response)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
                     return self._session.post(url=self._url, data=data)
@@ -178,8 +175,7 @@ class API:
             retried += 1
         raise exc
 
-    def _put(self, data: Union[list, dict], mask_input_regexes: List[str] = None,
-             mask_output_regexes: List[str] = None):
+    def _put(self, data: Union[list, dict]):
         """
         Performs a PUT method request. If the response suggests the API Key is expired, then
         a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
@@ -190,13 +186,13 @@ class API:
         Returns:
             Returns the raw JSON response.
         """
-        self._log_rest_call(method='PUT', data=data, mask_values_with_key=mask_input_regexes)
+        self._log_rest_call(method='PUT', data=data)
         retried = 0
         exc = None
         while retried < self.retries:
             try:
                 response = self._session.put(url=self._url, data=data)
-                self._log_response(response=response, mask_values_with_key=mask_output_regexes)
+                self._log_response(response=response)
                 if self._is_api_key_invalid(response=response):
                     self._re_authenticate()
                     self._session.put(url=self._url, data=data)
@@ -226,19 +222,12 @@ class API:
             num_prev_callers=num_prev_callers
         )
 
-    def _log_rest_call(self, method: str, data: dict = None, mask_values_with_key: List[str] = None,
-                       num_prev_callers: int = 3):
+    def _log_rest_call(self, method: str, data: dict = None, num_prev_callers: int = 3):
         """
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
         if data:
-            if mask_values_with_key:
-                payload = json.dumps(
-                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
-                    indent=4
-                )
-            else:
-                payload = json.dumps(data, indent=4)
+            payload = logger._jsonpickle.dumps(data)
             logger.log(
                 msg=f'{method}\nURL: {self._url}\nBODY: {payload}',
                 log_tag=LogTags.api,
@@ -251,21 +240,13 @@ class API:
                 num_prev_callers=3
             )
 
-    def _log_response(self, response: Response, mask_values_with_key: List[str] = None,
-                      num_prev_callers: int = 3):
+    def _log_response(self, response: Response, num_prev_callers: int = 3):
         """
         Logs the URL, response code, and the content returned by TPP.
         This enforces consistency in logging across all API calls.
         """
         try:
-            data = response.json()
-            if mask_values_with_key and isinstance(data, dict):
-                pretty_json = json.dumps(
-                    self._mask_values_by_key(d=data.copy(), mask_values_with_key=mask_values_with_key),
-                    indent=4
-                )
-            else:
-                pretty_json = json.dumps(data, indent=4)
+            pretty_json = logger._jsonpickle.dumps(response.json())
         except json.JSONDecodeError:
             pretty_json = response.text or response.reason or 'No Content'
         except:
@@ -276,16 +257,6 @@ class API:
             log_tag=LogTags.api,
             num_prev_callers=num_prev_callers
         )
-
-    def _mask_values_by_key(self, d: dict, mask_values_with_key: List[str]):
-        regexes = "(" + ")|(".join(mask_values_with_key) + ")"
-        for key, value in d.items():
-            if re.match(pattern=regexes, string=key, flags=re.IGNORECASE):
-                d[key] = '********'
-            elif isinstance(value, dict):
-                d = self._mask_values_by_key(d, mask_values_with_key=mask_values_with_key)
-        return d
-
 
 class APIResponse:
     def __init__(self, response: Response):
@@ -375,8 +346,10 @@ class APIResponse:
             self.json_response.raise_for_status()
         except HTTPError as err:
             error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
-            body = json.dumps(json.loads(err.request.body), indent=4) if err.request.body else ''
-            raise InvalidResponseError('\n'.join(err.args) + f"\nERROR:{error_msg}\nCONTENT: {body}")
+            body = logger._jsonpickle.dumps(
+                json.loads(err.request.body)
+            ) if err.request.body else ''
+            raise InvalidResponseError('\n'.join(err.args) + f"\nERROR: {error_msg}\nCONTENT: {body}")
 
 
 class InvalidResponseError(Exception):

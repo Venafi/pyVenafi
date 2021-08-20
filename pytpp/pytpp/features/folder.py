@@ -202,7 +202,11 @@ class Folder(FeatureBase):
         Returns:
             Config object representing the folder.
         """
-        return self._get_config_object(object_dn=folder_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=folder_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(FolderClassNames)
+        )
 
     def get_engines(self, folder: Union['Config.Object', str]):
         """

@@ -165,7 +165,11 @@ class NetworkDiscovery(FeatureBase):
         Returns:
             Config object of the discovery job.
         """
-        return self._get_config_object(object_dn=f'{self._discovery_dn}\\{name}', raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=f'{self._discovery_dn}\\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(DiscoveryClassNames)
+        )
 
     def schedule(self, job: Union['Config.Object', str], hour: Union[str, int], days_of_week: List[str] = None,
                  days_of_month: List[str] = None, days_of_year: List[str] = None):
