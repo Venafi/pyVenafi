@@ -51,7 +51,7 @@ from dblogging.logger import Logger, _LoggerPickler
 from dblogging.config import LogTag, LogTagTemplate
 
 MASKED_REGEXES = [
-    'password',
+    '.*password.*',
     '.*token.*',
     '.*private.*key.*',
     'self',
