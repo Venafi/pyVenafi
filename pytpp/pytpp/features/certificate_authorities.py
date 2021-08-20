@@ -29,7 +29,11 @@ class _CertificateAuthorityBase(FeatureBase):
         Returns:
             Config object representing the Certificate Authority.
         """
-        return self._get_config_object(object_dn=certificate_authority_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=certificate_authority_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(CertificateAuthorityClassNames)
+        )
 
 
 @feature()

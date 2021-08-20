@@ -1,4 +1,3 @@
-import inspect
 import time
 import os
 import re
@@ -15,22 +14,10 @@ def feature():
     def decorate(cls):
         if int(os.getenv('PYTPP_DOC_IN_PROGRESS', 0)):
             return cls
-        for attr, fn in inspect.getmembers(cls, inspect.isroutine):
-            # Only public methods are decorated.
-            if callable(getattr(cls, attr)) and not fn.__name__.startswith('_'):
-                if type(cls.__dict__.get(fn.__name__)) in {staticmethod, classmethod}:
-                    setattr(cls, attr, logger.wrap_func(
-                        log_tag=LogTags.feature,
-                        mask_input_regexes=['self', 'cls'],
-                        is_static_or_classmethod=True
-                    )(getattr(cls, attr)))
-                else:
-                    setattr(cls, attr, logger.wrap_func(
-                        log_tag=LogTags.feature,
-                        mask_input_regexes=['self', 'cls'],
-                    )(getattr(cls, attr)))
-        return cls
-
+        return logger.wrap_class(
+            log_tag=LogTags.feature,
+            func_regex_exclude='_.*'
+        )(cls)
     return decorate
 
 
@@ -61,20 +48,29 @@ class FeatureBase:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def _get_config_object(self, object_dn: str = None, object_guid: str = None,
-                           raise_error_if_not_exists: bool = True):
+                           raise_error_if_not_exists: bool = True, valid_class_names: List[str] = None):
         if not (object_dn or object_guid):
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
         if isinstance(object_dn, Config.Object):
-            return object_dn
-        if isinstance(object_guid, Config.Object):
-            return object_guid
-        obj = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
-        if obj.result.code == 400 and not raise_error_if_not_exists:
-            # The object doesn't exist, but just return an empty object.
-            return Config.Object(response_object={})
-        return obj.object
+            obj = object_dn
+        elif isinstance(object_guid, Config.Object):
+            obj = object_guid
+        else:
+            response = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
+            if response.result.code == 400:
+                if raise_error_if_not_exists:
+                    raise ValueError(f'"{object_dn or object_guid}" does not exist.')
+                else:
+                    obj = Config.Object({})
+            else:
+                obj = response.object
+        if valid_class_names and obj.type_name not in valid_class_names:
+            valid_class_names = "\n".join(f"*  {i}" for i in valid_class_names)
+            raise TypeError(f'"{object_dn or object_guid}" exists, but is not the expected class type.\n'
+                             f'Got type "{obj.type_name}" instead of one of \n{valid_class_names}.')
+        return obj
 
     def _get_identity_object(self, prefixed_name: str = None, prefixed_universal: str = None,
                              raise_error_if_not_exists: bool = True):

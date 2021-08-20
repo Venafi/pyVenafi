@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List, Union
 from pytpp.vtypes import Config
-from pytpp.properties.config import CredentialAttributes
+from pytpp.properties.config import CredentialAttributes, CredentialClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
@@ -56,7 +56,11 @@ class _CredentialBase(FeatureBase):
         Returns:
             Config object of the credential object.
         """
-        return self._get_config_object(object_dn=credential_dn, raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=credential_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(CredentialClassNames)
+        )
 
 
 @feature()

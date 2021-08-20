@@ -102,7 +102,11 @@ class ClientGroups(FeatureBase):
         Returns:
             Config object representing the client group.
         """
-        return self._get_config_object(object_dn=fr'{self._group_base_dn}\{name}', raise_error_if_not_exists=raise_error_if_not_exists)
+        return self._get_config_object(
+            object_dn=fr'{self._group_base_dn}\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(ClientGroupsClassNames)
+        )
 
     def list(self):
         """

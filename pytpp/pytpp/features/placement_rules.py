@@ -334,5 +334,6 @@ class PlacementRules(FeatureBase):
         """
         return self._get_config_object(
             object_dn=f'{self._layout_rules_dn}\\{name}',
-            raise_error_if_not_exists=raise_error_if_not_exists
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(PlacementRulesClassNames)
         )
