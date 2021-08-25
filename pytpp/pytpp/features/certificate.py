@@ -243,7 +243,7 @@ class Certificate(FeatureBase):
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
-        return [result.file, result.ssl_tls]
+        return result.file, result.ssl_tls
 
     def push_to_applications(self, certificate: Union['Config.Object', str], application_dns: List[str] = None):
         """
@@ -395,17 +395,21 @@ class Certificate(FeatureBase):
 
     def validate(self, certificates: 'List[Config.Object]'):
         """
-        Validates the certificate on all applications associated to certificate that are not disabled.
+        Performs SSL/TLS network validation of certificate on all applications associated to certificate that are not disabled.
 
         Args:
             certificates: List of certificate config objects to validate.
 
         Returns:
-            Validation results.
+            A tuple of valid certificate DNs and validation warnings..
         """
         certificate_dns = [self._get_dn(certificate) for certificate in certificates]
         result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
-        return result
+        if not result.success:
+            raise FeatureError.UnexpectedValue(
+                f'TPP failed to perform validation. Got this error: "{result.error}".'
+            )
+        return result.validated_certificate_dns, result.warnings
 
     def wait_for_enrollment_to_complete(self, certificate: Union['Config.Object', str], current_thumbprint: str, timeout: int = 60):
         """
