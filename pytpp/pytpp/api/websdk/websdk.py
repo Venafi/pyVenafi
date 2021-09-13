@@ -1,4 +1,5 @@
 from typing import Union
+
 from pytpp.logger import logger, LogTags
 from pytpp.api.session import Session
 from pytpp.properties.oauth import Scope
@@ -24,6 +25,7 @@ from pytpp.api.websdk.endpoints.revoke import _Revoke
 from pytpp.api.websdk.endpoints.rights import _Rights
 from pytpp.api.websdk.endpoints.secret_store import _SecretStore
 from pytpp.api.websdk.endpoints.ssh import _SSH
+from pytpp.api.websdk.endpoints.ssh_certificates import _SSHCertificates
 from pytpp.api.websdk.endpoints.stats import _Stats
 from pytpp.api.websdk.endpoints.system_status import _SystemStatus
 from pytpp.api.websdk.endpoints.teams import _Teams
@@ -158,6 +160,7 @@ class WebSDK:
         self.Rights = _Rights(self)
         self.SecretStore = _SecretStore(self)
         self.SSH = _SSH(self)
+        self.SSHCertificates = _SSHCertificates(self)
         self.Stats = _Stats(self)
         self.SystemStatus = _SystemStatus(self)
         self.Teams = _Teams(self)

@@ -5,40 +5,9 @@ from pytpp.properties.response_objects.ssh_certificates import SSHCertificate
 
 class _SSHCertificates:
     def __init__(self, api_obj):
-        self.AddAuthorizedKey = self._AddAuthorizedKey(api_obj=api_obj)
-        self.AddHostPrivateKey = self._AddHostPrivateKey(api_obj=api_obj)
-        self.AddKnownHostKey = self._AddKnownHostKey(api_obj=api_obj)
-        self.AddSelfServiceKey = self._AddSelfServiceKey(api_obj=api_obj)
-        self.AddSelfServiceAuthorizedKey = self._AddSelfServiceAuthorizedKey(api_obj=api_obj)
-        self.AddSelfServicePrivateKey = self._AddSelfServicePrivateKey(api_obj=api_obj)
-        self.AddUserPrivateKey = self._AddUserPrivateKey(api_obj=api_obj)
-        self.ApproveKeyOperation = self._ApproveKeyOperation(api_obj=api_obj)
-        self.CancelKeyOperation = self._CancelKeyOperation(api_obj=api_obj)
-        self.CancelRotation = self._CancelRotation(api_obj=api_obj)
-        self.ChangePrivateKeyPassphrase = self._ChangePrivateKeyPassphrase(api_obj=api_obj)
-        self.ConfirmSelfServiceKeyInstallation = self._ConfirmSelfServiceKeyInstallation(api_obj=api_obj)
-        self.DeleteUnmatchedKeyset = self._DeleteUnmatchedKeyset(api_obj=api_obj)
-        self.Devices = self._Devices(api_obj=api_obj)
-        self.EditKeyOptions = self._EditKeyOptions(api_obj=api_obj)
-        self.EditSelfServiceAuthorizedKey = self._EditSelfServiceAuthorizedKey(api_obj=api_obj)
-        self.ExportSelfServiceKey = self._ExportSelfServiceKey(api_obj=api_obj)
-        self.ExportSelfServicePrivateKey = self._ExportSelfServicePrivateKey(api_obj=api_obj)
-        self.ImportAuthorizedKey = self._ImportAuthorizedKey(api_obj=api_obj)
-        self.ImportKeyUsageData = self._ImportKeyUsageData(api_obj=api_obj)
-        self.ImportPrivateKey = self._ImportPrivateKey(api_obj=api_obj)
-        self.KeyDetails = self._KeyDetails(api_obj=api_obj)
-        self.KeysetDetails = self._KeysetDetails(api_obj=api_obj)
-        self.KeyUsage = self._KeyUsage(api_obj=api_obj)
-        self.MoveKeysetsToPolicy = self._MoveKeysetsToPolicy(api_obj=api_obj)
-        self.RejectKeyOperation = self._RejectKeyOperation(api_obj=api_obj)
-        self.RemoveKey = self._RemoveKey(api_obj=api_obj)
-        self.RetryKeyOperation = self._RetryKeyOperation(api_obj=api_obj)
-        self.RetryRotation = self._RetryRotation(api_obj=api_obj)
-        self.Rotate = self._Rotate(api_obj=api_obj)
-        self.SetUnmatchedKeysetPassPhrase = self._SetUnmatchedKeysetPassPhrase(api_obj=api_obj)
-        self.SkipKeyRotation = self._SkipKeyRotation(api_obj=api_obj)
-        self.TestDeviceConnection = self._TestDeviceConnection(api_obj=api_obj)
-        self.Widget = self._Widget(api_obj=api_obj)
+        self.Request = self._Request(api_obj=api_obj)
+        self.Retrieve = self._Retrieve(api_obj=api_obj)
+        self.Template = self._Template(api_obj=api_obj)
 
     class _Request(API):
         def __init__(self, api_obj):
@@ -183,10 +152,12 @@ class _SSHCertificates:
     class _Template(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSHCertificates/Template')
+            self.Retrieve = self._Retrieve(api_obj=api_obj)
 
         class _Retrieve(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SSHCertificates/Template/Retrieve')
+                self.PublicKeyData = self._PublicKeyData(api_obj=api_obj)
 
             def post(self, template_dn: str = None, template_guid: str = None, include_ca_keypair_details: bool = None):
                 body = {
