@@ -2,6 +2,7 @@ from typing import List, Union
 from pytpp.vtypes import Config
 from pytpp.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.logger import logger, LogTags
 
 
 @feature()
@@ -14,13 +15,20 @@ class Certificate(FeatureBase):
         super().__init__(api)
 
     def _get(self, certificate: Union['Config.Object', str]):
-        certificate_guid = self._get_guid(certificate)
-        result = self._api.websdk.Certificates.Guid(certificate_guid).get()
-        result.assert_valid_response()
-
+        # High volume concurrency can cause a 500 internal error in IIS due to a deadlock.
+        # In this case the error requests the client to "rerun the transaction".
+        retries = 3
+        while retries > 0:
+            certificate_guid = self._get_guid(certificate)
+            result = self._api.websdk.Certificates.Guid(certificate_guid).get()
+            if 'Rerun the transaction' not in result.json_response.reason:
+                result.assert_valid_response()
+                break
+            logger.log('Rerunning Certificates/Get transaction due to deadlock...', log_tag=LogTags.feature)
+            retries -= 1
         return result
 
-    def associate_application(self, certificate: Union['Config.Object', str], application_dns: List[str], 
+    def associate_application(self, certificate: Union['Config.Object', str], application_dns: List[str],
                               push_to_new: bool = False):
         """
         Associate an application object to a certificate.
@@ -210,7 +218,8 @@ class Certificate(FeatureBase):
         return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists,
                                        valid_class_names=list(CertificateClassNames))
 
-    def get_previous_versions(self, certificate: Union['Config.Object', str], exclude_expired: bool = False, exclude_revoked: bool = False):
+    def get_previous_versions(self, certificate: Union['Config.Object', str], exclude_expired: bool = False,
+                              exclude_revoked: bool = False):
         """
         Returns all of the historical certificates and their details related to the given certificate GUID.
 
@@ -355,8 +364,8 @@ class Certificate(FeatureBase):
                 f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
             )
 
-    def upload(self, certificate_data: str, parent_folder_dn: str, certificate_authority_attributes: dict = None, name: str = None,
-               password: str = None, private_key_data: str = None, reconcile: bool = False):
+    def upload(self, certificate_data: str, parent_folder_dn: str, certificate_authority_attributes: dict = None,
+               name: str = None, password: str = None, private_key_data: str = None, reconcile: bool = False):
         """
         Uploads the certificate data to TPP to create a certificate object under the given parent folder DN. If the BEGIN/END
         header or footer is missing, the data is assumed to be Base 64 encoded in the PKCS#12 format. For Base 64 encoded
@@ -411,7 +420,8 @@ class Certificate(FeatureBase):
             )
         return result.validated_certificate_dns, result.warnings
 
-    def wait_for_enrollment_to_complete(self, certificate: Union['Config.Object', str], current_thumbprint: str, timeout: int = 60):
+    def wait_for_enrollment_to_complete(self, certificate: Union['Config.Object', str], current_thumbprint: str,
+                                        timeout: int = 60):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
@@ -446,7 +456,8 @@ class Certificate(FeatureBase):
             f'status "{cert.processing_details.status}".'
         )
 
-    def wait_for_stage(self, certificate: Union['Config.Object', str], stage: int, expect_workflow: bool = True, timeout: int = 60):
+    def wait_for_stage(self, certificate: Union['Config.Object', str], stage: int, expect_workflow: bool = True,
+                       timeout: int = 60):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of
         ``timeout`` seconds. If the timeout is reached, an error is raised.
