@@ -17,15 +17,19 @@ class Certificate(FeatureBase):
     def _get(self, certificate: Union['Config.Object', str]):
         # High volume concurrency can cause a 500 internal error in IIS due to a deadlock.
         # In this case the error requests the client to "rerun the transaction".
+        certificate_guid = self._get_guid(certificate)
+
         retries = 3
-        while retries > 0:
-            certificate_guid = self._get_guid(certificate)
-            result = self._api.websdk.Certificates.Guid(certificate_guid).get()
+        result = self._api.websdk.Certificates.Guid(certificate_guid).get()
+        for retry in range(retries):
             if 'Rerun the transaction' not in result.json_response.reason:
                 result.assert_valid_response()
-                break
+                return result
             logger.log('Rerunning Certificates/Get transaction due to deadlock...', log_tag=LogTags.feature)
-            retries -= 1
+            result = self._api.websdk.Certificates.Guid(certificate_guid).get()
+        # It's likely at this point that we failed to get the certificate. Let the result.assert_valid_response()
+        # handle the errors. In some unknown case where the response is valid, return it just in case.
+        result.assert_valid_response()
         return result
 
     def associate_application(self, certificate: Union['Config.Object', str], application_dns: List[str],
