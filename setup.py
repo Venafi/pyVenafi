@@ -1,10 +1,9 @@
-__version__ = "0.5.5"
+__version__ = "0.5.6"
 
 from setuptools import setup, find_packages
 import os
 
-PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(PROJECT_DIR, 'README.md')) as f:
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     long_description = f.read()
 
 if __name__ == '__main__':
@@ -28,7 +27,7 @@ if __name__ == '__main__':
             'jsonpickle',
             'python-dateutil',
             'isodate',
-            'dblogging>=1.2.1',
+            'dblogging',
             'packaging'
         ],
         classifiers=[
