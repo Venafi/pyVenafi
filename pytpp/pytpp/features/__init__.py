@@ -1,26 +1,33 @@
 from pytpp.features.bases.feature_base import FeatureBase
 from pytpp.features.objects import Objects
 from pytpp.features.folder import Folder, FolderAttributes, FolderClassNames
-from pytpp.features.client_groups import ClientGroups, ClientGroupsClassNames, ClientGroupsAttributes, ClientGroupsAttributeValues
+from pytpp.features.client_groups import ClientGroups, ClientGroupsClassNames, ClientGroupsAttributes, \
+    ClientGroupsAttributeValues
 from pytpp.features.client_work import AgentConnectivity, AgentUpgrade, CertificateDevicePlacement, \
     CertificateDiscovery, CertificateEnrollmentViaESTProtocol, CertificateInstallation, ClientWorkClassNames, \
     ClientWorkAttributes, \
     ClientWorkAttributeValues, DynamicProvisioning, SSHDevicePlacement, SSHDiscovery, SSHKeyUsage, SSHRemediation, \
     UserCertificateCreation
-from pytpp.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, CertificateClassNames
+from pytpp.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, \
+    CertificateClassNames
 from pytpp.features.device import Device, DeviceAttributes, DevicesClassNames, DeviceAttributeValues
-from pytpp.features.application import A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, \
-    CitrixNetScaler, ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, JuniperSAS, \
-    OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, ApplicationAttributes, \
-    ApplicationAttributeValues, ApplicationClassNames
-from pytpp.features.discovery import NetworkDiscovery, DiscoveryClassNames, DiscoveryAttributeValues, DiscoveryAttributes
+from pytpp.features.application import A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, \
+    CAPI, \
+    CitrixNetScaler, ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, \
+    JuniperSAS, \
+    OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, \
+    ApplicationAttributes, \
+    ApplicationAttributeValues, ApplicationClassNames, ApplicationGroupAttributes, ApplicationGroupClassNames, \
+    PKCS11ApplicationGroup, ApacheApplicationGroup
+from pytpp.features.discovery import NetworkDiscovery, DiscoveryClassNames, DiscoveryAttributeValues, \
+    DiscoveryAttributes
 from pytpp.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
     PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
 from pytpp.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
     CertificateAuthorityClassNames
 from pytpp.features.identity import User, Group, IdentityClassNames, IdentityAttributes
 from pytpp.features.permissions import Permissions
-from pytpp.features.platform import AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager,\
+from pytpp.features.platform import AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager, \
     CertificatePreEnrollment, CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, \
     OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes, \
     PlatformsClassNames
@@ -29,7 +36,6 @@ from pytpp.features.placement_rules import PlacementRules, PlacementRulesAttribu
 from pytpp.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
     WorkflowAttributeValues, WorkflowClassNames
 from pytpp.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
-
 
 
 # region Features
@@ -181,6 +187,24 @@ class _Application:
     def vamnshield(self) -> VAMnShield:
         self._vamnshield = self._vamnshield or VAMnShield(self._api)
         return self._vamnshield
+
+
+class _ApplicationGroup:
+    def __init__(self, api):
+        self._api = api
+
+        self._apache = None
+        self._pkcs11 = None
+
+    @property
+    def apache(self) -> ApacheApplicationGroup:
+        self._apache = self._apache or ApacheApplicationGroup(self._api)
+        return self._apache
+
+    @property
+    def pkcs11(self) -> PKCS11ApplicationGroup:
+        self._pkcs11 = self._pkcs11 or PKCS11ApplicationGroup(self._api)
+        return self._pkcs11
 
 
 class _CertificateAuthority:
@@ -488,9 +512,9 @@ class _Workflow:
 class Features:
     def __init__(self, api):
         self._api = api
-        
+
         self._applications = None
-        self._objects = None
+        self._application_group = None
         self._ca = None
         self._certificate = None
         self._client_groups = None
@@ -501,6 +525,7 @@ class Features:
         self._discovery = None
         self._folder = None
         self._identity = None
+        self._objects = None
         self._permissions = None
         self._placement_rule_condition = None
         self._placement_rules = None
@@ -513,9 +538,9 @@ class Features:
         return self._applications
 
     @property
-    def objects(self) -> Objects:
-        self._objects = self._objects or Objects(self._api)
-        return self._objects
+    def application_group(self) -> _ApplicationGroup:
+        self._application_group = self._application_group or _ApplicationGroup(self._api)
+        return self._application_group
 
     @property
     def certificate(self) -> Certificate:
@@ -568,6 +593,11 @@ class Features:
         return self._identity
 
     @property
+    def objects(self) -> Objects:
+        self._objects = self._objects or Objects(self._api)
+        return self._objects
+
+    @property
     def permissions(self) -> Permissions:
         self._permissions = self._permissions or Permissions(self._api)
         return self._permissions
@@ -592,12 +622,14 @@ class Features:
         self._workflow = self._workflow or _Workflow(self._api)
         return self._workflow
 
+
 # endregion
 
 
 # region AttributeNames, AttributeValues, and Classes
 class AttributeNames:
     Application = ApplicationAttributes
+    ApplicationGroup = ApplicationGroupAttributes
     Certificate = CertificateAttributes
     CertificateAuthority = CertificateAuthorityAttributes
     ClientGroups = ClientGroupsAttributes
@@ -627,6 +659,7 @@ class AttributeValues:
 
 class Classes:
     Application = ApplicationClassNames
+    ApplicationGroup = ApplicationGroupClassNames
     Certificate = CertificateClassNames
     CertificateAuthority = CertificateAuthorityClassNames
     ClientGroups = ClientGroupsClassNames

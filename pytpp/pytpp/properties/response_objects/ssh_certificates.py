@@ -1,6 +1,5 @@
 from typing import List
 from pytpp.properties.resultcodes import ResultCodes
-from pytpp.tools.helpers.date_converter import from_date_string
 
 
 class SSHCertificate:

@@ -662,6 +662,11 @@ class _Certificates(API):
 
                 @property
                 @json_response_property()
+                def error(self) -> str:
+                    return self._from_json(key='Error')
+
+                @property
+                @json_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 

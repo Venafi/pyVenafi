@@ -156,15 +156,20 @@ class NetworkDiscovery(FeatureBase):
         response = self._api.websdk.Discovery.Guid(guid=job_guid).delete()
         response.assert_valid_response()
 
-    def get(self, name: str):
+    def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
         Args:
             name: Name of the discovery job.
+            raise_error_if_not_exists: Raise an exception if the discovery job does not exist.
 
         Returns:
             Config object of the discovery job.
         """
-        return self._get_config_object(object_dn=f'{self._discovery_dn}\\{name}')
+        return self._get_config_object(
+            object_dn=f'{self._discovery_dn}\\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(DiscoveryClassNames)
+        )
 
     def schedule(self, job: Union['Config.Object', str], hour: Union[str, int], days_of_week: List[str] = None,
                  days_of_month: List[str] = None, days_of_year: List[str] = None):

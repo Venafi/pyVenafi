@@ -47,9 +47,17 @@ Examples Of Using The Logger
 Refer to the dblogging documentation for further customization.
 
 """
-from dblogging.logger import Logger
+from dblogging.logger import Logger, _LoggerPickler
 from dblogging.config import LogTag, LogTagTemplate
 
+MASKED_REGEXES = [
+    '.*password.*',
+    '.*token.*',
+    '.*private.*key.*',
+    'self',
+    'cls',
+    'apikey',
+]
 
 class LogTags(LogTagTemplate):
     #: * **Name** - API
@@ -84,3 +92,4 @@ class LogTags(LogTagTemplate):
 
 logger = Logger()
 logger.log_tags = LogTags
+_LoggerPickler.MASKED_REGEXES = MASKED_REGEXES

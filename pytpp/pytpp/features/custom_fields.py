@@ -155,17 +155,21 @@ class CustomField(FeatureBase):
         )
         self._validate_result_code(response.result)
 
-    def get(self, name: str = None):
+    def get(self, name: str = None, raise_error_if_not_exists: bool = True):
         """
         Fetches the config object a custom field object.
 
         Args:
             name: The name of the custom field object.
+            raise_error_if_not_exists: Raise an exception if the custom field does not exist.
 
         Returns:
             Config object of the custom field.
         """
-        return self._get_config_object(object_dn=f'{self._metadata_root_dn}\\{name}')
+        return self._get_config_object(
+            object_dn=f'{self._metadata_root_dn}\\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists
+        )
 
     def get_item_details(self, custom_field: Union['Config.Object', str] = None):
         """
