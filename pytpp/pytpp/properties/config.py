@@ -786,6 +786,8 @@ class ApplicationGroupAttributes(_ApplicationGroupAttributesBase, metaclass=_Pro
         softcard_identifier = "Softcard Identifier"
 
     class PKCS11(metaclass=_PropertyMeta):
+        application_group = "Application Group"
+        hsm_cblob = "HSM:CBlob"
         hsm_cka_label_format = "HSM:CKA LABEL Format"
         hsm_csr_subject_dn = "HSM:CSR Subject DN"
         hsm_embed_sans_in_csr = "HSM:Embed SANs in CSR"
