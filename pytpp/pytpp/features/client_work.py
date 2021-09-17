@@ -61,17 +61,22 @@ class _ClientWorkBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def get(self, name: str):
+    def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
         Gets a client work and returns a config object
 
         Args:
             name: The name of the client work.
+            raise_error_if_not_exists: Raise an exception if the client work does not exist.
 
         Returns:
             Config object representing a client work
         """
-        return self._get_config_object(object_dn=rf'{self._work_base_dn}\{name}')
+        return self._get_config_object(
+            object_dn=rf'{self._work_base_dn}\{name}',
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(ClientWorkClassNames)
+        )
 
     def list(self):
         """

@@ -1,10 +1,12 @@
-from typing import Union
+from typing import Union, List
 from pytpp.vtypes import Config
-from pytpp.properties.config import ApplicationClassNames, ApplicationAttributes, ApplicationAttributeValues, CertificateAttributes
+from pytpp.properties.config import ApplicationClassNames, ApplicationGroupClassNames, ApplicationAttributes, \
+    ApplicationGroupAttributes, ApplicationAttributeValues, CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.tools.helpers.date_converter import from_date_string
 
 
+# region Applications
 class _ApplicationBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -54,17 +56,22 @@ class _ApplicationBase(FeatureBase):
         if result.code != 1:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def get(self, application_dn: str):
+    def get(self, application_dn: str, raise_error_if_not_exists: bool = True):
         """
         Returns the config object of the application DN.
 
         Args:
             application_dn: DN of the application object.
+            raise_error_if_not_exists: Raise an exception if the application DN does not exist.
 
         Returns:
             Config Object of the application.
         """
-        return self._get_config_object(object_dn=application_dn)
+        return self._get_config_object(
+            object_dn=application_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(ApplicationClassNames)
+        )
 
     def get_associated_certificate(self, application: Union['Config.Object', str]):
         """
@@ -229,7 +236,7 @@ class A10AXTrafficManager(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an A10 AX Traffic Manager application object.
@@ -266,7 +273,7 @@ class Adaptable(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Adaptable application object.
@@ -303,7 +310,7 @@ class AmazonAWS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an Amazon AWS application object.
@@ -340,7 +347,7 @@ class Apache(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an Apache application object.
@@ -378,7 +385,7 @@ class AzureKeyVault(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an Azure Key Vault application object.
@@ -415,7 +422,7 @@ class Basic(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Basic application object.
@@ -487,7 +494,7 @@ class BlueCoatSSLVA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a BlueCoat SSLVA application object.
@@ -524,7 +531,7 @@ class CAPI(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a CAPI application object.
@@ -561,7 +568,7 @@ class CitrixNetScaler(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a CAPI application object.
@@ -598,7 +605,7 @@ class ConnectDirect(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Connect:Direct application object.
@@ -635,7 +642,7 @@ class F5AuthenticationBundle(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, bundle_file_name: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, bundle_file_name: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a F5 Authentication Bundle application object.
@@ -672,7 +679,7 @@ class F5LTMAdvanced(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a F5 LTM Advanced application object.
@@ -709,7 +716,7 @@ class IBMDataPower(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an IBM DataPower application object.
@@ -746,7 +753,7 @@ class IBMGSK(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an IBM GSK application object.
@@ -783,7 +790,7 @@ class ImpervaMX(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates an Imperva MX application object.
@@ -820,7 +827,7 @@ class JKS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a JKS application object.
@@ -857,7 +864,7 @@ class JuniperSAS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Juniper SAS application object.
@@ -894,7 +901,7 @@ class OracleIPlanet(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Oracle iPlanet application object.
@@ -931,7 +938,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Palo Alto Network FW application object.
@@ -968,7 +975,7 @@ class PEM(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a PEM application object.
@@ -1005,7 +1012,7 @@ class PKCS11(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a PKCS11 application object.
@@ -1041,7 +1048,7 @@ class PKCS12(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a PKCS #12 application object.
@@ -1078,7 +1085,7 @@ class RiverbedSteelHead(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Riverbed SteelHead application object.
@@ -1115,7 +1122,7 @@ class TealeafPCA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a Tealeaf PCA application object.
@@ -1152,7 +1159,7 @@ class VAMnShield(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, 
+    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Creates a VAM nShield application object.
@@ -1178,3 +1185,169 @@ class VAMnShield(_ApplicationBase):
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
+# endregion Applications
+
+# region Application Groups
+class _ApplicationGroupBase(FeatureBase):
+    def __init__(self, api, class_name):
+        super().__init__(api=api)
+        self.class_name = class_name
+        self.certificate_suffix = f'{class_name.split(maxsplit=1)[0]} App Group'
+
+    def delete(self, application_group: Union['Config.Object', str], dissociate: bool = True):
+        """
+        Deletes an Application group object.
+
+        Args:
+            application_group: Config object or DN of the Application object.
+            dissociate: If ``True``, dissociate all applications in the group from the certificate.
+        """
+        application_group_dn = self._get_dn(application_group)
+        if dissociate:
+            consumer_dns, certificate_dn = self._get_applications_in_group(application_group=application_group)
+            result = self._api.websdk.Certificates.Dissociate.post(
+                certificate_dn=certificate_dn,
+                application_dn=consumer_dns,
+                delete_orphans=False
+            )
+            if not result.success:
+                raise FeatureError(
+                    f'Unable to dissociate the applications in the application group "{application_group.dn}" '
+                    f'from {certificate_dn}'
+                )
+        self._secret_store_delete(object_dn=application_group_dn)
+        self._config_delete(object_dn=application_group_dn)
+
+    def get(self, application_group_dn: str, raise_error_if_not_exists: bool = True):
+        """
+        Returns the config object of the application DN.
+
+        Args:
+            application_group_dn: DN of the application group object.
+            raise_error_if_not_exists: Raise an exception if the application DN does not exist.
+
+        Returns:
+            Config Object of the application group.
+        """
+        return self._get_config_object(
+            object_dn=application_group_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(ApplicationGroupClassNames)
+        )
+
+    def get_applications_in_group(self, application_group: Union['Config.Object', str]):
+        consumer_dns, certificate_dn = self._get_applications_in_group(application_group=application_group)
+        return consumer_dns
+
+    def _create(self, application_dns: List[str], certificate: 'Config.Object', attributes: dict = None):
+        # Create the Application Group.
+        app_group = self._config_create(
+            name=f'{certificate.name} - {self.certificate_suffix}',
+            parent_folder_dn=certificate.parent,
+            config_class=self.class_name,
+            attributes=attributes
+        )
+        # Associate the Application Group DN.
+        result = self._api.websdk.Config.WriteDn.post(
+            object_dn=certificate.dn,
+            attribute_name=CertificateAttributes.application_group_dn,
+            values=[app_group.dn]
+        ).result
+        if result.code != 1:
+            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+
+        # Associate each individual application.
+        result = self._api.websdk.Certificates.Associate.post(
+            application_dn=application_dns,
+            certificate_dn=certificate.dn,
+            push_to_new=False
+        )
+        if not result.success:
+            raise FeatureError(f'Unable to associate the given applications to the certificate "{certificate.dn}".')
+
+        return app_group
+
+    def _get_applications_in_group(self, application_group: Union['Config.Object', str]):
+        application_group_dn = self._get_dn(application_group)
+        certificate_dn = self._api.websdk.Config.Read.post(
+            object_dn=application_group_dn,
+            attribute_name=ApplicationGroupAttributes.certificate
+        ).values[0]
+        consumer_dns = self._api.websdk.Config.Read.post(
+            object_dn=certificate_dn,
+            attribute_name=CertificateAttributes.consumers
+        ).values
+        return consumer_dns, certificate_dn
+
+
+@feature()
+class ApacheApplicationGroup(_ApplicationGroupBase):
+    def __init__(self, api):
+        super().__init__(api=api, class_name=ApplicationGroupClassNames.apache_application_group)
+
+    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
+               common_data_location: str = None, attributes: dict = None):
+        application_dns = [self._get_dn(application) for application in applications]
+        certificate = self._get_config_object(object_dn=certificate)
+        default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
+        if not common_data_location:
+            try:
+                hsm = next(attr.values[0] for attr in default_attrs if attr.name == ApplicationAttributes.Apache.private_key_location)
+            except StopIteration:
+                hsm = None
+            if hsm == ApplicationAttributeValues.Apache.PrivateKeyLocation.thales_nshield_hsm:
+                common_data_location = '/opt/nfast/bin'
+            elif hsm == ApplicationAttributeValues.Apache.PrivateKeyLocation.gemalto_safe_net_hsm:
+                common_data_location = '/usr/safenet/lunaclient/bin'
+
+        group_attributes = {
+            ApplicationGroupAttributes.Apache.client_tools_path            : None,
+            ApplicationGroupAttributes.Apache.partition_password_credential: None,
+            ApplicationGroupAttributes.Apache.protection_type              : None,
+            ApplicationGroupAttributes.Apache.softcard_identifier          : None,
+            ApplicationGroupAttributes.Apache.private_key_label            : None,
+            ApplicationGroupAttributes.common_data_location                : common_data_location,
+            ApplicationGroupAttributes.certificate                         : certificate.dn,
+            ApplicationGroupAttributes.enrollment_application_dn           : application_dns[0],
+        }
+        for attribute in default_attrs:
+            if attribute.name in group_attributes.keys():
+                group_attributes[attribute.name] = attribute.values
+
+        if attributes:
+            group_attributes.update(attributes)
+
+        return self._create(application_dns=application_dns, certificate=certificate, attributes=group_attributes)
+
+
+@feature()
+class PKCS11ApplicationGroup(_ApplicationGroupBase):
+    def __init__(self, api):
+        super().__init__(api=api, class_name=ApplicationGroupClassNames.pkcs11_application_group)
+
+    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
+               attributes: dict = None):
+        application_dns = [self._get_dn(application) for application in applications]
+        certificate = self._get_config_object(object_dn=certificate)
+        default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
+        group_attributes = {
+            ApplicationGroupAttributes.PKCS11.hsm_cka_label_format   : None,
+            ApplicationGroupAttributes.PKCS11.hsm_requested_cka_label: None,
+            ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr  : None,
+            ApplicationGroupAttributes.PKCS11.hsm_import_certificate : None,
+            ApplicationGroupAttributes.PKCS11.hsm_protection_type    : None,
+            ApplicationGroupAttributes.PKCS11.hsm_requested_usecase  : None,
+            ApplicationGroupAttributes.PKCS11.hsm_reverse_subject_dn : None,
+            ApplicationGroupAttributes.PKCS11.hsm_token_label        : None,
+            ApplicationGroupAttributes.PKCS11.hsm_token_password     : None,
+            ApplicationGroupAttributes.certificate                   : certificate.dn,
+            ApplicationGroupAttributes.enrollment_application_dn     : application_dns[0],
+        }
+        for attribute in default_attrs:
+            if attribute.name in group_attributes.keys():
+                group_attributes[attribute.name] = attribute.values
+        if attributes:
+            group_attributes.update(attributes)
+
+        return self._create(application_dns=application_dns, certificate=certificate, attributes=group_attributes)
+# endregion Application Groups

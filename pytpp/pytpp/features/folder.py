@@ -191,17 +191,22 @@ class Folder(FeatureBase):
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
-    def get(self, folder_dn: str):
+    def get(self, folder_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Creates a Folder, or Policy, object in TPP.
+        Returns the config object of the folder DN.
 
         Args:
             folder_dn: DN of the folder.
+            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
 
         Returns:
             Config object representing the folder.
         """
-        return self._get_config_object(object_dn=folder_dn)
+        return self._get_config_object(
+            object_dn=folder_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(FolderClassNames)
+        )
 
     def get_engines(self, folder: Union['Config.Object', str]):
         """

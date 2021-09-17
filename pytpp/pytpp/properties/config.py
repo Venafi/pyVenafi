@@ -1,5 +1,17 @@
+class _PropertyMeta(type):
+    def __iter__(self):
+        for item in dir(self):
+            if not item.startswith('_'):
+                attr = getattr(self, item)
+                if not callable(attr):
+                    yield attr
+
+    def list(cls):
+        return list(iter(cls))
+
+
 # region Application
-class _ApplicationAttributesBase:
+class _ApplicationAttributesBase(metaclass=_PropertyMeta):
     adaptable_workflow_approvers = "Adaptable Workflow Approvers"
     adaptable_workflow_reference_id = "Adaptable Workflow Reference ID"
     adaptable_workflow_stage = "Adaptable Workflow Stage"
@@ -73,8 +85,8 @@ class _ApplicationAttributesBase:
     workflow_block = "Workflow Block"
 
 
-class ApplicationAttributes(_ApplicationAttributesBase):
-    class A10AXTrafficManager:
+class ApplicationAttributes(_ApplicationAttributesBase, metaclass=_PropertyMeta):
+    class A10AXTrafficManager(metaclass=_PropertyMeta):
         bundle_certificate = "Bundle Certificate"
         certificate_chain_name = "Certificate Chain Name"
         certificate_name = "Certificate Name"
@@ -91,7 +103,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         tls_version = "TLS Version"
         use_ssl_template = "Use SSL Template"
 
-    class Adaptable:
+    class Adaptable(metaclass=_PropertyMeta):
         certificate_name = "Certificate Name"
         file_validation_disabled = "File Validation Disabled"
         installation_status = "Installation Status"
@@ -112,7 +124,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         text_field_4 = "Text Field 4"
         text_field_5 = "Text Field 5"
 
-    class AmazonAWS:
+    class AmazonAWS(metaclass=_PropertyMeta):
         access_key_id = "Access Key ID"
         aws_credential_dn = "Aws Credential DN"
         binding_target = "Binding Target"
@@ -136,7 +148,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         target_group = "Target Group"
         timeout = "Timeout"
 
-    class AzureKeyVault:
+    class AzureKeyVault(metaclass=_PropertyMeta):
         binding_hostnames = "Binding Hostnames"
         binding_ssl_type = "Binding SSL Type"
         certificate_credential = "Certificate Credential"
@@ -152,7 +164,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         vault_name = "Vault Name"
         web_app_name = "Web App Name"
 
-    class Apache:
+    class Apache(metaclass=_PropertyMeta):
         application_id = "Application ID"
         certificate_chain_file = "Certificate Chain File"
         certificate_file = "Certificate File"
@@ -169,11 +181,11 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         slot_number = "Slot Number"
         softcard_identifier = "Softcard Identifier"
 
-    class Basic:
+    class Basic(metaclass=_PropertyMeta):
         certificate_file = "Certificate File"
         network_validation_disabled = "Network Validation Disabled"
 
-    class BlueCoatSSLVA:
+    class BlueCoatSSLVA(metaclass=_PropertyMeta):
         certificate_label = "Certificate Label"
         certificate_oid = "Certificate OID"
         certificate_only = "Certificate Only"
@@ -184,7 +196,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         network_validation_disabled = "Network Validation Disabled"
         replace_store = "Replace Store"
 
-    class CAPI:
+    class CAPI(metaclass=_PropertyMeta):
         binding_ip_address = "Binding IP Address"
         binding_port = "Binding Port"
         create_binding = "Create Binding"
@@ -201,7 +213,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         update_iis = "Update IIS"
         web_site_name = "Web Site Name"
 
-    class CitrixNetScaler:
+    class CitrixNetScaler(metaclass=_PropertyMeta):
         certificate_file = "Certificate File"
         chain_cert = "Chain Cert"
         file_validation_disabled = "File Validation Disabled"
@@ -216,7 +228,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         temp_certificate_label = "Temp Certificate Label"
         virtual_server_name = "Virtual Server Name"
 
-    class ConnectDirect:
+    class ConnectDirect(metaclass=_PropertyMeta):
         certificate_label = "Certificate Label"
         certificate_only = "Certificate Only"
         file_validation_disabled = "File Validation Disabled"
@@ -226,11 +238,11 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         node_name = "Node Name"
         protocol = "Protocol"
 
-    class F5AuthenticationBundle:
+    class F5AuthenticationBundle(metaclass=_PropertyMeta):
         advanced_settings_bundle_name = "Advanced Settings Bundle Name"
         certificates = "Certificates"
 
-    class F5LTMAdvanced:
+    class F5LTMAdvanced(metaclass=_PropertyMeta):
         advanced_settings_bundle_name = "Advanced Settings Bundle Name"
         advertised_ca = "Advertised CA"
         archive_location = "Archive Location"
@@ -275,7 +287,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         virtual_server_name = "Virtual Server Name"
         virtual_server_partition = "Virtual Server Partition"
 
-    class IBMDataPower:
+    class IBMDataPower(metaclass=_PropertyMeta):
         application_domain = "Application Domain"
         associate_to_cp = "Associate To CP"
         certificate_name = "Certificate Name"
@@ -303,7 +315,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         use_basic_provisioning = "Use Basic Provisioning"
         xml_port = "XML Port"
 
-    class IBMGSK:
+    class IBMGSK(metaclass=_PropertyMeta):
         backup_store = "Backup Store"
         certificate_label = "Certificate Label"
         create_store = "Create Store"
@@ -327,7 +339,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         utility_path = "Utility Path"
         version = "Version"
 
-    class ImpervaMX:
+    class ImpervaMX(metaclass=_PropertyMeta):
         file_validation_disabled = "File Validation Disabled"
         key_store_validation_disabled = "Key Store Validation Disabled"
         private_key_name = "Private Key Name"
@@ -337,7 +349,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         username_credential = "Username Credential"
         utility_path = "Utility Path"
 
-    class JKS:
+    class JKS(metaclass=_PropertyMeta):
         certificate_label = "Certificate Label"
         create_store = "Create Store"
         disable_ssh_history = "Disable SSH History"
@@ -359,7 +371,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         temp_certificate_label = "Temp Certificate Label"
         version = "Version"
 
-    class JuniperSAS:
+    class JuniperSAS(metaclass=_PropertyMeta):
         external_port = "External Port"
         file_validation_disabled = "File Validation Disabled"
         internal_port = "Internal Port"
@@ -367,7 +379,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         reassign_ports = "Reassign Ports"
         vlan_port = "Vlan Port"
 
-    class OracleIPlanet:
+    class OracleIPlanet(metaclass=_PropertyMeta):
         alias = "Alias"
         certutil_path = "Certutil Path"
         create_store = "Create Store"
@@ -394,7 +406,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         web_credential = "Web Credential"
         web_port = "Web Port"
 
-    class PaloAltoNetworkFW:
+    class PaloAltoNetworkFW(metaclass=_PropertyMeta):
         certificate_only = "Certificate Only"
         chain_cert = "Chain Cert"
         create_decryption_policy = "Create Decryption Policy"
@@ -407,7 +419,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         replace_store = "Replace Store"
         temporary_name = "Temporary Name"
 
-    class PEM:
+    class PEM(metaclass=_PropertyMeta):
         certificate_chain_file = "Certificate Chain File"
         certificate_file = "Certificate File"
         file_validation_disabled = "File Validation Disabled"
@@ -416,7 +428,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         overwrite_existing_chain = "Overwrite Existing Chain"
         private_key_file = "Private Key File"
 
-    class PKCS11:
+    class PKCS11(metaclass=_PropertyMeta):
         hsm_cblob = 'HSM:CBlob'
         hsm_cka_label_format = 'HSM:CKA LABEL Format'
         hsm_csr_subject_dn = 'HSM:CSR Subject DN'
@@ -450,7 +462,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         hsm_token_label = 'HSM:Token Label'
         hsm_token_password = 'HSM:Token Password'
 
-    class PKCS12:
+    class PKCS12(metaclass=_PropertyMeta):
         bundle_certificate = "Bundle Certificate"
         certificate_chain_file = "Certificate Chain File"
         certificate_file = "Certificate File"
@@ -463,14 +475,14 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         recycle_alias = "Recycle Alias"
         replace_store = "Replace Store"
 
-    class RiverbedSteelHead:
+    class RiverbedSteelHead(metaclass=_PropertyMeta):
         certificate_type = "Certificate Type"
         file_validation_disabled = "File Validation Disabled"
         install_chain = "Install Chain"
         network_validation_disabled = "Network Validation Disabled"
         replace_existing = "Replace Existing"
 
-    class TealeafPCA:
+    class TealeafPCA(metaclass=_PropertyMeta):
         file_validation_disabled = "File Validation Disabled"
         install_path = "Install Path"
         key_store_credential = "Key Store Credential"
@@ -479,7 +491,7 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         sunimp_utility_path = "Sunimp Utility Path"
         tealeaf_utility_path = "Tealeaf Utility Path"
 
-    class VAMnShield:
+    class VAMnShield(metaclass=_PropertyMeta):
         file_validation_disabled = "File Validation Disabled"
         install_path = "Install Path"
         key_store_validation_disabled = "Key Store Validation Disabled"
@@ -487,54 +499,54 @@ class ApplicationAttributes(_ApplicationAttributesBase):
         module_id = "Module Id"
 
 
-class _ApplicationAttributeValuesBase:
-    class ConnectionMethod:
+class _ApplicationAttributeValuesBase(metaclass=_PropertyMeta):
+    class ConnectionMethod(metaclass=_PropertyMeta):
         https = 'HTTPS'
         ssh = 'SSH'
         winrm = 'WinRM'
         winrms = 'WinRMs'
 
-    class GroupPermissions:
+    class GroupPermissions(metaclass=_PropertyMeta):
         none = '0000'
         read_only = '0040'
         read_and_write = '0060'
 
-    class ManagedBy:
+    class ManagedBy(metaclass=_PropertyMeta):
         aperture = 'Aperture'
         user_portal = 'User Portal'
 
-    class OwnerPermissions:
+    class OwnerPermissions(metaclass=_PropertyMeta):
         read_only = '0400'
         read_and_write = '0600'
 
-    class ProtectionType:
+    class ProtectionType(metaclass=_PropertyMeta):
         module = 'Module'
         ocs = 'OCS'
         softcard = 'Softcard'
 
 
-class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
-    class A10AXTrafficManager:
-        class TemplateType:
+class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_PropertyMeta):
+    class A10AXTrafficManager(metaclass=_PropertyMeta):
+        class TemplateType(metaclass=_PropertyMeta):
             client = 'Client'
             server = 'Server'
 
-        class ServerSslTlsVersion:
+        class ServerSslTlsVersion(metaclass=_PropertyMeta):
             ssl_3_0 = 'SSL Version 3.0'
             tls_1_0 = 'TLS Version 1.0'
 
-    class AmazonAWS:
-        class BindingTarget:
+    class AmazonAWS(metaclass=_PropertyMeta):
+        class BindingTarget(metaclass=_PropertyMeta):
             no_binding = 0
             elastic_load_balancer = 1
             cloud_front = 2
             application_load_balancer = 3
 
-        class ProvisionTo:
+        class ProvisionTo(metaclass=_PropertyMeta):
             acm = 'ACM'
             iam = 'IAM'
 
-        class Region:
+        class Region(metaclass=_PropertyMeta):
             us_east_virginia = 'us-east-1'
             us_east_ohio = 'us-east-2'
             us_west_california = 'us-west-1'
@@ -553,133 +565,133 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
             south_america_sao_paolo = 'sa-east-1'
             aws_govcloud_us = 'us-gov-west-1'
 
-    class Apache:
-        class PrivateKeyLocation:
+    class Apache(metaclass=_PropertyMeta):
+        class PrivateKeyLocation(metaclass=_PropertyMeta):
             device = 'Device'
             gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
             thales_nshield_hsm = "Thales nShield HSM"
 
-    class AzureKeyVault:
-        class SslTye:
+    class AzureKeyVault(metaclass=_PropertyMeta):
+        class SslTye(metaclass=_PropertyMeta):
             sni = 0
             ip_based = 1
 
-    class CAPI:
-        class PrivateKeyLocation:
+    class CAPI(metaclass=_PropertyMeta):
+        class PrivateKeyLocation(metaclass=_PropertyMeta):
             device = 'Device'
             gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
             thales_nshield_hsm = "Thales nShield HSM"
 
-    class CitrixNetScaler:
-        class BindCertificateTo:
+    class CitrixNetScaler(metaclass=_PropertyMeta):
+        class BindCertificateTo(metaclass=_PropertyMeta):
             virtual_server = 'Virtual Server'
             service = 'Service'
             service_group = 'Service Group'
 
-    class ConnectDirect:
-        class APIProtocol:
+    class ConnectDirect(metaclass=_PropertyMeta):
+        class APIProtocol(metaclass=_PropertyMeta):
             ssl = 'SSL'
             tls = 'TLS'
             tls_1_1 = 'TLS11'
             tls_1_2 = 'TLS12'
 
-    class F5LTMAdvanced:
-        class ClientCertificate:
+    class F5LTMAdvanced(metaclass=_PropertyMeta):
+        class ClientCertificate(metaclass=_PropertyMeta):
             ignore = 'Ignore'
             require = 'Require'
             request = 'Request'
 
-        class Frequency:
+        class Frequency(metaclass=_PropertyMeta):
             once = 'Once'
             always = 'Always'
 
-        class ProvisioningMode:
+        class ProvisioningMode(metaclass=_PropertyMeta):
             advanced = 0
             basic_with_configurable_certificate_name = 1
             basic_with_automatic_certificate_name = 2
 
-        class ProvisioningTo:
+        class ProvisioningTo(metaclass=_PropertyMeta):
             standalone = 'Standalone'
             active = 'Active'
             standby = 'Standby'
             ignore_failover_state = 'Ignore Failover State'
 
-        class ServerCertificate:
+        class ServerCertificate(metaclass=_PropertyMeta):
             ignore = 'Ignore'
             require = 'Require'
 
-        class SslProfileType:
+        class SslProfileType(metaclass=_PropertyMeta):
             client = 'Client'
             server = 'Server'
 
-    class IBMDataPower:
-        class CertificateFolder:
+    class IBMDataPower(metaclass=_PropertyMeta):
+        class CertificateFolder(metaclass=_PropertyMeta):
             cert = 1
             shared_cert = 2
 
-        class CredentialType:
+        class CredentialType(metaclass=_PropertyMeta):
             identification = 1
             validation = 2
 
-        class ProfileType:
+        class ProfileType(metaclass=_PropertyMeta):
             ssl_proxy = 1
             ssl_client = 2
             ssl_server = 3
 
-        class ProvisioningMode:
+        class ProvisioningMode(metaclass=_PropertyMeta):
             advanced = 1
             basic = 2
 
-    class IBMGSK:
-        class Version:
+    class IBMGSK(metaclass=_PropertyMeta):
+        class Version(metaclass=_PropertyMeta):
             gsk_7_0 = 'GSK 7.0'
             gsk_8_0 = 'GSK 8.0'
 
-    class JKS:
-        class PrivateKeyLocation:
+    class JKS(metaclass=_PropertyMeta):
+        class PrivateKeyLocation(metaclass=_PropertyMeta):
             device = 'Device'
             gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
             thales_nshield_hsm = "Thales nShield HSM"
 
-        class JavaVendor:
+        class JavaVendor(metaclass=_PropertyMeta):
             oracle = 'Oracle'
             ibm = 'IBM'
 
-        class JavaVersion:
+        class JavaVersion(metaclass=_PropertyMeta):
             java_1_6 = 'Java 1.6'
             java_1_7 = 'Java 1.7'
             java_1_8 = 'Java 1.8'
 
-        class StoreType:
+        class StoreType(metaclass=_PropertyMeta):
             jks = 'JKS'
             jceks = 'JCEKS'
 
-    class OracleIPlanet:
-        class CertificateDatabaseType:
+    class OracleIPlanet(metaclass=_PropertyMeta):
+        class CertificateDatabaseType(metaclass=_PropertyMeta):
             berkeley = 'Berkeley'
             sqlite = 'SQLite'
 
-    class PaloAltoNetworkFW:
-        class Provision:
+    class PaloAltoNetworkFW(metaclass=_PropertyMeta):
+        class Provision(metaclass=_PropertyMeta):
             certificate_only = 1
             certificate_and_private_key = 2
 
-    class PKCS11:
-        class ImportCertificatesIntoHsm:
+    class PKCS11(metaclass=_PropertyMeta):
+        class ImportCertificatesIntoHsm(metaclass=_PropertyMeta):
             no = 'No'
             import_certificate_only = 'Import Certificate Only'
             import_certificate_and_chain = 'Import Certificate and Chain'
             import_certificate_with_intermediate_certificates = 'Import Certificate with Intermediate certificates'
 
-        class LabelFormat:
+        class LabelFormat(metaclass=_PropertyMeta):
             date_with_cn = 'Date with CN'
             custom_label = 'Custom Label'
 
-        class OpenSslType:
+        class OpenSslType(metaclass=_PropertyMeta):
             custom_openssl_directory = 'Custom OpenSSL Directory'
             system = 'System'
 
-        class UseCase:
+        class UseCase(metaclass=_PropertyMeta):
             tls_client_ecc = 'TLS Client - ECC'
             tls_client_rsa = 'TLS Client - RSA'
             tls_client_server_ecc = 'TLS Client/Server - ECC'
@@ -698,19 +710,19 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase):
             key_derivation_ecc = 'Key Derivation - ECC'
             key_wrapping_rsa = 'Key Wrapping - RSA'
 
-    class PKCS12:
-        class CertificateChainLocation:
+    class PKCS12(metaclass=_PropertyMeta):
+        class CertificateChainLocation(metaclass=_PropertyMeta):
             certificate_chain_file = 0
             pkcs12_file = 1
 
-    class RiverbedSteelHead:
-        class CertificateType:
+    class RiverbedSteelHead(metaclass=_PropertyMeta):
+        class CertificateType(metaclass=_PropertyMeta):
             ssl_main = 0
             secure_peering = 1
             web = 2
 
 
-class ApplicationClassNames:
+class ApplicationClassNames(metaclass=_PropertyMeta):
     a10_ax_traffic_manager = "A10 AX Traffic Manager"
     adaptable_app = "Adaptable App"
     amazon_app = "Amazon App"
@@ -748,11 +760,59 @@ class ApplicationClassNames:
     vam_nshield = "VAM nShield"
     vam_cavium = "VamCavium"
 
+
+class ApplicationGroupClassNames(metaclass=_PropertyMeta):
+    apache_application_group = 'Apache Application Group'
+    pkcs11_application_group = 'PKCS11 Application Group'
+
+
+class _ApplicationGroupAttributesBase(metaclass=_PropertyMeta):
+    certificate = "Certificate"
+    common_data_location = "Common Data Location"
+    common_data_vault_id = "Common Data Vault Id"
+    enrollment_application_dn = "Enrollment Application DN"
+    primary_application_dn = "Primary Application DN"
+    private_key_stub_vault_id = "Private Key Stub Vault Id"
+
+
+class ApplicationGroupAttributes(_ApplicationGroupAttributesBase, metaclass=_PropertyMeta):
+    class Apache(metaclass=_PropertyMeta):
+        client_tools_path = "Client Tools Path"
+        ocs_identifier = "OCS Identifier"
+        partition_password_credential = "Partition Password Credential"
+        private_key_label = "Private Key Label"
+        private_key_location = "Private Key Location"
+        protection_type = "Protection Type"
+        softcard_identifier = "Softcard Identifier"
+
+    class PKCS11(metaclass=_PropertyMeta):
+        application_group = "Application Group"
+        hsm_cblob = "HSM:CBlob"
+        hsm_cka_label_format = "HSM:CKA LABEL Format"
+        hsm_csr_subject_dn = "HSM:CSR Subject DN"
+        hsm_embed_sans_in_csr = "HSM:Embed SANs in CSR"
+        hsm_import_certificate = "HSM:Import Certificate"
+        hsm_issued_id = "HSM:Issued ID"
+        hsm_issued_label = "HSM:Issued Label"
+        hsm_kpblob = "HSM:KPBlob"
+        hsm_last_issued_id = "HSM:Last Issued ID"
+        hsm_last_issued_kpblob = "HSM:Last Issued KPBlob"
+        hsm_last_issued_label = "HSM:Last Issued Label"
+        hsm_pkcs11attributes = "HSM:PKCS11Attributes"
+        hsm_protection_type = "HSM:Protection Type"
+        hsm_requested_cka_label = "HSM:Requested CKA LABEL"
+        hsm_requested_ecdh = "HSM:Requested ECDH"
+        hsm_requested_usecase = "HSM:Requested Usecase"
+        hsm_reverse_subject_dn = "HSM:Reverse Subject DN"
+        hsm_tmp_issued_cblob = "HSM:TMP Issued CBlob"
+        hsm_tmp_issued_id = "HSM:TMP Issued ID"
+        hsm_tmp_issued_kpblob = "HSM:TMP Issued KPBlob"
+        hsm_token_label = "HSM:Token Label"
+        hsm_token_password = "HSM:Token Password"
 # endregion
 
-
 # region Certificate
-class CertificateAttributes:
+class CertificateAttributes(metaclass=_PropertyMeta):
     acme_account_dn = "ACME Account DN"
     adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
     adaptable_ca_early_password_vault_id = "Adaptable CA:Early Password Vault ID"
@@ -1022,13 +1082,13 @@ class CertificateAttributes:
     xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
 
-class CertificateAttributeValues:
-    class EllipticCurve:
+class CertificateAttributeValues(metaclass=_PropertyMeta):
+    class EllipticCurve(metaclass=_PropertyMeta):
         p256 = 'P256'
         p384 = 'P384'
         p521 = 'P521'
 
-    class Format:
+    class Format(metaclass=_PropertyMeta):
         base64 = 'Base64'
         pkcs8 = 'Base64 (PKCS #8)'
         der = 'DER'
@@ -1036,25 +1096,25 @@ class CertificateAttributeValues:
         pkcs7 = 'PKCS #7'
         pkcs12 = 'PKCS #12'
 
-    class HashAlgorithm:
+    class HashAlgorithm(metaclass=_PropertyMeta):
         sha1 = 'Sha1'
         sha256 = 'Sha256'
 
-    class KeyAlgorithm:
+    class KeyAlgorithm(metaclass=_PropertyMeta):
         rsa = 'RSA'
         ecc = 'ECC'
 
-    class ManagedBy:
+    class ManagedBy(metaclass=_PropertyMeta):
         aperture = 'Aperture'
         user_portal = 'User Portal'
 
-    class ManagementType:
+    class ManagementType(metaclass=_PropertyMeta):
         unassigned = 'Unassigned'
         monitoring = 'Monitoring'
         enrollment = 'Enrollment'
         provisioning = 'Provisioning'
 
-    class RevokeReason:
+    class RevokeReason(metaclass=_PropertyMeta):
         none = 0
         user_key_compromised = 1
         ca_key_compromised = 2
@@ -1063,7 +1123,7 @@ class CertificateAttributeValues:
         original_use_no_longer_valid = 5
 
 
-class CertificateClassNames:
+class CertificateClassNames(metaclass=_PropertyMeta):
     client_certificate_work = "Client Certificate Work"
     client_user_certificate_work = "Client User Certificate Work"
     server_certificate_work = "Server Certificate Work"
@@ -1074,12 +1134,10 @@ class CertificateClassNames:
     x509_root_certificate = "X509 Root Certificate"
     x509_server_certificate = "X509 Server Certificate"
     x509_user_certificate = "X509 User Certificate"
-
 # endregion
 
-
 # region Certificate Authority
-class _CertificateAuthorityAttributesBase:
+class _CertificateAuthorityAttributesBase(metaclass=_PropertyMeta):
     additional_field = "Additional Field"
     concurrent_connection_limit = "Concurrent Connection Limit"
     contact = "Contact"
@@ -1118,8 +1176,8 @@ class _CertificateAuthorityAttributesBase:
     workflow_block = "Workflow Block"
 
 
-class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
-    class Adaptable:
+class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase, metaclass=_PropertyMeta):
+    class Adaptable(metaclass=_PropertyMeta):
         allow_reissue = "Allow Reissue"
         certificate_credential = "Certificate Credential"
         connection_valid = "Connection Valid"
@@ -1131,7 +1189,7 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         retry_after_script_hash_mismatch = "Retry After Script Hash Mismatch"
         secondary_credential = "Secondary Credential"
 
-    class ComodoCCM:
+    class ComodoCCM(metaclass=_PropertyMeta):
         address = "Address"
         company_number = "Company Number"
         customer_login_uri = "Customer Login URI"
@@ -1142,7 +1200,7 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         secret_key = "Secret Key"
         uri = "URI"
 
-    class Digicert:
+    class Digicert(metaclass=_PropertyMeta):
         account_number = "Account Number"
         account_organization = "Account Organization"
         allow_reissue = "Allow Reissue"
@@ -1159,7 +1217,7 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         uc_allowed = "UC Allowed"
         wildcard_allowed = "Wildcard Allowed"
 
-    class EntrustCertificateServicesBase:
+    class EntrustCertificateServicesBase(metaclass=_PropertyMeta):
         certificate_type = "Certificate Type"
         create_entrust_user = "Create Entrust User"
         enrollment_server_for_web_folder = "Enrollment Server for Web Folder"
@@ -1170,7 +1228,7 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         searchbase = "Searchbase"
         user_class_name = "User Class Name"
 
-    class GeoTrustReseller:
+    class GeoTrustReseller(metaclass=_PropertyMeta):
         account_type = "Account Type"
         address = "Address"
         billing_contact_first_name = "Billing Contact First Name"
@@ -1199,13 +1257,13 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         test_account = "Test Account"
         web_service_url = "Web Service URL"
 
-    class GlobalSignMSSL:
+    class GlobalSignMSSL(metaclass=_PropertyMeta):
         domain_id = "Domain ID"
         profile_id = "Profile ID"
         san_type = "SAN Type"
         web_service_url = "Web Service URL"
 
-    class HydrantID:
+    class HydrantID(metaclass=_PropertyMeta):
         account_name = "Account Name"
         account_organization = "Account Organization"
         api_credentials = "API Credentials"
@@ -1215,12 +1273,12 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         web_service_url = "Web Service URL"
         web_ui_url = "Web UI URL"
 
-    class MSCA:
+    class MSCA(metaclass=_PropertyMeta):
         enrollment_agent_certificate = "Enrollment Agent Certificate"
         given_name = "Given Name"
         include_cn_as_san = "Include CN as SAN"
 
-    class OpenSSL:
+    class OpenSSL(metaclass=_PropertyMeta):
         certificate_directory = "Certificate Directory"
         certificate_file = "Certificate File"
         configuration_file = "Configuration File"
@@ -1229,13 +1287,13 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         private_key_password_credential = "Private Key Password Credential"
         temp_directory = "Temp Directory"
 
-    class OpenTrust:
+    class OpenTrust(metaclass=_PropertyMeta):
         connector_type = "Connector Type"
         fields = "Fields"
         retrieval_period = "Retrieval Period"
         web_service_url = "Web Service URL"
 
-    class QuoVadis:
+    class QuoVadis(metaclass=_PropertyMeta):
         account_name = "Account Name"
         account_organization = "Account Organization"
         api_credentials = "API Credentials"
@@ -1245,14 +1303,14 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         web_service_url = "Web Service URL"
         web_ui_url = "Web UI URL"
 
-    class RedHat:
+    class RedHat(metaclass=_PropertyMeta):
         agent_port = "Agent Port"
         agent_url_surffix = "Agent URL Surffix"
         end_entity_port = "End Entity Port"
         end_entity_url_surffix = "End Entity URL Surffix"
         use_profile = "Use Profile"
 
-    class RSA:
+    class RSA(metaclass=_PropertyMeta):
         ca_md5 = "CA MD5"
         ca_name = "CA Name"
         certificate_block = "Certificate Block"
@@ -1260,16 +1318,16 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         jurisdiction_name = "Jurisdiction Name"
         supported_validity_periods = "Supported Validity Periods"
 
-    class SelfSigned:
+    class SelfSigned(metaclass=_PropertyMeta):
         algorithm = "Algorithm"
         enhanced_key_usage = "Enhanced Key Usage"
         key_usage = "Key Usage"
 
-    class Symantec:
+    class Symantec(metaclass=_PropertyMeta):
         fields = "Fields"
         uri = "URI"
 
-    class Thawte:
+    class Thawte(metaclass=_PropertyMeta):
         certificate_block = "Certificate Block"
         certificate_transparency = "Certificate Transparency"
         retrieval_period = "Retrieval Period"
@@ -1277,20 +1335,20 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase):
         signature_algorithm = "Signature Algorithm"
         uri = "URI"
 
-    class TrustWave:
+    class TrustWave(metaclass=_PropertyMeta):
         interval = "Interval"
         reseller_id = "Reseller ID"
         retrieval_period = "Retrieval Period"
         web_service_url = "Web Service URL"
 
-    class UniCERT:
+    class UniCERT(metaclass=_PropertyMeta):
         ca_dn = "CA DN"
         ra_dn = "RA DN"
         secure = "Secure"
         web_instance = "Web Instance"
 
 
-class CertificateAuthorityClassNames:
+class CertificateAuthorityClassNames(metaclass=_PropertyMeta):
     adaptable_ca = "Adaptable CA"
     comodo_ccm = "Comodo CCM"
     entrust_security_manager_ca = "Entrust Security Manager CA"
@@ -1308,12 +1366,10 @@ class CertificateAuthorityClassNames:
     verizon_ca = "Verizon CA"
     xolphin_ca = "Xolphin CA"
     zos_ca = "zOS CA"
-
 # endregion
 
-
 # region Certificate Trust Store
-class CertificateTrustStoreClassNames:
+class CertificateTrustStoreClassNames(metaclass=_PropertyMeta):
     blue_coat_sslva_trust_store = "BlueCoat SSLVA Trust Store"
     capi_trust_store = "CAPI Trust Store"
     connect_direct_trust_store = "ConnectDirect Trust Store"
@@ -1323,11 +1379,10 @@ class CertificateTrustStoreClassNames:
     palo_alto_network_fw_trust_store = "Palo Alto Network FW Trust Store"
     pem_trust_store = "PEM Trust Store"
     pkcs_12_trust_store = "PKCS#12 Trust Store"
-
 # endregion
 
 # region Client Group
-class ClientGroupsAttributes:
+class ClientGroupsAttributes(metaclass=_PropertyMeta):
     agent_type = "Agent Type"
     assigned_work = "Assigned Work"
     client_portal_access_identity = "Client Portal Access Identity"
@@ -1348,29 +1403,32 @@ class ClientGroupsAttributes:
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-class ClientGroupsAttributeValues:
-    class CreatedBy:
+
+class ClientGroupsAttributeValues(metaclass=_PropertyMeta):
+    class CreatedBy(metaclass=_PropertyMeta):
         websdk = 'Web SDK'
-    class AgentType:
+
+    class AgentType(metaclass=_PropertyMeta):
         agent_installed = 'AgentInstalled'
         agentless = 'NoAgent'
         certificate_enrollment = 'EntMob'
         deploy_user_and_device_certificates = 'Enrollment'
-    class DefaultRules:
+
+    class DefaultRules(metaclass=_PropertyMeta):
         agent_installed = 'ClientType == VenafiAgent'
         agentless = 'ClientType == Agentless'
         certificate_enrollment = 'ClientType == Est'
         deploy_user_and_device_certificates = '((ClientType In ["AgentJuniorUser","Portal"]))'
 
-class ClientGroupsClassNames:
-    group = "Client Group"
 
+class ClientGroupsClassNames(metaclass=_PropertyMeta):
+    group = "Client Group"
 # endregion
 
 # region Client Work
-class ClientWorkAttributes:
-    #AgentConnectivity = 'Client Agent Configuration Work'
-    class AgentConnectivity:
+class ClientWorkAttributes(metaclass=_PropertyMeta):
+    # AgentConnectivity = 'Client Agent Configuration Work'
+    class AgentConnectivity(metaclass=_PropertyMeta):
         agent_cert_trust_bundle = "Agent Cert Trust Bundle"
         contact = "Contact"
         created_by = "Created By"
@@ -1398,8 +1456,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # AgentUpgrade = 'Client Agent Automatic Upgrade Work'
-    class AgentUpgrade:
+    class AgentUpgrade(metaclass=_PropertyMeta):
         contact = "Contact"
         created_by = "Created By"
         days_of_month = "Days Of Month"
@@ -1418,8 +1477,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # CertificateDevicePlacement = 'Server Agent Cert Device Placement Work'
-    class CertificateDevicePlacement:
+    class CertificateDevicePlacement(metaclass=_PropertyMeta):
         contact = "Contact"
         created_by = "Created By"
         description = "Description"
@@ -1434,8 +1494,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # CertificateDiscovery = 'Client Certificate Discovery Work'
-    class CertificateDiscovery:
+    class CertificateDiscovery(metaclass=_PropertyMeta):
         certificate_location_dn = "Certificate Location DN"
         certificate_scanner_capi = "Certificate Scanner CAPI"
         certificate_scanner_map = "Certificate Scanner Map"
@@ -1471,8 +1532,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # CertificateEnrollmentViaESTProtocol = 'Network Device Certificate Work'
-    class CertificateEnrollmentViaESTProtocol:
+    class CertificateEnrollmentViaESTProtocol(metaclass=_PropertyMeta):
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
         adaptable_ca_early_password_vault_id = "Adaptable CA:Early Password Vault ID"
         adaptable_ca_early_pkcs7_vault_id = "Adaptable CA:Early Pkcs7 Vault ID"
@@ -1741,8 +1803,9 @@ class ClientWorkAttributes:
         xolphin_ca_postbox = "Xolphin CA:Postbox"
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
+
     # CertificateInstallation = 'Certificate Provisioning Work'
-    class CertificateInstallation:
+    class CertificateInstallation(metaclass=_PropertyMeta):
         contact = "Contact"
         created_by = "Created By"
         days_of_month = "Days Of Month"
@@ -1761,8 +1824,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # DeviceCertificateCreation = 'Client Certificate Work'
-    class DeviceCertificateCreation:
+    class DeviceCertificateCreation(metaclass=_PropertyMeta):
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
         adaptable_ca_early_password_vault_id = "Adaptable CA:Early Password Vault ID"
         adaptable_ca_early_pkcs7_vault_id = "Adaptable CA:Early Pkcs7 Vault ID"
@@ -2014,8 +2078,9 @@ class ClientWorkAttributes:
         xolphin_ca_postbox = "Xolphin CA:Postbox"
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
+
     # DynamicProvisioning = 'Server Certificate Work'
-    class DynamicProvisioning:
+    class DynamicProvisioning(metaclass=_PropertyMeta):
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
         adaptable_ca_early_password_vault_id = "Adaptable CA:Early Password Vault ID"
         adaptable_ca_early_pkcs7_vault_id = "Adaptable CA:Early Pkcs7 Vault ID"
@@ -2323,8 +2388,9 @@ class ClientWorkAttributes:
         xolphin_ca_postbox = "Xolphin CA:Postbox"
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
+
     # SSHDevicePlacement = 'Server Agent SSH Device Placement Work'
-    class SSHDevicePlacement:
+    class SSHDevicePlacement(metaclass=_PropertyMeta):
         contact = "Contact"
         created_by = "Created By"
         description = "Description"
@@ -2339,8 +2405,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # SSHDiscovery = 'Client Agent SSH Discovery Work'
-    class SSHDiscovery:
+    class SSHDiscovery(metaclass=_PropertyMeta):
         clear_cache_timestamp = "Clear Cache Timestamp"
         contact = "Contact"
         created_by = "Created By"
@@ -2368,8 +2435,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # SSHKeyUsage = 'Client Agent SSH Key Usage Work'
-    class SSHKeyUsage:
+    class SSHKeyUsage(metaclass=_PropertyMeta):
         contact = "Contact"
         created_by = "Created By"
         days_of_month = "Days Of Month"
@@ -2389,8 +2457,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # SSHRemediation = 'Client Agent SSH Provisioning Work'
-    class SSHRemediation:
+    class SSHRemediation(metaclass=_PropertyMeta):
         contact = "Contact"
         created_by = "Created By"
         days_of_month = "Days Of Month"
@@ -2409,8 +2478,9 @@ class ClientWorkAttributes:
         work_guid = "Work Guid"
         workflow = "Workflow"
         workflow_block = "Workflow Block"
+
     # UserCertificateCreation = 'Client User Certificate Work'
-    class UserCertificateCreation:
+    class UserCertificateCreation(metaclass=_PropertyMeta):
         adaptable_ca_binary_data_vault_id = "Adaptable CA:Binary Data Vault ID"
         adaptable_ca_early_password_vault_id = "Adaptable CA:Early Password Vault ID"
         adaptable_ca_early_pkcs7_vault_id = "Adaptable CA:Early Pkcs7 Vault ID"
@@ -2680,14 +2750,16 @@ class ClientWorkAttributes:
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
-class ClientWorkAttributeValues:
-    class AgentConnectivity:
-        class ScheduleType:
+
+class ClientWorkAttributeValues(metaclass=_PropertyMeta):
+    class AgentConnectivity(metaclass=_PropertyMeta):
+        class ScheduleType(metaclass=_PropertyMeta):
             daily = "Daily"
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             hourly = "IntervalHours"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2695,23 +2767,29 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class CreatedBy:
+
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-    class AgentUpgrade:
-        class CreatedBy:
+
+    class AgentUpgrade(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-    class CertificateDevicePlacement:
-        class CreatedBy:
+
+    class CertificateDevicePlacement(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class DeviceSharedMode:
-            whole_tree     = "WholeTree"
+
+        class DeviceSharedMode(metaclass=_PropertyMeta):
+            whole_tree = "WholeTree"
             devices_folder = "SpecifiedFolderOnly"
             devices_folder_and_sub_folders = "SpecifiedFolderAndSubFolders"
             duplicate_device = "None"
-    class CertificateDiscovery:
-        class CreatedBy:
+
+    class CertificateDiscovery(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2719,43 +2797,52 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class ScheduleType:
+
+        class ScheduleType(metaclass=_PropertyMeta):
             daily = "Daily"
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             hourly = "IntervalHours"
             on_receipt = "OnReceipt"
-        class MaxFilesize:
-            less_than_10k  = "10240"
+
+        class MaxFilesize(metaclass=_PropertyMeta):
+            less_than_10k = "10240"
             less_than_100k = "102400"
-            less_than_1MB  = "1048576"
+            less_than_1MB = "1048576"
             less_than_10MB = "10485760"
             no_limit = "0"
-        class Extensions:
+
+        class Extensions(metaclass=_PropertyMeta):
             default_pkcs12_extensions = [".p12", ".pfx"]
             default_pkcs7_extensions = [".p7b", ".p7c", ".p7"]
             default_pem_extensions = [".cer", ".der", ".crt", ".pem"]
             default_ibmcms_extensions = [".kdb"]
             default_jks_jceks_extensions = [".jck", ".jceks", ".jks", "cacerts"]
             default_iplanet_extensions = [".db"]
-    class CertificateEnrollmentViaESTProtocol:
-        class CreatedBy:
+
+    class CertificateEnrollmentViaESTProtocol(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class ValidationType:
+
+        class ValidationType(metaclass=_PropertyMeta):
             basic = 0
             strict = 1
-        class RevocationStatusCheck:
+
+        class RevocationStatusCheck(metaclass=_PropertyMeta):
             disabled = 0
             accept_when_unknown = 1
             reject_when_unknown = 2
-        class IdentityVerification:
+
+        class IdentityVerification(metaclass=_PropertyMeta):
             disable = 1
             valid = 3
             valid_or_missing = 2
-    class CertificateInstallation:
-        class CreatedBy:
+
+    class CertificateInstallation(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2763,20 +2850,24 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class ScheduleType:
+
+        class ScheduleType(metaclass=_PropertyMeta):
             daily = "Daily"
             hourly = "IntervalHours"
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             on_receipt = "OnReceipt"
             every_x_minutes = "IntervalMinutes"
-    class DeviceCertificateCreation:
-        class CreatedBy:
+
+    class DeviceCertificateCreation(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-    class DynamicProvisioning:
-        class CreatedBy:
+
+    class DynamicProvisioning(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2784,20 +2875,25 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class ApplicationType:
+
+        class ApplicationType(metaclass=_PropertyMeta):
             capi = "CAPI"
-    class SSHDevicePlacement:
-        class CreatedBy:
+
+    class SSHDevicePlacement(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class DeviceSharedMode:
+
+        class DeviceSharedMode(metaclass=_PropertyMeta):
             whole_tree = "WholeTree"
             devices_folder = "SpecifiedFolderOnly"
             devices_folder_and_sub_folders = "SpecifiedFolderAndSubFolders"
             duplicate_device = "None"
-    class SSHDiscovery:
-        class CreatedBy:
+
+    class SSHDiscovery(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2805,22 +2901,26 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class MaxFilesize:
+
+        class MaxFilesize(metaclass=_PropertyMeta):
             less_than_10k = "10240"
             less_than_100k = "102400"
             less_than_1MB = "1048576"
             less_than_10MB = "10485760"
-        class ScheduleType:
+
+        class ScheduleType(metaclass=_PropertyMeta):
             daily = "Daily"
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             hourly = "IntervalHours"
             on_receipt = "OnReceipt"
             every_30_minutes = "IntervalMinutes"
-    class SSHKeyUsage:
-        class CreatedBy:
+
+    class SSHKeyUsage(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2828,15 +2928,18 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class ScheduleType:
+
+        class ScheduleType(metaclass=_PropertyMeta):
             daily = "Daily"
             hourly = "IntervalHours"
             on_receipt = "OnReceipt"
             every_x_minutes = "IntervalMinutes"
-    class SSHRemediation:
-        class CreatedBy:
+
+    class SSHRemediation(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class LogThreshold:
+
+        class LogThreshold(metaclass=_PropertyMeta):
             alert = "Alert"
             critical = "Critical"
             emergency = "Emergency"
@@ -2844,17 +2947,20 @@ class ClientWorkAttributeValues:
             info = "Info"
             notice = "Notice"
             warning = "Warning"
-        class ScheduleType:
+
+        class ScheduleType(metaclass=_PropertyMeta):
             daily = "Daily"
             hourly = "IntervalHours"
             days_of_month = "DaysOfMonth"
             days_of_week = "DaysOfWeek"
             on_receipt = "OnReceipt"
             every_x_minutes = "IntervalMinutes"
-    class UserCertificateCreation:
-        class CreatedBy:
+
+    class UserCertificateCreation(metaclass=_PropertyMeta):
+        class CreatedBy(metaclass=_PropertyMeta):
             websdk = "Web SDK"
-        class DefaultValues:
+
+        class DefaultValues(metaclass=_PropertyMeta):
             all_values = {'baslh': 'bash'}
             naming_pattern = '$Identity[$Client.Identity$, "userPrincipalName"]$'
             common_name = '$Identity[$Client.Identity$,"cn"]$'
@@ -2868,8 +2974,7 @@ class ClientWorkAttributeValues:
             subject_alt_names_upn = '$Identity[$Client.Identity$,"userPrincipalName"]$'
 
 
-
-class ClientWorkClassNames:
+class ClientWorkClassNames(metaclass=_PropertyMeta):
     agent_connectivity = 'Client Agent Configuration Work'
     agent_upgrade = 'Client Agent Automatic Upgrade Work'
     certificate_device_placement = 'Server Agent Cert Device Placement Work'
@@ -2883,18 +2988,15 @@ class ClientWorkClassNames:
     ssh_key_usage = 'Client Agent SSH Key Usage Work'
     ssh_remediation = 'Client Agent SSH Provisioning Work'
     user_certificate_creation = 'Client User Certificate Work'
-
 # endregion
 
 # region Cloud Instance Monitoring
-class CloudInstanceMonitoringClassNames:
+class CloudInstanceMonitoringClassNames(metaclass=_PropertyMeta):
     aws_ec2_instance_monitor = 'AWS EC2 Instance Monitor'
-
 # endregion
 
-
 # region Credential
-class _CredentialAttributesBase:
+class _CredentialAttributesBase(metaclass=_PropertyMeta):
     contact = "Contact"
     created_by = "Created By"
     description = "Description"
@@ -2917,45 +3019,45 @@ class _CredentialAttributesBase:
     workflow_block = "Workflow Block"
 
 
-class CredentialAttributes(_CredentialAttributesBase):
-    class Amazon:
+class CredentialAttributes(_CredentialAttributesBase, metaclass=_PropertyMeta):
+    class Amazon(metaclass=_PropertyMeta):
         authentication_credential = "Authentication Credential"
         authentication_source = "Authentication Source"
         region_code = "Region Code"
         role = "Role"
         web_service_url = "Web Service URL"
 
-    class Certificate:
+    class Certificate(metaclass=_PropertyMeta):
         certificate = 'Certificate'
         username = 'Username'
 
-    class CyberArkPassword:
+    class CyberArkPassword(metaclass=_PropertyMeta):
         account_name = "Account Name"
         application_id = "Application ID"
         folder = "Folder"
         safe = "Safe"
 
-    class CyberArkUsernamePassword:
+    class CyberArkUsernamePassword(metaclass=_PropertyMeta):
         account_name = "Account Name"
         application_id = "Application ID"
         folder = "Folder"
         safe = "Safe"
         username = "Username"
 
-    class Generic:
+    class Generic(metaclass=_PropertyMeta):
         pass
 
-    class Password(_CredentialAttributesBase):
+    class Password(_CredentialAttributesBase, metaclass=_PropertyMeta):
         pass
 
-    class PrivateKey(_CredentialAttributesBase):
+    class PrivateKey(_CredentialAttributesBase, metaclass=_PropertyMeta):
         username = 'Username'
 
-    class UsernamePassword(_CredentialAttributesBase):
+    class UsernamePassword(_CredentialAttributesBase, metaclass=_PropertyMeta):
         username = 'Username'
 
 
-class CredentialClassNames:
+class CredentialClassNames(metaclass=_PropertyMeta):
     amazon_credential = "Amazon Credential"
     automatic_password_credential = "Automatic Password Credential"
     certificate_credential = "Certificate Credential"
@@ -2964,12 +3066,10 @@ class CredentialClassNames:
     password_credential = "Password Credential"
     private_key_credential = "Private Key Credential"
     username_password_credential = "Username Password Credential"
-
 # endregion
 
-
 # region Custom Field
-class _CustomFieldAttributes:
+class _CustomFieldAttributes(metaclass=_PropertyMeta):
     allowed_values = "Allowed Values"
     associated_classes = "Associated Classes"
     category = "Category"
@@ -2995,20 +3095,20 @@ class _CustomFieldAttributes:
     workflow_block = "Workflow Block"
 
 
-class CustomFieldAttributes(_CustomFieldAttributes):
-    class Choice:
+class CustomFieldAttributes(_CustomFieldAttributes, metaclass=_PropertyMeta):
+    class Choice(metaclass=_PropertyMeta):
         single = "Single"
 
-    class DateTime:
+    class DateTime(metaclass=_PropertyMeta):
         date_only = "Date Only"
 
-    class Identity:
+    class Identity(metaclass=_PropertyMeta):
         single = "Single"
 
-    class List:
+    class List(metaclass=_PropertyMeta):
         single = "Single"
 
-    class Text:
+    class Text(metaclass=_PropertyMeta):
         allowed_characters = "Allowed Characters"
         error_message = "Error Message"
         mask = "Mask"
@@ -3017,18 +3117,16 @@ class CustomFieldAttributes(_CustomFieldAttributes):
         regular_expression = "Regular Expression"
 
 
-class CustomFieldAttributeValues:
-    class Type:
+class CustomFieldAttributeValues(metaclass=_PropertyMeta):
+    class Type(metaclass=_PropertyMeta):
         text_string = 1
         list = 2
         date_time = 4
         identity = 5
-
 # endregion
 
-
 # region Device
-class _DeviceAttributesBase:
+class _DeviceAttributesBase(metaclass=_PropertyMeta):
     agentless_discovery_stage = "Agentless Discovery Stage"
     agentless_discovery_status = "Agentless Discovery Status"
     algorithm = "Algorithm"
@@ -3135,19 +3233,19 @@ class _DeviceAttributesBase:
     workflow_block = "Workflow Block"
 
 
-class DeviceAttributes(_DeviceAttributesBase):
-    class DeviceBase:
+class DeviceAttributes(_DeviceAttributesBase, metaclass=_PropertyMeta):
+    class DeviceBase(metaclass=_PropertyMeta):
         pass
 
-    class JumpServer:
+    class JumpServer(metaclass=_PropertyMeta):
         consumers = "Consumers"
         location = "Location"
         ssh_connection_string = "SSH Connection String"
         ssh_version = "SSH Version"
 
 
-class DeviceAttributeValues:
-    class OSType:
+class DeviceAttributeValues(metaclass=_PropertyMeta):
+    class OSType(metaclass=_PropertyMeta):
         aix = 'OS_AIX'
         automatic = 'OS_AUTO'
         hpux = 'OS_HPUX'
@@ -3157,20 +3255,18 @@ class DeviceAttributeValues:
         windows = 'OS_WINDOWS'
         z_os = 'OS_zOS'
 
-    class ConnectionMethod:
+    class ConnectionMethod(metaclass=_PropertyMeta):
         agent = 'Agent'
         agentless = 'Agentless'
 
 
-class DevicesClassNames:
+class DevicesClassNames(metaclass=_PropertyMeta):
     device = 'Device'
     jump_server = 'Jump Server'
-
 # endregion
 
-
 # region Discovery
-class DiscoveryAttributes:
+class DiscoveryAttributes(metaclass=_PropertyMeta):
     address_range = "Address Range"
     company_name = "Company Name"
     contact = "Contact"
@@ -3195,7 +3291,7 @@ class DiscoveryAttributes:
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-    class Network:
+    class Network(metaclass=_PropertyMeta):
         address_parsing_errors = "Address Parsing Errors"
         automatically_import = "Automatically Import"
         blackout = "Blackout"
@@ -3248,22 +3344,20 @@ class DiscoveryAttributes:
         work_units = "Work Units"
 
 
-class DiscoveryAttributeValues:
+class DiscoveryAttributeValues(metaclass=_PropertyMeta):
     pass
 
 
-class DiscoveryClassNames:
+class DiscoveryClassNames(metaclass=_PropertyMeta):
     network_discovery = 'Discovery'
-
 # endregion
 
-
 # region Folder
-class FolderClassNames:
+class FolderClassNames(metaclass=_PropertyMeta):
     policy = 'Policy'
 
 
-class FolderAttributes:
+class FolderAttributes(metaclass=_PropertyMeta):
     certificate_origin = "Certificate Origin"
     contact = "Contact"
     created_by = "Created By"
@@ -3288,34 +3382,32 @@ class FolderAttributes:
     scep_signing_ra_certificate = "Scep Signing RA Certificate"
     workflow = "Workflow"
     workflow_block = "Workflow Block"
-
 # endregion
 
-
 # region Identity
-class IdentityClassNames:
+class IdentityClassNames(metaclass=_PropertyMeta):
     user = 'USER'
     security_group = 'GROUP'
 
 
-class IdentityAttributes:
-    class Types:
+class IdentityAttributes(metaclass=_PropertyMeta):
+    class Types(metaclass=_PropertyMeta):
         user = 1
         security_group = 2
         distribution_group = 8
-
 # endregion
 
-
 # region Placement Rules
-class PlacementRulesClassNames:
+class PlacementRulesClassNames(metaclass=_PropertyMeta):
     layout_rule_base = 'Layout Rule Base'
 
-class PlacementRulesAttributeNames:
+
+class PlacementRulesAttributeNames(metaclass=_PropertyMeta):
     rule = 'Rule'
 
-class PlacementRulesAttributeValues:
-    class Field:
+
+class PlacementRulesAttributeValues(metaclass=_PropertyMeta):
+    class Field(metaclass=_PropertyMeta):
         cert_expired = "CertificateExpired"
         cert_self_signed = "CertificateSelfSigned"
         city = "L"
@@ -3335,7 +3427,7 @@ class PlacementRulesAttributeValues:
         support_ssh1 = "SupportsSsHv1"
         support_ssh2 = "SupportsSsHv2"
 
-    class Condition:
+    class Condition(metaclass=_PropertyMeta):
         contains = "Contains"
         ends_with = "EndsWith"
         inside = "In"
@@ -3345,15 +3437,13 @@ class PlacementRulesAttributeValues:
         matches_regex = "MatchesRegex"
         starts_with = "StartsWith"
 
-    class RuleType:
+    class RuleType(metaclass=_PropertyMeta):
         certificate = 'X509 Certificate'
         ssh = 'SSH'
-
 # endregion Placement Rules
 
-
 # region Platforms
-class PlatformsClassNames:
+class PlatformsClassNames(metaclass=_PropertyMeta):
     auto_layout_manager = "Auto Layout Manager"
     bulk_provisioning_manager = "Bulk Provisioning Manager"
     ca_import_manager = "CA Import Manager"
@@ -3371,7 +3461,7 @@ class PlatformsClassNames:
     validation_manager = "Validation Manager"
 
 
-class _PlatformsAttributes:
+class _PlatformsAttributes(metaclass=_PropertyMeta):
     acme_fqdn = "ACME FQDN"
     address_range = "Address Range"
     allowed_protocol_version = "Allowed Protocol Version"
@@ -3464,11 +3554,11 @@ class _PlatformsAttributes:
     zone_description = "Zone Description"
 
 
-class PlatformsAttributes(_PlatformsAttributes):
-    class BulkProvisioningManager:
+class PlatformsAttributes(_PlatformsAttributes, metaclass=_PropertyMeta):
+    class BulkProvisioningManager(metaclass=_PropertyMeta):
         retry_interval = "Retry Interval"
 
-    class CertificateManager:
+    class CertificateManager(metaclass=_PropertyMeta):
         cdp_aia_verification_disabled = "CDP AIA Verification Disabled"
         escalation_notice_interval = "Escalation Notice Interval"
         escalation_notice_start = "Escalation Notice Start"
@@ -3483,12 +3573,12 @@ class PlatformsAttributes(_PlatformsAttributes):
         start_time = "Start Time"
         trust_store_management_disabled = "Trust Store Management Disabled"
 
-    class CertificateRevocation:
+    class CertificateRevocation(metaclass=_PropertyMeta):
         ca_issuer_monitor_disabled = "CA Issuer Monitor Disabled"
         ocsp_concurrent_connection_limit = "OCSP Concurrent Connection Limit"
         ocsp_concurrent_request_limit = "OCSP Concurrent Request Limit"
 
-    class CloudInstanceMonitor:
+    class CloudInstanceMonitor(metaclass=_PropertyMeta):
         certificate_cleanup_options = "Certificate Cleanup Options"
         certificate_relocation_policy_dn = "Certificate Relocation Policy DN"
         cleanup_after = "Cleanup After"
@@ -3496,7 +3586,7 @@ class PlatformsAttributes(_PlatformsAttributes):
         last_run = "Last Run"
         policydn = "PolicyDN"
 
-    class DiscoveryManager:
+    class DiscoveryManager(metaclass=_PropertyMeta):
         connection_timeout = "Connection Timeout"
         delay = "Delay"
         load_percentage = "Load Percentage"
@@ -3509,13 +3599,13 @@ class PlatformsAttributes(_PlatformsAttributes):
         window_end = "Window End"
         window_start = "Window Start"
 
-    class Monitor:
+    class Monitor(metaclass=_PropertyMeta):
         escalation_notice_interval = "Escalation Notice Interval"
         escalation_notice_start = "Escalation Notice Start"
         expiration_notice_interval = "Expiration Notice Interval"
         expiration_notice_start = "Expiration Notice Start"
 
-    class Reporting:
+    class Reporting(metaclass=_PropertyMeta):
         host = "Host"
         log_delivery = "Log Delivery"
         max_running_reports = "Max Running Reports"
@@ -3525,7 +3615,7 @@ class PlatformsAttributes(_PlatformsAttributes):
         sender = "Sender"
         smtp_credentials = "SMTP Credentials"
 
-    class SSHManager:
+    class SSHManager(metaclass=_PropertyMeta):
         escalation_notice_interval = "Escalation Notice Interval"
         escalation_notice_start = "Escalation Notice Start"
         expiration_notice_interval = "Expiration Notice Interval"
@@ -3533,7 +3623,7 @@ class PlatformsAttributes(_PlatformsAttributes):
         renewal_window = "Renewal Window"
         renewal_window_event = "Renewal Window Event"
 
-    class TrustNetManager:
+    class TrustNetManager(metaclass=_PropertyMeta):
         api_key = "API Key"
         blackout = "Blackout"
         certificate_location_dn = "Certificate Location DN"
@@ -3574,47 +3664,46 @@ class PlatformsAttributes(_PlatformsAttributes):
         uri = "URI"
         utc = "UTC"
 
-    class ValidationManager:
+    class ValidationManager(metaclass=_PropertyMeta):
         start_time = "Start Time"
 
-    class VenafiPlatform:
+    class VenafiPlatform(metaclass=_PropertyMeta):
         acme_fqdn = "ACME FQDN"
-        address_range = "Address Range"
+        activation_latency_threshold = "Activation Latency Threshold"
+        activation_query_frequency = "Activation Query Frequency"
+        activation_work_threshold = "Activation Work Threshold"
         allowed_protocol_version = "Allowed Protocol Version"
         aperture_fqdn = "Aperture FQDN"
         authserver_fqdn = "AuthServer FQDN"
-        bypass_proxy_on_local = "Bypass Proxy on Local"
-        capabilities_asymmetric_key_generation = "Capabilities: Asymmetric Key Generation"
+        aws_ec2_role_authorized_identities = "AWS EC2 Role Authorized Identities"
+        capabilities__asymmetric_key_generation = "Capabilities: Asymmetric Key Generation"
         certificate_origin = "Certificate Origin"
         certificate_verification = "Certificate Verification"
         certificate_verification_log_warnings = "Certificate Verification Log Warnings"
         check_crl = "Check CRL"
         client_enrollment_require_windows_authentication = "Client Enrollment Require Windows Authentication"
-        contact = "Contact"
-        created_by = "Created By"
+        client_id = "Client ID"
         current_upgrade_task = "Current Upgrade Task"
-        dbo_vault_id = "Dbo Vault Id"
-        description = "Description"
         disable_triggers = "Disable Triggers"
-        disabled = "Disabled"
         display_name = "Display Name"
-        escalation_contact = "Escalation Contact"
+        engine_root = "Engine Root"
         est_options = "Est Options"
-        guid = "GUID"
         heartbeat_interval = "Heartbeat Interval"
         hsm_fqdn = "HSM FQDN"
+        ignore_identity = "Ignore Identity"
         interval = "Interval"
+        keystore_cache_check = "KeyStore Cache Check"
+        keystore_cache_lifetime = "KeyStore Cache Lifetime"
+        keystore_cache_size = "KeyStore Cache Size"
         log_debug = "Log Debug"
         log_server = "Log Server"
         log_target = "Log Target"
-        managed_by = "Managed By"
         maximum_above_normal_priority_threads = "Maximum Above Normal Priority Threads"
         maximum_below_normal_priority_threads = "Maximum Below Normal Priority Threads"
         maximum_highest_priority_threads = "Maximum Highest Priority Threads"
         maximum_low_priority_threads = "Maximum Low Priority Threads"
         maximum_normal_priority_threads = "Maximum Normal Priority Threads"
         maximum_threads = "Maximum Threads"
-        metadata = "Metadata"
         migration_task = "Migration Task"
         minimum_threads = "Minimum Threads"
         operational_certificate_dn = "Operational Certificate DN"
@@ -3622,11 +3711,8 @@ class PlatformsAttributes(_PlatformsAttributes):
         pending_migration_task = "Pending Migration Task"
         portal_fqdn = "Portal FQDN"
         private_key_vault_id = "Private Key Vault Id"
-        proxy_credential = "Proxy Credential"
-        proxy_host = "Proxy Host"
-        proxy_port = "Proxy Port"
-        proxy_use_host_configuration = "Proxy Use Host Configuration"
-        reference = "Reference"
+        processing_enabled = "Processing Enabled"
+        proxy_base = "Proxy Base"
         scep_allowed_identities = "Scep Allowed Identities"
         scep_certificate_authority = "Scep Certificate Authority"
         scep_challenge_password = "Scep Challenge Password"
@@ -3653,24 +3739,24 @@ class PlatformsAttributes(_PlatformsAttributes):
         scep_ra_certificate = "Scep RA Certificate"
         scep_signing_certificate_authority = "Scep Signing Certificate Authority"
         scep_signing_ra_certificate = "Scep Signing RA Certificate"
+        standby_mode = "Standby Mode"
         start_time = "Start Time"
+        time_stamping_certificate_dn = "Time Stamping Certificate DN"
+        time_stamping_proxy_host_urls = "Time Stamping Proxy Host URLs"
+        time_stamping_proxy_options = "Time Stamping Proxy Options"
+        timestampserver_fqdn = "TimeStampServer FQDN"
+        top = "Top"
         upgrade_details = "Upgrade Details"
         upgrade_status = "Upgrade Status"
         user_agent_windows_authentication_enabled = "User Agent Windows Authentication Enabled"
         vedclient_fqdn = "VEDClient FQDN"
         webadmin_fqdn = "WebAdmin FQDN"
         websdk_fqdn = "WebSDK FQDN"
-        window_end = "Window End"
-        window_start = "Window Start"
-        workflow = "Workflow"
-        workflow_block = "Workflow Block"
-        zone_contact = "Zone Contact"
-        zone_description = "Zone Description"
+        zone_base = "Zone Base"
 # endregion Platforms
 
-
 # region Workflow
-class _WorkflowAttributes:
+class _WorkflowAttributes(metaclass=_PropertyMeta):
     contact = "Contact"
     created_by = "Created By"
     description = "Description"
@@ -3686,8 +3772,8 @@ class _WorkflowAttributes:
     workflow_block = "Workflow Block"
 
 
-class WorkflowAttributes(_WorkflowAttributes):
-    class Adaptable:
+class WorkflowAttributes(_WorkflowAttributes, metaclass=_PropertyMeta):
+    class Adaptable(metaclass=_PropertyMeta):
         adaptable_workflow_text_field_1 = "Adaptable Workflow Text Field 1"
         adaptable_workflow_text_field_10 = "Adaptable Workflow Text Field 10"
         adaptable_workflow_text_field_11 = "Adaptable Workflow Text Field 11"
@@ -3707,7 +3793,7 @@ class WorkflowAttributes(_WorkflowAttributes):
         secondary_credential = "Secondary Credential"
         service_address = "Service Address"
 
-    class Standard:
+    class Standard(metaclass=_PropertyMeta):
         approval_explanation = "Approval Explanation"
         approval_from = "Approval From"
         approval_reason = "Approval Reason"
@@ -3724,8 +3810,8 @@ class WorkflowAttributes(_WorkflowAttributes):
         user_data = "User Data"
 
 
-class WorkflowAttributeValues:
-    class Status:
+class WorkflowAttributeValues(metaclass=_PropertyMeta):
+    class Status(metaclass=_PropertyMeta):
         approved = 'Approved'
         approved_after = 'Approved After'
         approved_before = 'Approved Before'
@@ -3734,8 +3820,7 @@ class WorkflowAttributeValues:
         rejected = 'Rejected'
 
 
-class WorkflowClassNames:
+class WorkflowClassNames(metaclass=_PropertyMeta):
     adaptable_workflow = 'Adaptable Workflow'
     workflow = 'Workflow'
-
 # endregion

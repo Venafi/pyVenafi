@@ -18,6 +18,23 @@ class _CertificateAuthorityBase(FeatureBase):
         self._secret_store_delete(object_dn=certificate_authority_dn)
         self._config_delete(object_dn=certificate_authority_dn)
 
+    def get(self, certificate_authority_dn: str, raise_error_if_not_exists: bool = True):
+        """
+        Get the Certificate Authority object in TPP.
+
+        Args:
+            certificate_authority_dn: DN of the Certificate Authority.
+            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
+
+        Returns:
+            Config object representing the Certificate Authority.
+        """
+        return self._get_config_object(
+            object_dn=certificate_authority_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(CertificateAuthorityClassNames)
+        )
+
 
 @feature()
 class AdaptableCA(_CertificateAuthorityBase):

@@ -31,5 +31,5 @@ class _Users:
                     return self._from_json('apiKey')
 
             return _Response(
-                response=self._post(data=body, mask_input_regexes=['password'], mask_output_regexes=['apiKey']),
+                response=self._post(data=body),
                 api_source=self._api_source)

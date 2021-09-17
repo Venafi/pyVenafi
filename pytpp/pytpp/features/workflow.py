@@ -23,6 +23,23 @@ class _WorkflowBase(FeatureBase):
         self._secret_store_delete(object_dn=workflow_dn)
         self._config_delete(object_dn=workflow_dn)
 
+    def get(self, workflow_dn: str, raise_error_if_not_exists: bool = True):
+        """
+        Returns the config object of the folder DN.
+
+        Args:
+            workflow_dn: DN of the workflow.
+            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
+
+        Returns:
+            Config object representing the workflow.
+        """
+        return self._get_config_object(
+            object_dn=workflow_dn,
+            raise_error_if_not_exists=raise_error_if_not_exists,
+            valid_class_names=list(WorkflowClassNames)
+        )
+
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,
                 get_if_already_exists: bool = True):    
