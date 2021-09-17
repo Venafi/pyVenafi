@@ -130,7 +130,7 @@ class _SSHCertificates:
                 @property
                 @json_response_property()
                 def processing_details(self) -> SSHCertificate.ProcessingDetails:
-                    return SSHCertificate.ProcessingDetails(self._from_json('PrivateKeyData'))
+                    return SSHCertificate.ProcessingDetails(self._from_json('ProcessingDetails'))
 
                 @property
                 @json_response_property()
@@ -140,7 +140,7 @@ class _SSHCertificates:
                 @property
                 @json_response_property()
                 def request_details(self) -> SSHCertificate.RequestDetails:
-                    return SSHCertificate.RequestDetails(self._from_json('PublicKeyData'))
+                    return SSHCertificate.RequestDetails(self._from_json('RequestDetails'))
 
                 @property
                 @json_response_property()
