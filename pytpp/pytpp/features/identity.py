@@ -1,6 +1,6 @@
 from typing import List, Union
 from pytpp.vtypes import Identity
-from pytpp.properties.config import IdentityClassNames, IdentityAttributes
+from pytpp.properties.config import IdentityClassNames, IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.rights import SubSystemTypes
 
@@ -98,11 +98,11 @@ class _IdentityBase(FeatureBase):
         """
         identity_type = 0
         if is_user:
-            identity_type += IdentityAttributes.Types.user
+            identity_type += IdentityAttributeValues.Types.user
         if is_security_group:
-            identity_type += IdentityAttributes.Types.security_group
+            identity_type += IdentityAttributeValues.Types.security_group
         if is_distribution_group:
-            identity_type += IdentityAttributes.Types.distribution_group
+            identity_type += IdentityAttributeValues.Types.distribution_group
 
         result = self._api.websdk.Identity.Browse.post(
             filter=name,

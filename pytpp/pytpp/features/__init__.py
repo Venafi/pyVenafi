@@ -1,41 +1,55 @@
 from pytpp.features.bases.feature_base import FeatureBase
 from pytpp.features.objects import Objects
-from pytpp.features.folder import Folder, FolderAttributes, FolderClassNames
-from pytpp.features.client_groups import ClientGroups, ClientGroupsClassNames, ClientGroupsAttributes, \
-    ClientGroupsAttributeValues
-from pytpp.features.client_work import AgentConnectivity, AgentUpgrade, CertificateDevicePlacement, \
-    CertificateDiscovery, CertificateEnrollmentViaESTProtocol, CertificateInstallation, ClientWorkClassNames, \
-    ClientWorkAttributes, \
-    ClientWorkAttributeValues, DynamicProvisioning, SSHDevicePlacement, SSHDiscovery, SSHKeyUsage, SSHRemediation, \
-    UserCertificateCreation
-from pytpp.features.certificate import Certificate, CertificateAttributes, CertificateAttributeValues, \
-    CertificateClassNames
-from pytpp.features.device import Device, DeviceAttributes, DevicesClassNames, DeviceAttributeValues
-from pytpp.features.application import A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, \
-    CAPI, \
-    CitrixNetScaler, ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, \
-    JuniperSAS, \
-    OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield, \
-    ApplicationAttributes, \
-    ApplicationAttributeValues, ApplicationClassNames, ApplicationGroupAttributes, ApplicationGroupClassNames, \
+from pytpp.features.folder import Folder
+from pytpp.features.client_groups import ClientGroups
+from pytpp.features.client_work import (
+    AgentConnectivity, AgentUpgrade, CertificateDevicePlacement, CertificateDiscovery,
+    CertificateEnrollmentViaESTProtocol, CertificateInstallation, DynamicProvisioning,
+    SSHDevicePlacement, SSHDiscovery, SSHKeyUsage, SSHRemediation, UserCertificateCreation
+)
+from pytpp.features.certificate import Certificate
+from pytpp.features.device import Device
+from pytpp.features.application import (
+    A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, CitrixNetScaler,
+    ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, JuniperSAS,
+    OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield,
     PKCS11ApplicationGroup, ApacheApplicationGroup
-from pytpp.features.discovery import NetworkDiscovery, DiscoveryClassNames, DiscoveryAttributeValues, \
-    DiscoveryAttributes
-from pytpp.features.credentials import AmazonCredential, CertificateCredential, GenericCredential, \
-    PasswordCredential, PrivateKeyCredential, UsernamePasswordCredential, CredentialAttributes
-from pytpp.features.certificate_authorities import AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityAttributes, \
-    CertificateAuthorityClassNames
-from pytpp.features.identity import User, Group, IdentityClassNames, IdentityAttributes
+)
+from pytpp.features.discovery import NetworkDiscovery
+from pytpp.features.credentials import (
+    AmazonCredential, CertificateCredential, GenericCredential, PasswordCredential, PrivateKeyCredential,
+    UsernamePasswordCredential
+)
+from pytpp.features.certificate_authorities import (AdaptableCA, MSCA, SelfSignedCA, CertificateAuthorityClassNames)
+from pytpp.features.identity import User, Group
 from pytpp.features.permissions import Permissions
-from pytpp.features.platform import AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager, \
-    CertificatePreEnrollment, CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, \
-    OnboardDiscoveryManager, Reporting, SSHManager, TrustNetManager, ValidationManager, PlatformsAttributes, \
-    PlatformsClassNames
-from pytpp.features.placement_rules import PlacementRules, PlacementRulesAttributeNames, PlacementRulesAttributeValues, \
-    PlacementRulesClassNames, PlacementRuleCondition
-from pytpp.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket, WorkflowAttributes, \
-    WorkflowAttributeValues, WorkflowClassNames
-from pytpp.features.custom_fields import CustomField, CustomFieldAttributes, CustomFieldAttributeValues
+from pytpp.features.platform import (
+    AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager, CertificatePreEnrollment,
+    CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, OnboardDiscoveryManager, Reporting,
+    SSHManager, TrustNetManager, ValidationManager
+)
+from pytpp.features.placement_rules import PlacementRules, PlacementRuleCondition
+from pytpp.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket
+from pytpp.features.custom_fields import CustomField
+from pytpp.tools.deprecation import DeprecationMeta
+# region To Be Deprecated Soon
+from pytpp.properties.config import (
+    # Attribute Names
+    FolderAttributes, ClientGroupsAttributes, ClientWorkAttributes, WorkflowAttributes, CustomFieldAttributes,
+    CertificateAttributes, DeviceAttributes, ApplicationAttributes, CredentialAttributes, DiscoveryAttributes,
+    CertificateAuthorityAttributes, PlatformsAttributes, PlacementRulesAttributeNames, ApplicationGroupAttributes,
+
+    # Attribute Values
+    ApplicationAttributeValues, ClientGroupsAttributeValues, CertificateAttributeValues, DeviceAttributeValues,
+    DiscoveryAttributeValues, CustomFieldAttributeValues, IdentityAttributeValues, WorkflowAttributeValues,
+    PlacementRulesAttributeValues, ClientWorkAttributeValues,
+
+    # Class Names
+    ApplicationGroupClassNames, ApplicationClassNames, CertificateClassNames, DevicesClassNames, DiscoveryClassNames,
+    IdentityClassNames, PlacementRulesClassNames, PlatformsClassNames, WorkflowClassNames, ClientWorkClassNames,
+    ClientGroupsClassNames, FolderClassNames
+)
+# endregion To Be Deprecated Soon
 
 
 # region Features
@@ -627,7 +641,9 @@ class Features:
 
 
 # region AttributeNames, AttributeValues, and Classes
-class AttributeNames:
+class AttributeNames(metaclass=DeprecationMeta):
+    __deprecation_reason__ = 'Using AttributeNames will be deprecated soon. Please use the ' \
+                             'attributes from "pytpp.attributes" instead.'
     Application = ApplicationAttributes
     ApplicationGroup = ApplicationGroupAttributes
     Certificate = CertificateAttributes
@@ -639,13 +655,14 @@ class AttributeNames:
     Device = DeviceAttributes
     Discovery = DiscoveryAttributes
     Folder = FolderAttributes
-    Identity = IdentityAttributes
     PlacementRules = PlacementRulesAttributeNames
     Platforms = PlatformsAttributes
     Workflow = WorkflowAttributes
 
 
-class AttributeValues:
+class AttributeValues(metaclass=DeprecationMeta):
+    __deprecation_reason__ = 'Using AttributeValues will be deprecated soon. Please use the ' \
+                             'attribute values from "pytpp.attribute_values" instead.'
     Application = ApplicationAttributeValues
     Certificate = CertificateAttributeValues
     ClientGroups = ClientGroupsAttributeValues
@@ -653,6 +670,7 @@ class AttributeValues:
     CustomField = CustomFieldAttributeValues
     Device = DeviceAttributeValues
     Discovery = DiscoveryAttributeValues
+    Identity = IdentityAttributeValues
     PlacementRules = PlacementRulesAttributeValues
     Workflow = WorkflowAttributeValues
 

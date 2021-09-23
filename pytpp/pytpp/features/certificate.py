@@ -1,6 +1,7 @@
 from typing import List, Union
 from pytpp.vtypes import Config
-from pytpp.properties.config import CertificateClassNames, CertificateAttributes, CertificateAttributeValues
+from pytpp.properties.config import CertificateClassNames
+from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.logger import logger, LogTags
 
@@ -270,7 +271,7 @@ class Certificate(FeatureBase):
             certificate_dn = self._get_dn(certificate)
             application_dns = self._api.websdk.Config.ReadDn.post(
                 object_dn=certificate_dn,
-                attribute_name=CertificateAttributes.consumers
+                attribute_name=X509CertificateAttributes.consumers
             ).values
 
         self.associate_application(

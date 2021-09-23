@@ -3,7 +3,19 @@ import time
 from typing import List, Union
 from pytpp.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.config import ClientWorkAttributeValues, ClientWorkAttributes, ClientWorkClassNames
+from pytpp.properties.config import ClientWorkAttributeValues, ClientWorkClassNames
+from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
+from pytpp.attributes.server_agent_base_device_placement_work import \
+    ServerAgentBaseDevicePlacementWorkAttributes
+from pytpp.attributes.client_agent_automatic_upgrade_work import ClientAgentAutomaticUpgradeWorkAttributes
+from pytpp.attributes.client_agent_configuration_work import ClientAgentConfigurationWorkAttributes
+from pytpp.attributes.client_agent_device_placement_work import ClientAgentDevicePlacementWorkAttributes
+from pytpp.attributes.client_agent_ssh_discovery_work import ClientAgentSSHDiscoveryWorkAttributes
+from pytpp.attributes.client_agent_ssh_key_usage_work import ClientAgentSSHKeyUsageWorkAttributes
+from pytpp.attributes.client_certificate_discovery_work import ClientCertificateDiscoveryWorkAttributes
+from pytpp.attributes.client_user_certificate_work import ClientUserCertificateWorkAttributes
+from pytpp.attributes.network_device_certificate_work import NetworkDeviceCertificateWorkAttributes
+from pytpp.attributes.server_certificate_work import ServerCertificateWorkAttributes
 
 
 class _ClientWorkBase(FeatureBase):
@@ -38,7 +50,7 @@ class _ClientWorkBase(FeatureBase):
         result = self._api.websdk.Config.Write.post(
             object_dn=work_dn,
             attribute_data=self._name_value_list({
-                ClientWorkAttributes.AgentConnectivity.disabled: ["1"]
+                ClientWorkBaseAttributes.disabled: ["1"]
             }, keep_list_values=True)
         ).result
 
@@ -55,7 +67,7 @@ class _ClientWorkBase(FeatureBase):
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         result = self._api.websdk.Config.ClearAttribute.post(
             object_dn=work_dn,
-            attribute_name=ClientWorkAttributes.AgentConnectivity.disabled
+            attribute_name=ClientWorkBaseAttributes.disabled
         ).result
 
         if result.code != 1:
@@ -119,8 +131,8 @@ class AgentConnectivity(_ClientWorkBase):
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
 
         attributes = {
-            ClientWorkAttributes.AgentConnectivity.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
-            ClientWorkAttributes.AgentConnectivity.interval  : randomize_minutes
+            ClientAgentConfigurationWorkAttributes.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
+            ClientAgentConfigurationWorkAttributes.interval  : randomize_minutes
         }
 
         if len([x for x in [daily, hourly, days_of_week, days_of_month] if x not in[None, False]]) != 1:
@@ -132,27 +144,23 @@ class AgentConnectivity(_ClientWorkBase):
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
-            attributes[
-                ClientWorkAttributes.AgentConnectivity.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.daily
+            attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.daily
         elif hourly:
-            attributes[
-                ClientWorkAttributes.AgentConnectivity.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.hourly
+            attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.hourly
         elif days_of_week:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
 
-            attributes[
-                ClientWorkAttributes.AgentConnectivity.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.days_of_week
-            attributes[ClientWorkAttributes.AgentConnectivity.days_of_week] = days_of_week
+            attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.days_of_week
+            attributes[ClientAgentConfigurationWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
 
-            attributes[
-                ClientWorkAttributes.AgentConnectivity.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.days_of_month
-            attributes[ClientWorkAttributes.AgentConnectivity.days_of_month] = days_of_month
+            attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.days_of_month
+            attributes[ClientAgentConfigurationWorkAttributes.days_of_month] = days_of_month
         else:
             raise FeatureError.InvalidFormat(
                 "Error in Schedule: must supply at one of (daily, hourly, days_of_week, days_of_month)")
@@ -181,15 +189,17 @@ class AgentConnectivity(_ClientWorkBase):
             A config object representing the client work
         """
         attributes = {
-            ClientWorkAttributes.AgentConnectivity.created_by   : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
-            ClientWorkAttributes.AgentConnectivity.interval     : 0,
-            ClientWorkAttributes.AgentConnectivity.log_threshold: log_threshold
+            ClientAgentConfigurationWorkAttributes.created_by   : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
+            ClientAgentConfigurationWorkAttributes.interval     : 0,
+            ClientAgentConfigurationWorkAttributes.log_threshold: log_threshold
         }
 
-        if len(server_url) > 0: attributes[ClientWorkAttributes.AgentConnectivity.web_service_url] = server_url
-        if len(proxy_url) > 0: attributes[ClientWorkAttributes.AgentConnectivity.proxy_host] = proxy_url
-        if len(proxy_credentials) > 0: attributes[
-            ClientWorkAttributes.AgentConnectivity.proxy_credential] = proxy_credentials
+        if len(server_url) > 0:
+            attributes[ClientAgentConfigurationWorkAttributes.web_service_url] = server_url
+        if len(proxy_url) > 0:
+            attributes[ClientAgentConfigurationWorkAttributes.proxy_host] = proxy_url
+        if len(proxy_credentials) > 0:
+            attributes[ClientAgentConfigurationWorkAttributes.proxy_credential] = proxy_credentials
 
         attributes.update(kwargs)
 
@@ -210,11 +220,11 @@ class AgentConnectivity(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
-            ClientWorkAttributes.AgentConnectivity.start_time,
-            ClientWorkAttributes.AgentConnectivity.schedule_type,
-            ClientWorkAttributes.AgentConnectivity.interval,
-            ClientWorkAttributes.AgentConnectivity.days_of_week,
-            ClientWorkAttributes.AgentConnectivity.days_of_month
+            ClientAgentConfigurationWorkAttributes.start_time,
+            ClientAgentConfigurationWorkAttributes.schedule_type,
+            ClientAgentConfigurationWorkAttributes.interval,
+            ClientAgentConfigurationWorkAttributes.days_of_week,
+            ClientAgentConfigurationWorkAttributes.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=work_dn,
@@ -239,7 +249,7 @@ class AgentUpgrade(_ClientWorkBase):
             A config object representing the client work
         """
         attributes = {
-            ClientWorkAttributes.AgentUpgrade.created_by: ClientWorkAttributeValues.AgentUpgrade.CreatedBy.websdk,
+            ClientAgentAutomaticUpgradeWorkAttributes.created_by: ClientWorkAttributeValues.AgentUpgrade.CreatedBy.websdk,
         }
 
         attributes.update(kwargs)
@@ -277,22 +287,23 @@ class CertificateDevicePlacement(_ClientWorkBase):
             A config object representing the client work
         """
         attributes = {
-            ClientWorkAttributes.CertificateDevicePlacement.created_by            : ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
-            ClientWorkAttributes.CertificateDevicePlacement.device_object_location: placement_folder_dn
+            ClientAgentDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
+            ClientAgentDevicePlacementWorkAttributes.device_object_location: placement_folder_dn
         }
 
         if share_mode == 0:
-            attributes[
-                ClientWorkAttributes.CertificateDevicePlacement.device_share_mode] = ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.whole_tree
+            attributes[ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+                ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.whole_tree
         elif share_mode == 1:
             attributes[
-                ClientWorkAttributes.CertificateDevicePlacement.device_share_mode] = ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder
+                ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+                ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder
         elif share_mode == 2:
-            attributes[
-                ClientWorkAttributes.CertificateDevicePlacement.device_share_mode] = ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders
+            attributes[ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+                ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders
         elif share_mode == 3:
-            attributes[
-                ClientWorkAttributes.CertificateDevicePlacement.device_share_mode] = ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.duplicate_device
+            attributes[ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+                ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.duplicate_device
         else:
             raise FeatureError.UnexpectedValue(f"Unexpected value for 'share_mode': {share_mode}")
 
@@ -335,8 +346,8 @@ class CertificateDiscovery(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
-            ClientWorkAttributes.CertificateDiscovery.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
-            ClientWorkAttributes.CertificateDiscovery.interval  : randomize_minutes
+            ClientCertificateDiscoveryWorkAttributes.start_time: datetime.time(start_time % 24).strftime("%I:00 %p"),
+            ClientCertificateDiscoveryWorkAttributes.interval  : randomize_minutes
         }
 
         if len([x for x in [daily, hourly, on_receipt, days_of_week, days_of_month] if x not in [None, False]]) != 1:
@@ -344,37 +355,37 @@ class CertificateDiscovery(_ClientWorkBase):
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt,days_of_week,days_of_month")
 
         if full_scan:
-            attributes[ClientWorkAttributes.CertificateDiscovery.clear_cache_timestamp] = str(time.time())
+            attributes[ClientCertificateDiscoveryWorkAttributes.clear_cache_timestamp] = str(time.time())
 
         if daily:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
-            attributes[
-                ClientWorkAttributes.CertificateDiscovery.schedule_type] = ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.daily
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.daily
         elif hourly:
-            attributes[
-                ClientWorkAttributes.CertificateDiscovery.schedule_type] = ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.hourly
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.hourly
         elif on_receipt:
-            attributes[
-                ClientWorkAttributes.CertificateDiscovery.schedule_type] = ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.on_receipt
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.on_receipt
         elif days_of_week:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
 
-            attributes[
-                ClientWorkAttributes.CertificateDiscovery.schedule_type] = ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.days_of_week
-            attributes[ClientWorkAttributes.CertificateDiscovery.days_of_week] = days_of_week
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.days_of_week
+            attributes[ClientCertificateDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
 
-            attributes[
-                ClientWorkAttributes.CertificateDiscovery.schedule_type] = ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.days_of_month
-            attributes[ClientWorkAttributes.CertificateDiscovery.days_of_month] = days_of_month
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.days_of_month
+            attributes[ClientCertificateDiscoveryWorkAttributes.days_of_month] = days_of_month
         else:
             raise FeatureError.InvalidFormat(
                 "Error in Schedule: must supply at one of (daily, hourly, days_of_week, days_of_month)")
@@ -424,12 +435,12 @@ class CertificateDiscovery(_ClientWorkBase):
             A config object representing the client work
         """
         attributes = {
-            ClientWorkAttributes.CertificateDiscovery.created_by                 : ClientWorkAttributeValues.CertificateDiscovery.CreatedBy.websdk,
-            ClientWorkAttributes.CertificateDiscovery.certificate_location_dn    : certificate_location_dn,
-            ClientWorkAttributes.CertificateDiscovery.interval                   : 0,
-            ClientWorkAttributes.CertificateDiscovery.log_threshold              : log_threshold,
-            ClientWorkAttributes.CertificateDiscovery.exclude_remote_mount_points: int(scan_mounted_file_systems),
-            ClientWorkAttributes.CertificateDiscovery.max_filesize               : max_filesize
+            ClientCertificateDiscoveryWorkAttributes.created_by                 : ClientWorkAttributeValues.CertificateDiscovery.CreatedBy.websdk,
+            ClientCertificateDiscoveryWorkAttributes.certificate_location_dn    : certificate_location_dn,
+            ClientCertificateDiscoveryWorkAttributes.interval                   : 0,
+            ClientCertificateDiscoveryWorkAttributes.log_threshold              : log_threshold,
+            ClientCertificateDiscoveryWorkAttributes.exclude_remote_mount_points: int(scan_mounted_file_systems),
+            ClientCertificateDiscoveryWorkAttributes.max_filesize               : max_filesize
         }
 
         paths = []
@@ -446,7 +457,7 @@ class CertificateDiscovery(_ClientWorkBase):
             paths.append(f'6,{path}')
 
         if len(paths) > 0:
-            attributes[ClientWorkAttributes.CertificateDiscovery.certificate_scanner_path] = paths
+            attributes[ClientCertificateDiscoveryWorkAttributes.certificate_scanner_path] = paths
 
         extensions = []
 
@@ -464,7 +475,7 @@ class CertificateDiscovery(_ClientWorkBase):
             extensions.append(f'2,{ext}')
 
         if len(extensions) > 0:
-            attributes[ClientWorkAttributes.CertificateDiscovery.certificate_scanner_map] = extensions
+            attributes[ClientCertificateDiscoveryWorkAttributes.certificate_scanner_map] = extensions
 
         attributes.update(kwargs)
 
@@ -487,11 +498,11 @@ class CertificateDiscovery(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
-            ClientWorkAttributes.CertificateDiscovery.start_time,
-            ClientWorkAttributes.CertificateDiscovery.schedule_type,
-            ClientWorkAttributes.CertificateDiscovery.interval,
-            ClientWorkAttributes.CertificateDiscovery.days_of_week,
-            ClientWorkAttributes.CertificateDiscovery.days_of_month
+            ClientCertificateDiscoveryWorkAttributes.start_time,
+            ClientCertificateDiscoveryWorkAttributes.schedule_type,
+            ClientCertificateDiscoveryWorkAttributes.interval,
+            ClientCertificateDiscoveryWorkAttributes.days_of_week,
+            ClientCertificateDiscoveryWorkAttributes.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=work_dn,
@@ -538,33 +549,27 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
             A config object representing the client work
         """
         attributes = {
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.created_by                                 : ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.CreatedBy.websdk,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.certificate_container                      : certificate_container_dn,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.naming_pattern                             : naming_pattern,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.certificate_authority                      : ca_template_dn,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.contact                                    : contacts,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.client_certificate_eku_checks_enabled      : validation_type,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.revocation_mode                            : revocation_status_check,
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.fallback_to_http_auth                      : int(
-                authenticate_only_by_password == False),
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.revoke_existing_certificate_on_reenrollment: int(
-                revoke_previous_version),
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.pop_mode                                   : identity_verification
+            NetworkDeviceCertificateWorkAttributes.created_by                                 : ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.CreatedBy.websdk,
+            NetworkDeviceCertificateWorkAttributes.certificate_container                      : certificate_container_dn,
+            NetworkDeviceCertificateWorkAttributes.naming_pattern                             : naming_pattern,
+            NetworkDeviceCertificateWorkAttributes.certificate_authority                      : ca_template_dn,
+            NetworkDeviceCertificateWorkAttributes.contact                                    : contacts,
+            NetworkDeviceCertificateWorkAttributes.client_certificate_eku_checks_enabled      : validation_type,
+            NetworkDeviceCertificateWorkAttributes.revocation_mode                            : revocation_status_check,
+            NetworkDeviceCertificateWorkAttributes.fallback_to_http_auth                      : int(authenticate_only_by_password == False),
+            NetworkDeviceCertificateWorkAttributes.revoke_existing_certificate_on_reenrollment: int(revoke_previous_version),
+            NetworkDeviceCertificateWorkAttributes.pop_mode                                   : identity_verification
         }
 
-        if certificate_origin: attributes[
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.origin] = certificate_origin
-        if certificate_description: attributes[
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.description] = certificate_description
-        if authentication_credentials_dn: attributes[
-            ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.authentication_credentials] = authentication_credentials_dn
+        if certificate_origin: attributes[NetworkDeviceCertificateWorkAttributes.origin] = certificate_origin
+        if certificate_description: attributes[NetworkDeviceCertificateWorkAttributes.description] = certificate_description
+        if authentication_credentials_dn: attributes[NetworkDeviceCertificateWorkAttributes.authentication_credentials] = authentication_credentials_dn
 
         if trusted_certs_and_cas:
-            attributes[
-                ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.explicit_trust_anchors] = trusted_certs_and_cas
-            attributes[ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.use_implicit_trust_anchors] = 0
+            attributes[NetworkDeviceCertificateWorkAttributes.explicit_trust_anchors] = trusted_certs_and_cas
+            attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 0
         else:
-            attributes[ClientWorkAttributes.CertificateEnrollmentViaESTProtocol.use_implicit_trust_anchors] = 1
+            attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 1
 
         attributes.update(kwargs)
 
@@ -606,7 +611,7 @@ class CertificateInstallation(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
-            ClientWorkAttributes.CertificateInstallation.interval: randomize_minutes
+            ClientCertificateDiscoveryWorkAttributes.interval: randomize_minutes
         }
 
         if len([x for x in [daily, hourly, on_receipt, days_of_week, days_of_month, every_x_minutes] if
@@ -619,48 +624,42 @@ class CertificateInstallation(_ClientWorkBase):
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
-            attributes[ClientWorkAttributes.CertificateInstallation.start_time] = datetime.time(
+            attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = datetime.time(
                 start_time % 24).strftime(
                 "%I:00 %p")
-            attributes[
-                ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.daily
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateInstallation.ScheduleType.daily
         elif hourly:
-            attributes[
-                ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.hourly
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateInstallation.ScheduleType.hourly
         elif days_of_week:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
-            attributes[
-                ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.days_of_week
-            attributes[ClientWorkAttributes.CertificateInstallation.days_of_week] = days_of_week
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.CertificateInstallation.ScheduleType.days_of_week
+            attributes[ClientCertificateDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
-            attributes[
-                ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.days_of_month
-            attributes[ClientWorkAttributes.CertificateInstallation.days_of_month] = days_of_month
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.days_of_month
+            attributes[ClientCertificateDiscoveryWorkAttributes.days_of_month] = days_of_month
         elif on_receipt:
-            attributes[
-                ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.on_receipt
+            attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.on_receipt
         elif every_x_minutes:
             if every_x_minutes == 30:
-                attributes[
-                    ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.CertificateInstallation.start_time] = "12:30:00 AM"
+                attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
+                attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = "12:30:00 AM"
             elif every_x_minutes == 15:
-                attributes[
-                    ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.CertificateInstallation.start_time] = "12:15:00 AM"
+                attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
+                attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = "12:15:00 AM"
             elif every_x_minutes == 5:
-                attributes[
-                    ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.CertificateInstallation.start_time] = "12:05:00 AM"
+                attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
+                attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = "12:05:00 AM"
             elif every_x_minutes == 1:
-                attributes[
-                    ClientWorkAttributes.CertificateInstallation.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.CertificateInstallation.start_time] = "12:01:00 AM"
+                attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
+                attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = "12:01:00 AM"
             else:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply at one of (30, 15, 5, 1) for every_x_minutes")
@@ -689,9 +688,9 @@ class CertificateInstallation(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.CertificateInstallation.created_by   : ClientWorkAttributeValues.CertificateInstallation.CreatedBy.websdk,
-            ClientWorkAttributes.CertificateInstallation.interval     : 0,
-            ClientWorkAttributes.CertificateInstallation.log_threshold: log_threshold
+            ClientCertificateDiscoveryWorkAttributes.created_by   : ClientWorkAttributeValues.CertificateInstallation.CreatedBy.websdk,
+            ClientCertificateDiscoveryWorkAttributes.interval     : 0,
+            ClientCertificateDiscoveryWorkAttributes.log_threshold: log_threshold
         }
 
         attributes.update(kwargs)
@@ -713,11 +712,11 @@ class CertificateInstallation(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
-            ClientWorkAttributes.CertificateInstallation.start_time,
-            ClientWorkAttributes.CertificateInstallation.schedule_type,
-            ClientWorkAttributes.CertificateInstallation.interval,
-            ClientWorkAttributes.CertificateInstallation.days_of_week,
-            ClientWorkAttributes.CertificateInstallation.days_of_month
+            ClientCertificateDiscoveryWorkAttributes.start_time,
+            ClientCertificateDiscoveryWorkAttributes.schedule_type,
+            ClientCertificateDiscoveryWorkAttributes.interval,
+            ClientCertificateDiscoveryWorkAttributes.days_of_week,
+            ClientCertificateDiscoveryWorkAttributes.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=work_dn,
@@ -765,30 +764,27 @@ class DeviceCertificateCreation(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.DeviceCertificateCreation.created_by               : ClientWorkAttributeValues.DeviceCertificateCreation.CreatedBy.websdk,
-            ClientWorkAttributes.DeviceCertificateCreation.certificate_container    : certificate_container_dn,
-            ClientWorkAttributes.DeviceCertificateCreation.certificate_authority    : ca_template_dn,
-            ClientWorkAttributes.DeviceCertificateCreation.naming_pattern           : naming_pattern,
-            ClientWorkAttributes.DeviceCertificateCreation.contact                  : contacts,
-            ClientWorkAttributes.DeviceCertificateCreation.key_bit_strength         : key_bit_strength,
-            ClientWorkAttributes.DeviceCertificateCreation.x509_subject             : common_name,
-            ClientWorkAttributes.DeviceCertificateCreation.disable_automatic_renewal: not automatic_renewal,
-            ClientWorkAttributes.DeviceCertificateCreation.transfer_allowed         : allow_certificate_sharing
+            ClientUserCertificateWorkAttributes.created_by               : ClientWorkAttributeValues.DeviceCertificateCreation.CreatedBy.websdk,
+            ClientUserCertificateWorkAttributes.certificate_container    : certificate_container_dn,
+            ClientUserCertificateWorkAttributes.certificate_authority    : ca_template_dn,
+            ClientUserCertificateWorkAttributes.naming_pattern           : naming_pattern,
+            ClientUserCertificateWorkAttributes.contact                  : contacts,
+            ClientUserCertificateWorkAttributes.key_bit_strength         : key_bit_strength,
+            ClientUserCertificateWorkAttributes.x509_subject             : common_name,
+            ClientUserCertificateWorkAttributes.disable_automatic_renewal: not automatic_renewal,
+            ClientUserCertificateWorkAttributes.transfer_allowed         : allow_certificate_sharing
         }
 
         attributes.update(kwargs)
 
-        if description: attributes[ClientWorkAttributes.DeviceCertificateCreation.description] = description
-        if organization: attributes[ClientWorkAttributes.DeviceCertificateCreation.organization] = organization
-        if city_locality: attributes[ClientWorkAttributes.DeviceCertificateCreation.city] = city_locality
-        if state_province: attributes[ClientWorkAttributes.DeviceCertificateCreation.state] = state_province
-        if organizational_unit: attributes[
-            ClientWorkAttributes.DeviceCertificateCreation.organizational_unit] = organizational_unit
-        if country: attributes[ClientWorkAttributes.DeviceCertificateCreation.country] = country
-        if subject_alternative_names: attributes[
-            ClientWorkAttributes.DeviceCertificateCreation.x509_subjectaltname_dns] = common_name
-        if automatic_renewal: attributes[
-            ClientWorkAttributes.DeviceCertificateCreation.renewal_window] = renewal_days_before
+        if description: attributes[ClientUserCertificateWorkAttributes.description] = description
+        if organization: attributes[ClientUserCertificateWorkAttributes.organization] = organization
+        if city_locality: attributes[ClientUserCertificateWorkAttributes.city] = city_locality
+        if state_province: attributes[ClientUserCertificateWorkAttributes.state] = state_province
+        if organizational_unit: attributes[ClientUserCertificateWorkAttributes.organizational_unit] = organizational_unit
+        if country: attributes[ClientUserCertificateWorkAttributes.country] = country
+        if subject_alternative_names: attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_dns] = common_name
+        if automatic_renewal: attributes[ClientUserCertificateWorkAttributes.renewal_window] = renewal_days_before
 
         return self._config_create(
             name=name,
@@ -843,30 +839,28 @@ class DynamicProvisioning(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.DynamicProvisioning.created_by             : ClientWorkAttributeValues.DynamicProvisioning.CreatedBy.websdk,
-            ClientWorkAttributes.DynamicProvisioning.certificate_container  : certificate_container_dn,
-            ClientWorkAttributes.DynamicProvisioning.certificate_authority  : ca_template_dn,
-            ClientWorkAttributes.DynamicProvisioning.naming_pattern         : naming_pattern,
-            ClientWorkAttributes.DynamicProvisioning.contact                : contacts,
-            ClientWorkAttributes.DynamicProvisioning.key_bit_strength       : key_bit_strength,
-            ClientWorkAttributes.DynamicProvisioning.x509_subject           : common_name,
-            ClientWorkAttributes.DynamicProvisioning.x509_subjectaltname_dns: subject_alternative_names,
-            ClientWorkAttributes.DynamicProvisioning.interval               : retry_interval,
-            ClientWorkAttributes.DynamicProvisioning.log_threshold          : log_threshold
+            ServerCertificateWorkAttributes.created_by             : ClientWorkAttributeValues.DynamicProvisioning.CreatedBy.websdk,
+            ServerCertificateWorkAttributes.certificate_container  : certificate_container_dn,
+            ServerCertificateWorkAttributes.certificate_authority  : ca_template_dn,
+            ServerCertificateWorkAttributes.naming_pattern         : naming_pattern,
+            ServerCertificateWorkAttributes.contact                : contacts,
+            ServerCertificateWorkAttributes.key_bit_strength       : key_bit_strength,
+            ServerCertificateWorkAttributes.x509_subject           : common_name,
+            ServerCertificateWorkAttributes.x509_subjectaltname_dns: subject_alternative_names,
+            ServerCertificateWorkAttributes.interval               : retry_interval,
+            ServerCertificateWorkAttributes.log_threshold          : log_threshold
         }
 
-        if description: attributes[ClientWorkAttributes.DynamicProvisioning.description] = description
-        if organization: attributes[ClientWorkAttributes.DynamicProvisioning.organization] = organization
-        if city_locality: attributes[ClientWorkAttributes.DynamicProvisioning.city] = city_locality
-        if state_province: attributes[ClientWorkAttributes.DynamicProvisioning.state] = state_province
-        if organizational_unit: attributes[
-            ClientWorkAttributes.DynamicProvisioning.organizational_unit] = organizational_unit
-        if country: attributes[ClientWorkAttributes.DynamicProvisioning.country] = country
+        if description: attributes[ServerCertificateWorkAttributes.description] = description
+        if organization: attributes[ServerCertificateWorkAttributes.organization] = organization
+        if city_locality: attributes[ServerCertificateWorkAttributes.city] = city_locality
+        if state_province: attributes[ServerCertificateWorkAttributes.state] = state_province
+        if organizational_unit: attributes[ServerCertificateWorkAttributes.organizational_unit] = organizational_unit
+        if country: attributes[ServerCertificateWorkAttributes.country] = country
         if capi_keystore:
-            attributes[
-                ClientWorkAttributes.DynamicProvisioning.application_type] = ClientWorkAttributeValues.DynamicProvisioning.ApplicationType.capi
-            attributes[ClientWorkAttributes.DynamicProvisioning.friendly_name] = capi_friendly_name
-            attributes[ClientWorkAttributes.DynamicProvisioning.private_key_trustee] = capi_trustee
+            attributes[ServerCertificateWorkAttributes.application_type] = ClientWorkAttributeValues.DynamicProvisioning.ApplicationType.capi
+            attributes[ServerCertificateWorkAttributes.friendly_name] = capi_friendly_name
+            attributes[ServerCertificateWorkAttributes.private_key_trustee] = capi_trustee
 
         attributes.update(kwargs)
 
@@ -906,9 +900,9 @@ class SSHDevicePlacement(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.SSHDevicePlacement.created_by            : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
-            ClientWorkAttributes.SSHDevicePlacement.device_object_location: devices_folder_dn,
-            ClientWorkAttributes.SSHDevicePlacement.device_share_mode     : share_mode
+            ServerAgentBaseDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
+            ServerAgentBaseDevicePlacementWorkAttributes.device_object_location: devices_folder_dn,
+            ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode     : share_mode
         }
 
         attributes.update(kwargs)
@@ -951,7 +945,7 @@ class SSHDiscovery(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
-            ClientWorkAttributes.SSHDiscovery.interval: randomize_minutes
+            ClientAgentSSHDiscoveryWorkAttributes.interval: randomize_minutes
         }
 
         if len([x for x in [daily, hourly, on_receipt, every_30_minutes, days_of_week, days_of_month] if x not in [None, False]]) != 1:
@@ -959,42 +953,43 @@ class SSHDiscovery(_ClientWorkBase):
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt,every_30_minutes,days_of_week,days_of_month")
 
         if full_scan:
-            attributes[ClientWorkAttributes.SSHDiscovery.clear_cache_timestamp] = str(time.time())
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.clear_cache_timestamp] = str(time.time())
 
         if daily:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
-            attributes[ClientWorkAttributes.SSHDiscovery.start_time] = datetime.time(start_time % 24).strftime(
-                "%I:00 %p")
-            attributes[
-                ClientWorkAttributes.SSHDiscovery.schedule_type] = ClientWorkAttributeValues.SSHDiscovery.ScheduleType.daily
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = \
+                datetime.time(start_time % 24).strftime("%I:00 %p")
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHDiscovery.ScheduleType.daily
         elif hourly:
-            attributes[
-                ClientWorkAttributes.SSHDiscovery.schedule_type] = ClientWorkAttributeValues.SSHDiscovery.ScheduleType.hourly
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHDiscovery.ScheduleType.hourly
         elif on_receipt:
-            attributes[ClientWorkAttributes.SSHDiscovery.schedule_type] = ClientWorkAttributeValues.SSHDiscovery.ScheduleType.on_receipt
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHDiscovery.ScheduleType.on_receipt
         elif every_30_minutes:
-            attributes[
-                ClientWorkAttributes.SSHDiscovery.schedule_type] = ClientWorkAttributeValues.SSHDiscovery.ScheduleType.every_30_minutes
-            attributes[ClientWorkAttributes.SSHDiscovery.start_time] = "12:30:00 AM"
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHDiscovery.ScheduleType.every_30_minutes
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:30:00 AM"
         elif days_of_week:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
 
-            attributes[
-                ClientWorkAttributes.SSHDiscovery.schedule_type] = ClientWorkAttributeValues.SSHDiscovery.ScheduleType.days_of_week
-            attributes[ClientWorkAttributes.SSHDiscovery.days_of_week] = days_of_week
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHDiscovery.ScheduleType.days_of_week
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
 
-            attributes[
-                ClientWorkAttributes.SSHDiscovery.schedule_type] = ClientWorkAttributeValues.SSHDiscovery.ScheduleType.days_of_month
-            attributes[ClientWorkAttributes.SSHDiscovery.days_of_month] = days_of_month
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHDiscovery.ScheduleType.days_of_month
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_month] = days_of_month
         else:
             raise FeatureError.InvalidFormat(
                 "Error in Schedule: must supply one of (daily,hourly,on_receipt,every_30_minutes,days_of_week,days_of_month)")
@@ -1033,14 +1028,14 @@ class SSHDiscovery(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.SSHDiscovery.created_by                   : ClientWorkAttributeValues.SSHDiscovery.CreatedBy.websdk,
-            ClientWorkAttributes.SSHDiscovery.interval                     : 0,
-            ClientWorkAttributes.SSHDiscovery.server_path_defaults_disabled: int(not scan_default_paths),
-            ClientWorkAttributes.SSHDiscovery.user_path_defaults_disabled  : int(not scan_default_paths),
-            ClientWorkAttributes.SSHDiscovery.exclude_remote_mount_points  : int(not scan_mounted_fs),
-            ClientWorkAttributes.SSHDiscovery.minimize_resource_use        : int(minimize_resources),
-            ClientWorkAttributes.SSHDiscovery.max_filesize                 : max_filesize,
-            ClientWorkAttributes.SSHDiscovery.log_threshold                : log_threshold
+            ClientAgentSSHDiscoveryWorkAttributes.created_by                   : ClientWorkAttributeValues.SSHDiscovery.CreatedBy.websdk,
+            ClientAgentSSHDiscoveryWorkAttributes.interval                     : 0,
+            ClientAgentSSHDiscoveryWorkAttributes.server_path_defaults_disabled: int(not scan_default_paths),
+            ClientAgentSSHDiscoveryWorkAttributes.user_path_defaults_disabled  : int(not scan_default_paths),
+            ClientAgentSSHDiscoveryWorkAttributes.exclude_remote_mount_points  : int(not scan_mounted_fs),
+            ClientAgentSSHDiscoveryWorkAttributes.minimize_resource_use        : int(minimize_resources),
+            ClientAgentSSHDiscoveryWorkAttributes.max_filesize                 : max_filesize,
+            ClientAgentSSHDiscoveryWorkAttributes.log_threshold                : log_threshold
         }
 
         scanner_paths = []
@@ -1057,11 +1052,11 @@ class SSHDiscovery(_ClientWorkBase):
             scanner_paths.append(f'4,{path}')
             user_paths.append(f'4,{path}')
 
-        if len(scanner_paths) > 0: attributes[ClientWorkAttributes.SSHDiscovery.ssh_scanner_service_path]: scanner_paths
-        if len(user_paths) > 0: attributes[ClientWorkAttributes.SSHDiscovery.ssh_scanner_user_path]: user_paths
+        if len(scanner_paths) > 0: attributes[ClientAgentSSHDiscoveryWorkAttributes.ssh_scanner_service_path]: scanner_paths
+        if len(user_paths) > 0: attributes[ClientAgentSSHDiscoveryWorkAttributes.ssh_scanner_user_path]: user_paths
 
         attributes.update(kwargs)
-        
+
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
@@ -1080,11 +1075,11 @@ class SSHDiscovery(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
-            ClientWorkAttributes.SSHDiscovery.start_time,
-            ClientWorkAttributes.SSHDiscovery.schedule_type,
-            ClientWorkAttributes.SSHDiscovery.interval,
-            ClientWorkAttributes.SSHDiscovery.days_of_week,
-            ClientWorkAttributes.SSHDiscovery.days_of_month
+            ClientAgentSSHDiscoveryWorkAttributes.start_time,
+            ClientAgentSSHDiscoveryWorkAttributes.schedule_type,
+            ClientAgentSSHDiscoveryWorkAttributes.interval,
+            ClientAgentSSHDiscoveryWorkAttributes.days_of_week,
+            ClientAgentSSHDiscoveryWorkAttributes.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=work_dn,
@@ -1116,7 +1111,7 @@ class SSHKeyUsage(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
-            ClientWorkAttributes.SSHKeyUsage.interval: randomize_minutes
+            ClientAgentSSHKeyUsageWorkAttributes.interval: randomize_minutes
         }
 
         if len([x for x in [daily, hourly, on_receipt, every_x_minutes] if x not in [None, False]]) != 1:
@@ -1128,33 +1123,33 @@ class SSHKeyUsage(_ClientWorkBase):
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
-            attributes[ClientWorkAttributes.SSHKeyUsage.start_time] = datetime.time(start_time % 24).strftime(
-                "%I:00 %p")
-            attributes[
-                ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.daily
+            attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] =\
+                datetime.time(start_time % 24).strftime("%I:00 %p")
+            attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.daily
         elif hourly:
-            attributes[
-                ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.hourly
+            attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.hourly
         elif on_receipt:
-            attributes[
-                ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.on_receipt
+            attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.on_receipt
         elif every_x_minutes:
             if every_x_minutes == 30:
-                attributes[
-                    ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:30:00 AM"
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] = "12:30:00 AM"
             elif every_x_minutes == 15:
-                attributes[
-                    ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:15:00 AM"
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] = "12:15:00 AM"
             elif every_x_minutes == 5:
-                attributes[
-                    ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:05:00 AM"
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] = "12:05:00 AM"
             elif every_x_minutes == 1:
-                attributes[
-                    ClientWorkAttributes.SSHKeyUsage.schedule_type] = ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:01:00 AM"
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] = "12:01:00 AM"
             else:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply at one of (30, 15, 5, 1) for every_x_minutes")
@@ -1185,14 +1180,14 @@ class SSHKeyUsage(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.SSHKeyUsage.created_by   : ClientWorkAttributeValues.SSHKeyUsage.CreatedBy.websdk,
-            ClientWorkAttributes.SSHKeyUsage.interval     : 0,
-            ClientWorkAttributes.SSHKeyUsage.log_threshold: log_threshold,
-            ClientWorkAttributes.SSHKeyUsage.max_row_count: limit_cache_size
+            ClientAgentSSHKeyUsageWorkAttributes.created_by   : ClientWorkAttributeValues.SSHKeyUsage.CreatedBy.websdk,
+            ClientAgentSSHKeyUsageWorkAttributes.interval     : 0,
+            ClientAgentSSHKeyUsageWorkAttributes.log_threshold: log_threshold,
+            ClientAgentSSHKeyUsageWorkAttributes.max_row_count: limit_cache_size
         }
 
         attributes.update(kwargs)
-        
+
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
@@ -1210,11 +1205,11 @@ class SSHKeyUsage(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
-            ClientWorkAttributes.SSHKeyUsage.start_time,
-            ClientWorkAttributes.SSHKeyUsage.schedule_type,
-            ClientWorkAttributes.SSHKeyUsage.interval,
-            ClientWorkAttributes.SSHKeyUsage.days_of_week,
-            ClientWorkAttributes.SSHKeyUsage.days_of_month
+            ClientAgentSSHKeyUsageWorkAttributes.start_time,
+            ClientAgentSSHKeyUsageWorkAttributes.schedule_type,
+            ClientAgentSSHKeyUsageWorkAttributes.interval,
+            ClientAgentSSHKeyUsageWorkAttributes.days_of_week,
+            ClientAgentSSHKeyUsageWorkAttributes.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=work_dn,
@@ -1250,7 +1245,7 @@ class SSHRemediation(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         attributes = {
-            ClientWorkAttributes.SSHRemediation.interval: randomize_minutes
+            ClientAgentSSHDiscoveryWorkAttributes.interval: randomize_minutes
         }
 
         if len([x for x in [daily, hourly, on_receipt, days_of_week, days_of_month, every_x_minutes] if x not in [None, False]]) != 1:
@@ -1262,47 +1257,47 @@ class SSHRemediation(_ClientWorkBase):
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
-            attributes[ClientWorkAttributes.SSHRemediation.start_time] = datetime.time(start_time % 24).strftime(
-                "%I:00 %p")
-            attributes[
-                ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.daily
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = \
+                datetime.time(start_time % 24).strftime("%I:00 %p")
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHRemediation.ScheduleType.daily
         elif hourly:
-            attributes[
-                ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.hourly
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHRemediation.ScheduleType.hourly
         elif days_of_week:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
-            attributes[
-                ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.days_of_week
-            attributes[ClientWorkAttributes.SSHRemediation.days_of_week] = days_of_week
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHRemediation.ScheduleType.days_of_week
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
-            attributes[
-                ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.days_of_month
-            attributes[ClientWorkAttributes.SSHRemediation.days_of_month] = days_of_month
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHRemediation.ScheduleType.days_of_month
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_month] = days_of_month
         elif on_receipt:
-            attributes[
-                ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.on_receipt
+            attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                ClientWorkAttributeValues.SSHRemediation.ScheduleType.on_receipt
         elif every_x_minutes:
             if every_x_minutes == 30:
-                attributes[
-                    ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:30:00 AM"
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:30:00 AM"
             elif every_x_minutes == 15:
-                attributes[
-                    ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:15:00 AM"
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:15:00 AM"
             elif every_x_minutes == 5:
-                attributes[
-                    ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:05:00 AM"
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:05:00 AM"
             elif every_x_minutes == 1:
-                attributes[
-                    ClientWorkAttributes.SSHRemediation.schedule_type] = ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
-                attributes[ClientWorkAttributes.SSHRemediation.start_time] = "12:01:00 AM"
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
+                    ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
+                attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:01:00 AM"
             else:
                 raise FeatureError.InvalidFormat(
                     "Error in Schedule: must supply at one of (30, 15, 5, 1) for every_x_minutes")
@@ -1331,13 +1326,13 @@ class SSHRemediation(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.SSHRemediation.created_by   : ClientWorkAttributeValues.SSHRemediation.CreatedBy.websdk,
-            ClientWorkAttributes.SSHRemediation.interval     : 0,
-            ClientWorkAttributes.SSHRemediation.log_threshold: log_threshold
+            ClientAgentSSHDiscoveryWorkAttributes.created_by   : ClientWorkAttributeValues.SSHRemediation.CreatedBy.websdk,
+            ClientAgentSSHDiscoveryWorkAttributes.interval     : 0,
+            ClientAgentSSHDiscoveryWorkAttributes.log_threshold: log_threshold
         }
 
         attributes.update(kwargs)
-        
+
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
@@ -1355,11 +1350,11 @@ class SSHRemediation(_ClientWorkBase):
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
-            ClientWorkAttributes.SSHRemediation.start_time,
-            ClientWorkAttributes.SSHRemediation.schedule_type,
-            ClientWorkAttributes.SSHRemediation.interval,
-            ClientWorkAttributes.SSHRemediation.days_of_week,
-            ClientWorkAttributes.SSHRemediation.days_of_month
+            ClientAgentSSHDiscoveryWorkAttributes.start_time,
+            ClientAgentSSHDiscoveryWorkAttributes.schedule_type,
+            ClientAgentSSHDiscoveryWorkAttributes.interval,
+            ClientAgentSSHDiscoveryWorkAttributes.days_of_week,
+            ClientAgentSSHDiscoveryWorkAttributes.days_of_month
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=work_dn,
@@ -1409,7 +1404,7 @@ class UserCertificateCreation(_ClientWorkBase):
             city_locality: (optional) a city or locality for the certificate
             state_province: (optional) a state or province for the certificate
             country: optional) a country code for the certificate
-            user_email: add user's email to the certifcate
+            user_email: add user's email to the certificate
             subject_alt_names_email: (optional) use subject alternative name email for the certificate
             subject_alt_names_upn: (optional) use subject alternative upn for the certificate
             key_bit_strength: (optional) the key size of the certificate
@@ -1443,60 +1438,58 @@ class UserCertificateCreation(_ClientWorkBase):
         """
 
         attributes = {
-            ClientWorkAttributes.UserCertificateCreation.created_by                       : ClientWorkAttributeValues.UserCertificateCreation.CreatedBy.websdk,
-            ClientWorkAttributes.UserCertificateCreation.certificate_container            : certificate_container_dn,
-            ClientWorkAttributes.UserCertificateCreation.certificate_authority            : ca_template_dn,
-            ClientWorkAttributes.UserCertificateCreation.naming_pattern                   : naming_pattern,
-            ClientWorkAttributes.UserCertificateCreation.contact                          : contacts,
-            ClientWorkAttributes.UserCertificateCreation.key_bit_strength                 : key_bit_strength,
-            ClientWorkAttributes.UserCertificateCreation.x509_subject                     : common_name,
-            ClientWorkAttributes.UserCertificateCreation.organization                     : organization,
-            ClientWorkAttributes.UserCertificateCreation.organizational_unit              : organizational_unit,
-            ClientWorkAttributes.UserCertificateCreation.city                             : city_locality,
-            ClientWorkAttributes.UserCertificateCreation.state                            : state_province,
-            ClientWorkAttributes.UserCertificateCreation.country                          : country,
-            ClientWorkAttributes.UserCertificateCreation.disable_automatic_renewal        : int(not automatic_renewal),
-            ClientWorkAttributes.UserCertificateCreation.publish_to_identity              : int(
-                publish_to_identity_provider),
-            ClientWorkAttributes.UserCertificateCreation.publish_to_identity_on_pre_enroll: int(publish_pre_enrollment),
-            ClientWorkAttributes.UserCertificateCreation.transfer_allowed                 : allow_mobile_sharing,
-            ClientWorkAttributes.UserCertificateCreation.include_historic_certificates    : install_previous_certs,
-            ClientWorkAttributes.UserCertificateCreation.certificate_icon                 : portal_icon,
-            ClientWorkAttributes.UserCertificateCreation.download_limit                   : portal_download_limit,
+            ClientUserCertificateWorkAttributes.created_by                       : ClientWorkAttributeValues.UserCertificateCreation.CreatedBy.websdk,
+            ClientUserCertificateWorkAttributes.certificate_container            : certificate_container_dn,
+            ClientUserCertificateWorkAttributes.certificate_authority            : ca_template_dn,
+            ClientUserCertificateWorkAttributes.naming_pattern                   : naming_pattern,
+            ClientUserCertificateWorkAttributes.contact                          : contacts,
+            ClientUserCertificateWorkAttributes.key_bit_strength                 : key_bit_strength,
+            ClientUserCertificateWorkAttributes.x509_subject                     : common_name,
+            ClientUserCertificateWorkAttributes.organization                     : organization,
+            ClientUserCertificateWorkAttributes.organizational_unit              : organizational_unit,
+            ClientUserCertificateWorkAttributes.city                             : city_locality,
+            ClientUserCertificateWorkAttributes.state                            : state_province,
+            ClientUserCertificateWorkAttributes.country                          : country,
+            ClientUserCertificateWorkAttributes.disable_automatic_renewal        : int(not automatic_renewal),
+            ClientUserCertificateWorkAttributes.publish_to_identity              : int(publish_to_identity_provider),
+            ClientUserCertificateWorkAttributes.publish_to_identity_on_pre_enroll: int(publish_pre_enrollment),
+            ClientUserCertificateWorkAttributes.transfer_allowed                 : allow_mobile_sharing,
+            ClientUserCertificateWorkAttributes.include_historic_certificates    : install_previous_certs,
+            ClientUserCertificateWorkAttributes.certificate_icon                 : portal_icon,
+            ClientUserCertificateWorkAttributes.download_limit                   : portal_download_limit,
         }
 
-        if description: attributes[ClientWorkAttributes.UserCertificateCreation.description] = description
+        if description: attributes[ClientUserCertificateWorkAttributes.description] = description
         if user_email:
-            attributes[
-                ClientWorkAttributes.UserCertificateCreation.x509_e] = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.user_email
+            attributes[ClientUserCertificateWorkAttributes.x509_e] = \
+                ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.user_email
         if subject_alt_names_email:
-            attributes[
-                ClientWorkAttributes.UserCertificateCreation.x509_subjectaltname_rfc822] = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.subject_alt_names_email
+            attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_rfc822] = \
+                ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.subject_alt_names_email
         if subject_alt_names_upn:
-            attributes[
-                ClientWorkAttributes.UserCertificateCreation.x509_subjectaltname_othername_upn] = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.subject_alt_names_upn
-        if automatic_renewal: attributes[
-            ClientWorkAttributes.UserCertificateCreation.renewal_window] = renewal_days_before
+            attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_othername_upn] = \
+                ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.subject_alt_names_upn
+        if automatic_renewal: attributes[ClientUserCertificateWorkAttributes.renewal_window] = renewal_days_before
 
         if configure_outlook:
-            attributes[ClientWorkAttributes.UserCertificateCreation.outlook_profile_generation] = int(configure_outlook)
-            attributes[ClientWorkAttributes.UserCertificateCreation.outlook_profile_name] = outlook_security_name
+            attributes[ClientUserCertificateWorkAttributes.outlook_profile_generation] = int(configure_outlook)
+            attributes[ClientUserCertificateWorkAttributes.outlook_profile_name] = outlook_security_name
             option_value = 0
             if outlook_encrypt_messages: option_value += 1
             if outlook_sign_outgoing: option_value += 2
             if not outlook_send_cleartext_signed: option_value += 32
             if outlook_request_receipts: option_value += 512
-            attributes[ClientWorkAttributes.UserCertificateCreation.outlook_profile_options] = option_value
+            attributes[ClientUserCertificateWorkAttributes.outlook_profile_options] = option_value
 
         if lifecycle_groups:
-            attributes[ClientWorkAttributes.UserCertificateCreation.required_member_identity] = lifecycle_groups
-            attributes[ClientWorkAttributes.UserCertificateCreation.membership_loss_disable] = lifecycle_disable_cert
-            attributes[ClientWorkAttributes.UserCertificateCreation.membership_loss_revoke] = lifecycle_revoke_cert
+            attributes[ClientUserCertificateWorkAttributes.required_member_identity] = lifecycle_groups
+            attributes[ClientUserCertificateWorkAttributes.membership_loss_disable] = lifecycle_disable_cert
+            attributes[ClientUserCertificateWorkAttributes.membership_loss_revoke] = lifecycle_revoke_cert
 
         if portal_friendly_name:
-            attributes[ClientWorkAttributes.UserCertificateCreation.portal_friendly_name] = portal_friendly_name
+            attributes[ClientUserCertificateWorkAttributes.portal_friendly_name] = portal_friendly_name
         if portal_instructions:
-            attributes[ClientWorkAttributes.UserCertificateCreation.download_instructions] = portal_instructions
+            attributes[ClientUserCertificateWorkAttributes.download_instructions] = portal_instructions
 
         attributes.update(kwargs)
 

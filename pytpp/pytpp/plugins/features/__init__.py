@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 from pytpp.features import Features as _OriginalFeatures, AttributeNames, AttributeValues, Classes, \
     _Discovery as _OriginalDiscovery
 from pytpp.plugins.features.discovery import NetworkDiscovery as _PluginNetworkDiscovery

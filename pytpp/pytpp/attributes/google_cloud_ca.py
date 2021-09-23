@@ -1,0 +1,7 @@
+from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes.http_ca_base import HTTPCABaseAttributes
+
+
+class GoogleCloudCAAttributes(HTTPCABaseAttributes, metaclass=PropertyMeta):
+	certificate_authority_id = Attribute('Certificate Authority ID', min_version='20.2')
+	region = Attribute('Region', min_version='20.4')

@@ -209,7 +209,8 @@ class PlacementRules(_OriginalPlacementRules):
             self._api = api
 
     def create(self, name: str, conditions: List[Union[str, dict]], device_location_dn: str,
-               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
+               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate',
+               get_if_already_exists: bool = True):
         """
         Creates a placement rule.
 
@@ -236,6 +237,7 @@ class PlacementRules(_OriginalPlacementRules):
             certificate_location_dn: Absolute path to folder that should received all certificate objects that apply to this
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object of the placement rule.

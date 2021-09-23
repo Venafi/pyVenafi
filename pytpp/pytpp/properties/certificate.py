@@ -19,7 +19,7 @@ class CertificateAttributes:
     san_upn = 'SAN-UPN'
     san_uri = 'SAN-URI'
     serial = 'Serial'
-    signature_algorithm = 'SignatureAlgorithmn'
+    signature_algorithm = 'SignatureAlgorithm'
     thumbprint = 'Thumbprint'
     valid_from = 'ValidFrom'
     valid_to = 'ValidTo'

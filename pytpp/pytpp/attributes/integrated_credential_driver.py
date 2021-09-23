@@ -1,0 +1,6 @@
+from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes.credential_driver_base import CredentialDriverBaseAttributes
+
+
+class IntegratedCredentialDriverAttributes(CredentialDriverBaseAttributes, metaclass=PropertyMeta):
+	pass

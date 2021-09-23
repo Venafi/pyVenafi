@@ -1,13 +1,15 @@
 import time
 import os
 import re
+from typing import TYPE_CHECKING
 from pytpp.properties.response_objects.config import Config
 from pytpp.properties.response_objects.identity import Identity
 from pytpp.logger import logger, LogTags
 from pytpp.properties.secret_store import Namespaces
-from pytpp.api.authenticate import Authenticate
 from typing import List, Dict, Union
 from packaging.version import Version
+if TYPE_CHECKING:
+    from pytpp.api.authenticate import Authenticate
 
 
 def feature():
@@ -23,7 +25,7 @@ def feature():
 
 @feature()
 class FeatureBase:
-    def __init__(self, api: Authenticate):
+    def __init__(self, api: 'Authenticate'):
         self._api = api
 
     def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None,
@@ -53,6 +55,7 @@ class FeatureBase:
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
+        obj = Config.Object({})
         if isinstance(object_dn, Config.Object):
             obj = object_dn
         elif isinstance(object_guid, Config.Object):
@@ -62,8 +65,6 @@ class FeatureBase:
             if response.result.code == 400:
                 if raise_error_if_not_exists:
                     raise ValueError(f'"{object_dn or object_guid}" does not exist.')
-                else:
-                    obj = Config.Object({})
             else:
                 obj = response.object
         if valid_class_names and obj.type_name not in valid_class_names:

@@ -1,8 +1,9 @@
 from typing import List, Union
 from pytpp.vtypes import Config
-from pytpp.properties.config import PlacementRulesAttributeNames, PlacementRulesAttributeValues, \
+from pytpp.properties.config import PlacementRulesAttributeValues, \
     PlacementRulesClassNames
 from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
 
 
 @feature()
@@ -227,7 +228,7 @@ class PlacementRules(FeatureBase):
             name=name,
             parent_folder_dn=self._layout_rules_dn,
             attributes={
-                PlacementRulesAttributeNames.rule: rule_attr
+                LayoutRuleBaseAttributes.rule: rule_attr
             },
             config_class=PlacementRulesClassNames.layout_rule_base,
             get_if_already_exists=get_if_already_exists
@@ -279,7 +280,7 @@ class PlacementRules(FeatureBase):
         rule_dn = self._get_dn(rule, parent_dn=self._layout_rules_dn)
         current_attr = self._api.websdk.Config.Read.post(
             object_dn=rule_dn,
-            attribute_name=PlacementRulesAttributeNames.rule
+            attribute_name=LayoutRuleBaseAttributes.rule
         ).values[0]
         new_conditions = conditions or []
         new_certificate_dn = certificate_location_dn or ''
@@ -316,7 +317,7 @@ class PlacementRules(FeatureBase):
         )
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=rule_dn,
-            attribute_name=PlacementRulesAttributeNames.rule,
+            attribute_name=LayoutRuleBaseAttributes.rule,
             values=[
                 rule_attr
             ]

@@ -1,5 +1,9 @@
 import requests
 import json
+from typing import TYPE_CHECKING
+from pytpp.attributes._helper import Attribute
+if TYPE_CHECKING:
+    from packaging.version import Version
 
 
 class Session:
@@ -8,7 +12,7 @@ class Session:
     request. It also removes all null values from all data sent to TPP.
     """
     def __init__(self, headers: dict, proxies: dict = None, certificate_path: str = None,
-                 key_file_path: str = None, verify_ssl: bool = False):
+                 key_file_path: str = None, verify_ssl: bool = False, tpp_version: 'Version' = None):
         self.requests = requests
         self.requests.packages.urllib3.disable_warnings()
         self.request_kwargs = {
@@ -22,6 +26,7 @@ class Session:
                              'given for certificate authentication.')
         if certificate_path and key_file_path:
             self.request_kwargs['cert'] = (certificate_path, key_file_path)
+        self.tpp_version = tpp_version
 
     def update_headers(self, new_headers):
         self.request_kwargs['headers'].update(new_headers)
@@ -90,6 +95,11 @@ class Session:
             return d
 
         for key, value in list(d.items()):
+            if self.tpp_version:
+                if isinstance(key, Attribute) and key.min_version and self.tpp_version < value.min_version:
+                    raise AttributeError(f'The attribute "{key}" is not available until TPP version {key.min_version}.')
+                if isinstance(value, Attribute) and value.min_version and self.tpp_version < value.min_version:
+                    raise AttributeError(f'The attribute "{value}" is not available until TPP version {value.min_version}.')
             if value is None:
                 del d[key]
             elif isinstance(value, dict):

@@ -38,8 +38,8 @@ class _Certificates(API):
             @property
             @json_response_property()
             def links(self):
-                lnks = self._from_json(key='_links')
-                return [Certificate.Link(lnk) for lnk in lnks]
+                links = self._from_json(key='_links')
+                return [Certificate.Link(lnk) for lnk in links]
 
             @property
             @json_response_property()

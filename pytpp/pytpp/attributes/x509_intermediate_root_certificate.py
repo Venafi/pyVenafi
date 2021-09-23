@@ -1,0 +1,6 @@
+from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes.x509_root_certificate import X509RootCertificateAttributes
+
+
+class X509IntermediateRootCertificateAttributes(X509RootCertificateAttributes, metaclass=PropertyMeta):
+	pass

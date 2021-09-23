@@ -1,5 +1,8 @@
 from pytpp.vtypes import Config
-from pytpp.properties.config import CertificateAuthorityClassNames, CertificateAuthorityAttributes
+from pytpp.properties.config import CertificateAuthorityClassNames
+from pytpp.attributes.adaptable_ca import AdaptableCAAttributes
+from pytpp.attributes.microsoft_ca import MicrosoftCAAttributes
+from pytpp.attributes.self_signed_ca import SelfSignedCAAttributes
 from pytpp.features.bases.feature_base import FeatureBase, feature
 
 
@@ -67,11 +70,11 @@ class AdaptableCA(_CertificateAuthorityBase):
         """
         attributes = attributes or {}
         attributes.update({
-            CertificateAuthorityAttributes.Adaptable.interoperability_script: powershell_script,
-            CertificateAuthorityAttributes.credential: username_credential_dn,
-            CertificateAuthorityAttributes.Adaptable.certificate_credential: certificate_credential_dn,
-            CertificateAuthorityAttributes.Adaptable.secondary_credential: secondary_credential_dn,
-            CertificateAuthorityAttributes.driver_name: 'caadaptable'
+            AdaptableCAAttributes.interoperability_script: powershell_script,
+            AdaptableCAAttributes.credential: username_credential_dn,
+            AdaptableCAAttributes.certificate_credential: certificate_credential_dn,
+            AdaptableCAAttributes.secondary_credential: secondary_credential_dn,
+            AdaptableCAAttributes.driver_name: 'caadaptable'
         })
         return self._config_create(
             name=name,
@@ -111,11 +114,11 @@ class MSCA(_CertificateAuthorityBase):
         """
         attributes = attributes or {}
         attributes.update({
-            CertificateAuthorityAttributes.host: hostname,
-            CertificateAuthorityAttributes.MSCA.given_name: service_name,
-            CertificateAuthorityAttributes.credential: credential_dn,
-            CertificateAuthorityAttributes.template: template,
-            CertificateAuthorityAttributes.driver_name: 'camicrosoft'
+            MicrosoftCAAttributes.host: hostname,
+            MicrosoftCAAttributes.given_name: service_name,
+            MicrosoftCAAttributes.credential: credential_dn,
+            MicrosoftCAAttributes.template: template,
+            MicrosoftCAAttributes.driver_name: 'camicrosoft'
         })
         return self._config_create(
             name=name,
@@ -150,7 +153,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
         """
         attributes = attributes or {}
         attributes.update({
-            CertificateAuthorityAttributes.driver_name: 'caselfsigned'
+            SelfSignedCAAttributes.driver_name: 'caselfsigned'
         })
         return self._config_create(
             name=name,
