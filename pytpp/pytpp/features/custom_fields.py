@@ -1,6 +1,5 @@
 from typing import List, Dict, Union
 from pytpp.vtypes import Config
-from pytpp.properties.config import CustomFieldAttributes, CustomFieldAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 

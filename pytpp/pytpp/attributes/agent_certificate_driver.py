@@ -1,0 +1,8 @@
+from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes.agent_certificate_base import AgentCertificateBaseAttributes
+from pytpp.attributes.agent_driver_base import AgentDriverBaseAttributes
+from pytpp.attributes.schedule_base import ScheduleBaseAttributes
+
+
+class AgentCertificateDriverAttributes(AgentCertificateBaseAttributes, AgentDriverBaseAttributes, ScheduleBaseAttributes, metaclass=PropertyMeta):
+	pass

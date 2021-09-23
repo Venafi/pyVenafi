@@ -1,7 +1,8 @@
 from typing import List, Union
 from pytpp.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.config import FolderClassNames, FolderAttributes
+from pytpp.properties.config import FolderClassNames
+from pytpp.attributes.policy import PolicyAttributes
 
 
 @feature()
@@ -25,7 +26,7 @@ class Folder(FeatureBase):
         workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.AddValue.post(
             object_dn=folder_dn,
-            attribute_name=FolderAttributes.workflow,
+            attribute_name=PolicyAttributes.workflow,
             value=workflow_dn
         )
 
@@ -44,7 +45,7 @@ class Folder(FeatureBase):
         workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.AddValue.post(
             object_dn=folder_dn,
-            attribute_name=FolderAttributes.workflow_block,
+            attribute_name=PolicyAttributes.workflow_block,
             value=workflow_dn
         )
 
@@ -350,7 +351,7 @@ class Folder(FeatureBase):
         workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=folder_dn,
-            attribute_name=FolderAttributes.workflow,
+            attribute_name=PolicyAttributes.workflow,
             value=workflow_dn
         )
 
@@ -368,7 +369,7 @@ class Folder(FeatureBase):
         workflow_dn = self._get_dn(workflow)
         result = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=folder_dn,
-            attribute_name=FolderAttributes.workflow_block,
+            attribute_name=PolicyAttributes.workflow_block,
             value=workflow_dn
         )
 

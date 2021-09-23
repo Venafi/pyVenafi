@@ -35,8 +35,9 @@ class Authenticate:
                              application_id=application_id, scope=scope, proxies=proxies,
                              certificate_path=certificate_path, key_file_path=key_file_path,
                              verify_ssl=verify_ssl)
-        tpp_version = self.websdk.SystemStatus.Version.get().version
-        self._tpp_version = parse(tpp_version)
+        tpp_version = parse(self.websdk.SystemStatus.Version.get().version)
+        self._tpp_version = tpp_version
+        self.websdk._session.tpp_version = Version(f'{tpp_version.major}.{tpp_version.minor}')
         self._host = host
         self._username = username
         self._password = password
@@ -76,7 +77,7 @@ class Authenticate:
                 password=password or self._password,
                 application_id=application_id or self._application_id,
                 scope=scope or self._scope,
-                version=str(self._version),
+                version=str(self._tpp_version),
                 proxies=self._proxies
             )
         else:

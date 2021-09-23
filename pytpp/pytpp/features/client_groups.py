@@ -1,7 +1,8 @@
 from typing import Union
 from pytpp.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.config import ClientGroupsAttributeValues, ClientGroupsAttributes, ClientGroupsClassNames
+from pytpp.properties.config import ClientGroupsAttributeValues, ClientGroupsClassNames
+from pytpp.attributes.client_group import ClientGroupAttributes
 
 
 @feature()
@@ -24,7 +25,7 @@ class ClientGroups(FeatureBase):
         response = self._api.websdk.Config.Write.post(
             object_dn=group_dn,
             attribute_data=self._name_value_list({
-                ClientGroupsAttributes.assigned_work: [fr'{self._work_base_dn}\{work_name}']
+                ClientGroupAttributes.assigned_work: [fr'{self._work_base_dn}\{work_name}']
             })
         )
 
@@ -47,27 +48,27 @@ class ClientGroups(FeatureBase):
         """
         if agent_type == ClientGroupsAttributeValues.AgentType.agent_installed:
             attributes = {
-                ClientGroupsAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupsAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agent_installed,
-                ClientGroupsAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agent_installed
+                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agent_installed,
+                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agent_installed
             }
         elif agent_type == ClientGroupsAttributeValues.AgentType.agentless:
             attributes = {
-                ClientGroupsAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupsAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agentless,
-                ClientGroupsAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agentless
+                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agentless,
+                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agentless
             }
         elif agent_type == ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates:
             attributes = {
-                ClientGroupsAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupsAttributes.agent_type: ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates,
-                ClientGroupsAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.deploy_user_and_device_certificates
+                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates,
+                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.deploy_user_and_device_certificates
             }
         elif agent_type == ClientGroupsAttributeValues.AgentType.certificate_enrollment:
             attributes = {
-                ClientGroupsAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupsAttributes.agent_type: ClientGroupsAttributeValues.AgentType.certificate_enrollment,
-                ClientGroupsAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.certificate_enrollment
+                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.certificate_enrollment,
+                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.certificate_enrollment
             }
         else:
             raise FeatureError.UnexpectedValue(
@@ -140,7 +141,7 @@ class ClientGroups(FeatureBase):
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         response = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=group_dn,
-            attribute_name=ClientGroupsAttributes.assigned_work,
+            attribute_name=ClientGroupAttributes.assigned_work,
             value=fr'{self._work_base_dn}\{work_name}'
         )
         if response.result.code != 1:

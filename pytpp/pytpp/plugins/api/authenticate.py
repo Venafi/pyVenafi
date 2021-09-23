@@ -91,7 +91,7 @@ class Authenticate(_Authenticate):
                 preference=preference or self.preference,
                 application_id=application_id or self._application_id,
                 scope=scope or self._scope,
-                version=str(self._version),
+                version=str(self._tpp_version),
                 proxies=self._proxies
             )
         else:

@@ -1,5 +1,4 @@
 from typing import Union
-
 from pytpp.logger import logger, LogTags
 from pytpp.api.session import Session
 from pytpp.properties.oauth import Scope

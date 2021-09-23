@@ -3,9 +3,12 @@ import hashlib
 from typing import List, Union
 from datetime import datetime
 from pytpp.vtypes import Config, Identity
-from pytpp.properties.config import WorkflowClassNames, WorkflowAttributes, WorkflowAttributeValues
+from pytpp.properties.config import WorkflowClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
+from pytpp.attributes.workflow import WorkflowAttributes
+from pytpp.attributes.adaptable_workflow import AdaptableWorkflowAttributes
+from pytpp.attributes.workflow_ticket import WorkflowTicketAttributes
 
 
 class _WorkflowBase(FeatureBase):
@@ -158,7 +161,7 @@ class AdaptableWorkflow(_WorkflowBase):
         )
 
         add_value = lambda x, y, z: self._api.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
-        add_value(workflow.dn, WorkflowAttributes.Adaptable.powershell_script, powershell_script_name)
+        add_value(workflow.dn, AdaptableWorkflowAttributes.powershell_script, powershell_script_name)
 
         vault_id = self._api.websdk.SecretStore.Add.post(
             base_64_data=self._calculate_hash(powershell_script_content),
@@ -170,7 +173,7 @@ class AdaptableWorkflow(_WorkflowBase):
 
         self._api.websdk.Config.WriteDn.post(
             object_dn=workflow.dn,
-            attribute_name=WorkflowAttributes.Adaptable.powershell_script_hash_vault_id,
+            attribute_name=AdaptableWorkflowAttributes.powershell_script_hash_vault_id,
             values=[vault_id]
         )
 
@@ -241,7 +244,7 @@ class ReasonCode(FeatureBase):
         """
         result = self._api.websdk.Config.AddValue.post(
             object_dn=self._workflow_dn,
-            attribute_name=WorkflowAttributes.Standard.approval_reason,
+            attribute_name=WorkflowTicketAttributes.approval_reason,
             value=f'{code},{name},{description}'
         )
         result.assert_valid_response()
@@ -260,7 +263,7 @@ class ReasonCode(FeatureBase):
         """
         result_codes = self._api.websdk.Config.ReadDn.post(
             object_dn=self._workflow_dn,
-            attribute_name=WorkflowAttributes.Standard.approval_reason
+            attribute_name=WorkflowTicketAttributes.approval_reason
         ).values
 
         if not result_codes:
@@ -271,7 +274,7 @@ class ReasonCode(FeatureBase):
             if search_string in rc:
                 result = self._api.websdk.Config.RemoveDnValue.post(
                     object_dn=self._workflow_dn,
-                    attribute_name=WorkflowAttributes.Standard.approval_reason,
+                    attribute_name=WorkflowTicketAttributes.approval_reason,
                     value=rc
                 )
                 result.assert_valid_response()

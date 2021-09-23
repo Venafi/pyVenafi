@@ -3390,7 +3390,7 @@ class IdentityClassNames(metaclass=_PropertyMeta):
     security_group = 'GROUP'
 
 
-class IdentityAttributes(metaclass=_PropertyMeta):
+class IdentityAttributeValues(metaclass=_PropertyMeta):
     class Types(metaclass=_PropertyMeta):
         user = 1
         security_group = 2
