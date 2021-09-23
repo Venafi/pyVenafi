@@ -1,8 +1,12 @@
 from pytpp.plugins.api.aperture.aperture import Aperture
-from pytpp.api.authenticate import Authenticate as _Authenticate
+from pytpp.plugins.api.websdk.endpoints.rights import _Rights
+from pytpp.api.authenticate import Authenticate as _OriginalAuthenticate
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.plugins.api.websdk.websdk import WebSDK
 
 
-class Authenticate(_Authenticate):
+class Authenticate(_OriginalAuthenticate):
     """
     Authenticates WebSDK and Aperture API sessions.
 
@@ -15,6 +19,9 @@ class Authenticate(_Authenticate):
     to WebSDK and log a message that Aperture could not be used. It should be noted that more support
     is provided by WebSDK, which is the default.
     """
+
+    websdk: 'WebSDK'
+
     def __init__(self, *args, preference='websdk', aperture_token: str = None, **kwargs):
         """
         Authenticates the given user to WebSDK and Aperture. The only supported method for authentication at
@@ -49,6 +56,11 @@ class Authenticate(_Authenticate):
             version: Version of the TPP server.
         """
         super().__init__(*args, **kwargs)
+
+        # Extend WebSDK API
+        self.websdk.Rights = _Rights(self.websdk)
+
+        # Set up Aperture API
         if self.websdk._oauth is not None and not aperture_token:
             self.aperture = Aperture(
                 host=self.host,
