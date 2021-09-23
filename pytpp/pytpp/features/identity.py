@@ -2,71 +2,12 @@ from typing import List, Union
 from pytpp.vtypes import Identity
 from pytpp.properties.config import IdentityClassNames, IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.rights import SubSystemTypes
 
 
 class _IdentityBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
         self._identity_dn = r'\VED\Identity'
-
-    def allow_aperture_user_search(self, identity: Union['Identity.Identity', str]):
-        """
-        Grants Aperture User Search permission to a user or group.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Add.post(
-            subsystem=SubSystemTypes.aperture,
-            rights_object='local',
-            universal_id=prefixed_universal,
-            rights_value='Impersonate'
-        )
-        result.assert_valid_response()
-
-    def add_master_admin(self, identity: Union['Identity.Identity', str]):
-        """
-        Grants Master Admin privileges to a user or group in TPP.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        ved_guid = self._api.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
-
-        admin_rights = [
-            [SubSystemTypes.config, ved_guid, 'AllPrivileges'],
-            [SubSystemTypes.secret_store_config, ved_guid, '*127'],
-            [SubSystemTypes.client, '', 'AllPrivileges'],
-            [SubSystemTypes.rights, '', 'Supervisor'],
-        ]
-        for rights in admin_rights:
-            subsystem, rights_object, rights_value = rights
-            result = self._api.websdk.Rights.Add.post(
-                subsystem=subsystem,
-                rights_object=rights_object,
-                universal_id=prefixed_universal,
-                rights_value=rights_value
-            )
-            result.assert_valid_response()
-
-    def allow_websdk_access(self, identity: Union['Identity.Identity', str]):
-        """
-        Grants WebSDK access to a user or group.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Add.post(
-            subsystem=SubSystemTypes.websdk,
-            rights_object='Sessions',
-            universal_id=prefixed_universal,
-            rights_value='Allowed'
-        )
-        result.assert_valid_response()
 
     def _find(self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = False,
               is_user: bool = False):
@@ -170,19 +111,6 @@ class _IdentityBase(FeatureBase):
 
         return memberships
 
-    def get_rights(self, identity: Union['Identity.Identity', str]):
-        """
-        Returns all of the special rights granted to a user or group.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-
-        Returns:
-            List of Rights objects.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        return self._api.websdk.Rights.Get.post(universal_id=prefixed_universal).rights
-
     def read_attribute(self, identity: Union['Identity.Identity', str], attribute_name: str):
         """
         Returns the value associated to the given ``attribute_name``.
@@ -201,83 +129,22 @@ class _IdentityBase(FeatureBase):
         )
         return result.attributes
 
-    def remove_aperture_user_search(self, identity: Union['Identity.Identity', str]):
-        """
-        Removes Aperture User Search permission from a user or group.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Remove.post(
-            subsystem=SubSystemTypes.aperture,
-            rights_object='local',
-            universal_id=prefixed_universal
-        )
-        result.assert_valid_response()
-
-    def remove_master_admin(self, identity: Union['Identity.Identity', str]):
-        """
-        Removes Master Admin privileges from a user or group.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        ved_guid = self._api.websdk.Config.DnToGuid.post(object_dn='\\VED').guid
-
-        admin_rights = [
-            [SubSystemTypes.config, ved_guid],
-            [SubSystemTypes.secret_store_config, ved_guid],
-            [SubSystemTypes.client, ''],
-            [SubSystemTypes.rights, ''],
-        ]
-        for rights in admin_rights:
-            subsystem, rights_object, rights_value = rights
-            result = self._api.websdk.Rights.Remove.post(
-                subsystem=subsystem,
-                rights_object=rights_object,
-                universal_id=prefixed_universal
-            )
-            result.assert_valid_response()
-
-    def remove_websdk_access(self, identity: Union['Identity.Identity', str]):
-        """
-        Removes WebSDK Access from a user or group.
-
-        Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
-        """
-        prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Remove.post(
-            subsystem=SubSystemTypes.websdk,
-            rights_object='Sessions',
-            universal_id=prefixed_universal
-        )
-        result.assert_valid_response()
-
 
 @feature()
 class User(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, password: str, email_address: str, add_master_admin: bool = False,
-               allow_aperture_user_search: bool = False, allow_websdk_access: bool = False,
-               add_to_everyone_group: bool = True, get_if_already_exists: bool = True):
+    def create(self, name: str, password: str, email_address: str, add_to_everyone_group: bool = True,
+               get_if_already_exists: bool = True):
         """
         Creates a local user in TPP with the given ``password`` and ``email_address``. By default, the
-        user is added to the Everyone group in the Local Identity Provider. If ``add_master_admin`` is
-        ``True``, then the user is automatically enrolled as a Master Admin. The same is true for
-        ``allow_websdk_access`` and ``allow_aperture_user_search``.
+        user is added to the Everyone group in the Local Identity Provider.
 
         Args:
             name: Name of the user. The `"local:"` prefix is not required.
             password: Password.
             email_address: E-mail address. TPP requires it.
-            add_master_admin: If ``True``, grants Master Admin privileges to the user.
-            allow_aperture_user_search: If ``True``, grants Aperture User Search permission to the user.
-            allow_websdk_access: If ``True``, grants WebSDK Access to the user.
             add_to_everyone_group: If ``True``, the user to the Local Identity group "Everyone".
             get_if_already_exists: If the identity already exists, just return it as is.
 
@@ -307,22 +174,11 @@ class User(_IdentityBase):
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
             )
             response.assert_valid_response()
-
-        if add_master_admin:
-            self.add_master_admin(identity=user)
-
-        if allow_aperture_user_search:
-            self.allow_aperture_user_search(identity=user)
-
-        if allow_websdk_access:
-            self.allow_websdk_access(identity=user)
-
         return user
 
     def delete(self, user: Union['Identity.Identity', str]):
         """
-        Deletes the user from the Local Identity Provider. The user is removed from all local groups and
-        has all rights removed.
+        Deletes the user from the Local Identity Provider. The user is removed from all local groups.
 
         Args:
             user: Identity.Identity or prefixed name of the user. The prefix is required.
@@ -336,12 +192,6 @@ class User(_IdentityBase):
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
             )
             result.assert_valid_response()
-
-        result = self._api.websdk.Rights.Remove.post(
-            universal_id=user.prefixed_universal
-        )
-        result.assert_valid_response()
-
         self._config_delete(object_dn=f'{self._identity_dn}\\{user.name}')
 
     def find(self, name: str, limit: int = 100):
@@ -429,21 +279,14 @@ class Group(_IdentityBase):
 
         return result.members
 
-    def create(self, name: str, member_prefixed_names: List[str] = None, master_admin_group: bool = False,
-               allow_websdk_access: bool = False, allow_aperture_user_search: bool = False,
-               get_if_already_exists: bool = True):
+    def create(self, name: str, member_prefixed_names: List[str] = None, get_if_already_exists: bool = True):
         """
-        Creates a local group in TPP. If ``add_master_admin`` is ``True``, then the group is automatically
-        granted Master Admin privileges. The same is true for ``allow_websdk_access`` and
-        ``allow_aperture_user_search``. Each member of the group inherits the rights and permissions of this
+        Creates a local group in TPP. Each member of the group inherits the permissions of this
         group. To add members, provide a list of prefixed names for each member.
 
         Args:
             name: Name of the user. The `"local:"` prefix is not required.
             member_prefixed_names: List of prefixed universal names of each member.
-            master_admin_group: If ``True``, grants Master Admin privileges to the user.
-            allow_aperture_user_search: If ``True``, grants Aperture User Search permission to the user.
-            allow_websdk_access: If ``True``, grants WebSDK Access to the user.
             get_if_already_exists: If the identity already exists, just return it as is.
 
         Returns:
@@ -472,15 +315,6 @@ class Group(_IdentityBase):
             )
 
         group = result.identity
-        if master_admin_group:
-            self.add_master_admin(identity=group)
-
-        if allow_websdk_access:
-            self.allow_websdk_access(identity=group)
-
-        if allow_aperture_user_search:
-            self.allow_aperture_user_search(identity=group)
-
         return group
 
     def delete(self, group: Union['Identity.Identity', str]):

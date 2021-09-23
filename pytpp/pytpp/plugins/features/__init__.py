@@ -1,9 +1,13 @@
 # noinspection PyUnresolvedReferences
-from pytpp.features import Features as _OriginalFeatures, AttributeNames, AttributeValues, Classes, \
-    _Discovery as _OriginalDiscovery
+from pytpp.features import (
+    AttributeNames, AttributeValues, Classes, Features as _OriginalFeatures,
+    _Discovery as _OriginalDiscovery, _Identity as _OriginalIdentity
+)
 from pytpp.plugins.features.discovery import NetworkDiscovery as _PluginNetworkDiscovery
-from pytpp.plugins.features.placement_rules import PlacementRules as _PluginPlacementRules, \
-    PlacementRuleCondition as _PluginPlacementRuleCondition
+from pytpp.plugins.features.placement_rules import (
+    PlacementRules as _PluginPlacementRules, PlacementRuleCondition as _PluginPlacementRuleCondition
+)
+from pytpp.plugins.features.identity import (User as _User, Group as _Group)
 
 
 class _Discovery(_OriginalDiscovery):
@@ -18,11 +22,35 @@ class _Discovery(_OriginalDiscovery):
         return self._network
 
 
+class _Identity:
+    def __init__(self, api):
+        self._api = api
+
+        self._group = None
+        self._user = None
+
+    @property
+    def group(self) -> _Group:
+        self._group = self._group or _Group(self._api)
+        return self._group
+
+    @property
+    def user(self) -> _User:
+        self._user = self._user or _User(self._api)
+        return self._user
+
+
+
 class Features(_OriginalFeatures):
     @property
     def discovery(self) -> _Discovery:
         self._discovery = self._discovery or _Discovery(self._api)
         return self._discovery
+
+    @property
+    def identity(self) -> _Identity:
+        self._identity = self._identity or _Identity(self._api)
+        return self._identity
 
     @property
     def placement_rule_condition(self) -> _PluginPlacementRuleCondition:
