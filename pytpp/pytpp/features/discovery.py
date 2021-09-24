@@ -3,8 +3,6 @@ from pytpp.vtypes import Config
 from pytpp.properties.config import DiscoveryClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.attributes.discovery import DiscoveryAttributes
-from pytpp.attributes.schedule_base import ScheduleBaseAttributes
-from pytpp.attributes.placement_job import PlacementJobAttributes
 
 
 @feature()
@@ -119,26 +117,26 @@ class NetworkDiscovery(FeatureBase):
         attributes.update({
             DiscoveryAttributes.address_range: address_range,
             DiscoveryAttributes.automatically_import: "1" if automatically_import else "0",
-            ScheduleBaseAttributes.blackout : blackout,
+            DiscoveryAttributes.blackout : blackout,
             DiscoveryAttributes.certificate_location_dn: default_certificate_dn,
             DiscoveryAttributes.contact: contacts,
             DiscoveryAttributes.description: description,
             DiscoveryAttributes.discovery_exclusion_dn: exclusion_dns,
             DiscoveryAttributes.placement_rule: [f'{e}:{guid}' for e, guid in enumerate(placement_rule_guids)],
             DiscoveryAttributes.priority: priority,
-            ScheduleBaseAttributes.reschedule: "1" if hour and reschedule else "0",
+            DiscoveryAttributes.reschedule: "1" if hour and reschedule else "0",
             DiscoveryAttributes.resolve_host: "1" if resolve_host else "0",
-            ScheduleBaseAttributes.utc: utc
+            DiscoveryAttributes.utc: utc
         })
 
         if hour:
-            attributes[ScheduleBaseAttributes.hour] = hour
+            attributes[DiscoveryAttributes.hour] = hour
             if days_of_week:
-                attributes[ScheduleBaseAttributes.days_of_week] = days_of_week
+                attributes[DiscoveryAttributes.days_of_week] = days_of_week
             elif days_of_month:
-                attributes[ScheduleBaseAttributes.days_of_month] = days_of_month
+                attributes[DiscoveryAttributes.days_of_month] = days_of_month
             elif days_of_year:
-                attributes[ScheduleBaseAttributes.days_of_year] = days_of_year
+                attributes[DiscoveryAttributes.days_of_year] = days_of_year
 
         return self._config_create(
             name=name,
@@ -192,15 +190,15 @@ class NetworkDiscovery(FeatureBase):
             hour = [hour]
 
         attributes = {
-            ScheduleBaseAttributes.reschedule: "1",
-            ScheduleBaseAttributes.hour: hour
+            DiscoveryAttributes.reschedule: "1",
+            DiscoveryAttributes.hour: hour
         }
         if days_of_week:
-            attributes[ScheduleBaseAttributes.days_of_week] = days_of_week
+            attributes[DiscoveryAttributes.days_of_week] = days_of_week
         elif days_of_month:
-            attributes[ScheduleBaseAttributes.days_of_month] = days_of_month
+            attributes[DiscoveryAttributes.days_of_month] = days_of_month
         elif days_of_year:
-            attributes[ScheduleBaseAttributes.days_of_year] = days_of_year
+            attributes[DiscoveryAttributes.days_of_year] = days_of_year
 
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
@@ -217,11 +215,11 @@ class NetworkDiscovery(FeatureBase):
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         for attribute_name in {
-            ScheduleBaseAttributes.hour,
-            ScheduleBaseAttributes.days_of_year,
-            ScheduleBaseAttributes.days_of_month,
-            ScheduleBaseAttributes.days_of_week,
-            ScheduleBaseAttributes.reschedule
+            DiscoveryAttributes.hour,
+            DiscoveryAttributes.days_of_year,
+            DiscoveryAttributes.days_of_month,
+            DiscoveryAttributes.days_of_week,
+            DiscoveryAttributes.reschedule
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=job_dn,
@@ -252,7 +250,7 @@ class NetworkDiscovery(FeatureBase):
                 hours = ','.join(map(str, day))
                 blackout.append(f'{e}:{hours}')
         attributes = {
-            ScheduleBaseAttributes.blackout: blackout
+            DiscoveryAttributes.blackout: blackout
         }
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
@@ -296,7 +294,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=job_dn,
-            attribute_name=PlacementJobAttributes.status,
+            attribute_name=DiscoveryAttributes.status,
             values=['Canceled']
         )
         response.assert_valid_response()
@@ -311,7 +309,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=job_dn,
-            attribute_name=PlacementJobAttributes.status,
+            attribute_name=DiscoveryAttributes.status,
             values=['Paused']
         )
         response.assert_valid_response()
@@ -326,7 +324,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=job_dn,
-            attribute_name=PlacementJobAttributes.status,
+            attribute_name=DiscoveryAttributes.status,
             values=['Pending']
         )
         response.assert_valid_response()
@@ -377,7 +375,7 @@ class NetworkDiscovery(FeatureBase):
 
         status = self._api.websdk.Config.Read.post(
             object_dn=job_dn,
-            attribute_name=PlacementJobAttributes.status
+            attribute_name=DiscoveryAttributes.status
         ).values[0]
         raise FeatureError.UnexpectedValue(
             f'Expected Network Discovery Job "{job_dn}" to finish within {timeout} seconds, but it is still '
