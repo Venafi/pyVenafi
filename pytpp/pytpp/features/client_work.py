@@ -257,7 +257,7 @@ class AgentUpgrade(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.agent_connectivity,
+            config_class=ClientWorkClassNames.agent_upgrade,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -312,7 +312,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.agent_connectivity,
+            config_class=ClientWorkClassNames.certificate_device_placement,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
