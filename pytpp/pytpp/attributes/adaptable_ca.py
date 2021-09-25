@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.certificate_authority_base import CertificateAuthorityBaseAttributes
 from pytpp.attributes.proxy import ProxyAttributes
 
 
-class AdaptableCAAttributes(CertificateAuthorityBaseAttributes, ProxyAttributes, metaclass=PropertyMeta):
+class AdaptableCAAttributes(CertificateAuthorityBaseAttributes, ProxyAttributes, metaclass=IterableMeta):
+	__config_class__ = "Adaptable CA"
 	allow_reissue = Attribute('Allow Reissue', min_version='16.2')
 	certificate_credential = Attribute('Certificate Credential', min_version='16.2')
 	connection_valid = Attribute('Connection Valid', min_version='16.2')

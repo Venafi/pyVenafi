@@ -2,7 +2,7 @@ import base64
 import hashlib
 from typing import List, Union
 from datetime import datetime
-from pytpp.vtypes import Config, Identity
+from pytpp.tools.vtypes import Config, Identity
 from pytpp.properties.config import WorkflowClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes

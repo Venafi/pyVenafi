@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class TrustAttributes(TopAttributes, metaclass=PropertyMeta):
+class TrustAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Trust"
 	allow_from = Attribute('Allow From', min_version='19.3')
 	allowed_algorithm = Attribute('Allowed Algorithm', min_version='19.3')
 	allowed_command = Attribute('Allowed Command', min_version='19.3')

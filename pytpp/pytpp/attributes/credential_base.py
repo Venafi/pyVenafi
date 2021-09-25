@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class CredentialBaseAttributes(TopAttributes, metaclass=PropertyMeta):
+class CredentialBaseAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Credential Base"
 	escalation_notice_interval = Attribute('Escalation Notice Interval')
 	escalation_notice_start = Attribute('Escalation Notice Start')
 	expiration = Attribute('Expiration')

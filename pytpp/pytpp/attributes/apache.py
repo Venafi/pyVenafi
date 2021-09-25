@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class ApacheAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class ApacheAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Apache"
 	application_id = Attribute('Application ID', min_version='17.2')
 	certificate_chain_file = Attribute('Certificate Chain File')
 	certificate_file = Attribute('Certificate File')

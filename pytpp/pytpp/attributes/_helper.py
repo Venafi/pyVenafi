@@ -13,7 +13,7 @@ class Attribute(str):
         return str().__new__(cls, name)
 
 
-class PropertyMeta(type):
+class IterableMeta(type):
     def __iter__(self) -> Generator[Attribute, None, None]:
         for item in dir(self):
             if not item.startswith('_'):
@@ -23,3 +23,9 @@ class PropertyMeta(type):
 
     def list(cls) -> List[Attribute]:
         return list(iter(cls))  # type: List[Attribute]
+
+    def __repr__(self):
+        return self.__config_class__
+
+    def __str__(self):
+        return self.__config_class__

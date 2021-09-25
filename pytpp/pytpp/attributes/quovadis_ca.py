@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.http_ca_base import HTTPCABaseAttributes
 
 
-class QuoVadisCAAttributes(HTTPCABaseAttributes, metaclass=PropertyMeta):
+class QuoVadisCAAttributes(HTTPCABaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "QuoVadis CA"
 	api_credentials = Attribute('API Credentials')
 	account_name = Attribute('Account Name')
 	account_organization = Attribute('Account Organization')

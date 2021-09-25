@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class ValidationBaseAttributes(metaclass=PropertyMeta):
+class ValidationBaseAttributes(metaclass=IterableMeta):
+	__config_class__ = "Validation Base"
 	file_validation_error = Attribute('File Validation Error', min_version='15.3')
 	file_validation_result = Attribute('File Validation Result', min_version='15.3')
 	last_validation = Attribute('Last Validation')

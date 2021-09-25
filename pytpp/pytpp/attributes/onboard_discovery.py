@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.schedule_base import ScheduleBaseAttributes
 from pytpp.attributes.top import TopAttributes
 
 
-class OnboardDiscoveryAttributes(ScheduleBaseAttributes, TopAttributes, metaclass=PropertyMeta):
+class OnboardDiscoveryAttributes(ScheduleBaseAttributes, TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Onboard Discovery"
 	amazon_account_ids = Attribute('Amazon Account Ids', min_version='19.2')
 	application_type = Attribute('Application Type', min_version='15.2')
 	azure_application_id = Attribute('Azure Application Id', min_version='19.2')

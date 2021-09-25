@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
 
 
-class ClientAgentConfigurationWorkAttributes(ClientWorkBaseAttributes, metaclass=PropertyMeta):
+class ClientAgentConfigurationWorkAttributes(ClientWorkBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Client Agent Configuration Work"
 	agent_cert_trust_bundle = Attribute('Agent Cert Trust Bundle')
 	days_of_month = Attribute('Days Of Month')
 	days_of_week = Attribute('Days Of Week')

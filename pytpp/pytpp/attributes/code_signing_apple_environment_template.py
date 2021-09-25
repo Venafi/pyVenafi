@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.code_signing_environment_template_base import CodeSigningEnvironmentTemplateBaseAttributes
 
 
-class CodeSigningAppleEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplateBaseAttributes, metaclass=PropertyMeta):
+class CodeSigningAppleEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplateBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Code Signing Apple Environment Template"
 	cn_pattern = Attribute('CN Pattern', min_version='21.2')
 	certificate_container_dn = Attribute('Certificate Container DN', min_version='21.2')
 	key_container_dn = Attribute('Key Container DN', min_version='21.2')

@@ -1,7 +1,7 @@
 import datetime
 import time
 from typing import List, Union
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.config import ClientWorkAttributeValues, ClientWorkClassNames
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes

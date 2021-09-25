@@ -1,7 +1,7 @@
-from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes._helper import IterableMeta
 from pytpp.attributes.report_base import ReportBaseAttributes
 from pytpp.attributes.report_filter_base import ReportFilterBaseAttributes
 
 
-class ReportClientCertificateTrendsReportAttributes(ReportBaseAttributes, ReportFilterBaseAttributes, metaclass=PropertyMeta):
-	pass
+class ReportClientCertificateTrendsReportAttributes(ReportBaseAttributes, ReportFilterBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Report:Client Certificate Trends Report"

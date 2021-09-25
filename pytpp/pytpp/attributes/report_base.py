@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.driver_base import DriverBaseAttributes
 from pytpp.attributes.schedule_base import ScheduleBaseAttributes
 
 
-class ReportBaseAttributes(DriverBaseAttributes, ScheduleBaseAttributes, metaclass=PropertyMeta):
+class ReportBaseAttributes(DriverBaseAttributes, ScheduleBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Report Base"
 	csv_vault_id = Attribute('CSV Vault Id')
 	configuration = Attribute('Configuration')
 	creation_date = Attribute('Creation Date')

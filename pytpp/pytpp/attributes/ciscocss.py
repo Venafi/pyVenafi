@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class CiscoCSSAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class CiscoCSSAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "CiscoCSS"
 	certificate_file = Attribute('Certificate File')
 	chain_cert = Attribute('Chain Cert')
 	ftp_credential = Attribute('FTP Credential')

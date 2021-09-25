@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class F5LTMAdvancedAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class F5LTMAdvancedAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "F5 LTM Advanced"
 	advanced_settings_bundle_name = Attribute('Advanced Settings Bundle Name')
 	advertised_ca = Attribute('Advertised CA')
 	archive_location = Attribute('Archive Location')

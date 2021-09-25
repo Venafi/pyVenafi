@@ -1,4 +1,4 @@
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.properties.config import CertificateAuthorityClassNames
 from pytpp.attributes.adaptable_ca import AdaptableCAAttributes
 from pytpp.attributes.microsoft_ca import MicrosoftCAAttributes

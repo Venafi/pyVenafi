@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class ImpervaMXAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class ImpervaMXAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Imperva MX"
 	file_validation_disabled = Attribute('File Validation Disabled', min_version='15.3')
 	key_store_validation_disabled = Attribute('Key Store Validation Disabled')
 	private_key_name = Attribute('Private Key Name')

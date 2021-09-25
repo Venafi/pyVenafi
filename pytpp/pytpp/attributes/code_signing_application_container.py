@@ -1,6 +1,6 @@
-from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes._helper import IterableMeta
 from pytpp.attributes.top import TopAttributes
 
 
-class CodeSigningApplicationContainerAttributes(TopAttributes, metaclass=PropertyMeta):
-	pass
+class CodeSigningApplicationContainerAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Code Signing Application Container"

@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class iPlanetAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class iPlanetAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "iPlanet"
 	alias = Attribute('Alias')
 	certutil_path = Attribute('Certutil Path')
 	create_store = Attribute('Create Store')

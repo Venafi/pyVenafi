@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class CodeSigningProjectAttributes(TopAttributes, metaclass=PropertyMeta):
+class CodeSigningProjectAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Code Signing Project"
 	approval_submission_date = Attribute('Approval Submission Date', min_version='21.2')
 	auditor = Attribute('Auditor', min_version='19.2')
 	certificate_issue_flow_dn = Attribute('Certificate Issue Flow DN', min_version='19.2')

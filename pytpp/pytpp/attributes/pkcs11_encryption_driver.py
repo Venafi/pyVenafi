@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.encryption_driver import EncryptionDriverAttributes
 
 
-class Pkcs11EncryptionDriverAttributes(EncryptionDriverAttributes, metaclass=PropertyMeta):
+class Pkcs11EncryptionDriverAttributes(EncryptionDriverAttributes, metaclass=IterableMeta):
+	__config_class__ = "Pkcs11 Encryption Driver"
 	account_type = Attribute('Account Type')
 	credential = Attribute('Credential')
 	cryptokipath = Attribute('CryptokiPath')

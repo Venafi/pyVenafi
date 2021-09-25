@@ -1,6 +1,6 @@
-from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes._helper import IterableMeta
 from pytpp.attributes.top import TopAttributes
 
 
-class ClientGroupContainerAttributes(TopAttributes, metaclass=PropertyMeta):
-	pass
+class ClientGroupContainerAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Client Group Container"

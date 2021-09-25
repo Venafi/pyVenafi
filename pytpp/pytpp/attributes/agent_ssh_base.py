@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class AgentSSHBaseAttributes(metaclass=PropertyMeta):
+class AgentSSHBaseAttributes(metaclass=IterableMeta):
+	__config_class__ = "Agent SSH Base"
 	credential = Attribute('Credential')
 	exclude_remote_mount_points = Attribute('Exclude Remote Mount Points')
 	expiration = Attribute('Expiration')

@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.certificate_authority_base import CertificateAuthorityBaseAttributes
 
 
-class EntrustSecurityManagerCAAttributes(CertificateAuthorityBaseAttributes, metaclass=PropertyMeta):
+class EntrustSecurityManagerCAAttributes(CertificateAuthorityBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Entrust Security Manager CA"
 	certificate_type = Attribute('Certificate Type', min_version='15.3')
 	create_entrust_user = Attribute('Create Entrust User')
 	epf_credential = Attribute('EPF Credential')

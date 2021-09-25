@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.identity_driver import IdentityDriverAttributes
 
 
-class LDAPIdentityDriverAttributes(IdentityDriverAttributes, metaclass=PropertyMeta):
+class LDAPIdentityDriverAttributes(IdentityDriverAttributes, metaclass=IterableMeta):
+	__config_class__ = "LDAP Identity Driver"
 	ambiguous_name_resolution = Attribute('Ambiguous Name Resolution')
 	base_dn = Attribute('Base DN')
 	configuration = Attribute('Configuration')

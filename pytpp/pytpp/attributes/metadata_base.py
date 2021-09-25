@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class MetadataBaseAttributes(TopAttributes, metaclass=PropertyMeta):
+class MetadataBaseAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Metadata Base"
 	allowed_values = Attribute('Allowed Values')
 	associated_classes = Attribute('Associated Classes')
 	category = Attribute('Category')

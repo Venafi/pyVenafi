@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.branch_base import BranchBaseAttributes
 
 
-class SecretStoreRootAttributes(BranchBaseAttributes, metaclass=PropertyMeta):
+class SecretStoreRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Secret Store Root"
 	certificate_protection_key = Attribute('Certificate Protection Key')
 	dsn = Attribute('DSN')
 	driver_name = Attribute('Driver Name')

@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
 
 
-class ClientCertificateDiscoveryWorkAttributes(ClientWorkBaseAttributes, metaclass=PropertyMeta):
+class ClientCertificateDiscoveryWorkAttributes(ClientWorkBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Client Certificate Discovery Work"
 	certificate_location_dn = Attribute('Certificate Location DN', min_version='15.2')
 	certificate_scanner_capi = Attribute('Certificate Scanner CAPI')
 	certificate_scanner_map = Attribute('Certificate Scanner Map')

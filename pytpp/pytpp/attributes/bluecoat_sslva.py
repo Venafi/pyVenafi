@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class BlueCoatSSLVAAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class BlueCoatSSLVAAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "BlueCoat SSLVA"
 	certificate_label = Attribute('Certificate Label')
 	certificate_oid = Attribute('Certificate OID')
 	certificate_only = Attribute('Certificate Only')

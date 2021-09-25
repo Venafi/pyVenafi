@@ -1,4 +1,4 @@
-from pytpp.logger import logger, LogTags
+from pytpp.tools.logger import logger, LogTags
 from pytpp.api.session import Session
 from pytpp.plugins.api.aperture.endpoints.application_integration import _ApplicationIntegration
 from pytpp.plugins.api.aperture.endpoints.approvers import _Approvers

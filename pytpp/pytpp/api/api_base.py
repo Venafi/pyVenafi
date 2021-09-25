@@ -3,7 +3,7 @@ import re
 import json
 from pytpp.api.session import Session
 from requests import Response, HTTPError
-from pytpp.logger import logger, LogTags
+from pytpp.tools.logger import logger, LogTags
 
 
 def json_response_property(return_on_204: type = None):

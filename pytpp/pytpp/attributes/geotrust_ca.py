@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.http_ca_base import HTTPCABaseAttributes
 
 
-class GeotrustCAAttributes(HTTPCABaseAttributes, metaclass=PropertyMeta):
+class GeotrustCAAttributes(HTTPCABaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Geotrust CA"
 	account_type = Attribute('Account Type')
 	address = Attribute('Address')
 	billing_contact_first_name = Attribute('Billing Contact First Name')

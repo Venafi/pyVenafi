@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.log_channel import LogChannelAttributes
 
 
-class LogSMTPAttributes(LogChannelAttributes, metaclass=PropertyMeta):
+class LogSMTPAttributes(LogChannelAttributes, metaclass=IterableMeta):
+	__config_class__ = "Log SMTP"
 	attachment_behavior = Attribute('Attachment Behavior', min_version='21.2')
 	cc = Attribute('CC')
 	host = Attribute('Host')

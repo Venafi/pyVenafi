@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.x509_certificate_base import X509CertificateBaseAttributes
 from pytpp.attributes.x509_certificate_validation import X509CertificateValidationAttributes
 
 
-class X509CertificateAttributes(X509CertificateBaseAttributes, X509CertificateValidationAttributes, metaclass=PropertyMeta):
+class X509CertificateAttributes(X509CertificateBaseAttributes, X509CertificateValidationAttributes, metaclass=IterableMeta):
+	__config_class__ = "X509 Certificate"
 	acme_account_dn = Attribute('ACME Account DN', min_version='17.2')
 	application_group_dn = Attribute('Application Group DN', min_version='19.4')
 	geotrusttrueflex_ca_emails = Attribute('GeotrustTrueFlex CA:Emails', min_version='15.3')

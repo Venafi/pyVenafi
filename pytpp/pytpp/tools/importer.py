@@ -11,4 +11,4 @@ class Importer:
         except KeyError as err:
             offender = err.__traceback__.tb_frame.f_back.f_back.f_code.co_filename
             raise ImportError(f"cannot import name '{name}' from '{self.name}' ({offender})") from None
-        return getattr(import_module(module), attr)
+        return getattr(__import__(module, globals(), locals(), ['']), attr)

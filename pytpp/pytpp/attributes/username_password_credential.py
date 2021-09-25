@@ -1,6 +1,7 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.credential_base import CredentialBaseAttributes
 
 
-class UsernamePasswordCredentialAttributes(CredentialBaseAttributes, metaclass=PropertyMeta):
+class UsernamePasswordCredentialAttributes(CredentialBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Username Password Credential"
 	username = Attribute('Username')

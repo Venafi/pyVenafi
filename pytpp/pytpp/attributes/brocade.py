@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class BrocadeAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class BrocadeAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Brocade"
 	all_cipher_suites = Attribute('All Cipher Suites')
 	certificate_file = Attribute('Certificate File')
 	chain_cert = Attribute('Chain Cert')

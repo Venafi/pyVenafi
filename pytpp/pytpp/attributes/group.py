@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class GroupAttributes(TopAttributes, metaclass=PropertyMeta):
+class GroupAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Group"
 	assets = Attribute('Assets', min_version='20.1')
 	closed_group = Attribute('Closed Group', min_version='20.1')
 	foreign_security_principal = Attribute('Foreign Security Principal', min_version='19.3')

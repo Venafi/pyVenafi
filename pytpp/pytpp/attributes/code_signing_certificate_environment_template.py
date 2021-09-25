@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.code_signing_environment_template_base import CodeSigningEnvironmentTemplateBaseAttributes
 
 
-class CodeSigningCertificateEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplateBaseAttributes, metaclass=PropertyMeta):
+class CodeSigningCertificateEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplateBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Code Signing Certificate Environment Template"
 	certificate_authority = Attribute('Certificate Authority', min_version='20.1')
 	certificate_container_dn = Attribute('Certificate Container DN', min_version='20.1')
 	city = Attribute('City', min_version='20.1')

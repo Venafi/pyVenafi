@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class AmazonAppAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class AmazonAppAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Amazon App"
 	access_key_id = Attribute('Access Key ID', min_version='16.1')
 	aws_credential_dn = Attribute('Aws Credential DN', min_version='18.3')
 	binding_target = Attribute('Binding Target', min_version='16.1')

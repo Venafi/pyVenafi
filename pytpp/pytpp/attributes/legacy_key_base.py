@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class LegacyKeyBaseAttributes(metaclass=PropertyMeta):
+class LegacyKeyBaseAttributes(metaclass=IterableMeta):
+	__config_class__ = "Legacy Key Base"
 	algorithm = Attribute('Algorithm')
 	approver = Attribute('Approver')
 	key_bit_strength = Attribute('Key Bit Strength')

@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
 
 
-class CertificateProvisioningWorkAttributes(ClientWorkBaseAttributes, metaclass=PropertyMeta):
+class CertificateProvisioningWorkAttributes(ClientWorkBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Certificate Provisioning Work"
 	days_of_month = Attribute('Days Of Month', min_version='15.3')
 	days_of_week = Attribute('Days Of Week', min_version='15.3')
 	interval = Attribute('Interval', min_version='15.3')
