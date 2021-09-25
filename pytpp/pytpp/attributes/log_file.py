@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.log_channel import LogChannelAttributes
 
 
-class LogFileAttributes(LogChannelAttributes, metaclass=PropertyMeta):
+class LogFileAttributes(LogChannelAttributes, metaclass=IterableMeta):
+	__config_class__ = "Log File"
 	expiration = Attribute('Expiration')
 	language = Attribute('Language')
 	log_directory = Attribute('Log Directory')

@@ -1,5 +1,5 @@
 from typing import List, Union
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.config import FolderClassNames
 from pytpp.attributes.policy import PolicyAttributes

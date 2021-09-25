@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.driver_base import DriverBaseAttributes
 
 
-class CertificateAuthorityBaseAttributes(DriverBaseAttributes, metaclass=PropertyMeta):
+class CertificateAuthorityBaseAttributes(DriverBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Certificate Authority Base"
 	additional_field = Attribute('Additional Field')
 	concurrent_connection_limit = Attribute('Concurrent Connection Limit')
 	credential = Attribute('Credential')

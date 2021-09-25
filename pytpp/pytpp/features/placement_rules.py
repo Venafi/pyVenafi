@@ -1,5 +1,5 @@
 from typing import List, Union
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.properties.config import PlacementRulesAttributeValues, \
     PlacementRulesClassNames
 from pytpp.features.bases.feature_base import FeatureBase, feature

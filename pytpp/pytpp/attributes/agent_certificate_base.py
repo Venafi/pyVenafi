@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class AgentCertificateBaseAttributes(metaclass=PropertyMeta):
+class AgentCertificateBaseAttributes(metaclass=IterableMeta):
+	__config_class__ = "Agent Certificate Base"
 	certificate_scanner_capi = Attribute('Certificate Scanner CAPI')
 	certificate_scanner_map = Attribute('Certificate Scanner Map')
 	certificate_scanner_path = Attribute('Certificate Scanner Path')

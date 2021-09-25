@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.certificate_trust_store_base import CertificateTrustStoreBaseAttributes
 
 
-class DataPowerTrustStoreAttributes(CertificateTrustStoreBaseAttributes, metaclass=PropertyMeta):
+class DataPowerTrustStoreAttributes(CertificateTrustStoreBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "DataPower Trust Store"
 	application_domain = Attribute('Application Domain', min_version='20.3')
 	crl_distribution_points_handling = Attribute('CRL Distribution Points Handling', min_version='20.3')
 	certificate_validation_mode = Attribute('Certificate Validation Mode', min_version='20.3')

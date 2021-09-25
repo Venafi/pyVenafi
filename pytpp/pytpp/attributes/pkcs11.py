@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class PKCS11Attributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class PKCS11Attributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "PKCS11"
 	file_validation_disabled = Attribute('File Validation Disabled')
 	hsm_cblob = Attribute('HSM:CBlob')
 	hsm_cka_label_format = Attribute('HSM:CKA LABEL Format')

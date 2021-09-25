@@ -1,6 +1,6 @@
-from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes._helper import IterableMeta
 from pytpp.attributes.flow_action_base import FlowActionBaseAttributes
 
 
-class SSHCertificateCreateCertificateActionAttributes(FlowActionBaseAttributes, metaclass=PropertyMeta):
-	pass
+class SSHCertificateCreateCertificateActionAttributes(FlowActionBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "SSH Certificate Create Certificate Action"

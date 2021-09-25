@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.log_channel import LogChannelAttributes
 
 
-class LogSNMPAttributes(LogChannelAttributes, metaclass=PropertyMeta):
+class LogSNMPAttributes(LogChannelAttributes, metaclass=IterableMeta):
+	__config_class__ = "Log SNMP"
 	community = Attribute('Community')
 	message_body = Attribute('Message Body')
 	snmp_authentication_password = Attribute('SNMP Authentication Password')

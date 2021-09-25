@@ -43,6 +43,7 @@ class UpdateConfig:
         results = dict(zip(columns, zip(*all_results)))
         self.config_relations = pd.DataFrame(results)
         self.version = Version(version)
+        self.all_classes = []
 
     @classmethod
     def add_pkcs11_vse(cls):
@@ -117,13 +118,13 @@ class UpdateConfig:
                 attributes['children'].update(self.get_attributes(child))
         return {reference: attributes}
 
-    def format_scripts(self, d: dict):
+    def dump_attributes(self, d: dict):
         for key, data in d.items():
             imports = []
             if data.get('options'):
-                imports.append('from pytpp.attributes._helper import PropertyMeta, Attribute')
+                imports.append('from pytpp.attributes._helper import IterableMeta, Attribute')
             else:
-                imports.append('from pytpp.attributes._helper import PropertyMeta')
+                imports.append('from pytpp.attributes._helper import IterableMeta')
             parents = list(self.config_relations.query(
                 f'ClassName == "{key}" and Flags == "SuperClass"'
             )['Reference'].values)
@@ -151,22 +152,21 @@ class UpdateConfig:
             file_name = self.snake_case(key)
             class_name = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(key))}""".replace(' ', '') + 'Attributes'
             if parent_classes:
-                class_def = f'class {class_name}({", ".join(parent_classes)}, metaclass=PropertyMeta):'
+                class_def = f'class {class_name}({", ".join(parent_classes)}, metaclass=IterableMeta):'
             else:
-                class_def = f'class {class_name}(metaclass=PropertyMeta):'
-            script += f'\n{class_def}\n'
+                class_def = f'class {class_name}(metaclass=IterableMeta):'
+            script += f'\n{class_def}\n\t__config_class__ = "{key}"\n'
             if data.get('options'):
                 for value, schema_version in data['options']:
                     script += f'\t{self.option_to_variable(value, str(schema_version))}\n'
-            else:
-                script += '\tpass'
             if data.get('children'):
-                self.format_scripts(data['children'])
+                self.dump_attributes(data['children'])
             file_path = Path(f'pytpp/pytpp/attributes/{file_name}.py')
             if not file_path.parent.exists():
                 file_path.parent.mkdir(parents=True, exist_ok=True)
             with file_path.open('w') as f:
                 print(script, end='', file=f)
+            self.all_classes.append(key)
 
     def get_xml_files(self):
         ctx = ssl.create_default_context()
@@ -282,6 +282,18 @@ class UpdateConfig:
         new_attrs = apply_version(attrs)
         return new_attrs
 
+    def dump_classes(self):
+        classes = '\n\t'.join(f'{self.snake_case(c)} = "{c}"' for c in set(self.all_classes))
+        script = '\n'.join([
+            'from pytpp.attributes._helper import IterableMeta\n',
+            'class Classes(metaclass=IterableMeta):',
+            f'\t{classes}',
+            ''
+        ])
+        file_path = Path(f'pytpp/pytpp/features/definitions/classes.py')
+        with file_path.open('w') as f:
+            print(script, end='', file=f)
+
     def main(self):
         roots = self.get_root_classes()
         def doit(root):
@@ -289,9 +301,10 @@ class UpdateConfig:
                 print(f'Processing {root} tree...')
             attrs = self.get_attributes(root)
             attrs = self.apply_version_to_attrs(attrs)
-            self.format_scripts(attrs)
+            self.dump_attributes(attrs)
         with ThreadPoolExecutor(4) as pool:
             list(pool.map(doit, roots))
+        self.dump_classes()
 
 
 if __name__ == '__main__':

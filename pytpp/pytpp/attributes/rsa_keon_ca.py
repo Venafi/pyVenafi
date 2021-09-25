@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.certificate_authority_base import CertificateAuthorityBaseAttributes
 
 
-class RSAKeonCAAttributes(CertificateAuthorityBaseAttributes, metaclass=PropertyMeta):
+class RSAKeonCAAttributes(CertificateAuthorityBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "RSA Keon CA"
 	ca_md5 = Attribute('CA MD5')
 	ca_name = Attribute('CA Name')
 	certificate_block = Attribute('Certificate Block')

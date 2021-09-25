@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class GSKAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class GSKAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "GSK"
 	backup_store = Attribute('Backup Store')
 	certificate_label = Attribute('Certificate Label')
 	create_store = Attribute('Create Store')

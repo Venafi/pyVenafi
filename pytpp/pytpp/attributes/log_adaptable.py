@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.log_channel import LogChannelAttributes
 
 
-class LogAdaptableAttributes(LogChannelAttributes, metaclass=PropertyMeta):
+class LogAdaptableAttributes(LogChannelAttributes, metaclass=IterableMeta):
+	__config_class__ = "Log Adaptable"
 	adaptable_logging_channel_text_field_1 = Attribute('Adaptable Logging Channel Text Field 1', min_version='17.1')
 	adaptable_logging_channel_text_field_10 = Attribute('Adaptable Logging Channel Text Field 10', min_version='17.1')
 	adaptable_logging_channel_text_field_11 = Attribute('Adaptable Logging Channel Text Field 11', min_version='17.1')

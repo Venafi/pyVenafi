@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.log_channel import LogChannelAttributes
 
 
-class LogSyslogAttributes(LogChannelAttributes, metaclass=PropertyMeta):
+class LogSyslogAttributes(LogChannelAttributes, metaclass=IterableMeta):
+	__config_class__ = "Log Syslog"
 	credential = Attribute('Credential', min_version='19.3')
 	enable_tls = Attribute('Enable TLS', min_version='19.3')
 	facility = Attribute('Facility')

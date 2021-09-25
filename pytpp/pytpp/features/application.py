@@ -1,6 +1,6 @@
 from typing import Union, List
-from pytpp.vtypes import Config
-from pytpp.properties.config import ApplicationClassNames, ApplicationGroupClassNames, ApplicationAttributeValues
+from pytpp.tools.vtypes import Config
+from pytpp.properties.config import ApplicationAttributeValues
 from pytpp.attributes.f5_authentication_bundle import F5AuthenticationBundleAttributes
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 from pytpp.attributes.application_group import ApplicationGroupAttributes
@@ -74,8 +74,7 @@ class _ApplicationBase(FeatureBase):
         """
         return self._get_config_object(
             object_dn=application_dn,
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(ApplicationClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def get_associated_certificate(self, application: Union['Config.Object', str]):

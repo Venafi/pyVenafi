@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.workflow import WorkflowAttributes
 
 
-class AdaptableWorkflowAttributes(WorkflowAttributes, metaclass=PropertyMeta):
+class AdaptableWorkflowAttributes(WorkflowAttributes, metaclass=IterableMeta):
+	__config_class__ = "Adaptable Workflow"
 	adaptable_workflow_text_field_1 = Attribute('Adaptable Workflow Text Field 1', min_version='18.3')
 	adaptable_workflow_text_field_10 = Attribute('Adaptable Workflow Text Field 10', min_version='18.3')
 	adaptable_workflow_text_field_11 = Attribute('Adaptable Workflow Text Field 11', min_version='18.3')

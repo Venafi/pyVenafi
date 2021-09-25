@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.connection_base import ConnectionBaseAttributes
 from pytpp.attributes.driver_base import DriverBaseAttributes
 
 
-class CertificateTrustStoreBaseAttributes(ConnectionBaseAttributes, DriverBaseAttributes, metaclass=PropertyMeta):
+class CertificateTrustStoreBaseAttributes(ConnectionBaseAttributes, DriverBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Certificate Trust Store Base"
 	approver = Attribute('Approver')
 	automatic_provisioning_disabled = Attribute('Automatic Provisioning Disabled')
 	bundle = Attribute('Bundle')

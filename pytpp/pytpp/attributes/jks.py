@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class JKSAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class JKSAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "JKS"
 	certificate_label = Attribute('Certificate Label')
 	create_store = Attribute('Create Store')
 	disable_ssh_history = Attribute('Disable SSH History', min_version='19.3')

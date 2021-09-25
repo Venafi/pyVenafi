@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.organization import OrganizationAttributes
 
 
-class PolicyAttributes(OrganizationAttributes, metaclass=PropertyMeta):
+class PolicyAttributes(OrganizationAttributes, metaclass=IterableMeta):
+	__config_class__ = "Policy"
 	certificate_origin = Attribute('Certificate Origin', min_version='19.1')
 	log_view_server = Attribute('Log View Server')
 	master_preferences = Attribute('Master Preferences', min_version='17.2')

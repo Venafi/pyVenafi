@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class ScheduleBaseAttributes(metaclass=PropertyMeta):
+class ScheduleBaseAttributes(metaclass=IterableMeta):
+	__config_class__ = "Schedule Base"
 	blackout = Attribute('Blackout')
 	days_of_month = Attribute('Days Of Month')
 	days_of_week = Attribute('Days Of Week')

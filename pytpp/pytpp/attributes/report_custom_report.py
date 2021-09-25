@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.report_base import ReportBaseAttributes
 from pytpp.attributes.report_filter_base import ReportFilterBaseAttributes
 
 
-class ReportCustomReportAttributes(ReportBaseAttributes, ReportFilterBaseAttributes, metaclass=PropertyMeta):
+class ReportCustomReportAttributes(ReportBaseAttributes, ReportFilterBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Report:Custom Report"
 	custom_report_data_type = Attribute('Custom Report: Data Type', min_version='15.3')
 	custom_report_entity_type = Attribute('Custom Report: Entity Type', min_version='19.2')
 	custom_report_filter = Attribute('Custom Report: Filter', min_version='15.3')

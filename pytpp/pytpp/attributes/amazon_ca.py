@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.http_ca_base import HTTPCABaseAttributes
 
 
-class AmazonCAAttributes(HTTPCABaseAttributes, metaclass=PropertyMeta):
+class AmazonCAAttributes(HTTPCABaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Amazon CA"
 	access_key_id = Attribute('Access Key ID', min_version='16.1')
 	amazon_private_ca = Attribute('Amazon Private CA', min_version='21.2')
 	aws_credential_dn = Attribute('Aws Credential DN', min_version='18.3')

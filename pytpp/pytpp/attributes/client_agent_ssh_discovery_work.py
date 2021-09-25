@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
 
 
-class ClientAgentSSHDiscoveryWorkAttributes(ClientWorkBaseAttributes, metaclass=PropertyMeta):
+class ClientAgentSSHDiscoveryWorkAttributes(ClientWorkBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Client Agent SSH Discovery Work"
 	clear_cache_timestamp = Attribute('Clear Cache Timestamp', min_version='20.1')
 	days_of_month = Attribute('Days Of Month', min_version='15.1')
 	days_of_week = Attribute('Days Of Week', min_version='15.1')

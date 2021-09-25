@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class CodeSigningEnvironmentTemplateBaseAttributes(TopAttributes, metaclass=PropertyMeta):
+class CodeSigningEnvironmentTemplateBaseAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Code Signing Environment Template Base"
 	flow_instance_macro = Attribute('Flow Instance Macro', min_version='20.1')
 	key_use_authentication = Attribute('Key Use Authentication', min_version='20.1')
 	key_use_flow_dn = Attribute('Key Use Flow DN', min_version='20.1')

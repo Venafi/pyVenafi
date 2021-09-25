@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.driver_base import DriverBaseAttributes
 
 
-class AgentDriverBaseAttributes(DriverBaseAttributes, metaclass=PropertyMeta):
+class AgentDriverBaseAttributes(DriverBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Agent Driver Base"
 	address = Attribute('Address')
 	agent_discovery_redirection_rule = Attribute('Agent Discovery Redirection Rule')
 	credential = Attribute('Credential')

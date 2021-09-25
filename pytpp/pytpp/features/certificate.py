@@ -1,9 +1,9 @@
 from typing import List, Union
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.properties.config import CertificateClassNames
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.logger import logger, LogTags
+from pytpp.tools.logger import logger, LogTags
 
 
 @feature()

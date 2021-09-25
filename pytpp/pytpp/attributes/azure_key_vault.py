@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class AzureKeyVaultAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class AzureKeyVaultAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Azure Key Vault"
 	binding_hostnames = Attribute('Binding Hostnames', min_version='19.2')
 	binding_ssl_type = Attribute('Binding SSL Type', min_version='19.2')
 	certificate_credential = Attribute('Certificate Credential', min_version='17.2')

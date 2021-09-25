@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.monitoring_base import MonitoringBaseAttributes
 from pytpp.attributes.top import TopAttributes
 
 
-class KeyBaseAttributes(MonitoringBaseAttributes, TopAttributes, metaclass=PropertyMeta):
+class KeyBaseAttributes(MonitoringBaseAttributes, TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Key Base"
 	algorithm = Attribute('Algorithm', min_version='20.2')
 	approver = Attribute('Approver', min_version='20.2')
 	consumers = Attribute('Consumers', min_version='20.2')

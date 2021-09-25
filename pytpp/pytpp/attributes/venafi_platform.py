@@ -1,10 +1,11 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.proxy_base import ProxyBaseAttributes
 from pytpp.attributes.top import TopAttributes
 from pytpp.attributes.zone_base import ZoneBaseAttributes
 
 
-class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttributes, metaclass=PropertyMeta):
+class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Venafi Platform"
 	acme_fqdn = Attribute('ACME FQDN', min_version='17.2')
 	aws_ec2_role_authorized_identities = Attribute('AWS EC2 Role Authorized Identities', min_version='20.4')
 	activation_latency_threshold = Attribute('Activation Latency Threshold', min_version='21.3')

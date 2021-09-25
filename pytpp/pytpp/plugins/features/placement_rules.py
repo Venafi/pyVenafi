@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List, Union
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
 import json
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import feature
 from pytpp.features.placement_rules import PlacementRules as _OriginalPlacementRules, \
     PlacementRuleCondition as _OriginalPlacementRuleCondition

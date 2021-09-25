@@ -144,9 +144,10 @@ the SQLite database, you can visualize the results in HTML. See the *dblogging* 
 **Console Output Only**
 
 ```python
-from pytpp import logger
 
-logger.set_mode(mode='console') # Not necessary because it is set to this mode by default.
+from pytpp.tools import logger
+
+logger.set_mode(mode='console')  # Not necessary because it is set to this mode by default.
 logger.start()
 ```
 
@@ -155,9 +156,10 @@ logger.start()
 Logs can persist in a SQLite database.
 
 ```python
-from pytpp import logger
 
-logger.set_mode(mode='persistence') # No console output, just the SQLite DB.
+from pytpp.tools import logger
+
+logger.set_mode(mode='persistence')  # No console output, just the SQLite DB.
 logger.log_path = '/path/to/logs/folder'
 logger.start()
 ```
@@ -165,9 +167,10 @@ logger.start()
 **Both Console And Persistent Logs**
 
 ```python
-from pytpp import logger
 
-logger.set_mode(mode='all') # Not necessary because setting the log_path implies this.
+from pytpp.tools import logger
+
+logger.set_mode(mode='all')  # Not necessary because setting the log_path implies this.
 logger.log_path = '/path/to/logs/folder'
 logger.start()
 ```
@@ -175,10 +178,11 @@ logger.start()
 **Suppressing Verbose Logging**
 
 Sometimes logging can be too verbose, especially when iterating through many WebSDK calls. This is especially prevalent in cases where there 
-is a timeout period during which many calls are issued to check for a condition to break a loop. 
+is a timeout period during which many calls are issued to check for a condition to break a loop.
 
 ```python
-from pytpp import logger
+
+from pytpp.tools import logger
 
 with logger.disabled(why='Cuz I want to.'):
     # Nothing is logged in this context block.
@@ -188,7 +192,8 @@ with logger.disabled(why='Cuz I want to.'):
 **Logging Custom Messages**
 
 ```python
-from pytpp import logger
+
+from pytpp.tools import logger
 
 # Start the logger
 # Do stuff...

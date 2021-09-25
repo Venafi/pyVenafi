@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class PKCS12Attributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class PKCS12Attributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "PKCS#12"
 	bundle_certificate = Attribute('Bundle Certificate')
 	certificate_chain_file = Attribute('Certificate Chain File')
 	certificate_file = Attribute('Certificate File')

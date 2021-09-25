@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class ACMEOrderAttributes(TopAttributes, metaclass=PropertyMeta):
+class ACMEOrderAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "ACME Order"
 	acme_authorization_dn = Attribute('ACME Authorization DN', min_version='17.2')
 	acme_expires = Attribute('ACME Expires', min_version='17.2')
 	acme_not_after = Attribute('ACME Not After', min_version='17.2')

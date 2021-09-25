@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureError, feature
 from pytpp.features.discovery import NetworkDiscovery as _NetworkDiscovery
 from pytpp.plugins.properties.network_discovery import NetworkDiscovery as _NetworkDiscoveryProperties

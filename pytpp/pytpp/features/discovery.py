@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.properties.config import DiscoveryClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.attributes.discovery import DiscoveryAttributes

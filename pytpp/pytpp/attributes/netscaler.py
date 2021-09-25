@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class NetScalerAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class NetScalerAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "NetScaler"
 	certificate_file = Attribute('Certificate File')
 	chain_cert = Attribute('Chain Cert')
 	file_validation_disabled = Attribute('File Validation Disabled')

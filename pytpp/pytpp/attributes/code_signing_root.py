@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.branch_base import BranchBaseAttributes
 
 
-class CodeSigningRootAttributes(BranchBaseAttributes, metaclass=PropertyMeta):
+class CodeSigningRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Code Signing Root"
 	default_ca_container = Attribute('Default CA Container', min_version='19.2')
 	default_certificate_container = Attribute('Default Certificate Container', min_version='19.2')
 	default_credential_container = Attribute('Default Credential Container', min_version='19.2')

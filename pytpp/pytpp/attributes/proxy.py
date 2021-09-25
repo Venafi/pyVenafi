@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class ProxyAttributes(metaclass=PropertyMeta):
+class ProxyAttributes(metaclass=IterableMeta):
+	__config_class__ = "Proxy"
 	bypass_proxy_on_local = Attribute('Bypass Proxy on Local')
 	credential = Attribute('Credential')
 	proxy_credential = Attribute('Proxy Credential')

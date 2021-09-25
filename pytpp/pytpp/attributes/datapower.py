@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class DataPowerAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class DataPowerAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "DataPower"
 	application_domain = Attribute('Application Domain')
 	associate_to_cp = Attribute('Associate To CP')
 	certificate_name = Attribute('Certificate Name', min_version='16.1')

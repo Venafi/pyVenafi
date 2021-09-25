@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.top import TopAttributes
 
 
-class StatisticsCounterAttributes(TopAttributes, metaclass=PropertyMeta):
+class StatisticsCounterAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Statistics Counter"
 	sensitive = Attribute('Sensitive', min_version='19.3')
 	statistic_id = Attribute('Statistic Id', min_version='19.3')
 	tag_a_name = Attribute('Tag A Name', min_version='19.3')

@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.flow_action_approver_base import FlowActionApproverBaseAttributes
 
 
-class FlowActionConfigReadApproversAttributes(FlowActionApproverBaseAttributes, metaclass=PropertyMeta):
+class FlowActionConfigReadApproversAttributes(FlowActionApproverBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Flow Action Config Read Approvers"
 	attribute_name = Attribute('Attribute Name', min_version='19.2')
 	object_dn = Attribute('Object DN', min_version='19.2')
 	policy_read = Attribute('Policy Read', min_version='19.2')

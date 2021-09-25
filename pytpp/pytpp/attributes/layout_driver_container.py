@@ -1,6 +1,6 @@
-from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes._helper import IterableMeta
 from pytpp.attributes.organization import OrganizationAttributes
 
 
-class LayoutDriverContainerAttributes(OrganizationAttributes, metaclass=PropertyMeta):
-	pass
+class LayoutDriverContainerAttributes(OrganizationAttributes, metaclass=IterableMeta):
+	__config_class__ = "Layout Driver Container"

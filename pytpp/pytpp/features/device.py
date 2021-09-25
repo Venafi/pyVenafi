@@ -1,5 +1,5 @@
 from typing import Union
-from pytpp.vtypes import Config
+from pytpp.tools.vtypes import Config
 from pytpp.properties.config import DevicesClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 

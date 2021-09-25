@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.schedule_base import ScheduleBaseAttributes
 from pytpp.attributes.service_module import ServiceModuleAttributes
 
 
-class ReporterServiceModuleAttributes(ScheduleBaseAttributes, ServiceModuleAttributes, metaclass=PropertyMeta):
+class ReporterServiceModuleAttributes(ScheduleBaseAttributes, ServiceModuleAttributes, metaclass=IterableMeta):
+	__config_class__ = "Reporter Service Module"
 	host = Attribute('Host')
 	log_delivery = Attribute('Log Delivery')
 	max_running_reports = Attribute('Max Running Reports', min_version='17.1')

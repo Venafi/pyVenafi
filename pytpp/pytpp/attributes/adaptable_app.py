@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 
-class AdaptableAppAttributes(ApplicationBaseAttributes, metaclass=PropertyMeta):
+class AdaptableAppAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Adaptable App"
 	allow_push_without_private_key = Attribute('Allow Push Without Private Key', min_version='20.1')
 	certificate_name = Attribute('Certificate Name', min_version='16.3')
 	file_validation_disabled = Attribute('File Validation Disabled', min_version='16.3')

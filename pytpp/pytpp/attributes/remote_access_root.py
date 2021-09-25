@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.branch_base import BranchBaseAttributes
 
 
-class RemoteAccessRootAttributes(BranchBaseAttributes, metaclass=PropertyMeta):
+class RemoteAccessRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
+	__config_class__ = "Remote Access Root"
 	approved_issuer = Attribute('Approved Issuer', min_version='19.2')
 	authentication_methods = Attribute('Authentication Methods', min_version='19.2')
 	certificate_auth_lookup_field = Attribute('Certificate Auth Lookup Field', min_version='19.2')

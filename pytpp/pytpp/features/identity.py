@@ -1,5 +1,5 @@
 from typing import List, Union
-from pytpp.vtypes import Identity
+from pytpp.tools.vtypes import Identity
 from pytpp.properties.config import IdentityClassNames, IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 

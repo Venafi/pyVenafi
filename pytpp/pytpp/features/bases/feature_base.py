@@ -4,7 +4,7 @@ import re
 from typing import TYPE_CHECKING
 from pytpp.properties.response_objects.config import Config
 from pytpp.properties.response_objects.identity import Identity
-from pytpp.logger import logger, LogTags
+from pytpp.tools.logger import logger, LogTags
 from pytpp.properties.secret_store import Namespaces
 from typing import List, Dict, Union
 from packaging.version import Version

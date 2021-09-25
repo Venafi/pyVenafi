@@ -1,9 +1,10 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.discovery_statistics import DiscoveryStatisticsAttributes
 from pytpp.attributes.service_module import ServiceModuleAttributes
 
 
-class DiscoveryManagerAttributes(DiscoveryStatisticsAttributes, ServiceModuleAttributes, metaclass=PropertyMeta):
+class DiscoveryManagerAttributes(DiscoveryStatisticsAttributes, ServiceModuleAttributes, metaclass=IterableMeta):
+	__config_class__ = "Discovery Manager"
 	connection_timeout = Attribute('Connection Timeout')
 	delay = Attribute('Delay')
 	load_percentage = Attribute('Load Percentage')

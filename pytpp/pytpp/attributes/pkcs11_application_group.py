@@ -1,8 +1,9 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 from pytpp.attributes.application_group import ApplicationGroupAttributes
 
 
-class PKCS11ApplicationGroupAttributes(ApplicationGroupAttributes, metaclass=PropertyMeta):
+class PKCS11ApplicationGroupAttributes(ApplicationGroupAttributes, metaclass=IterableMeta):
+	__config_class__ = "PKCS11 Application Group"
 	hsm_cblob = Attribute('HSM:CBlob')
 	hsm_cka_label_format = Attribute('HSM:CKA LABEL Format')
 	hsm_csr_subject_dn = Attribute('HSM:CSR Subject DN')

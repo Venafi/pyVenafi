@@ -1,6 +1,6 @@
-from pytpp.attributes._helper import PropertyMeta
+from pytpp.attributes._helper import IterableMeta
 from pytpp.attributes.top import TopAttributes
 
 
-class AgentContainerAttributes(TopAttributes, metaclass=PropertyMeta):
-	pass
+class AgentContainerAttributes(TopAttributes, metaclass=IterableMeta):
+	__config_class__ = "Agent Container"

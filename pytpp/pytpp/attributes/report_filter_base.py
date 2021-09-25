@@ -1,7 +1,8 @@
-from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes._helper import IterableMeta, Attribute
 
 
-class ReportFilterBaseAttributes(metaclass=PropertyMeta):
+class ReportFilterBaseAttributes(metaclass=IterableMeta):
+	__config_class__ = "Report Filter Base"
 	address = Attribute('Address')
 	discoverydn = Attribute('DiscoveryDN')
 	grouping = Attribute('Grouping')
