@@ -41,14 +41,14 @@ Examples Of Using The Logger
         )
 
     logger.log_path = f'{log_dir}/my_logs.db'
-    logger.log_tags = CustomLogTags
+    logger.add_log_tags(CustomLogTags)
     logger.start()
 
-Refer to the dblogging documentation for further customization.
+Refer to the logboss documentation for further customization.
 
 """
-from dblogging.logger import Logger, _LoggerPickler
-from dblogging.config import LogTag, LogTagTemplate
+from logboss import Logger, LogTagTypes
+from logboss.logger import _LoggerPickler
 
 MASKED_REGEXES = [
     '.*password.*',
@@ -59,37 +59,11 @@ MASKED_REGEXES = [
     'apikey',
 ]
 
-class LogTags(LogTagTemplate):
-    #: * **Name** - API
-    #: * **Value** - 10
-    api = LogTag(
-        name='API',
-        value=10,
-        html_color='palegoldenrod'
-    )
-    #: * **Name** - Feature
-    #: * **Value** - 20
-    feature = LogTag(
-        name='Feature',
-        value=20,
-        html_color='lightcyan'
-    )
-    #: * **Name** - Main
-    #: * **Value** - 30
-    default = LogTag(
-        name='Main',
-        value=30,
-        html_color='hotpink'
-    )
-    #: * **Name** - Critical
-    #: * **Value** - 40
-    critical = LogTag(
-        name='Critical',
-        value=90,
-        html_color='red'
-    )
+class LogTags:
+    api = LogTagTypes.Debug(name='API')
+    feature = LogTagTypes.Info(name='Feature')
 
 
 logger = Logger()
-logger.log_tags = LogTags
+logger.add_log_tags(LogTags)
 _LoggerPickler.MASKED_REGEXES = MASKED_REGEXES

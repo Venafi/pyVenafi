@@ -1,7 +1,6 @@
 from typing import List, Union
 from pytpp.tools.vtypes import Config
-from pytpp.properties.config import PlacementRulesAttributeValues, \
-    PlacementRulesClassNames
+from pytpp.properties.config import PlacementRulesAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
 
@@ -230,7 +229,7 @@ class PlacementRules(FeatureBase):
             attributes={
                 LayoutRuleBaseAttributes.rule: rule_attr
             },
-            config_class=PlacementRulesClassNames.layout_rule_base,
+            config_class=LayoutRuleBaseAttributes.__config_class__,
             get_if_already_exists=get_if_already_exists
         )
         return rule
@@ -335,6 +334,5 @@ class PlacementRules(FeatureBase):
         """
         return self._get_config_object(
             object_dn=f'{self._layout_rules_dn}\\{name}',
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(PlacementRulesClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )

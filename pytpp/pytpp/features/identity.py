@@ -1,7 +1,8 @@
 from typing import List, Union
 from pytpp.tools.vtypes import Identity
-from pytpp.properties.config import IdentityClassNames, IdentityAttributeValues
+from pytpp.properties.config import IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.definitions.classes import Classes
 
 
 class _IdentityBase(FeatureBase):
@@ -160,7 +161,7 @@ class User(_IdentityBase):
         user = self._config_create(
             name=name,
             parent_folder_dn=self._identity_dn,
-            config_class=IdentityClassNames.user,
+            config_class=Classes.user,
             attributes=attributes,
             get_if_already_exists=False
         )

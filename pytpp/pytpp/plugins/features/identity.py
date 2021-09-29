@@ -138,6 +138,44 @@ class _IdentityBase(_OriginalIdentityBase):
 
 @feature()
 class User(_OriginalUser, _IdentityBase):
+    def create(self, name: str, password: str, email_address: str, add_master_admin: bool = False,
+               allow_aperture_user_search: bool = False, allow_websdk_access: bool = False,
+               add_to_everyone_group: bool = True, get_if_already_exists: bool = True):
+        """
+        Creates a local user in TPP with the given ``password`` and ``email_address``. By default, the
+        user is added to the Everyone group in the Local Identity Provider. If ``add_master_admin`` is
+        ``True``, then the user is automatically enrolled as a Master Admin. The same is true for
+        ``allow_websdk_access`` and ``allow_aperture_user_search``.
+
+        Args:
+            name: Name of the user. The `"local:"` prefix is not required.
+            password: Password.
+            email_address: E-mail address. TPP requires it.
+            add_master_admin: If ``True``, grants Master Admin privileges to the user.
+            allow_aperture_user_search: If ``True``, grants Aperture User Search permission to the user.
+            allow_websdk_access: If ``True``, grants WebSDK Access to the user.
+            add_to_everyone_group: If ``True``, the user to the Local Identity group "Everyone".
+            get_if_already_exists: If the identity already exists, just return it as is.
+
+        Returns:
+            Identity object of the user.
+        """
+        user = super().create(
+            name=name, password=password, email_address=email_address,
+            get_if_already_exists=get_if_already_exists
+        )
+
+        if add_master_admin:
+            self.add_master_admin(identity=user)
+
+        if allow_aperture_user_search:
+            self.allow_aperture_user_search(identity=user)
+
+        if allow_websdk_access:
+            self.allow_websdk_access(identity=user)
+
+        return user
+
     def delete(self, user: Union['Identity.Identity', str]):
         """
         Deletes the user from the Local Identity Provider. The user is removed from all local groups and
@@ -186,29 +224,10 @@ class Group(_OriginalGroup, _IdentityBase):
         Returns:
             Identity object of the user.
         """
-        if not name.startswith('local:'):
-            name = f'local:{name}'
-        if not isinstance(member_prefixed_names, list):
-            member_prefixed_names = []
-        if get_if_already_exists:
-            if self.exists(prefixed_name=name):
-                return self.get(prefixed_name=name)
-
-        result = self._api.websdk.Identity.AddGroup.post(
-            name=self._identity_dict(prefixed_name=name),
-            members=[
-                self._identity_dict(prefixed_name=member_prefixed_name)
-                for member_prefixed_name in member_prefixed_names
-            ]
+        group = super().create(
+            name=name, member_prefixed_names=member_prefixed_names,
+            get_if_already_exists=get_if_already_exists
         )
-
-        if member_prefixed_names and result.invalid_members:
-            im = "\n\t".join([m.prefixed_name for m in result.invalid_members])
-            self._log_warning_message(
-                msg=f'Unable to add these members to the group "{name}":\n\t{im}'
-            )
-
-        group = result.identity
         if master_admin_group:
             self.add_master_admin(identity=group)
 

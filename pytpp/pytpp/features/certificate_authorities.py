@@ -1,5 +1,4 @@
 from pytpp.tools.vtypes import Config
-from pytpp.properties.config import CertificateAuthorityClassNames
 from pytpp.attributes.adaptable_ca import AdaptableCAAttributes
 from pytpp.attributes.microsoft_ca import MicrosoftCAAttributes
 from pytpp.attributes.self_signed_ca import SelfSignedCAAttributes
@@ -34,8 +33,7 @@ class _CertificateAuthorityBase(FeatureBase):
         """
         return self._get_config_object(
             object_dn=certificate_authority_dn,
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(CertificateAuthorityClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
 
@@ -79,7 +77,7 @@ class AdaptableCA(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=CertificateAuthorityClassNames.adaptable_ca,
+            config_class=AdaptableCAAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -123,7 +121,7 @@ class MSCA(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=CertificateAuthorityClassNames.microsoft_ca,
+            config_class=MicrosoftCAAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -158,7 +156,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=CertificateAuthorityClassNames.self_signed_ca,
+            config_class=SelfSignedCAAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )

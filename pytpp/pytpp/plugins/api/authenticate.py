@@ -81,8 +81,10 @@ class Authenticate(_OriginalAuthenticate):
         if self.preference not in {'websdk', 'aperture'}:
             raise ValueError('Invalid preference. Must be one of "websdk" or "aperture".')
 
-    def re_authenticate(self, host: str = None, username: str = None, password: str = None, preference=None,
-                        application_id: str = None, scope: str = None, proxies: dict = None):
+    def re_authenticate(self, host: str = None, username: str = None, password: str = None,
+                        application_id: str = None, scope: str = None, proxies: dict = None,
+                        certificate_path: str = None, key_file_path: str = None,
+                        verify_ssl: bool = None, preference: str = 'websdk', **kwargs):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
 
@@ -90,10 +92,13 @@ class Authenticate(_OriginalAuthenticate):
             host: Hostname or IP Address
             username: Username
             password: Password
-            preference: 'websdk' or 'aperture'
             application_id: Application ID applicable to OAuth. Must supply ``scope``.
             scope: Scope within the Application. Must supply ``application_id``.
             proxies: An OrderedDict used by the python Requests library.
+            certificate_path: Absolute path to the public certificate file.
+            key_file_path: Absolute path to the private key file.
+            verify_ssl: If ``True``, verify the SSL certificate of the target endpoints.
+            preference: 'websdk' or 'aperture'
         """
         if any([host, username, password, application_id, scope]):
             self.__init__(

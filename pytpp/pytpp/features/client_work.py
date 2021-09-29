@@ -3,19 +3,21 @@ import time
 from typing import List, Union
 from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.config import ClientWorkAttributeValues, ClientWorkClassNames
+from pytpp.properties.config import ClientWorkAttributeValues
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
-from pytpp.attributes.server_agent_base_device_placement_work import \
-    ServerAgentBaseDevicePlacementWorkAttributes
-from pytpp.attributes.client_agent_automatic_upgrade_work import ClientAgentAutomaticUpgradeWorkAttributes
 from pytpp.attributes.client_agent_configuration_work import ClientAgentConfigurationWorkAttributes
-from pytpp.attributes.client_agent_device_placement_work import ClientAgentDevicePlacementWorkAttributes
+from pytpp.attributes.client_agent_automatic_upgrade_work import ClientAgentAutomaticUpgradeWorkAttributes
+from pytpp.attributes.server_agent_cert_device_placement_work import ServerAgentCertDevicePlacementWorkAttributes
+from pytpp.attributes.client_certificate_discovery_work import ClientCertificateDiscoveryWorkAttributes
+from pytpp.attributes.network_device_certificate_work import NetworkDeviceCertificateWorkAttributes
+from pytpp.attributes.certificate_provisioning_work import CertificateProvisioningWorkAttributes
+from pytpp.attributes.client_certificate_work import ClientCertificateWorkAttributes
+from pytpp.attributes.server_certificate_work import ServerCertificateWorkAttributes
+from pytpp.attributes.server_agent_ssh_device_placement_work import ServerAgentSSHDevicePlacementWorkAttributes
 from pytpp.attributes.client_agent_ssh_discovery_work import ClientAgentSSHDiscoveryWorkAttributes
 from pytpp.attributes.client_agent_ssh_key_usage_work import ClientAgentSSHKeyUsageWorkAttributes
-from pytpp.attributes.client_certificate_discovery_work import ClientCertificateDiscoveryWorkAttributes
+from pytpp.attributes.client_agent_ssh_provisioning_work import ClientAgentSSHProvisioningWorkAttributes
 from pytpp.attributes.client_user_certificate_work import ClientUserCertificateWorkAttributes
-from pytpp.attributes.network_device_certificate_work import NetworkDeviceCertificateWorkAttributes
-from pytpp.attributes.server_certificate_work import ServerCertificateWorkAttributes
 
 
 class _ClientWorkBase(FeatureBase):
@@ -86,8 +88,7 @@ class _ClientWorkBase(FeatureBase):
         """
         return self._get_config_object(
             object_dn=rf'{self._work_base_dn}\{name}',
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(ClientWorkClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def list(self):
@@ -206,7 +207,7 @@ class AgentConnectivity(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.agent_connectivity,
+            config_class=ClientAgentConfigurationWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -257,7 +258,7 @@ class AgentUpgrade(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.agent_upgrade,
+            config_class=ClientAgentAutomaticUpgradeWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -287,22 +288,24 @@ class CertificateDevicePlacement(_ClientWorkBase):
             A config object representing the client work
         """
         attributes = {
-            ClientAgentDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
-            ClientAgentDevicePlacementWorkAttributes.device_object_location: placement_folder_dn
+            ServerAgentCertDevicePlacementWorkAttributes.created_by            :
+                ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
+            ServerAgentCertDevicePlacementWorkAttributes.device_object_location:
+                placement_folder_dn
         }
 
         if share_mode == 0:
-            attributes[ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+            attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.whole_tree
         elif share_mode == 1:
             attributes[
-                ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+                ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder
         elif share_mode == 2:
-            attributes[ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+            attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders
         elif share_mode == 3:
-            attributes[ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode] = \
+            attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.duplicate_device
         else:
             raise FeatureError.UnexpectedValue(f"Unexpected value for 'share_mode': {share_mode}")
@@ -312,7 +315,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.certificate_device_placement,
+            config_class=ServerAgentCertDevicePlacementWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -482,7 +485,7 @@ class CertificateDiscovery(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.certificate_discovery,
+            config_class=ClientCertificateDiscoveryWorkAttributes.__config_class__,
             attributes=attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
@@ -576,7 +579,7 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.certificate_enrollment_via_est_protocol,
+            config_class=NetworkDeviceCertificateWorkAttributes.__config_class__,
             attributes=attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
@@ -688,9 +691,9 @@ class CertificateInstallation(_ClientWorkBase):
         """
 
         attributes = {
-            ClientCertificateDiscoveryWorkAttributes.created_by   : ClientWorkAttributeValues.CertificateInstallation.CreatedBy.websdk,
-            ClientCertificateDiscoveryWorkAttributes.interval     : 0,
-            ClientCertificateDiscoveryWorkAttributes.log_threshold: log_threshold
+            CertificateProvisioningWorkAttributes.created_by   : ClientWorkAttributeValues.CertificateInstallation.CreatedBy.websdk,
+            CertificateProvisioningWorkAttributes.interval     : 0,
+            CertificateProvisioningWorkAttributes.log_threshold: log_threshold
         }
 
         attributes.update(kwargs)
@@ -698,7 +701,7 @@ class CertificateInstallation(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.certificate_installation,
+            config_class=CertificateProvisioningWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -777,19 +780,19 @@ class DeviceCertificateCreation(_ClientWorkBase):
 
         attributes.update(kwargs)
 
-        if description: attributes[ClientUserCertificateWorkAttributes.description] = description
-        if organization: attributes[ClientUserCertificateWorkAttributes.organization] = organization
-        if city_locality: attributes[ClientUserCertificateWorkAttributes.city] = city_locality
-        if state_province: attributes[ClientUserCertificateWorkAttributes.state] = state_province
-        if organizational_unit: attributes[ClientUserCertificateWorkAttributes.organizational_unit] = organizational_unit
-        if country: attributes[ClientUserCertificateWorkAttributes.country] = country
-        if subject_alternative_names: attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_dns] = common_name
-        if automatic_renewal: attributes[ClientUserCertificateWorkAttributes.renewal_window] = renewal_days_before
+        if description: attributes[ClientCertificateWorkAttributes.description] = description
+        if organization: attributes[ClientCertificateWorkAttributes.organization] = organization
+        if city_locality: attributes[ClientCertificateWorkAttributes.city] = city_locality
+        if state_province: attributes[ClientCertificateWorkAttributes.state] = state_province
+        if organizational_unit: attributes[ClientCertificateWorkAttributes.organizational_unit] = organizational_unit
+        if country: attributes[ClientCertificateWorkAttributes.country] = country
+        if subject_alternative_names: attributes[ClientCertificateWorkAttributes.x509_subjectaltname_dns] = common_name
+        if automatic_renewal: attributes[ClientCertificateWorkAttributes.renewal_window] = renewal_days_before
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.device_certificate_creation,
+            config_class=ClientCertificateWorkAttributes.__config_class__,
             attributes=attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
@@ -867,7 +870,7 @@ class DynamicProvisioning(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.dynamic_provisioning,
+            config_class=ServerCertificateWorkAttributes.__config_class__,
             attributes=attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
@@ -900,9 +903,9 @@ class SSHDevicePlacement(_ClientWorkBase):
         """
 
         attributes = {
-            ServerAgentBaseDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
-            ServerAgentBaseDevicePlacementWorkAttributes.device_object_location: devices_folder_dn,
-            ServerAgentBaseDevicePlacementWorkAttributes.device_share_mode     : share_mode
+            ServerAgentSSHDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
+            ServerAgentSSHDevicePlacementWorkAttributes.device_object_location: devices_folder_dn,
+            ServerAgentSSHDevicePlacementWorkAttributes.device_share_mode     : share_mode
         }
 
         attributes.update(kwargs)
@@ -910,7 +913,7 @@ class SSHDevicePlacement(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.ssh_device_placement,
+            config_class=ServerAgentSSHDevicePlacementWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1060,7 +1063,7 @@ class SSHDiscovery(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.ssh_discovery,
+            config_class=ClientAgentSSHDiscoveryWorkAttributes.__config_class__,
             attributes=attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
@@ -1191,7 +1194,7 @@ class SSHKeyUsage(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.ssh_key_usage,
+            config_class=ClientAgentSSHKeyUsageWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1336,7 +1339,7 @@ class SSHRemediation(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.ssh_remediation,
+            config_class=ClientAgentSSHProvisioningWorkAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1496,7 +1499,7 @@ class UserCertificateCreation(_ClientWorkBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
-            config_class=ClientWorkClassNames.user_certificate_creation,
+            config_class=ClientUserCertificateWorkAttributes.__config_class__,
             attributes=attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists

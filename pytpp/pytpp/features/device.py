@@ -1,7 +1,7 @@
 from typing import Union
 from pytpp.tools.vtypes import Config
-from pytpp.properties.config import DevicesClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.definitions.classes import Classes
 
 
 class _DeviceBase(FeatureBase):
@@ -46,7 +46,7 @@ class Device(_DeviceBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=DevicesClassNames.device,
+            config_class=Classes.device,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -64,8 +64,7 @@ class Device(_DeviceBase):
         """
         return self._get_config_object(
             object_dn=device_dn,
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(DevicesClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def scan_for_ssh_keys(self, device: Union['Config.Object', str]):

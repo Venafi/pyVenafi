@@ -14,6 +14,8 @@ class Attribute(str):
 
 
 class IterableMeta(type):
+    __config_class__ = None
+
     def __iter__(self) -> Generator[Attribute, None, None]:
         for item in dir(self):
             if not item.startswith('_'):

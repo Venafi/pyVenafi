@@ -1,7 +1,6 @@
 from typing import List, Union
 from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.config import FolderClassNames
 from pytpp.attributes.policy import PolicyAttributes
 
 
@@ -154,7 +153,7 @@ class Folder(FeatureBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=FolderClassNames.policy,
+            config_class=PolicyAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -205,8 +204,7 @@ class Folder(FeatureBase):
         """
         return self._get_config_object(
             object_dn=folder_dn,
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(FolderClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def get_engines(self, folder: Union['Config.Object', str]):

@@ -216,9 +216,8 @@ class API:
         msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
         if alternate_api:
             msg += f'\nUse {alternate_api} instead.'
-        logger.log(
+        logger.warning(
             msg=msg,
-            log_tag=LogTags.critical,
             num_prev_callers=num_prev_callers
         )
 

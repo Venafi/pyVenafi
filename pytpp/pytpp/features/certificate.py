@@ -1,8 +1,8 @@
 from typing import List, Union
 from pytpp.tools.vtypes import Config
-from pytpp.properties.config import CertificateClassNames
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import logger, LogTags
 
 
@@ -73,7 +73,7 @@ class Certificate(FeatureBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=CertificateClassNames.x509_certificate,
+            config_class=Classes.x509_certificate,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -220,8 +220,7 @@ class Certificate(FeatureBase):
         Returns:
             Config Object of the certificate.
         """
-        return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists,
-                                       valid_class_names=list(CertificateClassNames))
+        return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
     def get_previous_versions(self, certificate: Union['Config.Object', str], exclude_expired: bool = False,
                               exclude_revoked: bool = False):

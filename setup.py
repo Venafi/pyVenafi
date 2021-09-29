@@ -1,4 +1,4 @@
-__version__ = "0.5.7"
+__version__ = "0.5.8"
 
 from setuptools import setup, find_packages
 import os
@@ -27,7 +27,7 @@ if __name__ == '__main__':
             'jsonpickle',
             'python-dateutil',
             'isodate',
-            'dblogging',
+            'logboss',
             'packaging'
         ],
         classifiers=[
