@@ -1,7 +1,7 @@
 from typing import Union
 from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
-from pytpp.properties.config import ClientGroupsAttributeValues, ClientGroupsClassNames
+from pytpp.properties.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
 
 
@@ -77,7 +77,7 @@ class ClientGroups(FeatureBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._group_base_dn,
-            config_class=ClientGroupsClassNames.group,
+            config_class=ClientGroupAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -105,8 +105,7 @@ class ClientGroups(FeatureBase):
         """
         return self._get_config_object(
             object_dn=fr'{self._group_base_dn}\{name}',
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(ClientGroupsClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def list(self):

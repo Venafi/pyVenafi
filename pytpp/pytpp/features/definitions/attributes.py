@@ -631,9 +631,9 @@ class _Attributes:
             from pytpp.attributes.metadata_choice import MetadataChoiceAttributes
             from pytpp.attributes.metadata_datetime import MetadataDateTimeAttributes
             from pytpp.attributes.metadata_identity import MetadataIdentityAttributes
-            from pytpp.attributes.metadata_base import PropertyMeta
+            from pytpp.attributes.metadata_base import IterableMeta
 
-            class CustomFieldAttributes(metaclass=PropertyMeta):
+            class CustomFieldAttributes(metaclass=IterableMeta):
                 list_type = MetadataListAttributes
                 text_type = MetadataTextAttributes
                 category_type = MetadataCategoryAttributes

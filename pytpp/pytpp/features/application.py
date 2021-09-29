@@ -8,6 +8,7 @@ from pytpp.attributes.apache_application_group import ApacheApplicationGroupAttr
 from pytpp.attributes.pkcs11_application_group import PKCS11ApplicationGroupAttributes
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.definitions.classes import Classes
 from pytpp.tools.helpers.date_converter import from_date_string
 
 
@@ -262,7 +263,7 @@ class A10AXTrafficManager(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.a10_ax_traffic_manager,
+            config_class=Classes.a10_ax_traffic_manager,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -299,7 +300,7 @@ class Adaptable(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.adaptable_app,
+            config_class=Classes.adaptable_app,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -336,7 +337,7 @@ class AmazonAWS(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.amazon_app,
+            config_class=Classes.amazon_app,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -374,7 +375,7 @@ class Apache(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.apache,
+            config_class=Classes.apache,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -411,7 +412,7 @@ class AzureKeyVault(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.azure_key_vault,
+            config_class=Classes.azure_key_vault,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -448,7 +449,7 @@ class Basic(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.basic,
+            config_class=Classes.basic,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -520,7 +521,7 @@ class BlueCoatSSLVA(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.blue_coat_sslva,
+            config_class=Classes.bluecoat_sslva,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -557,7 +558,7 @@ class CAPI(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.capi,
+            config_class=Classes.capi,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -594,7 +595,7 @@ class CitrixNetScaler(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.net_scaler,
+            config_class=Classes.netscaler,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -631,7 +632,7 @@ class ConnectDirect(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.connect_direct,
+            config_class=Classes.connectdirect,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -668,7 +669,7 @@ class F5AuthenticationBundle(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.f5_authentication_bundle,
+            config_class=Classes.f5_authentication_bundle,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -705,7 +706,7 @@ class F5LTMAdvanced(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.f5_ltm_advanced,
+            config_class=Classes.f5_ltm_advanced,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -742,7 +743,7 @@ class IBMDataPower(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.data_power,
+            config_class=Classes.datapower,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -779,7 +780,7 @@ class IBMGSK(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.gsk,
+            config_class=Classes.gsk,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -816,7 +817,7 @@ class ImpervaMX(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.imperva_mx,
+            config_class=Classes.imperva_mx,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -853,7 +854,7 @@ class JKS(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.jks,
+            config_class=Classes.jks,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -890,7 +891,7 @@ class JuniperSAS(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.juniper_sas,
+            config_class=Classes.juniper_sas,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -927,7 +928,7 @@ class OracleIPlanet(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.iplanet,
+            config_class=Classes.iplanet,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -964,7 +965,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.palo_alto_network_fw,
+            config_class=Classes.palo_alto_network_fw,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1001,7 +1002,7 @@ class PEM(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.pem,
+            config_class=Classes.pem,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1037,7 +1038,7 @@ class PKCS11(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.pkcs11,
+            config_class=Classes.pkcs11,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1074,7 +1075,7 @@ class PKCS12(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.pkcs12,
+            config_class=Classes.pkcs_12,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1111,7 +1112,7 @@ class RiverbedSteelHead(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.riverbed_steel_head,
+            config_class=Classes.riverbed_steelhead,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1148,7 +1149,7 @@ class TealeafPCA(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.tealeaf_pca,
+            config_class=Classes.tealeaf_pca,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1185,7 +1186,7 @@ class VAMnShield(_ApplicationBase):
         return self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=ApplicationClassNames.vam_nshield,
+            config_class=Classes.vam_nshield,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -1235,8 +1236,7 @@ class _ApplicationGroupBase(FeatureBase):
         """
         return self._get_config_object(
             object_dn=application_group_dn,
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(ApplicationGroupClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def get_applications_in_group(self, application_group: Union['Config.Object', str]):
@@ -1287,7 +1287,7 @@ class _ApplicationGroupBase(FeatureBase):
 @feature()
 class ApacheApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
-        super().__init__(api=api, class_name=ApplicationGroupClassNames.apache_application_group)
+        super().__init__(api=api, class_name=Classes.apache_application_group)
 
     def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
                common_data_location: str = None, attributes: dict = None):
@@ -1327,7 +1327,7 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
 @feature()
 class PKCS11ApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
-        super().__init__(api=api, class_name=ApplicationGroupClassNames.pkcs11_application_group)
+        super().__init__(api=api, class_name=Classes.pkcs11_application_group)
 
     def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
                attributes: dict = None):

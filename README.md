@@ -137,9 +137,9 @@ features.certificate.download(certificate=certificate, ...)
 
 #### Logging
 
-See [dblogging](https://pypi.org/project/dblogging/) for details on the logging module used. Logging can be sent to 
+See [logboss](https://pypi.org/project/logboss/) for details on the logging module used. Logging can be sent to 
 the console, stored in a SQLite database, both, or neither. By default the logger is inactive. If persistent logs to
-the SQLite database, you can visualize the results in HTML. See the *dblogging* documentation for more details.
+the SQLite database, you can visualize the results in HTML. See the *logboss* documentation for more details.
 
 **Console Output Only**
 

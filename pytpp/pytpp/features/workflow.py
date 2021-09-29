@@ -3,7 +3,6 @@ import hashlib
 from typing import List, Union
 from datetime import datetime
 from pytpp.tools.vtypes import Config, Identity
-from pytpp.properties.config import WorkflowClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.attributes.workflow import WorkflowAttributes
@@ -39,8 +38,7 @@ class _WorkflowBase(FeatureBase):
         """
         return self._get_config_object(
             object_dn=workflow_dn,
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(WorkflowClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
@@ -49,7 +47,7 @@ class _WorkflowBase(FeatureBase):
         workflow = self._config_create(
             name=name,
             parent_folder_dn=parent_folder_dn,
-            config_class=WorkflowClassNames.workflow if not is_adaptable else WorkflowClassNames.adaptable_workflow,
+            config_class=WorkflowAttributes.__config_class__ if not is_adaptable else AdaptableWorkflowAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )

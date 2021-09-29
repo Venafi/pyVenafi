@@ -134,26 +134,23 @@ class FeatureBase:
         return isinstance(obj, str) and bool(re.match(pattern=regex, string=obj))
 
     def _get_prefixed_name(self, identity: Union[Identity.Identity, str]):
-        if isinstance(identity, Identity.Identity):
+        if hasattr(identity, 'prefixed_name'):
             return identity.prefixed_name
         if self._is_prefixed_universal(identity):
-            logger.log(f'Getting prefixed name from prefixed GUID: {identity}')
             return self._get_identity_object(prefixed_universal=identity).prefixed_name
         return identity
 
     def _get_prefixed_universal(self, identity: Union[Identity.Identity, str]):
-        if isinstance(identity, Identity.Identity):
+        if hasattr(identity, 'prefixed_universal'):
             return identity.prefixed_universal
         if self._is_prefixed_universal(identity):
             return identity
-        logger.log(f'Getting prefixed name from prefixed GUID: {identity}')
         return self._get_identity_object(prefixed_name=identity).prefixed_universal
 
     def _get_dn(self, obj: Union[Config.Object, str], parent_dn: str = None):
-        if isinstance(obj, Config.Object):
+        if hasattr(obj, 'dn'):
             return obj.dn
         if self._is_obj_guid(obj):
-            logger.log(f'Getting DN from GUID: {obj}')
             return self._get_config_object(object_guid=obj).dn
         if parent_dn and not obj.startswith(parent_dn):
             obj = parent_dn.rstrip('\\') + '\\' + obj.rstrip('\\')
@@ -163,7 +160,7 @@ class FeatureBase:
             return obj
 
     def _get_guid(self, obj: Union[Config.Object, str], parent_dn: str = None):
-        if isinstance(obj, Config.Object):
+        if hasattr(obj, 'guid'):
             return obj.guid
         if self._is_obj_guid(obj):
             return obj
@@ -171,12 +168,11 @@ class FeatureBase:
             obj = parent_dn.rstrip('\\') + f'\\{obj}'
         if not obj.startswith(r'\VED'):
             obj = '\\VED\\' + obj.strip("\\")
-        logger.log(f'Getting GUID from DN: {obj}')
         return self._get_config_object(object_dn=obj).guid
 
     @staticmethod
     def _log_warning_message(msg: str):
-        logger.log(msg=msg, log_tag=LogTags.critical, num_prev_callers=2)
+        logger.warning(msg=msg, num_prev_callers=2)
 
     @staticmethod
     def __no_op(*args, **kwargs):
@@ -215,10 +211,10 @@ class FeatureBase:
 
     def _is_version_compatible(self, minimum: str = '', maximum: str = ''):
         if minimum and self._api._tpp_version <= Version(minimum):
-            logger.log(f'Incompatible version. This feature requires at least TPP {minimum}.')
+            logger.error(f'Incompatible version. This feature requires at least TPP {minimum}.')
             return False
         if maximum and self._api._tpp_version >= Version(maximum):
-            logger.log(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
+            logger.error(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
             return False
         return True
 
@@ -230,7 +226,7 @@ class FeatureBase:
         def __enter__(self):
             logger.set_rule(
                 log_tag=LogTags.feature,
-                min_tag_value=LogTags.feature.value,
+                blacklist_function=lambda x: x is LogTags.api,
                 why=f'Disabling all logs during timeout to reduce redundant logging.'
             )
             return self
@@ -253,9 +249,8 @@ class _FeatureException(Exception):
         super().__init__(msg)
 
     def log(self):
-        logger.log(
+        logger.error(
             msg=self.__str__(),
-            log_tag=LogTags.critical,
             num_prev_callers=2
         )
 

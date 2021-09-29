@@ -1,6 +1,5 @@
 from typing import List, Dict, Union
 from pytpp.tools.vtypes import Config
-from pytpp.properties.config import DiscoveryClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.attributes.discovery import DiscoveryAttributes
 
@@ -141,7 +140,7 @@ class NetworkDiscovery(FeatureBase):
         return self._config_create(
             name=name,
             parent_folder_dn=self._discovery_dn,
-            config_class=DiscoveryClassNames.network_discovery,
+            config_class=DiscoveryAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
@@ -168,8 +167,7 @@ class NetworkDiscovery(FeatureBase):
         """
         return self._get_config_object(
             object_dn=f'{self._discovery_dn}\\{name}',
-            raise_error_if_not_exists=raise_error_if_not_exists,
-            valid_class_names=list(DiscoveryClassNames)
+            raise_error_if_not_exists=raise_error_if_not_exists
         )
 
     def schedule(self, job: Union['Config.Object', str], hour: Union[str, int], days_of_week: List[str] = None,

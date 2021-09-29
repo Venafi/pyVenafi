@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from pytpp.tools.vtypes import Config
+from pytpp.tools.vtypes import Config, CustomFields
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
@@ -137,7 +137,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.item
 
-    def delete(self, custom_field: Union['Config.Object', str], remove_data: bool = True):
+    def delete(self, custom_field: Union['CustomFields.Item', str], remove_data: bool = True):
         """
         Deletes a custom field and all instances of it, including policy settings. If ``remove_data = False``, then
         an exception will be raised if there is existing data for the custom field on any object.
@@ -170,7 +170,7 @@ class CustomField(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_item_details(self, custom_field: Union['Config.Object', str] = None):
+    def get_item_details(self, custom_field: Union['CustomFields.Item', str] = None):
         """
         Fetches the item details of a custom field object according to the data
         returned by the WebSDK API "POST Metadata/LoadItem".
@@ -197,7 +197,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.items
 
-    def read(self, obj: Union['Config.Object', str], custom_field: Union['Config.Object', str]):
+    def read(self, obj: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str]):
         """
         Reads the actual value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
@@ -227,7 +227,7 @@ class CustomField(FeatureBase):
 
         return EffectiveValues()
 
-    def read_policy(self, folder: Union['Config.Object', str], custom_field: Union['Config.Object', str], class_name: str):
+    def read_policy(self, folder: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], class_name: str):
         """
         Reads the policy value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
@@ -257,7 +257,7 @@ class CustomField(FeatureBase):
 
         return PolicyValues()
 
-    def update(self, custom_field: Union['Config.Object', str], allowed_characters: List[str] = None, allowed_values: List[str] = None,
+    def update(self, custom_field: Union['CustomFields.Item', str], allowed_characters: List[str] = None, allowed_values: List[str] = None,
                category: str = None, classes: list = None, data_type: int = None, date_only: bool = None,
                default_values: str = None, display_after: str = None, error_message: str = None, help_text: str = None,
                label: str = None, localization_table: str = None, localized_help: str = None, localized_label: str = None,
@@ -339,7 +339,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return self.get_item_details(custom_field=custom_field)
 
-    def write(self, obj: Union['Config.Object', str], custom_field: Union['Config.Object', str], values: List,
+    def write(self, obj: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], values: List,
               keep_existing: bool = True):
         """
         Writes a set of values to a custom field on the specified ``obj``. If ``keep_existing = False``,
@@ -360,7 +360,7 @@ class CustomField(FeatureBase):
         )
         self._validate_result_code(result=response.result)
 
-    def write_policy(self, folder: Union['Config.Object', str], custom_field: Union['Config.Object', str], class_name: str,
+    def write_policy(self, folder: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], class_name: str,
                      values: List, locked: bool = False):
         """
         Writes a set of values to a custom field on the specified ``folder``. The custom field MUST be policyable.
