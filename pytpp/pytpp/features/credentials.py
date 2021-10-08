@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List, Union
 from pytpp.vtypes import Config
-from pytpp.properties.config import CredentialAttributes, CredentialClassNames
+from pytpp.properties.config import CredentialClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 

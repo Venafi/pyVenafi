@@ -15,8 +15,8 @@ class PKI:
                 response_object = {}
 
             self.city = response_object.get('City')  # type: str
-            self.common_name = city = response_object.get('CommonName')  # type: str
-            self.country = city = response_object.get('Country')  # type: str
+            self.common_name = response_object.get('CommonName')  # type: str
+            self.country = response_object.get('Country')  # type: str
             self.key_algorithm = response_object.get('KeyAlgorithm')  # type: str
             self.key_bit_size = response_object.get('KeyBitSize')  # type: str
             self.organization = response_object.get('Organization')  # type: str

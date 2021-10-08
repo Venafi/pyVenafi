@@ -44,10 +44,10 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddAuthorizedKey')
 
-        def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, allowed_source_restricition: list = None,
+        def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, allowed_source_restriction: list = None,
                  denied_source_restriction: list = None, forced_command: str = None, format: str = None, options: list = None):
             body = {
-                'AllowedSourceRestriction': allowed_source_restricition,
+                'AllowedSourceRestriction': allowed_source_restriction,
                 'DeniedSourceRestriction': denied_source_restriction,
                 'DeviceGuid': device_guid,
                 'Filepath': filepath,
@@ -57,9 +57,7 @@ class _SSH:
                 'Options': options,
                 'Username': username
             }
-            
-            
-            
+
             class _Response(APIResponse):
                 def __init__(self, response):
                     super().__init__(response=response)

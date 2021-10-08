@@ -1,5 +1,4 @@
 from typing import Union
-
 from pytpp.logger import logger, LogTags
 from pytpp.api.session import Session
 from pytpp.properties.oauth import Scope
@@ -22,7 +21,6 @@ from pytpp.api.websdk.endpoints.pki import _PKI
 from pytpp.api.websdk.endpoints.preferences import _Preferences
 from pytpp.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from pytpp.api.websdk.endpoints.revoke import _Revoke
-from pytpp.api.websdk.endpoints.rights import _Rights
 from pytpp.api.websdk.endpoints.secret_store import _SecretStore
 from pytpp.api.websdk.endpoints.ssh import _SSH
 from pytpp.api.websdk.endpoints.ssh_certificates import _SSHCertificates
@@ -74,6 +72,9 @@ class WebSDK:
         self._oauth = None
         self._token = None
         self._proxies = proxies
+        self._certificate_path = certificate_path
+        self._key_file_path = key_file_path
+        self._verify_ssl = verify_ssl
 
         # This is used by the endpoints to avoid redundancy.
         self._base_url = f'https://{host}/vedsdk'
@@ -157,7 +158,6 @@ class WebSDK:
         self.Preferences = _Preferences(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
-        self.Rights = _Rights(self)
         self.SecretStore = _SecretStore(self)
         self.SSH = _SSH(self)
         self.SSHCertificates = _SSHCertificates(self)
@@ -177,15 +177,21 @@ class WebSDK:
                 host=self._host,
                 username=self._username,
                 password=self._password,
+                certificate_path=self._certificate_path,
+                key_file_path=self._key_file_path,
+                verify_ssl=self._verify_ssl,
+                proxies=self._proxies,
                 application_id=self._application_id,
                 scope=self._oauth.scope,
                 refresh_token=self._oauth.refresh_token,
-                proxies=self._proxies
             )
         else:
             self.__init__(
                 host=self._host,
                 username=self._username,
                 password=self._password,
+                certificate_path=self._certificate_path,
+                key_file_path=self._key_file_path,
+                verify_ssl=self._verify_ssl,
                 proxies=self._proxies
             )

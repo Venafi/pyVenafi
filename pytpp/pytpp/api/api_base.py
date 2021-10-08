@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Union
 import re
 import json
 from pytpp.api.session import Session

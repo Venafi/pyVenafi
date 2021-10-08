@@ -1,7 +1,12 @@
 from typing import Union, List
 from pytpp.vtypes import Config
-from pytpp.properties.config import ApplicationClassNames, ApplicationGroupClassNames, ApplicationAttributes, \
-    ApplicationGroupAttributes, ApplicationAttributeValues, CertificateAttributes
+from pytpp.properties.config import ApplicationClassNames, ApplicationGroupClassNames, ApplicationAttributeValues
+from pytpp.attributes.f5_authentication_bundle import F5AuthenticationBundleAttributes
+from pytpp.attributes.application_base import ApplicationBaseAttributes
+from pytpp.attributes.application_group import ApplicationGroupAttributes
+from pytpp.attributes.apache_application_group import ApacheApplicationGroupAttributes
+from pytpp.attributes.pkcs11_application_group import PKCS11ApplicationGroupAttributes
+from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.tools.helpers.date_converter import from_date_string
 
@@ -33,7 +38,7 @@ class _ApplicationBase(FeatureBase):
         result = self._api.websdk.Config.Write.post(
             object_dn=application_dn,
             attribute_data=self._name_value_list({
-                ApplicationAttributes.disabled: ["1"]
+                ApplicationBaseAttributes.disabled: ["1"]
             }, keep_list_values=True)
         ).result
 
@@ -50,7 +55,7 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         result = self._api.websdk.Config.ClearAttribute.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.disabled
+            attribute_name=ApplicationBaseAttributes.disabled
         ).result
 
         if result.code != 1:
@@ -86,7 +91,7 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.certificate
+            attribute_name=ApplicationBaseAttributes.certificate
         )
 
         if not response.values:
@@ -108,7 +113,7 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.stage
+            attribute_name=ApplicationBaseAttributes.stage
         )
 
         return int(response.values[0]) if response.values else None
@@ -138,7 +143,7 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.status
+            attribute_name=ApplicationBaseAttributes.status
         )
 
         return response.values[0] if response.values else None
@@ -156,7 +161,7 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.in_error
+            attribute_name=ApplicationBaseAttributes.in_error
         )
 
         return bool(response.values[0]) if response.values else False
@@ -177,7 +182,7 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         certificate_dn = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
-            attribute_name=ApplicationAttributes.certificate
+            attribute_name=ApplicationBaseAttributes.certificate
         )
         if not certificate_dn.values:
             raise FeatureError.UnexpectedValue(
@@ -185,7 +190,7 @@ class _ApplicationBase(FeatureBase):
             )
         response = self._api.websdk.Config.Read.post(
             object_dn=certificate_dn.values[0],
-            attribute_name=CertificateAttributes.last_renewed_on
+            attribute_name=X509CertificateAttributes.last_renewed_on
         )
 
         if not response.values:
@@ -198,7 +203,7 @@ class _ApplicationBase(FeatureBase):
         def _certificate_is_installed():
             resp = self._api.websdk.Config.Read.post(
                 object_dn=application_dn,
-                attribute_name=ApplicationAttributes.last_pushed_on
+                attribute_name=ApplicationBaseAttributes.last_pushed_on
             )
 
             if not resp.values:
@@ -252,7 +257,7 @@ class A10AXTrafficManager(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appa10axtm'
+            ApplicationBaseAttributes.driver_name: 'appa10axtm'
         })
 
         return self._config_create(
@@ -289,7 +294,7 @@ class Adaptable(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appadaptable'
+            ApplicationBaseAttributes.driver_name: 'appadaptable'
         })
 
         return self._config_create(
@@ -326,7 +331,7 @@ class AmazonAWS(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appamazon'
+            ApplicationBaseAttributes.driver_name: 'appamazon'
         })
 
         return self._config_create(
@@ -364,7 +369,7 @@ class Apache(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appapache'
+            ApplicationBaseAttributes.driver_name: 'appapache'
         })
 
         return self._config_create(
@@ -401,7 +406,7 @@ class AzureKeyVault(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appazurekeyvault'
+            ApplicationBaseAttributes.driver_name: 'appazurekeyvault'
         })
 
         return self._config_create(
@@ -438,7 +443,7 @@ class Basic(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appbasic'
+            ApplicationBaseAttributes.driver_name: 'appbasic'
         })
 
         return self._config_create(
@@ -510,7 +515,7 @@ class BlueCoatSSLVA(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appBlueCoat'
+            ApplicationBaseAttributes.driver_name: 'appBlueCoat'
         })
 
         return self._config_create(
@@ -547,7 +552,7 @@ class CAPI(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appcapi'
+            ApplicationBaseAttributes.driver_name: 'appcapi'
         })
 
         return self._config_create(
@@ -584,7 +589,7 @@ class CitrixNetScaler(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appnetscaler'
+            ApplicationBaseAttributes.driver_name: 'appnetscaler'
         })
 
         return self._config_create(
@@ -621,7 +626,7 @@ class ConnectDirect(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appConnectDirect'
+            ApplicationBaseAttributes.driver_name: 'appConnectDirect'
         })
 
         return self._config_create(
@@ -659,7 +664,7 @@ class F5AuthenticationBundle(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.F5AuthenticationBundle.advanced_settings_bundle_name: bundle_file_name
+            F5AuthenticationBundleAttributes.advanced_settings_bundle_name: bundle_file_name
         })
         return self._config_create(
             name=name,
@@ -695,7 +700,7 @@ class F5LTMAdvanced(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appf5ltmadvanced'
+            ApplicationBaseAttributes.driver_name: 'appf5ltmadvanced'
         })
 
         return self._config_create(
@@ -732,7 +737,7 @@ class IBMDataPower(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appdatapower'
+            ApplicationBaseAttributes.driver_name: 'appdatapower'
         })
 
         return self._config_create(
@@ -769,7 +774,7 @@ class IBMGSK(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appgsk'
+            ApplicationBaseAttributes.driver_name: 'appgsk'
         })
 
         return self._config_create(
@@ -806,7 +811,7 @@ class ImpervaMX(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appimpervamx'
+            ApplicationBaseAttributes.driver_name: 'appimpervamx'
         })
 
         return self._config_create(
@@ -843,7 +848,7 @@ class JKS(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appjks'
+            ApplicationBaseAttributes.driver_name: 'appjks'
         })
 
         return self._config_create(
@@ -880,7 +885,7 @@ class JuniperSAS(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appjuniper'
+            ApplicationBaseAttributes.driver_name: 'appjuniper'
         })
 
         return self._config_create(
@@ -917,7 +922,7 @@ class OracleIPlanet(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appiplanet'
+            ApplicationBaseAttributes.driver_name: 'appiplanet'
         })
 
         return self._config_create(
@@ -954,7 +959,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appPaloAlto'
+            ApplicationBaseAttributes.driver_name: 'appPaloAlto'
         })
 
         return self._config_create(
@@ -991,7 +996,7 @@ class PEM(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appPem'
+            ApplicationBaseAttributes.driver_name: 'appPem'
         })
 
         return self._config_create(
@@ -1028,7 +1033,7 @@ class PKCS11(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'apppkcs11'
+            ApplicationBaseAttributes.driver_name: 'apppkcs11'
         })
         return self._config_create(
             name=name,
@@ -1064,7 +1069,7 @@ class PKCS12(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'apppkcs12'
+            ApplicationBaseAttributes.driver_name: 'apppkcs12'
         })
 
         return self._config_create(
@@ -1101,7 +1106,7 @@ class RiverbedSteelHead(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appriverbedsteelhead'
+            ApplicationBaseAttributes.driver_name: 'appriverbedsteelhead'
         })
 
         return self._config_create(
@@ -1138,7 +1143,7 @@ class TealeafPCA(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'apptealeafpca'
+            ApplicationBaseAttributes.driver_name: 'apptealeafpca'
         })
 
         return self._config_create(
@@ -1175,7 +1180,7 @@ class VAMnShield(_ApplicationBase):
         """
         attributes = attributes or {}
         attributes.update({
-            ApplicationAttributes.driver_name: 'appvamnshield'
+            ApplicationBaseAttributes.driver_name: 'appvamnshield'
         })
 
         return self._config_create(
@@ -1250,7 +1255,7 @@ class _ApplicationGroupBase(FeatureBase):
         # Associate the Application Group DN.
         result = self._api.websdk.Config.WriteDn.post(
             object_dn=certificate.dn,
-            attribute_name=CertificateAttributes.application_group_dn,
+            attribute_name=X509CertificateAttributes.application_group_dn,
             values=[app_group.dn]
         ).result
         if result.code != 1:
@@ -1275,7 +1280,7 @@ class _ApplicationGroupBase(FeatureBase):
         ).values[0]
         consumer_dns = self._api.websdk.Config.Read.post(
             object_dn=certificate_dn,
-            attribute_name=CertificateAttributes.consumers
+            attribute_name=X509CertificateAttributes.consumers
         ).values
         return consumer_dns, certificate_dn
 
@@ -1292,7 +1297,7 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
         default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
         if not common_data_location:
             try:
-                hsm = next(attr.values[0] for attr in default_attrs if attr.name == ApplicationAttributes.Apache.private_key_location)
+                hsm = next(attr.values[0] for attr in default_attrs if attr.name == ApacheApplicationGroupAttributes.private_key_location)
             except StopIteration:
                 hsm = None
             if hsm == ApplicationAttributeValues.Apache.PrivateKeyLocation.thales_nshield_hsm:
@@ -1301,11 +1306,11 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
                 common_data_location = '/usr/safenet/lunaclient/bin'
 
         group_attributes = {
-            ApplicationGroupAttributes.Apache.client_tools_path            : None,
-            ApplicationGroupAttributes.Apache.partition_password_credential: None,
-            ApplicationGroupAttributes.Apache.protection_type              : None,
-            ApplicationGroupAttributes.Apache.softcard_identifier          : None,
-            ApplicationGroupAttributes.Apache.private_key_label            : None,
+            ApacheApplicationGroupAttributes.client_tools_path            : None,
+            ApacheApplicationGroupAttributes.partition_password_credential: None,
+            ApacheApplicationGroupAttributes.protection_type              : None,
+            ApacheApplicationGroupAttributes.softcard_identifier          : None,
+            ApacheApplicationGroupAttributes.private_key_label            : None,
             ApplicationGroupAttributes.common_data_location                : common_data_location,
             ApplicationGroupAttributes.certificate                         : certificate.dn,
             ApplicationGroupAttributes.enrollment_application_dn           : application_dns[0],
@@ -1331,15 +1336,15 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
         certificate = self._get_config_object(object_dn=certificate)
         default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
         group_attributes = {
-            ApplicationGroupAttributes.PKCS11.hsm_cka_label_format   : None,
-            ApplicationGroupAttributes.PKCS11.hsm_requested_cka_label: None,
-            ApplicationGroupAttributes.PKCS11.hsm_embed_sans_in_csr  : None,
-            ApplicationGroupAttributes.PKCS11.hsm_import_certificate : None,
-            ApplicationGroupAttributes.PKCS11.hsm_protection_type    : None,
-            ApplicationGroupAttributes.PKCS11.hsm_requested_usecase  : None,
-            ApplicationGroupAttributes.PKCS11.hsm_reverse_subject_dn : None,
-            ApplicationGroupAttributes.PKCS11.hsm_token_label        : None,
-            ApplicationGroupAttributes.PKCS11.hsm_token_password     : None,
+            PKCS11ApplicationGroupAttributes.hsm_cka_label_format   : None,
+            PKCS11ApplicationGroupAttributes.hsm_requested_cka_label: None,
+            PKCS11ApplicationGroupAttributes.hsm_embed_sans_in_csr  : None,
+            PKCS11ApplicationGroupAttributes.hsm_import_certificate : None,
+            PKCS11ApplicationGroupAttributes.hsm_protection_type    : None,
+            PKCS11ApplicationGroupAttributes.hsm_requested_usecase  : None,
+            PKCS11ApplicationGroupAttributes.hsm_reverse_subject_dn : None,
+            PKCS11ApplicationGroupAttributes.hsm_token_label        : None,
+            PKCS11ApplicationGroupAttributes.hsm_token_password     : None,
             ApplicationGroupAttributes.certificate                   : certificate.dn,
             ApplicationGroupAttributes.enrollment_application_dn     : application_dns[0],
         }

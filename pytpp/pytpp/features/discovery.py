@@ -1,7 +1,10 @@
 from typing import List, Dict, Union
 from pytpp.vtypes import Config
-from pytpp.properties.config import DiscoveryAttributes, DiscoveryAttributeValues, DiscoveryClassNames
+from pytpp.properties.config import DiscoveryClassNames
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.attributes.discovery import DiscoveryAttributes
+from pytpp.attributes.schedule_base import ScheduleBaseAttributes
+from pytpp.attributes.placement_job import PlacementJobAttributes
 
 
 @feature()
@@ -26,7 +29,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.Read.post(
             object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.Network.status
+            attribute_name=DiscoveryAttributes.status
         )
         in_progress_states = ['Pending Execution', 'Running']
         if response.is_valid_response():
@@ -115,27 +118,27 @@ class NetworkDiscovery(FeatureBase):
         attributes = attributes or {}
         attributes.update({
             DiscoveryAttributes.address_range: address_range,
-            DiscoveryAttributes.Network.automatically_import: "1" if automatically_import else "0",
-            DiscoveryAttributes.Network.blackout : blackout,
-            DiscoveryAttributes.Network.certificate_location_dn: default_certificate_dn,
+            DiscoveryAttributes.automatically_import: "1" if automatically_import else "0",
+            ScheduleBaseAttributes.blackout : blackout,
+            DiscoveryAttributes.certificate_location_dn: default_certificate_dn,
             DiscoveryAttributes.contact: contacts,
             DiscoveryAttributes.description: description,
-            DiscoveryAttributes.Network.discovery_exclusion_dn: exclusion_dns,
-            DiscoveryAttributes.Network.placement_rule: [f'{e}:{guid}' for e, guid in enumerate(placement_rule_guids)],
-            DiscoveryAttributes.Network.priority: priority,
-            DiscoveryAttributes.Network.reschedule: "1" if hour and reschedule else "0",
-            DiscoveryAttributes.Network.resolve_host: "1" if resolve_host else "0",
-            DiscoveryAttributes.Network.utc: utc
+            DiscoveryAttributes.discovery_exclusion_dn: exclusion_dns,
+            DiscoveryAttributes.placement_rule: [f'{e}:{guid}' for e, guid in enumerate(placement_rule_guids)],
+            DiscoveryAttributes.priority: priority,
+            ScheduleBaseAttributes.reschedule: "1" if hour and reschedule else "0",
+            DiscoveryAttributes.resolve_host: "1" if resolve_host else "0",
+            ScheduleBaseAttributes.utc: utc
         })
 
         if hour:
-            attributes[DiscoveryAttributes.Network.hour] = hour
+            attributes[ScheduleBaseAttributes.hour] = hour
             if days_of_week:
-                attributes[DiscoveryAttributes.Network.days_of_week] = days_of_week
+                attributes[ScheduleBaseAttributes.days_of_week] = days_of_week
             elif days_of_month:
-                attributes[DiscoveryAttributes.Network.days_of_month] = days_of_month
+                attributes[ScheduleBaseAttributes.days_of_month] = days_of_month
             elif days_of_year:
-                attributes[DiscoveryAttributes.Network.days_of_year] = days_of_year
+                attributes[ScheduleBaseAttributes.days_of_year] = days_of_year
 
         return self._config_create(
             name=name,
@@ -189,15 +192,15 @@ class NetworkDiscovery(FeatureBase):
             hour = [hour]
 
         attributes = {
-            DiscoveryAttributes.Network.reschedule: "1",
-            DiscoveryAttributes.Network.hour: hour
+            ScheduleBaseAttributes.reschedule: "1",
+            ScheduleBaseAttributes.hour: hour
         }
         if days_of_week:
-            attributes[DiscoveryAttributes.Network.days_of_week] = days_of_week
+            attributes[ScheduleBaseAttributes.days_of_week] = days_of_week
         elif days_of_month:
-            attributes[DiscoveryAttributes.Network.days_of_month] = days_of_month
+            attributes[ScheduleBaseAttributes.days_of_month] = days_of_month
         elif days_of_year:
-            attributes[DiscoveryAttributes.Network.days_of_year] = days_of_year
+            attributes[ScheduleBaseAttributes.days_of_year] = days_of_year
 
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
@@ -214,11 +217,11 @@ class NetworkDiscovery(FeatureBase):
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         for attribute_name in {
-            DiscoveryAttributes.Network.hour,
-            DiscoveryAttributes.Network.days_of_year,
-            DiscoveryAttributes.Network.days_of_month,
-            DiscoveryAttributes.Network.days_of_week,
-            DiscoveryAttributes.Network.reschedule
+            ScheduleBaseAttributes.hour,
+            ScheduleBaseAttributes.days_of_year,
+            ScheduleBaseAttributes.days_of_month,
+            ScheduleBaseAttributes.days_of_week,
+            ScheduleBaseAttributes.reschedule
         }:
             self._api.websdk.Config.ClearAttribute.post(
                 object_dn=job_dn,
@@ -249,7 +252,7 @@ class NetworkDiscovery(FeatureBase):
                 hours = ','.join(map(str, day))
                 blackout.append(f'{e}:{hours}')
         attributes = {
-            DiscoveryAttributes.Network.blackout: blackout
+            ScheduleBaseAttributes.blackout: blackout
         }
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
@@ -269,7 +272,7 @@ class NetworkDiscovery(FeatureBase):
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
             attribute_data=self._name_value_list({
-                DiscoveryAttributes.Network.start_now: ['1']
+                "Start Now": ['1']  # Secret config-bridge attribute name.
             })
         )
         response.assert_valid_response()
@@ -293,7 +296,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.Network.status,
+            attribute_name=PlacementJobAttributes.status,
             values=['Canceled']
         )
         response.assert_valid_response()
@@ -308,7 +311,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.Network.status,
+            attribute_name=PlacementJobAttributes.status,
             values=['Paused']
         )
         response.assert_valid_response()
@@ -323,7 +326,7 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
             object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.Network.status,
+            attribute_name=PlacementJobAttributes.status,
             values=['Pending']
         )
         response.assert_valid_response()
@@ -339,7 +342,7 @@ class NetworkDiscovery(FeatureBase):
             job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
             response = self._api.websdk.Config.WriteDn.post(
                 object_dn=job_dn,
-                attribute_name=DiscoveryAttributes.Network.import_results_now,
+                attribute_name="Import Results Now",  # Secret config-bridge attribute name.
                 values=['1']
             )
             response.assert_valid_response()
@@ -374,7 +377,7 @@ class NetworkDiscovery(FeatureBase):
 
         status = self._api.websdk.Config.Read.post(
             object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.Network.status
+            attribute_name=PlacementJobAttributes.status
         ).values[0]
         raise FeatureError.UnexpectedValue(
             f'Expected Network Discovery Job "{job_dn}" to finish within {timeout} seconds, but it is still '

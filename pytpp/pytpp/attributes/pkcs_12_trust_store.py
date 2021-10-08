@@ -1,0 +1,7 @@
+from pytpp.attributes._helper import PropertyMeta, Attribute
+from pytpp.attributes.certificate_trust_store_base import CertificateTrustStoreBaseAttributes
+
+
+class PKCS12TrustStoreAttributes(CertificateTrustStoreBaseAttributes, metaclass=PropertyMeta):
+	key_store = Attribute('Key Store', min_version='15.1')
+	key_store_credential = Attribute('Key Store Credential', min_version='15.1')

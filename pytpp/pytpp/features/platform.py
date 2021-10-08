@@ -1,6 +1,5 @@
 from typing import List, Dict
-from pytpp.properties.config import PlatformsAttributes, PlatformsClassNames
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
 
 
 class _Platforms(FeatureBase):
@@ -97,7 +96,7 @@ class CertificateManager(_Platforms):
 @feature()
 class CertificatePreEnrollment(_Platforms):
     """
-    This feature provides high-level interaction with the TPP ficate Pre-Enrollment Manager module.
+    This feature provides high-level interaction with the TPP Certificate Pre-Enrollment Manager module.
     """
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Pre-Enrollment')

@@ -408,7 +408,7 @@ class ResultCodes:
         5  : 'KeyAlreadyExists',
         6  : 'NoPrivateKeyOnTpp',
         7  : 'UnsupportedKeyLength',
-        8  : 'OperationIsAlreadyRuninng',
+        8  : 'OperationIsAlreadyRunning',
         9  : 'NotAbleToLoadApprovers',
         10 : 'TicketNotFound',
         11 : 'MissingRejectComment',

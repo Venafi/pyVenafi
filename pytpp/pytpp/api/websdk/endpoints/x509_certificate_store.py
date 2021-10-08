@@ -15,11 +15,11 @@ class _X509CertificateStore:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/X509CertificateStore/Add')
 
-        def post(self, owner_dn: str, certificate_collection_strings: list = None, ceritificate_string: str = None,
+        def post(self, owner_dn: str, certificate_collection_strings: list = None, certificate_string: str = None,
                  protection_key: str = None, typed_name_values: list = None):
             body = {
                 'CertificateCollectionStrings': certificate_collection_strings,
-                'CertificateString': ceritificate_string,
+                'CertificateString': certificate_string,
                 'OwnerDN': owner_dn,
                 'ProtectionKey': protection_key,
                 'TypedNameValues': typed_name_values
