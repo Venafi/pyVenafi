@@ -710,7 +710,7 @@ class _SSH:
                 @property
                 @json_response_property()
                 def private_keys(self):
-                    return [SSH.KeyData(key) for key in self._from_json('PrivateKeys')]
+                    return [SSH.KeyData(key) for key in self._from_json('PrivateKeys')] if 'PrivateKeys' in self.json_response.json() else []
 
                 @property
                 @json_response_property()
@@ -720,7 +720,7 @@ class _SSH:
                 @property
                 @json_response_property()
                 def public_keys(self):
-                    return [SSH.KeyData(key) for key in self._from_json('PublicKeys')]
+                    return [SSH.KeyData(key) for key in self._from_json('PublicKeys')] if 'PublicKeys' in self.json_response.json() else []
 
                 @property
                 @json_response_property()
