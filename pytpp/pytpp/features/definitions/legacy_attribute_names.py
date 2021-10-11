@@ -6,8 +6,8 @@ from pytpp.properties.config import (
 )
 
 class AttributeNames(metaclass=DeprecationMeta):
-    __deprecation_reason__ = 'Using AttributeNames will be deprecated soon. Please use the ' \
-                             'attributes from "pytpp.attributes" instead.'
+    __deprecation_reason__ = 'Using AttributeNames will be deprecated soon. Please use ' \
+                             'pytpp.Attributes (from pytpp import Attributes) instead.'
     Application = ApplicationAttributes
     ApplicationGroup = ApplicationGroupAttributes
     Certificate = CertificateAttributes
