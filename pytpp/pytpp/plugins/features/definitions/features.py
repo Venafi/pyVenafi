@@ -1,9 +1,3 @@
-# noinspection PyUnresolvedReferences
-from pytpp.features.definitions.legacy_attribute_names import AttributeNames
-# noinspection PyUnresolvedReferences
-from pytpp.features.definitions.attribute_values import AttributeValues
-# noinspection PyUnresolvedReferences
-from pytpp.features.definitions.legacy_classes import Classes
 from pytpp.features.definitions.features import (
     Features as _OriginalFeatures, _Discovery as _OriginalDiscovery,
     _Identity as _OriginalIdentity
