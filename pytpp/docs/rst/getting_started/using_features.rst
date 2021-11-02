@@ -24,7 +24,7 @@ Here is an example of how to initialize the ``Features`` object.
         host='tppserver.mycompany.com',
         username='username12',
         password='passw0rd!@#$',
-        application_id='SomeOAuthApplication',
+        application_id='PyTPP',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
     features = Features(api)

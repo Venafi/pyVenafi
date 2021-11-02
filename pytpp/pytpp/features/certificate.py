@@ -425,7 +425,7 @@ class Certificate(FeatureBase):
         return result.validated_certificate_dns, result.warnings
 
     def wait_for_enrollment_to_complete(self, certificate: Union['Config.Object', str], current_thumbprint: str,
-                                        timeout: int = 60):
+                                        timeout: int = 60, poll_interval: int = 1):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
@@ -440,13 +440,14 @@ class Certificate(FeatureBase):
             certificate: Config object of the certificate.
             current_thumbprint: Thumbprint of the `current` certificate object.
             timeout: Timeout in seconds before raising an error.
+            poll_interval: Interval to poll TPP for the renewal status.
 
         Returns:
             Certificate details object.
         """
         cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:
-            while not to.is_expired():
+            while not to.is_expired(poll=poll_interval):
                 cert.assert_valid_response()
                 thumbprint = cert.certificate_details.thumbprint
                 if thumbprint and thumbprint != current_thumbprint and cert.processing_details.stage in {None, 800}:
@@ -461,7 +462,7 @@ class Certificate(FeatureBase):
         )
 
     def wait_for_stage(self, certificate: Union['Config.Object', str], stage: int, expect_workflow: bool = True,
-                       timeout: int = 60):
+                       timeout: int = 60, poll_interval: int = 1):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of
         ``timeout`` seconds. If the timeout is reached, an error is raised.
@@ -471,13 +472,14 @@ class Certificate(FeatureBase):
             stage: Stage at which to return
             expect_workflow: If ``True``, validates that a Ticket DN has been issued to the certificate.
             timeout: Timeout in seconds before throwing an error.
+            poll_interval: Interval to poll TPP for the renewal status.
 
         Returns:
             Certificate and processing details.
         """
         cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:
-            while not to.is_expired():
+            while not to.is_expired(poll=poll_interval):
                 if cert.processing_details.in_error is True:
                     break
                 if cert.processing_details.stage is not None:

@@ -32,6 +32,23 @@ Getting Started
 Initializing The API and Feature Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. note::
+    The OAuth scope in this example is only an example of what scope can be used and is not the required scope for pytpp to
+    function. You can create a customized API Application Integration in Aperture for PyTPP, which is documented
+    `here <https://docs.venafi.com/Docs/current/TopNav/Content/API-ApplicationIntegration/t-APIAppIntegrations-creatingNew-Aperture.php>`_.
+
+Here is an example API Application Integration that can be imported into Aperture:
+
+.. code-block:: json
+
+    {
+        "id": "PyTPP",
+        "name": "Python for TPP",
+        "vendor": "Venafi",
+        "description": "Python package for Trust Protection Platform (TPP). It provides an interface to the TPP WebSDK API and a feature layer abstraction that provides a higher-level interface to TPP.",
+        "scope": "certificate;ssh:discover,approve;security:manage"
+    }
+
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -41,7 +58,7 @@ Initializing The API and Feature Objects
         host='tppserver.mycompany.com',
         username='username12',
         password='passw0rd!@#$',
-        application_id='SomeOAuthApplication',
+        application_id='PyTPP',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
 
@@ -80,7 +97,7 @@ The response body returned by TPP is also translated to Python. For example:
         host='tpp.mycompany.com',
         username='username123',
         password='passw0rd!@#$',
-        application_id='SomeOAuthApplication',
+        application_id='PyTPP',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
     # Create a folder

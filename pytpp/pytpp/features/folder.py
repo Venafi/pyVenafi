@@ -178,8 +178,8 @@ class Folder(FeatureBase):
             all_child_dns = response.objects
             for child in all_child_dns:
                 self._secret_store_delete(object_dn=child.dn)
-
-        self._config_delete(object_dn=folder.dn, recursive=recursive)
+            self._secret_store_delete(object_dn=folder_dn)
+        self._config_delete(object_dn=folder_dn, recursive=recursive)
 
     def delete_engines(self, folder: Union['Config.Object', str]):
         """
