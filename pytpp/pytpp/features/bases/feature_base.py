@@ -199,15 +199,9 @@ class FeatureBase:
         return nvl
 
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):
-        owners = self._api.websdk.SecretStore.LookupByOwner.post(namespace=namespace, owner=object_dn)
-        result = owners.result
+        result = self._api.websdk.SecretStore.OwnerDelete.post(namespace=namespace, owner=object_dn).result
         if result.code != 0:
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
-
-        for vault_id in owners.vault_ids:
-            result = self._api.websdk.SecretStore.Delete.post(vault_id=vault_id).result
-            if result.code != 0:
-                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
     def _is_version_compatible(self, minimum: str = '', maximum: str = ''):
         if minimum and self._api._tpp_version <= Version(minimum):
