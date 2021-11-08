@@ -437,6 +437,7 @@ class _Platforms:
         self._certificate_revocation = None
         self._cloud_instance_monitor = None
         self._discovery_manager = None
+        self._engines = None
         self._monitor = None
         self._onboard_discovery_manager = None
         self._reporting = None
@@ -499,6 +500,13 @@ class _Platforms:
             from pytpp.attributes.discovery_manager import DiscoveryManagerAttributes
             self._discovery_manager = DiscoveryManagerAttributes
         return self._discovery_manager
+
+    @property
+    def engines(self):
+        if not self._engines:
+            from pytpp.attributes.venafi_platform import VenafiPlatformAttributes
+            self._engines = VenafiPlatformAttributes
+        return self._engines
 
     @property
     def monitor(self) :
