@@ -18,7 +18,7 @@ REMOTE_PACKAGES_DIR = '/spi/packages/data'
 
 class UploadFiles:
     def __init__(self):
-        self.host = '10.100.203.6'
+        self.host = '10.100.203.5'
         self.port = 22
         self.username = r'root'
         self.password = 'newPassw0rd!'
