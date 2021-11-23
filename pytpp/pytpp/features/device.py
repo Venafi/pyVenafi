@@ -58,8 +58,7 @@ class Device(_DeviceBase):
         Returns:
             ``Config.Object``
         """
-        attributes = attributes or {}
-        attributes.update({
+        dev_attrs = {
             DeviceAttributes.description: description,
             DeviceAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             DeviceAttributes.host: address,
@@ -72,12 +71,15 @@ class Device(_DeviceBase):
             DeviceAttributes.global_sudo: {True: "1", False: "0"}.get(use_sudo),
             DeviceAttributes.secondary_credential: self._get_dn(sudo_credential) if sudo_credential else None,
             DeviceAttributes.enforce_known_host: {True: "1", False: "0"}.get(enforce_host_key)
-        })
+        }
+        if attributes:
+            dev_attrs.update(attributes)
+
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),
             config_class=Classes.device,
-            attributes=attributes,
+            attributes=dev_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -151,8 +153,7 @@ class JumpServer(_DeviceBase):
         Returns:
             ``Config.Object``
         """
-        attributes = attributes or {}
-        attributes.update({
+        dev_attrs = {
             JumpServerAttributes.description                : description,
             JumpServerAttributes.contact                    : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             JumpServerAttributes.host                       : address,
@@ -166,12 +167,15 @@ class JumpServer(_DeviceBase):
             JumpServerAttributes.global_sudo                : {True: "1", False: "0"}.get(use_sudo),
             JumpServerAttributes.secondary_credential       : self._get_dn(sudo_credential) if sudo_credential else None,
             JumpServerAttributes.enforce_known_host         : {True: "1", False: "0"}.get(enforce_host_key)
-        })
+        }
+        if attributes:
+            dev_attrs.update(attributes)
+
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),
             config_class=Classes.jump_server,
-            attributes=attributes,
+            attributes=dev_attrs,
             get_if_already_exists=get_if_already_exists
         )
 

@@ -113,8 +113,7 @@ class AgentConnectivity(_ClientWorkBase):
         super().__init__(api=api)
 
     def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
-                 days_of_week: List[str] = None,
-                 days_of_month: List[str] = None, randomize_minutes: int = 0):
+                 days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0):
         """
         Schedules the Agent Connectivity work to run
 
@@ -175,7 +174,7 @@ class AgentConnectivity(_ClientWorkBase):
 
     def create(self, name: str, server_url: str = "", proxy_url: str = "", proxy_credentials: str = "",
                log_threshold: str = ClientWorkAttributeValues.AgentConnectivity.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates an Agent Connectivity client work
 
@@ -185,31 +184,33 @@ class AgentConnectivity(_ClientWorkBase):
             proxy_url: (optional) specify the proxy url
             proxy_credentials: (optional) specify the proxy credentials
             log_threshold: (optional) set the log threshold, defaults to INFO
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-        attributes = {
+        work_attributes = {
             ClientAgentConfigurationWorkAttributes.created_by   : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
             ClientAgentConfigurationWorkAttributes.interval     : 0,
             ClientAgentConfigurationWorkAttributes.log_threshold: log_threshold
         }
 
         if len(server_url) > 0:
-            attributes[ClientAgentConfigurationWorkAttributes.web_service_url] = server_url
+            work_attributes[ClientAgentConfigurationWorkAttributes.web_service_url] = server_url
         if len(proxy_url) > 0:
-            attributes[ClientAgentConfigurationWorkAttributes.proxy_host] = proxy_url
+            work_attributes[ClientAgentConfigurationWorkAttributes.proxy_host] = proxy_url
         if len(proxy_credentials) > 0:
-            attributes[ClientAgentConfigurationWorkAttributes.proxy_credential] = proxy_credentials
+            work_attributes[ClientAgentConfigurationWorkAttributes.proxy_credential] = proxy_credentials
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientAgentConfigurationWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -239,28 +240,30 @@ class AgentUpgrade(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, get_if_already_exists: bool = True, **kwargs):
+    def create(self, name: str, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates an Agent Upgrade client work
 
         Args:
             name: The name of the client work.
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-        attributes = {
+        work_attributes = {
             ClientAgentAutomaticUpgradeWorkAttributes.created_by: ClientWorkAttributeValues.AgentUpgrade.CreatedBy.websdk,
         }
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientAgentAutomaticUpgradeWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -271,7 +274,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, placement_folder: 'Union[Config.Object, str]', share_mode: int = 2,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Certificate Device Placement client work
 
@@ -283,13 +286,14 @@ class CertificateDevicePlacement(_ClientWorkBase):
                 1: search the devices folder
                 2: search the devices folder and any sub-folders
                 3: create a duplicate device
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
         placement_folder_dn = self._get_dn(placement_folder)
-        attributes = {
+        work_attributes = {
             ServerAgentCertDevicePlacementWorkAttributes.created_by            :
                 ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
             ServerAgentCertDevicePlacementWorkAttributes.device_object_location:
@@ -297,28 +301,29 @@ class CertificateDevicePlacement(_ClientWorkBase):
         }
 
         if share_mode == 0:
-            attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
+            work_attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.whole_tree
         elif share_mode == 1:
-            attributes[
+            work_attributes[
                 ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder
         elif share_mode == 2:
-            attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
+            work_attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders
         elif share_mode == 3:
-            attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
+            work_attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.duplicate_device
         else:
             raise FeatureError.UnexpectedValue(f"Unexpected value for 'share_mode': {share_mode}")
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ServerAgentCertDevicePlacementWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -413,7 +418,7 @@ class CertificateDiscovery(_ClientWorkBase):
                exclude_recursive_paths: List[str] = None, exclude_non_recursive_paths: List[str] = None,
                exclude_file_patterns: List[str] = None, scan_mounted_file_systems: bool = False,
                log_threshold: str = ClientWorkAttributeValues.CertificateDiscovery.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Certificate Discovery client work
 
@@ -434,13 +439,14 @@ class CertificateDiscovery(_ClientWorkBase):
             exclude_file_patterns: (optional) A list of file patterns to exclude from discovery
             scan_mounted_file_systems: (optional) Scan file systems mounted via NFS/CIFS/NTFS junction points (defaults to False)
             log_threshold: (optional) set the logging level (defaults to INFO)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
         certificate_location_dn = self._get_dn(certificate_location)
-        attributes = {
+        work_attributes = {
             ClientCertificateDiscoveryWorkAttributes.created_by                 : ClientWorkAttributeValues.CertificateDiscovery.CreatedBy.websdk,
             ClientCertificateDiscoveryWorkAttributes.certificate_location_dn    : certificate_location_dn,
             ClientCertificateDiscoveryWorkAttributes.interval                   : 0,
@@ -463,7 +469,7 @@ class CertificateDiscovery(_ClientWorkBase):
             paths.append(f'6,{path}')
 
         if len(paths) > 0:
-            attributes[ClientCertificateDiscoveryWorkAttributes.certificate_scanner_path] = paths
+            work_attributes[ClientCertificateDiscoveryWorkAttributes.certificate_scanner_path] = paths
 
         extensions = []
 
@@ -481,15 +487,16 @@ class CertificateDiscovery(_ClientWorkBase):
             extensions.append(f'2,{ext}')
 
         if len(extensions) > 0:
-            attributes[ClientCertificateDiscoveryWorkAttributes.certificate_scanner_map] = extensions
+            work_attributes[ClientCertificateDiscoveryWorkAttributes.certificate_scanner_map] = extensions
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientCertificateDiscoveryWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
         )
@@ -528,7 +535,7 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
                authentication_credentials: 'Union[Config.Object, str]' = None, authenticate_only_by_password: bool = False,
                revoke_previous_version: bool = False,
                identity_verification: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.IdentityVerification.valid,
-               trusted_certs_and_cas: List[str] = None, get_if_already_exists: bool = False, **kwargs):
+               trusted_certs_and_cas: List[str] = None, get_if_already_exists: bool = False, attributes: dict = None):
         """
         Creates a Certificate Enrollment Via EST Protocol client work
 
@@ -549,6 +556,7 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
             revoke_previous_version: (optional) Revoke previous versions of the certificate (defaults to False)
             identity_verification: (optional) Proof of Possession
             trusted_certs_and_cas: (optional) A List of Certificate Authorities and Certificates to trust
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
@@ -556,7 +564,7 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
         """
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
-        attributes = {
+        work_attributes = {
             NetworkDeviceCertificateWorkAttributes.created_by                                 : ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.CreatedBy.websdk,
             NetworkDeviceCertificateWorkAttributes.certificate_container                      : certificate_container_dn,
             NetworkDeviceCertificateWorkAttributes.naming_pattern                             : naming_pattern,
@@ -570,24 +578,25 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
             NetworkDeviceCertificateWorkAttributes.pop_mode                                   : identity_verification
         }
 
-        if certificate_origin: attributes[NetworkDeviceCertificateWorkAttributes.origin] = certificate_origin
-        if certificate_description: attributes[NetworkDeviceCertificateWorkAttributes.description] = certificate_description
+        if certificate_origin: work_attributes[NetworkDeviceCertificateWorkAttributes.origin] = certificate_origin
+        if certificate_description: work_attributes[NetworkDeviceCertificateWorkAttributes.description] = certificate_description
         if authentication_credentials: 
-            attributes[NetworkDeviceCertificateWorkAttributes.authentication_credentials] = self._get_dn(authentication_credentials)
+            work_attributes[NetworkDeviceCertificateWorkAttributes.authentication_credentials] = self._get_dn(authentication_credentials)
 
         if trusted_certs_and_cas:
-            attributes[NetworkDeviceCertificateWorkAttributes.explicit_trust_anchors] = trusted_certs_and_cas
-            attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 0
+            work_attributes[NetworkDeviceCertificateWorkAttributes.explicit_trust_anchors] = trusted_certs_and_cas
+            work_attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 0
         else:
-            attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 1
+            work_attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 1
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=NetworkDeviceCertificateWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
         )
@@ -684,32 +693,33 @@ class CertificateInstallation(_ClientWorkBase):
         response.assert_valid_response()
 
     def create(self, name: str, log_threshold: str = ClientWorkAttributeValues.CertificateInstallation.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Certificate Installation client work
 
         Args:
             name: The name of the client work.
             log_threshold: (optional) set the logging level (defaults to INFO)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
-        attributes = {
+        work_attributes = {
             CertificateProvisioningWorkAttributes.created_by   : ClientWorkAttributeValues.CertificateInstallation.CreatedBy.websdk,
             CertificateProvisioningWorkAttributes.interval     : 0,
             CertificateProvisioningWorkAttributes.log_threshold: log_threshold
         }
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=CertificateProvisioningWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -745,7 +755,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
                organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
                country: str = None, subject_alternative_names: bool = False, automatic_renewal: bool = True,
                renewal_days_before: int = 30, key_bit_strength: int = 2048, allow_certificate_sharing: bool = False,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Device Certificate Creation client work
 
@@ -767,6 +777,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
             renewal_days_before: days before expiration for automatic renewal (defaults to 30)
             key_bit_strength: key size of the certificates (defaults to 2048)
             allow_certificate_sharing: allow sharing with mobile devices (default sto False)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
@@ -775,7 +786,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
         
-        attributes = {
+        work_attributes = {
             ClientUserCertificateWorkAttributes.created_by               : ClientWorkAttributeValues.DeviceCertificateCreation.CreatedBy.websdk,
             ClientUserCertificateWorkAttributes.certificate_container    : certificate_container_dn,
             ClientUserCertificateWorkAttributes.certificate_authority    : ca_template_dn,
@@ -788,22 +799,23 @@ class DeviceCertificateCreation(_ClientWorkBase):
             ClientUserCertificateWorkAttributes.transfer_allowed         : allow_certificate_sharing
         }
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
-        if description: attributes[ClientCertificateWorkAttributes.description] = description
-        if organization: attributes[ClientCertificateWorkAttributes.organization] = organization
-        if city_locality: attributes[ClientCertificateWorkAttributes.city] = city_locality
-        if state_province: attributes[ClientCertificateWorkAttributes.state] = state_province
-        if organizational_unit: attributes[ClientCertificateWorkAttributes.organizational_unit] = organizational_unit
-        if country: attributes[ClientCertificateWorkAttributes.country] = country
-        if subject_alternative_names: attributes[ClientCertificateWorkAttributes.x509_subjectaltname_dns] = common_name
-        if automatic_renewal: attributes[ClientCertificateWorkAttributes.renewal_window] = renewal_days_before
+        if description: work_attributes[ClientCertificateWorkAttributes.description] = description
+        if organization: work_attributes[ClientCertificateWorkAttributes.organization] = organization
+        if city_locality: work_attributes[ClientCertificateWorkAttributes.city] = city_locality
+        if state_province: work_attributes[ClientCertificateWorkAttributes.state] = state_province
+        if organizational_unit: work_attributes[ClientCertificateWorkAttributes.organizational_unit] = organizational_unit
+        if country: work_attributes[ClientCertificateWorkAttributes.country] = country
+        if subject_alternative_names: work_attributes[ClientCertificateWorkAttributes.x509_subjectaltname_dns] = common_name
+        if automatic_renewal: work_attributes[ClientCertificateWorkAttributes.renewal_window] = renewal_days_before
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientCertificateWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
         )
@@ -821,7 +833,7 @@ class DynamicProvisioning(_ClientWorkBase):
                capi_keystore: bool = False, capi_friendly_name: str = "", capi_trustee: str = "",
                key_bit_strength: int = 2048, retry_interval: int = 15,
                log_threshold: str = ClientWorkAttributeValues.DynamicProvisioning.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Dynamic Provisioning client work
 
@@ -845,6 +857,7 @@ class DynamicProvisioning(_ClientWorkBase):
             key_bit_strength: (optional) key size for the certificate (defaults to 2048)
             retry_interval: (optional) An interval in minutes (15, 30, 45, 60) for the agent to retry
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
@@ -853,7 +866,7 @@ class DynamicProvisioning(_ClientWorkBase):
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
         
-        attributes = {
+        work_attributes = {
             ServerCertificateWorkAttributes.created_by             : ClientWorkAttributeValues.DynamicProvisioning.CreatedBy.websdk,
             ServerCertificateWorkAttributes.certificate_container  : certificate_container_dn,
             ServerCertificateWorkAttributes.certificate_authority  : ca_template_dn,
@@ -866,24 +879,25 @@ class DynamicProvisioning(_ClientWorkBase):
             ServerCertificateWorkAttributes.log_threshold          : log_threshold
         }
 
-        if description: attributes[ServerCertificateWorkAttributes.description] = description
-        if organization: attributes[ServerCertificateWorkAttributes.organization] = organization
-        if city_locality: attributes[ServerCertificateWorkAttributes.city] = city_locality
-        if state_province: attributes[ServerCertificateWorkAttributes.state] = state_province
-        if organizational_unit: attributes[ServerCertificateWorkAttributes.organizational_unit] = organizational_unit
-        if country: attributes[ServerCertificateWorkAttributes.country] = country
+        if description: work_attributes[ServerCertificateWorkAttributes.description] = description
+        if organization: work_attributes[ServerCertificateWorkAttributes.organization] = organization
+        if city_locality: work_attributes[ServerCertificateWorkAttributes.city] = city_locality
+        if state_province: work_attributes[ServerCertificateWorkAttributes.state] = state_province
+        if organizational_unit: work_attributes[ServerCertificateWorkAttributes.organizational_unit] = organizational_unit
+        if country: work_attributes[ServerCertificateWorkAttributes.country] = country
         if capi_keystore:
-            attributes[ServerCertificateWorkAttributes.application_type] = ClientWorkAttributeValues.DynamicProvisioning.ApplicationType.capi
-            attributes[ServerCertificateWorkAttributes.friendly_name] = capi_friendly_name
-            attributes[ServerCertificateWorkAttributes.private_key_trustee] = capi_trustee
+            work_attributes[ServerCertificateWorkAttributes.application_type] = ClientWorkAttributeValues.DynamicProvisioning.ApplicationType.capi
+            work_attributes[ServerCertificateWorkAttributes.friendly_name] = capi_friendly_name
+            work_attributes[ServerCertificateWorkAttributes.private_key_trustee] = capi_trustee
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ServerCertificateWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
         )
@@ -896,7 +910,7 @@ class SSHDevicePlacement(_ClientWorkBase):
 
     def create(self, name: str, devices_folder: 'Union[Config.Object, str]',
                share_mode: str = ClientWorkAttributeValues.SSHDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a SSH Device Placement client work
 
@@ -908,25 +922,27 @@ class SSHDevicePlacement(_ClientWorkBase):
                     "SpecifiedFolderOnly" : search the devices folder
                     "SpecifiedFolderAndSubFolders" : search the devices folder and all sub-folders
                     "None" : create a duplicate device
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
         devices_folder_dn = self._get_dn(devices_folder)
-        attributes = {
+        work_attributes = {
             ServerAgentSSHDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
             ServerAgentSSHDevicePlacementWorkAttributes.device_object_location: devices_folder_dn,
             ServerAgentSSHDevicePlacementWorkAttributes.device_share_mode     : share_mode
         }
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ServerAgentSSHDevicePlacementWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1021,7 +1037,7 @@ class SSHDiscovery(_ClientWorkBase):
                minimize_resources: bool = False,
                max_filesize: int = ClientWorkAttributeValues.SSHDiscovery.MaxFilesize.less_than_1MB,
                log_threshold: str = ClientWorkAttributeValues.SSHDiscovery.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a SSH Discovery client work
 
@@ -1036,13 +1052,13 @@ class SSHDiscovery(_ClientWorkBase):
             minimize_resources: (optional) Minimizes resource usage during scan (defaults to False)
             max_filesize: (optional) Ignore files larger than this size (defaults to 1MB)
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
-        attributes = {
+        work_attributes = {
             ClientAgentSSHDiscoveryWorkAttributes.created_by                   : ClientWorkAttributeValues.SSHDiscovery.CreatedBy.websdk,
             ClientAgentSSHDiscoveryWorkAttributes.interval                     : 0,
             ClientAgentSSHDiscoveryWorkAttributes.server_path_defaults_disabled: int(not scan_default_paths),
@@ -1067,16 +1083,17 @@ class SSHDiscovery(_ClientWorkBase):
             scanner_paths.append(f'4,{path}')
             user_paths.append(f'4,{path}')
 
-        if len(scanner_paths) > 0: attributes[ClientAgentSSHDiscoveryWorkAttributes.ssh_scanner_service_path]: scanner_paths
-        if len(user_paths) > 0: attributes[ClientAgentSSHDiscoveryWorkAttributes.ssh_scanner_user_path]: user_paths
+        if len(scanner_paths) > 0: work_attributes[ClientAgentSSHDiscoveryWorkAttributes.ssh_scanner_service_path]: scanner_paths
+        if len(user_paths) > 0: work_attributes[ClientAgentSSHDiscoveryWorkAttributes.ssh_scanner_user_path]: user_paths
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientAgentSSHDiscoveryWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
         )
@@ -1180,7 +1197,7 @@ class SSHKeyUsage(_ClientWorkBase):
 
     def create(self, name: str, limit_cache_size: int = 50000,
                log_threshold: str = ClientWorkAttributeValues.SSHKeyUsage.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a SSH Key Usage Creation client work
 
@@ -1188,26 +1205,27 @@ class SSHKeyUsage(_ClientWorkBase):
             name: The name of the client work.
             limit_cache_size: maximum items in the cache
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
-        attributes = {
+        work_attributes = {
             ClientAgentSSHKeyUsageWorkAttributes.created_by   : ClientWorkAttributeValues.SSHKeyUsage.CreatedBy.websdk,
             ClientAgentSSHKeyUsageWorkAttributes.interval     : 0,
             ClientAgentSSHKeyUsageWorkAttributes.log_threshold: log_threshold,
             ClientAgentSSHKeyUsageWorkAttributes.max_row_count: limit_cache_size
         }
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientAgentSSHKeyUsageWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1238,9 +1256,8 @@ class SSHRemediation(_ClientWorkBase):
         super().__init__(api=api)
 
     def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
-                 on_receipt: bool = False,
-                 days_of_week: List[str] = None,
-                 days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
+                 on_receipt: bool = False, days_of_week: List[str] = None, days_of_month: List[str] = None,
+                 every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         Schedules the SSH Remediation work to run
 
@@ -1327,32 +1344,33 @@ class SSHRemediation(_ClientWorkBase):
         response.assert_valid_response()
 
     def create(self, name: str, log_threshold: str = ClientWorkAttributeValues.SSHRemediation.LogThreshold.info,
-               get_if_already_exists: bool = True, **kwargs):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a SSH Remediation client work
 
         Args:
             name: The name of the client work.
             log_threshold: (optional) Set the logging level (defaults to INFO)
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             A config object representing the client work
         """
-
-        attributes = {
+        work_attributes = {
             ClientAgentSSHDiscoveryWorkAttributes.created_by   : ClientWorkAttributeValues.SSHRemediation.CreatedBy.websdk,
             ClientAgentSSHDiscoveryWorkAttributes.interval     : 0,
             ClientAgentSSHDiscoveryWorkAttributes.log_threshold: log_threshold
         }
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientAgentSSHProvisioningWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1402,7 +1420,7 @@ class UserCertificateCreation(_ClientWorkBase):
                lifecycle_groups: List[str] = None, lifecycle_revoke_cert: bool = False,
                lifecycle_disable_cert: bool = False,
                portal_friendly_name: str = None, portal_icon: int = 0, portal_download_limit: int = 3,
-               portal_instructions: str = None, get_if_already_exists: bool = True, **kwargs):
+               portal_instructions: str = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a User Certificate Creation client work
 
@@ -1446,6 +1464,7 @@ class UserCertificateCreation(_ClientWorkBase):
                                     3 - VPN
             portal_download_limit: (optional) limit the number of portal downloads
             portal_instructions: (optional) text of portal download instructions
+            attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
@@ -1453,7 +1472,7 @@ class UserCertificateCreation(_ClientWorkBase):
         """
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
-        attributes = {
+        work_attributes = {
             ClientUserCertificateWorkAttributes.created_by                       : ClientWorkAttributeValues.UserCertificateCreation.CreatedBy.websdk,
             ClientUserCertificateWorkAttributes.certificate_container            : certificate_container_dn,
             ClientUserCertificateWorkAttributes.certificate_authority            : ca_template_dn,
@@ -1475,45 +1494,46 @@ class UserCertificateCreation(_ClientWorkBase):
             ClientUserCertificateWorkAttributes.download_limit                   : portal_download_limit,
         }
 
-        if description: attributes[ClientUserCertificateWorkAttributes.description] = description
+        if description: work_attributes[ClientUserCertificateWorkAttributes.description] = description
         if user_email:
-            attributes[ClientUserCertificateWorkAttributes.x509_e] = \
+            work_attributes[ClientUserCertificateWorkAttributes.x509_e] = \
                 ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.user_email
         if subject_alt_names_email:
-            attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_rfc822] = \
+            work_attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_rfc822] = \
                 ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.subject_alt_names_email
         if subject_alt_names_upn:
-            attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_othername_upn] = \
+            work_attributes[ClientUserCertificateWorkAttributes.x509_subjectaltname_othername_upn] = \
                 ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.subject_alt_names_upn
-        if automatic_renewal: attributes[ClientUserCertificateWorkAttributes.renewal_window] = renewal_days_before
+        if automatic_renewal: work_attributes[ClientUserCertificateWorkAttributes.renewal_window] = renewal_days_before
 
         if configure_outlook:
-            attributes[ClientUserCertificateWorkAttributes.outlook_profile_generation] = int(configure_outlook)
-            attributes[ClientUserCertificateWorkAttributes.outlook_profile_name] = outlook_security_name
+            work_attributes[ClientUserCertificateWorkAttributes.outlook_profile_generation] = int(configure_outlook)
+            work_attributes[ClientUserCertificateWorkAttributes.outlook_profile_name] = outlook_security_name
             option_value = 0
             if outlook_encrypt_messages: option_value += 1
             if outlook_sign_outgoing: option_value += 2
             if not outlook_send_cleartext_signed: option_value += 32
             if outlook_request_receipts: option_value += 512
-            attributes[ClientUserCertificateWorkAttributes.outlook_profile_options] = option_value
+            work_attributes[ClientUserCertificateWorkAttributes.outlook_profile_options] = option_value
 
         if lifecycle_groups:
-            attributes[ClientUserCertificateWorkAttributes.required_member_identity] = lifecycle_groups
-            attributes[ClientUserCertificateWorkAttributes.membership_loss_disable] = lifecycle_disable_cert
-            attributes[ClientUserCertificateWorkAttributes.membership_loss_revoke] = lifecycle_revoke_cert
+            work_attributes[ClientUserCertificateWorkAttributes.required_member_identity] = lifecycle_groups
+            work_attributes[ClientUserCertificateWorkAttributes.membership_loss_disable] = lifecycle_disable_cert
+            work_attributes[ClientUserCertificateWorkAttributes.membership_loss_revoke] = lifecycle_revoke_cert
 
         if portal_friendly_name:
-            attributes[ClientUserCertificateWorkAttributes.portal_friendly_name] = portal_friendly_name
+            work_attributes[ClientUserCertificateWorkAttributes.portal_friendly_name] = portal_friendly_name
         if portal_instructions:
-            attributes[ClientUserCertificateWorkAttributes.download_instructions] = portal_instructions
+            work_attributes[ClientUserCertificateWorkAttributes.download_instructions] = portal_instructions
 
-        attributes.update(kwargs)
+        if attributes:
+            work_attributes.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._work_base_dn,
             config_class=ClientUserCertificateWorkAttributes.__config_class__,
-            attributes=attributes,
+            attributes=work_attributes,
             keep_list_values=True,
             get_if_already_exists=get_if_already_exists
         )

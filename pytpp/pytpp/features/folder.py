@@ -153,11 +153,13 @@ class Folder(FeatureBase):
         Returns:
             Config object representing the folder.
         """
-        attributes = attributes or {}
-        attributes.update({
+        folder_attrs = {
             PolicyAttributes.description: description,
             PolicyAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
-        })
+        }
+        if attributes:
+            folder_attrs.update(attributes)
+
         folder = self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),

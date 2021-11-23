@@ -96,8 +96,7 @@ class Certificate(FeatureBase):
         Returns:
             Config object representing the certificate object.
         """
-        attributes = attributes or {}
-        attributes.update({
+        cert_attrs = {
             X509CertificateAttributes.description: description,
             X509CertificateAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             X509CertificateAttributes.approver: [self._get_prefixed_universal(a) for a in approvers] if approvers else None,
@@ -123,12 +122,14 @@ class Certificate(FeatureBase):
             X509CertificateAttributes.certificate_authority: self._get_dn(ca_template) if ca_template else None,
             X509CertificateAttributes.disable_automatic_renewal: {True: "1", False: "0"}.get(disable_automatic_renewal),
             X509CertificateAttributes.renewal_window: renewal_window
-        })
+        }
+        if attributes:
+            cert_attrs.update(attributes)
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),
             config_class=Classes.x509_certificate,
-            attributes=attributes,
+            attributes=cert_attrs,
             get_if_already_exists=get_if_already_exists
         )
 

@@ -72,8 +72,7 @@ class MSCA(_CertificateAuthorityBase):
         Returns:
             ``Config.Object``
         """
-        attributes = attributes or {}
-        attributes.update({
+        ca_attrs = {
             MicrosoftCAAttributes.driver_name: 'camicrosoft',
             MicrosoftCAAttributes.host: hostname,
             MicrosoftCAAttributes.given_name: service_name,
@@ -86,13 +85,15 @@ class MSCA(_CertificateAuthorityBase):
             MicrosoftCAAttributes.include_cn_as_san: {True: "1", False: "0"}.get(automatically_include_cn_as_dns_san),
             MicrosoftCAAttributes.specific_end_date_enabled: {True: "1", False: "0"}.get(allow_users_to_specify_end_date),
             MicrosoftCAAttributes.enrollment_agent_certificate: self._get_dn(enrollment_agent) if enrollment_agent else None
-        })
+        }
+        if attributes:
+            ca_attrs.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),
             config_class=MicrosoftCAAttributes.__config_class__,
-            attributes=attributes,
+            attributes=ca_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -127,34 +128,35 @@ class SelfSignedCA(_CertificateAuthorityBase):
         Returns:
             ``Config.Object``
         """
-        attributes = attributes or {}
-        attributes.update({
+        ca_attrs = {
             SelfSignedCAAttributes.driver_name: 'caselfsigned',
             SelfSignedCAAttributes.description: description,
             SelfSignedCAAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             SelfSignedCAAttributes.key_usage: ','.join(key_usage),
             SelfSignedCAAttributes.algorithm: signature_algorithm,
-        })
+        }
         if server_authentication or client_authentication or code_signing:
             enhanced_key_usage = {
                 '1.3.6.1.5.5.7.3.1': server_authentication,
                 '1.3.6.1.5.5.7.3.2': client_authentication,
                 '1.3.6.1.5.5.7.3.3': code_signing
             }
-            attributes.update({
+            ca_attrs.update({
                 SelfSignedCAAttributes.enhanced_key_usage: [
                     eku for eku, enabled in enhanced_key_usage.items() if enabled is True
                 ],
             })
         if valid_years or valid_days:
             validity_period= (365 * (valid_years or 0)) + (valid_days or 0)
-            attributes.update({
+            ca_attrs.update({
                 SelfSignedCAAttributes.validity_period: validity_period
             })
+        if attributes:
+            ca_attrs.update(attributes)
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),
             config_class=SelfSignedCAAttributes.__config_class__,
-            attributes=attributes,
+            attributes=ca_attrs,
             get_if_already_exists=get_if_already_exists
         )

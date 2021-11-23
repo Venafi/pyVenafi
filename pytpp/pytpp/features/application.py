@@ -332,8 +332,7 @@ class Adaptable(_ApplicationBase):
                application_credential: 'Union[Config.Object, str]' = None,
                secondary_credential: 'Union[Config.Object, str]' = None,
                port: 'int' = None, private_key_credential: 'str' = None, log_debug: 'bool' = None,
-               attributes: dict = None,
-               get_if_already_exists: bool = True):
+               attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Adaptable application object.
 
@@ -393,10 +392,8 @@ class Adaptable(_ApplicationBase):
             locked=locked
         ).assert_valid_response()
         # endregion Create The Policy Attributes
-
-        attributes = attributes or {}
-
-        attributes.update({
+        
+        app_attrs = {
             ApplicationBaseAttributes.driver_name      : 'appadaptable',
             AdaptableAppAttributes.credential          : self._get_dn(
                 application_credential) if application_credential else None,
@@ -406,10 +403,13 @@ class Adaptable(_ApplicationBase):
             AdaptableAppAttributes.port                : port,
             AdaptableAppAttributes.secondary_credential: self._get_dn(
                 secondary_credential) if secondary_credential else None,
-        })
+        }
+        if attributes:
+            app_attrs.update(attributes)
+
         return self._create(
             name=name, device=device, contacts=contacts, approvers=approvers, description=description,
-            attributes=attributes, get_if_already_exists=get_if_already_exists
+            attributes=app_attrs, get_if_already_exists=get_if_already_exists
         )
 
 
@@ -454,8 +454,7 @@ class AmazonAWS(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appamazon',
             AmazonAppAttributes.aws_credential_dn         : self._get_dn(aws_credential),
             AmazonAppAttributes.issued_by_aws             : {True: "1", False: "0"}.get(issued_by_aws),
@@ -469,7 +468,9 @@ class AmazonAWS(_ApplicationBase):
             AmazonAppAttributes.create_binding            : {True: "1", False: "0"}.get(create_listener),
             AmazonAppAttributes.target_group              : target_group,
             AmazonAppAttributes.cloudfront_distribution_id: cloudfront_distribution_id
-        })
+        }
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -477,7 +478,7 @@ class AmazonAWS(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -530,8 +531,7 @@ class Apache(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appapache',
             ApacheAttributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
@@ -549,9 +549,9 @@ class Apache(_ApplicationBase):
             ApacheAttributes.certificate_file               : certificate_file,
             ApacheAttributes.certificate_chain_file         : certificate_chain_file,
             ApacheAttributes.overwrite_existing_chain       : {True: "1", False: "0"}.get(overwrite_existing_chain),
-        })
+        }
         if owner or group:
-            attributes.update({
+            app_attrs.update({
                 ApacheAttributes.file_permissions_enabled: "1",
                 ApacheAttributes.file_owner_user         : owner,
                 ApacheAttributes.file_permissions_user   : owner_permissions,
@@ -559,13 +559,16 @@ class Apache(_ApplicationBase):
                 ApacheAttributes.file_permissions_group  : group_permissions,
             })
 
+        if attributes:
+            app_attrs.update(attributes)
+
         return self._create(
             name=name,
             device=device,
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -607,17 +610,16 @@ class AzureKeyVault(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appazurekeyvault',
             AzureKeyVaultAttributes.client_id             : application_id,
             AzureKeyVaultAttributes.certificate_credential: self._get_dn(certificate_credential),
             AzureKeyVaultAttributes.vault_name            : azure_key_vault_name,
             AzureKeyVaultAttributes.certificate_name      : certificate_name,
             AzureKeyVaultAttributes.non_exportable        : {True: "0", False: "1"}.get(private_key_exportable)
-        })
+        }
         if web_application_name:
-            attributes.update({
+            app_attrs.update({
                 AzureKeyVaultAttributes.update_web_app         : "0",
                 AzureKeyVaultAttributes.web_app_name           : web_application_name,
                 AzureKeyVaultAttributes.create_binding         : {True: "0", False: "1"}.get(create_new_binding),
@@ -626,9 +628,12 @@ class AzureKeyVault(_ApplicationBase):
                 AzureKeyVaultAttributes.binding_hostnames      : binding_hostnames
             })
         else:
-            attributes.update({
+            app_attrs.update({
                 AzureKeyVaultAttributes.update_web_app: "1"
             })
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -636,7 +641,7 @@ class AzureKeyVault(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -665,10 +670,11 @@ class Basic(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appbasic'
-        })
+        }
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -676,7 +682,7 @@ class Basic(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -753,18 +759,18 @@ class BlueCoatSSLVA(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appBlueCoat',
-            BlueCoatSSLVAAttributes.credential        : self._get_dn(
-                application_credential) if application_credential else None,
+            BlueCoatSSLVAAttributes.credential        : self._get_dn(application_credential) if application_credential else None,
             BlueCoatSSLVAAttributes.port              : port,
             BlueCoatSSLVAAttributes.device_certificate: {True: "1", False: "0"}.get(device_certificate),
             BlueCoatSSLVAAttributes.replace_store     : {True: "1", False: "0"}.get(replace_existing),
             BlueCoatSSLVAAttributes.certificate_only  : {True: "1", False: "0"}.get(install_chain),
             BlueCoatSSLVAAttributes.create_lists      : {True: "1", False: "0"}.get(create_lists),
             BlueCoatSSLVAAttributes.certificate_label : known_certificates_with_keys_lists
-        })
+        }
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -772,7 +778,7 @@ class BlueCoatSSLVA(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -819,20 +825,18 @@ class CAPI(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appcapi',
-            CAPIAttributes.credential            : self._get_dn(
-                application_credential) if application_credential else None,
+            CAPIAttributes.credential            : self._get_dn(application_credential) if application_credential else None,
             CAPIAttributes.port                  : winrm_port,
             CAPIAttributes.private_key_location  : private_key_location,
             CAPIAttributes.private_key_label     : key_label,
             CAPIAttributes.friendly_name         : friendly_name,
             CAPIAttributes.non_exportable        : {True: "0", False: "1"}.get(exportable),
             CAPIAttributes.private_key_trustee   : private_key_trustee,
-        })
+        }
         if web_site_name:
-            attributes.update({
+            app_attrs.update({
                 CAPIAttributes.update_iis        : "1",
                 CAPIAttributes.web_site_name     : web_site_name,
                 CAPIAttributes.binding_ip_address: binding_ip_address,
@@ -841,17 +845,20 @@ class CAPI(_ApplicationBase):
                 CAPIAttributes.create_binding    : {True: "1", False: "0"}.get(create_binding),
             })
         else:
-            attributes.update({
+            app_attrs.update({
                 CAPIAttributes.update_iis: "0"
             })
 
+        if attributes:
+            app_attrs.update(attributes)
+            
         return self._create(
             name=name,
             device=device,
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -896,22 +903,22 @@ class CitrixNetScaler(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appnetscaler',
-            NetScalerAttributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+            NetScalerAttributes.credential                     : self._get_dn(application_credential) if application_credential else None,
             NetScalerAttributes.port                           : port,
             NetScalerAttributes.chain_cert                     : {True: "1", False: "0"}.get(install_certificate_chain),
             NetScalerAttributes.fips_key                       : {True: "1", False: "0"}.get(use_fips),
-            NetScalerAttributes.private_key_password_credential: self._get_dn(
-                private_key_credential) if private_key_credential else None,
+            NetScalerAttributes.private_key_password_credential: self._get_dn(private_key_credential) if private_key_credential else None,
             NetScalerAttributes.import_only                    : {True: "1", False: "0"}.get(import_only),
             NetScalerAttributes.install_path                   : subfolder_relative_path,
             NetScalerAttributes.ssl_object_type                : certificate_binding,
             NetScalerAttributes.virtual_server_name            : virtual_server_name,
             NetScalerAttributes.sni_certificate                : {True: "1", False: "0"}.get(sni_certificate),
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -919,7 +926,7 @@ class CitrixNetScaler(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -956,17 +963,18 @@ class ConnectDirect(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name    : 'appConnectDirect',
-            ConnectDirectAttributes.credential       : self._get_dn(
-                application_credential) if application_credential else None,
+            ConnectDirectAttributes.credential       : self._get_dn(application_credential) if application_credential else None,
             ConnectDirectAttributes.protocol         : api_protocol,
             ConnectDirectAttributes.port             : port,
             ConnectDirectAttributes.node_name        : node_name,
             ConnectDirectAttributes.certificate_only : {True: "1", False: "0"}.get(install_chain),
             ConnectDirectAttributes.certificate_label: key_certificate_alias
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -974,7 +982,7 @@ class ConnectDirect(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1002,19 +1010,21 @@ class F5AuthenticationBundle(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             F5AuthenticationBundleAttributes.advanced_settings_bundle_name: bundle_file_name,
             F5AuthenticationBundleAttributes.description                  : description,
             F5AuthenticationBundleAttributes.certificates                 : [self._get_dn(c) for c in
                                                                              certifictes_to_use] if certifictes_to_use else None,
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(device),
             config_class=Classes.f5_authentication_bundle,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1092,30 +1102,23 @@ class F5LTMAdvanced(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name                    : 'appf5ltmadvanced',
-            F5LTMAdvancedAttributes.credential                       : self._get_dn(
-                application_credential) if application_credential else None,
+            F5LTMAdvancedAttributes.credential                       : self._get_dn(application_credential) if application_credential else None,
             F5LTMAdvancedAttributes.port                             : https_port,
             F5LTMAdvancedAttributes.ssh_port                         : ssh_port,
             F5LTMAdvancedAttributes.device_certificate               : {True: "1", False: "0"}.get(device_certificate),
             F5LTMAdvancedAttributes.use_basic_provisioning           : provisioning_mode,
             F5LTMAdvancedAttributes.certificate_name                 : certificate_and_key_file,
-            F5LTMAdvancedAttributes.private_key_password_credential  : self._get_dn(
-                private_key_credential) if private_key_credential else None,
-            F5LTMAdvancedAttributes.force_profile_update             : {True: "1", False: "0"}.get(
-                force_profile_update),
+            F5LTMAdvancedAttributes.private_key_password_credential  : self._get_dn(private_key_credential) if private_key_credential else None,
+            F5LTMAdvancedAttributes.force_profile_update             : {True: "1", False: "0"}.get(force_profile_update),
             F5LTMAdvancedAttributes.install_chain_file               : {True: "1", False: "0"}.get(install_chain),
             F5LTMAdvancedAttributes.bundle_certificate               : {True: "1", False: "0"}.get(bundle_certificate),
-            F5LTMAdvancedAttributes.overwrite_existing_chain         : {True: "1", False: "0"}.get(
-                overwrite_chain_file),
+            F5LTMAdvancedAttributes.overwrite_existing_chain         : {True: "1", False: "0"}.get(overwrite_chain_file),
             F5LTMAdvancedAttributes.certificate_chain_name           : ca_chain_file,
             F5LTMAdvancedAttributes.fips_key                         : {True: "1", False: "0"}.get(use_fips),
-            F5LTMAdvancedAttributes.overwrite_certificate            : {True: "1", False: "0"}.get(
-                overwrite_certificate_and_key),
-            F5LTMAdvancedAttributes.delete_previous_cert_and_key     : {True: "1", False: "0"}.get(
-                delete_previous_cert_and_key),
+            F5LTMAdvancedAttributes.overwrite_certificate            : {True: "1", False: "0"}.get(overwrite_certificate_and_key),
+            F5LTMAdvancedAttributes.delete_previous_cert_and_key     : {True: "1", False: "0"}.get(delete_previous_cert_and_key),
             F5LTMAdvancedAttributes.provisioning_to                  : provisioning_target,
             F5LTMAdvancedAttributes.config_sync                      : {True: "1", False: "0"}.get(config_sync),
             F5LTMAdvancedAttributes.ssl_profile_name                 : ssl_profile,
@@ -1126,16 +1129,17 @@ class F5LTMAdvanced(_ApplicationBase):
             F5LTMAdvancedAttributes.sni_default                      : {True: "1", False: "0"}.get(sni_default),
             F5LTMAdvancedAttributes.virtual_server_name              : virtual_server,
             F5LTMAdvancedAttributes.virtual_server_partition         : virtual_server_partition,
-            F5LTMAdvancedAttributes.use_advanced_settings            : {True: "1", False: "0"}.get(
-                use_advanced_settings),
+            F5LTMAdvancedAttributes.use_advanced_settings            : {True: "1", False: "0"}.get(use_advanced_settings),
             F5LTMAdvancedAttributes.client_authentication_certificate: client_certificate_requirement,
             F5LTMAdvancedAttributes.server_authentication_certificate: server_certificate_requirement,
             F5LTMAdvancedAttributes.authentication_frequency         : frequency,
             F5LTMAdvancedAttributes.chain_traversal_depth            : chain_traversal_depth,
-            F5LTMAdvancedAttributes.bundle_certificate_collection    : self._get_dn(
-                certificate_bundle) if certificate_bundle else None,
+            F5LTMAdvancedAttributes.bundle_certificate_collection    : self._get_dn(certificate_bundle) if certificate_bundle else None,
             F5LTMAdvancedAttributes.server_authentication_name       : authentication_name,
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1143,7 +1147,7 @@ class F5LTMAdvanced(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1178,14 +1182,16 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appgooglecloudloadbalancer',
             GoogleCloudAppAttributes.credential       : self._get_dn(google_credential) if google_credential else None,
             GoogleCloudAppAttributes.target_proxy_type: target_proxy_type,
             GoogleCloudAppAttributes.target_proxy_name: target_proxy_name,
             GoogleCloudAppAttributes.target_resource  : target_resource
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1193,7 +1199,7 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1243,8 +1249,7 @@ class IBMDataPower(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appdatapower',
             DataPowerAttributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1263,7 +1268,10 @@ class IBMDataPower(_ApplicationBase):
             DataPowerAttributes.chain_cert                     : {True: "1", False: "0"}.get(install_certificate_chain),
             DataPowerAttributes.private_key_password_credential: self._get_dn(
                 private_key_password_credential) if private_key_password_credential else None,
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1271,7 +1279,7 @@ class IBMDataPower(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1327,8 +1335,7 @@ class IBMGSK(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appgsk',
             GSKAttributes.credential             : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1346,9 +1353,9 @@ class IBMGSK(_ApplicationBase):
             GSKAttributes.password_expire_days   : password_validity,
             GSKAttributes.stash_password         : {True: "1", False: "0"}.get(stash_password),
             GSKAttributes.default_cert           : {True: "1", False: "0"}.get(default_certificate),
-        })
+        }
         if owner or group:
-            attributes.update({
+            app_attrs.update({
                 GSKAttributes.file_permissions_enabled: "1",
                 GSKAttributes.file_owner_user         : owner,
                 GSKAttributes.file_permissions_user   : owner_permissions,
@@ -1356,9 +1363,12 @@ class IBMGSK(_ApplicationBase):
                 GSKAttributes.file_permissions_group  : group_permissions
             })
         else:
-            attributes.update({
+            app_attrs.update({
                 GSKAttributes.file_permissions_enabled: "0"
             })
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1366,7 +1376,7 @@ class IBMGSK(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1405,8 +1415,7 @@ class ImpervaMX(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name  : 'appimpervamx',
             ImpervaMXAttributes.credential         : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1416,7 +1425,10 @@ class ImpervaMX(_ApplicationBase):
             ImpervaMXAttributes.site               : site,
             ImpervaMXAttributes.server_group       : server_group,
             ImpervaMXAttributes.service            : service
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1424,7 +1436,7 @@ class ImpervaMX(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1485,8 +1497,7 @@ class JKS(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name        : 'appjks',
             JKSAttributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1508,9 +1519,9 @@ class JKS(_ApplicationBase):
             JKSAttributes.replace_store                  : {True: "1", False: "0"}.get(replace_existing),
             JKSAttributes.certificate_label              : certificate_alias,
             JKSAttributes.recycle_alias                  : {True: "1", False: "0"}.get(reuse_alias)
-        })
+        }
         if owner or group:
-            attributes.update({
+            app_attrs.update({
                 JKSAttributes.file_permissions_enabled: "1",
                 JKSAttributes.file_owner_user         : owner,
                 JKSAttributes.file_permissions_user   : owner_permissions,
@@ -1518,9 +1529,12 @@ class JKS(_ApplicationBase):
                 JKSAttributes.file_permissions_group  : group_permissions
             })
         else:
-            attributes.update({
+            app_attrs.update({
                 JKSAttributes.file_permissions_enabled: "0"
             })
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1528,7 +1542,7 @@ class JKS(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1580,8 +1594,7 @@ class OracleIPlanet(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name : 'appiplanet',
             iPlanetAttributes.credential          : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1596,9 +1609,9 @@ class OracleIPlanet(_ApplicationBase):
             iPlanetAttributes.certutil_path       : certutil_path,
             iPlanetAttributes.pk12util_path       : pk12util_path,
             iPlanetAttributes.alias               : certificate_alias,
-        })
+        }
         if owner or group:
-            attributes.update({
+            app_attrs.update({
                 iPlanetAttributes.file_permissions_enabled: "1",
                 iPlanetAttributes.file_owner_user         : owner,
                 iPlanetAttributes.file_permissions_user   : owner_permissions,
@@ -1606,9 +1619,12 @@ class OracleIPlanet(_ApplicationBase):
                 iPlanetAttributes.file_permissions_group  : group_permissions
             })
         else:
-            attributes.update({
+            app_attrs.update({
                 iPlanetAttributes.file_permissions_enabled: "0"
             })
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1616,7 +1632,7 @@ class OracleIPlanet(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1662,8 +1678,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name                      : 'appPaloAlto',
             PaloAltoNetworkFWAttributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1681,7 +1696,10 @@ class PaloAltoNetworkFW(_ApplicationBase):
             PaloAltoNetworkFWAttributes.decryption_profile             : decryption_profile_name,
             PaloAltoNetworkFWAttributes.decryption_destinations        : destination_addresses,
             PaloAltoNetworkFWAttributes.lock_config                    : {True: "1", False: "0"}.get(lock_config)
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1689,7 +1707,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1734,8 +1752,7 @@ class PEM(_ApplicationBase):
             ``Config.Object``.
 
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appPem',
             ApacheAttributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1746,9 +1763,9 @@ class PEM(_ApplicationBase):
             ApacheAttributes.certificate_file               : certificate_file,
             ApacheAttributes.certificate_chain_file         : certificate_chain_file,
             ApacheAttributes.overwrite_existing_chain       : {True: "1", False: "0"}.get(overwrite_existing_chain),
-        })
+        }
         if owner or group:
-            attributes.update({
+            app_attrs.update({
                 ApacheAttributes.file_permissions_enabled: "1",
                 ApacheAttributes.file_owner_user         : owner,
                 ApacheAttributes.file_permissions_user   : owner_permissions,
@@ -1756,13 +1773,16 @@ class PEM(_ApplicationBase):
                 ApacheAttributes.file_permissions_group  : group_permissions,
             })
 
+        if attributes:
+            app_attrs.update(attributes)
+
         return self._create(
             name=name,
             device=device,
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1815,8 +1835,7 @@ class PKCS11(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'apppkcs11',
             PKCS11Attributes.credential               : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1835,12 +1854,15 @@ class PKCS11(_ApplicationBase):
             PKCS11Attributes.hsm_openssl_config_file  : openssl_config_file,
             PKCS11Attributes.hsm_reverse_subject_dn   : {True: "Yes", False: "No"}.get(reverse_subject_dn),
             PKCS11Attributes.hsm_embed_sans_in_csr    : {True: "Yes", False: "No"}.get(embed_sans_in_csr),
-        })
+        }
         if openssl_directory:
-            attributes.update({
+            app_attrs.update({
                 PKCS11Attributes.hsm_openssl_type: "Custom OpenSSL Directory",
                 PKCS11Attributes.hsm_openssl_path: openssl_directory
             })
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1848,7 +1870,7 @@ class PKCS11(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1895,8 +1917,7 @@ class PKCS12(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'apppkcs12',
             PKCS12Attributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
@@ -1908,20 +1929,20 @@ class PKCS12(_ApplicationBase):
             PKCS12Attributes.create_store                   : {True: "1", False: "0"}.get(create),
             PKCS12Attributes.replace_store                  : {True: "1", False: "0"}.get(replace_existing),
             PKCS12Attributes.recycle_alias                  : {True: "1", False: "0"}.get(reuse_friendly_name)
-        })
+        }
 
         if certificate_chain_file:
-            attributes.update({
+            app_attrs.update({
                 PKCS12Attributes.bundle_certificate    : "0",
                 PKCS12Attributes.certificate_chain_file: certificate_chain_file
             })
         else:
-            attributes.update({
+            app_attrs.update({
                 PKCS12Attributes.bundle_certificate: "1"
             })
 
         if owner or group:
-            attributes.update({
+            app_attrs.update({
                 ApacheAttributes.file_permissions_enabled: "1",
                 ApacheAttributes.file_owner_user         : owner,
                 ApacheAttributes.file_permissions_user   : owner_permissions,
@@ -1929,13 +1950,16 @@ class PKCS12(_ApplicationBase):
                 ApacheAttributes.file_permissions_group  : group_permissions,
             })
 
+        if attributes:
+            app_attrs.update(attributes)
+
         return self._create(
             name=name,
             device=device,
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -1969,13 +1993,15 @@ class RiverbedSteelHead(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name       : 'appriverbedsteelhead',
             RiverbedSteelHeadAttributes.certificate_type: certificate_type,
             RiverbedSteelHeadAttributes.replace_existing: {True: "1", False: "0"}.get(replace_existing),
             RiverbedSteelHeadAttributes.install_chain   : {True: "1", False: "0"}.get(install_chain_certificates)
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -1983,7 +2009,7 @@ class RiverbedSteelHead(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -2016,14 +2042,16 @@ class TealeafPCA(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name: 'apptealeafpca',
             TealeafPCAAttributes.credential      : self._get_dn(
                 application_credential) if application_credential else None,
             TealeafPCAAttributes.port            : port,
             TealeafPCAAttributes.install_path    : passive_capture_setup_path
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -2031,7 +2059,7 @@ class TealeafPCA(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
@@ -2068,8 +2096,7 @@ class VAMnShield(_ApplicationBase):
         Returns:
             ``Config.Object``.
         """
-        attributes = attributes or {}
-        attributes.update({
+        app_attrs = {
             ApplicationBaseAttributes.driver_name   : 'appvamnshield',
             VAMnShieldAttributes.credential         : self._get_dn(
                 application_credential) if application_credential else None,
@@ -2077,7 +2104,10 @@ class VAMnShield(_ApplicationBase):
             VAMnShieldAttributes.install_path       : nshield_setup_path,
             VAMnShieldAttributes.module_id          : module_id,
             VAMnShieldAttributes.restart_application: restart_device
-        })
+        }
+
+        if attributes:
+            app_attrs.update(attributes)
 
         return self._create(
             name=name,
@@ -2085,7 +2115,7 @@ class VAMnShield(_ApplicationBase):
             approvers=approvers,
             contacts=contacts,
             description=description,
-            attributes=attributes,
+            attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
 
