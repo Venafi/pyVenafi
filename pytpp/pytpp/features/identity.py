@@ -1,8 +1,9 @@
-from typing import List, Union
-from pytpp.tools.vtypes import Identity
 from pytpp.properties.config import IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.features.definitions.classes import Classes
+from typing import List, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Identity
 
 
 class _IdentityBase(FeatureBase):
@@ -251,17 +252,18 @@ class Group(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def add_members(self, group: Union['Identity.Identity', str], member_prefixed_names: List[str]):
+    def add_members(self, group: Union['Identity.Identity', str], members: 'List[Union[Identity.Identity, str]]'):
         """
         Adds members to a local group.
 
         Args:
             group: Identity.Identity or prefixed name of the group. The prefix is required.
-            member_prefixed_names: List of prefixed names of each member.
+            members: List of ``Identity.Identity`` or prefixed names of each member.
 
         Returns:
             List of Identity objects for each member.
         """
+        member_prefixed_names = [self._get_prefixed_name(i) for i in members]
         prefixed_name = self._get_prefixed_name(group)
         result = self._api.websdk.Identity.AddGroupMembers.put(
             group=self._identity_dict(prefixed_name=prefixed_name),
@@ -280,23 +282,22 @@ class Group(_IdentityBase):
 
         return result.members
 
-    def create(self, name: str, member_prefixed_names: List[str] = None, get_if_already_exists: bool = True):
+    def create(self, name: str, members: 'List[Union[Identity, Identity, str]]' = None, get_if_already_exists: bool = True):
         """
         Creates a local group in TPP. Each member of the group inherits the permissions of this
         group. To add members, provide a list of prefixed names for each member.
 
         Args:
             name: Name of the user. The `"local:"` prefix is not required.
-            member_prefixed_names: List of prefixed universal names of each member.
+            members: List of ``Identity.Identity`` or prefixed universal names of each member.
             get_if_already_exists: If the identity already exists, just return it as is.
 
         Returns:
             Identity object of the user.
         """
+        member_prefixed_names = [self._get_prefixed_name(i) for i in members] if members else []
         if not name.startswith('local:'):
             name = f'local:{name}'
-        if not isinstance(member_prefixed_names, list):
-            member_prefixed_names = []
         if get_if_already_exists:
             if self.exists(prefixed_name=name):
                 return self.get(prefixed_name=name)
@@ -382,18 +383,19 @@ class Group(_IdentityBase):
 
         return result.identities
 
-    def remove_members(self, group: Union['Identity.Identity', str], member_prefixed_names: List[str]):
+    def remove_members(self, group: Union['Identity.Identity', str], members: 'List[Union[Identity.Identity, str]]'):
         """
         Removes members from a local group.
 
         Args:
             group: Identity.Identity or prefixed name of the group. The prefix is required.
-            member_prefixed_names: List of prefixed universal names of each member.
+            members: List of ``Identity.Identity`` or prefixed universal names of each member.
 
         Returns:
             List of Identity objects for each remaining member. If no members remain, then
             the list is empty.
         """
+        member_prefixed_names = [self._get_prefixed_name(i) for i in members]
         prefixed_name = self._get_prefixed_name(group)
         result = self._api.websdk.Identity.RemoveGroupMembers.put(
             group=self._identity_dict(prefixed_name=prefixed_name),

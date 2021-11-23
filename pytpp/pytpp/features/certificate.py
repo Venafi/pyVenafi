@@ -1,5 +1,6 @@
-from typing import List, Union
-from pytpp.tools.vtypes import Config
+from typing import List, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Config, Identity
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.features.definitions.classes import Classes
@@ -8,10 +9,6 @@ from pytpp.tools.logger import logger, LogTags
 
 @feature()
 class Certificate(FeatureBase):
-    """
-    This feature provides high-level interaction with TPP Certificate objects.
-    """
-
     def __init__(self, api):
         super().__init__(api)
 
@@ -33,29 +30,34 @@ class Certificate(FeatureBase):
         result.assert_valid_response()
         return result
 
-    def associate_application(self, certificate: Union['Config.Object', str], application_dns: List[str],
+    def associate_application(self, certificate: Union['Config.Object', str], applications: 'List[Config.Object, str]',
                               push_to_new: bool = False):
         """
         Associate an application object to a certificate.
 
         Args:
             certificate: Config object of the certificate.
-            application_dns: A list of absolute paths to each application object.
+            applications: A list of ``Config.Object`` or DN for each application object.
             push_to_new: If True, the certificate will be pushed to the application once associated.
         """
         certificate_dn = self._get_dn(certificate)
-        if not isinstance(application_dns, list):
-            application_dns = [application_dns]
-
         result = self._api.websdk.Certificates.Associate.post(
-            application_dn=application_dns,
+            application_dn=[self._get_dn(a) for a in applications],
             certificate_dn=certificate_dn,
             push_to_new=push_to_new
         )
         if not result.success:
             raise FeatureError(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
+               contacts: 'List[Union[Identity.Identity, str]]' = None, approvers: 'List[Union[Identity.Identity, str]]' = None,
+               management_type: 'str' = None, service_generated_csr: 'bool' = None, generate_key_on_application: 'bool' = None,
+               hash_algorithm: 'str' = None, common_name: 'str' = None, organization: 'str' = None, organization_unit: 'List[str]' = None,
+               city: 'str' = None, state: 'str' = None, country: 'str' = None, san_dns: 'List[str]' = None, san_email: 'List[str]' = None,
+               san_upn: 'List[str]' = None, san_ip: 'List[str]' = None, san_uri: 'List[str]' = None, key_algorithm: 'str' = None,
+               key_strength: 'int' = None, elliptic_curve: 'str' = None, ca_template: 'Union[Config.Object, str]' = None,
+               disable_automatic_renewal: 'bool' = None, renewal_window: 'int' = None, attributes: dict = None,
+               get_if_already_exists: bool = True):
         """
         Creates the config object that represents the certificate.
 
@@ -63,16 +65,68 @@ class Certificate(FeatureBase):
 
         Args:
             name: Name of the Certificate object.
-            parent_folder_dn: Absolute path to the parent folder of the certificate object.
+            parent_folder: ``Config.Object`` or DN of the parent folder of the certificate object.
+            description: Description of the certificate object.
+            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts for this certificate.
+            approvers: List of ``Identity.Identity`` or prefixed universal GUIDs of the approvers for this certificate.
+            management_type: Certificate management type.
+            service_generated_csr: If ``True``, TPP generates the CSR.
+            generate_key_on_application: If ``True``, the key/CSR are generated on the target application.
+            hash_algorithm: Hash algorithm.
+            common_name: Common name (CN) of the certificate.
+            organization: Organization of the certificate.
+            organization_unit: Organization units (OU) of the certificate.
+            city: City.
+            state: State.
+            country: Country code.
+            san_dns: List of Subject Alternative Names for DNS.
+            san_email: List of Subject Alternative Names for e-mail addresses.
+            san_upn: List of Subject Alternative Names for UPN.
+            san_ip: List of Subject Alternative Names for IP addresses.
+            san_uri: List of Subject Alternative Names for URI.
+            key_algorithm: Signing key algorithm.
+            key_strength: Key strength in bits.
+            elliptic_curve: Elliptic curve.
+            ca_template: ``Config.Object`` or DN of the Certificate Authority template.
+            disable_automatic_renewal: If ``True``, disables automatic renewal.
+            renewal_window: Number of days that make the renewal window.
             attributes: Additional attributes that define this certificate.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
             Config object representing the certificate object.
         """
+        attributes = attributes or {}
+        attributes.update({
+            X509CertificateAttributes.description: description,
+            X509CertificateAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            X509CertificateAttributes.approver: [self._get_prefixed_universal(a) for a in approvers] if approvers else None,
+            X509CertificateAttributes.management_type: management_type,
+            X509CertificateAttributes.manual_csr: {True: "0", False: "1"}.get(service_generated_csr),
+            X509CertificateAttributes.generate_keypair_on_application: {True: "1", False: "0"}.get(generate_key_on_application),
+            X509CertificateAttributes.pkcs10_hash_algorithm: hash_algorithm,
+            X509CertificateAttributes.x509_subject: common_name,
+            X509CertificateAttributes.organization: organization,
+            X509CertificateAttributes.organizational_unit: organization_unit,
+            X509CertificateAttributes.city: city,
+            X509CertificateAttributes.state: state,
+            X509CertificateAttributes.country: country,
+            X509CertificateAttributes.driver_name: 'appx509certificate',
+            X509CertificateAttributes.x509_subjectaltname_dns: san_dns,
+            X509CertificateAttributes.x509_subjectaltname_ipaddress: san_ip,
+            X509CertificateAttributes.x509_subjectaltname_uri: san_uri,
+            X509CertificateAttributes.x509_subjectaltname_othername_upn: san_upn,
+            X509CertificateAttributes.x509_subjectaltname_rfc822: san_email,
+            X509CertificateAttributes.key_algorithm: key_algorithm,
+            X509CertificateAttributes.key_bit_strength: key_strength,
+            X509CertificateAttributes.elliptic_curve: elliptic_curve,
+            X509CertificateAttributes.certificate_authority: self._get_dn(ca_template) if ca_template else None,
+            X509CertificateAttributes.disable_automatic_renewal: {True: "1", False: "0"}.get(disable_automatic_renewal),
+            X509CertificateAttributes.renewal_window: renewal_window
+        })
         return self._config_create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder_dn=self._get_dn(parent_folder),
             config_class=Classes.x509_certificate,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
@@ -131,14 +185,14 @@ class Certificate(FeatureBase):
         """
         return self._get(certificate=certificate).certificate_details
 
-    def dissociate_application(self, certificate: Union['Config.Object', str], application_dns: List[str],
+    def dissociate_application(self, certificate: Union['Config.Object', str], applications: 'List[Config.Object, str]',
                                delete_orphans: bool = False):
         """
         Associate an application object to a certificate.
 
         Args:
             certificate: Config object of the certificate.
-            application_dns: A list of absolute paths to each application object.
+            applications: A list of ``Config.Object`` or DNs to each application object.
             delete_orphans: Delete the Application DN. Only delete the corresponding Device DN when it has no child objects.
                 Otherwise retain only the Device DN and its children. Use this option to completely remove the application
                 object and corresponding device objects.
@@ -146,7 +200,7 @@ class Certificate(FeatureBase):
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Dissociate.post(
             certificate_dn=certificate_dn,
-            application_dn=application_dns,
+            application_dn=[self._get_dn(a) for a in applications],
             delete_orphans=delete_orphans
         )
         result.assert_valid_response()
@@ -258,24 +312,24 @@ class Certificate(FeatureBase):
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
         return result.file, result.ssl_tls
 
-    def push_to_applications(self, certificate: Union['Config.Object', str], application_dns: List[str] = None):
+    def push_to_applications(self, certificate: Union['Config.Object', str], applications: 'List[Config.Object, str]' = None):
         """
         Push the active certificate to the given Application DNs.
 
         Args:
             certificate: Config object of the certificate.
-            application_dns: A list of application DNs.
+            applications: A list of ``Config.Object`` or DNs to each application object.
         """
-        if not application_dns:
+        if not applications:
             certificate_dn = self._get_dn(certificate)
-            application_dns = self._api.websdk.Config.ReadDn.post(
+            applications = self._api.websdk.Config.ReadDn.post(
                 object_dn=certificate_dn,
                 attribute_name=X509CertificateAttributes.consumers
             ).values
 
         self.associate_application(
             certificate=certificate,
-            application_dns=application_dns,
+            applications=applications,
             push_to_new=True
         )
 
@@ -368,7 +422,7 @@ class Certificate(FeatureBase):
                 f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
             )
 
-    def upload(self, certificate_data: str, parent_folder_dn: str, certificate_authority_attributes: dict = None,
+    def upload(self, certificate_data: str, parent_folder: 'Union[Config.Object, str]', certificate_authority_attributes: dict = None,
                name: str = None, password: str = None, private_key_data: str = None, reconcile: bool = False):
         """
         Uploads the certificate data to TPP to create a certificate object under the given parent folder DN. If the BEGIN/END
@@ -378,7 +432,7 @@ class Certificate(FeatureBase):
 
         Args:
             certificate_data: Encoded certificate data.
-            parent_folder_dn: Absolute path to the parent folder DN.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             certificate_authority_attributes: Attributes pertaining to the Certificate Authority to store with the certificate
                 object. This is not a DN to a Certificate Authority in TPP.
             name: If given, the name of the new certificate object. If not given, then the Common Name is used.
@@ -396,7 +450,7 @@ class Certificate(FeatureBase):
 
         result = self._api.websdk.Certificates.Import.post(
             certificate_data=certificate_data,
-            policy_dn=parent_folder_dn,
+            policy_dn=self._get_dn(parent_folder),
             ca_specific_attributes=certificate_authority_attributes,
             object_name=name,
             password=password,

@@ -7,19 +7,19 @@ from pytpp.features.client_work import (
     SSHDevicePlacement, SSHDiscovery, SSHKeyUsage, SSHRemediation, UserCertificateCreation
 )
 from pytpp.features.certificate import Certificate
-from pytpp.features.device import Device
+from pytpp.features.device import Device, JumpServer
 from pytpp.features.application import (
-    A10AXTrafficManager, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, CitrixNetScaler,
-    ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, IBMDataPower, IBMGSK, ImpervaMX, JKS, JuniperSAS,
+    Adaptable as AdapatbleApplication, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, CitrixNetScaler,
+    ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, GoogleCloudLoadBalancer, IBMDataPower, IBMGSK, ImpervaMX, JKS,
     OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield,
     PKCS11ApplicationGroup, ApacheApplicationGroup
 )
 from pytpp.features.discovery import NetworkDiscovery
 from pytpp.features.credentials import (
     AmazonCredential, CertificateCredential, GenericCredential, PasswordCredential, PrivateKeyCredential,
-    UsernamePasswordCredential
+    UsernamePasswordCredential, GoogleCredential
 )
-from pytpp.features.certificate_authorities import (AdaptableCA, MSCA, SelfSignedCA)
+from pytpp.features.certificate_authorities import (MSCA, SelfSignedCA)
 from pytpp.features.identity import User, Group
 from pytpp.features.permissions import Permissions
 from pytpp.features.platform import (
@@ -37,7 +37,7 @@ class _Application:
     def __init__(self, api):
         self._api = api
 
-        self._a10_ax_traffic_manager = None
+        self._adaptable = None
         self._amazon_aws = None
         self._apache = None
         self._azure_key_vault = None
@@ -48,11 +48,11 @@ class _Application:
         self._connect_direct = None
         self._f5_authentication_bundle = None
         self._f5_ltm_advanced = None
+        self._google_cloud_load_balancer = None
         self._ibm_datapower = None
         self._ibm_gsk = None
         self._imperva_mx = None
         self._jks = None
-        self._juniper_sas = None
         self._oracle_iplanet = None
         self._palo_alto_network_fw = None
         self._pem = None
@@ -63,9 +63,9 @@ class _Application:
         self._vamnshield = None
 
     @property
-    def a10_ax_traffic_manager(self) -> A10AXTrafficManager:
-        self._a10_ax_traffic_manager = self._a10_ax_traffic_manager or A10AXTrafficManager(self._api)
-        return self._a10_ax_traffic_manager
+    def adaptable(self) -> AdapatbleApplication:
+        self._adaptable = self._adaptable or AdapatbleApplication(self._api)
+        return self._adaptable
 
     @property
     def amazon_aws(self) -> AmazonAWS:
@@ -118,6 +118,11 @@ class _Application:
         return self._f5_ltm_advanced
 
     @property
+    def google_cloud_load_balancer(self) -> GoogleCloudLoadBalancer:
+        self._google_cloud_load_balancer = self._google_cloud_load_balancer or GoogleCloudLoadBalancer(self._api)
+        return self._google_cloud_load_balancer
+
+    @property
     def ibm_datapower(self) -> IBMDataPower:
         self._ibm_datapower = self._ibm_datapower or IBMDataPower(self._api)
         return self._ibm_datapower
@@ -136,11 +141,6 @@ class _Application:
     def jks(self) -> JKS:
         self._jks = self._jks or JKS(self._api)
         return self._jks
-
-    @property
-    def juniper_sas(self) -> JuniperSAS:
-        self._juniper_sas = self._juniper_sas or JuniperSAS(self._api)
-        return self._juniper_sas
 
     @property
     def oracle_iplanet(self) -> OracleIPlanet:
@@ -205,14 +205,8 @@ class _CertificateAuthority:
     def __init__(self, api):
         self._api = api
 
-        self._adaptable = None
         self._msca = None
         self._self_signed = None
-
-    @property
-    def adaptable(self) -> AdaptableCA:
-        self._adaptable = self._adaptable or AdaptableCA(self._api)
-        return self._adaptable
 
     @property
     def msca(self) -> MSCA:
@@ -318,6 +312,7 @@ class _Credential:
         self._amazon = None
         self._certificate = None
         self._generic = None
+        self._google = None
         self._password = None
         self._private_key = None
         self._upcred = None
@@ -336,6 +331,11 @@ class _Credential:
     def generic(self) -> GenericCredential:
         self._generic = self._generic or GenericCredential(self._api)
         return self._generic
+
+    @property
+    def google(self) -> GoogleCredential:
+        self._google = self._google or GoogleCredential(self._api)
+        return self._google
 
     @property
     def password(self) -> PasswordCredential:
@@ -519,6 +519,7 @@ class Features:
         self._discovery = None
         self._folder = None
         self._identity = None
+        self._jump_server = None
         self._objects = None
         self._permissions = None
         self._placement_rule_condition = None
@@ -585,6 +586,11 @@ class Features:
     def identity(self) -> _Identity:
         self._identity = self._identity or _Identity(self._api)
         return self._identity
+
+    @property
+    def jump_server(self) -> JumpServer:
+        self._jump_server = self._jump_server or JumpServer(self._api)
+        return self._jump_server
 
     @property
     def objects(self) -> Objects:

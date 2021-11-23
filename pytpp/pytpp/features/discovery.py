@@ -6,9 +6,6 @@ from pytpp.attributes.discovery import DiscoveryAttributes
 
 @feature()
 class NetworkDiscovery(FeatureBase):
-    """
-    This feature provides high-level interaction with TPP Network Discovery objects.
-    """
     def __init__(self, api):
         super().__init__(api=api)
         self._discovery_dn = r'\VED\Discovery'

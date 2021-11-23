@@ -11,9 +11,6 @@ class _AttributeValue:
 
 @feature()
 class Objects(FeatureBase):
-    """
-    This feature provides access to read, write, update, clear, and retrieve config objects and their attributes.
-    """
     def __init__(self, api):
         super().__init__(api=api)
 

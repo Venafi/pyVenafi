@@ -160,9 +160,6 @@ class PlacementRuleCondition:
 
 @feature()
 class PlacementRules(FeatureBase):
-    """
-    This feature provides high-level interaction with TPP Placement Rule objects.
-    """
     def __init__(self, api):
         super().__init__(api=api)
         self._layout_rules_dn = r'\VED\Layout Root\Rules'

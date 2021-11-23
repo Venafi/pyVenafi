@@ -49,7 +49,7 @@ class UploadFiles:
         #           f'Please update the __version__ in setup.py.')
         #     return
         sandbox.run_setup(f'{PROJECT_DIR}/setup.py', ['clean', 'sdist'])
-        self.print_stage('Send Files Via FTP')
+        self.print_stage('Send Files Via SFTP')
         dist_dir = f'{PROJECT_DIR}/dist'
         files = [f for f in os.listdir(dist_dir) if f'{__version__}.tar.gz' in f]
         with self.ssh_client.open_sftp() as sftp:

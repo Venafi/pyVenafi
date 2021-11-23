@@ -59,125 +59,83 @@ class _Platforms(FeatureBase):
 
 @feature()
 class AutoLayoutManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Auto Layout Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Auto Layout Manager')
 
 
 @feature()
 class BulkProvisioningManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Bulk Provisioning Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Bulk Provisioning Manager')
 
 
 @feature()
 class CAImportManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP CA Import Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='CA Import Manager')
 
 
 @feature()
 class CertificateManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Certificate Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Manager')
 
 
 @feature()
 class CertificatePreEnrollment(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Certificate Pre-Enrollment Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Pre-Enrollment')
 
 
 @feature()
 class CertificateRevocation(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Certificate Revocation Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Revocation')
 
 
 @feature()
 class CloudInstanceMonitor(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Cloud Instance Monitor Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Cloud Instance Monitor')
 
 
 @feature()
 class DiscoveryManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Discovery Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Discovery')
 
 
 @feature()
 class Monitor(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Monitor module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Monitor')
 
 
 @feature()
 class OnboardDiscoveryManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP OnBoard Discovery Manager Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Onboard Discovery Manager')
 
 
 @feature()
 class Reporting(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Reporting module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Reporting')
 
 
 @feature()
 class SSHManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP SSH Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='SSH Manager')
 
 
 @feature()
 class TrustNetManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP TrustNet Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='TrustNet Manager')
 
 
 @feature()
 class ValidationManager(_Platforms):
-    """
-    This feature provides high-level interaction with the TPP Validation Manager module.
-    """
     def __init__(self, api):
         super().__init__(api=api, module='Validation Manager')
