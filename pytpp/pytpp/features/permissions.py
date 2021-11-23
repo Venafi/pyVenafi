@@ -16,7 +16,6 @@ class Permissions(FeatureBase):
             identity = self._get_identity_object(identity)
         return obj, identity
 
-
     def delete(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str]):
         """
         Deletes all explicit permissions granted to a user or group on the ``obj``. All implicit permissions,
@@ -133,10 +132,10 @@ class Permissions(FeatureBase):
 
         return principals
 
-    def update(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str], is_associate_allowed: bool = None, is_create_allowed: bool = None,
-               is_delete_allowed: bool = None, is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
-               is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None, is_read_allowed: bool = None,
-               is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
+    def update(self, obj: Union['Config.Object', str], identity: Union['Identity.Identity', str], is_associate_allowed: bool = None,
+               is_create_allowed: bool = None, is_delete_allowed: bool = None, is_manage_permissions_allowed: bool = None,
+               is_policy_write_allowed: bool = None, is_private_key_read_allowed: bool = None, is_private_key_write_allowed: bool = None,
+               is_read_allowed: bool = None, is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
                is_write_allowed: bool = None):
         """
         Grants the specified permissions to a user or group identity.
@@ -146,21 +145,21 @@ class Permissions(FeatureBase):
             identity: Identity object of the user or group.
             is_associate_allowed: Allows associating/dissociating applications to certificates and pushing certificates
                 to the associated applications.
-            is_create_allowed: Allows creating subordinate objects to the ``object_dn``. Also grants View permission.
-            is_delete_allowed: Allows deleting subordinate objects to the ``object_dn``.
-            is_manage_permissions_allowed: Allows modification to others' permissions to ``object_dn`` and its
+            is_create_allowed: Allows creating subordinate objects to the ``obj``. Also grants View permission.
+            is_delete_allowed: Allows deleting subordinate objects to the ``obj``.
+            is_manage_permissions_allowed: Allows modification to others' permissions to ``obj`` and its
                 subordinate objects.
             is_policy_write_allowed: Allows modification to policy values on folder. Requires View permission. Also grants
                 Read and Write permissions.
             is_private_key_read_allowed: Allows download of private keys.
             is_private_key_write_allowed: Allows upload of private keys.
-            is_read_allowed: Allows ability to read values on subordinate objects to ``object_dn``.
-            is_rename_allowed: Allows ability to rename and move subordinate objects to ``object_dn``. Requires Rename
+            is_read_allowed: Allows ability to read values on subordinate objects to ``obj``.
+            is_rename_allowed: Allows ability to rename and move subordinate objects to ``obj``. Requires Rename
                 permission to the destination location.
             is_revoke_allowed: Allows ability to invalidate a certificate. Requires Write permission to the certificate
                 object.
-            is_view_allowed: Allows ability to view the name of all subordinate objects to ``object_dn``.
-            is_write_allowed: Allows editing of subordinate objects to ``object_dn``.
+            is_view_allowed: Allows ability to view the name of all subordinate objects to ``obj``.
+            is_write_allowed: Allows editing of subordinate objects to ``obj``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:

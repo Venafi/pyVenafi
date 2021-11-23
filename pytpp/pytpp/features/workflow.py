@@ -41,12 +41,12 @@ class _WorkflowBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def _create(self, name: str, parent_folder_dn: str, is_adaptable: bool, stage: int, injection_command: str = None,
+    def _create(self, name: str, parent_folder: 'Union[Config.Object, str]', is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,
                 get_if_already_exists: bool = True):    
         workflow = self._config_create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder_dn=self._get_dn(parent_folder),
             config_class=WorkflowAttributes.__config_class__ if not is_adaptable else AdaptableWorkflowAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
@@ -90,7 +90,7 @@ class AdaptableWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, stage: int, powershell_script_name: str, powershell_script_content: bytes,
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, powershell_script_name: str, powershell_script_content: bytes,
                approvers: Union['List[Identity.Identity]', List[str]] = None, reason_code: int = None,
                use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -126,7 +126,7 @@ class AdaptableWorkflow(_WorkflowBase):
 
         Args:
             name: Name of the workflow object.
-            parent_folder_dn: Absolute path to the parent folder of the workflow object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             stage: One of the valid stages that represent the certificate lifecycle.
             powershell_script_name: Name (not path) of the actual PowerShell script on the TPP server.
             powershell_script_content: Contents of the PowerShell script as bytes.
@@ -149,7 +149,7 @@ class AdaptableWorkflow(_WorkflowBase):
 
         workflow = self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             is_adaptable=True,
             stage=stage,
             approvers=wf_approvers,
@@ -158,8 +158,11 @@ class AdaptableWorkflow(_WorkflowBase):
             get_if_already_exists=get_if_already_exists
         )
 
-        add_value = lambda x, y, z: self._api.websdk.Config.AddValue.post(object_dn=x, attribute_name=y, value=z)
-        add_value(workflow.dn, AdaptableWorkflowAttributes.powershell_script, powershell_script_name)
+        self._api.websdk.Config.AddValue.post(
+            object_dn=workflow.dn,
+            attribute_name=AdaptableWorkflowAttributes.powershell_script,
+            value=powershell_script_name
+        ).assert_valid_response()
 
         vault_id = self._api.websdk.SecretStore.Add.post(
             base_64_data=self._calculate_hash(powershell_script_content),
@@ -173,7 +176,7 @@ class AdaptableWorkflow(_WorkflowBase):
             object_dn=workflow.dn,
             attribute_name=AdaptableWorkflowAttributes.powershell_script_hash_vault_id,
             values=[vault_id]
-        )
+        ).assert_valid_response()
 
         return workflow
 
@@ -283,7 +286,7 @@ class StandardWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder_dn: str, stage: int, injection_command: str = None, application_class_name: str = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, injection_command: str = None, application_class_name: str = None,
                approvers: Union['List[Identity.Identity]', str] = None, macro: str = None, reason_code: int = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
@@ -302,7 +305,7 @@ class StandardWorkflow(_WorkflowBase):
 
         Args:
             name: Name of the workflow object.
-            parent_folder_dn: Absolute path to the parent folder of the workflow object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             stage: One of the valid stages that represent the certificate lifecycle.
             injection_command: Command to be invoked on the target application.
             application_class_name: Application Class Name to trigger this workflow.
@@ -325,7 +328,7 @@ class StandardWorkflow(_WorkflowBase):
 
         workflow = self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             is_adaptable=False,
             stage=stage,
             injection_command=injection_command,

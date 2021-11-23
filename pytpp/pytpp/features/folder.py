@@ -1,14 +1,12 @@
-from typing import List, Union
-from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.attributes.policy import PolicyAttributes
+from typing import List, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Config, Identity
 
 
 @feature()
 class Folder(FeatureBase):
-    """
-    This feature provides high-level interaction with TPP folders, also known as policies.
-    """
     def __init__(self, api):
         super().__init__(api)
 
@@ -134,14 +132,19 @@ class Folder(FeatureBase):
         else:
             raise TypeError(f'Expected attributes to be of type List[str] or Dict, but got {type(attributes)} instead.')
 
-    def create(self, name: str, parent_folder_dn: str, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
+               contacts: 'List[Union[Identity.Identity, str]]' = None, log_server: 'Union[Config.Object, str]' = None,
+               engines: 'List[Union[Config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Folder, or Policy, object in TPP.
 
         Args:
             name: Name of the folder.
-            parent_folder_dn: Absolute path to the folder's parent folder.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
+            description: Description of the policy folder.
+            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts.
+            log_server: ``Config.Object`` or name of the log server.
+            engines: List of ``Config.Object`` or names of the processing engines for this folder.
             attributes: Attributes pertaining to the folder itself and NOT any of the policyable options.
                 In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
                 options on the folder, use :meth:`write_policy`.
@@ -150,13 +153,28 @@ class Folder(FeatureBase):
         Returns:
             Config object representing the folder.
         """
-        return self._config_create(
+        attributes = attributes or {}
+        attributes.update({
+            PolicyAttributes.description: description,
+            PolicyAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+        })
+        folder = self._config_create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder_dn=self._get_dn(parent_folder),
             config_class=PolicyAttributes.__config_class__,
             attributes=attributes,
             get_if_already_exists=get_if_already_exists
         )
+        if log_server:
+            self._api.websdk.Config.WritePolicy.post(
+                object_dn=folder.dn,
+                class_name=PolicyAttributes.__config_class__,
+                attribute_name=PolicyAttributes.log_view_server,
+                values=[self._get_dn(log_server, parent_dn=r'\VED\Logging')]
+            )
+        if engines:
+            self.set_engines(folder=folder, engines=engines, append_engines=True)
+        return folder
 
     def delete(self, folder: Union['Config.Object', str], recursive: bool = True):
         """
@@ -246,7 +264,7 @@ class Folder(FeatureBase):
             object_name_pattern: A regular expression
             object_types: List of TPP Object Types (also called a Config Classes)
             recursive: Search sub-folders when True
-            starting_dn: Parent folder DN to begin search
+            starting_dn: DN of the folder to begin search
 
         Returns:
             A list of Config Objects representing the objects found.

@@ -1,6 +1,7 @@
 class _Application:
     def __init__(self):
         self._a10_ax_traffic_manager = None
+        self._adaptable = None
         self._amazon_aws = None
         self._apache = None
         self._azure_key_vault = None
@@ -31,6 +32,13 @@ class _Application:
             from pytpp.attributes.a10_ax_traffic_manager import A10AXTrafficManagerAttributes
             self._a10_ax_traffic_manager = A10AXTrafficManagerAttributes
         return self._a10_ax_traffic_manager
+
+    @property
+    def adaptable(self):
+        if not self._adaptable:
+            from pytpp.attributes.adaptable_app import AdaptableAppAttributes
+            self._adaptable = AdaptableAppAttributes
+        return self._adaptable
 
     @property
     def amazon_aws(self):

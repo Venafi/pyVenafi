@@ -5,9 +5,6 @@ from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 @feature()
 class CustomField(FeatureBase):
-    """
-    This feature provides high-level interaction with TPP Custom Field objects.
-    """
     def __init__(self, api):
         super().__init__(api)
         self._metadata_root_dn = r'\VED\Metadata Root'
@@ -208,7 +205,7 @@ class CustomField(FeatureBase):
         Returns:
             EffectiveValues object:
                 * locked: Boolean. If ``True``, the ``values`` are locked by the policy.
-                * policy_dn: Absolute path to the policy locking the values.
+                * policy_dn: DN of the policy folder locking the values.
                 * values: List of values.
         """
         obj_dn = self._get_dn(obj)

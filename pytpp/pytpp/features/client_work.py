@@ -1,7 +1,6 @@
 import datetime
 import time
-from typing import List, Union
-from pytpp.tools.vtypes import Config
+from typing import List, Union, TYPE_CHECKING
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.properties.config import ClientWorkAttributeValues
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
@@ -18,6 +17,8 @@ from pytpp.attributes.client_agent_ssh_discovery_work import ClientAgentSSHDisco
 from pytpp.attributes.client_agent_ssh_key_usage_work import ClientAgentSSHKeyUsageWorkAttributes
 from pytpp.attributes.client_agent_ssh_provisioning_work import ClientAgentSSHProvisioningWorkAttributes
 from pytpp.attributes.client_user_certificate_work import ClientUserCertificateWorkAttributes
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Config, Identity
 
 
 class _ClientWorkBase(FeatureBase):
@@ -269,14 +270,14 @@ class CertificateDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, placement_folder_dn: str, share_mode: int = 2,
+    def create(self, name: str, placement_folder: 'Union[Config.Object, str]', share_mode: int = 2,
                get_if_already_exists: bool = True, **kwargs):
         """
         Creates a Certificate Device Placement client work
 
         Args:
             name: The name of the client work.
-            placement_folder_dn: The folder's dn to place devices
+            placement_folder: ``Config.Object`` or DN of the folder to place devices.
             share_mode: (optional) specify how newly discovered devices are de-duplicated
                 0: search the entire policy tree
                 1: search the devices folder
@@ -287,6 +288,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
         Returns:
             A config object representing the client work
         """
+        placement_folder_dn = self._get_dn(placement_folder)
         attributes = {
             ServerAgentCertDevicePlacementWorkAttributes.created_by            :
                 ClientWorkAttributeValues.CertificateDevicePlacement.CreatedBy.websdk,
@@ -400,7 +402,7 @@ class CertificateDiscovery(_ClientWorkBase):
         response.assert_valid_response()
 
     def create(self,
-               name: str, certificate_location_dn: str, recursive_paths: List[str] = None, non_recursive_paths: List[str] = None,
+               name: str, certificate_location: 'Union[Config.Object, str]', recursive_paths: List[str] = None, non_recursive_paths: List[str] = None,
                max_filesize: str = ClientWorkAttributeValues.CertificateDiscovery.MaxFilesize.less_than_10k,
                pkcs12_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs12_extensions,
                pkcs7_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs7_extensions,
@@ -417,7 +419,7 @@ class CertificateDiscovery(_ClientWorkBase):
 
         Args:
             name: The name of the client work.
-            certificate_location_dn: The folder's dn to place the certificates
+            certificate_location: ``Config.Object`` or DN of the folder to place certificates.
             recursive_paths: (optional) A list of file paths to recursively search for new certificates
             non_recursive_paths: (optional) A lit of file paths to search for new certificates
             max_filesize: (optional) A maximum file size (Ignores files larger than this size)
@@ -437,6 +439,7 @@ class CertificateDiscovery(_ClientWorkBase):
         Returns:
             A config object representing the client work
         """
+        certificate_location_dn = self._get_dn(certificate_location)
         attributes = {
             ClientCertificateDiscoveryWorkAttributes.created_by                 : ClientWorkAttributeValues.CertificateDiscovery.CreatedBy.websdk,
             ClientCertificateDiscoveryWorkAttributes.certificate_location_dn    : certificate_location_dn,
@@ -518,11 +521,11 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container_dn: str, naming_pattern: str, ca_template_dn: str,
-               contacts: List[str], certificate_origin: str = None, certificate_description: str = None,
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', naming_pattern: str, ca_template: 'Union[Config.Object, str]',
+               contacts: 'List[Identity.Identity, str]', certificate_origin: str = None, certificate_description: str = None,
                validation_type: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.ValidationType.basic,
                revocation_status_check: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.RevocationStatusCheck.accept_when_unknown,
-               authentication_credentials_dn: str = None, authenticate_only_by_password: bool = False,
+               authentication_credentials: 'Union[Config.Object, str]' = None, authenticate_only_by_password: bool = False,
                revoke_previous_version: bool = False,
                identity_verification: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.IdentityVerification.valid,
                trusted_certs_and_cas: List[str] = None, get_if_already_exists: bool = False, **kwargs):
@@ -531,17 +534,17 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
 
         Args:
             name: The name of the client work.
-            certificate_container_dn: The folder's dn to create certificates
+            certificate_container: ``Config.Object`` or DN of the folder to create certificates.
             naming_pattern: The object naming pattern (IE. $CSR.CN$)
-            ca_template_dn: The Certificate Authority Template to use
-            contacts: List of identity prefixed universal GUIDs. (IE: contacts = [user1.guid, user2.guid]
+            ca_template: ``Config.Object`` or DN of the Certificate Authority.
+            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.
             certificate_origin: (optional) Specify the certificate origin value
             certificate_description: (optional) Specify the certificate description value
             validation_type: (optional) defaults to basic
                                 basic: Checks Expiration, Revocation, and Chain of Trust
                                 strict: Performs Basic Validation and checks Client Authentication Enhanced Key Usage
             revocation_status_check: (optional) defaults to accept when unknown
-            authentication_credentials_dn: (optional) credential_dn to provide client password authentication
+            authentication_credentials: (optional) ``Config.Object`` or DN of the credential to provide client password authentication.
             authenticate_only_by_password: (optional) only accept requests that are authenticated by password
             revoke_previous_version: (optional) Revoke previous versions of the certificate (defaults to False)
             identity_verification: (optional) Proof of Possession
@@ -549,14 +552,17 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            ``Config.Object``
         """
+        certificate_container_dn = self._get_dn(certificate_container)
+        ca_template_dn = self._get_dn(ca_template)
         attributes = {
             NetworkDeviceCertificateWorkAttributes.created_by                                 : ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.CreatedBy.websdk,
             NetworkDeviceCertificateWorkAttributes.certificate_container                      : certificate_container_dn,
             NetworkDeviceCertificateWorkAttributes.naming_pattern                             : naming_pattern,
             NetworkDeviceCertificateWorkAttributes.certificate_authority                      : ca_template_dn,
-            NetworkDeviceCertificateWorkAttributes.contact                                    : contacts,
+            NetworkDeviceCertificateWorkAttributes.contact                                    : [
+                self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             NetworkDeviceCertificateWorkAttributes.client_certificate_eku_checks_enabled      : validation_type,
             NetworkDeviceCertificateWorkAttributes.revocation_mode                            : revocation_status_check,
             NetworkDeviceCertificateWorkAttributes.fallback_to_http_auth                      : int(authenticate_only_by_password == False),
@@ -566,7 +572,8 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
 
         if certificate_origin: attributes[NetworkDeviceCertificateWorkAttributes.origin] = certificate_origin
         if certificate_description: attributes[NetworkDeviceCertificateWorkAttributes.description] = certificate_description
-        if authentication_credentials_dn: attributes[NetworkDeviceCertificateWorkAttributes.authentication_credentials] = authentication_credentials_dn
+        if authentication_credentials: 
+            attributes[NetworkDeviceCertificateWorkAttributes.authentication_credentials] = self._get_dn(authentication_credentials)
 
         if trusted_certs_and_cas:
             attributes[NetworkDeviceCertificateWorkAttributes.explicit_trust_anchors] = trusted_certs_and_cas
@@ -732,8 +739,8 @@ class DeviceCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container_dn: str, ca_template_dn: str, contacts: List[str],
-               description: str = None, naming_pattern: str = "$Client.DNSName$",
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]', 
+               contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$",
                common_name: str = "$Client.DNSName$", organization: str = None,
                organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
                country: str = None, subject_alternative_names: bool = False, automatic_renewal: bool = True,
@@ -744,9 +751,9 @@ class DeviceCertificateCreation(_ClientWorkBase):
 
         Args:
             name: The name of the client work
-            certificate_container_dn: Folder dn to create certificates in
-            ca_template_dn: Certificate Authority dn to use
-            contacts: List of identity prefixed universal GUIDs. (IE: contacts = [user1.guid, user2.guid]
+            certificate_container: ``Config.Object`` or DN of the folder to place certificates.
+            ca_template: ``Config.Object`` or DN of the Certificate Authority.
+            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.
             description: (optional) A description for the certificates
             naming_pattern: (optional) object naming pattern (defaults to: $Client.DNSName$)
             common_name: (optional) common name for the certificate
@@ -765,13 +772,16 @@ class DeviceCertificateCreation(_ClientWorkBase):
         Returns:
             A config object representing the client work
         """
-
+        certificate_container_dn = self._get_dn(certificate_container)
+        ca_template_dn = self._get_dn(ca_template)
+        
         attributes = {
             ClientUserCertificateWorkAttributes.created_by               : ClientWorkAttributeValues.DeviceCertificateCreation.CreatedBy.websdk,
             ClientUserCertificateWorkAttributes.certificate_container    : certificate_container_dn,
             ClientUserCertificateWorkAttributes.certificate_authority    : ca_template_dn,
             ClientUserCertificateWorkAttributes.naming_pattern           : naming_pattern,
-            ClientUserCertificateWorkAttributes.contact                  : contacts,
+            ClientUserCertificateWorkAttributes.contact                  : [self._get_prefixed_universal(c) for c in
+                                                                            contacts] if contacts else None,
             ClientUserCertificateWorkAttributes.key_bit_strength         : key_bit_strength,
             ClientUserCertificateWorkAttributes.x509_subject             : common_name,
             ClientUserCertificateWorkAttributes.disable_automatic_renewal: not automatic_renewal,
@@ -804,8 +814,8 @@ class DynamicProvisioning(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container_dn: str, ca_template_dn: str, contacts: List[str],
-               description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]', 
+               contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
                organization: str = None, organizational_unit: List[str] = None, city_locality: str = None,
                state_province: str = None, country: str = None, subject_alternative_names: str = "$Client.DNSname$",
                capi_keystore: bool = False, capi_friendly_name: str = "", capi_trustee: str = "",
@@ -817,9 +827,9 @@ class DynamicProvisioning(_ClientWorkBase):
 
         Args:
             name: The name of the client work
-            certificate_container_dn: Folder dn to create certificates in
-            ca_template_dn: Certificate Authority dn to use
-            contacts: List of identity prefixed universal GUIDs. (IE: contacts = [user1.guid, user2.guid]
+            certificate_container: ``Config.Object``  or DN of the folder to place certificates.
+            ca_template: ``Config.Object`` or DN of the Certificate Authority.
+            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.
             description: (optional) A description for the certificates
             naming_pattern: (optional) object naming pattern (defaults to: $Client.DNSName$)
             common_name: (optional) common name for the certificate
@@ -840,13 +850,15 @@ class DynamicProvisioning(_ClientWorkBase):
         Returns:
             A config object representing the client work
         """
-
+        certificate_container_dn = self._get_dn(certificate_container)
+        ca_template_dn = self._get_dn(ca_template)
+        
         attributes = {
             ServerCertificateWorkAttributes.created_by             : ClientWorkAttributeValues.DynamicProvisioning.CreatedBy.websdk,
             ServerCertificateWorkAttributes.certificate_container  : certificate_container_dn,
             ServerCertificateWorkAttributes.certificate_authority  : ca_template_dn,
             ServerCertificateWorkAttributes.naming_pattern         : naming_pattern,
-            ServerCertificateWorkAttributes.contact                : contacts,
+            ServerCertificateWorkAttributes.contact                : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             ServerCertificateWorkAttributes.key_bit_strength       : key_bit_strength,
             ServerCertificateWorkAttributes.x509_subject           : common_name,
             ServerCertificateWorkAttributes.x509_subjectaltname_dns: subject_alternative_names,
@@ -882,7 +894,7 @@ class SSHDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, devices_folder_dn: str,
+    def create(self, name: str, devices_folder: 'Union[Config.Object, str]',
                share_mode: str = ClientWorkAttributeValues.SSHDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders,
                get_if_already_exists: bool = True, **kwargs):
         """
@@ -890,7 +902,7 @@ class SSHDevicePlacement(_ClientWorkBase):
 
         Args:
             name: The name of the client work
-            devices_folder_dn: the folder's dn to place newly discovered ssh devices
+            devices_folder: ``Config.Object`` or DN of the folder to place newly discovered ssh devices.
             share_mode: how to de-duplicate newly discovered devices:
                     "WholeTree" : search the entire policy tree
                     "SpecifiedFolderOnly" : search the devices folder
@@ -901,7 +913,7 @@ class SSHDevicePlacement(_ClientWorkBase):
         Returns:
             A config object representing the client work
         """
-
+        devices_folder_dn = self._get_dn(devices_folder)
         attributes = {
             ServerAgentSSHDevicePlacementWorkAttributes.created_by            : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
             ServerAgentSSHDevicePlacementWorkAttributes.device_object_location: devices_folder_dn,
@@ -1370,8 +1382,8 @@ class UserCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container_dn: str, ca_template_dn: str, contacts: List[str],
-               description: str = None,
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]', 
+               contacts: 'List[Identity.Identity, str]', description: str = None,
                naming_pattern: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.naming_pattern,
                common_name: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.common_name,
                organization: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.organization,
@@ -1396,9 +1408,9 @@ class UserCertificateCreation(_ClientWorkBase):
 
         Args:
             name: The name of the client work.
-            certificate_container_dn: folder dn to create certificates in
-            ca_template_dn: Certificate Authority dn to use
-            contacts: List of identity prefixed universal GUIDs. (IE: contacts = [user1.guid, user2.guid])
+            certificate_container: ``Config.Object`` or DN of the folder to place certificates.
+            ca_template: ``Config.Object`` or DN of the Certificate Authority.
+            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.)
             description: (optional) a description for the certificates
             naming_pattern: (optional) object naming pattern
             common_name: (optional) common name for the certificate
@@ -1439,13 +1451,14 @@ class UserCertificateCreation(_ClientWorkBase):
         Returns:
             A config object representing the client work
         """
-
+        certificate_container_dn = self._get_dn(certificate_container)
+        ca_template_dn = self._get_dn(ca_template)
         attributes = {
             ClientUserCertificateWorkAttributes.created_by                       : ClientWorkAttributeValues.UserCertificateCreation.CreatedBy.websdk,
             ClientUserCertificateWorkAttributes.certificate_container            : certificate_container_dn,
             ClientUserCertificateWorkAttributes.certificate_authority            : ca_template_dn,
             ClientUserCertificateWorkAttributes.naming_pattern                   : naming_pattern,
-            ClientUserCertificateWorkAttributes.contact                          : contacts,
+            ClientUserCertificateWorkAttributes.contact                          : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             ClientUserCertificateWorkAttributes.key_bit_strength                 : key_bit_strength,
             ClientUserCertificateWorkAttributes.x509_subject                     : common_name,
             ClientUserCertificateWorkAttributes.organization                     : organization,

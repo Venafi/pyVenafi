@@ -86,23 +86,6 @@ class _ApplicationAttributesBase(metaclass=_PropertyMeta):
 
 
 class ApplicationAttributes(_ApplicationAttributesBase, metaclass=_PropertyMeta):
-    class A10AXTrafficManager(metaclass=_PropertyMeta):
-        bundle_certificate = "Bundle Certificate"
-        certificate_chain_name = "Certificate Chain Name"
-        certificate_name = "Certificate Name"
-        file_validation_disabled = "File Validation Disabled"
-        install_chain_file = "Install Chain File"
-        network_validation_disabled = "Network Validation Disabled"
-        ssh_port = "SSH Port"
-        ssl_cache_size = "SSL Cache Size"
-        ssl_close_notification = "SSL Close Notification"
-        ssl_false_start = "SSL False Start"
-        ssl_pass_phrase = "SSL Pass Phrase"
-        ssl_profile_name = "SSL Profile Name"
-        ssl_profile_type = "SSL Profile Type"
-        tls_version = "TLS Version"
-        use_ssl_template = "Use SSL Template"
-
     class Adaptable(metaclass=_PropertyMeta):
         certificate_name = "Certificate Name"
         file_validation_disabled = "File Validation Disabled"
@@ -521,20 +504,11 @@ class _ApplicationAttributeValuesBase(metaclass=_PropertyMeta):
 
     class ProtectionType(metaclass=_PropertyMeta):
         module = 'Module'
-        ocs = 'OCS'
+        ocs = 'Operator Card Set'
         softcard = 'Softcard'
 
 
 class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_PropertyMeta):
-    class A10AXTrafficManager(metaclass=_PropertyMeta):
-        class TemplateType(metaclass=_PropertyMeta):
-            client = 'Client'
-            server = 'Server'
-
-        class ServerSslTlsVersion(metaclass=_PropertyMeta):
-            ssl_3_0 = 'SSL Version 3.0'
-            tls_1_0 = 'TLS Version 1.0'
-
     class AmazonAWS(metaclass=_PropertyMeta):
         class BindingTarget(metaclass=_PropertyMeta):
             no_binding = 0
@@ -543,8 +517,8 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_Pro
             application_load_balancer = 3
 
         class ProvisionTo(metaclass=_PropertyMeta):
-            acm = 'ACM'
-            iam = 'IAM'
+            acm = 0
+            iam = 1
 
         class Region(metaclass=_PropertyMeta):
             us_east_virginia = 'us-east-1'
@@ -566,6 +540,14 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_Pro
             aws_govcloud_us = 'us-gov-west-1'
 
     class Apache(metaclass=_PropertyMeta):
+        class GroupPermissions(metaclass=_PropertyMeta):
+            read = '0040'
+            read_write = '0060'
+
+        class OwnerPermissions(metaclass=_PropertyMeta):
+            read = '0400'
+            read_write = '0600'
+
         class PrivateKeyLocation(metaclass=_PropertyMeta):
             device = 'Device'
             gemalto_safe_net_hsm = 'Gemalto SafeNet HSM'
@@ -623,6 +605,11 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_Pro
         class SslProfileType(metaclass=_PropertyMeta):
             client = 'Client'
             server = 'Server'
+
+    class GoogleCloudLoadBalancer(metaclass=_PropertyMeta):
+        class TargetProxyType:
+            https = 'HTTPS'
+            ssl = 'SSL'
 
     class IBMDataPower(metaclass=_PropertyMeta):
         class CertificateFolder(metaclass=_PropertyMeta):
@@ -723,7 +710,6 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_Pro
 
 
 class ApplicationClassNames(metaclass=_PropertyMeta):
-    a10_ax_traffic_manager = "A10 AX Traffic Manager"
     adaptable_app = "Adaptable App"
     amazon_app = "Amazon App"
     apache = "Apache"
@@ -1347,6 +1333,23 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase, metacl
         secure = "Secure"
         web_instance = "Web Instance"
 
+
+class CertificateAuthorityAttributeValues(metaclass=_PropertyMeta):
+    class SelfSigned:
+        class KeyUsage:
+            encipher_only = 'EncipherOnly'
+            key_agreement = 'KeyAgreement'
+            data_encipherment = 'DataEncipherment'
+            key_encipherment = 'KeyEncipherment'
+            non_repudiation = 'NonRepudiation'
+            digital_signature = 'DigitalSignature'
+            decipher_only = 'DecipherOnly'
+
+        class SignatureAlgorithm:
+            sha_1 = 'SHA1'
+            sha_256 = 'SHA256'
+            sha_384 = 'SHA384'
+            sha_512 = 'SHA512'
 
 class CertificateAuthorityClassNames(metaclass=_PropertyMeta):
     adaptable_ca = "Adaptable CA"
@@ -3258,6 +3261,13 @@ class DeviceAttributeValues(metaclass=_PropertyMeta):
     class ConnectionMethod(metaclass=_PropertyMeta):
         agent = 'Agent'
         agentless = 'Agentless'
+
+
+class JumpServerAttributeValues(metaclass=_PropertyMeta):
+    class SSHVersion:
+        open_ssh = 'OpenSSH'
+        tectia_4 = 'Tectia 4'
+        tectia_6 = 'Tectia 6'
 
 
 class DevicesClassNames(metaclass=_PropertyMeta):

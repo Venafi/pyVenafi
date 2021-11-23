@@ -1,20 +1,21 @@
 from datetime import datetime, timedelta
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
 from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Identity
 
 
 class _CredentialBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def _create(self, name: str, parent_folder_dn: str, friendly_name: str, values: List[dict], expiration: int,
-                description: str, encryption_key: str = None, shared: bool = False, contact: List[str] = None,
+    def _create(self, name: str, parent_folder: 'Union[Config.Object]', friendly_name: str, values: List[dict], expiration: int,
+                description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                 get_if_already_exists: bool = True):
+        parent_folder_dn = self._get_dn(parent_folder)
         dn = f'{parent_folder_dn}\\{name}'
-
         expiration = int((datetime.now() + timedelta(expiration * (365 / 12))).timestamp() * 1000)
-
         result = self._api.websdk.Credentials.Create.post(
             credential_path=dn,
             friendly_name=friendly_name,
@@ -23,7 +24,7 @@ class _CredentialBase(FeatureBase):
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact
+            contact=[self._get_prefixed_universal(c) for c in contacts] if contacts else None
         ).result
 
         if result.code != 1:
@@ -53,7 +54,7 @@ class _CredentialBase(FeatureBase):
             raise_error_if_not_exists: Raise an exception if the credential DN does not exist.
 
         Returns:
-            Config object of the credential object.
+            ``Config.Object``
         """
         return self._get_config_object(
             object_dn=credential_dn,
@@ -63,30 +64,26 @@ class _CredentialBase(FeatureBase):
 
 @feature()
 class AmazonCredential(_CredentialBase):
-    """
-    This feature provides high-level interaction with TPP Amazon Credentials.
-    """
-
     def __init__(self, api):
         super().__init__(api)
 
-    def create_adfs(self, name: str, parent_folder_dn: str, adfs_credential_dn: str, adfs_url: str, role: str, expiration: int = 6,
-                    description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None,
-                    get_if_already_exists: bool = True):
+    def create_adfs(self, name: str, parent_folder: 'Union[Config.Object]', adfs_credential: 'Union[Config.Object, str]', adfs_url: str,
+                    role: str, expiration: int = 6, description: str = None, encryption_key: str = None, shared: bool = False,
+                    contacts: 'List[Union[Identity.Identity, str]]' = None, get_if_already_exists: bool = True):
         """
         Creates a Local Amazon Credential object in TPP. By default, the credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
-            adfs_credential_dn: Absolute path to the ADFS credential object in TPP.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
+            adfs_credential: ``Config.Object`` or DN of the ADFS username credential.
             adfs_url: ADFS URL.
             role: Role.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
@@ -95,31 +92,31 @@ class AmazonCredential(_CredentialBase):
         values = [
             self._name_type_value( name='Source', type='string', value='ADFS'),
             self._name_type_value(name='AdfsUrl', type='string', value=adfs_url),
-            self._name_type_value(name='AdfsCredential', type='string', value=adfs_credential_dn),
+            self._name_type_value(name='AdfsCredential', type='string', value=self._get_dn(adfs_credential)),
             self._name_type_value(name='Role', type='string', value=role),
         ]
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='Amazon',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
 
-    def create_local(self, name: str, parent_folder_dn: str, access_key: str, secret_key: str, role: str = None,
+    def create_local(self, name: str, parent_folder: 'Union[Config.Object]', access_key: str, secret_key: str, role: str = None,
                      external_id: str = None, expiration: int = 6, description: str = None, encryption_key: str = None,
-                     shared: bool = False, contact: List[str] = None, get_if_already_exists: bool = True):
+                     shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None, get_if_already_exists: bool = True):
         """
         Creates a Local Amazon Credential object in TPP. By default, the credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             access_key: Access Key.
             secret_key: Secret Key.
             role: Role.
@@ -128,7 +125,7 @@ class AmazonCredential(_CredentialBase):
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: bool = True
 
         Returns:
@@ -143,43 +140,39 @@ class AmazonCredential(_CredentialBase):
         ]
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='Amazon',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
 
 
 @feature()
 class CertificateCredential(_CredentialBase):
-    """
-    This feature provides high-level interaction with TPP Certificate Credentials.
-    """
-
     def __init__(self, api):
         super().__init__(api)
 
-    def create(self, name: str, parent_folder_dn: str, certificate: str, password: str = None, expiration: int = 6,
-               description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object]', certificate: str, password: str = None, expiration: int = 6,
+               description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
         Creates a Certificate Credential object in TPP. The credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             certificate: Base64-encoded PKCS#12 or PFX certificate.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: bool = True
 
         Returns:
@@ -193,43 +186,83 @@ class CertificateCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='Certificate',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
 
 
 @feature()
-class GenericCredential(_CredentialBase):
-    """
-    This feature provides high-level interaction with TPP Generic Credentials.
-    """
-
+class GoogleCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def create(self, name: str, parent_folder_dn: str, generic: str, password: str = None, expiration: int = 6,
-               description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', json_content: 'str', expiration: int = 6,
+               description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
         Creates a Generic Password Credential object in TPP. The credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
+            json_content: JSON content as plain text.
+            expiration: Number months from today at which the credential expires.
+            description: Description of the credential object.
+            encryption_key: Encryption Key used to protect the credential data.
+            shared: If True, the credential can be shared between multiple objects.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
+            get_if_already_exists: bool = True
+
+        Returns:
+            Config object representing the credential.
+        """
+        import json
+        values = [
+            self._name_type_value('Json', 'string', value=json.dumps(json_content)),
+        ]
+
+        return self._create(
+            name=name,
+            parent_folder=parent_folder,
+            friendly_name='Google',
+            values=values,
+            expiration=expiration,
+            description=description,
+            encryption_key=encryption_key,
+            shared=shared,
+            contacts=contacts,
+            get_if_already_exists=get_if_already_exists
+        )
+
+
+@feature()
+class GenericCredential(_CredentialBase):
+    def __init__(self, api):
+        super().__init__(api)
+
+    def create(self, name: str, parent_folder: 'Union[Config.Object]', generic: str, password: str = None, expiration: int = 6,
+               description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
+               get_if_already_exists: bool = True):
+        """
+        Creates a Generic Password Credential object in TPP. The credential is set to expire 6 months from now.
+
+        Args:
+            name: Name of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             generic: Unclassified binary data.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: bool = True
 
         Returns:
@@ -242,42 +275,38 @@ class GenericCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='Generic',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
 
 
 @feature()
 class PasswordCredential(_CredentialBase):
-    """
-    This feature provides high-level interaction with TPP Password Credentials.
-    """
-
     def __init__(self, api):
         super().__init__(api)
 
-    def create(self, name: str, parent_folder_dn: str, password: str, expiration: int = 6, description: str = None,
-               encryption_key: str = None, shared: bool = False, contact: List[str] = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object]', password: str, expiration: int = 6, description: str = None,
+               encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
         Creates a Password Credential object in TPP. The credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: bool = True
 
         Returns:
@@ -289,43 +318,39 @@ class PasswordCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='Password',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
 
 
 @feature()
 class PrivateKeyCredential(_CredentialBase):
-    """
-    This feature provides high-level interaction with TPP PrivateKey Credentials.
-    """
-
     def __init__(self, api):
         super().__init__(api)
 
-    def create(self, name: str, parent_folder_dn: str, private_key: str, username: str, expiration: int = 6,
-               description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object]', private_key: str, username: str, expiration: int = 6,
+               description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
         Creates a Private Key Credential object in TPP. The credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             private_key: Base64-encoded (PKCS#8) private key.
             username: Username.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: bool = True
 
         Returns:
@@ -338,42 +363,39 @@ class PrivateKeyCredential(_CredentialBase):
 
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='PrivateKey',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
 
 
 @feature()
 class UsernamePasswordCredential(_CredentialBase):
-    """
-    This feature provides high-level interaction with TPP Username/Password Credentials.
-    """
     def __init__(self, api):
         super().__init__(api)
 
-    def create(self, name: str, parent_folder_dn: str, username: str, password: str, expiration: int = 6,
-               description: str = None, encryption_key: str = None, shared: bool = False, contact: List[str] = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object]', username: str, password: str, expiration: int = 6,
+               description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
         Creates a Username/Password Credential object in TPP. By default, the credential is set to expire 6 months from now.
 
         Args:
             name: Name of the credential object.
-            parent_folder_dn: Absolute path to the parent folder of the credential object.
+            parent_folder: ``Config.Object`` or DN of the parent folder.
             username: Username.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
             shared: If True, the credential can be shared between multiple objects.
-            contact: List of absolute paths to the users in TPP to be established as contacts.
+            contacts: List of absolute paths to the users in TPP to be established as contacts.
             get_if_already_exists: bool = True
 
         Returns:
@@ -386,13 +408,13 @@ class UsernamePasswordCredential(_CredentialBase):
         ]
         return self._create(
             name=name,
-            parent_folder_dn=parent_folder_dn,
+            parent_folder=parent_folder,
             friendly_name='UsernamePassword',
             values=values,
             expiration=expiration,
             description=description,
             encryption_key=encryption_key,
             shared=shared,
-            contact=contact,
+            contacts=contacts,
             get_if_already_exists=get_if_already_exists
         )
