@@ -1,11 +1,13 @@
-from typing import Union, List
 from pytpp.features.identity import (
     _IdentityBase as _OriginalIdentityBase,
     User as _OriginalUser,
     Group as _OriginalGroup,
-    Identity, feature
 )
+from pytpp.features.bases.feature_base import feature
 from pytpp.properties.rights import SubSystemTypes
+from typing import Union, List, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Identity
 
 
 class _IdentityBase(_OriginalIdentityBase):
@@ -204,7 +206,7 @@ class User(_OriginalUser, _IdentityBase):
 
 @feature()
 class Group(_OriginalGroup, _IdentityBase):
-    def create(self, name: str, member_prefixed_names: List[str] = None, master_admin_group: bool = False,
+    def create(self, name: str, members: 'List[Union[Identity.Identity, str]]' = None, master_admin_group: bool = False,
                allow_websdk_access: bool = False, allow_aperture_user_search: bool = False,
                get_if_already_exists: bool = True):
         """
@@ -215,7 +217,7 @@ class Group(_OriginalGroup, _IdentityBase):
 
         Args:
             name: Name of the user. The `"local:"` prefix is not required.
-            member_prefixed_names: List of prefixed universal names of each member.
+            members: List of ``Identity.Identity`` or prefixed universal names of each member.
             master_admin_group: If ``True``, grants Master Admin privileges to the user.
             allow_aperture_user_search: If ``True``, grants Aperture User Search permission to the user.
             allow_websdk_access: If ``True``, grants WebSDK Access to the user.
@@ -224,10 +226,7 @@ class Group(_OriginalGroup, _IdentityBase):
         Returns:
             Identity object of the user.
         """
-        group = super().create(
-            name=name, member_prefixed_names=member_prefixed_names,
-            get_if_already_exists=get_if_already_exists
-        )
+        group = super().create(name=name, members=members, get_if_already_exists=get_if_already_exists)
         if master_admin_group:
             self.add_master_admin(identity=group)
 
