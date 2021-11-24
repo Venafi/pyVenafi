@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.permissions import Permissions
 
 
@@ -26,7 +26,7 @@ class _Permissions:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def principals(self) -> List[str]:
                         return self._from_json()
 
@@ -75,12 +75,12 @@ class _Permissions:
                                     super().__init__(response=response)
 
                                 @property
-                                @json_response_property()
+                                @api_response_property()
                                 def explicit_permissions(self):
                                     return Permissions.Permissions(self._from_json(key='ExplicitPermissions'))
 
                                 @property
-                                @json_response_property()
+                                @api_response_property()
                                 def implicit_permissions(self):
                                     return Permissions.Permissions(self._from_json(key='ImplicitPermissions'))
 
@@ -143,7 +143,7 @@ class _Permissions:
                                         super().__init__(response=response)
 
                                     @property
-                                    @json_response_property()
+                                    @api_response_property()
                                     def effective_permissions(self):
                                         return Permissions.Permissions(self._from_json('EffectivePermissions'))
 
@@ -166,12 +166,12 @@ class _Permissions:
                                 super().__init__(response=response)
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def explicit_permissions(self):
                                 return Permissions.Permissions(self._from_json('ExplicitPermissions'))
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def implicit_permissions(self):
                                 return Permissions.Permissions(self._from_json('ImplicitPermissions'))
 
@@ -234,7 +234,7 @@ class _Permissions:
                                     super().__init__(response=response)
 
                                 @property
-                                @json_response_property()
+                                @api_response_property()
                                 def effective_permissions(self):
                                     return Permissions.Permissions(self._from_json('EffectivePermissions'))
 
@@ -250,7 +250,7 @@ class _Permissions:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self) -> int:
                     return self._from_json('Result')
 

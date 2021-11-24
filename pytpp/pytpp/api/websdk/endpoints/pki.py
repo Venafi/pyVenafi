@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.pki import PKI
 
 
@@ -26,7 +26,7 @@ class _PKI:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def pkis(self):
                         return [PKI.PKI(pki) for pki in self._from_json(key='pkis')]
 
@@ -54,22 +54,22 @@ class _PKI:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def certificate_dn(self) -> str:
                         return self._from_json(key='CertificateDN')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def certificate_guid(self) -> str:
                         return self._from_json(key='CertificateGuid')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def error(self) -> str:
                         return self._from_json(key='Error')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def guid(self) -> str:
                         return self._from_json(key='Guid')
 
@@ -94,37 +94,37 @@ class _PKI:
                             super().__init__(response=response)
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def certificate(self):
                             return PKI.Certificate(self._from_json(key='Certificate'))
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def create_certificate_authority(self) -> bool:
                             return self._from_json(key='CreateCertificateAuthority')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def create_pki_role(self) -> bool:
                             return self._from_json(key='CreatePKIRole')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def folder_dn(self):
                             return self._from_json(key='FolderDn')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def installation(self):
                             return PKI.Installation(self._from_json(key='Installation'))
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def pki_path(self):
                             return self._from_json(key='PkiPath')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def roles(self) -> list:
                             return self._from_json(key='Roles')
 
@@ -136,22 +136,22 @@ class _PKI:
                             super().__init__(response=response)
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def certificate_dn(self) -> str:
                             return self._from_json(key='CertificateDN')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def certificate_guid(self) -> str:
                             return self._from_json(key='CertificateGuid')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def error(self) -> str:
                             return self._from_json(key='Error')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 
@@ -179,22 +179,22 @@ class _PKI:
                             super().__init__(response=response)
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def certificate_dn(self) -> str:
                             return self._from_json(key='CertificateDN')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def certificate_guid(self) -> str:
                             return self._from_json(key='CertificateGuid')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def error(self) -> str:
                             return self._from_json(key='Error')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 
@@ -210,17 +210,17 @@ class _PKI:
                                 super().__init__(response=response)
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def certificate_dn(self) -> str:
                                 return self._from_json(key='CertificateDN')
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def certificate_guid(self) -> str:
                                 return self._from_json(key='CertificateGuid')
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def guid(self) -> str:
                                 return self._from_json(key='Guid')
 
@@ -254,12 +254,12 @@ class _PKI:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def error(self) -> str:
                         return self._from_json(key='Error')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def guid(self) -> str:
                         return self._from_json(key='Guid')
 
@@ -285,67 +285,67 @@ class _PKI:
                             super().__init__(response=response)
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def city(self) -> str:
                             return self._from_json(key='City')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def country(self) -> str:
                             return self._from_json(key='Country')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def enhanced_key_usage(self) -> str:
                             return self._from_json(key='EnhancedKeyUsage')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def error(self) -> str:
                             return self._from_json(key='Error')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def folder_dn(self) -> str:
                             return self._from_json(key='FolderDn')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def key_algorithm(self) -> str:
                             return self._from_json(key='KeyAlgorithm')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def key_bit_size(self) -> str:
                             return self._from_json(key='KeyBitSize')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def organization(self) -> str:
                             return self._from_json(key='Organization')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def organizational_units(self) -> List[str]:
                             return self._from_json(key='OrganizationalUnits')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def role_name(self) -> str:
                             return self._from_json(key='RoleName')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def state(self) -> str:
                             return self._from_json(key='State')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def whitelisted_domains(self) -> List[str]:
                             return self._from_json(key='WhitelistedDomains')
 
@@ -372,12 +372,12 @@ class _PKI:
                             super().__init__(response=response)
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def error(self) -> str:
                             return self._from_json(key='Error')
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def guid(self) -> str:
                             return self._from_json(key='Guid')
 

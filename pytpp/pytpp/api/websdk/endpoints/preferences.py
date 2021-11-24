@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.preferences import Preferences
 
 
@@ -18,7 +18,7 @@ class _Preferences(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def preferences(self):
                 return [Preferences.Preference(p) for p in self._from_json(key='Preferences')]
 

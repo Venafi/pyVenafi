@@ -20,7 +20,7 @@ class Certificate(FeatureBase):
         retries = 3
         result = self._api.websdk.Certificates.Guid(certificate_guid).get()
         for retry in range(retries):
-            if 'Rerun the transaction' not in result.json_response.reason:
+            if 'Rerun the transaction' not in result.api_response.reason:
                 result.assert_valid_response()
                 return result
             logger.log('Rerunning Certificates/Get transaction due to deadlock...', log_tag=LogTags.feature)

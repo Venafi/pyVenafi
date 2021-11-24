@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.codesign import CodeSign
 
 
@@ -62,17 +62,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -92,17 +92,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -122,17 +122,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -159,17 +159,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -190,22 +190,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def count(self) -> int:
                     return self._from_json(key='Count')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -225,22 +225,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application(self):
                     return CodeSign.Application(self._from_json(key='Application'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -260,22 +260,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application(self):
                     return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -295,22 +295,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def project(self):
                     return CodeSign.Project(self._from_json(key='Project'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -332,22 +332,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_template(self):
                     return CodeSign.CertificateTemplate(self._from_json(key='CertificateTemplate'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -369,17 +369,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -401,17 +401,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -433,17 +433,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -465,17 +465,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -498,17 +498,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -528,24 +528,24 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def applications(self):
                     return [
                         CodeSign.Application(a) for a in self._from_json(key='Applications')
                     ]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -565,7 +565,7 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_collections(self):
                     return [
                         CodeSign.ApplicationCollection(ac)
@@ -573,17 +573,17 @@ class _Codesign:
                     ]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -604,22 +604,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def projects(self):
                     return [CodeSign.Project(p) for p in self._from_json(key='Projects')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -646,22 +646,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def reference_dns(self) -> List[str]:
                     return self._from_json(key='ReferenceDNs')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -682,7 +682,7 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_templates(self):
                     return [
                         CodeSign.CertificateTemplate(t)
@@ -690,7 +690,7 @@ class _Codesign:
                     ]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def csp_templates(self):
                     return [
                         CodeSign.CSPTemplate(t)
@@ -698,7 +698,7 @@ class _Codesign:
                     ]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def dot_net_templates(self):
                     return [
                         CodeSign.DotNetTemplate(t)
@@ -706,7 +706,7 @@ class _Codesign:
                     ]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def gpg_templates(self):
                     return [
                         CodeSign.GPGTemplate(t)
@@ -714,17 +714,17 @@ class _Codesign:
                     ]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -746,22 +746,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application(self):
                     return CodeSign.Application(self._from_json(key='Application'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -783,22 +783,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_collection(self):
                     return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -820,22 +820,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_collection(self):
                     return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -857,32 +857,32 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_collection(self):
                     return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_collection_dns(self) -> List[str]:
                     return self._from_json(key='ApplicationCollectionDNs')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_dns(self) -> List[str]:
                     return self._from_json(key='ApplicationDNs')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -904,22 +904,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_environment(self):
                     return CodeSign.CertificateEnvironment(self._from_json(key='CertificateEnvironment'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -935,22 +935,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def global_configuration(self):
                     return CodeSign.GlobalConfiguration(self._from_json(key='GlobalConfiguration'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -970,22 +970,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rights_list(self):
                     return [CodeSign.RightsKeyValue(r) for r in self._from_json(key='RightsList')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1007,22 +1007,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def project(self):
                     return CodeSign.Project(self._from_json(key='Project'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1042,22 +1042,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rights(self):
                     return CodeSign.Rights(self._from_json(key='Rights'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1079,22 +1079,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_template(self):
                     return CodeSign.CertificateTemplate(self._from_json(key='CertificateTemplate'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1114,22 +1114,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rights_list(self):
                     return [CodeSign.RightsKeyValue(r) for r in self._from_json(key='RightsList')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1149,17 +1149,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1179,17 +1179,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1209,17 +1209,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1240,17 +1240,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1271,17 +1271,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1304,17 +1304,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1336,17 +1336,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1366,17 +1366,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1396,17 +1396,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1426,17 +1426,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1456,22 +1456,22 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_environment(self):
                     return CodeSign.CertificateEnvironment(self._from_json(key='CertificateEnvironment'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1491,17 +1491,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1524,17 +1524,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
@@ -1556,17 +1556,17 @@ class _Codesign:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return CodeSign.ResultCode(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 

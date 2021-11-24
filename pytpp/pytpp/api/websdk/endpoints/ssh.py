@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.ssh import SSH
 
 
@@ -63,12 +63,12 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -91,17 +91,17 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keyset_id(self) -> str:
                     return self._from_json('KeysetId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -125,12 +125,12 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -155,22 +155,22 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keyset_id(self) -> str:
                     return self._from_json('KeysetId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def notes(self) -> str:
                     return self._from_json('Notes')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -200,22 +200,22 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keyset_id(self) -> str:
                     return self._from_json('KeysetId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def notes(self) -> str:
                     return self._from_json('Notes')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -240,17 +240,17 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def owner(self) -> str:
                     return self._from_json('Owner')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def location(self) -> str:
                     return self._from_json('Location')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -275,17 +275,17 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keyset_id(self) -> str:
                     return self._from_json('KeysetId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -306,7 +306,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -326,7 +326,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -346,7 +346,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -367,7 +367,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -387,7 +387,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -407,7 +407,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -429,7 +429,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def data(self):
                     return [SSH.DeviceData(d) for d in self._from_json('Data')]
 
@@ -457,7 +457,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -479,12 +479,12 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_material(self) -> str:
                     return self._from_json('KeyMaterial')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -506,22 +506,22 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keyset_id(self) -> str:
                     return self._from_json('KeysetId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def notes(self) -> str:
                     return self._from_json('Notes')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('Response'))
 
@@ -545,12 +545,12 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('SshWebResponse'))
 
@@ -570,7 +570,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('SshWebResponse'))
 
@@ -595,12 +595,12 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json('SshWebResponse'))
 
@@ -625,7 +625,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -645,7 +645,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_data(self):
                     return [SSH.KeyData(d) for d in self._from_json('KeyData')]
 
@@ -666,72 +666,72 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access(self):
                     return self._from_json('Access')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def algorithm(self):
                     return self._from_json('Algorithm')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def fingerprint_md5(self):
                     return self._from_json('FingerprintMD5')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def fingerprint_sha256(self):
                     return self._from_json('FingerprintSHA256')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keyset_id(self):
                     return self._from_json('KeysetId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def last_rotation_date(self):
                     return self._from_json('LastRotationDate')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def last_used(self):
                     return self._from_json('LastUsed')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def length(self):
                     return self._from_json('Length')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def private_keys(self):
-                    return [SSH.KeyData(key) for key in self._from_json('PrivateKeys')] if 'PrivateKeys' in self.json_response.json() else []
+                    return [SSH.KeyData(key) for key in self._from_json('PrivateKeys')] if 'PrivateKeys' in self.api_response.json() else []
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def process_status(self):
                     return self._from_json('ProcessStatus')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def public_keys(self):
-                    return [SSH.KeyData(key) for key in self._from_json('PublicKeys')] if 'PublicKeys' in self.json_response.json() else []
+                    return [SSH.KeyData(key) for key in self._from_json('PublicKeys')] if 'PublicKeys' in self.api_response.json() else []
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rotation_stage(self):
                     return self._from_json('RotationStage')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def type(self):
                     return self._from_json('Type')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def violation_status(self):
                     return self._from_json('ViolationStatus')
 
@@ -750,7 +750,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def data(self):
                     return [SSH.KeySetData(key) for key in self._from_json('Data')]
 
@@ -773,7 +773,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def data(self):
                     return [SSH.KeyUsageData(key) for key in self._from_json('Data')]
 
@@ -794,7 +794,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -815,7 +815,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -835,7 +835,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -855,7 +855,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -875,7 +875,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -896,7 +896,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -917,7 +917,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -937,7 +937,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSH.Response(self._from_json())
 
@@ -957,7 +957,7 @@ class _SSH:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def connection_results(self):
                     return [SSH.ConnectionResult(result) for result in self._from_json()]
 
@@ -983,32 +983,32 @@ class _SSH:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def root_orphans(self) -> int:
                         return self._from_json('RootOrphans')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def non_root_orphans(self) -> int:
                         return self._from_json('NonRootOrphans')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def accessible_root_accounts(self) -> int:
                         return self._from_json('AccessibleRootAccounts')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def shared_private_keys(self) -> int:
                         return self._from_json('SharedPrivateKeys')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def non_compliant_duplicate_private_keys(self) -> int:
                         return self._from_json('NonCompliantDuplicatePrivateKeys')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def very_small_key(self) -> int:
                         return self._from_json('VerySmallKey')
 
@@ -1024,57 +1024,57 @@ class _SSH:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def non_compliant_force_command(self):
                         return self._from_json('NonCompliantForceCommand')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def non_compliant_source_restriction(self):
                         return self._from_json('NonCompliantSourceRestriction')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def missing_options(self):
                         return self._from_json('MissingOptions')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def non_compliant_algorithm(self):
                         return self._from_json('NonCompliantAlgorithm')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def vulnerable_protocol(self):
                         return self._from_json('VulnerableProtocol')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def non_compliant_vendor_format(self):
                         return self._from_json('NonCompliantVendorFormat')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def key_older_than_policy(self):
                         return self._from_json('KeyOlderThanPolicy')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def shared_server_account(self):
                         return self._from_json('SharedServerAccount')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def key_smaller_than_policy(self):
                         return self._from_json('KeySmallerThanPolicy')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def duplicate_private_keys(self):
                         return self._from_json('DuplicatePrivateKeys')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def root_access(self):
                         return self._from_json('RootAccess')
 
@@ -1094,7 +1094,7 @@ class _SSH:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def name_value_pairs(self) -> dict:
                         return self._from_json()
 

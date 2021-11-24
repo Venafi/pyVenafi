@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.flow import Flow
 from pytpp.properties.response_objects.codesign import CodeSign
 from typing import List
@@ -41,17 +41,17 @@ class _Flow:
                                 super().__init__(response=response)
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def error(self) -> str:
                                 return self._from_json(key='Error')
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def result(self):
                                 return CodeSign.ResultCode(self._from_json(key='Result'))
 
                             @property
-                            @json_response_property()
+                            @api_response_property()
                             def success(self) -> bool:
                                 return self._from_json(key='Success')
 
@@ -89,12 +89,12 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
@@ -110,17 +110,17 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def count(self) -> int:
                         return self._from_json(key='Count')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
@@ -136,17 +136,17 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def count(self) -> int:
                         return self._from_json(key='Count')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
@@ -168,17 +168,17 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def tickets(self):
                         return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
 
@@ -200,17 +200,17 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def tickets(self):
                         return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
 
@@ -231,17 +231,17 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def tickets(self):
                         return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
 
@@ -265,17 +265,17 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def invalid_ticket_ids(self) -> List[int]:
                         return self._from_json(key='InvalidTicketIds')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
@@ -301,12 +301,12 @@ class _Flow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Flow.Result(self._from_json(key='Result'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 

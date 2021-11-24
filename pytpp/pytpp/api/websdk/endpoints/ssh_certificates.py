@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.ssh_certificates import SSHCertificate
 
 
@@ -48,22 +48,22 @@ class _SSHCertificates:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def ssh_certificate_dn(self) -> str:
                     return self._from_json('DN')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def ssh_certificate_guid(self) -> str:
                     return self._from_json('Guid')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self) -> SSHCertificate.Response:
                     return SSHCertificate.Response(self._from_json('Response'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def processing_details(self) -> SSHCertificate.ProcessingDetails:
                     return SSHCertificate.ProcessingDetails(self._from_json('ProcessingDetails'))
 
@@ -93,57 +93,57 @@ class _SSHCertificates:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def ca_dn(self) -> str:
                     return self._from_json('CADN')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def ca_guid(self) -> str:
                     return self._from_json('CAGuid')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_data(self) -> str:
                     return self._from_json('CertificateData')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def certificate_details(self) -> SSHCertificate.CertificateDetails:
                     return SSHCertificate.CertificateDetails(self._from_json('CertificateDetails'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def guid(self) -> str:
                     return self._from_json('Guid')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_id(self) -> str:
                     return self._from_json('KeyID')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def private_key_data(self) -> str:
                     return self._from_json('PrivateKeyData')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def processing_details(self) -> SSHCertificate.ProcessingDetails:
                     return SSHCertificate.ProcessingDetails(self._from_json('ProcessingDetails'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def public_key_data(self) -> str:
                     return self._from_json('PublicKeyData')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def request_details(self) -> SSHCertificate.RequestDetails:
                     return SSHCertificate.RequestDetails(self._from_json('RequestDetails'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def response(self):
                     return SSHCertificate.Response(self._from_json('Response'))
 
@@ -171,57 +171,57 @@ class _SSHCertificates:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def access_control(self) -> dict:
                         return self._from_json('AccessControl')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def api_client(self) -> SSHCertificate.APIClient:
                         return SSHCertificate.APIClient(self._from_json('APIClient'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def ca_keypair_guid(self) -> str:
                         return self._from_json('CAKeyPairGuid')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def ca_keypair_dn(self) -> str:
                         return self._from_json('CAKeyPairDN')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def ca_keypair(self) -> SSHCertificate.CAKeyPair:
                         return SSHCertificate.CAKeyPair(self._from_json('CAKeyPair'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def certificate(self) -> SSHCertificate.Certificate:
                         return SSHCertificate.Certificate(self._from_json('Certificate'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def contacts(self) -> List[str]:
                         return self._from_json('Contacts')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def created_on(self) -> str:
                         return self._from_json('CreatedOn')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def guid(self) -> str:
                         return self._from_json('Guid')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def name(self) -> str:
                         return self._from_json('Name')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def response(self):
                         return SSHCertificate.Response(self._from_json('Response'))
 

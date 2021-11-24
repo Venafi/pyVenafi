@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 
 
 class _HSMAPI:
@@ -38,17 +38,17 @@ class _HSMAPI:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result_data(self) -> str:
                     return self._from_json(key='ResultData')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json(key='Success')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def try_later(self) -> bool:
                     return self._from_json(key='TryLater')
 

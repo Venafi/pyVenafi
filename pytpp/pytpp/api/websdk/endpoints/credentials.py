@@ -1,5 +1,5 @@
 import time
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.credential import Credential
 from pytpp.tools.helpers.date_converter import from_date_string
 
@@ -37,7 +37,7 @@ class _Credentials:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Credential.Result(self._from_json(key='Result'))
 
@@ -57,7 +57,7 @@ class _Credentials:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Credential.Result(self._from_json(key='Result'))
 
@@ -79,12 +79,12 @@ class _Credentials:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Credential.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def credential_infos(self):
                     return [Credential.CredentialInfo(cred_info) for cred_info in self._from_json(key='CredentialInfos')]
 
@@ -105,7 +105,7 @@ class _Credentials:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Credential.Result(self._from_json(key='Result'))
 
@@ -125,32 +125,32 @@ class _Credentials:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def classname(self) -> str:
                     return self._from_json(key='Classname')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def description(self) -> str:
                     return self._from_json(key='Description')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expiration(self):
                     return from_date_string(self._from_json(key='Expiration'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def friendly_name(self) -> str:
                     return self._from_json(key='FriendlyName')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Credential.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def values(self):
                     return [Credential.NameTypeValue(ntv) for ntv in self._from_json(key='Values')]
 
@@ -185,7 +185,7 @@ class _Credentials:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Credential.Result(self._from_json(key='Result'))
 
@@ -218,7 +218,7 @@ class _Credentials:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Credential.Result(self._from_json(key='Result'))
 
@@ -246,7 +246,7 @@ class _Credentials:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Credential.Result(self._from_json(key='Result'))
 

@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.client import Client
 
 
@@ -37,7 +37,7 @@ class _Client(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property(return_on_204=list)
+            @api_response_property(return_on_204=list)
             def clients(self):
                 return [Client.Client(client) for client in self._from_json()]
 
@@ -58,12 +58,12 @@ class _Client(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def deleted_count(self) -> int:
                     return self._from_json(key='DeletedCount')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def errors(self) -> List[str]:
                     return self._from_json(key='Errors')
 
@@ -100,7 +100,7 @@ class _Client(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property(return_on_204=list)
+                @api_response_property(return_on_204=list)
                 def details(self):
                     return [Client.ClientDetails(client) for client in self._from_json()]
 
@@ -116,7 +116,7 @@ class _Client(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property(return_on_204=list)
+                @api_response_property(return_on_204=list)
                 def works(self):
                     return [Client.Work(work) for work in self._from_json()]
 

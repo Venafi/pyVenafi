@@ -1,4 +1,4 @@
-from pytpp.plugins.api.api_base import API, APIResponse, json_response_property
+from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
 
 
 class _Users:
@@ -26,7 +26,7 @@ class _Users:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def token(self) -> dict:
                     return self._from_json('apiKey')
 

@@ -59,7 +59,7 @@ class Aperture:
             response = self.Users.Authorize.post(username=username, password=password)
             token = f'VENAFI {response.token}'
             cookie =''
-            for c in response.json_response.cookies:
+            for c in response.api_response.cookies:
                 cookie = f'{c.name}={c.value}'
         self._token = token
         self._cookie = cookie

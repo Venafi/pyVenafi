@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.stats import Stats
 
 
@@ -18,12 +18,12 @@ class _Stats:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def counters(self):
                     return [Stats.Counter(counter) for counter in self._from_json(key='Counters')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
 
@@ -52,7 +52,7 @@ class _Stats:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def results(self):
                     return [Stats.Result(result) for result in self._from_json(key='Results')]
 

@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.secret_store import SecretStore
 
 
@@ -41,12 +41,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_id(self) -> int:
                     return self._from_json(key='VaultID')
 
@@ -70,7 +70,7 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -90,7 +90,7 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -114,7 +114,7 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -130,12 +130,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def encryption_keys(self) -> List[str]:
                     return self._from_json(key='EncryptionKeys')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -151,12 +151,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
@@ -176,12 +176,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def typed_name_values(self):
                     return [SecretStore.TypedNameValues(tnv) for tnv in self._from_json('TypedNameValues')]
 
@@ -204,12 +204,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
@@ -230,12 +230,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self) -> str:
                     return self._from_json(key='Value')
 
@@ -257,12 +257,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
@@ -282,12 +282,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
@@ -308,7 +308,7 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -328,12 +328,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_ids(self) -> List[int]:
                     return self._from_json(key='VaultIDs')
 
@@ -355,7 +355,7 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -377,7 +377,7 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
@@ -398,12 +398,12 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def owners(self) -> List[str]:
                     return self._from_json(key='Owners')
 
@@ -423,17 +423,17 @@ class _SecretStore:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def base_64_data(self) -> str:
                     return self._from_json(key='Base64Data')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return SecretStore.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vault_type(self) -> str:
                     return self._from_json(key='VaultType')
 

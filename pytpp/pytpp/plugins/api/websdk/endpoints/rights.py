@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.rights import Rights
 
 
@@ -37,7 +37,7 @@ class _Rights:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rights(self):
                     return [Rights.Rights(rights) for rights in self._from_json('Rights')]
 

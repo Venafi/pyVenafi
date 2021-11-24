@@ -1,4 +1,4 @@
-from pytpp.plugins.api.api_base import API, APIResponse, json_response_property
+from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
 from pytpp.plugins.properties.response_objects.config import Config
 
 
@@ -20,7 +20,7 @@ class _ConfigObjects:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def object(self):
                     return Config.Object(self._from_json(), self._api_source)
 

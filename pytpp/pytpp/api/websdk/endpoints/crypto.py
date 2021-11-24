@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 
 
 class _Crypto:
@@ -17,7 +17,7 @@ class _Crypto:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def keynames(self) -> List[str]:
                     return self._from_json('Keynames')
 
@@ -33,7 +33,7 @@ class _Crypto:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def default_key(self) -> str:
                     return self._from_json('DefaultKey')
 

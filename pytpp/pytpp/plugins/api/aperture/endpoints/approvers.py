@@ -1,4 +1,4 @@
-from pytpp.plugins.api.api_base import API, APIResponse, json_response_property
+from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
 from pytpp.plugins.properties.response_objects.identity import Identity
 
 
@@ -19,7 +19,7 @@ class _Approvers(API):
                 )
             
             @property
-            @json_response_property()
+            @api_response_property()
             def identities(self):
                 return [Identity.Identity(i, api_type=self._api_source) for i in self._from_json()]
             

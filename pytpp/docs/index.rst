@@ -109,7 +109,7 @@ The response body returned by TPP is also translated to Python. For example:
     #### Not the preferred method for getting content from the response. ####
     # The response is not validated until an object returned in the body of the response is accessed.
     response.assert_valid_response()  # Validate the response is valid.
-    folder = response.json_response.json()['Object']  # Raw JSON response.
+    folder = response.api_response.json()['Object']  # Raw JSON response.
     print(folder['DN'])
 
     #### Preferred method for getting content from the response. ####

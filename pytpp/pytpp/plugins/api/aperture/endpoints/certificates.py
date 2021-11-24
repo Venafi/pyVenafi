@@ -1,5 +1,5 @@
 from typing import List, Dict
-from pytpp.plugins.api.api_base import API, APIResponse, json_response_property
+from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
 from pytpp.plugins.properties.certificate_inventory import Field, Filter
 from pytpp.plugins.properties.response_objects.certificate_inventory import CertificateDetails
 
@@ -51,7 +51,7 @@ class _Certificates:
                         super().__init__(response=response, api_source=api_source)
                         
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def certificates(self):
                         return [CertificateDetails(cert) for cert in self._from_json()]
 
