@@ -1,4 +1,4 @@
-from pytpp.plugins.api.api_base import API, APIResponse, json_response_property
+from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
 from pytpp.plugins.properties.response_objects.identity import Identity
 from pytpp.plugins.properties.response_objects.oauth import OAuth
 
@@ -30,7 +30,7 @@ class _ApplicationIntegration(API):
                 super().__init__(response=response, api_source=api_source)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def application_id(self) -> str:
                 return self._from_json()
 
@@ -58,7 +58,7 @@ class _ApplicationIntegration(API):
                 super().__init__(response=response, api_source=api_source)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def application_id(self) -> str:
                 return self._from_json()
 
@@ -103,57 +103,57 @@ class _ApplicationIntegration(API):
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_granted(self) -> int:
                     return self._from_json(key='accessGranted')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_validity_days(self) -> int:
                     return self._from_json(key='accessValidityDays')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def allowed_identities(self):
                     return [Identity.Identity(id, self._api_source) for id in self._from_json(key='allowedIdentities')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_id(self) -> str:
                     return self._from_json(key='applicationId')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_name(self) -> str:
                     return self._from_json(key='applicationName')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application_scope(self):
                     return OAuth.ApplicationScope(self._from_json(key='applicationScope'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def default_access_settings_used(self) -> bool:
                     return self._from_json(key='defaultAccessSettingsUsed')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def description(self) -> str:
                     return self._from_json(key='description')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def grant_validity_days(self) -> int:
                     return self._from_json(key='grantValidityDays')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def renewable(self) -> bool:
                     return self._from_json(key='renewable')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def vendor(self) -> str:
                     return self._from_json(key='vendor')
 

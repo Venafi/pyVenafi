@@ -1,6 +1,6 @@
 from typing import List
 
-from pytpp.api.api_base import json_response_property
+from pytpp.api.api_base import api_response_property
 from pytpp.plugins.api.api_base import API, APIResponse
 from pytpp.plugins.properties.response_objects.device import Device
 
@@ -39,12 +39,12 @@ class _Device(API):
                 super().__init__(response=response, api_source=api_source)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def total_count(self):
                 return int(self._from_json(key='totalCount'))
 
             @property
-            @json_response_property()
+            @api_response_property()
             def devices_list_items(self):
                 return [Device(device) for device in self._from_json(key='devicesListItems')]
 
@@ -67,17 +67,17 @@ class _Device(API):
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def is_out_of_compliance(self):
                     return bool(self._from_json(key='isOutOfCompliance'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def discovery_stage(self):
                     return int(self._from_json(key='discoveryStage'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def discovery_status(self):
                     return self._from_json(key='discoveryStatus')
 

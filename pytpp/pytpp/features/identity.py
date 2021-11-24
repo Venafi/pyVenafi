@@ -68,7 +68,7 @@ class _IdentityBase(FeatureBase):
             identity=self._identity_dict(prefixed_name=prefixed_name)
         )
         response.assert_valid_response()
-        if response.json_response.content:
+        if response.api_response.content:
             return response.identity.prefixed_name == prefixed_name
         return False
 

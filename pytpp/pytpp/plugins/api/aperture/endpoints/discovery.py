@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.plugins.api.api_base import API, APIResponse, json_response_property
+from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
 from pytpp.plugins.properties.response_objects.config import Config
 from pytpp.plugins.properties.response_objects.placement_rules import PlacementRules
 
@@ -33,42 +33,42 @@ class _Discovery:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def cert_location(self):
                     return Config.Object(self._from_json(key='certLocation'), self._api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def conditions(self):
                     return [PlacementRules.Condition(condition) for condition in self._from_json(key='conditions')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def device_location(self):
                     return Config.Object(self._from_json(key='deviceLocation'), self._api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def guid(self) -> str:
                     return self._from_json(key='id')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def index(self) -> str:
                     return self._from_json(key='index')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def name(self) -> str:
                     return self._from_json(key='name')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rule_container(self):
                     return Config.Object(self._from_json(key='ruleContainer'), self._api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def type(self) -> str:
                     return self._from_json(key='type')
 
@@ -96,42 +96,42 @@ class _Discovery:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def cert_location(self):
                     return Config.Object(self._from_json(key='certLocation'), self._api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def conditions(self):
                     return [PlacementRules.Condition(condition) for condition in self._from_json(key='conditions')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def device_location(self):
                     return Config.Object(self._from_json(key='deviceLocation'), self._api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def guid(self) -> str:
                     return self._from_json(key='id')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def index(self) -> str:
                     return self._from_json(key='index')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def name(self) -> str:
                     return self._from_json(key='name')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def rule_container(self):
                     return Config.Object(self._from_json(key='ruleContainer'), self._api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def type(self) -> str:
                     return self._from_json(key='type')
 
@@ -150,47 +150,47 @@ class _Discovery:
                         super().__init__(response=response, api_source=api_source)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def cert_location(self):
                         return Config.Object(self._from_json(key='certLocation'), self._api_source)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def conditions(self):
                         return [PlacementRules.Condition(condition) for condition in self._from_json(key='conditions')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def device_location(self):
                         return Config.Object(self._from_json(key='deviceLocation'), self._api_source)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def dn(self) -> str:
                         return self._from_json(key='dn')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def guid(self) -> str:
                         return self._from_json(key='id')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def index(self) -> str:
                         return self._from_json(key='index')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def name(self) -> str:
                         return self._from_json(key='name')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def rule_container(self):
                         return Config.Object(self._from_json(key='ruleContainer'), self._api_source)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def type(self) -> str:
                         return self._from_json(key='type')
 

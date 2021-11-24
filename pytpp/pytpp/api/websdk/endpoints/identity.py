@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.identity import Identity
 
 
@@ -34,17 +34,17 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self):
                     return Identity.Identity(self._from_json('ID'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def invalid_members(self):
                     return [Identity.InvalidIdentity(im) for im in self._from_json(key='InvalidMembers', return_on_error=list)]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json(key='Message', return_on_error=str)
 
@@ -66,17 +66,17 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def invalid_members(self):
                     return [Identity.InvalidIdentity(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json('Message')
 
@@ -98,7 +98,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identities(self):
                     return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
@@ -118,7 +118,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identities(self):
                     return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
@@ -139,7 +139,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identities(self):
                     return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
@@ -159,7 +159,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identities(self):
                     return [Identity.Identity(i) for i in self._from_json(key='Identities', return_on_error=list)]
 
@@ -190,7 +190,7 @@ class _Identity:
                             super().__init__(response=response)
 
                         @property
-                        @json_response_property()
+                        @api_response_property()
                         def message(self) -> str:
                             return self._from_json('Message')
 
@@ -211,7 +211,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def attributes(self) -> List[str]:
                     return self._from_json(key='Attributes')
 
@@ -233,17 +233,17 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def invalid_members(self):
                     return [Identity.InvalidIdentity(im) for im in self._from_json('InvalidMembers', return_on_error=list)]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json('Message')
 
@@ -265,17 +265,17 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json('Message')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def owners(self):
                     return [Identity.Identity(m) for m in self._from_json('Owners', return_on_error=list)]
 
@@ -296,7 +296,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self):
                     return Identity.Identity(self._from_json('ID'))
 
@@ -312,7 +312,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identities(self):
                     return [Identity.Identity(i) for i in self._from_json(key='Identities')]
 
@@ -334,7 +334,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self):
                     return Identity.Identity(self._from_json('ID'))
 
@@ -354,7 +354,7 @@ class _Identity:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self):
                     return Identity.Identity(self._from_json('ID'))
 

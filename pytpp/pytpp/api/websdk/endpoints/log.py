@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.log import Log
 
 
@@ -31,7 +31,7 @@ class _Log(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def log_events(self):
                 return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
 
@@ -56,7 +56,7 @@ class _Log(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def log_result(self) -> int:
                 return self._from_json('LogResult')
 
@@ -75,7 +75,7 @@ class _Log(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def log_events(self):
                     return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
 
@@ -91,19 +91,19 @@ class _Log(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def log_event_application_definitions(self):
                     return [Log.LogEventApplicationDefinition(lead) for lead in
                             self._from_json(key='LogEventApplicationDefinitions')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def log_event_definitions(self):
                     return [Log.LogEventDefinition(led) for led in
                             self._from_json(key='LogEventDefinitions')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def log_result(self) -> int:
                     return self._from_json(key='LogResult')
 

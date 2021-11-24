@@ -87,7 +87,7 @@ class FeatureBase:
         result = self._api.websdk.Identity.Validate.post(
             identity=self._identity_dict(prefixed_name=prefixed_name, prefixed_universal=prefixed_universal)
         )
-        if result.is_valid_response() and result.json_response.content:
+        if result.is_valid_response() and result.api_response.content:
             identity = result.identity
         elif raise_error_if_not_exists:
             target = prefixed_name or prefixed_universal

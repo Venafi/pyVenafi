@@ -113,9 +113,9 @@ Then:
         1  response = api.websdk.Metadata.Get.post(dn="\\VED\\Policy\\Certificates\\MyCert")
         2  guids = [data.key.guid for data in response.data]
         3  if response.is_valid_response():
-        4      body = response.json_response.json()
-        5      logger.log(f"URL: {response.json_response.url}\n"
-        6                 f"Status Code: {response.json_response.status_code}\n"
+        4      body = response.api_response.json()
+        5      logger.log(f"URL: {response.api_response.url}\n"
+        6                 f"Status Code: {response.api_response.status_code}\n"
         7                 f"Data: {body['Data']}")
         8  else:
         9      response.assert_valid_response()
@@ -126,11 +126,11 @@ Then:
     `response` has a property `data` that is a Pythonic representation of the actual body of the API response. Using
     the raw response one could use this instead:
 
-    ``guids = [data['Key']['Guid'] for data in response.json_response.json()['Data']]``
+    ``guids = [data['Key']['Guid'] for data in response.api_response.json()['Data']]``
 
     When accessing a property from a response object for the first time, an automatic validation of the return codes occurs.
     If the status code is not a valid response then an error is raised. This ensures success of the APIs as they are used. If
-    this is undesired, then use ``response.json_response``.
+    this is undesired, then use ``response.api_response``.
 
 * **Line 3:**
 
@@ -139,7 +139,7 @@ Then:
 
 * **Lines 4-7:**
 
-    The raw response can be accessed via ``response.json_response``. This object is the response object created by Python's
+    The raw response can be accessed via ``response.api_response``. This object is the response object created by Python's
     ``requests`` library.
 
 * **Line 9:**

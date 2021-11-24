@@ -6,7 +6,7 @@ from requests import Response, HTTPError
 from pytpp.tools.logger import logger, LogTags
 
 
-def json_response_property(return_on_204: type = None):
+def api_response_property(return_on_204: type = None):
     """
     This function serves as a decorator for all API response objects. Each
     response property must be validated before returning the object. This
@@ -22,14 +22,14 @@ def json_response_property(return_on_204: type = None):
         # No 204 should ever be returned, so just validate the response
         # status codes and return the object on 200.
         @property
-        @json_response_property()
+        @api_response_property()
         def value1(self) -> str:
             return self._from_json(key='Value1')
 
         # 204 could be returned by TPP, so just send an empty response
         # of the same object type as the expected response.
         @property
-        @json_response_property(on_204=list)
+        @api_response_property(on_204=list)
         def value2(self) -> list:
             return self._from_json(key='Value2')
 
@@ -39,20 +39,17 @@ def json_response_property(return_on_204: type = None):
     Returns: Key of response content returned by TPP.
 
     """
-
     def pre_validation(func):
         def wrap(self: APIResponse, *args, **kwargs):
             if not self._validated:
                 self._validate()
-            if return_on_204 and self.json_response.status_code == 204:
+            if return_on_204 and self.api_response.status_code == 204:
                 if callable(return_on_204):
                     return return_on_204()
                 else:
                     return return_on_204
             return func(self, *args, **kwargs)
-
         return wrap
-
     return pre_validation
 
 
@@ -261,18 +258,19 @@ class APIResponse:
     def __init__(self, response: Response):
         """
         """
-        self._json_response = response
+        self._api_response = response
+        self._decoded_api_response = None
         self._validated = False
 
     @property
-    def json_response(self):
-        return self._json_response
+    def api_response(self):
+        return self._api_response
 
-    @json_response.setter
-    def json_response(self, value):
+    @api_response.setter
+    def api_response(self, value):
         # When set, a new raw response is stored and hasn't been validated, so invalidate.
         self._validated = False
-        self._json_response = value
+        self._api_response = value
 
     def assert_valid_response(self):
         """
@@ -316,12 +314,12 @@ class APIResponse:
             response content.
         """
         try:
-            result = self.json_response.json()
+            result = self.api_response.json()
         except json.decoder.JSONDecodeError:
             if return_on_error:
                 return return_on_error()
-            raise InvalidResponseError(f'{self.json_response.url} return no content. '
-                                       f'Got status code {self.json_response.status_code}.')
+            raise InvalidResponseError(f'{self.api_response.url} return no content. '
+                                       f'Got status code {self.api_response.status_code}.')
         if error_key and error_key in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
         if not key:
@@ -342,9 +340,9 @@ class APIResponse:
         """
         self._validated = True
         try:
-            self.json_response.raise_for_status()
+            self.api_response.raise_for_status()
         except HTTPError as err:
-            error_msg = self.json_response.text or self.json_response.reason or 'No error message found.'
+            error_msg = self.api_response.text or self.api_response.reason or 'No error message found.'
             body = logger._jsonpickle.dumps(
                 json.loads(err.request.body)
             ) if err.request.body else ''

@@ -64,7 +64,7 @@ The path of the URL for the WebSDK API is translated to Python by following this
 The response body returned by TPP is also translated to Python. For example:
 
 *Given*: POST Config/Create -> {"Object": {"DN": "...", ...}}
-*Then*: Access the DN -> ``response.object.dn`` 
+*Then*: Access the DN -> ``response.object.dn``
 
 ```python
 from pytpp import Authenticate, AttributeNames, AttributeValues, Classes
@@ -86,13 +86,13 @@ response = api.websdk.Config.Create.post(
 #### Not the preferred method for getting content from the response. #### 
 # The response is not validated until an object returned in the body of the response is accessed.
 response.assert_valid_response()  # Validate the response is valid.
-folder = response.json_response.json()['Object']  # Raw JSON response.
+folder = response.api_response.json()['Object']  # Raw JSON response.
 print(folder['DN'])
 
 #### Preferred method for getting content from the response. ####
 # The response is validated automatically here since the object returned in the body of the response
 # is accessed. There is no need to call response.assert_valid_response here.
-folder = response.object # The Config Object returned by the API
+folder = response.object  # The Config Object returned by the API
 print(folder.dn)  # The DN attribute within the Config Object returned by the API
 ```
 

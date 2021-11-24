@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.metadata import Metadata
 from pytpp.properties.response_objects.config import Config
 
@@ -39,22 +39,22 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def dn(self) -> str:
                     return self._from_json('DN')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def item(self):
                     return Metadata.Item(self._from_json('Item'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -76,17 +76,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def objects(self):
                     return [Config.Object(obj) for obj in self._from_json('Objects')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -106,17 +106,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def item_guid(self) -> str:
                     return self._from_json('ItemGuid')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -137,17 +137,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def data(self):
                     return [Metadata.Data(self._from_json('Data'))]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -167,17 +167,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def item_guids(self) -> List[str]:
                     return self._from_json('ItemGuids')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -197,17 +197,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def items(self):
                     return [Metadata.Item(item) for item in self._from_json('Items')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -227,17 +227,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def items(self):
                     return [Metadata.Item(item) for item in self._from_json('Items')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -257,17 +257,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def policy_items(self):
                     return [Metadata.PolicyItem(item) for item in self._from_json('PolicyItems')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -283,17 +283,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def items(self):
                     return [Metadata.Item(item) for item in self._from_json('Items')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -313,17 +313,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def item(self):
                     return Metadata.Item(self._from_json('Item'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -343,17 +343,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def item_guid(self) -> str:
                     return self._from_json('ItemGuid')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -374,22 +374,22 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def policy_dn(self) -> str:
                     return self._from_json('PolicyDn')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def values(self) -> List[str]:
                     return self._from_json('Values')
 
@@ -411,17 +411,17 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def values(self) -> List[str]:
                     return self._from_json('Values')
 
@@ -443,12 +443,12 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -471,12 +471,12 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -497,12 +497,12 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 
@@ -523,12 +523,12 @@ class _Metadata(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def locked(self) -> bool:
                     return self._from_json('Locked')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return Metadata.Result(self._from_json('Result'))
 

@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.system_status import SystemStatus
 from pytpp.tools.helpers.date_converter import from_date_string
 
@@ -14,7 +14,7 @@ class _SystemStatus(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def engines(self):
                 return [SystemStatus.SystemStatus(status) for status in self._from_json()]
 
@@ -44,37 +44,37 @@ class _SystemStatus(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def engine(self):
                         return SystemStatus.Engine(self._from_json(key='Engine'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def status(self) -> str:
                         return self._from_json(key='Status')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def upgrade_start_time(self):
                         return from_date_string(self._from_json(key='UpgradeStartTime'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def upgrade_stop_time(self):
                         return from_date_string(self._from_json(key='UpgradeStopTime'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def tasks_completed(self):
                         return [SystemStatus.Task(task) for task in self._from_json(key='TasksCompleted')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def tasks_pending(self):
                         return [SystemStatus.Task(task) for task in self._from_json(key='TasksPending')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def tasks_running(self):
                         return [SystemStatus.Task(task) for task in self._from_json(key='TasksRunning')]
 
@@ -94,7 +94,7 @@ class _SystemStatus(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def engines(self):
                         return [SystemStatus.UpgradeStatus(engine) for engine in self._from_json(key='Engines')]
 
@@ -110,7 +110,7 @@ class _SystemStatus(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def upgrade_history(self):
                         return [SystemStatus.UpgradeInfo(info) for info in self._from_json(key='UpgradeHistory')]
 
@@ -126,7 +126,7 @@ class _SystemStatus(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def upgrade_in_progress(self) -> bool:
                         return self._from_json(key='UpgradeInProgress')
 
@@ -142,7 +142,7 @@ class _SystemStatus(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def upgrade_summary(self):
                         return SystemStatus.UpgradeSummary(self._from_json(key='UpgradeSummary'))
 
@@ -158,7 +158,7 @@ class _SystemStatus(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def version(self) -> str:
                     return self._from_json('Version')
 

@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 
 
 class _Discovery:
@@ -20,7 +20,7 @@ class _Discovery:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def success(self) -> bool:
                     return self._from_json('Success')
 
@@ -41,32 +41,32 @@ class _Discovery:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def created_certificates(self) -> int:
                     return self._from_json('createdCertificates')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def created_instances(self) -> int:
                     return self._from_json('createdInstances')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def updated_certificates(self) -> int:
                     return self._from_json('updatedCertificates')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def updated_instances(self) -> int:
                     return self._from_json('updatedInstances')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def warnings(self) -> List[str]:
                     return self._from_json('warnings')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def zone_name(self) -> str:
                     return self._from_json('zoneName')
 

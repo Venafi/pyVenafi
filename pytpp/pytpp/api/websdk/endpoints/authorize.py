@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from datetime import datetime
 from pytpp.tools.helpers.date_converter import from_date_string
 
@@ -28,7 +28,7 @@ class _Authorize(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def token(self) -> str:
                 return self._from_json('APIKey')
 
@@ -51,42 +51,42 @@ class _Authorize(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_token(self) -> str:
                     return self._from_json('access_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires(self):
                     return datetime.fromtimestamp(self._from_json('expires'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires_in(self) -> int:
                     return self._from_json(key='expires_in')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self) -> str:
                     return self._from_json('identity')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_token(self) -> str:
                     return self._from_json('refresh_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_until(self):
                     return datetime.fromtimestamp(self._from_json(key='refresh_until'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def scope(self) -> str:
                     return self._from_json('scope')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
@@ -111,42 +111,42 @@ class _Authorize(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_token(self) -> str:
                     return self._from_json('access_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires(self):
                     return datetime.fromtimestamp(self._from_json('expires'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires_in(self) -> int:
                     return self._from_json(key='expires_in')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self) -> str:
                     return self._from_json('identity')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_token(self) -> str:
                     return self._from_json('refresh_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_until(self):
                     return datetime.fromtimestamp(self._from_json(key='refresh_until'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def scope(self) -> str:
                     return self._from_json('scope')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
@@ -171,32 +171,32 @@ class _Authorize(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_token(self) -> str:
                     return self._from_json('access_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires(self) -> str:
                     return self._from_json('expires')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self) -> str:
                     return self._from_json('identity')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_token(self) -> str:
                     return self._from_json('refresh_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def scope(self) -> str:
                     return self._from_json('scope')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
@@ -219,32 +219,32 @@ class _Authorize(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_token(self) -> str:
                     return self._from_json('access_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires(self) -> str:
                     return self._from_json('expires')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_token(self) -> str:
                     return self._from_json('refresh_token')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def refresh_until(self) -> str:
                     return self._from_json('refresh_until')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def scope(self) -> str:
                     return self._from_json('scope')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
@@ -261,67 +261,67 @@ class _Authorize(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_issued_on(self):
                     return from_date_string(self._from_json(key='access_issued_on'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_issued_on_ISO8601(self):
                     return from_date_string(self._from_json(key='access_issued_on_ISO8601'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def access_issued_on_unix_time(self):
                     return datetime.fromtimestamp(self._from_json(key='access_issued_on_unix_time'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def application(self) -> str:
                     return self._from_json(key='application')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires(self):
                     return from_date_string(self._from_json(key='expires'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires_ISO8601(self):
                     return from_date_string(self._from_json(key='expires_ISO8601'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def expires_unix_time(self):
                     return datetime.fromtimestamp(self._from_json(key='expires_unix_time'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def grant_issued_on(self):
                     return from_date_string(self._from_json(key='grant_issued_on'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def grant_issued_on_ISO8601(self):
                     return from_date_string(self._from_json(key='grant_issued_on_ISO8601'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def grant_issued_on_unix_time(self):
                     return datetime.fromtimestamp(self._from_json(key='grant_issued_on_unix_time'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self) -> str:
                     return self._from_json(key='identity')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def scope(self) -> str:
                     return self._from_json(key='scope')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def valid_for(self) -> int:
                     return self._from_json(key='valid_for')
 

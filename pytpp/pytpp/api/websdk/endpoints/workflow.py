@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.worfklow import Workflow
 
 
@@ -35,12 +35,12 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def guid(self) -> str:
                         return self._from_json('GUID')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
@@ -60,7 +60,7 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
@@ -80,12 +80,12 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def details(self):
                         return Workflow.Details(self._from_json())
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
@@ -106,12 +106,12 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def guids(self) -> List[str]:
                         return self._from_json('GUIDS')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
@@ -131,7 +131,7 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
@@ -151,12 +151,12 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def status(self) -> str:
                         return self._from_json('Status')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 
@@ -180,7 +180,7 @@ class _Workflow:
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def result(self):
                         return Workflow.Result(self._from_json('Result'))
 

@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.processing_engines import ProcessingEngines
 
 
@@ -16,7 +16,7 @@ class _ProcessingEngines(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def engines(self):
                 return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
 
@@ -39,7 +39,7 @@ class _ProcessingEngines(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property(return_on_204=list)
+                    @api_response_property(return_on_204=list)
                     def folders(self):
                         return [ProcessingEngines.Folder(folder) for folder in self._from_json('Folders')][0]
 
@@ -55,12 +55,12 @@ class _ProcessingEngines(API):
                         super().__init__(response=response) \
 
                     @property
-                    @json_response_property(return_on_204=str)
+                    @api_response_property(return_on_204=str)
                     def added_count(self) -> int:
                         return self._from_json('AddedCount')
 
                     @property
-                    @json_response_property(return_on_204=list)
+                    @api_response_property(return_on_204=list)
                     def errors(self) -> List[str]:
                         return self._from_json('Errors')
 
@@ -87,7 +87,7 @@ class _ProcessingEngines(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property(return_on_204=list)
+                    @api_response_property(return_on_204=list)
                     def engines(self):
                         return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
 

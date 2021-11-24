@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.config_schema import ConfigSchema
 
 
@@ -17,12 +17,12 @@ class _ConfigSchema:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return ConfigSchema.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def attribute_definitions(self):
                     return [ConfigSchema.AttributeDefinition(attr) for attr in self._from_json('AttributeDefinitions')]
 
@@ -42,12 +42,12 @@ class _ConfigSchema:
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def result(self):
                     return ConfigSchema.Result(self._from_json(key='Result'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def class_definition(self):
                     return ConfigSchema.ClassDefinition(self._from_json('ClassDefinition'))
 

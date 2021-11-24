@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, json_response_property
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.identity import Identity
 
 
@@ -28,12 +28,12 @@ class _Teams(API):
                 super().__init__(response=response)
 
             @property
-            @json_response_property()
+            @api_response_property()
             def identity(self):
                 return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
 
             @property
-            @json_response_property()
+            @api_response_property()
             def invalid_members(self):
                 return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
 
@@ -55,17 +55,17 @@ class _Teams(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def invalid_members(self):
                     return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(member) for member in self._from_json(key='Members')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json(key='Message')
 
@@ -87,17 +87,17 @@ class _Teams(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def owners(self):
                     return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(member) for member in self._from_json(key='Members')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json(key='Message')
 
@@ -119,22 +119,22 @@ class _Teams(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def invalid_owners(self):
                     return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def owners(self):
                     return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(member) for member in self._from_json(key='Members')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json(key='Message')
 
@@ -173,32 +173,32 @@ class _Teams(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def assets(self) -> List[str]:
                         return self._from_json(key='Assets')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def description(self) -> str:
                         return self._from_json(key='Description')
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def identity(self):
                         return Identity.Identity(self._from_json(key='ID'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def members(self):
                         return [Identity.Identity(member) for member in self._from_json(key='Members')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def owners(self):
                         return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def products(self) -> List[str]:
                         return self._from_json(key='Products')
 
@@ -219,22 +219,22 @@ class _Teams(API):
                         super().__init__(response=response)
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def identity(self):
                         return Identity.Identity(self._from_json(key='ID'))
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def invalid_owners(self):
                         return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def invalid_members(self):
                         return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
 
                     @property
-                    @json_response_property()
+                    @api_response_property()
                     def message(self) -> str:
                         return self._from_json(key='Message')
 
@@ -256,22 +256,22 @@ class _Teams(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def invalid_members(self):
                     return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def members(self):
                     return [Identity.Identity(member) for member in self._from_json(key='Members')]
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json(key='Message')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def owners(self):
                     return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
 
@@ -292,12 +292,12 @@ class _Teams(API):
                     super().__init__(response=response)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def identity(self):
                     return Identity.Identity(self._from_json(key='ID'))
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def message(self) -> str:
                     return self._from_json(key='Message')
 

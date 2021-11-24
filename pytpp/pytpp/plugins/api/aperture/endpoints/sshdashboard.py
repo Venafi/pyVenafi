@@ -1,4 +1,4 @@
-from pytpp.api.api_base import json_response_property
+from pytpp.api.api_base import api_response_property
 from pytpp.plugins.api.api_base import API, APIResponse
 from pytpp.plugins.properties.response_objects.ssh_dashboard import SshDashboard
 
@@ -34,7 +34,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -50,7 +50,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -66,7 +66,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -82,12 +82,12 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def total(self):
                     return self._from_json(key='total')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def all_codes(self):
                     return self._from_json(key='allCodes')
 
@@ -103,7 +103,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -119,7 +119,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -135,7 +135,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -151,7 +151,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -167,7 +167,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -183,7 +183,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -199,7 +199,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -215,7 +215,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def value(self):
                     return self._from_json()
 
@@ -231,22 +231,22 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def hide_zeros(self):
                     return self._from_json(key='hideZeros')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def key_length(self):
                     return self._from_json(key='keyLength')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def last_used(self):
                     return self._from_json(key='lastUsed')
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def has_permissions_to_lock(self):
                     return self._from_json(key='hasPermissionsToLock')
 
@@ -262,7 +262,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def records(self):
                     return [SshDashboard.Record(record) for record in self._from_json()]
 
@@ -278,7 +278,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def records(self):
                     return [SshDashboard.Record(record) for record in self._from_json()]
 
@@ -294,7 +294,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def policy_violations(self):
                     return [SshDashboard.PolicyViolation(violation) for violation in self._from_json()]
 
@@ -310,7 +310,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def trends(self):
                     return [SshDashboard.Trend(trend) for trend in self._from_json()]
 
@@ -326,7 +326,7 @@ class _SshDashboard:
                     super().__init__(response=response, api_source=api_source)
 
                 @property
-                @json_response_property()
+                @api_response_property()
                 def records(self):
                     return [SshDashboard.Record(record) for record in self._from_json()]
 
