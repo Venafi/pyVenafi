@@ -10,8 +10,7 @@ link for details on how it works.
 Using The Logger
 ================
 
-.. automodule:: pytpp.logger
+.. automodule:: pytpp.tools.logger
    :members:
    :undoc-members:
    :show-inheritance:
-

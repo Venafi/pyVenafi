@@ -19,6 +19,18 @@ as the ``application_id`` in order to use OAuth authentication. See Venafi's Web
 Authentication
 """"""""""""""
 
+.. note:: You can use this Application Integration JSON snippet to create an Application Integration in Aperture.
+
+.. code-block:: json
+
+    {
+        "id"         : "pytpp",
+        "name"       : "Venafi PyTPP SDK",
+        "vendor"     : "Venafi, Inc.",
+        "description": "Application Integration for PyTPP, a Python interface to TPP.",
+        "scope"      : "certificate:approve,delete,discover,manage,read,revoke;ssh:approve,delete,discover,manage,read;codesign:delete,manage,read;configuration:delete,manage,read;restricted:delete,manage,read;security:delete,manage,read;statistics:read;agent:delete,read"
+    }
+
 .. warning::
    The use of *https://<tpp_host>/vedsdk/Authorize* has been deprecated as of TPP 20.1 and is required beyond 21.1. While it is
    still functional, it is advised that you use the OAuth function to authenticate.

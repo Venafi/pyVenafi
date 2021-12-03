@@ -57,85 +57,85 @@ class _Platforms(FeatureBase):
             response.assert_valid_response()
 
 
-@feature()
+@feature('Auto Layout Manager')
 class AutoLayoutManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Auto Layout Manager')
 
 
-@feature()
+@feature('Bulk Provisioning Manager')
 class BulkProvisioningManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Bulk Provisioning Manager')
 
 
-@feature()
+@feature('CA Import Manager')
 class CAImportManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='CA Import Manager')
 
 
-@feature()
+@feature('Certificate Manager')
 class CertificateManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Manager')
 
 
-@feature()
+@feature('Certificate Pre-Enrollment')
 class CertificatePreEnrollment(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Pre-Enrollment')
 
 
-@feature()
+@feature('Certificate Revocation')
 class CertificateRevocation(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Revocation')
 
 
-@feature()
+@feature('Cloud Instance Monitor')
 class CloudInstanceMonitor(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Cloud Instance Monitor')
 
 
-@feature()
+@feature('Discovery Manager')
 class DiscoveryManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Discovery')
 
 
-@feature()
+@feature('Monitor')
 class Monitor(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Monitor')
 
 
-@feature()
+@feature('Onboard Discovery Manager')
 class OnboardDiscoveryManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Onboard Discovery Manager')
 
 
-@feature()
+@feature('Reporting')
 class Reporting(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Reporting')
 
 
-@feature()
+@feature('SSH Manager')
 class SSHManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='SSH Manager')
 
 
-@feature()
+@feature('TrustNet Manager')
 class TrustNetManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='TrustNet Manager')
 
 
-@feature()
+@feature('Validation Manager')
 class ValidationManager(_Platforms):
     def __init__(self, api):
         super().__init__(api=api, module='Validation Manager')

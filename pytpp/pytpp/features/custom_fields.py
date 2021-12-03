@@ -3,7 +3,7 @@ from pytpp.tools.vtypes import Config, CustomFields
 from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 
 
-@feature()
+@feature('Custom Field')
 class CustomField(FeatureBase):
     def __init__(self, api):
         super().__init__(api)

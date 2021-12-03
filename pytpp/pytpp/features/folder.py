@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from pytpp.tools.vtypes import Config, Identity
 
 
-@feature()
+@feature('Folder')
 class Folder(FeatureBase):
     def __init__(self, api):
         super().__init__(api)

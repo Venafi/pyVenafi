@@ -132,7 +132,7 @@ class _IdentityBase(FeatureBase):
         return result.attributes
 
 
-@feature()
+@feature('User')
 class User(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -247,7 +247,7 @@ class User(_IdentityBase):
         return response.identity
 
 
-@feature()
+@feature('Group')
 class Group(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)

@@ -5,7 +5,7 @@ from pytpp.properties.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
 
 
-@feature()
+@feature('Client Groups')
 class ClientGroups(FeatureBase):
     def __init__(self, api):
         super().__init__(api)

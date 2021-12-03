@@ -7,7 +7,7 @@ from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import logger, LogTags
 
 
-@feature()
+@feature('Certificate')
 class Certificate(FeatureBase):
     def __init__(self, api):
         super().__init__(api)

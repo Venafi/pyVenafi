@@ -9,7 +9,7 @@ class _AttributeValue:
         self.locked = locked
 
 
-@feature()
+@feature('Objects')
 class Objects(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)

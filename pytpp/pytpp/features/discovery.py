@@ -4,7 +4,7 @@ from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
 from pytpp.attributes.discovery import DiscoveryAttributes
 
 
-@feature()
+@feature('Network Discovery')
 class NetworkDiscovery(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -111,18 +111,18 @@ class NetworkDiscovery(FeatureBase):
 
         attributes = attributes or {}
         attributes.update({
-            DiscoveryAttributes.address_range: address_range,
-            DiscoveryAttributes.automatically_import: "1" if automatically_import else "0",
-            DiscoveryAttributes.blackout : blackout,
+            DiscoveryAttributes.address_range          : address_range,
+            DiscoveryAttributes.automatically_import   : "1" if automatically_import else "0",
+            DiscoveryAttributes.blackout               : blackout,
             DiscoveryAttributes.certificate_location_dn: default_certificate_dn,
-            DiscoveryAttributes.contact: contacts,
-            DiscoveryAttributes.description: description,
-            DiscoveryAttributes.discovery_exclusion_dn: exclusion_dns,
-            DiscoveryAttributes.placement_rule: [f'{e}:{guid}' for e, guid in enumerate(placement_rule_guids)],
-            DiscoveryAttributes.priority: priority,
-            DiscoveryAttributes.reschedule: "1" if hour and reschedule else "0",
-            DiscoveryAttributes.resolve_host: "1" if resolve_host else "0",
-            DiscoveryAttributes.utc: utc
+            DiscoveryAttributes.contact                : contacts,
+            DiscoveryAttributes.description            : description,
+            DiscoveryAttributes.discovery_exclusion_dn : exclusion_dns,
+            DiscoveryAttributes.placement_rule         : [f'{e}:{guid}' for e, guid in enumerate(placement_rule_guids)],
+            DiscoveryAttributes.priority               : priority,
+            DiscoveryAttributes.reschedule             : "1" if hour and reschedule else "0",
+            DiscoveryAttributes.resolve_host           : "1" if resolve_host else "0",
+            DiscoveryAttributes.utc                    : utc
         })
 
         if hour:
@@ -186,7 +186,7 @@ class NetworkDiscovery(FeatureBase):
 
         attributes = {
             DiscoveryAttributes.reschedule: "1",
-            DiscoveryAttributes.hour: hour
+            DiscoveryAttributes.hour      : hour
         }
         if days_of_week:
             attributes[DiscoveryAttributes.days_of_week] = days_of_week
@@ -221,7 +221,8 @@ class NetworkDiscovery(FeatureBase):
                 attribute_name=attribute_name
             ).assert_valid_response()
 
-    def blackout_schedule(self, job: Union['Config.Object', str], sunday: List[Union[str, int]] = None, monday: List[Union[str, int]] = None,
+    def blackout_schedule(self, job: Union['Config.Object', str], sunday: List[Union[str, int]] = None,
+                          monday: List[Union[str, int]] = None,
                           tuesday: List[Union[str, int]] = None, wednesday: List[Union[str, int]] = None,
                           thursday: List[Union[str, int]] = None, friday: List[Union[str, int]] = None,
                           saturday: List[Union[str, int]] = None):
