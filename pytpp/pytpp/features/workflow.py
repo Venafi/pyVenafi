@@ -85,7 +85,7 @@ class _WorkflowBase(FeatureBase):
         return workflow
 
 
-@feature()
+@feature('Adapatable Workflow')
 class AdaptableWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -224,7 +224,7 @@ class RC:
         self.description = description
 
 
-@feature()
+@feature('Reason Code')
 class ReasonCode(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -281,7 +281,7 @@ class ReasonCode(FeatureBase):
                 result.assert_valid_response()
 
 
-@feature()
+@feature('Standard Workflow')
 class StandardWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -342,7 +342,7 @@ class StandardWorkflow(_WorkflowBase):
         return workflow
 
 
-@feature()
+@feature('Ticket')
 class Ticket(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)

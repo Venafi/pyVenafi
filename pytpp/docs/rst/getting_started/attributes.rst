@@ -56,7 +56,7 @@ Using AttributeNames and AttributeValues
 Reading And Writing Attributes
 """"""""""""""""""""""""""""""
 
-Attributes can be read and written using :ref:`objects`. Reading an attributes always returns a list of values.
+Attributes can be read and written using `objects`. Reading an attributes always returns a list of values.
 While it is convenient to be able to write to an object's attribute directly, there are feature functions
 available to facilitate writing to objects.
 
@@ -90,7 +90,7 @@ Policies are established on folder objects in TPP and enforced for specific attr
 Having a list of all classes is convenient when managing policies and searching for objects. Search the code
 for a list of all classes as they are not documented here.
 
-See :ref:`folders` for an API reference to policy management.
+See `folders` for an API reference to policy management.
 
 In this example the Management Type and Certificate Authority attributes are being locked on the *Certificates*
 folder.

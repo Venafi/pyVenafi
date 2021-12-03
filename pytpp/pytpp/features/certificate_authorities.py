@@ -38,7 +38,7 @@ class _CertificateAuthorityBase(FeatureBase):
         )
 
 
-@feature()
+@feature('Microsoft CA')
 class MSCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -98,7 +98,7 @@ class MSCA(_CertificateAuthorityBase):
         )
 
 
-@feature()
+@feature('Self-Signed CA')
 class SelfSignedCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)

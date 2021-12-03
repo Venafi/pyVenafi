@@ -12,10 +12,11 @@ if TYPE_CHECKING:
     from pytpp.api.authenticate import Authenticate
 
 
-def feature():
+def feature(name: str):
     def decorate(cls):
         if int(os.getenv('PYTPP_DOC_IN_PROGRESS', 0)):
             return cls
+        setattr(cls, '__feature__', name)
         return logger.wrap_class(
             log_tag=LogTags.feature,
             func_regex_exclude='_.*'
@@ -23,7 +24,6 @@ def feature():
     return decorate
 
 
-@feature()
 class FeatureBase:
     def __init__(self, api: 'Authenticate'):
         self._api = api

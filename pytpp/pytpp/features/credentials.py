@@ -62,7 +62,7 @@ class _CredentialBase(FeatureBase):
         )
 
 
-@feature()
+@feature('Amazon Credential')
 class AmazonCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
@@ -152,7 +152,7 @@ class AmazonCredential(_CredentialBase):
         )
 
 
-@feature()
+@feature('Certificate Credential')
 class CertificateCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
@@ -198,7 +198,7 @@ class CertificateCredential(_CredentialBase):
         )
 
 
-@feature()
+@feature('Google Credential')
 class GoogleCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
@@ -242,7 +242,7 @@ class GoogleCredential(_CredentialBase):
         )
 
 
-@feature()
+@feature('Generic Credential')
 class GenericCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
@@ -287,7 +287,7 @@ class GenericCredential(_CredentialBase):
         )
 
 
-@feature()
+@feature('Password Credential')
 class PasswordCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
@@ -330,7 +330,7 @@ class PasswordCredential(_CredentialBase):
         )
 
 
-@feature()
+@feature('Private Key Credential')
 class PrivateKeyCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)
@@ -375,7 +375,7 @@ class PrivateKeyCredential(_CredentialBase):
         )
 
 
-@feature()
+@feature('Username/Password Credential')
 class UsernamePasswordCredential(_CredentialBase):
     def __init__(self, api):
         super().__init__(api)

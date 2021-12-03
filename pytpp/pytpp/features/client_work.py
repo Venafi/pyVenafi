@@ -107,7 +107,7 @@ class _ClientWorkBase(FeatureBase):
         return response.objects
 
 
-@feature()
+@feature('Agent Connectivity')
 class AgentConnectivity(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -235,7 +235,7 @@ class AgentConnectivity(_ClientWorkBase):
             ).assert_valid_response()
 
 
-@feature()
+@feature('Agent Upgrade')
 class AgentUpgrade(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -268,7 +268,7 @@ class AgentUpgrade(_ClientWorkBase):
         )
 
 
-@feature()
+@feature('Certificate Device Placement')
 class CertificateDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -328,7 +328,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
         )
 
 
-@feature()
+@feature('Certificate Discovery')
 class CertificateDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -523,7 +523,7 @@ class CertificateDiscovery(_ClientWorkBase):
             ).assert_valid_response()
 
 
-@feature()
+@feature('Certificate Enrollment Via EST Protocol')
 class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -602,7 +602,7 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
         )
 
 
-@feature()
+@feature('Certificate Installation')
 class CertificateInstallation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -744,7 +744,7 @@ class CertificateInstallation(_ClientWorkBase):
             ).assert_valid_response()
 
 
-@feature()
+@feature('Device Certificate Creation')
 class DeviceCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -821,7 +821,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
         )
 
 
-@feature()
+@feature('Dynamic Provisioning')
 class DynamicProvisioning(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -903,7 +903,7 @@ class DynamicProvisioning(_ClientWorkBase):
         )
 
 
-@feature()
+@feature('SSH Device Placement')
 class SSHDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -947,7 +947,7 @@ class SSHDevicePlacement(_ClientWorkBase):
         )
 
 
-@feature()
+@feature('SSH Discovery')
 class SSHDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -1119,7 +1119,7 @@ class SSHDiscovery(_ClientWorkBase):
             ).assert_valid_response()
 
 
-@feature()
+@feature('SSH Key Usage')
 class SSHKeyUsage(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -1250,7 +1250,7 @@ class SSHKeyUsage(_ClientWorkBase):
             ).assert_valid_response()
 
 
-@feature()
+@feature('SSH Remediation')
 class SSHRemediation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -1395,7 +1395,7 @@ class SSHRemediation(_ClientWorkBase):
             ).assert_valid_response()
 
 
-@feature()
+@feature('User Certificate Creation')
 class UserCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)

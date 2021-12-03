@@ -1,7 +1,7 @@
 PyTPP Documentation
 ===================
 
-See the full documentation `here <https://pytpp.readthedocs.io/en/latest>`_.
+See the `full documentation here <https://pytpp.readthedocs.io/en/latest>`_.
 
 This is a Python package for Trust Protection Platform (TPP). It provides an interface to the TPP WebSDK API
 and a feature layer abstraction that provides a higher-level interface to TPP. The feature layer
@@ -231,7 +231,7 @@ is a timeout period during which many calls are issued to check for a condition 
     :maxdepth: 1
 
     rst/getting_started
-    rst/pytpp
+    rst/api_reference
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -23,7 +23,7 @@ class _DeviceBase(FeatureBase):
         self._config_delete(object_dn=dn)
 
 
-@feature()
+@feature('Device')
 class Device(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)
@@ -117,7 +117,7 @@ class Device(_DeviceBase):
             raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
 
 
-@feature()
+@feature('Jump Server')
 class JumpServer(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)

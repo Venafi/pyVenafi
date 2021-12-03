@@ -4,7 +4,7 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.properties.response_objects.permissions import Permissions as PermResponseObj
 
 
-@feature()
+@feature('Permissions')
 class Permissions(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)

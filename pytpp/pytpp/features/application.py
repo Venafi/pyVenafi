@@ -285,7 +285,7 @@ class _ApplicationBase(FeatureBase):
         )
 
 
-@feature()
+@feature('Adaptable Application')
 class Adaptable(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.adaptable_app)
@@ -392,7 +392,7 @@ class Adaptable(_ApplicationBase):
             locked=locked
         ).assert_valid_response()
         # endregion Create The Policy Attributes
-        
+
         app_attrs = {
             ApplicationBaseAttributes.driver_name      : 'appadaptable',
             AdaptableAppAttributes.credential          : self._get_dn(
@@ -413,7 +413,7 @@ class Adaptable(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Amazon AWS')
 class AmazonAWS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.amazon_app)
@@ -483,7 +483,7 @@ class AmazonAWS(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Apache')
 class Apache(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache)
@@ -573,7 +573,7 @@ class Apache(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Azure Key Vault')
 class AzureKeyVault(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.azure_key_vault)
@@ -646,7 +646,7 @@ class AzureKeyVault(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Basic Application')
 class Basic(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.basic)
@@ -723,7 +723,7 @@ class Basic(_ApplicationBase):
         return new_object
 
 
-@feature()
+@feature('Blue Coat SSLVA')
 class BlueCoatSSLVA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.bluecoat_sslva)
@@ -783,7 +783,7 @@ class BlueCoatSSLVA(_ApplicationBase):
         )
 
 
-@feature()
+@feature('CAPI')
 class CAPI(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.capi)
@@ -851,7 +851,7 @@ class CAPI(_ApplicationBase):
 
         if attributes:
             app_attrs.update(attributes)
-            
+
         return self._create(
             name=name,
             device=device,
@@ -863,7 +863,7 @@ class CAPI(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Citrix NetScaler')
 class CitrixNetScaler(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.netscaler)
@@ -931,7 +931,7 @@ class CitrixNetScaler(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Connect:Direct')
 class ConnectDirect(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.connectdirect)
@@ -987,7 +987,7 @@ class ConnectDirect(_ApplicationBase):
         )
 
 
-@feature()
+@feature('F5 Authentication Bundle')
 class F5AuthenticationBundle(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.f5_authentication_bundle)
@@ -1029,7 +1029,7 @@ class F5AuthenticationBundle(_ApplicationBase):
         )
 
 
-@feature()
+@feature('F5 LTM Advanced')
 class F5LTMAdvanced(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.f5_ltm_advanced)
@@ -1152,7 +1152,7 @@ class F5LTMAdvanced(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Google Cloud Load Balancer')
 class GoogleCloudLoadBalancer(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.google_cloud_app)
@@ -1204,7 +1204,7 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
         )
 
 
-@feature()
+@feature('IBM DataPower')
 class IBMDataPower(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.datapower)
@@ -1284,7 +1284,7 @@ class IBMDataPower(_ApplicationBase):
         )
 
 
-@feature()
+@feature('IBM GSK')
 class IBMGSK(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.gsk)
@@ -1381,7 +1381,7 @@ class IBMGSK(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Imperva MX')
 class ImpervaMX(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.imperva_mx)
@@ -1441,7 +1441,7 @@ class ImpervaMX(_ApplicationBase):
         )
 
 
-@feature()
+@feature('JKS')
 class JKS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.jks)
@@ -1547,7 +1547,7 @@ class JKS(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Oracle iPlanet')
 class OracleIPlanet(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.iplanet)
@@ -1637,7 +1637,7 @@ class OracleIPlanet(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Palo Alto Network FW')
 class PaloAltoNetworkFW(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.palo_alto_network_fw)
@@ -1712,7 +1712,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
         )
 
 
-@feature()
+@feature('PEM')
 class PEM(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pem)
@@ -1787,7 +1787,7 @@ class PEM(_ApplicationBase):
         )
 
 
-@feature()
+@feature('PKCS11')
 class PKCS11(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11)
@@ -1875,7 +1875,7 @@ class PKCS11(_ApplicationBase):
         )
 
 
-@feature()
+@feature('PKCS #12')
 class PKCS12(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs_12)
@@ -1964,7 +1964,7 @@ class PKCS12(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Riverbed Steelhead')
 class RiverbedSteelHead(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.riverbed_steelhead)
@@ -2014,7 +2014,7 @@ class RiverbedSteelHead(_ApplicationBase):
         )
 
 
-@feature()
+@feature('Tealeaf PCA')
 class TealeafPCA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.tealeaf_pca)
@@ -2064,7 +2064,7 @@ class TealeafPCA(_ApplicationBase):
         )
 
 
-@feature()
+@feature('VAM nShield')
 class VAMnShield(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.vam_nshield)
@@ -2215,7 +2215,7 @@ class _ApplicationGroupBase(FeatureBase):
         return consumer_dns, certificate_dn
 
 
-@feature()
+@feature('Apache Group')
 class ApacheApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache_application_group)
@@ -2256,7 +2256,7 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
         return self._create(application_dns=application_dns, certificate=certificate, attributes=group_attributes)
 
 
-@feature()
+@feature('PKCS11 Group')
 class PKCS11ApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11_application_group)

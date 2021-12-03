@@ -5,7 +5,7 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
 
 
-@feature()
+@feature('Placement Rule Condition')
 class PlacementRuleCondition:
     def __init__(self):
         pass
@@ -158,7 +158,7 @@ class PlacementRuleCondition:
             return f"{self._field} == 0"
 
 
-@feature()
+@feature('Placement Rules')
 class PlacementRules(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
