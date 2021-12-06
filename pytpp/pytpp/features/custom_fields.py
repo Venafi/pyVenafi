@@ -243,7 +243,7 @@ class CustomField(FeatureBase):
         response = self._api.websdk.Metadata.ReadPolicy.post(
             dn=folder_dn,
             item_guid=custom_field_guid,
-            obj_type=class_name
+            obj_type=str(class_name)
         )
         self._validate_result_code(response.result)
 
@@ -375,7 +375,7 @@ class CustomField(FeatureBase):
         custom_field_guid = self._get_guid(custom_field)
         response = self._api.websdk.Metadata.SetPolicy.post(
             dn=folder_dn,
-            config_class=class_name,
+            config_class=str(class_name),
             guid_data=self._guid_data_list({custom_field_guid: values}),
             locked=locked
         )

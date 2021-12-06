@@ -7,7 +7,7 @@ from pytpp.features.discovery import NetworkDiscovery as _NetworkDiscovery
 from pytpp.plugins.properties.network_discovery import NetworkDiscovery as _NetworkDiscoveryProperties
 
 
-@feature()
+@feature(_NetworkDiscovery.__feature__)
 class NetworkDiscovery(_NetworkDiscovery):
     """
     This feature provides high-level interaction with TPP Network Discovery objects.

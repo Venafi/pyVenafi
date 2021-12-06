@@ -34,7 +34,7 @@ class FeatureBase:
             attributes = self._name_value_list(attributes=attributes, keep_list_values=keep_list_values)
 
         dn = f'{parent_folder_dn}\\{name}'
-        ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=config_class,
+        ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=str(config_class),
                                                  name_attribute_list=attributes or [])
         result = ca.result
         if result.code != 1:
