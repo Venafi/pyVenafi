@@ -14,6 +14,7 @@ class OnboardDiscoveryAttributes(ScheduleBaseAttributes, TopAttributes, metaclas
 	default_container = Attribute('Default Container', min_version='15.2')
 	device = Attribute('Device', min_version='15.2')
 	devices_folder = Attribute('Devices Folder', min_version='15.2')
+	disable_installations_not_in_use = Attribute('Disable Installations Not In Use', min_version='21.4')
 	driver_name = Attribute('Driver Name', min_version='15.2')
 	environment = Attribute('Environment', min_version='20.2')
 	extract_private_key = Attribute('Extract Private Key', min_version='15.2')

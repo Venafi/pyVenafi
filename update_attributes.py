@@ -16,7 +16,7 @@ class UpdateConfig:
     def __init__(self, version: str):
         sql = pyodbc.connect(
             p_str='',
-            server='10.100.206.16',
+            server='10.100.206.20',
             port=1433,
             database='TPP',
             user='sa',

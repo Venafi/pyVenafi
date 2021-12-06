@@ -103,6 +103,8 @@ class X509CertificateBaseAttributes(DriverBaseAttributes, MonitoringBaseAttribut
 	globalsign_mssl_ca_first_name = Attribute('GlobalSign MSSL CA:First Name')
 	globalsign_mssl_ca_last_name = Attribute('GlobalSign MSSL CA:Last Name')
 	globalsign_mssl_ca_phone = Attribute('GlobalSign MSSL CA:Phone')
+	google_cloud_ca_early_x509_chain_vault_id = Attribute('Google Cloud CA:Early X509 Chain Vault ID', min_version='21.3')
+	google_cloud_ca_early_x509_vault_id = Attribute('Google Cloud CA:Early X509 Vault ID', min_version='21.3')
 	grouping_id = Attribute('Grouping Id')
 	in_error = Attribute('In Error')
 	in_process = Attribute('In Process', min_version='15.3')
