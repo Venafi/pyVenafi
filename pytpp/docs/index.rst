@@ -37,16 +37,16 @@ Initializing The API and Feature Objects
     function. You can create a customized API Application Integration in Aperture for PyTPP, which is documented
     `here <https://docs.venafi.com/Docs/current/TopNav/Content/API-ApplicationIntegration/t-APIAppIntegrations-creatingNew-Aperture.php>`_.
 
-Here is an example API Application Integration that can be imported into Aperture:
+.. note:: You can use this Application Integration JSON snippet to create an Application Integration in Aperture.
 
 .. code-block:: json
 
     {
-        "id": "PyTPP",
-        "name": "Python for TPP",
-        "vendor": "Venafi",
-        "description": "Python package for Trust Protection Platform (TPP). It provides an interface to the TPP WebSDK API and a feature layer abstraction that provides a higher-level interface to TPP.",
-        "scope": "certificate;ssh:discover,approve;security:manage"
+        "id"         : "pytpp",
+        "name"       : "Venafi PyTPP SDK",
+        "vendor"     : "Venafi, Inc.",
+        "description": "Application Integration for PyTPP, a Python interface to TPP.",
+        "scope"      : "certificate:approve,delete,discover,manage,read,revoke;ssh:approve,delete,discover,manage,read;codesign:delete,manage,read;configuration:delete,manage,read;restricted:delete,manage,read;security:delete,manage,read;statistics:read;agent:delete,read"
     }
 
 .. code-block:: python
@@ -58,7 +58,7 @@ Here is an example API Application Integration that can be imported into Apertur
         host='tppserver.mycompany.com',
         username='username12',
         password='passw0rd!@#$',
-        application_id='PyTPP',
+        application_id='pytpp',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
 
@@ -97,7 +97,7 @@ The response body returned by TPP is also translated to Python. For example:
         host='tpp.mycompany.com',
         username='username123',
         password='passw0rd!@#$',
-        application_id='PyTPP',
+        application_id='ptypp',
         scope="certificate:approve,delete,discover,manage,revoke;configuration:delete,manage"
     )
     # Create a folder
