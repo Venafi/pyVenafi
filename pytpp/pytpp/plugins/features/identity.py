@@ -138,7 +138,7 @@ class _IdentityBase(_OriginalIdentityBase):
         result.assert_valid_response()
 
 
-@feature()
+@feature(_OriginalUser.__feature__)
 class User(_OriginalUser, _IdentityBase):
     def create(self, name: str, password: str, email_address: str, add_master_admin: bool = False,
                allow_aperture_user_search: bool = False, allow_websdk_access: bool = False,
@@ -204,7 +204,7 @@ class User(_OriginalUser, _IdentityBase):
         self._config_delete(object_dn=f'{self._identity_dn}\\{user.name}')
 
 
-@feature()
+@feature(_OriginalGroup.__name__)
 class Group(_OriginalGroup, _IdentityBase):
     def create(self, name: str, members: 'List[Union[Identity.Identity, str]]' = None, master_admin_group: bool = False,
                allow_websdk_access: bool = False, allow_aperture_user_search: bool = False,

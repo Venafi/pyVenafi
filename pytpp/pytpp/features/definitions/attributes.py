@@ -1,6 +1,5 @@
 class _Application:
     def __init__(self):
-        self._a10_ax_traffic_manager = None
         self._adaptable = None
         self._amazon_aws = None
         self._apache = None
@@ -12,6 +11,7 @@ class _Application:
         self._connect_direct = None
         self._f5_authentication_bundle = None
         self._f5_ltm_advanced = None
+        self._google_cloud_load_balancer = None
         self._ibm_datapower = None
         self._ibm_gsk = None
         self._imperva_mx = None
@@ -25,13 +25,6 @@ class _Application:
         self._riverbed_steel_head = None
         self._tealeaf_pca = None
         self._vamnshield = None
-
-    @property
-    def a10_ax_traffic_manager(self):
-        if not self._a10_ax_traffic_manager:
-            from pytpp.attributes.a10_ax_traffic_manager import A10AXTrafficManagerAttributes
-            self._a10_ax_traffic_manager = A10AXTrafficManagerAttributes
-        return self._a10_ax_traffic_manager
 
     @property
     def adaptable(self):
@@ -109,6 +102,13 @@ class _Application:
             from pytpp.attributes.f5_ltm_advanced import F5LTMAdvancedAttributes
             self._f5_ltm_advanced = F5LTMAdvancedAttributes
         return self._f5_ltm_advanced
+
+    @property
+    def google_cloud_load_balancer(self):
+        if not self._google_cloud_load_balancer:
+            from pytpp.attributes.google_cloud_app import GoogleCloudAppAttributes
+            self._google_cloud_load_balancer = GoogleCloudAppAttributes
+        return self._google_cloud_load_balancer
 
     @property
     def ibm_datapower(self):

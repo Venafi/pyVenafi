@@ -57,6 +57,7 @@ class _WorkflowBase(FeatureBase):
         else:
             driver_str = '028Venafi.Drivers.WFApplication'
         if application_class_name:
+            application_class_name = str(application_class_name)
             stage_str = f'B&{len(str(stage)):03d}{stage}D-{len(application_class_name):03d}{application_class_name}'
         else:
             stage_str = f'B-{len(str(stage)):03d}{stage}'
@@ -332,7 +333,7 @@ class StandardWorkflow(_WorkflowBase):
             is_adaptable=False,
             stage=stage,
             injection_command=injection_command,
-            application_class_name=application_class_name,
+            application_class_name=str(application_class_name),
             approvers=wf_approvers,
             reason_code=reason_code,
             attributes=attributes,

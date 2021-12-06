@@ -283,7 +283,7 @@ class UpdateConfig:
         return new_attrs
 
     def dump_classes(self):
-        classes = '\n\t'.join(f'{self.snake_case(c)} = "{c}"' for c in set(self.all_classes))
+        classes = '\n\t'.join(f'{self.snake_case(c)} = "{c}"' for c in sorted(set(self.all_classes)))
         script = '\n'.join([
             'from pytpp.attributes._helper import IterableMeta\n',
             'class Classes(metaclass=IterableMeta):',

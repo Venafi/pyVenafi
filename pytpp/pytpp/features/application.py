@@ -42,7 +42,7 @@ if TYPE_CHECKING:
 class _ApplicationBase(FeatureBase):
     def __init__(self, api, class_name: str):
         super().__init__(api=api)
-        self._class_name = class_name
+        self._class_name = str(class_name)
 
     def delete(self, application: Union['Config.Object', str]):
         """
@@ -702,7 +702,7 @@ class Basic(_ApplicationBase):
         basic_application_dn = self._get_dn(basic_application)
         result = self._api.websdk.Config.MutateObject.post(
             object_dn=basic_application_dn,
-            class_name=new_class_name
+            class_name=str(new_class_name)
         )
         result.assert_valid_response()
 

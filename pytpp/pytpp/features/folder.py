@@ -108,7 +108,7 @@ class Folder(FeatureBase):
                 result = self._api.websdk.Config.ClearPolicyAttribute.post(
                     object_dn=folder_dn,
                     attribute_name=attribute_name,
-                    class_name=class_name
+                    class_name=str(class_name)
                 ).result
 
                 if result.code != 1:
@@ -122,7 +122,7 @@ class Folder(FeatureBase):
                 for value in values:
                     result = self._api.websdk.Config.RemovePolicyValue.post(
                         object_dn=folder_dn,
-                        class_name=class_name,
+                        class_name=str(class_name),
                         attribute_name=name,
                         value=value
                     ).result
@@ -347,7 +347,7 @@ class Folder(FeatureBase):
         folder_dn = self._get_dn(folder)
         resp = self._api.websdk.Config.ReadPolicy.post(
             object_dn=folder_dn,
-            class_name=class_name,
+            class_name=str(class_name),
             attribute_name=attribute_name
         )
 
@@ -439,7 +439,7 @@ class Folder(FeatureBase):
 
             result = self._api.websdk.Config.WritePolicy.post(
                 object_dn=folder_dn,
-                class_name=class_name,
+                class_name=str(class_name),
                 attribute_name=name,
                 values=values,
                 locked=locked
@@ -487,7 +487,7 @@ class Folder(FeatureBase):
         for name, value in attributes.items():
             result = self._api.websdk.Config.AddPolicyValue.post(
                 object_dn=folder_dn,
-                class_name=class_name,
+                class_name=str(class_name),
                 attribute_name=name,
                 value=value,
                 locked=locked,

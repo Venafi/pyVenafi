@@ -129,7 +129,7 @@ class Objects(FeatureBase):
         obj_dn = self._get_dn(obj)
         resp = self._api.websdk.Config.FindPolicy.post(
             object_dn=obj_dn,
-            class_name=class_name,
+            class_name=str(class_name),
             attribute_name=attribute_name
         )
 

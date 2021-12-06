@@ -7,10 +7,19 @@ from pytpp.features.definitions.attributes import Attributes
 # noinspection PyUnresolvedReferences
 from pytpp.features.definitions.attribute_values import AttributeValues
 # noinspection PyUnresolvedReferences
-from pytpp.features.definitions.legacy_classes import Classes
+from pytpp.features.definitions.legacy_classes import Classes as __C
 # noinspection PyUnresolvedReferences
-from pytpp.features.definitions.legacy_attribute_names import AttributeNames
+from pytpp.features.definitions.legacy_attribute_names import AttributeNames as __AN
 # noinspection PyUnresolvedReferences
 from pytpp.tools.logger import logger
 # noinspection PyUnresolvedReferences
 from pytpp.tools import vtypes as Types
+
+
+def __getattr__(name):
+    attr = None
+    if name == 'AttributeNames':
+        attr = __AN
+    elif name == 'Classes':
+        attr = __C
+    return attr

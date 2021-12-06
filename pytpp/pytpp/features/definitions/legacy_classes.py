@@ -6,8 +6,10 @@ from pytpp.properties.config import (
 )
 
 class Classes(metaclass=DeprecationMeta):
-    __deprecation_reason__ = 'Using Classes will be deprecated soon. Get the class names from the attributes using ' \
-                             'pytpp.Attributes (from pytpp import Attributes) instead.'
+    __deprecation_reason__ = 'Using Classes will be deprecated soon. Get the TPP class names from the attributes using ' \
+                             'pytpp.Attributes (from pytpp import Attributes) instead. Alternatively you can import ' \
+                             'pytpp.ClassNames, which provides all class names in TPP whereas the Attributes only ' \
+                             'provide the commonly used TPP class names.'
     Application = ApplicationClassNames
     ApplicationGroup = ApplicationGroupClassNames
     Certificate = CertificateClassNames

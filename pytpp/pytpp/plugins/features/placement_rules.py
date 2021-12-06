@@ -8,7 +8,7 @@ from pytpp.features.placement_rules import PlacementRules as _OriginalPlacementR
     PlacementRuleCondition as _OriginalPlacementRuleCondition
 
 
-@feature()
+@feature(_OriginalPlacementRuleCondition.__feature__)
 class PlacementRuleCondition(_OriginalPlacementRuleCondition):
     def __init__(self):
         pass
@@ -197,7 +197,7 @@ class PlacementRuleCondition(_OriginalPlacementRuleCondition):
             )
 
 
-@feature()
+@feature(_OriginalPlacementRules.__feature__)
 class PlacementRules(_OriginalPlacementRules):
     """
     This feature provides high-level interaction with TPP Placement Rule objects.

@@ -100,6 +100,8 @@ class Session:
                     raise AttributeError(f'The attribute "{key}" is not available until TPP version {key.min_version}.')
                 if isinstance(value, Attribute) and value.min_version and self.tpp_version < value.min_version:
                     raise AttributeError(f'The attribute "{value}" is not available until TPP version {value.min_version}.')
+                if hasattr(value, '__config_class__'):
+                    d[key] = value.__config_class__
             if value is None:
                 del d[key]
             elif isinstance(value, dict):
