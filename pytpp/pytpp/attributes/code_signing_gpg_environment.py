@@ -9,6 +9,7 @@ class CodeSigningGPGEnvironmentAttributes(CodeSigningEnvironmentBaseAttributes, 
 	encryption_key_algorithm = Attribute('Encryption Key Algorithm', min_version='20.3')
 	encryption_key_dn = Attribute('Encryption Key DN', min_version='20.2')
 	internet_email_address = Attribute('Internet EMail Address', min_version='20.3')
+	issuer_key_dn = Attribute('Issuer Key DN', min_version='21.4')
 	key_storage_location = Attribute('Key Storage Location', min_version='20.3')
 	max_uses = Attribute('Max Uses', min_version='20.3')
 	real_name = Attribute('Real Name', min_version='20.3')

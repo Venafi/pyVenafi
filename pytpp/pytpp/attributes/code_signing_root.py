@@ -8,6 +8,7 @@ class CodeSigningRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
 	default_certificate_container = Attribute('Default Certificate Container', min_version='19.2')
 	default_credential_container = Attribute('Default Credential Container', min_version='19.2')
 	enforce_group_roles = Attribute('Enforce Group Roles', min_version='19.2')
+	environment_template_update_flow_dn = Attribute('Environment Template Update Flow DN', min_version='21.4')
 	flow_instance_macro = Attribute('Flow Instance Macro', min_version='19.3')
 	key_storage_location = Attribute('Key Storage Location', min_version='19.2')
 	key_use_timeout = Attribute('Key Use Timeout', min_version='19.2')

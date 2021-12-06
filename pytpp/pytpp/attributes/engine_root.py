@@ -28,6 +28,7 @@ class EngineRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
 	oam_logout_url = Attribute('OAM Logout Url', min_version='20.1')
 	operating_environment = Attribute('Operating Environment', min_version='15.1')
 	options = Attribute('Options', min_version='20.4')
+	pendo_events_last_sent = Attribute('Pendo Events Last Sent', min_version='21.4')
 	require_password = Attribute('Require Password')
 	revocation_check_issuer_dn = Attribute('Revocation Check Issuer DN')
 	revocation_check_issuer_identifier = Attribute('Revocation Check Issuer Identifier')

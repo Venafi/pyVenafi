@@ -5,6 +5,7 @@ from pytpp.attributes.service_module import ServiceModuleAttributes
 class CertificateManagerAttributes(ServiceModuleAttributes, metaclass=IterableMeta):
 	__config_class__ = "Certificate Manager"
 	cdp_aia_verification_disabled = Attribute('CDP AIA Verification Disabled')
+	certificate_api_todo_timeout = Attribute('Certificate API ToDo Timeout', min_version='21.4')
 	escalation_notice_interval = Attribute('Escalation Notice Interval')
 	escalation_notice_start = Attribute('Escalation Notice Start')
 	expiration_notice_interval = Attribute('Expiration Notice Interval')
