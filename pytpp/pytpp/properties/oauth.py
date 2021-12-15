@@ -16,7 +16,6 @@ class Permissions:
             'delete': self.delete,
             'discover': self.discover,
             'manage': self.manage,
-            'read': self.read,
             'revoke': self.revoke,
         }.items() if v is not None]
 
@@ -45,13 +44,14 @@ class Scope:
                 self._certificate, self._ssh, self._codesign,
                 self._configuration, self._restricted,
                 self._security, self._statistics, self._agent
-            ]
+            ] if p.effective()
         ]
         return ';'.join(scopes)
 
     def agent(self, delete: bool = False, read: bool = False):
         self._agent.delete = delete
         self._agent.read = read
+        return self
 
     def certificate(self, approve: bool = False, delete: bool = False, discover: bool = False,
                     manage: bool = False, read: bool = False, revoke: bool = False):
@@ -61,26 +61,31 @@ class Scope:
         self._certificate.manage = manage
         self._certificate.read = read
         self._certificate.revoke = revoke
+        return self
 
     def configuration(self, delete: bool = False, manage: bool = False, read: bool = False):
         self._configuration.delete = delete
         self._configuration.manage = manage
         self._configuration.read = read
+        return self
 
     def codesign(self, delete: bool = False, manage: bool = False, read: bool = False):
         self._codesign.delete = delete
         self._codesign.manage = manage
         self._codesign.read = read
+        return self
 
     def restricted(self, delete: bool = False, manage: bool = False, read: bool = False):
         self._restricted.delete = delete
         self._restricted.manage = manage
         self._restricted.read = read
+        return self
 
     def security(self, delete: bool = False, manage: bool = False, read: bool = False):
         self._security.delete = delete
         self._security.manage = manage
         self._security.read = read
+        return self
 
     def ssh(self, approve: bool = False, delete: bool = False, discover: bool = False,
             manage: bool = False, read: bool = False):
@@ -89,19 +94,22 @@ class Scope:
         self._ssh.discover = discover
         self._ssh.manage = manage
         self._ssh.read = read
+        return self
 
     def statistics(self, read: bool = False):
         self._statistics.read = read
+        return self
+
 
 
 if __name__ == '__main__':
-    scope = Scope()
-    scope.certificate(True, True, True, True, True, True)
-    scope.ssh(*[True * 5])
-    scope.codesign(*[True * 3])
-    scope.configuration(*[True * 3])
-    scope.restricted(*[True * 3])
-    scope.security(True, True, True)
-    scope.statistics(True)
-    scope.agent(*[True * 2])
+    scope = Scope()\
+        .certificate(True, True, True, True, True, True)\
+        .ssh(*[True * 5])\
+        .codesign(*[True * 3])\
+        .configuration(*[True * 3])\
+        .restricted(*[True * 3])\
+        .security(True, True, True)\
+        .statistics(True)\
+        .agent(*[True * 2])
     print(scope.to_string())

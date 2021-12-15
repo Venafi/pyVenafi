@@ -39,7 +39,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'all_docs/excluded/*.rst', ]
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -70,4 +70,19 @@ html_css_files = [
     'css/custom.css'
 ]
 
-# -- Extension configuration -------------------------------------------------
+# region Documentation Variables
+string = lambda name, value: f'.. |{name}| replace:: {value}'
+link = lambda name, label, href:  f"""
+.. |{name}| raw:: html
+
+   <a href="{href}">{label}</a>
+"""
+
+variables = [
+    string(name='Product', value='PyTPP'),
+    link(name='Doc Home Page', label='Venafi TPP WebSDK Documentation', href='https://docs.venafi.com/index.php'),
+    link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/'),
+]
+
+rst_prolog = '\n'.join(variables) + '\n'
+# endregion Documentation Variables

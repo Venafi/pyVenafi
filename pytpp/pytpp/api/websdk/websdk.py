@@ -56,7 +56,7 @@ class WebSDK:
             host: Hostname or IP Address of TPP
             username: Username
             password: Password
-            token: Either the X-Venafi-API-Key or an OAuth Access Bearer Token
+            token: OAuth Access Bearer Token
             application_id: Application ID of the OAuth API Application Integration. Must supply ``scope``.
             scope: Scope of the OAuth API Application Integration to be used. Must supply ``application_id``.
             proxies: An OrderedDict used by the python Requests library.
