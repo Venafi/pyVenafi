@@ -1,5 +1,5 @@
-|Product| Usage Guide
-=====================
+Usage Guide
+============
 
 Authentication
 --------------
@@ -380,9 +380,3 @@ call. By default, the logger is turned off. To use the logger:
         ...
 
 Visit the LogBoss documentation for more usage information.
-
-.. toctree::
-    :hidden:
-    :maxdepth: 1
-
-    usage/examples

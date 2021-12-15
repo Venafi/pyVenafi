@@ -47,5 +47,6 @@ Install using ``pip install pytpp``.
     :caption: Table Of Contents
     :maxdepth: 1
 
-    Usage Guide <rst/usage>
+    rst/usage
+    rst/usage/examples
     rst/api_reference
