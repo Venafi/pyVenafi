@@ -3,7 +3,8 @@ import hashlib
 from typing import List, Union
 from datetime import datetime
 from pytpp.tools.vtypes import Config, Identity
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.attributes.workflow import WorkflowAttributes
 from pytpp.attributes.adaptable_workflow import AdaptableWorkflowAttributes
@@ -352,7 +353,7 @@ class Ticket(FeatureBase):
     @staticmethod
     def _validate_result_code(result):
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.workflow_result)
+            raise InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
     def create(self, obj: Union['Config.Object', str], workflow: Union['Config.Object', str],
                approvers: Union['List[Identity.Identity]', List[str]], reason: Union[RC, int, str],

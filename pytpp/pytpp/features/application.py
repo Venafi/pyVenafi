@@ -28,7 +28,8 @@ from pytpp.attributes.application_group import ApplicationGroupAttributes
 from pytpp.attributes.apache_application_group import ApacheApplicationGroupAttributes
 from pytpp.attributes.pkcs11_application_group import PKCS11ApplicationGroupAttributes
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, FeatureException
 from pytpp.features.definitions.classes import Classes
 from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.tools.helpers.date_converter import from_date_string
@@ -71,7 +72,7 @@ class _ApplicationBase(FeatureBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def enable(self, application: Union['Config.Object', str]):
         """
@@ -87,7 +88,7 @@ class _ApplicationBase(FeatureBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def get(self, application_dn: str, raise_error_if_not_exists: bool = True):
         """
@@ -238,7 +239,7 @@ class _ApplicationBase(FeatureBase):
             attribute_name=ApplicationBaseAttributes.certificate
         )
         if not certificate_dn.values:
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f'There is no certificate associated to "{application_dn}" in TPP.'
             )
         response = self._api.websdk.Config.Read.post(
@@ -247,7 +248,7 @@ class _ApplicationBase(FeatureBase):
         )
 
         if not response.values:
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f'Cannot validate that the certificate "{certificate_dn}" is installed on the application '
                 f'"{application_dn}" as it seems that the certificate has never been renewed.'
             )
@@ -271,14 +272,14 @@ class _ApplicationBase(FeatureBase):
                     break
                 elif not stage:
                     if not _certificate_is_installed():
-                        raise FeatureError.UnexpectedValue(
+                        raise UnexpectedValue(
                             f'Expected a certificate to be installed on "{application_dn}", '
                             f'but the application is not in a processing status.'
                         )
                     return
                 stage = self._get_stage(application=application)
 
-        raise FeatureError.UnexpectedValue(
+        raise UnexpectedValue(
             f'Certificate installation failed on "{application_dn}".\n'
             f'Stage: {stage}\n'
             f'Status: {self.get_status(application=application)}'
@@ -716,7 +717,7 @@ class Basic(_ApplicationBase):
 
         new_object = self._api.websdk.Config.IsValid.post(object_dn=basic_application_dn).object
         if new_object.type_name != new_class_name:
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f'Unable to convert Basic App "{basic_application_dn}" to {new_class_name}. '
                 f'Its current class name is {new_object.type_name}.'
             )
@@ -2147,7 +2148,7 @@ class _ApplicationGroupBase(FeatureBase):
                 delete_orphans=False
             )
             if not result.success:
-                raise FeatureError(
+                raise FeatureException(
                     f'Unable to dissociate the applications in the application group "{application_group.dn}" '
                     f'from {certificate_dn}'
                 )
@@ -2189,7 +2190,7 @@ class _ApplicationGroupBase(FeatureBase):
             values=[app_group.dn]
         ).result
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
         # Associate each individual application.
         result = self._api.websdk.Certificates.Associate.post(
@@ -2198,7 +2199,7 @@ class _ApplicationGroupBase(FeatureBase):
             push_to_new=False
         )
         if not result.success:
-            raise FeatureError(f'Unable to associate the given applications to the certificate "{certificate.dn}".')
+            raise FeatureException(f'Unable to associate the given applications to the certificate "{certificate.dn}".')
 
         return app_group
 

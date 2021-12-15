@@ -1,4 +1,5 @@
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.attributes.policy import PolicyAttributes
 from typing import List, Union, TYPE_CHECKING
 if TYPE_CHECKING:
@@ -112,7 +113,7 @@ class Folder(FeatureBase):
                 ).result
 
                 if result.code != 1:
-                    raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                    raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
         elif isinstance(attributes, dict):
             for name, values in attributes.items():
@@ -128,7 +129,7 @@ class Folder(FeatureBase):
                     ).result
 
                     if result.code != 1:
-                        raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                        raise InvalidResultCode(code=result.code, code_description=result.config_result)
         else:
             raise TypeError(f'Expected attributes to be of type List[str] or Dict, but got {type(attributes)} instead.')
 
@@ -193,7 +194,7 @@ class Folder(FeatureBase):
             response = self._api.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
             result = response.result
             if result.code != 1:
-                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
             all_child_dns = response.objects
             for child in all_child_dns:
@@ -353,7 +354,7 @@ class Folder(FeatureBase):
 
         result = resp.result
         if result.code != 1:
-            FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+            InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
         return [resp.values, resp.locked]
 
@@ -446,7 +447,7 @@ class Folder(FeatureBase):
             ).result
 
             if result.code != 1:
-                FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+                InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
     def update_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: dict, locked: bool):
         """
@@ -494,4 +495,4 @@ class Folder(FeatureBase):
             ).result
 
             if result.code != 1:
-                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                raise InvalidResultCode(code=result.code, code_description=result.config_result)

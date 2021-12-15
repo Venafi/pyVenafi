@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
 from pytpp.tools.vtypes import Config
-from pytpp.features.bases.feature_base import FeatureError, feature
+from pytpp.features.bases.feature_base import feature
+from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.features.discovery import NetworkDiscovery as _NetworkDiscovery
 from pytpp.plugins.properties.network_discovery import NetworkDiscovery as _NetworkDiscoveryProperties
 
@@ -36,7 +37,7 @@ class NetworkDiscovery(_NetworkDiscovery):
                 if self._is_in_progress(job=job):
                     return
 
-        raise FeatureError.UnexpectedValue(
+        raise UnexpectedValue(
             f'Expected the job "{job.dn}" to start progress, but it did not.'
         )
 

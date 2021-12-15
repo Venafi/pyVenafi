@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from typing import List, Union, TYPE_CHECKING
 from pytpp.tools.vtypes import Config
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Identity
 
@@ -30,7 +31,7 @@ class _CredentialBase(FeatureBase):
         if result.code != 1:
             if result.code == 401 and get_if_already_exists:
                 return self._get_config_object(object_dn=dn)
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
+            raise InvalidResultCode(code=result.code, code_description=result.credential_result)
 
         return self._get_config_object(object_dn=dn)
 
@@ -43,7 +44,7 @@ class _CredentialBase(FeatureBase):
         """
         result = self._api.websdk.Credentials.Delete.post(credential_path=credential.dn).result
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.credential_result)
+            raise InvalidResultCode(code=result.code, code_description=result.credential_result)
 
     def get(self, credential_dn: str, raise_error_if_not_exists: bool = True):
         """

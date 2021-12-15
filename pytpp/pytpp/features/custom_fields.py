@@ -1,6 +1,7 @@
 from typing import List, Dict, Union
 from pytpp.tools.vtypes import Config, CustomFields
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode
 
 
 @feature('Custom Field')
@@ -19,7 +20,7 @@ class CustomField(FeatureBase):
     @staticmethod
     def _validate_result_code(result):
         if result.code != 0:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.metadata_result)
+            raise InvalidResultCode(code=result.code, code_description=result.metadata_result)
 
     def create(self, label: str, name: str, classes: list, data_type: int, allowed_characters: List[str] = None,
                allowed_values: List[str] = None, category: str = None, date_only: bool = None, default_values: List = None,

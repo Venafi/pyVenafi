@@ -1,7 +1,8 @@
 import datetime
 import time
 from typing import List, Union, TYPE_CHECKING
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, InvalidFormat
 from pytpp.properties.config import ClientWorkAttributeValues
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
 from pytpp.attributes.client_agent_configuration_work import ClientAgentConfigurationWorkAttributes
@@ -37,7 +38,7 @@ class _ClientWorkBase(FeatureBase):
         response = self._api.websdk.Config.Delete.post(work_dn)
 
         if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(
+            raise InvalidResultCode(
                 code=response.result.code,
                 code_description=response.result.credential_result
             )
@@ -58,7 +59,7 @@ class _ClientWorkBase(FeatureBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def enable(self, work: Union['Config.Object', str]):
         """
@@ -74,7 +75,7 @@ class _ClientWorkBase(FeatureBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
@@ -102,7 +103,7 @@ class _ClientWorkBase(FeatureBase):
         response = self._api.websdk.Config.Enumerate.post(object_dn=self._work_base_dn)
 
         if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(code=response.result.code,
+            raise InvalidResultCode(code=response.result.code,
                                                  code_description=response.result.credential_result)
         return response.objects
 
@@ -137,12 +138,12 @@ class AgentConnectivity(_ClientWorkBase):
         }
 
         if len([x for x in [daily, hourly, days_of_week, days_of_month] if x not in[None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,days_of_week,days_of_month")
 
         if daily:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
             attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.daily
@@ -150,20 +151,20 @@ class AgentConnectivity(_ClientWorkBase):
             attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.hourly
         elif days_of_week:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
 
             attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.days_of_week
             attributes[ClientAgentConfigurationWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
 
             attributes[ClientAgentConfigurationWorkAttributes.schedule_type] = ClientWorkAttributeValues.AgentConnectivity.ScheduleType.days_of_month
             attributes[ClientAgentConfigurationWorkAttributes.days_of_month] = days_of_month
         else:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must supply at one of (daily, hourly, days_of_week, days_of_month)")
 
         response = self._api.websdk.Config.Write.post(
@@ -314,7 +315,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
             work_attributes[ServerAgentCertDevicePlacementWorkAttributes.device_share_mode] = \
                 ClientWorkAttributeValues.CertificateDevicePlacement.DeviceSharedMode.duplicate_device
         else:
-            raise FeatureError.UnexpectedValue(f"Unexpected value for 'share_mode': {share_mode}")
+            raise UnexpectedValue(f"Unexpected value for 'share_mode': {share_mode}")
 
         if attributes:
             work_attributes.update(attributes)
@@ -361,7 +362,7 @@ class CertificateDiscovery(_ClientWorkBase):
         }
 
         if len([x for x in [daily, hourly, on_receipt, days_of_week, days_of_month] if x not in [None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt,days_of_week,days_of_month")
 
         if full_scan:
@@ -369,7 +370,7 @@ class CertificateDiscovery(_ClientWorkBase):
 
         if daily:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
             attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
@@ -382,7 +383,7 @@ class CertificateDiscovery(_ClientWorkBase):
                 ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.on_receipt
         elif days_of_week:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
 
             attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
@@ -390,14 +391,14 @@ class CertificateDiscovery(_ClientWorkBase):
             attributes[ClientCertificateDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
 
             attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
                 ClientWorkAttributeValues.CertificateDiscovery.ScheduleType.days_of_month
             attributes[ClientCertificateDiscoveryWorkAttributes.days_of_month] = days_of_month
         else:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must supply at one of (daily, hourly, days_of_week, days_of_month)")
 
         response = self._api.websdk.Config.Write.post(
@@ -635,12 +636,12 @@ class CertificateInstallation(_ClientWorkBase):
 
         if len([x for x in [daily, hourly, on_receipt, days_of_week, days_of_month, every_x_minutes] if
                 x not in [None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt,days_of_week,days_of_month,every_x_minutes")
 
         if daily:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
             attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = datetime.time(
@@ -653,14 +654,14 @@ class CertificateInstallation(_ClientWorkBase):
                 ClientWorkAttributeValues.CertificateInstallation.ScheduleType.hourly
         elif days_of_week:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
             attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = \
                 ClientWorkAttributeValues.CertificateInstallation.ScheduleType.days_of_week
             attributes[ClientCertificateDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
             attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.days_of_month
             attributes[ClientCertificateDiscoveryWorkAttributes.days_of_month] = days_of_month
@@ -680,10 +681,10 @@ class CertificateInstallation(_ClientWorkBase):
                 attributes[ClientCertificateDiscoveryWorkAttributes.schedule_type] = ClientWorkAttributeValues.CertificateInstallation.ScheduleType.every_x_minutes
                 attributes[ClientCertificateDiscoveryWorkAttributes.start_time] = "12:01:00 AM"
             else:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply at one of (30, 15, 5, 1) for every_x_minutes")
         else:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must supply at one of (daily,hourly,on_receipt,days_of_week,days_of_month,every_x_minutes)")
 
         response = self._api.websdk.Config.Write.post(
@@ -980,7 +981,7 @@ class SSHDiscovery(_ClientWorkBase):
         }
 
         if len([x for x in [daily, hourly, on_receipt, every_30_minutes, days_of_week, days_of_month] if x not in [None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt,every_30_minutes,days_of_week,days_of_month")
 
         if full_scan:
@@ -988,7 +989,7 @@ class SSHDiscovery(_ClientWorkBase):
 
         if daily:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
             attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = \
@@ -1007,7 +1008,7 @@ class SSHDiscovery(_ClientWorkBase):
             attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:30:00 AM"
         elif days_of_week:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
 
             attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
@@ -1015,14 +1016,14 @@ class SSHDiscovery(_ClientWorkBase):
             attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
 
             attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
                 ClientWorkAttributeValues.SSHDiscovery.ScheduleType.days_of_month
             attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_month] = days_of_month
         else:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must supply one of (daily,hourly,on_receipt,every_30_minutes,days_of_week,days_of_month)")
 
         response = self._api.websdk.Config.Write.post(
@@ -1147,12 +1148,12 @@ class SSHKeyUsage(_ClientWorkBase):
         }
 
         if len([x for x in [daily, hourly, on_receipt, every_x_minutes] if x not in [None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt, every_x_minutes")
 
         if daily:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
             attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] =\
@@ -1183,10 +1184,10 @@ class SSHKeyUsage(_ClientWorkBase):
                     ClientWorkAttributeValues.SSHKeyUsage.ScheduleType.every_x_minutes
                 attributes[ClientAgentSSHKeyUsageWorkAttributes.start_time] = "12:01:00 AM"
             else:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply at one of (30, 15, 5, 1) for every_x_minutes")
         else:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must supply one of (daily, hourly, on_receipt, every_x_minutes)")
 
         response = self._api.websdk.Config.Write.post(
@@ -1281,12 +1282,12 @@ class SSHRemediation(_ClientWorkBase):
         }
 
         if len([x for x in [daily, hourly, on_receipt, days_of_week, days_of_month, every_x_minutes] if x not in [None, False]]) != 1:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must specify one (and only one) of: daily,hourly,on_receipt,days_of_week,days_of_month,every_x_minutes")
 
         if daily:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the daily interval")
 
             attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = \
@@ -1298,14 +1299,14 @@ class SSHRemediation(_ClientWorkBase):
                 ClientWorkAttributeValues.SSHRemediation.ScheduleType.hourly
         elif days_of_week:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_week interval")
             attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
                 ClientWorkAttributeValues.SSHRemediation.ScheduleType.days_of_week
             attributes[ClientAgentSSHDiscoveryWorkAttributes.days_of_week] = days_of_week
         elif days_of_month:
             if not start_time:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply a 'start_time' to use the days_of_month interval")
             attributes[ClientAgentSSHDiscoveryWorkAttributes.schedule_type] = \
                 ClientWorkAttributeValues.SSHRemediation.ScheduleType.days_of_month
@@ -1331,10 +1332,10 @@ class SSHRemediation(_ClientWorkBase):
                     ClientWorkAttributeValues.SSHRemediation.ScheduleType.every_x_minutes
                 attributes[ClientAgentSSHDiscoveryWorkAttributes.start_time] = "12:01:00 AM"
             else:
-                raise FeatureError.InvalidFormat(
+                raise InvalidFormat(
                     "Error in Schedule: must supply at one of (30, 15, 5, 1) for every_x_minutes")
         else:
-            raise FeatureError.InvalidFormat(
+            raise InvalidFormat(
                 "Error in Schedule: must supply one of (daily,hourly,on_receipt,days_of_week,days_of_month,every_x_minutes)")
 
         response = self._api.websdk.Config.Write.post(

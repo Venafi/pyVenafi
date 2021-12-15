@@ -1,5 +1,6 @@
 from typing import List, Union
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat, FeatureTimeoutError
 from pytpp.properties.response_objects.config import Config
 
 
@@ -76,7 +77,7 @@ class Objects(FeatureBase):
                 ).result
 
                 if result.code != 1:
-                    raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                    raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
         elif isinstance(attributes, dict):
             for name, values in attributes.items():
@@ -91,7 +92,7 @@ class Objects(FeatureBase):
                     ).result
 
                     if result.code != 1:
-                        raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                        raise InvalidResultCode(code=result.code, code_description=result.config_result)
         else:
             raise TypeError(f'Expected attributes to be of type "list[str]" or "dict", but got {type(attributes)} instead.')
 
@@ -135,7 +136,7 @@ class Objects(FeatureBase):
 
         result = resp.result
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
         class Policy:
             policy_dn = resp.policy_dn
@@ -228,7 +229,7 @@ class Objects(FeatureBase):
                     return attr
 
         obj_dn = self._get_dn(obj)
-        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+        InvalidResultCode(code=result.code, code_description=result.config_result).log()
         raise TimeoutError(f'Could not read {attribute_name} on {obj_dn} because it did not exist '
                            f'after {timeout} seconds.')
 
@@ -260,7 +261,7 @@ class Objects(FeatureBase):
 
         result = resp.result
         if result.code != 1:
-            FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
+            InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
         return resp.name_values
 
@@ -275,13 +276,13 @@ class Objects(FeatureBase):
         """
         obj_dn = self._get_dn(obj)
         if not new_object_dn.startswith('\\VED'):
-            raise FeatureError.InvalidFormat(f'"{new_object_dn}" must be an absolute path starting from \\VED.')
+            raise InvalidFormat(f'"{new_object_dn}" must be an absolute path starting from \\VED.')
 
         response = self._api.websdk.Config.RenameObject.post(object_dn=obj_dn, new_object_dn=new_object_dn)
         result = response.result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
         return self.get(object_dn=new_object_dn, raise_error_if_not_exists=True)
 
@@ -322,7 +323,7 @@ class Objects(FeatureBase):
             ).result
 
             if result.code != 1:
-                raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+                raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def wait_for(self, obj: Union['Config.Object', str], attribute_name: str, attribute_value: str, include_policy_values: bool = False,
                  timeout: int = 10):
@@ -353,8 +354,8 @@ class Objects(FeatureBase):
                 if attr and any([True for value in attr.values if str(value).lower() == attribute_value.lower()]):
                     return attr
 
-        FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result).log()
-        raise FeatureError.TimeoutError(method=self.wait_for, expected_value=attribute_value,
+        InvalidResultCode(code=result.code, code_description=result.config_result).log()
+        raise FeatureTimeoutError(method=self.wait_for, expected_value=attribute_value,
                                         actual_value=attr.values, timeout=timeout)
 
     def write(self, obj: Union['Config.Object', str], attributes: dict):
@@ -394,7 +395,7 @@ class Objects(FeatureBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def _read(self, obj: Union['Config.Object', str], attribute_name: str, include_policy_values: bool):
         obj_dn = self._get_dn(obj)

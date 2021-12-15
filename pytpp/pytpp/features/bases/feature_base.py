@@ -2,6 +2,7 @@ import time
 import os
 import re
 from typing import TYPE_CHECKING
+from pytpp.features.definitions.exceptions import FeatureException, InvalidResultCode, ObjectDoesNotExist
 from pytpp.properties.response_objects.config import Config
 from pytpp.properties.response_objects.identity import Identity
 from pytpp.tools.logger import logger, LogTags
@@ -40,14 +41,14 @@ class FeatureBase:
         if result.code != 1:
             if result.code == 401 and get_if_already_exists:
                 return self._get_config_object(object_dn=dn)
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
         return ca.object
 
     def _config_delete(self, object_dn, recursive: bool = False):
         result = self._api.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
     def _get_config_object(self, object_dn: str = None, object_guid: str = None,
                            raise_error_if_not_exists: bool = True, valid_class_names: List[str] = None):
@@ -64,7 +65,7 @@ class FeatureBase:
             response = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
             if response.result.code == 400:
                 if raise_error_if_not_exists:
-                    raise ValueError(f'"{object_dn or object_guid}" does not exist.')
+                    raise ObjectDoesNotExist(f'"{object_dn or object_guid}" does not exist.')
             else:
                 obj = response.object
         if valid_class_names and obj.type_name not in valid_class_names:
@@ -91,7 +92,7 @@ class FeatureBase:
             identity = result.identity
         elif raise_error_if_not_exists:
             target = prefixed_name or prefixed_universal
-            raise FeatureError(f'Could not find identity "{target}".')
+            raise ObjectDoesNotExist(f'Could not find identity "{target}".')
         else:
             identity = Identity.Identity(response_object={})
         return identity
@@ -201,7 +202,7 @@ class FeatureBase:
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):
         result = self._api.websdk.SecretStore.OwnerDelete.post(namespace=namespace, owner=object_dn).result
         if result.code != 0:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.secret_store_result)
+            raise InvalidResultCode(code=result.code, code_description=result.secret_store_result)
 
     def _is_version_compatible(self, minimum: str = '', maximum: str = ''):
         if minimum and self._api._tpp_version <= Version(minimum):
@@ -236,34 +237,3 @@ class FeatureBase:
         def is_expired(self, poll: float = 0.5):
             time.sleep(poll)
             return time.time() >= self.max_time
-
-
-class _FeatureException(Exception):
-    def __init__(self, msg):
-        super().__init__(msg)
-
-    def log(self):
-        logger.error(
-            msg=self.__str__(),
-            num_prev_callers=2
-        )
-
-
-class FeatureError(_FeatureException):
-    def __init__(self, msg):
-        super().__init__(msg)
-
-    class InvalidFormat(_FeatureException):
-        pass
-
-    class InvalidResultCode(_FeatureException):
-        def __init__(self, code: int, code_description: str = 'Unknown'):
-            super().__init__(f'Expected a valid result code, but got "{code}": {code_description}.')
-
-    class TimeoutError(_FeatureException):
-        def __init__(self, method, expected_value, actual_value, timeout: int):
-            super().__init__(
-                f'{method.__name__} did not return {expected_value} in {timeout} seconds. Got {actual_value} instead.')
-
-    class UnexpectedValue(_FeatureException):
-        pass

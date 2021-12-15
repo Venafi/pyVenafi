@@ -1,5 +1,6 @@
 from pytpp.properties.config import IdentityAttributeValues
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.features.definitions.classes import Classes
 from typing import List, Union, TYPE_CHECKING
 if TYPE_CHECKING:
@@ -276,7 +277,7 @@ class Group(_IdentityBase):
 
         if member_prefixed_names and result.invalid_members:
             im = "\n\t".join([m.prefixed_name for m in result.invalid_members])
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f'Unable to add these members to the group "{prefixed_name}":\n\t{im}'
             )
 

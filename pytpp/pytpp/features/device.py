@@ -1,4 +1,5 @@
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.features.definitions.classes import Classes
 from pytpp.attributes.device import DeviceAttributes
 from pytpp.attributes.jump_server import JumpServerAttributes
@@ -114,7 +115,7 @@ class Device(_DeviceBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
 
 @feature('Jump Server')
@@ -212,4 +213,4 @@ class JumpServer(_DeviceBase):
         ).result
 
         if result.code != 1:
-            raise FeatureError.InvalidResultCode(code=result.code, code_description=result.config_result)
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)

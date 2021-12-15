@@ -2,7 +2,8 @@ from typing import List, Union, TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Config, Identity
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import FeatureException, UnexpectedValue
 from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import logger, LogTags
 
@@ -47,7 +48,7 @@ class Certificate(FeatureBase):
             push_to_new=push_to_new
         )
         if not result.success:
-            raise FeatureError(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
+            raise FeatureException(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
 
     def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None, approvers: 'List[Union[Identity.Identity, str]]' = None,
@@ -146,7 +147,7 @@ class Certificate(FeatureBase):
         result = self._api.websdk.Certificates.Guid(certificate_guid).delete()
         if not result.is_valid_response():
             certificate_dn = self._get_dn(certificate)
-            raise FeatureError(f'Could not delete certificate {certificate_dn}.')
+            raise FeatureException(f'Could not delete certificate {certificate_dn}.')
 
     def details(self, certificate: Union['Config.Object', str]):
         """
@@ -366,7 +367,7 @@ class Certificate(FeatureBase):
         result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=False)
         result.assert_valid_response()
         if not result.processing_reset_completed:
-            raise FeatureError.UnexpectedValue(f'Processing reset was not completed for {certificate_dn}.')
+            raise UnexpectedValue(f'Processing reset was not completed for {certificate_dn}.')
 
     def retry_from_current_stage(self, certificate: Union['Config.Object', str]):
         """
@@ -391,7 +392,7 @@ class Certificate(FeatureBase):
         result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=True)
         result.assert_valid_response()
         if not result.restart_completed:
-            raise FeatureError.UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate_dn}.')
+            raise UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate_dn}.')
 
     def revoke(self, certificate: Union['Config.Object', str], comments: str = None, disable: bool = None,
                reason: int = None, thumbprint: str = None):
@@ -419,7 +420,7 @@ class Certificate(FeatureBase):
         )
         result.assert_valid_response()
         if result.success is not True:
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
             )
 
@@ -474,7 +475,7 @@ class Certificate(FeatureBase):
         certificate_dns = [self._get_dn(certificate) for certificate in certificates]
         result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
         if not result.success:
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f'TPP failed to perform validation. Got this error: "{result.error}".'
             )
         return result.validated_certificate_dns, result.warnings
@@ -511,7 +512,7 @@ class Certificate(FeatureBase):
                     break
                 cert = self._get(certificate=certificate)
 
-        raise FeatureError.UnexpectedValue(
+        raise UnexpectedValue(
             f'Certificate renewal for "{cert.dn}" encountered an error at stage {cert.processing_details.stage} with '
             f'status "{cert.processing_details.status}".'
         )
@@ -551,4 +552,4 @@ class Certificate(FeatureBase):
         else:
             msg = f'Certificate renewal did not reach stage {stage} after {timeout} seconds. The current ' \
                   f'stage is {cert.processing_details.stage} with status {cert.processing_details.status}.'
-        raise FeatureError.UnexpectedValue(msg)
+        raise UnexpectedValue(msg)

@@ -1,6 +1,7 @@
 from typing import List, Dict, Union
 from pytpp.tools.vtypes import Config
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.attributes.discovery import DiscoveryAttributes
 
 
@@ -276,7 +277,7 @@ class NetworkDiscovery(FeatureBase):
                 if self._is_in_progress(job=job):
                     return
 
-        raise FeatureError.UnexpectedValue(
+        raise UnexpectedValue(
             f'Expected the job "{job_dn}" to start progress, but it did not.'
         )
 
@@ -373,7 +374,7 @@ class NetworkDiscovery(FeatureBase):
             object_dn=job_dn,
             attribute_name=DiscoveryAttributes.status
         ).values[0]
-        raise FeatureError.UnexpectedValue(
+        raise UnexpectedValue(
             f'Expected Network Discovery Job "{job_dn}" to finish within {timeout} seconds, but it is still '
             f'running. It has a status of "{status}."'
         )

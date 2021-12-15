@@ -1,6 +1,7 @@
 from typing import Union
 from pytpp.tools.vtypes import Config
-from pytpp.features.bases.feature_base import FeatureBase, FeatureError, feature
+from pytpp.features.bases.feature_base import FeatureBase, feature
+from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue
 from pytpp.properties.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
 
@@ -30,7 +31,7 @@ class ClientGroups(FeatureBase):
         )
 
         if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(code=response.result.code,
+            raise InvalidResultCode(code=response.result.code,
                                                  code_description=response.result.credential_result)
 
     def create(self, name: str, agent_type: str = ClientGroupsAttributeValues.AgentType.agentless,
@@ -71,7 +72,7 @@ class ClientGroups(FeatureBase):
                 ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.certificate_enrollment
             }
         else:
-            raise FeatureError.UnexpectedValue(
+            raise UnexpectedValue(
                 f"Invalid input for parameter: 'agent_type', unknown value: {agent_type}")
 
         return self._config_create(
@@ -120,7 +121,7 @@ class ClientGroups(FeatureBase):
         response = self._api.websdk.Config.Enumerate.post(object_dn=self._group_base_dn)
 
         if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(
+            raise InvalidResultCode(
                 code=response.result.code,
                 code_description=response.result.credential_result
             )
@@ -144,7 +145,7 @@ class ClientGroups(FeatureBase):
             value=fr'{self._work_base_dn}\{work_name}'
         )
         if response.result.code != 1:
-            raise FeatureError.InvalidResultCode(
+            raise InvalidResultCode(
                 code=response.result.code,
                 code_description=response.result.credential_result
             )
