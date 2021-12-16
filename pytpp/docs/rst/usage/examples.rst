@@ -1,6 +1,3 @@
-Examples
-========
-
 .. toctree::
     :maxdepth: 1
 
@@ -10,3 +7,4 @@ Examples
     examples/device
     examples/folders
     examples/objects
+    examples/identity
