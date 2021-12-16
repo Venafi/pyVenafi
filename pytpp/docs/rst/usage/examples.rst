@@ -6,5 +6,6 @@
     examples/client_work
     examples/device
     examples/folders
-    examples/objects
     examples/identity
+    examples/objects
+    examples/permissions
