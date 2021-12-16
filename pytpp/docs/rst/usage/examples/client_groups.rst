@@ -33,7 +33,6 @@ There are different types of client groups, they can be found in ClientGroupsAtt
 
     agent_types = [
         ClientGroupsAttributeValues.AgentType.agentless,
-        ClientGroupsAttributeValues.AgentType.agent_installed,
         ClientGroupsAttributeValues.AgentType.certificate_enrollment,
         ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates
     ]
@@ -69,19 +68,38 @@ How to assign client work (:ref:`client_work`) to a client group
     features.client_groups.assign_work(group=client_group_2, work_name='name_of_client_work_2')
 
 .. note::
-    The methods assign_work, remove_work and delete can take in the name of the client group or the object of the client group as the group parameter.
+    Only certain client work types can be assigned to specific client group agent_types.
 
 .. code-block:: python
 
+    from pytpp.properties.config import ClientGroupsAttributeValues
     from pytpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
 
-
-
-    client_group = features.client_groups.create(name='name_of_client_group')
-    features.client_groups.assign_work(group=client_group, work_name='name_of_client_work')
+    agent_types = {
+        ClientGroupsAttributeValues.AgentType.agentless : [
+            features.client_work.ssh_discovery,
+            features.client_work.ssh_remediation
+        ],
+        ClientGroupsAttributeValues.AgentType.certificate_enrollment : [
+            features.client_work.certificate_enrollment_via_est_protocol
+        ],
+        ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates : [
+            features.client_work.agent_connectivity,
+            features.client_work.agent_upgrade,
+            features.client_work.certificate_device_placement,
+            features.client_work.certificate_discovery,
+            features.client_work.certificate_installation,
+            features.client_work.dynamic_provisioning,
+            features.client_work.ssh_device_placement,
+            features.client_work.ssh_discovery,
+            features.client_work.ssh_key_usage,
+            features.client_work.ssh_remediation,
+            features.client_work.user_certificate_creation
+        ]
+    }
 
 Removing Client Work from a Client Group
 ----------------------------------------
