@@ -24,7 +24,7 @@ Make sure you are authenticated, see: :ref:`authentication`
     There are several types of client work and each type has it's own unique create method with different input parameters.
 
 Client Work Types
------------
+-----------------
 There are different types of client work:
 
 .. code-block:: python
@@ -52,7 +52,7 @@ There are different types of client work:
 
 
 Setting the schedule for client work
---------------------------------
+------------------------------------
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -73,8 +73,9 @@ Setting the schedule for client work
 
 .. note::
     Every client work type has different scheduling options
+
 Removing the schedule from a client work
---------------------------------
+----------------------------------------
 
 .. code-block:: python
 
@@ -88,7 +89,7 @@ Removing the schedule from a client work
     features.client_work.ssh_remediation.unschedule(work=client_work)
 
 Enable client work
---------------------------------
+------------------
 .. code-block:: python
 
     from pytpp import Authenticate, Features
