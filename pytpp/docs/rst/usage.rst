@@ -104,6 +104,10 @@ The path of the URL for the WebSDK API is translated to Python by following this
 
 .. code-block:: python
 
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+
     # The response is not validated until either a property of the return object is called
     # or the response is explicitly validated.
     response = api.websdk.Config.IsValid.post(object_dn=r'\VED\Policy')
@@ -137,8 +141,7 @@ jobs and managing permissions.
 
     from pytpp import Authenticate, Features, Attributes, AttributeValues
 
-
-    api = Authenticate(...)  # ... represents the parameters.
+    api = Authenticate(...)
     features = Features(api)
 
     # Using the API layer
@@ -219,19 +222,34 @@ Config Objects are the basic definition of every object that can be created in T
     "revision", "The revision of the object."
     "type_name", "The class name of the object."
 
+Many features have parameters typed as ``Union[Config.Object, str]``. In these instances the parameter is
+requiring a ``Config.Object`` or a DN value.
+
 **Example Usage**
 
 .. code-block:: python
 
-    policy = features.folder.get(object_dn=r'\VED\Policy') # This is a Config.Object
-    print(f'Absolute GUID : {policy.absolute_guid}')
-    print(f'DN            : {policy.dn}')
-    print(f'GUID          : {policy.guid}')
-    print(f'Config ID     : {policy.config_id}')
-    print(f'Name          : {policy.name}')
-    print(f'Parent        : {policy.parent}')
-    print(f'Revision      : {policy.revision}')
-    print(f'Class Name    : {policy.type_name}')
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
+
+    certificate_folder = features.folder.get(object_dn=r'\VED\Policy\Certificates') # This is a Config.Object
+    print(f'Absolute GUID : {certificate_folder.absolute_guid}')
+    print(f'DN            : {certificate_folder.dn}')
+    print(f'GUID          : {certificate_folder.guid}')
+    print(f'Config ID     : {certificate_folder.config_id}')
+    print(f'Name          : {certificate_folder.name}')
+    print(f'Parent        : {certificate_folder.parent}')
+    print(f'Revision      : {certificate_folder.revision}')
+    print(f'Class Name    : {certificate_folder.type_name}')
+
+    certificate = features.certificate.create(
+        name='my-cert.com',
+        parent_folder=certificate_folder,
+        # OR parent_folder=certificate_folder.dn
+        # OR parent_folder=r'\VED\Policy\Certificates'
+    )
 
 .. _identity_definition:
 
@@ -253,9 +271,17 @@ All identities in TPP share common properties that make up this class.
     "type", "The integer identifier that describes the identity type."
     "universal", "The Universal Unique ID that identifies a user or group identity."
 
+Many features have parameters typed as ``Union[Identity.Identity, str]``. In these instances the parameter is
+requiring an ``Identity.Identity`` or a prefixed name value.
+
 **Example Usage**
 
 .. code-block:: python
+
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
 
     user = features.identity.user.get(prefixed_name='local:special-user')
     print(f'Full Name          : {user.full_name}')
@@ -266,6 +292,12 @@ All identities in TPP share common properties that make up this class.
     print(f'Prefixed Universal : {user.prefixed_universal}')
     print(f'Type               : {user.type}')
     print(f'Universal          : {user.universal}')
+
+    features.permissions.get_effective(
+        obj=r'\VED\Poilcy',
+        identity=user,
+        # OR identity='local:special-user'
+    )
 
 Attribute, AttributeValues, and Class Names
 -------------------------------------------
@@ -363,7 +395,7 @@ call. By default, the logger is turned off. To use the logger:
 
 .. code-block:: python
 
-    from pytpp import logger, ...
+    from pytpp import logger
 
     # Log to the console only.
     logger.start()
