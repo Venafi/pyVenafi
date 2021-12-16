@@ -1,10 +1,7 @@
-.. device:
+.. _device:
 
 Device
 ======
-
-.. note::
-    The feature for client work is implemented by making use of the config objects api.  It is a wrapper around that API to make interacting with client work easier.
 
 Creating a device
 -----------------

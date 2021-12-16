@@ -1,4 +1,4 @@
-.. client_groups:
+.. _client_groups:
 
 Client Groups
 =============

@@ -1,4 +1,4 @@
-.. client_work:
+.. _client_work:
 
 Client Work
 ===========
