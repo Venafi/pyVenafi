@@ -6,5 +6,6 @@ Examples
 
     examples/authentication
     examples/client_groups
+    examples/client_work
     examples/folders
     examples/objects
