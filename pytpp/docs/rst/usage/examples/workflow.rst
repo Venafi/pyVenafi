@@ -140,7 +140,8 @@ Managing Workflow Tickets
             else:
                 features.workflow.ticket.update_status(
                     ticket_name=ticket, status=AttributeValues.Workflow.Status.rejected,
-                    explanation="This certificate does not meet the key size requirements.",            )
+                    explanation="This certificate does not meet the key size requirements.",
+                )
 
 Creating and Deleting Reason Codes
 ----------------------------------
