@@ -1,3 +1,6 @@
+Examples
+========
+
 .. toctree::
     :maxdepth: 1
 
@@ -6,7 +9,7 @@
     examples/client_groups
     examples/client_work
     examples/device
-    examples/folders
+    examples/folder
     examples/identity
     examples/objects
     examples/permissions

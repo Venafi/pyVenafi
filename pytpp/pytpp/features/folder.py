@@ -264,7 +264,7 @@ class Folder(FeatureBase):
                 )
 
         Args:
-            object_name_pattern: A regular expression
+            object_name_pattern: An expression for filtering DN matches.
             object_types: List of TPP Object Types (also called a Config Classes)
             recursive: Search sub-folders when True
             starting_dn: DN of the folder to begin search

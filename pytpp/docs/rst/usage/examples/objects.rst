@@ -54,13 +54,13 @@ Getting And Validating Config Objects
     if not features.objects.exists(object_dn=certificate_dn):
         print(f'Cannot find {certificate_dn}.')
 
+.. _read_attributes:
 
 Reading Attributes
 ------------------
 
 .. note::
     To read policy attributes for a particular class use :ref:`read_policy_attributes`.
-
 
 .. rubric:: Reading A Single Value
 .. code-block:: python
