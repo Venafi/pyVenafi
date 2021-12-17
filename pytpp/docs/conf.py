@@ -58,6 +58,8 @@ html_static_path = ['_static']
 html_css_files = [
     'css/custom.css'
 ]
+html_logo = '_static/images/venafi_logo.png'
+html_favicon = '_static/images/favicon.ico'
 
 autoclass_content = 'both'
 
