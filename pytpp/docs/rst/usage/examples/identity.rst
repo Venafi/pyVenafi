@@ -1,10 +1,8 @@
 .. _identity:
 
-|Product| Usage Guide
-=====================
-
 Identity
---------
+========
+
 .. note::
     Check out :ref:`authentication` for instructions on how to authenticate and have access to the required features.
 
