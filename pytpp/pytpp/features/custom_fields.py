@@ -1,7 +1,20 @@
+from dataclasses import dataclass
 from typing import List, Dict, Union
 from pytpp.tools.vtypes import Config, CustomFields
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
+
+@dataclass
+class EffectiveValues:
+    locked: bool
+    policy_dn: str
+    values: list
+
+
+@dataclass
+class PolicyValues:
+    locked: bool
+    values: list
 
 
 @feature('Custom Field')
@@ -195,7 +208,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.items
 
-    def read(self, obj: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str]):
+    def read(self, obj: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str]) -> EffectiveValues:
         """
         Reads the actual value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
@@ -216,16 +229,9 @@ class CustomField(FeatureBase):
             item_guid=custom_field_guid
         )
         self._validate_result_code(response.result)
+        return EffectiveValues(locked=response.locked, values=response.values, policy_dn=response.policy_dn)
 
-        class EffectiveValues:
-            def __init__(self):
-                self.locked = response.locked
-                self.policy_dn = response.policy_dn
-                self.values = response.values
-
-        return EffectiveValues()
-
-    def read_policy(self, folder: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], class_name: str):
+    def read_policy(self, folder: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], class_name: str) -> PolicyValues:
         """
         Reads the policy value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
@@ -235,7 +241,7 @@ class CustomField(FeatureBase):
             class_name: Object class.
 
         Returns:
-            EffectiveValues object:
+            PolicyValues object:
                 * locked: Boolean. If ``True``, the ``values`` are locked by the policy.
                 * values: List of values.
         """
@@ -247,13 +253,7 @@ class CustomField(FeatureBase):
             obj_type=str(class_name)
         )
         self._validate_result_code(response.result)
-
-        class PolicyValues:
-            def __init__(self):
-                self.locked = response.locked
-                self.values = response.values
-
-        return PolicyValues()
+        return PolicyValues(locked=response.locked, values=response.values)
 
     def update(self, custom_field: Union['CustomFields.Item', str], allowed_characters: List[str] = None, allowed_values: List[str] = None,
                category: str = None, classes: list = None, data_type: int = None, date_only: bool = None,

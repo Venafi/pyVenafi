@@ -9,6 +9,7 @@ Examples
     examples/certificate_authority
     examples/client_groups
     examples/client_work
+    examples/custom_fields
     examples/device
     examples/discovery
     examples/folder

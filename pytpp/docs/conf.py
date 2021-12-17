@@ -1,25 +1,14 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
-
+sys.path += [os.path.abspath('..'), os.path.abspath('../..')]
+from setup import __version__
 
 # -- Project information -----------------------------------------------------
 
 project = 'PyTPP'
 copyright = '2021, Venafi'
 author = 'Venafi SPI Team'
+version = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -70,6 +59,8 @@ html_css_files = [
     'css/custom.css'
 ]
 
+autoclass_content = 'both'
+
 # region Documentation Variables
 string = lambda name, value: f'.. |{name}| replace:: {value}'
 link = lambda name, label, href:  f"""
@@ -81,7 +72,7 @@ link = lambda name, label, href:  f"""
 variables = [
     string(name='Product', value='PyTPP'),
     link(name='Doc Home Page', label='Venafi TPP WebSDK Documentation', href='https://docs.venafi.com/index.php'),
-    link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/'),
+    link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/')
 ]
 
 rst_prolog = '\n'.join(variables) + '\n'

@@ -1,10 +1,9 @@
 Discovery And Placement
 =======================
 
-Placement Rules
----------------
+Managing Placement Rules
+------------------------
 
-.. rubric:: Managing Placement Rules
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -42,7 +41,9 @@ Placement Rules
 Network Discovery
 -----------------
 
-.. rubric:: Creating Network Discovery Jobs
+Creating Network Discovery Jobs
+*******************************
+
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -66,7 +67,9 @@ Network Discovery
         placement_rules=[certificate_placement_rule, ssh_placement_rule]
     )
 
-.. rubric:: Scheduling Network Discovery Jobs
+Scheduling Network Discovery Jobs
+*********************************
+
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -99,7 +102,8 @@ Network Discovery
     # Unschedule a job.
     features.discovery.network.unschedule(job='Deprecated Job')
 
-.. rubric:: Run, Pause, And Cancel Discovery Jobs
+Run, Pause, And Cancel Discovery Jobs
+*************************************
 
 .. warning::
     There is a known bug when running jobs using the WebSDK in that the job may actually fail to

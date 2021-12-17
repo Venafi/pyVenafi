@@ -199,8 +199,8 @@ jobs and managing permissions.
         renewal_window=30
     )
 
-Config.Object And Identity
---------------------------
+Config And Identity Objects
+---------------------------
 
 .. _config_object:
 .. rubric:: Config Objects
