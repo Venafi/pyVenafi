@@ -92,8 +92,8 @@ class AdaptableWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, powershell_script_name: str, powershell_script_content: bytes,
-               approvers: Union['List[Identity.Identity]', List[str]] = None, reason_code: int = None,
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, powershell_script_name: str,
+               powershell_script_content: bytes, approvers: 'List[Union[Identity.Identity, str]]' = None, reason_code: int = None,
                use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
@@ -288,9 +288,9 @@ class StandardWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, injection_command: str = None, application_class_name: str = None,
-               approvers: Union['List[Identity.Identity]', str] = None, macro: str = None, reason_code: int = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, injection_command: str = None,
+               application_class_name: str = None, approvers: 'List[Union[Identity.Identity, str]]' = None, macro: str = None,
+               reason_code: int = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a Standard Workflow object.
 
@@ -317,7 +317,7 @@ class StandardWorkflow(_WorkflowBase):
             attributes: Additional attributes to apply to the workflow object.
             get_if_already_exists: If the objects already exists, it is modified according to these parameters. Else
                 and exception is raised.
-            
+
         Returns:
             Config Object of the workflow.
         """
@@ -425,7 +425,7 @@ class Ticket(FeatureBase):
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def get(self, obj: Union['Config.Object', str], user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
+    def get(self, obj: Union['Config.Object', str] = None, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
         """
         Gets all tickets associated to ``obj``. If the minimum expected number of tickets do not
         appear on the ``obj``, then a warning is logged and whatever was found is returned and no
@@ -434,7 +434,7 @@ class Ticket(FeatureBase):
         An optional ``timeout`` parameter can be used to wait for the above to be ``True``.
 
         Args:
-            obj: Config object of the object with a workflow ticket issued to it.
+            obj: Config object of the object with a workflow ticket issued to it. If not given, only ``user_data`` has effect.
             user_data: The string to filter results using the User Data attribute of the
                 workflow ticket.
             expected_num_tickets: Minimum number of tickets expected to be written for the certificate.
@@ -443,17 +443,17 @@ class Ticket(FeatureBase):
         Returns:
             List of Config Objects
         """
-        obj_dn = self._get_dn(obj)
-        def get_tickets():
-            ticket_names = self._api.websdk.Workflow.Ticket.Enumerate.post(
-                object_dn=obj_dn,
+        if not obj:
+            return self._api.websdk.Workflow.Ticket.Enumerate.post(
                 user_data=user_data
             ).guids
 
-            return [
-                self._get_config_object(object_dn=f'{self._workflow_ticket_dn}\\{ticket_name}')
-                for ticket_name in ticket_names
-            ]
+        obj_dn = self._get_dn(obj)
+        def get_tickets():
+            return self._api.websdk.Workflow.Ticket.Enumerate.post(
+                object_dn=obj_dn,
+                user_data=user_data
+            ).guids
 
         if timeout:
             tickets = []

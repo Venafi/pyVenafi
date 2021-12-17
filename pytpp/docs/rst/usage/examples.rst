@@ -13,3 +13,4 @@ Examples
     examples/identity
     examples/objects
     examples/permissions
+    examples/workflow
