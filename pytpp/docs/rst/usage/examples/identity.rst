@@ -1,13 +1,12 @@
-.. _identity:
-
 Identity
-========
-
+=============
 .. note::
     Check out :ref:`authentication` for instructions on how to authenticate and have access to the required features.
 
+Here are some examples of what kinds of operations can be done at the group and user level.
+
 Group Operations
-----------------
+------------------
 
 .. rubric:: Create a Group
 .. code-block:: python
@@ -53,6 +52,8 @@ Group Operations
     )
 
 .. rubric:: Find a Group
+This will allow you to search for a specific group name, but it will return a list of all groups that contain the name searched.
+
 .. code-block:: python
 
     from pytpp import Features, Authenticate
@@ -154,6 +155,8 @@ User Operations
     features = Features(api=api)
     user = features.identity.user.find(name='my_username', limit = 100)
 .. rubric:: Change a Password
+This will set the password of the user. If the user did not have a previous password then you are not required to provide an old_password
+
 .. code-block:: python
 
     from pytpp import Features, Authenticate
