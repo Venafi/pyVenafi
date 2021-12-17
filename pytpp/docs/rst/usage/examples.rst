@@ -4,6 +4,7 @@ Examples
 .. toctree::
     :maxdepth: 1
 
+    examples/application
     examples/authentication
     examples/certificate_authority
     examples/client_groups
