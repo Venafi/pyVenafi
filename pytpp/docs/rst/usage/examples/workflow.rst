@@ -9,7 +9,7 @@ Create And Apply A Standard Workflow
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -96,7 +96,7 @@ Managing Workflow Tickets
 .. rubric:: Get All Workflow Tickets Pending My Approval
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -116,7 +116,7 @@ Managing Workflow Tickets
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)

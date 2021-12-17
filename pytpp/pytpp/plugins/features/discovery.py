@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import Union, TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
 from pytpp.tools.vtypes import Config
@@ -19,72 +19,83 @@ class NetworkDiscovery(_NetworkDiscovery):
         if TYPE_CHECKING:
             self._api = api
 
-    def run_now(self, job: 'Config.Object', timeout: int = 60):
+    def run_now(self, job: 'Union[Config.Object, str]', timeout: int = 60):
         """
         Runs a job despite any scheduling. This does not return until the job is processing, or has a `Processing` Attribute.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or name of the discovery job.
             timeout: Timeout in seconds within which the job should start.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job.guid).Actions.post(
+        job_obj = self._get_config_object(
+            self._get_dn(job, parent_dn=self._discovery_dn)
+        )
+        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job_obj.guid).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.run_now
         )
         response.assert_valid_response()
 
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                if self._is_in_progress(job=job):
+                if self.is_in_progress(job=job_obj):
                     return
 
         raise UnexpectedValue(
-            f'Expected the job "{job.dn}" to start progress, but it did not.'
+            f'Expected the job "{job_obj.dn}" to start progress, but it did not.'
         )
 
-    def cancel(self, job: 'Config.Object'):
+    def cancel(self, job: 'Union[Config.Object, str]'):
         """
         Cancels a currently running job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job.guid).Actions.post(
+        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+            self._get_guid(job, parent_dn=self._discovery_dn)
+        ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.cancel
         )
         response.assert_valid_response()
 
-    def pause(self, job: 'Config.Object'):
+    def pause(self, job: 'Union[Config.Object, str]'):
         """
         Pauses a currently running job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job.guid).Actions.post(
+        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+            self._get_guid(job, parent_dn=self._discovery_dn)
+        ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.pause
         )
         response.assert_valid_response()
 
-    def resume(self, job: 'Config.Object'):
+    def resume(self, job: 'Union[Config.Object, str]'):
         """
         Resumes a currently paused job.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job.guid).Actions.post(
+        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+            self._get_guid(job, parent_dn=self._discovery_dn)
+        ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.resume
         )
         response.assert_valid_response()
 
-    def place_results(self, job: 'Config.Object'):
+    def place_results(self, job: 'Union[Config.Object, str]'):
         """
         Places the results of the discovery job according to the placement rules.
 
         Args:
-            job: Config object of the discovery job.
+            job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job.guid).Actions.post(
+        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+            self._get_guid(job, parent_dn=self._discovery_dn)
+        ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.place_now
         )
         response.assert_valid_response()

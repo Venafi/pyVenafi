@@ -43,7 +43,6 @@ def feature_class_rst_template(module_path: str, class_: str):
        :inherited-members:
     """).lstrip()
 
-
 def main():
     features_rst_files = [] # rst/feature/<feature> files to be added to the main features TOC.
     for feature in FEATURES_PATH.glob('*.py'):
@@ -52,7 +51,8 @@ def main():
 
         # Collection feature classes
         classes = run_path(str(feature.absolute()))
-        feature_classes = [c for c in classes.values() if hasattr(c, '__feature__')]
+        feature_classes = sorted([c for c in classes.values() if hasattr(c, '__feature__')],
+                                 key=lambda x: x.__name__)
 
         # Get the module path for Sphinx's .. autoclass:: directive.
         rel_file_path = Path(classes['__file__']).relative_to(PYTPP_PATH)
@@ -90,7 +90,7 @@ def main():
             features_rst_files.append(process_class_rst(feature_classes[0]))
     pytpp_features_rst = feature_toc_rst_template(
         title='Features',
-        toc_items=[f'{f.parent.name}/{f.stem}' for f in features_rst_files]
+        toc_items=[f'{f.parent.name}/{f.stem}' for f in sorted(features_rst_files)]
     )
     pytpp_features_rst = f'.. _features:\n\n{pytpp_features_rst}'
     with Path(FEATURES_DOC_PATH, 'features_toc.rst').open('w') as f:

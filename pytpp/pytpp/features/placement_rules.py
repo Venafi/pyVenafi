@@ -164,24 +164,24 @@ class PlacementRules(FeatureBase):
         super().__init__(api=api)
         self._layout_rules_dn = r'\VED\Layout Root\Rules'
 
-    @staticmethod
-    def _format_rule_attribute(conditions: List[str], device_location_dn: str,
-                               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
+    def _format_rule_attribute(self, conditions: List[str], device_location: 'Union[Config.Object, str]',
+                               certificate_location: 'Union[Config.Object, str]' = None,
+                               rule_type: str = 'X509 Certificate'):
         """
         Formats the rule attribute on the Placement Rule object.
         """
         context = 'CONTEXT\n\tDiscovery'
         rule_types = f"FOR\n\t{','.join(('Device', rule_type))}"
         conditions = f"IF\n\t{' && '.join(conditions)}"
-        locations = [f'Location[Device]={device_location_dn}']
-        if certificate_location_dn:
-            locations.append(f'Location[X509 Certificate Base]={certificate_location_dn}')
+        locations = [f'Location[Device]={self._get_dn(device_location)}']
+        if certificate_location:
+            locations.append(f'Location[X509 Certificate Base]={self._get_dn(certificate_location)}')
         locations = f"THEN\n\t" + '\n\t'.join(locations)
 
         return f"{context}\n{rule_types}\n{conditions}\n{locations}\nEND"
 
-    def create(self, name: str, conditions: List[str], device_location_dn: str,
-               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate',
+    def create(self, name: str, conditions: List[str], device_location: 'Union[Config.Object, str]',
+               certificate_location: 'Union[Config.Object, str]' = None, rule_type: str = 'X509 Certificate',
                get_if_already_exists: bool = True):
         """
         Creates a placement rule.
@@ -204,9 +204,9 @@ class PlacementRules(FeatureBase):
             name: Name of the placement rule.
             conditions: The conditional logic that defines the rule. Requires a specific dictionary with `field`, `comparison`,
                         and `value` keys. Alternatively, use the ``condition`` method to create the condition dictionary.
-            device_location_dn: Absolute path to folder that should received all device and application objects that apply to
+            device_location: Absolute path to folder that should received all device and application objects that apply to
                                 this rule.
-            certificate_location_dn: Absolute path to folder that should received all certificate objects that apply to this
+            certificate_location: Absolute path to folder that should received all certificate objects that apply to this
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
             get_if_already_exists: If the objects already exists, just return it as is.
@@ -216,8 +216,8 @@ class PlacementRules(FeatureBase):
         """
         rule_attr = self._format_rule_attribute(
             conditions=conditions,
-            device_location_dn=device_location_dn,
-            certificate_location_dn=certificate_location_dn,
+            device_location=device_location,
+            certificate_location=certificate_location,
             rule_type=rule_type
         )
         rule = self._config_create(
@@ -242,8 +242,8 @@ class PlacementRules(FeatureBase):
         response = self._config_delete(object_dn=rule_dn)
         response.assert_valid_response()
 
-    def update(self, rule: Union['Config.Object', str], conditions: List[str] = None, device_location_dn: str = None,
-               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
+    def update(self, rule: Union['Config.Object', str], conditions: List[str] = None, device_location: str = None,
+               certificate_location: str = None, rule_type: str = 'X509 Certificate'):
         """
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten
         to the object. In other words, only the parameters given are updated.
@@ -267,9 +267,9 @@ class PlacementRules(FeatureBase):
             rule: Config.Object or name of the placement rule.
             conditions: The conditional logic that defines the rule. This will overwrite the existing rules.
                         Use ``:meth:`pytpp.features.placement_rules.PlacementRuleCondition`` to create a list of rules.
-            device_location_dn: Absolute path to folder that should received all device and application objects that apply to
+            device_location: Absolute path to folder that should received all device and application objects that apply to
                                 this rule.
-            certificate_location_dn: Absolute path to folder that should received all certificate objects that apply to this
+            certificate_location: Absolute path to folder that should received all certificate objects that apply to this
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
         """
@@ -279,8 +279,8 @@ class PlacementRules(FeatureBase):
             attribute_name=LayoutRuleBaseAttributes.rule
         ).values[0]
         new_conditions = conditions or []
-        new_certificate_dn = certificate_location_dn or ''
-        new_device_dn = device_location_dn or ''
+        new_certificate_dn = self._get_dn(certificate_location) if certificate_location else ''
+        new_device_dn = self._get_dn(device_location) if device_location else ''
         get_conditions = get_locations = False
         for line in current_attr.splitlines():
             if line.strip() == 'IF':
@@ -307,8 +307,8 @@ class PlacementRules(FeatureBase):
 
         rule_attr = self._format_rule_attribute(
             conditions=new_conditions,
-            device_location_dn=new_device_dn,
-            certificate_location_dn=new_certificate_dn,
+            device_location=new_device_dn,
+            certificate_location=new_certificate_dn,
             rule_type=rule_type
         )
         response = self._api.websdk.Config.WriteDn.post(

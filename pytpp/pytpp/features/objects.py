@@ -1,6 +1,6 @@
 from typing import List, Union
 from pytpp.features.bases.feature_base import FeatureBase, feature
-from pytpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat, FeatureTimeoutError
+from pytpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat
 from pytpp.properties.response_objects.config import Config
 
 
@@ -342,10 +342,11 @@ class Objects(FeatureBase):
         Returns:
             Values of the given ``attribute_name`` for the given ``object_dn``.
         """
+        obj_dn = self._get_dn(obj)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
                 result, attr = self._read(
-                    obj=obj,
+                    obj=obj_dn,
                     attribute_name=attribute_name,
                     include_policy_values=include_policy_values
                 )
@@ -355,8 +356,10 @@ class Objects(FeatureBase):
                     return attr
 
         InvalidResultCode(code=result.code, code_description=result.config_result).log()
-        raise FeatureTimeoutError(method=self.wait_for, expected_value=attribute_value,
-                                        actual_value=attr.values, timeout=timeout)
+        raise TimeoutError(
+            f'{attribute_name} on "{obj_dn}" did not return {attribute_value} in {timeout} seconds. '
+            f'Got {attr.values} instead.'
+        )
 
     def write(self, obj: Union['Config.Object', str], attributes: dict):
         """

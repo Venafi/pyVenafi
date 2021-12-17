@@ -11,7 +11,7 @@ This example demonstrates updating permissions to an 'example_folder' for a user
 
 .. code-block:: python
 
-    from pytpp import Attributes, Authenticate, Features
+    from pytpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -45,7 +45,7 @@ How to remove permissions from an object
 
 .. code-block:: python
 
-    from pytpp import Attributes, Authenticate, Features
+    from pytpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

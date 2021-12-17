@@ -8,11 +8,6 @@ class FeatureException(Exception):
             num_prev_callers=2
         )
 
-class FeatureTimeoutError(FeatureException):
-    def __init__(self, method, expected_value, actual_value, timeout: int):
-        super().__init__(
-            f'{method.__name__} did not return {expected_value} in {timeout} seconds. Got {actual_value} instead.')
-
 class InvalidFormat(FeatureException): ...
 
 class InvalidResultCode(FeatureException):

@@ -108,7 +108,7 @@ Searching Objects
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -138,7 +138,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -160,7 +160,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -186,7 +186,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -205,7 +205,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)

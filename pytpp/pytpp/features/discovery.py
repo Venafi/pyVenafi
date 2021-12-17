@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from pytpp.tools.vtypes import Config
+from pytpp.tools.vtypes import Config, Identity
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.attributes.discovery import DiscoveryAttributes
@@ -11,35 +11,14 @@ class NetworkDiscovery(FeatureBase):
         super().__init__(api=api)
         self._discovery_dn = r'\VED\Discovery'
 
-    def _is_in_progress(self, job: Union['Config.Object', str]):
-        """
-        Returns a boolean value according to whether a job is currently in progress or not.
-
-        Args:
-            job: Config object or name of the discovery job.
-
-        Returns:
-            Boolean value
-        """
-        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
-        response = self._api.websdk.Config.Read.post(
-            object_dn=job_dn,
-            attribute_name=DiscoveryAttributes.status
-        )
-        in_progress_states = ['Pending Execution', 'Running']
-        if response.is_valid_response():
-            if len(response.values) > 0:
-                status = response.values[0]
-                return status in in_progress_states
-        return False
-
-    def create(self, name: str, hosts: List[str], default_certificate_dn: str, attributes: dict = None,
-               automatically_import: bool = False, blackout: Dict[str, List] = None,
-               contacts: List[str] = None, days_of_week: List[str] = None, days_of_month: List[str] = None,
-               days_of_year: List[str] = None, description: str = None, exclusion_dns: List[str] = None,
-               hour: int = None, placement_rule_guids: List[str] = None, ports: List[Union[str, int]] = None,
-               priority: int = None, reschedule: bool = True, resolve_host: bool = True, utc: str = '1',
-               get_if_already_exists: bool = True):
+    def create(self, name: str, hosts: List[str], default_certificate_location: 'Union[Config.Object, str]',
+               attributes: dict = None, automatically_import: bool = False, blackout: Dict[str, List] = None,
+               contacts: 'List[Union[Identity, str]]' = None, days_of_week: List[str] = None, days_of_month: List[str] = None,
+               days_of_year: List[str] = None, description: str = None,
+               exclusion_locations: Union[Config.Object, str] = None, hour: int = None,
+               placement_rules: 'List[Union[Config.Object, str]]' = None,
+               ports: List[Union[str, int]] = None, priority: int = None, reschedule: bool = True,
+               resolve_host: bool = True, utc: str = '1', get_if_already_exists: bool = True):
         """
         Creates a network discovery job.
 
@@ -59,7 +38,7 @@ class NetworkDiscovery(FeatureBase):
                     days_of_week=['0', '3'],
                     description='Does important scanning.',
                     hour=4,  # 4AM UTC
-                    placement_rule_guids=[rule1.guid, rule2.guid],
+                    placement_rules=[rule1, rule2],
                     ports=[22, 80, 443],
                     priority=1,
                     reschedule=True,
@@ -71,7 +50,7 @@ class NetworkDiscovery(FeatureBase):
             hosts: A list of hosts. If specific hosts should scan different ports, then specify by appending the
                    port to the IP address or hostname (i.e. 192.168.0.10:80). If no port is specified, then the
                    `ports` parameter will be appended to those hosts.
-            default_certificate_dn: Absolute path to the default folder that will contain all certificates not
+            default_certificate_location: Absolute path to the default folder that will contain all certificates not
                                     matching a placement rule.
             attributes: Additional attributes.
             automatically_import: If `True`, the job will terminate by placing the certificate objects, device
@@ -86,10 +65,10 @@ class NetworkDiscovery(FeatureBase):
             days_of_year: Days of the year to run the job in the format "MM/DD" where leading zeros can be ignored
                           (i.e. 1/23, 10/3).
             description: Description of the job.
-            exclusion_dns: List of absolute paths to exclusion DN folders.
+            exclusion_locations: List of absolute paths to exclusion DN folders.
             hour: 24-hour UTC hour format of the day (i.e. 20 = 8 PM UTC).
-            placement_rule_guids: List of GUIDs for the placement rules. The order of the list matters as the
-                                  rules are prioritized accordingly.
+            placement_rules: List of :ref:`config_object` or GUIDs for the placement rules. The order of the list matters
+                             as the rules are prioritized accordingly.
             ports: List of ports to scan.
             priority: Priority of the job.
             reschedule: When ``True``, the job will run again on the next scheduled interval.
@@ -101,6 +80,9 @@ class NetworkDiscovery(FeatureBase):
             Config object of the discovery job.
 
         """
+        placement_rule_guids = None
+        if placement_rules:
+            placement_rule_guids = [f'{e}:{self._get_guid(pr)}' for e, pr in enumerate(placement_rules)]
         ports = ','.join(list(map(str, ports))) if ports else \
             "22,80,443-449,465,563,636,695,981-995,1311,1920,2083,2087,2096,2211,2484,2949,3268,3269,3414," \
             "4712,4843,5223,5358,6619,6679,6697,7002,8080,8222,8243,8333,8443,8878,8881,8882,9043,9090," \
@@ -115,11 +97,13 @@ class NetworkDiscovery(FeatureBase):
             DiscoveryAttributes.address_range          : address_range,
             DiscoveryAttributes.automatically_import   : "1" if automatically_import else "0",
             DiscoveryAttributes.blackout               : blackout,
-            DiscoveryAttributes.certificate_location_dn: default_certificate_dn,
-            DiscoveryAttributes.contact                : contacts,
+            DiscoveryAttributes.certificate_location_dn: self._get_dn(default_certificate_location)
+                                                         if default_certificate_location else None,
+            DiscoveryAttributes.contact                : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             DiscoveryAttributes.description            : description,
-            DiscoveryAttributes.discovery_exclusion_dn : exclusion_dns,
-            DiscoveryAttributes.placement_rule         : [f'{e}:{guid}' for e, guid in enumerate(placement_rule_guids)],
+            DiscoveryAttributes.discovery_exclusion_dn : [self._get_dn(el) for el in exclusion_locations]
+                                                         if exclusion_locations else None,
+            DiscoveryAttributes.placement_rule         : placement_rule_guids,
             DiscoveryAttributes.priority               : priority,
             DiscoveryAttributes.reschedule             : "1" if hour and reschedule else "0",
             DiscoveryAttributes.resolve_host           : "1" if resolve_host else "0",
@@ -168,8 +152,30 @@ class NetworkDiscovery(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def schedule(self, job: Union['Config.Object', str], hour: Union[str, int], days_of_week: List[str] = None,
-                 days_of_month: List[str] = None, days_of_year: List[str] = None):
+    def is_in_progress(self, job: Union['Config.Object', str]):
+        """
+        Returns a boolean value according to whether a job is currently in progress or not.
+
+        Args:
+            job: Config object or name of the discovery job.
+
+        Returns:
+            Boolean value
+        """
+        job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
+        response = self._api.websdk.Config.Read.post(
+            object_dn=job_dn,
+            attribute_name=DiscoveryAttributes.status
+        )
+        in_progress_states = ['Pending Execution', 'Running']
+        if response.is_valid_response():
+            if len(response.values) > 0:
+                status = response.values[0]
+                return status in in_progress_states
+        return False
+
+    def schedule(self, job: Union['Config.Object', str], hour: Union[str, int], days_of_week: List[Union[int, str]] = None,
+                 days_of_month: List[Union[int, str]] = None, days_of_year: List[str] = None):
         """
         Schedules an existing job.
 
@@ -190,9 +196,9 @@ class NetworkDiscovery(FeatureBase):
             DiscoveryAttributes.hour      : hour
         }
         if days_of_week:
-            attributes[DiscoveryAttributes.days_of_week] = days_of_week
+            attributes[DiscoveryAttributes.days_of_week] = map(str, days_of_week)
         elif days_of_month:
-            attributes[DiscoveryAttributes.days_of_month] = days_of_month
+            attributes[DiscoveryAttributes.days_of_month] = map(str, days_of_month)
         elif days_of_year:
             attributes[DiscoveryAttributes.days_of_year] = days_of_year
 
@@ -223,10 +229,9 @@ class NetworkDiscovery(FeatureBase):
             ).assert_valid_response()
 
     def blackout_schedule(self, job: Union['Config.Object', str], sunday: List[Union[str, int]] = None,
-                          monday: List[Union[str, int]] = None,
-                          tuesday: List[Union[str, int]] = None, wednesday: List[Union[str, int]] = None,
-                          thursday: List[Union[str, int]] = None, friday: List[Union[str, int]] = None,
-                          saturday: List[Union[str, int]] = None):
+                          monday: List[Union[str, int]] = None, tuesday: List[Union[str, int]] = None,
+                          wednesday: List[Union[str, int]] = None, thursday: List[Union[str, int]] = None,
+                          friday: List[Union[str, int]] = None, saturday: List[Union[str, int]] = None):
         """
         Times of the week to restrict a discovery job from processing.
 
@@ -274,7 +279,7 @@ class NetworkDiscovery(FeatureBase):
 
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                if self._is_in_progress(job=job):
+                if self.is_in_progress(job=job):
                     return
 
         raise UnexpectedValue(
@@ -367,14 +372,14 @@ class NetworkDiscovery(FeatureBase):
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired(poll=check_interval):
-                if not self._is_in_progress(job=job):
+                if not self.is_in_progress(job=job):
                     return
 
         status = self._api.websdk.Config.Read.post(
             object_dn=job_dn,
             attribute_name=DiscoveryAttributes.status
         ).values[0]
-        raise UnexpectedValue(
+        raise TimeoutError(
             f'Expected Network Discovery Job "{job_dn}" to finish within {timeout} seconds, but it is still '
             f'running. It has a status of "{status}."'
         )

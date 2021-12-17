@@ -279,7 +279,7 @@ class _ApplicationBase(FeatureBase):
                     return
                 stage = self._get_stage(application=application)
 
-        raise UnexpectedValue(
+        raise TimeoutError(
             f'Certificate installation failed on "{application_dn}".\n'
             f'Stage: {stage}\n'
             f'Status: {self.get_status(application=application)}'

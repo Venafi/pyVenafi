@@ -512,7 +512,7 @@ class Certificate(FeatureBase):
                     break
                 cert = self._get(certificate=certificate)
 
-        raise UnexpectedValue(
+        raise TimeoutError(
             f'Certificate renewal for "{cert.dn}" encountered an error at stage {cert.processing_details.stage} with '
             f'status "{cert.processing_details.status}".'
         )

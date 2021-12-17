@@ -7,6 +7,7 @@ Application
     adaptable_application
     amazon_aws
     apache
+    apache_group
     azure_key_vault
     basic_application
     blue_coat_sslva
@@ -21,12 +22,11 @@ Application
     imperva_mx
     jks
     oracle_iplanet
-    palo_alto_network_fw
     pem
     pkcs11
+    pkcs11_group
     pkcs_12
+    palo_alto_network_fw
     riverbed_steelhead
     tealeaf_pca
     vam_nshield
-    apache_group
-    pkcs11_group

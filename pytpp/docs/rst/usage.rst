@@ -202,7 +202,8 @@ jobs and managing permissions.
 Config.Object And Identity
 --------------------------
 
-.. _config_object_definition:
+.. _config_object:
+.. rubric:: Config Objects
 
 Config Objects are the basic definition of every object that can be created in TPP. Every feature with a
 ``create()``, ``get()``, or ``update()`` method will return a ``Config.Object``, which is defined below.
@@ -251,7 +252,8 @@ requiring a ``Config.Object`` or a DN value.
         # OR parent_folder=r'\VED\Policy\Certificates'
     )
 
-.. _identity_definition:
+.. _identity_object:
+.. rubric:: Identity Objects
 
 The ``Identity`` object is much like the *Confg.Object* except that it applies to users and groups, or identities.
 All identities in TPP share common properties that make up this class.

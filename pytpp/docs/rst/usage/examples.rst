@@ -9,6 +9,7 @@ Examples
     examples/client_groups
     examples/client_work
     examples/device
+    examples/discovery
     examples/folder
     examples/identity
     examples/objects

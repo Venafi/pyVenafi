@@ -14,14 +14,15 @@ Make sure you are authenticated, see: :ref:`authentication`
     api = Authenticate(...)
     features = Features(api)
 
-    device = features.device.create(name='name_of_device',
-                       parent_folder_dn='\\VED\\Policy\\PLACEMENT_FOLDER',
-                       attributes={
-                            Attributes.device.host       : '192.168.1.128',
-                            Attributes.device.port       : '22',
-                            Attributes.device.credential : '\\VED\\Policy\\Administration\\Credentials\\root',
-                            Attributes.device.description: 'Some description about the object'
-                        })
+    device = features.device.create(
+        name='name_of_device',
+        parent_folder_dn='\\VED\\Policy\\PLACEMENT_FOLDER',
+        attributes={
+            Attributes.device.host       : '192.168.1.128',
+            Attributes.device.port       : '22',
+            Attributes.device.credential : '\\VED\\Policy\\Administration\\Credentials\\root',
+            Attributes.device.description: 'Some description about the object'
+    })
 
 .. note::
     1. The parent_folder_dn is a path to a folder in the Policy Tree to place the device in
@@ -36,8 +37,10 @@ Deleting a device
     api = Authenticate(...)
     features = Features(api)
 
-    device = features.device.create(name='name_of_device',
-                       parent_folder_dn='\\VED\\Policy\\PLACEMENT_FOLDER')
+    device = features.device.create(
+        name='name_of_device',
+        parent_folder='\\VED\\Policy\\PLACEMENT_FOLDER'
+    )
 
     features.device.delete(device=device)
 

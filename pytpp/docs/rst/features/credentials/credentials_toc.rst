@@ -6,8 +6,8 @@ Credentials
 
     amazon_credential
     certificate_credential
-    google_credential
     generic_credential
+    google_credential
     password_credential
     private_key_credential
     username_password_credential

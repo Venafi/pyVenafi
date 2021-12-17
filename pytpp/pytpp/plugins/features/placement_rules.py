@@ -208,8 +208,8 @@ class PlacementRules(_OriginalPlacementRules):
         if TYPE_CHECKING:
             self._api = api
 
-    def create(self, name: str, conditions: List[Union[str, dict]], device_location_dn: str,
-               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate',
+    def create(self, name: str, conditions: List[str], device_location: 'Union[Config.Object, str]',
+               certificate_location: 'Union[Config.Object, str]' = None, rule_type: str = 'X509 Certificate',
                get_if_already_exists: bool = True):
         """
         Creates a placement rule.
@@ -232,9 +232,9 @@ class PlacementRules(_OriginalPlacementRules):
             name: Name of the placement rule.
             conditions: The conditional logic that defines the rule. Requires a specific dictionary with `field`, `comparison`,
                         and `value` keys. Alternatively, use the ``condition`` method to create the condition dictionary.
-            device_location_dn: Absolute path to folder that should received all device and application objects that apply to
+            device_location: Absolute path to folder that should received all device and application objects that apply to
                                 this rule.
-            certificate_location_dn: Absolute path to folder that should received all certificate objects that apply to this
+            certificate_location: Absolute path to folder that should received all certificate objects that apply to this
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
             get_if_already_exists: If the objects already exists, just return it as is.
@@ -246,24 +246,26 @@ class PlacementRules(_OriginalPlacementRules):
         response = self._api.aperture.Discovery.PlacementRules.post(
             name=name,
             conditions=conditions,
-            device_location_dn=device_location_dn,
-            cert_location_dn=certificate_location_dn
+            device_location_dn=self._get_dn(device_location),
+            cert_location_dn=self._get_dn(certificate_location) if certificate_location else None
         )
         rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
         return rule.object
 
-    def delete(self, rule: 'Config.Object'):
+    def delete(self, rule: 'Union[Config.Object, str]'):
         """
         Deletes a placement rule.
 
         Args:
             rule: Config object of the placement rule.
         """
-        response = self._api.aperture.Discovery.PlacementRules.Guid(guid=rule.guid).delete()
+        response = self._api.aperture.Discovery.PlacementRules.Guid(
+            guid=self._get_guid(rule, parent_dn=self._layout_rules_dn)
+        ).delete()
         response.assert_valid_response()
 
-    def update(self, rule: 'Config.Object', conditions: List[str] = None, device_location_dn: str = None,
-               certificate_location_dn: str = None, rule_type: str = 'X509 Certificate'):
+    def update(self, rule: 'Union[Config.Object, str]', conditions: List[str] = None, device_location: str = None,
+               certificate_location: str = None, rule_type: str = 'X509 Certificate'):
         """
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten
         to the object. In other words, only the parameters given are updated.
@@ -287,20 +289,22 @@ class PlacementRules(_OriginalPlacementRules):
             rule: Config object of the placement rule.
             conditions: The conditional logic that defines the rule. This will overwrite the existing rules.
                         Use ``:meth:`pytpp.features.placement_rules.PlacementRuleCondition`` to create a list of rules.
-            device_location_dn: Absolute path to folder that should received all device and application objects that apply to
+            device_location: Absolute path to folder that should received all device and application objects that apply to
                                 this rule.
-            certificate_location_dn: Absolute path to folder that should received all certificate objects that apply to this
+            certificate_location: Absolute path to folder that should received all certificate objects that apply to this
                                      rule.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
         """
         conditions = [json.loads(c) for c in conditions]
-        rule = self._api.aperture.Discovery.PlacementRules.Guid(guid=rule.guid).get()
+        rule = self._api.aperture.Discovery.PlacementRules.Guid(
+            guid=self._get_guid(rule, parent_dn=self._layout_rules_dn)
+        ).get()
         response = self._api.aperture.Discovery.PlacementRules.put(
             guid=rule.guid,
             name=rule.name,
             conditions=conditions or [c.__dict__ for c in rule.conditions],
-            device_location_dn=device_location_dn or rule.device_location.dn,
-            cert_location_dn=certificate_location_dn or rule.cert_location.dn
+            device_location_dn=self._get_dn(device_location) if device_location else rule.device_location.dn,
+            cert_location_dn=self._get_dn(certificate_location) if certificate_location else rule.cert_location.dn
         )
         rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
         return rule.object
