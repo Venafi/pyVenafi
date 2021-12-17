@@ -160,7 +160,7 @@ Get Processing Stage of the Application
     stage = features.application.pkcs11.get_stage(application='\\VED\\Policy\\Installations\\Applications\\example_application')
 
 Get Processing Status of the Application
----------------------------------------
+----------------------------------------
 
 .. code-block:: python
 
