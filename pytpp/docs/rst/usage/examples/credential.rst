@@ -21,6 +21,7 @@ Username password credential
         username='my_user',
         password='password'
     )
+
 * The attributes of the username_password object are:
     * name: Name of the credential object.
     * parent_folder: ``Config.Object`` or DN of the parent folder.

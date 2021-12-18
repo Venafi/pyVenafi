@@ -1,3 +1,5 @@
+.. _identity:
+
 Identity
 =============
 .. note::
@@ -52,6 +54,7 @@ Group Operations
     )
 
 .. rubric:: Find a Group
+
 This will allow you to search for a specific group name, but it will return a list of all groups that contain the name searched.
 
 .. code-block:: python
@@ -68,6 +71,7 @@ This will allow you to search for a specific group name, but it will return a li
         name='group_name', limit=100, is_distribution_group=False, is_security_group=True
     )
 .. rubric:: Get the Members of a Group
+
 .. code-block:: python
 
     from pytpp import Features, Authenticate
@@ -154,7 +158,9 @@ User Operations
 
     features = Features(api=api)
     user = features.identity.user.find(name='my_username', limit = 100)
+
 .. rubric:: Change a Password
+
 This will set the password of the user. If the user did not have a previous password then you are not required to provide an old_password
 
 .. code-block:: python
