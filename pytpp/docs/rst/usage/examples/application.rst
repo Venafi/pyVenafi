@@ -15,18 +15,12 @@ Make sure you are authenticated, see: :ref:`authentication`
     api = Authenticate(...)
     features = Features(api)
 
-    application = features.application.pkcs11.create(name='example_application',
-                                       parent_folder_dn='\\VED\\Policy\\Installations\\Applications',
-                                       attributes={
-                                           Attributes.application.pkcs11.connection_method        : AttributeValues.Application.ConnectionMethod.ssh,
-                                           Attributes.application.pkcs11.port                     : 22,
-                                           Attributes.application.pkcs11.hsm_protection_type      : AttributeValues.Application.ProtectionType.softcard,
-                                           Attributes.application.pkcs11.hsm_certificate_directory: '/home/example/dist',
-                                           Attributes.application.pkcs11.hsm_cryptoki_file        : '/opt/nfast/toolkits/pkcs11/libcknfast.so',
-                                           Attributes.application.pkcs11.hsm_client_tool_path     : '/opt/example',
-                                           Attributes.application.pkcs11.hsm_token_label          : 'hsm_example_label',
-                                           Attributes.application.pkcs11.hsm_token_password       : 'hsm_example_password',
-                                       })
+    features.application.apache.create(
+        name='example_apache_application',
+        device='\\VED\\Policy\\Installations\\Devices\\example_device',
+        private_key_file='/etc/example/private_key.p12',
+        certificate_file='/etc/example/cert.crt',
+    )
 
 Application Types
 -----------------
