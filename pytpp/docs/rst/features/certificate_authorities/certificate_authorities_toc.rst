@@ -1,3 +1,5 @@
+.. _certificate_authorities_feature_list:
+
 Certificate Authorities
 =======================
 

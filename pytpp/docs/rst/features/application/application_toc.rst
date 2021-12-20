@@ -1,3 +1,5 @@
+.. _application_feature_list:
+
 Application
 ===========
 

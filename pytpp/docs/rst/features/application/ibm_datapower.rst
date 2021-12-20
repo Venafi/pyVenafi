@@ -1,3 +1,5 @@
+.. _ibm_datapower_feature:
+
 IBM DataPower
 =============
 

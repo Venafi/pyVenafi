@@ -1,3 +1,5 @@
+.. _ca_import_manager_feature:
+
 CA Import Manager
 =================
 

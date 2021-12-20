@@ -1,3 +1,5 @@
+.. _adaptable_application_feature:
+
 Adaptable Application
 =====================
 

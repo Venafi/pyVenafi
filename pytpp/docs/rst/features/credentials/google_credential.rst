@@ -1,3 +1,5 @@
+.. _google_credential_feature:
+
 Google Credential
 =================
 

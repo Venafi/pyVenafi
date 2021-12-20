@@ -1,3 +1,5 @@
+.. _trustnet_manager_feature:
+
 TrustNet Manager
 ================
 

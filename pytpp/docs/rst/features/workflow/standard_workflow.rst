@@ -1,3 +1,5 @@
+.. _standard_workflow_feature:
+
 Standard Workflow
 =================
 

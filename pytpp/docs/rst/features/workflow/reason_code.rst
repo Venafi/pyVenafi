@@ -1,3 +1,5 @@
+.. _reason_code_feature:
+
 Reason Code
 ===========
 

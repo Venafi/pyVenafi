@@ -1,3 +1,5 @@
+.. _jks_feature:
+
 JKS
 ===
 

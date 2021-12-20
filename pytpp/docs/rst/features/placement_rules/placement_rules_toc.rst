@@ -1,3 +1,5 @@
+.. _placement_rules_feature_list:
+
 Placement Rules
 ===============
 

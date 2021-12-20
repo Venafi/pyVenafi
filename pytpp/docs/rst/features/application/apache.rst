@@ -1,3 +1,5 @@
+.. _apache_feature:
+
 Apache
 ======
 

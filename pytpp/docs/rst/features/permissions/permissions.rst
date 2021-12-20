@@ -1,3 +1,5 @@
+.. _permissions_feature:
+
 Permissions
 ===========
 

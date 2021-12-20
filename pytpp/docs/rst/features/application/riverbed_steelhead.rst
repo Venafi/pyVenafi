@@ -1,3 +1,5 @@
+.. _riverbed_steelhead_feature:
+
 Riverbed Steelhead
 ==================
 

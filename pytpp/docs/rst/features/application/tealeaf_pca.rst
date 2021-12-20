@@ -1,3 +1,5 @@
+.. _tealeaf_pca_feature:
+
 Tealeaf PCA
 ===========
 

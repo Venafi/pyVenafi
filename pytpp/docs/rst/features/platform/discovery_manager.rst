@@ -1,3 +1,5 @@
+.. _discovery_manager_feature:
+
 Discovery Manager
 =================
 

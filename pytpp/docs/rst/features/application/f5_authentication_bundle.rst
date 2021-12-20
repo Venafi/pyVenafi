@@ -1,3 +1,5 @@
+.. _f5_authentication_bundle_feature:
+
 F5 Authentication Bundle
 ========================
 

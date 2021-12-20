@@ -1,3 +1,5 @@
+.. _onboard_discovery_manager_feature:
+
 Onboard Discovery Manager
 =========================
 

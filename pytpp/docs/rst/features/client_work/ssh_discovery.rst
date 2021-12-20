@@ -1,3 +1,5 @@
+.. _ssh_discovery_feature:
+
 SSH Discovery
 =============
 

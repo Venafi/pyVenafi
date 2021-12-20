@@ -1,3 +1,5 @@
+.. _credentials_feature_list:
+
 Credentials
 ===========
 

@@ -1,3 +1,5 @@
+.. _pem_feature:
+
 PEM
 ===
 

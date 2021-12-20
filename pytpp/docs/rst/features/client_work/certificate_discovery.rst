@@ -1,3 +1,5 @@
+.. _certificate_discovery_feature:
+
 Certificate Discovery
 =====================
 

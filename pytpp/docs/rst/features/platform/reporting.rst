@@ -1,3 +1,5 @@
+.. _reporting_feature:
+
 Reporting
 =========
 

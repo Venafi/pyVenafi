@@ -1,3 +1,5 @@
+.. _basic_application_feature:
+
 Basic Application
 =================
 

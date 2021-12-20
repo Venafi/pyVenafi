@@ -1,6 +1,10 @@
 Custom Fields
 =============
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Creating Custom Fields
 ----------------------
 

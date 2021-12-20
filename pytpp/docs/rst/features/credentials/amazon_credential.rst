@@ -1,3 +1,5 @@
+.. _amazon_credential_feature:
+
 Amazon Credential
 =================
 

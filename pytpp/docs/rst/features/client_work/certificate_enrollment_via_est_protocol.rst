@@ -1,3 +1,5 @@
+.. _certificate_enrollment_via_est_protocol_feature:
+
 Certificate Enrollment Via EST Protocol
 =======================================
 

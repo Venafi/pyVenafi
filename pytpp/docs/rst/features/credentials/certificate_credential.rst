@@ -1,3 +1,5 @@
+.. _certificate_credential_feature:
+
 Certificate Credential
 ======================
 

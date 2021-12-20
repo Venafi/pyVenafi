@@ -1,3 +1,5 @@
+.. _blue_coat_sslva_feature:
+
 Blue Coat SSLVA
 ===============
 

@@ -1,3 +1,5 @@
+.. _user_certificate_creation_feature:
+
 User Certificate Creation
 =========================
 

@@ -1,3 +1,5 @@
+.. _certificate_revocation_feature:
+
 Certificate Revocation
 ======================
 

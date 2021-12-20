@@ -1,3 +1,5 @@
+.. _workflow_feature_list:
+
 Workflow
 ========
 

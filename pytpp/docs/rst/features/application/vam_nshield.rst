@@ -1,3 +1,5 @@
+.. _vam_nshield_feature:
+
 VAM nShield
 ===========
 

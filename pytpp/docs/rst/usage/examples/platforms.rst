@@ -3,6 +3,10 @@
 Platforms
 =========
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Updating Platforms
 ------------------
 Make sure you are authenticated, see: :ref:`authentication`

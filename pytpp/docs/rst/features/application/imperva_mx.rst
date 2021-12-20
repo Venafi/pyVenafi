@@ -1,3 +1,5 @@
+.. _imperva_mx_feature:
+
 Imperva MX
 ==========
 

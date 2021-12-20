@@ -10,8 +10,8 @@ Examples
     examples/certificate
     examples/client_groups
     examples/client_work
-    examples/custom_fields
     examples/credential
+    examples/custom_fields
     examples/device
     examples/discovery
     examples/folder

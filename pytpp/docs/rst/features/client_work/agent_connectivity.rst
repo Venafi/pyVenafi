@@ -1,3 +1,5 @@
+.. _agent_connectivity_feature:
+
 Agent Connectivity
 ==================
 

@@ -4,11 +4,14 @@ Client Groups
 =============
 
 .. note::
-    The feature for client groups is implemented by making use of the config objects api.  It is a wrapper around that API to make interacting with client groups easier.
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
+.. note::
+    The feature for client groups is implemented by making use of the WebSDK Config API. It is a wrapper around that API to make interacting with client groups easier.
 
 Creating a Client Group
 -----------------------
-Make sure you are authenticated, see: :ref:`authentication`
 
 .. code-block:: python
 
@@ -20,11 +23,14 @@ Make sure you are authenticated, see: :ref:`authentication`
     client_group = features.client_groups.create(name='name_of_client_group')
 
 .. note::
-    1. The default 'agent_type' for a client group is agentless.
-    2. The features.client_groups.create() will return the group if it already exists
+    The default 'agent_type' for a client group is ``Agentless``.
 
 Agent Types
 -----------
+
+TODO: CHANGE LINK TO ATTRIBUTE VALUES LIST
+Refer to :ref:`client_groups_feature_list` for the available client group types.
+
 There are different types of client groups, they can be found in ClientGroupsAttributeValues:
 
 .. code-block:: python
@@ -37,7 +43,7 @@ There are different types of client groups, they can be found in ClientGroupsAtt
         ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates
     ]
 
-Creating client groups with different agent_types:
+Creating client groups with different agent types:
 
 .. code-block:: python
 
@@ -61,11 +67,11 @@ How to assign client work (:ref:`client_work`) to a client group
     features = Features(api)
 
     # You can assign client work with the name of the client group
-    features.client_groups.assign_work(group='name_of_client_group_1', work_name='name_of_client_work_1')
+    features.client_groups.assign_work(group='name_of_client_group_1', work='name_of_client_work_1')
 
     # You can assign client work with the object of the client group
     client_group_2 = features.client_groups.create(name='name_of_client_group_2')
-    features.client_groups.assign_work(group=client_group_2, work_name='name_of_client_work_2')
+    features.client_groups.assign_work(group=client_group_2, work='name_of_client_work_2')
 
 .. note::
     Only certain client work types can be assigned to specific client group agent_types.
@@ -113,11 +119,11 @@ How to remove client work (:ref:`client_work`) from a client group
     features = Features(api)
 
     # You can remove work from a client group by name
-    features.client_groups.remove_work(group='name_of_client_group_1', work_name='name_of_client_work_1')
+    features.client_groups.remove_work(group='name_of_client_group_1', work='name_of_client_work_1')
 
     # You can also remove work with the client group object
     client_group_2 = features.client_groups.create(name='name_of_client_group_2')
-    features.client_groups.remove_work(group=client_group_2, work_name='name_of_client_work_2')
+    features.client_groups.remove_work(group=client_group_2, work='name_of_client_work_2')
 
 Deleting a Client Group
 -----------------------
@@ -135,8 +141,8 @@ Deleting a Client Group
     client_group_2 = features.client_groups.create(name='name_of_client_group_2')
     features.client_groups.delete(group=client_group_2)
 
-Get a Client Groups
--------------------
+Get a Client Group
+------------------
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -151,7 +157,7 @@ Get a Client Groups
     client_group = features.client_groups.get(name='name_of_client_group', raise_error_if_not_exists=False)
 
 .. note::
-    You can create and get the client_group using: features.client_groups.create().  This method will simply return the client_group if it already exists.
+    You can create and get the client_group using: features.client_groups.create(). This method will simply return the client_group if it already exists.
 
 List all Client Groups
 ----------------------

@@ -1,6 +1,10 @@
 Folders
 =======
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Creating And Deleting Folders
 -----------------------------
 

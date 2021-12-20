@@ -1,3 +1,5 @@
+.. _adapatable_workflow_feature:
+
 Adapatable Workflow
 ===================
 

@@ -1,3 +1,5 @@
+.. _folder_feature:
+
 Folder
 ======
 

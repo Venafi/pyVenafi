@@ -1,3 +1,5 @@
+.. _microsoft_ca_feature:
+
 Microsoft CA
 ============
 

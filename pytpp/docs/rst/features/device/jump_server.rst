@@ -1,3 +1,5 @@
+.. _jump_server_feature:
+
 Jump Server
 ===========
 

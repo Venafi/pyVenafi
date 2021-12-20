@@ -1,3 +1,5 @@
+.. _f5_ltm_advanced_feature:
+
 F5 LTM Advanced
 ===============
 

@@ -1,3 +1,5 @@
+.. _monitor_feature:
+
 Monitor
 =======
 

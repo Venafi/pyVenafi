@@ -2,7 +2,7 @@ Object Management
 =================
 
 .. note::
-    See :ref:`authentication` for authentication details.
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
 .. note::
     In all of the examples having ``obj`` parameters a DN may be substituted by a ``Config.Object`` and

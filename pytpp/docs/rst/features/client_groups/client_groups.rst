@@ -1,3 +1,5 @@
+.. _client_groups_feature:
+
 Client Groups
 =============
 

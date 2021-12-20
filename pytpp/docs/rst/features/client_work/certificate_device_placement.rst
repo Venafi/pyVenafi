@@ -1,3 +1,5 @@
+.. _certificate_device_placement_feature:
+
 Certificate Device Placement
 ============================
 

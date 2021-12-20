@@ -1,3 +1,5 @@
+.. _password_credential_feature:
+
 Password Credential
 ===================
 

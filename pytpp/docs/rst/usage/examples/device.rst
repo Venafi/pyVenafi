@@ -3,6 +3,10 @@
 Device
 ======
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Creating a device
 -----------------
 Make sure you are authenticated, see: :ref:`authentication`

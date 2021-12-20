@@ -47,10 +47,10 @@ class _ApplicationBase(FeatureBase):
 
     def delete(self, application: Union['Config.Object', str]):
         """
-        Deletes an Application object.
+        Delete an Application object.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
         """
         application_dn = self._get_dn(application)
         self._secret_store_delete(object_dn=application_dn)
@@ -61,7 +61,7 @@ class _ApplicationBase(FeatureBase):
         Disables all processing and provisioning of the application.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
         """
         application_dn = self._get_dn(application)
         result = self._api.websdk.Config.Write.post(
@@ -79,7 +79,7 @@ class _ApplicationBase(FeatureBase):
         Enables all processing and provisioning of the application.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
         """
         application_dn = self._get_dn(application)
         result = self._api.websdk.Config.ClearAttribute.post(
@@ -92,14 +92,12 @@ class _ApplicationBase(FeatureBase):
 
     def get(self, application_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Returns the config object of the application DN.
-
         Args:
-            application_dn: DN of the application object.
-            raise_error_if_not_exists: Raise an exception if the application DN does not exist.
+            application_dn: :ref:`dn` of the application object.
+            raise_error_if_not_exists: Raise an exception if the application :ref:`dn` does not exist.
 
         Returns:
-            Config Object of the application.
+            :ref:`config_object` of the application.
         """
         return self._get_config_object(
             object_dn=application_dn,
@@ -111,10 +109,10 @@ class _ApplicationBase(FeatureBase):
         Returns the Certificate object associated to the Application object.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
 
         Returns:
-            Config Object of the certificate object.
+            :ref:`config_object` of the certificate object.
         """
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
@@ -159,7 +157,7 @@ class _ApplicationBase(FeatureBase):
         Returns the current processing stage of the application object.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
 
         Returns:
             The current stage if it exists. Otherwise, returns ``None``.
@@ -177,7 +175,7 @@ class _ApplicationBase(FeatureBase):
         Returns the current processing stage of the application object.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
 
         Returns:
             The current stage if it exists. Otherwise, returns ``None``.
@@ -189,7 +187,7 @@ class _ApplicationBase(FeatureBase):
         Returns the current processing status of the application object.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
 
         Returns:
             The current status if it exists. Otherwise, returns ``None``.
@@ -207,7 +205,7 @@ class _ApplicationBase(FeatureBase):
         Returns ``True`` if the application object is in an error state.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
 
         Returns:
             Boolean
@@ -230,7 +228,7 @@ class _ApplicationBase(FeatureBase):
         ``push_to_new=True``.
 
         Args:
-            application: Config object or DN of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the Application object.
             timeout: Timeout in seconds.
         """
         application_dn = self._get_dn(application)
@@ -346,8 +344,8 @@ class Adaptable(_ApplicationBase):
             locked: Lock this script on the ``policy_folder``.
             retry_after_scipt_hash_mismatch: When the script is updated fix the related provisioning and discovery errors.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
             application_credential: Application credential.
             secondary_credential: Another credential to pass to PowerShell script.
             port: Port number.
@@ -357,7 +355,7 @@ class Adaptable(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
 
         # region Create The Policy Attributes
@@ -433,11 +431,11 @@ class AmazonAWS(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
-            aws_credential: ``Config.Object`` or DN of the AWS credential object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
+            aws_credential: :ref:`config_object` or :ref:`dn` of the AWS credential object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
             issued_by_aws: The certificate should be issued by AWS Certificate Manager.
             provision_to: ACM or IAM.
             region: AWS region.
@@ -453,7 +451,7 @@ class AmazonAWS(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appamazon',
@@ -505,21 +503,21 @@ class Apache(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             private_key_file: File location to place the private key file.
             certificate_file: File location to place the certificate file.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             private_key_location: Remote generation setting.
             client_tools_path: HSM client tools path.
             protection_type: HSM protection type.
             softcard_identifier: Softcard label.
             ocs_identifier: OCS label.
-            partition_password_credential: ``Config.Object`` or DN of OCS pin or softcard passphrase credential.
-            private_key_credential: ``Config.Object`` or DN of private key credential.
+            partition_password_credential: :ref:`config_object` or :ref:`dn` of OCS pin or softcard passphrase credential.
+            private_key_credential: :ref:`config_object` or :ref:`dn` of private key credential.
             certificate_chain_file: File location to place the certificate chain file.
             overwrite_existing_chain: Overwirte the existing chain.
             owner: File user owner.
@@ -530,7 +528,7 @@ class Apache(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appapache',
@@ -591,13 +589,13 @@ class AzureKeyVault(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.:
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             application_id: Application ID.
-            certificate_credential: ``Config.Object`` or DN of the certificate credential.
+            certificate_credential: :ref:`config_object` or :ref:`dn` of the certificate credential.
             azure_key_vault_name:  Azure Key Vault name.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
             certificate_name: Certificate name.
             private_key_exportable: Mark the private key as exportable.
             web_application_name: Name of the web application.
@@ -609,7 +607,7 @@ class AzureKeyVault(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appazurekeyvault',
@@ -661,15 +659,15 @@ class Basic(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appbasic'
@@ -693,12 +691,12 @@ class Basic(_ApplicationBase):
         then those attributes will apply to the new application once conversion is complete.
 
         Args:
-            basic_application: ``Config.Object`` or DN of the Basic Application.
+            basic_application: :ref:`config_object` or :ref:`dn` of the Basic Application.
             new_class_name: Application Class Name of the new application object.
             attributes: Attributes pertaining to the new application object.
 
         Returns:
-            Config object representation of the application object.
+            :ref:`config_object` representation of the application object.
         """
         basic_application_dn = self._get_dn(basic_application)
         result = self._api.websdk.Config.MutateObject.post(
@@ -743,11 +741,11 @@ class BlueCoatSSLVA(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port number.
             device_certificate: The key certificate is a device certificate.
             replace_existing: Replace existing certificate.
@@ -758,7 +756,7 @@ class BlueCoatSSLVA(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appBlueCoat',
@@ -804,11 +802,11 @@ class CAPI(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             winrm_port: WinRM connection port.
             private_key_location: Remote key generation setting for generating the private key.
             key_label: Private key label. Only applies if using remote key generation.
@@ -824,7 +822,7 @@ class CAPI(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appcapi',
@@ -884,15 +882,15 @@ class CitrixNetScaler(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             install_certificate_chain: Install the certificate chain.
             use_fips: Use FIPS.
-            private_key_credential: ``Config.Object`` or DN of the private key credential.
+            private_key_credential: :ref:`config_object` or :ref:`dn` of the private key credential.
             import_only: Import only.
             subfolder_relative_path: Subfolder relative path.
             certificate_binding: Certificate binding.
@@ -902,7 +900,7 @@ class CitrixNetScaler(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appnetscaler',
@@ -948,11 +946,11 @@ class ConnectDirect(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             api_protocol: API protocol.
             port: Connection port.
             node_name: Node name.
@@ -962,7 +960,7 @@ class ConnectDirect(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name    : 'appConnectDirect',
@@ -1001,7 +999,7 @@ class F5AuthenticationBundle(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             bundle_file_name: Filename of the certificate bundle.
             description: Description for the application object.
             certifictes_to_use: List of certificates to use.
@@ -1009,7 +1007,7 @@ class F5AuthenticationBundle(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             F5AuthenticationBundleAttributes.advanced_settings_bundle_name: bundle_file_name,
@@ -1061,17 +1059,17 @@ class F5LTMAdvanced(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             https_port: HTTPS port number.
             ssh_port: SSH port number.
             device_certificate: The certificate is a device certificate.
             provisioning_mode: Provisioning mode.
             certificate_and_key_file: Certificate and key file.
-            private_key_credential: ``Config.Object`` or DN of the private key credential.
+            private_key_credential: :ref:`config_object` or :ref:`dn` of the private key credential.
             force_profile_update: Force profile update.
             install_chain: Install the certificate chain.
             bundle_certificate: Bundle certificate.
@@ -1095,13 +1093,13 @@ class F5LTMAdvanced(_ApplicationBase):
             server_certificate_requirement: Require/ignore.
             frequency: Once or Always.
             chain_traversal_depth: Chain traversal depth.
-            certificate_bundle: ``Config.Object`` or DN of the certificate bundle.
+            certificate_bundle: :ref:`config_object` or :ref:`dn` of the certificate bundle.
             authentication_name: Authentication name.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name                    : 'appf5ltmadvanced',
@@ -1169,11 +1167,11 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            google_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            google_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             target_proxy_type: Target proxy type.
             target_proxy_name: Target proxy name.
             target_resource: Target resource.
@@ -1181,7 +1179,7 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appgooglecloudloadbalancer',
@@ -1225,11 +1223,11 @@ class IBMDataPower(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             xml_port: XML connection port.
             basic_provisioning_mode: Use basic provisioning mode if ``True`` or advanced if ``False``.
@@ -1243,12 +1241,12 @@ class IBMDataPower(_ApplicationBase):
             ssl_profile_name: SSL profile name.
             certificate_folder: Certificate folder.
             install_certificate_chain: Install the certficate chain.
-            private_key_password_credential: ``Config.Object`` or DN of the private key password credential.
+            private_key_password_credential: :ref:`config_object` or :ref:`dn` of the private key password credential.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appdatapower',
@@ -1307,17 +1305,17 @@ class IBMGSK(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             version: GSK version.
             gsk_utility_path: GSK utility path.
             java_home_path: JAVA_HOME path.
             key_store_path: Key store path.
-            key_store_credential: ``Config.Object`` or DN of the key store credential.
+            key_store_credential: :ref:`config_object` or :ref:`dn` of the key store credential.
             create: Create store.
             replace_existing: Replace existing store.
             certificate_label: Certificate label.
@@ -1334,7 +1332,7 @@ class IBMGSK(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appgsk',
@@ -1399,13 +1397,13 @@ class ImpervaMX(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
-            user_credential: ``Config.Object`` or DN of the user credential.
+            user_credential: :ref:`config_object` or :ref:`dn` of the user credential.
             ssl_key_tool_path: SSL key tool path.
             site: Site.
             server_group: Server group.
@@ -1414,7 +1412,7 @@ class ImpervaMX(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name  : 'appimpervamx',
@@ -1467,11 +1465,11 @@ class JKS(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             private_key_location: Remote generation setting.
             slot_number: Slot number.
@@ -1482,8 +1480,8 @@ class JKS(_ApplicationBase):
             version: Java version.
             store_type: Store type.
             keystore_path: Key store path.
-            keystore_credential: ``Config.Object`` or DN of the key store credential.
-            private_key_credential: ``Config.Object`` or DN of the private key credential.
+            keystore_credential: :ref:`config_object` or :ref:`dn` of the key store credential.
+            private_key_credential: :ref:`config_object` or :ref:`dn` of the private key credential.
             create: Create store.
             replace_existing: Replace existing store.
             certificate_alias: Certificate alias.
@@ -1496,7 +1494,7 @@ class JKS(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name        : 'appjks',
@@ -1570,15 +1568,15 @@ class OracleIPlanet(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             certificate_database_type: Certificate database type.
             certificate_database_path: Certificate database path.
-            certificate_database_credential: ``Config.Object`` or DN of the ccertificate database credentiaL.
+            certificate_database_credential: :ref:`config_object` or :ref:`dn` of the ccertificate database credentiaL.
             certificate_database_prefix: Certificate database prefix.
             create: Create store.
             replace_existing: Replace existing store.
@@ -1593,7 +1591,7 @@ class OracleIPlanet(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name : 'appiplanet',
@@ -1658,14 +1656,14 @@ class PaloAltoNetworkFW(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             provision_certificate_only: If ``False``, also provision the private key.
-            private_key_password: ``Config.Object`` or DN of the private key password.
+            private_key_password: :ref:`config_object` or :ref:`dn` of the private key password.
             install_chain: Insatll the certifcate chain.
             replace_certificate: Replace certificate.
             decryption_policy_rule_name: Decryption policy rule name.
@@ -1677,7 +1675,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name                      : 'appPaloAlto',
@@ -1731,15 +1729,15 @@ class PEM(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             private_key_file: File location to place the private key file.
             certificate_file: File location to place the certificate file.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
-            private_key_credential: ``Config.Object`` or DN of private key credential.
+            private_key_credential: :ref:`config_object` or :ref:`dn` of private key credential.
             certificate_chain_file: File location to place the certificate chain file.
             overwrite_existing_chain: Overwirte the existing chain.
             owner: File user owner.
@@ -1750,7 +1748,7 @@ class PEM(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
 
         """
         app_attrs = {
@@ -1809,23 +1807,23 @@ class PKCS11(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             connection_method: WinRM or SSH.
             port: Connection port.
             protection_type: HSM protection type.
             token_identifier: Token/Slot identifier.
-            token_pin: ``Config.Object`` or DN of the token/slot pin, or passphrase, credential.
+            token_pin: :ref:`config_object` or :ref:`dn` of the token/slot pin, or passphrase, credential.
             label_format: Label format.
             use_case: Use case.
             import_certificate_into_hsm: Where to import the certificate.
             distribution_directory: Distribution directory.
             cryptoki_file: Cryptoki file path.
             openssl_config_file: OpenSSL config file path.
-            reverse_subject_dn: Reverse the subject DN.
+            reverse_subject_dn: Reverse the subject :ref:`dn`.
             embed_sans_in_csr: Embed SANs in CSR.
             requested_label: Requested key label.
             client_tools_directory: Client tools directory.
@@ -1834,7 +1832,7 @@ class PKCS11(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'apppkcs11',
@@ -1895,14 +1893,14 @@ class PKCS12(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             pkcs12_file: PKCS #12 file.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
-            private_key_credential: ``Config.Object`` or DN of the private key credential.
+            private_key_credential: :ref:`config_object` or :ref:`dn` of the private key credential.
             friendly_name: Friendly name.
             certificate_chain_file: Certificate chain file.
             create: Create store.
@@ -1916,7 +1914,7 @@ class PKCS12(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'apppkcs12',
@@ -1981,10 +1979,10 @@ class RiverbedSteelHead(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
             certificate_type: Certificate type.
             replace_existing: Replace existing certificate.
             install_chain_certificates: Install the chain certificates.
@@ -1992,7 +1990,7 @@ class RiverbedSteelHead(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name       : 'appriverbedsteelhead',
@@ -2030,18 +2028,18 @@ class TealeafPCA(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             passive_capture_setup_path: Passive capture setup path.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'apptealeafpca',
@@ -2082,11 +2080,11 @@ class VAMnShield(_ApplicationBase):
 
         Args:
             name: Name of the application object.
-            device: ``Config.Object`` or DN of the device object.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
             description: Description for the application object.
-            contacts: Contacts for the application object.
-            approvers: Approvers for workflows blocking application processing.
-            application_credential: ``Config.Object`` or DN of the application credential.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential.
             port: Connection port.
             nshield_setup_path: nShield setup path.
             module_id: Module ID.
@@ -2095,7 +2093,7 @@ class VAMnShield(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``.
+            :ref:`config_object`
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name   : 'appvamnshield',
@@ -2136,7 +2134,7 @@ class _ApplicationGroupBase(FeatureBase):
         Deletes an Application group object.
 
         Args:
-            application_group: Config object or DN of the Application object.
+            application_group: :ref:`config_object` or :ref:`dn` of the Application object.
             dissociate: If ``True``, dissociate all applications in the group from the certificate.
         """
         application_group_dn = self._get_dn(application_group)
@@ -2157,14 +2155,14 @@ class _ApplicationGroupBase(FeatureBase):
 
     def get(self, application_group_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Returns the config object of the application DN.
+        Returns the :ref:`config_object` of the application :ref:`dn`.
 
         Args:
-            application_group_dn: DN of the application group object.
-            raise_error_if_not_exists: Raise an exception if the application DN does not exist.
+            application_group_dn: :ref:`dn` of the application group object.
+            raise_error_if_not_exists: Raise an exception if the application :ref:`dn` does not exist.
 
         Returns:
-            Config Object of the application group.
+            :ref:`config_object` of the application group.
         """
         return self._get_config_object(
             object_dn=application_group_dn,
@@ -2172,6 +2170,13 @@ class _ApplicationGroupBase(FeatureBase):
         )
 
     def get_applications_in_group(self, application_group: Union['Config.Object', str]):
+        """
+        Args:
+            application_group: :ref:`config_object` or :ref:`dn` of the application group.
+
+        Returns:
+            List of :ref:`dn`.
+        """
         consumer_dns, certificate_dn = self._get_applications_in_group(application_group=application_group)
         return consumer_dns
 
@@ -2183,7 +2188,7 @@ class _ApplicationGroupBase(FeatureBase):
             config_class=self.class_name,
             attributes=attributes
         )
-        # Associate the Application Group DN.
+        # Associate the Application Group :ref:`dn`.
         result = self._api.websdk.Config.WriteDn.post(
             object_dn=certificate.dn,
             attribute_name=X509CertificateAttributes.application_group_dn,
@@ -2223,6 +2228,18 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
 
     def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
                common_data_location: str = None, attributes: dict = None):
+        """
+        Args:
+            applications: List of :ref:`config_object` or :ref:`dn` that will belong to the application group.
+            certificate: :ref:`config_object` or :ref:`dn` of the associated certificate.
+            common_data_location: The common data location for the application group.
+            attributes: Dictionary of attributes to apply to the group explicitly. If not given, then the
+                        attributes belonging to the first application in the given list will be assumed to
+                        be the shared attributes for the application group.
+
+        Returns:
+            :ref:`config_object`
+        """
         application_dns = [self._get_dn(application) for application in applications]
         certificate = self._get_config_object(object_dn=certificate)
         default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
@@ -2264,6 +2281,17 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
 
     def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
                attributes: dict = None):
+        """
+        Args:
+            applications: List of :ref:`config_object` or :ref:`dn` that will belong to the application group.
+            certificate: :ref:`config_object` or :ref:`dn` of the associated certificate.
+            attributes: Dictionary of attributes to apply to the group explicitly. If not given, then the
+                        attributes belonging to the first application in the given list will be assumed to
+                        be the shared attributes for the application group.
+
+        Returns:
+            :ref:`config_object`
+        """
         application_dns = [self._get_dn(application) for application in applications]
         certificate = self._get_config_object(object_dn=certificate)
         default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values

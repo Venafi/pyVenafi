@@ -1,3 +1,5 @@
+.. _ssh_device_placement_feature:
+
 SSH Device Placement
 ====================
 

@@ -1,3 +1,5 @@
+.. _ssh_key_usage_feature:
+
 SSH Key Usage
 =============
 

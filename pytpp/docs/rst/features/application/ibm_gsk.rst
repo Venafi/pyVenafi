@@ -1,3 +1,5 @@
+.. _ibm_gsk_feature:
+
 IBM GSK
 =======
 

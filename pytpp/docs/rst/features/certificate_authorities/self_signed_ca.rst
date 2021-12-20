@@ -1,3 +1,5 @@
+.. _self-signed_ca_feature:
+
 Self-Signed CA
 ==============
 

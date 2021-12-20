@@ -18,6 +18,8 @@ def feature_toc_rst_template(title: str, toc_items: List[str]):
     h1 = '=' * len(title)
     toc_items_rst = '\n\t\t'.join(toc_items)
     return dedent(f"""
+    .. _{title.replace(" ", "_").lower()}_feature_list:
+    
     {title}
     {h1}
 
@@ -28,11 +30,13 @@ def feature_toc_rst_template(title: str, toc_items: List[str]):
     """.replace('\t', '    ')).lstrip()
 
 def feature_class_rst_template(module_path: str, class_: str):
-    title = getattr(class_, '__feature__')
+    title: str = getattr(class_, '__feature__')
     if not title:
         raise AttributeError(f'{class_.__name__} does not have a __feature__ attribute.')
     h1 = '=' * len(title)
     return dedent(f"""
+    .. _{title.replace(" ", "_").lower()}_feature:
+    
     {title}
     {h1}
     

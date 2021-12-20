@@ -1,3 +1,5 @@
+.. _device_feature_list:
+
 Device
 ======
 

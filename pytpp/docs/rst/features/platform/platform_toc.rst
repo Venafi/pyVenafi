@@ -1,3 +1,5 @@
+.. _platform_feature_list:
+
 Platform
 ========
 

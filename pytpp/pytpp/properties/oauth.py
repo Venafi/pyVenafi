@@ -10,14 +10,19 @@ class Permissions:
     read: bool = None
     revoke: bool = None
 
-    def effective(self):
-        return [k for k, v in {
-            'approve': self.approve,
-            'delete': self.delete,
+    def to_dict(self):
+        return {
+            'approve' : self.approve,
+            'delete'  : self.delete,
             'discover': self.discover,
-            'manage': self.manage,
-            'revoke': self.revoke,
-        }.items() if v is not None]
+            'manage'  : self.manage,
+            'read'    : self.read,
+            'revoke'  : self.revoke,
+        }
+
+    def effective(self):
+        return [k for k, v in self.to_dict().items() if v is not None and k != 'read']
+
 
 @dataclass
 class Scope:
@@ -37,14 +42,24 @@ class Scope:
     def __repr__(self):
         return self.to_string()
 
+    @property
+    def scopes(self):
+        return [
+            {'name': p.name, 'permissions': p.to_dict()}
+            for p in self.list()
+        ]
+
+    def list(self):
+        return [
+            self._certificate, self._ssh, self._codesign,
+            self._configuration, self._restricted,
+            self._security, self._statistics, self._agent
+        ]
+
     def to_string(self):
         scopes = [
             f'{p.name}:{",".join(p.effective())}'
-            for p in [
-                self._certificate, self._ssh, self._codesign,
-                self._configuration, self._restricted,
-                self._security, self._statistics, self._agent
-            ] if p.effective()
+            for p in self.list() if p.effective()
         ]
         return ';'.join(scopes)
 
@@ -99,17 +114,3 @@ class Scope:
     def statistics(self, read: bool = False):
         self._statistics.read = read
         return self
-
-
-
-if __name__ == '__main__':
-    scope = Scope()\
-        .certificate(True, True, True, True, True, True)\
-        .ssh(*[True * 5])\
-        .codesign(*[True * 3])\
-        .configuration(*[True * 3])\
-        .restricted(*[True * 3])\
-        .security(True, True, True)\
-        .statistics(True)\
-        .agent(*[True * 2])
-    print(scope.to_string())

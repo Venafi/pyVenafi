@@ -1,3 +1,5 @@
+.. _device_certificate_creation_feature:
+
 Device Certificate Creation
 ===========================
 

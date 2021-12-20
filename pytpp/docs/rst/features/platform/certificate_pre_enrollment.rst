@@ -1,3 +1,5 @@
+.. _certificate_pre-enrollment_feature:
+
 Certificate Pre-Enrollment
 ==========================
 

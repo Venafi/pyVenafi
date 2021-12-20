@@ -1,6 +1,10 @@
 Credential
 ===========
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Username password credential
 ----------------------------
 .. code-block:: python

@@ -1,3 +1,5 @@
+.. _pkcs11_group_feature:
+
 PKCS11 Group
 ============
 

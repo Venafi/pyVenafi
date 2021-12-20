@@ -2,55 +2,92 @@ Certificate Operations
 ========================
 
 .. note::
-    Check out :ref:`authentication` for instructions on how to authenticate and have access to the required features.
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
-
-Create, renew, download, revoke, delete a certificate
--------------------------------------------------------
-This example will show you how to create a certificate and perform basic operations with that certificate.
+Create, Renew, Download, Revoke, Delete a Certificate
+-----------------------------------------------------
 
 .. code-block:: python
 
-    from pytpp import Features, Authenticate, AttributeValues
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12'
-        password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
+    from pytpp import Features, Authenticate, Attributes, AttributeValues
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    # Create a certificate object.
+    certificate = features.certificate.create(
+        name='my-team.domain.com',
+        parent_folder=r'\VED\Policy\Certificates\MyTeam',
+        common_name='my-team.domain.com',
+        management_type=AttributeValues.Certificate.ManagementType.enrollment,
+        ca_template=r'\VED\Policy\Administration\CAs\AwesomeCA',
+        hash_algorithm=AttributeValues.Certificate.HashAlgorithm.sha256,
+        city='Salt Lake City',
+        state='Utah',
+        country='US',
+        organization='My Company',
+        organization_unit=['MyTeam', 'MyRegion'],
+        disable_automatic_renewal=False,
+        key_algorithm=AttributeValues.Certificate.KeyAlgorithm.rsa,
+        key_strength=2048
     )
 
+Renewing A Certificate
+----------------------
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate, Attributes, AttributeValues
+
+    api = Authenticate(...)
     features = Features(api=api)
-    #Create certificate with signature
-    cert = features.certificate.create(
-            name='certificate.com',
-            parent_folder=parent_folder,
-            common_name='certificate_common_name.com',
-            management_type=AttributeValues.Certificate.ManagementType.enrollment,
-            ca_template='path',
-            hash_algorithm=AttributeValues.Certificate.HashAlgorithm.sha256,
-            city='Salt Lake City',
-            state='Utah',
-            country='US',
-            organization='Venafi',
-            organization_unit=['SPI'],
-            disable_automatic_renewal=False,
-            key_algorithm='rsa',
-            key_strength='2048'
-        )
+
     #Renew the certificate
-    current_thumbprint = features.certificate.renew(certificate=cert)
-    features.certificate.wait_for_enrollment_to_complete(certificate=cert, current_thumbprint=current_thumbprint)
+    current_thumbprint = features.certificate.renew(certificate=certificate)
+    features.certificate.wait_for_enrollment_to_complete(certificate=certificate, current_thumbprint=current_thumbprint)
 
-    #Download the Certificate
-    downloaded_cert = features.certificate.download(certificate=cert)
+Downloading A Certificate
+-------------------------
 
-    #Revoke a Certificate
-    features.certificate.revoke(certificate=cert, thumbprint=current_thumbprint)
+.. code-block:: python
 
-    #Delete the certificate
-    features.certificate.delete(certificate=cert)
+    from pytpp import Features, Authenticate, Attributes, AttributeValues
 
-Create certificate with a dictionary and retry the renewal of a certificate from current stage
-----------------------------------------------------------------------------------------------
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    # Download the Certificate
+    downloaded_cert = features.certificate.download(certificate=certificate)
+
+Revoking A Certificate
+----------------------
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate, Attributes, AttributeValues
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    # Revoke a Certificate
+    features.certificate.revoke(certificate=certificate, thumbprint=current_thumbprint)
+
+Deleting A Certificate
+----------------------
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate, Attributes, AttributeValues
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    # Delete the certificate
+    features.certificate.delete(certificate=certificate)
+
+Resetting And Retrying Certificate Requests
+-------------------------------------------
+
 .. code-block:: python
 
     from pytpp import Features, Authenticate, AttributeValues
@@ -87,7 +124,9 @@ Create certificate with a dictionary and retry the renewal of a certificate from
     except:
         features.certificate.retry_from_current_stage(certificate=cert)
 
-.. rubric:: Validate/Receive Validation Results and Certificate Details
+Validation
+----------
+
 .. code-block:: python
 
     from pytpp import Features, Authenticate, AttributeValues
@@ -120,8 +159,13 @@ Create certificate with a dictionary and retry the renewal of a certificate from
     cert_details = features.certificate.details(certificate=cert)
     validation_results = features.certificate.get_validation_results(certificate=cert)
 
-Associate, disassociate, and provision a certificate
------------------------------------------------------
+Getting Certifiate Data
+-----------------------
+
+ADD ME.
+
+Associate/Dissociate A Certificate
+----------------------------------
 
 .. note:: Check out :ref:`application` and :ref:`device` for instructions on how to create and use applications and devices.
 

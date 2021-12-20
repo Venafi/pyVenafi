@@ -1,3 +1,5 @@
+.. _apache_group_feature:
+
 Apache Group
 ============
 

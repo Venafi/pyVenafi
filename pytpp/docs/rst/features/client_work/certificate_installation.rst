@@ -1,3 +1,5 @@
+.. _certificate_installation_feature:
+
 Certificate Installation
 ========================
 

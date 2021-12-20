@@ -1,3 +1,5 @@
+.. _client_work_feature_list:
+
 Client Work
 ===========
 

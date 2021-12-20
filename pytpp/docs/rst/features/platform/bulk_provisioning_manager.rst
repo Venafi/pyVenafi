@@ -1,3 +1,5 @@
+.. _bulk_provisioning_manager_feature:
+
 Bulk Provisioning Manager
 =========================
 

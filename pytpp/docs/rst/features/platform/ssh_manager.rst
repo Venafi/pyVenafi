@@ -1,3 +1,5 @@
+.. _ssh_manager_feature:
+
 SSH Manager
 ===========
 

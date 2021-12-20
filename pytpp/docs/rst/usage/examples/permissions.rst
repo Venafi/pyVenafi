@@ -3,6 +3,10 @@
 Permissions
 ===========
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Updating Permissions
 --------------------
 Make sure you are authenticated, see: :ref:`authentication`
@@ -36,7 +40,7 @@ This example demonstrates updating permissions to an 'example_folder' for a user
                                 )
 
 .. note::
-    Permissions can also be assigned using groups instead of users, please see: :ref:`identity`
+    Permissions can also be assigned using groups instead of users, please see: :ref:`identity_object`
 
 Deleting Permissions
 --------------------

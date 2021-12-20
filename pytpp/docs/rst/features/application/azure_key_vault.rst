@@ -1,3 +1,5 @@
+.. _azure_key_vault_feature:
+
 Azure Key Vault
 ===============
 

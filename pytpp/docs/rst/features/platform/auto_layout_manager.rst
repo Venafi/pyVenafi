@@ -1,3 +1,5 @@
+.. _auto_layout_manager_feature:
+
 Auto Layout Manager
 ===================
 

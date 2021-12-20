@@ -3,12 +3,15 @@
 Authentication
 ==============
 
-.. note::
-    Be sure to check out the :ref:`pytpp-requirements` to configure your API Application Integration in Aperture.
-    Only OAuth authentication is supported. Be sure to use the appropriate OAuth scope.
+
+.. _oauth_setup:
 
 Define The OAuth API Application Integration
 --------------------------------------------
+
+.. note::
+    Be sure to check out the :ref:`pytpp-requirements` to configure your API Application Integration in Aperture.
+    Only OAuth authentication is supported. Be sure to use the appropriate OAuth scope.
 
 Create your Application ID and OAuth scope definition in a separate file.
 
@@ -34,10 +37,11 @@ Create your Application ID and OAuth scope definition in a separate file.
     )
 
     proxies = {
-        'http':
+        'http': 'http://10.10.1.10:3128',
+        'https': 'http://10.10.1.10:1080'
     }
 
-Here are a few different ways to authenticate to TPP:
+.. _username_password_auth:
 
 Username/Password Authentication
 --------------------------------
@@ -51,7 +55,9 @@ Username/Password Authentication
         **my_oauth_application
     )
 
-Certiifcate Authentication
+.. _certificate_auth:
+
+Certificate Authentication
 --------------------------
 
 .. code-block:: python
@@ -64,6 +70,8 @@ Certiifcate Authentication
         key_file_path='/local/path/to/cert.key', **my_oauth_application
     )
 
+.. _reuse_oauth_token_auth:
+
 Reusing An OAuth Token
 ----------------------
 
@@ -75,6 +83,8 @@ Reusing An OAuth Token
     api = Authenticate(
         host='tppserver.mycompany.com', token='IpGB3icCfMn6YeyIvWu9tB==', **my_oauth_application
     )
+
+.. _proxy_auth:
 
 Using A Proxy Server
 --------------------
@@ -90,7 +100,7 @@ requests made with this object.
 
     api = Authenticate(
         host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$',
-        proxies={'http': 'http://10.10.1.10:3128', 'https': 'http://10.10.1.10:1080'},
+        proxies={'http': 'http://10.10.1.10:3128', 'https': 'https://10.10.1.10:1080'},
         **my_oauth_application
     )
 

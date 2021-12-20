@@ -1,3 +1,5 @@
+.. _pkcs11_feature:
+
 PKCS11
 ======
 

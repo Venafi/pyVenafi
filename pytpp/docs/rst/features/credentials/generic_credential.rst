@@ -1,3 +1,5 @@
+.. _generic_credential_feature:
+
 Generic Credential
 ==================
 

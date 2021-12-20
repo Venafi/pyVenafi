@@ -1,3 +1,5 @@
+.. _network_discovery_feature:
+
 Network Discovery
 =================
 

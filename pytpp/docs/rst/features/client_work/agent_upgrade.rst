@@ -1,3 +1,5 @@
+.. _agent_upgrade_feature:
+
 Agent Upgrade
 =============
 

@@ -1,6 +1,10 @@
 Discovery And Placement
 =======================
 
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+
 Managing Placement Rules
 ------------------------
 

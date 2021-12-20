@@ -1,3 +1,5 @@
+.. _amazon_aws_feature:
+
 Amazon AWS
 ==========
 

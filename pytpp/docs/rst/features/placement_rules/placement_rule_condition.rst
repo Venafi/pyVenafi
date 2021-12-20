@@ -1,3 +1,5 @@
+.. _placement_rule_condition_feature:
+
 Placement Rule Condition
 ========================
 

@@ -1,3 +1,5 @@
+.. _google_cloud_load_balancer_feature:
+
 Google Cloud Load Balancer
 ==========================
 

@@ -1,3 +1,5 @@
+.. _cloud_instance_monitor_feature:
+
 Cloud Instance Monitor
 ======================
 

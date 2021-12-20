@@ -1,3 +1,5 @@
+.. _oracle_iplanet_feature:
+
 Oracle iPlanet
 ==============
 

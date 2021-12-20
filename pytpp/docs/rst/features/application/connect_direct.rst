@@ -1,3 +1,5 @@
+.. _connect:direct_feature:
+
 Connect:Direct
 ==============
 

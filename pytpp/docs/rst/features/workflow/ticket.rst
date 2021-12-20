@@ -1,3 +1,5 @@
+.. _ticket_feature:
+
 Ticket
 ======
 

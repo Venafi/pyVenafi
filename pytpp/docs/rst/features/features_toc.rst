@@ -1,5 +1,7 @@
 .. _features:
 
+.. _features_feature_list:
+
 Features
 ========
 

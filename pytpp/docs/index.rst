@@ -47,4 +47,5 @@ Install using ``pip install pytpp``.
 
     rst/usage
     rst/usage/examples
+    rst/others/attribute_values
     rst/api_reference

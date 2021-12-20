@@ -1,3 +1,5 @@
+.. _ssh_remediation_feature:
+
 SSH Remediation
 ===============
 

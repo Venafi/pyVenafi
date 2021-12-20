@@ -3,33 +3,17 @@
 Certificate Authority
 =====================
 
-The certificate authority feature is still under development and further authority types will be implemented as needed.
+.. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
-Creating a certificate authority
---------------------------------
-
-Make sure you are authenticated, see: :ref:`authentication`
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-     msca = features.certificate_authority.msca.create(
-        name='name_of_msca',
-        parent_folder_dn='dn_to_parent_folder',
-        hostname='dns_or_ip_address',
-        service_name='ca_service_name,
-        template='ca_template_to_use',
-        credential_dn='dn_for_credentials_to_msca'
-    )
-
-Supported certificate authority types
+Supported Certificate Authority Types
 -------------------------------------
 
-Currently, the features API supports these types of certificate authorities: msca, self_signed and adaptable.
+The certificate authority feature is still under development and further Certificate Authority types will be implemented
+as needed. See :ref:`certificate_authorities_feature_list` for a list of supported Certificate Authority types.
+
+Creating And Deleting A Certificate Authority
+---------------------------------------------
 
 .. code-block:: python
 
@@ -38,32 +22,20 @@ Currently, the features API supports these types of certificate authorities: msc
     api = Authenticate(...)
     features = Features(api)
 
-    features.certificate_authority.msca.create(...)
-    features.certificate_authority.self_signed.create(...)
-    features.certificate_authority.adaptable.create(...)
-
-Deleting a certificate authority
---------------------------------
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    msca = features.certificate_authority.msca.create(
-        name='name_of_msca',
-        parent_folder_dn='dn_to_parent_folder',
-        hostname='dns_or_ip_address',
-        service_name='ca_service_name,
-        template='ca_template_to_use',
-        credential_dn='dn_for_credentials_to_msca'
+    # Create the CA.
+     msca = features.certificate_authority.msca.create(
+        name='Awesome MSCA',
+        parent_folder=r'\VED\Policy\Administration\CAs',
+        hostname='awesomeca.my-company.com',
+        service_name='AwesomeCA',
+        template='AwesomeTemplate',
+        credential=r'\VED\Policy\Administration\Credentials\Awesome MSCA'
     )
 
+    # Delete the CA.
     features.certificate_authority.msca.delete(certificate_authority=msca)
 
-Getting a certificate authority
+Getting A Certificate Authority
 -------------------------------
 
 .. code-block:: python
@@ -83,4 +55,3 @@ Getting a certificate authority
         certificate_authority_dn='\\VED\\Policy\\Administration\\Certificate Authorities\\example_msca',
         raise_error_if_not_exists=False
     )
-

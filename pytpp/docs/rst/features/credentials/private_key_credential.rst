@@ -1,3 +1,5 @@
+.. _private_key_credential_feature:
+
 Private Key Credential
 ======================
 

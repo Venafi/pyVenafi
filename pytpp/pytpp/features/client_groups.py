@@ -14,19 +14,20 @@ class ClientGroups(FeatureBase):
         self._group_base_dn = r'\VED\Clients\Groups'
         self._work_base_dn = r'\VED\Clients\Work'
 
-    def assign_work(self, group: Union['Config.Object', str], work_name: str):
+    def assign_work(self, group: Union['Config.Object', str], work: Union['Config.Object', str]):
         """
         Assigns work to the client group
 
         Args:
-            group: The Config.Object or name of the client group.
-            work_name: The name of the work
+            group: The :ref:`config_object` or name of the client group.
+            work: The :ref:`config_object` or name of the work.
         """
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         response = self._api.websdk.Config.Write.post(
             object_dn=group_dn,
             attribute_data=self._name_value_list({
-                ClientGroupAttributes.assigned_work: [fr'{self._work_base_dn}\{work_name}']
+                ClientGroupAttributes.assigned_work: [work_dn]
             })
         )
 
@@ -127,22 +128,23 @@ class ClientGroups(FeatureBase):
             )
         return response.objects
 
-    def remove_work(self, group: Union['Config.Object', str], work_name: str):
+    def remove_work(self, group: Union['Config.Object', str], work: Union['Config.Object', str]):
         """
         Removes work from a client group
 
         Args:
-            group: The Config.Object or name of the client group.
-            work_name: The name of the work to be removed.
+            group: The :ref:`config_object` or name of the client group.
+            work: The :ref:`config_object` or name of the work to be removed.
 
         Returns:
-            A list of config object representing the client groups.
+            A list of :ref:`config_object`.
         """
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
+        work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         response = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=group_dn,
             attribute_name=ClientGroupAttributes.assigned_work,
-            value=fr'{self._work_base_dn}\{work_name}'
+            value=work_dn
         )
         if response.result.code != 1:
             raise InvalidResultCode(

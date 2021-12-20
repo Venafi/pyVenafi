@@ -1,3 +1,5 @@
+.. _username/password_credential_feature:
+
 Username/Password Credential
 ============================
 

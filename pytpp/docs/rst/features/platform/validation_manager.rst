@@ -1,3 +1,5 @@
+.. _validation_manager_feature:
+
 Validation Manager
 ==================
 

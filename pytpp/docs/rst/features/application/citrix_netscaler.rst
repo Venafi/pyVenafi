@@ -1,3 +1,5 @@
+.. _citrix_netscaler_feature:
+
 Citrix NetScaler
 ================
 

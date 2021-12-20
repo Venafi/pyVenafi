@@ -2,6 +2,9 @@ Workflows And Tickets
 =====================
 
 .. note::
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
+.. note::
     Refer to :ref:`applying_workflows` for applying workflows.
 
 Create And Apply A Standard Workflow

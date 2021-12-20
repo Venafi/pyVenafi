@@ -2,8 +2,10 @@
 
 Identity
 =============
+
 .. note::
-    Check out :ref:`authentication` for instructions on how to authenticate and have access to the required features.
+    Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
+
 
 Here are some examples of what kinds of operations can be done at the group and user level.
 

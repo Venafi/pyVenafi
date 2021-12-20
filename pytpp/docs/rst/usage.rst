@@ -5,64 +5,15 @@ Authentication
 --------------
 
 .. note::
-    Be sure to check out the :ref:`pytpp-requirements` to configure your API Application Integration in Aperture.
-    Only OAuth authentication is supported. Be sure to use the appropriate OAuth scope.
+    Be sure to check out the :ref:`pytpp-requirements` and :ref:`oauth_setup` to configure your API Application
+    Integration in Aperture. Only OAuth authentication is supported. Be sure to use the appropriate OAuth scope.
 
 Here are a few different ways to authenticate to TPP:
 
-.. rubric:: Username/Password Authentication
-.. code-block:: python
-
-    from pytpp import Authenticate, Scope
-
-    scope = Scope()\
-        .certificate(approve=True, delete=True, discover=True, manage=True, revoke=True, read=True)\
-        .configuration(delete=True, read=True)
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope=scope
-    )
-
-.. rubric:: Certiifcate Authentication
-.. code-block:: python
-
-    from pytpp import Authenticate, Scope
-
-    scope = Scope()\
-        .certificate(approve=True, delete=True, discover=True, manage=True, revoke=True, read=True)\
-        .configuration(delete=True, read=True)
-    api = Authenticate(
-        host='tppserver.mycompany.com', certificate_path='/local/path/to/cert.crt',
-        key_file_path='/local/path/to/cert.key', application_id='pytpp', scope=scope
-    )
-
-.. rubric:: Reusing An OAuth Token
-.. code-block:: python
-
-    from pytpp import Authenticate, Scope
-
-    scope = Scope()\
-        .certificate(approve=True, delete=True, discover=True, manage=True, revoke=True, read=True)\
-        .configuration(delete=True, read=True)
-    api = Authenticate(
-        host='tppserver.mycompany.com', token='IpGB3icCfMn6YeyIvWu9tB==', application_id='pytpp',
-        scope=scope
-    )
-
-.. rubric:: Using A Proxy Server
-
-|Product| uses the |Python Requests Library| to make REST API requests.
-The proxies are submitted to `Authenticate` as a dictionary of protocols to URL endpoints and are used for all API
-requests made with this object.
-
-.. code-block:: python
-
-    from pytpp import Authenticate
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope=scope, proxies={'http': 'http://10.10.1.10:3128', 'https': 'http://10.10.1.10:1080'}
-    )
+    * :ref:`username_password_auth`
+    * :ref:`certificate_auth`
+    * :ref:`reuse_oauth_token_auth`
+    * :ref:`proxy_auth`
 
 The API Layer
 -------------
@@ -128,7 +79,7 @@ Note that the response body returned by TPP is also serialized to a Python objec
 .. code-block::
 
     Given: POST Config/IsValid -> {"Object": {"DN": "...", ...}}
-    Then: Access the DN -> ``response.object.dn``
+    Then: Access the DN -> response.object.dn
 
 The Features Layer
 ------------------
@@ -178,8 +129,8 @@ jobs and managing permissions.
     features_certificate = features.certificate.create(
         name='my-site.com', parent_folder=r'\VED\Policy\Certificates',
         description="Description Here.",
-        contacts=['local:{bc628602-36fc-4116-a0b4-2a3d5e92c776}'],
-        approvers=['local:{bc628602-36fc-4116-a0b4-2a3d5e92c776}'],
+        contacts=['local:user123'],
+        approvers=['local:user123'],
         management_type=AttributeValues.Certificate.ManagementType.enrollment,
         service_generated_csr=True,
         generate_key_on_application=False,
@@ -199,11 +150,38 @@ jobs and managing permissions.
         renewal_window=30
     )
 
+Common Terminology
+------------------
+
+.. _dn:
+.. rubric:: Distinguished Name (DN)
+
+A **Distinguished Name (DN)** is the path to an object relative to ``\VED``, the root of the tree.
+Policies are most commonly found under ``\VED\Policy`` and because that is so the Features layer can
+interpret paths relative to *\VED\Policy*. For example:
+
+``\VED\Policy\Certificates = \Policy\Certificates``.
+
+.. _guid:
+.. rubric:: GUID
+
+A **GUID** typically refers to the GUID of the object referenced. This usually isn't as readily used
+as a DN, but is commonly used in the WebSDK API and is part of the Config Object described below.
+
+.. _prefixed_name:
+.. rubric:: Prefixed Name
+
+A **Prefixed Name** refers to an identity's friendly name prepended by its identity provider's prefix
+stored in TPP. For example, for user *user123* the prefixed universal for the
+
+    * local identity is ``local:user123``.
+    * one of the active directory identities is ``AD+MyAd:user123``.
+
 Config And Identity Objects
 ---------------------------
 
 .. _config_object:
-.. rubric:: Config Objects
+.. rubric:: Config Object
 
 Config Objects are the basic definition of every object that can be created in TPP. Every feature with a
 ``create()``, ``get()``, or ``update()`` method will return a ``Config.Object``, which is defined below.
@@ -224,7 +202,7 @@ Config Objects are the basic definition of every object that can be created in T
     "type_name", "The class name of the object."
 
 Many features have parameters typed as ``Union[Config.Object, str]``. In these instances the parameter is
-requiring a ``Config.Object`` or a DN value.
+requiring a ``Config.Object`` or a :ref:`dn` value.
 
 **Example Usage**
 
@@ -253,7 +231,7 @@ requiring a ``Config.Object`` or a DN value.
     )
 
 .. _identity_object:
-.. rubric:: Identity Objects
+.. rubric:: Identity Object
 
 The ``Identity`` object is much like the *Confg.Object* except that it applies to users and groups, or identities.
 All identities in TPP share common properties that make up this class.
@@ -274,7 +252,7 @@ All identities in TPP share common properties that make up this class.
     "universal", "The Universal Unique ID that identifies a user or group identity."
 
 Many features have parameters typed as ``Union[Identity.Identity, str]``. In these instances the parameter is
-requiring an ``Identity.Identity`` or a prefixed name value.
+requiring an ``Identity.Identity`` or a :ref:`prefixed_name` value.
 
 **Example Usage**
 

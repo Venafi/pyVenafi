@@ -1,3 +1,5 @@
+.. _certificate_manager_feature:
+
 Certificate Manager
 ===================
 

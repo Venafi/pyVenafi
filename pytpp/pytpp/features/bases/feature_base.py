@@ -2,7 +2,7 @@ import time
 import os
 import re
 from typing import TYPE_CHECKING
-from pytpp.features.definitions.exceptions import FeatureException, InvalidResultCode, ObjectDoesNotExist
+from pytpp.features.definitions.exceptions import InvalidResultCode, ObjectDoesNotExist
 from pytpp.properties.response_objects.config import Config
 from pytpp.properties.response_objects.identity import Identity
 from pytpp.tools.logger import logger, LogTags
@@ -35,15 +35,15 @@ class FeatureBase:
             attributes = self._name_value_list(attributes=attributes, keep_list_values=keep_list_values)
 
         dn = f'{parent_folder_dn}\\{name}'
-        ca = self._api.websdk.Config.Create.post(object_dn=dn, class_name=str(config_class),
+        response = self._api.websdk.Config.Create.post(object_dn=dn, class_name=str(config_class),
                                                  name_attribute_list=attributes or [])
-        result = ca.result
+        result = response.result
         if result.code != 1:
             if result.code == 401 and get_if_already_exists:
                 return self._get_config_object(object_dn=dn)
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-        return ca.object
+        return response.object
 
     def _config_delete(self, object_dn, recursive: bool = False):
         result = self._api.websdk.Config.Delete.post(object_dn=object_dn, recursive=recursive).result
