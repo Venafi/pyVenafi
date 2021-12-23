@@ -1,9 +1,9 @@
-.. _reporting_feature:
+.. _platforms_feature:
 
-Reporting
+Platforms
 =========
 
-.. autoclass:: pytpp.features.platform.Reporting
+.. autoclass:: pytpp.features.platforms.Platforms
    :members:
    :undoc-members:
    :show-inheritance:

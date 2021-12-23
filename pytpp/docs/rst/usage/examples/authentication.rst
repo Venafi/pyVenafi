@@ -3,11 +3,10 @@
 Authentication
 ==============
 
-
 .. _oauth_setup:
 
-Define The OAuth API Application Integration
---------------------------------------------
+Defining The OAuth API Application Integration
+----------------------------------------------
 
 .. note::
     Be sure to check out the :ref:`pytpp-requirements` to configure your API Application Integration in Aperture.
@@ -19,7 +18,6 @@ Create your Application ID and OAuth scope definition in a separate file.
     :caption: tpp_authentication.py
 
     from pytpp import Scope
-
 
     # Only set the scope needed for this application. This example sets all to True just as an
     # example of the possible options.
@@ -51,7 +49,7 @@ Username/Password Authentication
     from pytpp import Authenticate
 
     api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$',
+        host='tppserver.mycompany.com', username='|LocalUser|', password='passw0rd!@#$',
         **my_oauth_application
     )
 
@@ -99,8 +97,7 @@ requests made with this object.
     from pytpp import Authenticate
 
     api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$',
+        host='tppserver.mycompany.com', username='|LocalUser|', password='passw0rd!@#$',
         proxies={'http': 'http://10.10.1.10:3128', 'https': 'https://10.10.1.10:1080'},
         **my_oauth_application
     )
-

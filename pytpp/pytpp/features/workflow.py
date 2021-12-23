@@ -15,7 +15,7 @@ class _WorkflowBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, workflow: Union['Config.Object', str]):
+    def delete(self, workflow: 'Union[Config.Object, str]'):
         """
         Deletes a workflow.
 
@@ -355,7 +355,7 @@ class Ticket(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
-    def create(self, obj: Union['Config.Object', str], workflow: Union['Config.Object', str],
+    def create(self, obj: 'Union[Config.Object, str]', workflow: 'Union[Config.Object, str]',
                approvers: Union['List[Identity.Identity]', List[str]], reason: Union[RC, int, str],
                user_data: str = None):
         """
@@ -425,7 +425,7 @@ class Ticket(FeatureBase):
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def get(self, obj: Union['Config.Object', str] = None, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
+    def get(self, obj: 'Union[Config.Object, str]' = None, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
         """
         Gets all tickets associated to ``obj``. If the minimum expected number of tickets do not
         appear on the ``obj``, then a warning is logged and whatever was found is returned and no

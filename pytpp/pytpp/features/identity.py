@@ -1,3 +1,4 @@
+from pytpp.attributes.user import UserAttributes
 from pytpp.properties.config import IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
@@ -93,7 +94,7 @@ class _IdentityBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_memberships(self, identity: Union['Identity.Identity', str]):
+    def get_memberships(self, identity: 'Union[Identity.Identity, str]'):
         """
         Finds all groups to which a user or group belongs.
 
@@ -114,7 +115,7 @@ class _IdentityBase(FeatureBase):
 
         return memberships
 
-    def read_attribute(self, identity: Union['Identity.Identity', str], attribute_name: str):
+    def read_attribute(self, identity: 'Union[Identity.Identity, str]', attribute_name: str):
         """
         Returns the value associated to the given ``attribute_name``.
 
@@ -138,8 +139,8 @@ class User(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, password: str, email_address: str, add_to_everyone_group: bool = True,
-               get_if_already_exists: bool = True):
+    def create(self, name: str, password: str, email_address: str, first_name: str = None, last_name: str = None,
+               add_to_everyone_group: bool = True, get_if_already_exists: bool = True):
         """
         Creates a local user in TPP with the given ``password`` and ``email_address``. By default, the
         user is added to the Everyone group in the Local Identity Provider.
@@ -148,6 +149,8 @@ class User(_IdentityBase):
             name: Name of the user. The `"local:"` prefix is not required.
             password: Password.
             email_address: E-mail address. TPP requires it.
+            first_name: First name of the user.
+            last_name: Last name of the user.
             add_to_everyone_group: If ``True``, the user to the Local Identity group "Everyone".
             get_if_already_exists: If the identity already exists, just return it as is.
 
@@ -155,31 +158,28 @@ class User(_IdentityBase):
             Identity object of the user.
         """
         attributes = {
-            'Internet Email Address': email_address
+            UserAttributes.internet_email_address: email_address,
+            UserAttributes.given_name: first_name,
+            UserAttributes.surname: last_name
         }
-        if get_if_already_exists:
-            if self.exists(prefixed_name=f'local:{name}'):
-                return self.get(prefixed_name=f'local:{name}')
         user = self._config_create(
             name=name,
             parent_folder_dn=self._identity_dn,
             config_class=Classes.user,
             attributes=attributes,
-            get_if_already_exists=False
+            get_if_already_exists=get_if_already_exists
         )
-        user = self.get(prefixed_name=f'local:{user.name}')
-        self.set_password(user=user, new_password=password)
+        user = self.set_password(user=f'local:{user.name}', new_password=password)
 
         if add_to_everyone_group:
-            everyone_group = self.get(prefixed_name='local:Everyone')
             response = self._api.websdk.Identity.AddGroupMembers.put(
-                group=self._identity_dict(prefixed_name=everyone_group.prefixed_name),
+                group=self._identity_dict(prefixed_name='local:Everyone'),
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
             )
             response.assert_valid_response()
         return user
 
-    def delete(self, user: Union['Identity.Identity', str]):
+    def delete(self, user: 'Union[Identity.Identity, str]'):
         """
         Deletes the user from the Local Identity Provider. The user is removed from all local groups.
 
@@ -226,7 +226,7 @@ class User(_IdentityBase):
             is_user=True
         )
 
-    def set_password(self, user: Union['Identity.Identity', str], new_password: str, old_password: str = None):
+    def set_password(self, user: 'Union[Identity.Identity, str]', new_password: str, old_password: str = None):
         """
         Sets the ``new_password`` for a local user. If the user did not have a previous password, then
         the ``old_password`` is not required.
@@ -253,7 +253,7 @@ class Group(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def add_members(self, group: Union['Identity.Identity', str], members: 'List[Union[Identity.Identity, str]]'):
+    def add_members(self, group: 'Union[Identity.Identity, str]', members: 'List[Union[Identity.Identity, str]]'):
         """
         Adds members to a local group.
 
@@ -320,7 +320,7 @@ class Group(_IdentityBase):
         group = result.identity
         return group
 
-    def delete(self, group: Union['Identity.Identity', str]):
+    def delete(self, group: 'Union[Identity.Identity, str]'):
         """
         Deletes a group, but not its members. All group permissions and privileges are deleted.
 
@@ -364,7 +364,7 @@ class Group(_IdentityBase):
             is_user=False
         )
 
-    def get_members(self, group: Union['Identity.Identity', str], resolve_nested: bool = False):
+    def get_members(self, group: 'Union[Identity.Identity, str]', resolve_nested: bool = False):
         """
         Finds all members of a group. If ``resolve_nested`` is ``True``, then members of groups within this group, etc.,
         are included in the result.
@@ -384,7 +384,7 @@ class Group(_IdentityBase):
 
         return result.identities
 
-    def remove_members(self, group: Union['Identity.Identity', str], members: 'List[Union[Identity.Identity, str]]'):
+    def remove_members(self, group: 'Union[Identity.Identity, str]', members: 'List[Union[Identity.Identity, str]]'):
         """
         Removes members from a local group.
 
@@ -409,7 +409,7 @@ class Group(_IdentityBase):
 
         return result.members
 
-    def rename(self, group: Union['Identity.Identity', str], new_group_name: str):
+    def rename(self, group: 'Union[Identity.Identity, str]', new_group_name: str):
         """
         Renames a local group. The `"local:"` prefix is not required.
 

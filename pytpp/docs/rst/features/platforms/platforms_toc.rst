@@ -1,7 +1,7 @@
-.. _platform_feature_list:
+.. _platforms_feature_list:
 
-Platform
-========
+Platforms
+=========
 
 .. toctree::
     :maxdepth: 1
@@ -16,6 +16,7 @@ Platform
     discovery_manager
     monitor
     onboard_discovery_manager
+    platforms
     reporting
     ssh_manager
     trustnet_manager

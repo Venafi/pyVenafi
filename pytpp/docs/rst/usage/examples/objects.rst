@@ -1,17 +1,19 @@
+.. _object_usage:
+
 Object Management
 =================
 
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
+Getting & Validating Config Objects
+-----------------------------------
+
 .. note::
-    In all of the examples having ``obj`` parameters a DN may be substituted by a ``Config.Object`` and
-    vice versa.
+    Most features have their own ``get()`` method. Using ``features.objects.get()`` is simply another way
+    of getting the :ref:`config_object` of an object's :ref:`dn`.
 
-Getting And Validating Config Objects
--------------------------------------
-
-.. rubric:: Getting Config Objects By DN Or GUID
+.. rubric:: Getting Config Objects By DN
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -19,11 +21,9 @@ Getting And Validating Config Objects
     api = Authenticate(...)
     features = Features(api)
 
-    certificate = features.objects.get(object_dn=r'\VED\Policy\Certificates\my-cert.com')
+    #### GET AN OBJECT ####
+    certificate = features.objects.get(object_dn=r'|CertDn|\|CertName|')
     print(certificate.dn)
-
-    same_certificate = features.objects.get(object_guid=certificate.guid)
-    print(certificate.guid == same_certificate.guid)  # prints "True"
 
 .. rubric:: Handling Objects That May Not Exist
 .. code-block:: python
@@ -34,25 +34,25 @@ Getting And Validating Config Objects
     api = Authenticate(...)
     features = Features(api)
 
-    certificate_dn = r'\VED\Policy\Certificates\my-cert.com'
+    credential_dn = r'|CredDn|\|CredName|'
 
-    # Using get() and try/except
+    #### VALIDATE EXISTENCE WITH TRY/EXCEPT ####
     try:
-        certificate = features.objects.get(object_dn=certificate_dn)
+        credential = features.objects.get(object_dn=credential_dn)
     except ObjectDoesNotExist:
-        print(f'Cannot find {certificate_dn}.')
+        print(f'Cannot find {credential_dn}.')
 
-    # Using get() and suppressing the exception
-    certificate = features.objects.get(
-        object_dn=certificate_dn,
+    #### VALIDATE EXISTENCE USING DN PROPERTY ####
+    credential = features.objects.get(
+        object_dn=credential_dn,
         raise_error_if_not_exists=False  # The default is True
     )
-    if not certifiate.dn:
-        print(f'Cannot find {certificate_dn}.')
+    if not credential.dn:
+        print(f'Cannot find {credential_dn}.')
 
-    # Using exists() to validate the existence of a DN.
-    if not features.objects.exists(object_dn=certificate_dn):
-        print(f'Cannot find {certificate_dn}.')
+    #### VALIDATE EXISTENCE USING EXISTS() ####
+    if not features.objects.exists(object_dn=credential_dn):
+        print(f'Cannot find {credential_dn}.')
 
 .. _read_attributes:
 
@@ -62,7 +62,6 @@ Reading Attributes
 .. note::
     To read policy attributes for a particular class use :ref:`read_policy_attributes`.
 
-.. rubric:: Reading A Single Value
 .. code-block:: python
 
     from pytpp import Authenticate, Features, Attributes
@@ -70,21 +69,15 @@ Reading Attributes
     api = Authenticate(...)
     features = Features(api)
 
+    #### READ A SINGLE ATTRIBUTE ####
     certiifcate_authority = features.objects.read(
-        obj=r'\VED\Policy\Certificates\my-cert.com',
+        obj=r'|CertDn|\|CertName|',
         attribute_name=Attributes.certificate.certificate_authority,
         include_policy_values=True  # If False, only the explicit attribute on this object is read.
     )
 
-.. rubric:: Reading All Values
-.. code-block:: python
-
-    from pytpp import Authenticate, Features, Attributes
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    attributes = features.objects.read_all(obj=r'\VED\Policy\Certificates\my-cert.com')
+    #### READ ALL ATTRIBUTES ####
+    attributes = features.objects.read_all(obj=r'|CertDn|\|CertName|')
     certificate_authority = [attr.values[0] for attr in attributes if attr.name == Attributes.certificate.certificate_authority]
 
 Writing Attributes
@@ -97,18 +90,17 @@ Writing Attributes
     Writing attributes will override the existing value(s) for that particular attribute. To append to a list of
     attributes that may already exist, first read those values and then append the new values.
 
-.. rubric:: Write An Attribute Value
 .. code-block:: python
 
-    from pytpp import Authenticate, Features, Attributes
+    from pytpp import Authenticate, Features, Attributes, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
 
     features.objects.write(
-        obj=r'\VED\Policy\Certificates\my-cert.com',
+        obj=r'|CertDn|\|CertName|',
         attributes={
-            Attributes.certificate.consumers: [r'\VED\Policy\Installations\MyDevice\MyApplication'],
+            Attributes.certificate.consumers: [r'|AppDn|\|AppName|'],
             Attributes.certificate.management_type: AttributeValues.Certificate.ManagementType.provisioning
         }
     )
@@ -116,9 +108,10 @@ Writing Attributes
 Waiting For Attribute Values
 ----------------------------
 
-Sometimes an operation is occurring that will create or update an attribute value on an object. For example, renewing a
-certificate will cause the *Stage* and *Status* attributes to populate. This is useful when you are expecting a value
-to be assigned to an attribute in some interval of time.
+.. note::
+    Sometimes an operation is occurring that will create or update an attribute value on an object. For example, renewing a
+    certificate will cause the *Stage* and *Status* attributes to populate. This is useful when you are expecting a value
+    to be assigned to an attribute in some interval of time.
 
 .. code-block:: python
 
@@ -131,7 +124,7 @@ to be assigned to an attribute in some interval of time.
 
     # Well, there is a certificate feature for this, but this is how it does it!
     features.objects.wait_for(
-        obj=r'\VED\Policy\Certificates\my-cert.com',
+        obj=r'|CertDn|\|CertName|',
         attribute_name=Attributes.certificate.stage,
         attribute_value='500'
     )
@@ -148,6 +141,6 @@ Renaming Objects
 
     # This is used for renaming and/or moving objects.
     features.objects.rename(
-        obj=r'\VED\Policy\Certificates\my-cert.com',
-        new_object_dn=r'\VED\Policy\Certificates\SomeNewFolder\my-cert.com'
+        obj=r'|CertDn|\|CertName|',
+        new_object_dn=obj=r'|CertDn|\|FolderName|\|CertName|',
     )

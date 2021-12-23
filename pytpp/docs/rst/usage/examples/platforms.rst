@@ -1,4 +1,4 @@
-.. _platforms:
+.. _platform_usage:
 
 Platforms
 =========
@@ -6,12 +6,13 @@ Platforms
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
+Platform Types
+--------------
 
-Updating Platforms
-------------------
-Make sure you are authenticated, see: :ref:`authentication`
+Refer to :ref:`platforms_feature_list` for the available platform feature types.
 
-This example demonstrates how to update the platform attributes for the discovery manager platform on the EXAMPLE_TPP_ENGINE_1 and EXAMPLE_TPP_ENGINE_2 engines.
+Updating Platform Compmonents
+-----------------------------
 
 .. code-block:: python
 
@@ -20,41 +21,24 @@ This example demonstrates how to update the platform attributes for the discover
     api = Authenticate(...)
     features = Features(api)
 
+    #### UPDATE DISCOVERY MANAGER ON SPECIFIC ENGINES ####
     features.platforms.discovery_manager.update_engines(
+        engine_names=['|EngineName|-1', '|EngineName|-2'],
         attributes={
             Attributes.platforms.discovery_manager.connection_timeout : ["1"],
             Attributes.platforms.engines.log_debug : ["1"]
         },
-        engine_names=[
-            'EXAMPLE_TPP_ENGINE_1',
-            'EXAMPLE_TPP_ENGINE_2'
-        ]
     )
 
-.. note::
-    There are many different platform types, discovery_manager is used in this example.
-
-Platform Types
---------------
+Getting The Platforms Root
+--------------------------
 
 .. code-block:: python
 
-    from pytpp import Authenticate, Features
+    from pytpp import Attributes, Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
 
-    features.platforms.auto_layout_manager.update_engines(...)
-    features.platforms.bulk_provisioning_manager.update_engines(...)
-    features.platforms.ca_import_manager.update_engines(...)
-    features.platforms.certificate_manager.update_engines(...)
-    features.platforms.certificate_pre_enrollment.update_engines(...)
-    features.platforms.certificate_revocation.update_engines(...)
-    features.platforms.cloud_instance_monitor.update_engines(...)
-    features.platforms.discovery_manager.update_engines(...)
-    features.platforms.monitor.update_engines(...)
-    features.platforms.onboard_discovery_manager.update_engines(...)
-    features.platforms.reporting.update_engines(...)
-    features.platforms.ssh_manager.update_engines(...)
-    features.platforms.trustnet_manager.update_engines(...)
-    features.platforms.validation_manager.update_engines(...)
+    #### GET PLATFORM ROOT ####
+    platforms = features.platforms.get()

@@ -1,3 +1,5 @@
+.. _workflow_usage:
+
 Workflows And Tickets
 =====================
 
@@ -7,8 +9,8 @@ Workflows And Tickets
 .. note::
     Refer to :ref:`applying_workflows` for applying workflows.
 
-Create And Apply A Standard Workflow
-------------------------------------
+Creating, Applying, & Deleting A Standard Workflow
+--------------------------------------------------
 
 .. code-block:: python
 
@@ -17,26 +19,27 @@ Create And Apply A Standard Workflow
     api = Authenticate(...)
     features = Features(api)
 
-    # Create the workflow...
+    #### CREATE AND APPLY ####
     workflow = features.workflow.standard.create(
-        name='Stage 300 Worfklow',
-        parent_folder=r'\VED\Policy\Administration\Worfkflows',
+        name='|WfName|',
+        parent_folder=r'|WfDn|',
         stage=300,
         injection_command="/bin/bash /run/something.sh",
         application_class_name=Attributes.application.apache.__config_class__,
-        approvers=['local:approver1', 'local:approver2'],
+        approvers=['|LocalUser|', '|DomainUser|'],
         macro='$Config[$Config[$WorkflowtargetDN$,"Owner Object"]$,"Contact"|"Approver"]$',
         reason_code=100
     )
-
-    # and apply the workflow to a folder.
     features.folder.apply_workflow(
-        folder=r'\VED\Policy\Certificates\MyTeam',
+        folder=r'|CertDn|',
         workflow=workflow
     )
 
-Create And Apply An Adaptable Workflow
---------------------------------------
+    #### DELETE ####
+    features.workflow.standard.delete(workflow=r'|WfDn|\|WfName|')
+
+Creating, Applying, & Deleting An Adaptable Workflow
+----------------------------------------------------
 
 .. code-block:: python
 
@@ -49,28 +52,33 @@ Create And Apply An Adaptable Workflow
     with open('SuperAwesomeScript.ps1', 'rb') as f:
         script_content_in_bytes = f.read()
 
-    # Create the workflow...
+    #### CREATE ####
     workflow = features.workflow.adaptable.create(
-        name='Stage 300 Worfklow',
-        parent_folder=r'\VED\Policy\Administration\Worfkflows',
+        name='|WfName|',
+        parent_folder=r'|WfDn|',
         stage=300,
-        approvers=['local:approver1', 'local:approver2'],
+        approvers=['|LocalUser|', '|DomainUser|'],
         reason_code=100,
         powershell_script_name='SuperAwesomeScript',  # Name of the script minus the extension.
         powershell_script_content=script_content_in_bytes,
         use_approvers_from_powershell_script=True
     )
 
-    # and apply the workflow to a folder.
+    #### APPLY ####
     features.folder.apply_workflow(
-        folder=r'\VED\Policy\Certificates\MyTeam',
+        folder=r'|CertDn|',
         workflow=workflow
     )
+
+    #### DELETE ####
+    features.workflow.adaptable.delete(workflow=workflow)
 
 Managing Workflow Tickets
 -------------------------
 
-.. rubric:: Create, Get, And Delete A Workflow Ticket
+Creating, Getting, & Deleting A Workflow Ticket
+***********************************************
+
 .. code-block:: python
 
     from pytpp import Authenticate, Features
@@ -78,25 +86,25 @@ Managing Workflow Tickets
     api = Authenticate(...)
     features = Features(api)
 
-    # Create the ticket.
+    #### CREATE ####
     features.workflow.ticket.create(
-        obj=r'\VED\Policy\Certificates\MyTeam\my-questionable-cert.com',
-        workflow=r'\VED\Policy\Administration\Workflows\Stage 0 Check',
-        approvers=['local:approver-1', 'local:approver-2'],
+        obj=r'|CertDn|\|CertName|',
+        workflow=r'|WfDn|\|WfName|',
+        approvers=['|LocalUser|', '|DomainUser|'],
         reason=42
     )
 
-    # Get the list of ticket names on the object.
+    #### GET ####
     # Multiple tickets can possibly exist on an object.
-    tickets = features.workflow.ticket.get(
-        obj=r'\VED\Policy\Certificates\MyTeam\my-questionable-cert.com',
-        expected_num_tickets=2  # Two or more tickets are expected to exist on this certificate.
-    )
+    tickets = features.workflow.ticket.get(obj=r'|CertDn|\|CertName|')
 
-    # Delete the ticket. This neither approves nor rejects the ticket.
+    #### DELETE ####
+    # This neither approves nor rejects the ticket.
     features.workflow.ticket.delete(ticket_name=ticket)
 
-.. rubric:: Get All Workflow Tickets Pending My Approval
+Getting All Workflow Tickets Pending My Approval
+************************************************
+
 .. code-block:: python
 
     from pytpp import Authenticate, Features, AttributeValues
@@ -115,7 +123,8 @@ Managing Workflow Tickets
     ]
 
 
-.. rubric:: Approving And Rejecting Workflow Tickets
+Approving And Rejecting Workflow Tickets
+****************************************
 
 .. code-block:: python
 
@@ -146,8 +155,8 @@ Managing Workflow Tickets
                     explanation="This certificate does not meet the key size requirements.",
                 )
 
-Creating and Deleting Reason Codes
-----------------------------------
+Creating & Deleting Reason Codes
+--------------------------------
 
 .. code-block:: python
 
@@ -156,15 +165,15 @@ Creating and Deleting Reason Codes
     api = Authenticate(...)
     features = Features(api)
 
-    # Create the reason code.
+    #### CREATE ####
     reason_code = features.workflow.reason_code.create(
         code=42,
         description='The answer to everything.',
-        name='SuperAwesomeReasonCode'
+        name='Awesome Reason Code'
     )
 
-    # Delete the reason code.
+    #### DELETE ####
     features.workflow.reason_code.delete(
         code=42,
-        name='SuperAwesomeReasonCode'
+        name='Awesome Reason Code'
     )

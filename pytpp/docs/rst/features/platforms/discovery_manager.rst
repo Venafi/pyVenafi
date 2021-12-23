@@ -3,7 +3,7 @@
 Discovery Manager
 =================
 
-.. autoclass:: pytpp.features.platform.DiscoveryManager
+.. autoclass:: pytpp.features.platforms.DiscoveryManager
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,20 +1,20 @@
-from typing import Union
-from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue
 from pytpp.properties.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
+from typing import Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.tools.vtypes import Config
 
 
-@feature('Client Groups')
-class ClientGroups(FeatureBase):
+class _ClientGroupBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
         self._group_base_dn = r'\VED\Clients\Groups'
         self._work_base_dn = r'\VED\Clients\Work'
 
-    def assign_work(self, group: Union['Config.Object', str], work: Union['Config.Object', str]):
+    def assign_work(self, group: 'Union[Config.Object, str]', work: 'Union[Config.Object, str]'):
         """
         Assigns work to the client group
 
@@ -35,56 +35,7 @@ class ClientGroups(FeatureBase):
             raise InvalidResultCode(code=response.result.code,
                                                  code_description=response.result.credential_result)
 
-    def create(self, name: str, agent_type: str = ClientGroupsAttributeValues.AgentType.agentless,
-               get_if_already_exists: bool = True):
-        """
-        Creates a client group
-
-        Args:
-            name: The name of the client group.
-            agent_type: The type of the client group
-            get_if_already_exists: If the objects already exists, just return it as is.
-
-        Returns:
-            Config object representing the client group.
-        """
-        if agent_type == ClientGroupsAttributeValues.AgentType.agent_installed:
-            attributes = {
-                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agent_installed,
-                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agent_installed
-            }
-        elif agent_type == ClientGroupsAttributeValues.AgentType.agentless:
-            attributes = {
-                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agentless,
-                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agentless
-            }
-        elif agent_type == ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates:
-            attributes = {
-                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.deploy_user_and_device_certificates,
-                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.deploy_user_and_device_certificates
-            }
-        elif agent_type == ClientGroupsAttributeValues.AgentType.certificate_enrollment:
-            attributes = {
-                ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
-                ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.certificate_enrollment,
-                ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.certificate_enrollment
-            }
-        else:
-            raise UnexpectedValue(
-                f"Invalid input for parameter: 'agent_type', unknown value: {agent_type}")
-
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._group_base_dn,
-            config_class=ClientGroupAttributes.__config_class__,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
-
-    def delete(self, group: Union['Config.Object', str]):
+    def delete(self, group: 'Union[Config.Object, str]'):
         """
         Deletes a client group
 
@@ -128,7 +79,7 @@ class ClientGroups(FeatureBase):
             )
         return response.objects
 
-    def remove_work(self, group: Union['Config.Object', str], work: Union['Config.Object', str]):
+    def remove_work(self, group: 'Union[Config.Object, str]', work: 'Union[Config.Object, str]'):
         """
         Removes work from a client group
 
@@ -151,3 +102,88 @@ class ClientGroups(FeatureBase):
                 code=response.result.code,
                 code_description=response.result.credential_result
             )
+
+
+@feature('Agentless Group')
+class Agentless(_ClientGroupBase):
+    def create(self, name: str, get_if_already_exists: bool = True):
+        """
+        Creates an Agentless client group.
+
+        Args:
+            name: The name of the client group.
+            get_if_already_exists: If the objects already exists, just return it as is.
+
+        Returns:
+            Config object representing the client group.
+        """
+        attributes = {
+            ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+            ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.agentless,
+            ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agentless
+        }
+
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._group_base_dn,
+            config_class=ClientGroupAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
+
+
+@feature('EST Certificate Enrollment Group')
+class EstCertificateEnrollment(_ClientGroupBase):
+    def create(self, name: str, get_if_already_exists: bool = True):
+        """
+        Creates a "Certificate Enrollment Via EST Protocol" client group
+
+        Args:
+            name: The name of the client group.
+            get_if_already_exists: If the objects already exists, just return it as is.
+
+        Returns:
+            Config object representing the client group.
+        """
+        attributes = {
+            ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+            ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.est,
+            ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.est
+        }
+
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._group_base_dn,
+            config_class=ClientGroupAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
+
+
+@feature('Venafi Agent Group')
+class VenafiAgent(_ClientGroupBase):
+    def create(self, name: str, get_if_already_exists: bool = True):
+        """
+        Creates a Venafi Agent client group.
+
+        Args:
+            name: The name of the client group.
+            get_if_already_exists: If the objects already exists, just return it as is.
+
+        Returns:
+            Config object representing the client group.
+        """
+        attributes = {
+            ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
+            ClientGroupAttributes.agent_type: ClientGroupsAttributeValues.AgentType.venafi_agent,
+            ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.venafi_agent
+        }
+
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._group_base_dn,
+            config_class=ClientGroupAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
+

@@ -1,4 +1,4 @@
-.. _identity:
+.. _identity_usage:
 
 Identity
 =============
@@ -6,173 +6,186 @@ Identity
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
+.. note::
+    The |Websdk| does not allow for a group or user to be granted special rights such as master admin. These must be
+    set manually through the UI.
 
-Here are some examples of what kinds of operations can be done at the group and user level.
+Users
+-----
 
-Group Operations
-------------------
+Creating & Deleting Users
+*************************
 
-.. rubric:: Create a Group
 .. code-block:: python
 
     from pytpp import Features, Authenticate
 
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
+    api = Authenticate(...)
     features = Features(api=api)
 
+    #### CREATE ####
+    # Yep: this guy's name is Awesome Awesome.
+    user = features.identity.user.create(
+        name='|LocalUser|',
+        password='S0m3CrayZP@ssw0rd!',
+        email_address='|LocalUser|@awesome-domain.com',
+        first_name='Awesome',
+        last_name='Awesome'
+    )
+
+    #### DELETE ####
+    features.identity.user.delete(user=user)
+
+Changing User Passwords
+***********************
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### CHANGE PASSWORD ####
+    user = features.identity.user.set_password(
+        user='|LocalUser|',
+        new_password='IhateSecurity',
+        old_passsword='S0m3CrayZP@ssw0rd!'
+    )
+
+Searching Users
+***************
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### SEARCH MATCHING NAMES ####
+    matching_users = features.identity.user.find(
+        name='|LocalUser|',
+        limit=100
+    )
+    for user in matching_users:
+        print(f'Found a match: {user.name}')
+
+Getting Memberships
+*******************
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### GET USER MEMBERSHIPS ####
+    groups = features.identity.user.get_memberships(identity='|LocalUser|')
+    for group in groups:
+        print(f'I belong to {group.name}.')
+
+Groups
+------
+
+Creating & Deleting Groups
+**************************
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### CREATE ####
     group = features.identity.group.create(
-        name='my_group', member_prefixed_names=my_list_of_prefixed_usernames, get_if_already_exists=True
+        name='|LocalGroup|',
+        member_prefixed_names=['|LocalUser|-1', '|LocalUser|-2'],
+        get_if_already_exists=True
     )
-.. rubric:: Delete a Group
+
+    #### DELETE ####
+    features.identity.group.delete(group=group)
+
+Adding, Getting, & Removing Members
+***********************************
+
 .. code-block:: python
 
     from pytpp import Features, Authenticate
 
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
-    features.identity.group.delete(group=my_group)
-.. rubric:: Add a Member
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
+    api = Authenticate(...)
     features = Features(api=api)
 
+    #### ADD MEMBERS ####
     features.identity.group.add_members(
-        group=my_group, members_prefixed_names=list_of_my_users
+        group='|LocalGroup|',
+        member_prefixed_names=['|LocalUser|-1', '|LocalUser|-2'],
+        get_if_already_exists=True
     )
 
-.. rubric:: Find a Group
+    #### GET MEMBERS ####
+    group_members = features.identity.group.get_members(group='|LocalGroup|')
 
-This will allow you to search for a specific group name, but it will return a list of all groups that contain the name searched.
-
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
-    groups = features.identity.group.find(
-        name='group_name', limit=100, is_distribution_group=False, is_security_group=True
-    )
-.. rubric:: Get the Members of a Group
-
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
-    group_members = features.identity.group.get_members(group=my_group)
-.. rubric:: Remove Members from a Group
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
+    #### REMOVE MEMBERS ####
     features.identity.group.remove_members(
-        group=my_group,
-        member_prefixed_names=my_list_of_prefixed_usernames
-    )
-.. rubric:: Rename a Group
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
+        group='|LocalGroup|',
+        member_prefixed_names=['|LocalUser|-1'],  # Remove just these members.
     )
 
+Searching Users
+***************
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
     features = Features(api=api)
-    features.identity.group.rename(
-        group=my_group,
-        new_group_name='my_new_group_name'
+
+    #### SEARCH MATCHING NAMES ####
+    matching_groups = features.identity.group.find(
+        name='|LocalUser|',
+        is_security_group=True,
+        is_distribution_group=True,
+        limit = 100
     )
+    for group in matching_groups:
+        print(f'Found a match: {group.name}')
 
-User Operations
----------------
+Getting Memberships
+*******************
 
-.. rubric:: Create a User
 .. code-block:: python
 
     from pytpp import Features, Authenticate
 
-    api = Authenticate(
-            host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-            scope='my_scope'
-        )
-
+    api = Authenticate(...)
     features = Features(api=api)
 
-    my_user = features.identity.user.create(
-        name='my_username',
-        password='password',
-        email_address='myemail@venafi.com',
+    #### GET GROUP MEMBERSHIPS ####
+    groups = features.identity.group.get_memberships(identity='|LocalGroup|')
+    for group in groups:
+        print(f'I belong to {group.name}.')
+
+Renaming Groups
+***************
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    group = feature.identity.group.get(prefixed_name='|LocalGroup|')
+    print(f'Old name: {group.name}')
+
+    #### RENAME GROUP ####
+    group = features.identity.group.rename(
+        group=group,
+        new_group_name='|LocalGroup|-1'
     )
-.. rubric:: Delete a User
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-            host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-            scope='my_scope'
-        )
-
-    features = Features(api=api)
-    features.identity.user.delete(user=my_user)
-.. rubric:: Find a User
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-            host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-            scope='my_scope'
-        )
-
-    features = Features(api=api)
-    user = features.identity.user.find(name='my_username', limit = 100)
-
-.. rubric:: Change a Password
-
-This will set the password of the user. If the user did not have a previous password then you are not required to provide an old_password
-
-.. code-block:: python
-
-    from pytpp import Features, Authenticate
-
-    api = Authenticate(
-            host='tppserver.mycompany.com', username='username12', password='passw0rd!@#$', application_id='pytpp',
-            scope='my_scope'
-        )
-
-    features = Features(api=api)
-    user = features.identity.user.set_password(user=my_user, new_password='new_password', old_passsword='old_password')
+    print(f'New group name: {group.name}')

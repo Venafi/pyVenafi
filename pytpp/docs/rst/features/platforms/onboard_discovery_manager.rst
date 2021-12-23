@@ -3,7 +3,7 @@
 Onboard Discovery Manager
 =========================
 
-.. autoclass:: pytpp.features.platform.OnboardDiscoveryManager
+.. autoclass:: pytpp.features.platforms.OnboardDiscoveryManager
    :members:
    :undoc-members:
    :show-inheritance:

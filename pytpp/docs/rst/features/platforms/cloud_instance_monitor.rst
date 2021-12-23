@@ -3,7 +3,7 @@
 Cloud Instance Monitor
 ======================
 
-.. autoclass:: pytpp.features.platform.CloudInstanceMonitor
+.. autoclass:: pytpp.features.platforms.CloudInstanceMonitor
    :members:
    :undoc-members:
    :show-inheritance:

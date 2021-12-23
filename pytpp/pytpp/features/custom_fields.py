@@ -208,7 +208,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.items
 
-    def read(self, obj: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str]) -> EffectiveValues:
+    def read(self, obj: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str]) -> EffectiveValues:
         """
         Reads the actual value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
@@ -231,7 +231,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return EffectiveValues(locked=response.locked, values=response.values, policy_dn=response.policy_dn)
 
-    def read_policy(self, folder: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], class_name: str) -> PolicyValues:
+    def read_policy(self, folder: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str], class_name: str) -> PolicyValues:
         """
         Reads the policy value(s) of a custom field, accounting for policy settings. Value(s) may be None.
 
@@ -337,7 +337,7 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return self.get_item_details(custom_field=custom_field)
 
-    def write(self, obj: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], values: List,
+    def write(self, obj: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str], values: List,
               keep_existing: bool = True):
         """
         Writes a set of values to a custom field on the specified ``obj``. If ``keep_existing = False``,
@@ -358,7 +358,7 @@ class CustomField(FeatureBase):
         )
         self._validate_result_code(result=response.result)
 
-    def write_policy(self, folder: Union['Config.Object', str], custom_field: Union['CustomFields.Item', str], class_name: str,
+    def write_policy(self, folder: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str], class_name: str,
                      values: List, locked: bool = False):
         """
         Writes a set of values to a custom field on the specified ``folder``. The custom field MUST be policyable.

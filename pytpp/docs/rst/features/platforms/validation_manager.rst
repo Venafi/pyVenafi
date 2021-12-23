@@ -3,7 +3,7 @@
 Validation Manager
 ==================
 
-.. autoclass:: pytpp.features.platform.ValidationManager
+.. autoclass:: pytpp.features.platforms.ValidationManager
    :members:
    :undoc-members:
    :show-inheritance:

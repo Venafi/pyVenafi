@@ -3,7 +3,7 @@
 Auto Layout Manager
 ===================
 
-.. autoclass:: pytpp.features.platform.AutoLayoutManager
+.. autoclass:: pytpp.features.platforms.AutoLayoutManager
    :members:
    :undoc-members:
    :show-inheritance:

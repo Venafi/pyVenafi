@@ -3,7 +3,7 @@
 Monitor
 =======
 
-.. autoclass:: pytpp.features.platform.Monitor
+.. autoclass:: pytpp.features.platforms.Monitor
    :members:
    :undoc-members:
    :show-inheritance:

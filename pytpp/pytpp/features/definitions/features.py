@@ -1,6 +1,8 @@
 from pytpp.features.objects import Objects
 from pytpp.features.folder import Folder
-from pytpp.features.client_groups import ClientGroups
+from pytpp.features.client_groups import (
+    Agentless, EstCertificateEnrollment, VenafiAgent
+)
 from pytpp.features.client_work import (
     AgentConnectivity, AgentUpgrade, CertificateDevicePlacement, CertificateDiscovery,
     CertificateEnrollmentViaESTProtocol, CertificateInstallation, DynamicProvisioning,
@@ -22,11 +24,7 @@ from pytpp.features.credentials import (
 from pytpp.features.certificate_authorities import (MSCA, SelfSignedCA)
 from pytpp.features.identity import User, Group
 from pytpp.features.permissions import Permissions
-from pytpp.features.platform import (
-    AutoLayoutManager, BulkProvisioningManager, CAImportManager, CertificateManager, CertificatePreEnrollment,
-    CertificateRevocation, CloudInstanceMonitor, DiscoveryManager, Monitor, OnboardDiscoveryManager, Reporting,
-    SSHManager, TrustNetManager, ValidationManager
-)
+from pytpp.features.platforms import Platforms
 from pytpp.features.placement_rules import PlacementRules, PlacementRuleCondition
 from pytpp.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket
 from pytpp.features.custom_fields import CustomField
@@ -219,6 +217,30 @@ class _CertificateAuthority:
         return self._self_signed
 
 
+class _ClientGroup:
+    def __init__(self, api):
+        self._api = api
+
+        self._agentless = None
+        self._est_certificate_enrollment = None
+        self._venafi_agent = None
+
+    @property
+    def agentless(self) -> Agentless:
+        self._agentless = self._agentless or Agentless(self._api)
+        return self._agentless
+
+    @property
+    def est_certificate_enrollment(self) -> EstCertificateEnrollment:
+        self._est_certificate_enrollment = self._est_certificate_enrollment or PKCS11ApplicationGroup(self._api)
+        return self._est_certificate_enrollment
+
+    @property
+    def venafi_agent(self) -> VenafiAgent:
+        self._venafi_agent = self._venafi_agent or VenafiAgent(self._api)
+        return self._venafi_agent
+
+
 class _ClientWork:
     def __init__(self, api):
         self._api = api
@@ -383,96 +405,6 @@ class _Identity:
         return self._user
 
 
-class _Platforms:
-    def __init__(self, api):
-        self._api = api
-
-        self._auto_layout_manager = None
-        self._bulk_provisioning_manager = None
-        self._ca_import_manager = None
-        self._certificate_manager = None
-        self._certificate_pre_enrollment = None
-        self._certificate_revocation = None
-        self._cloud_instance_monitor = None
-        self._discovery_manager = None
-        self._monitor = None
-        self._onboard_discovery_manager = None
-        self._reporting = None
-        self._ssh_manager = None
-        self._trustnet_manager = None
-        self._validation_manager = None
-
-    @property
-    def auto_layout_manager(self) -> AutoLayoutManager:
-        self._auto_layout_manager = self._auto_layout_manager or AutoLayoutManager(self._api)
-        return self._auto_layout_manager
-
-    @property
-    def bulk_provisioning_manager(self) -> BulkProvisioningManager:
-        self._bulk_provisioning_manager = self._bulk_provisioning_manager or BulkProvisioningManager(self._api)
-        return self._bulk_provisioning_manager
-
-    @property
-    def ca_import_manager(self) -> CAImportManager:
-        self._ca_import_manager = self._ca_import_manager or CAImportManager(self._api)
-        return self._ca_import_manager
-
-    @property
-    def certificate_manager(self) -> CertificateManager:
-        self._certificate_manager = self._certificate_manager or CertificateManager(self._api)
-        return self._certificate_manager
-
-    @property
-    def certificate_pre_enrollment(self) -> CertificatePreEnrollment:
-        self._certificate_pre_enrollment = self._certificate_pre_enrollment or CertificatePreEnrollment(self._api)
-        return self._certificate_pre_enrollment
-
-    @property
-    def certificate_revocation(self) -> CertificateRevocation:
-        self._certificate_revocation = self._certificate_revocation or CertificateRevocation(self._api)
-        return self._certificate_revocation
-
-    @property
-    def cloud_instance_monitor(self) -> CloudInstanceMonitor:
-        self._cloud_instance_monitor = self._cloud_instance_monitor or CloudInstanceMonitor(self._api)
-        return self._cloud_instance_monitor
-
-    @property
-    def discovery_manager(self) -> DiscoveryManager:
-        self._discovery_manager = self._discovery_manager or DiscoveryManager(self._api)
-        return self._discovery_manager
-
-    @property
-    def monitor(self) -> Monitor:
-        self._monitor = self._monitor or Monitor(self._api)
-        return self._monitor
-
-    @property
-    def onboard_discovery_manager(self) -> OnboardDiscoveryManager:
-        self._onboard_discovery_manager = self._onboard_discovery_manager or OnboardDiscoveryManager(self._api)
-        return self._onboard_discovery_manager
-
-    @property
-    def reporting(self) -> Reporting:
-        self._reporting = self._reporting or Reporting(self._api)
-        return self._reporting
-
-    @property
-    def ssh_manager(self) -> SSHManager:
-        self._ssh_manager = self._ssh_manager or SSHManager(self._api)
-        return self._ssh_manager
-
-    @property
-    def trustnet_manager(self) -> TrustNetManager:
-        self._trustnet_manager = self._trustnet_manager or TrustNetManager(self._api)
-        return self._trustnet_manager
-
-    @property
-    def validation_manager(self) -> ValidationManager:
-        self._validation_manager = self._validation_manager or ValidationManager(self._api)
-        return self._validation_manager
-
-
 class _Workflow:
     def __init__(self, api):
         self._api = api
@@ -548,8 +480,8 @@ class Features:
         return self._ca
 
     @property
-    def client_groups(self) -> ClientGroups:
-        self._client_groups = self._client_groups or ClientGroups(self._api)
+    def client_groups(self) -> _ClientGroup:
+        self._client_groups = self._client_groups or _ClientGroup(self._api)
         return self._client_groups
 
     @property
@@ -613,8 +545,8 @@ class Features:
         return self._placement_rules
 
     @property
-    def platforms(self) -> _Platforms:
-        self._platforms = self._platforms or _Platforms(self._api)
+    def platforms(self) -> Platforms:
+        self._platforms = self._platforms or Platforms(self._api)
         return self._platforms
 
     @property

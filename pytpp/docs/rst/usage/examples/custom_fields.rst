@@ -1,15 +1,17 @@
-Custom Fields
-=============
+.. _custom_field_usage:
+
+Custom Field
+============
 
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
-
 Creating Custom Fields
 ----------------------
 
-There are many options when creating custom fields. Refer to the *POST Metadata/DefineItem* API in the |Doc Home Page|
-to get more info on possible inputs.
+.. note::
+    There are many options when creating custom fields. Refer to the *POST Metadata/DefineItem* API in the |Doc Home Page|
+    to get more info on possible inputs.
 
 .. code-block:: python
 
@@ -18,9 +20,10 @@ to get more info on possible inputs.
     api = Authenticate(...)
     features = Features(api)
 
+    ### CREATE ####
     custom_field = features.custom_fields.create(
-        label='MyCustomFieldLabel',
-        name='MyCustomFieldName',
+        label='|CustomFieldName|',
+        name='|CustomFieldName|',
         classes=[Attributes.certificate.__config_class__],
         data_type=AttributeValues.CustomField.Type.text_string,
         allowed_values=[
@@ -38,10 +41,11 @@ to get more info on possible inputs.
         single=True
     )
 
+    #### DELETE ####
+    features.custom_fields.delete(custom_field='|CustomFieldName|', remove_data=True)
+
 Reading Custom Fields
 ---------------------
-
-.. rubric:: Read Custom Field From An Object
 
 .. code-block:: python
 
@@ -50,30 +54,23 @@ Reading Custom Fields
     api = Authenticate(...)
     features = Features(api)
 
-    result = features.custom_fields.read(
-        obj=r'\VED\Policy\Certificates\MyTeam\my-cert.com',
+    #### READ OBJECT ATTRIBUTES ####
+    result_on_object = features.custom_fields.read(
+        obj=r'|CertDn|\|CertDn|',
         custom_field='Team Name'
     )
-    if not 'West Region Team' in result.values:
-        print('This is not my team, hence not my certificate to manage.')
+    print(f'VALUES: {result_on_object.values}')
+    print(f'LOCKED: {result_on_object.locked}')
+    print(f'POLICY: {result_on_object.policy_dn}')
 
-.. rubric:: Read Custom Field From A Policy
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features, Attributes
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    result = features.custom_fields.read_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam',
+    #### READ POLICY ATTRIBUTES ####
+    result_on_policy = features.custom_fields.read_policy(
+        folder=r'|CertDn|',
         custom_field='Team Name',
         class_name=Attributes.device.__config_class__
     )
-    if not result.locked:
-        # Change it to locked here.
-        ...
+    print(f'POLICY VALUES: {result_on_policy.values}')
+    print(f'LOCKED: {result_on_policy.locked}')
 
 Writing Custom Fields
 ---------------------
@@ -87,26 +84,18 @@ Writing Custom Fields
     api = Authenticate(...)
     features = Features(api)
 
+    #### WRITE CUSTOM FIELD VALUE TO OBJECT ####
     features.custom_fields.write(
-        obj=r'\VED\Policy\Certificates\MyTeam\my-cert.com',
+        obj=r'|CertDn|\|CertName|',
         custom_field='Team Name',
-        values=['West Region Team']
+        values=['Awesome Team']
     )
 
-
-.. rubric:: Write Custom Field To A Policy
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features, Attributes
-
-    api = Authenticate(...)
-    features = Features(api)
-
+    #### WRITE CUSTOM FIELD VALUE TO POLICY ####
     features.custom_fields.write_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam',
+        folder=r'|CertDn|',
         custom_field='Team Name',
         class_name=Attributes.device.__config_class__,
-        values=['West Region Team'],
+        values=['Awesome Team'],
         locked=True
     )

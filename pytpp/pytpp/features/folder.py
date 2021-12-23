@@ -11,7 +11,7 @@ class Folder(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def apply_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
+    def apply_workflow(self, folder: 'Union[Config.Object, str]', workflow: 'Union[Config.Object, str]'):
         """
         Applies a workflow to a folder and all of its subordinate objects. However, a subordinate folder
         may block the workflow.
@@ -30,7 +30,7 @@ class Folder(FeatureBase):
 
         result.assert_valid_response()
 
-    def block_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
+    def block_workflow(self, folder: 'Union[Config.Object, str]', workflow: 'Union[Config.Object, str]'):
         """
         Blocks a workflow on a folder and all of its subordinate objects. This prevents any parent folders from
         enforcing a workflow on this folder and its subordinate objects.
@@ -49,7 +49,7 @@ class Folder(FeatureBase):
 
         result.assert_valid_response()
 
-    def clear_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: Union[dict, List[str]]):
+    def clear_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the policy attribute name along with all of its values
         on a folder. If ``attributes`` are provided, then only the corresponding policy attribute values
@@ -179,7 +179,7 @@ class Folder(FeatureBase):
             self.set_engines(folder=folder, engines=engines, append_engines=True)
         return folder
 
-    def delete(self, folder: Union['Config.Object', str], recursive: bool = True):
+    def delete(self, folder: 'Union[Config.Object, str]', recursive: bool = True):
         """
         Deletes the folder. The folder is, by default, deleted recursively. All objects deleted will be deleted from config
         and secret store.
@@ -202,7 +202,7 @@ class Folder(FeatureBase):
             self._secret_store_delete(object_dn=folder_dn)
         self._config_delete(object_dn=folder_dn, recursive=recursive)
 
-    def delete_engines(self, folder: Union['Config.Object', str]):
+    def delete_engines(self, folder: 'Union[Config.Object, str]'):
         """
         Deletes the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
@@ -228,7 +228,7 @@ class Folder(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_engines(self, folder: Union['Config.Object', str]):
+    def get_engines(self, folder: 'Union[Config.Object, str]'):
         """
         Gets the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
 
@@ -292,7 +292,7 @@ class Folder(FeatureBase):
 
         return objects
 
-    def set_engines(self, folder: Union['Config.Object', str], engines: Union['List[Config.Object]', List[str]],
+    def set_engines(self, folder: 'Union[Config.Object, str]', engines: 'List[Union[Config.Object, str]]',
                     append_engines: bool = False):
         """
         Sets the desired TPP engine(s) to exclusively do work for all objects contained in the folder.
@@ -311,7 +311,7 @@ class Folder(FeatureBase):
         result = self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).put(engine_guids=engine_guids)
         result.assert_valid_response()
 
-    def read_policy(self, folder: Union['Config.Object', str], class_name: str, attribute_name: str):
+    def read_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attribute_name: str):
         """
         Reads policy settings for the given folder, class name, and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether or not the
@@ -356,9 +356,9 @@ class Folder(FeatureBase):
         if result.code != 1:
             InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-        return [resp.values, resp.locked]
+        return resp.values, resp.locked
 
-    def remove_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
+    def remove_workflow(self, folder: 'Union[Config.Object, str]', workflow: 'Union[Config.Object, str]'):
         """
         Removes an applied workflow from a folder.
 
@@ -376,7 +376,7 @@ class Folder(FeatureBase):
 
         result.assert_valid_response()
 
-    def remove_blocked_workflow(self, folder: Union['Config.Object', str], workflow: Union['Config.Object', str]):
+    def remove_blocked_workflow(self, folder: 'Union[Config.Object, str]', workflow: 'Union[Config.Object, str]'):
         """
         Removes a blocked workflow from a folder.
 
@@ -394,7 +394,7 @@ class Folder(FeatureBase):
 
         result.assert_valid_response()
 
-    def write_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: dict, locked: bool):
+    def write_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attributes: dict, locked: bool):
         """
         Sets policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and
@@ -449,7 +449,7 @@ class Folder(FeatureBase):
             if result.code != 1:
                 InvalidResultCode(code=result.code, code_description=result.config_result).log()
 
-    def update_policy(self, folder: Union['Config.Object', str], class_name: str, attributes: dict, locked: bool):
+    def update_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attributes: dict, locked: bool):
         """
         Updates policy configurations on a folder. If the value is locked, then all objects derived
         from the folder of the specified policy class will inherit the given attribute value and

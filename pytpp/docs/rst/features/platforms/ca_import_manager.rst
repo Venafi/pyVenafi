@@ -3,7 +3,7 @@
 CA Import Manager
 =================
 
-.. autoclass:: pytpp.features.platform.CAImportManager
+.. autoclass:: pytpp.features.platforms.CAImportManager
    :members:
    :undoc-members:
    :show-inheritance:

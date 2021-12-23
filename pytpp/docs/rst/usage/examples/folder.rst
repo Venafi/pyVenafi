@@ -1,12 +1,14 @@
-Folders
-=======
+.. _folder_usage:
+
+Folder
+======
 
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
 
-Creating And Deleting Folders
------------------------------
+Creating And Deleting A Folder
+------------------------------
 
 .. warning::
     Deleting a folder will also remove all objects from its associated secrets, such as private key information
@@ -21,20 +23,18 @@ Creating And Deleting Folders
     api = Authenticate(...)
     features = Features(api)
 
-    # Create the folder.
-    some_folder = features.folder.create(
-        name='SomeFolder',
-        parent_folder=r'\VED\Policy\Certificates\MyTeam',
-        description='Some folder for my team.',
-        contacts=['local:user123', 'local:user456'],
-        engines=['WestRegionTpp-1', 'MidWestRegionTpp-1'],
-        log_server='WestRegionTpp-1 Log Server',
+    #### CREATE ####
+    folder = features.folder.create(
+        name='|FolderName|',
+        parent_folder=r'|CertDn|',
+        description='Folder description here.',
+        contacts=['LocalUser', 'DomainUser'],
+        engines=['|EngineName|-1', '|EngineName|-2'],
+        log_server='|EngineName|-1 Log Server',
     )
 
-    print(some_folder.dn)  # prints "\VED\Policy\Certificates\MyTeam\SomeFolder"
-
-    # Delete the folder.
-    features.folder.delete(folder=some_folder, recursive=True)
+    #### DELETE ####
+    features.folder.delete(folder=folder, recursive=True)
 
 Getting, Adding And Removing Engines
 ------------------------------------
@@ -46,21 +46,25 @@ Getting, Adding And Removing Engines
     api = Authenticate(...)
     features = Features(api)
 
+    #### SET PROCESSING ENGINES ####
+
     # Add these two engines as the processing engines for this folder. All other
     # engines will be removed.
     features.folder.set_engines(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
-        engines=['WestRegionTpp-1', 'MidWestRegionTpp-1'],
+        folder=r'|CertDn|\|FolderName|',
+        engines=['|EngineName|-1', '|EngineName|-2'],
         append_engines=False  # Set to "True" to preserve existing engines.
     )
 
-    # Get the engines
-    engines = features.folder.get_engines(folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder')
-    print([e.engine_name for e in engines])  # prints "['WestRegionTpp-1', 'MidWestRegionTpp-1']"
+    #### GET PROCESSING ENGINES ####
+    engines = features.folder.get_engines(folder=r'|CertDn|\|FolderName|')
+    print([e.engine_name for e in engines])  # prints "['|EngineName|-1', '|EngineName|-2']"
+
+    #### REMOVE PROCESSING ENGINES ####
 
     # Remove all engines from the folder. Now all engines will be able to process work from
     # this folder.
-    features.folder.delete_engines(folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder')
+    features.folder.delete_engines(folder=r'|CertDn|\|FolderName|')
 
 .. _applying_workflows:
 
@@ -75,16 +79,16 @@ Applying And Removing Workflows
     api = Authenticate(...)
     features = Features(api)
 
-    # Add a workflow.
+    #### APPLY WORKFLOW ####
     features.folder.apply_workflow(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
-        workflow=r'\VED\Policy\Administration\Workflows\Stage 100 Check'
+        folder=r'|CertDn|\|FolderName|',
+        workflow=r'|WfDn|\|WfName|'
     )
 
-    # Remove a workflow.
+    #### REMOVE WORKFLOW ####
     features.folder.remove_workflow(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
-        workflow=r'\VED\Policy\Administration\Workflows\Stage 100 Check'
+        folder=r'|CertDn|\|FolderName|',
+        workflow=r'|WfDn|\|WfName|'
     )
 
 .. rubric:: Managing Blocked Workflows
@@ -95,16 +99,16 @@ Applying And Removing Workflows
     api = Authenticate(...)
     features = Features(api)
 
-    # Add a workflow.
+    #### ADD BLOCKING WORKFLOW ####
     features.folder.block_workflow(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
-        workflow=r'\VED\Policy\Administration\Workflows\Stage 100 Check'
+        folder=r'|CertDn|\|FolderName|',
+        workflow=r'|WfDn|\|WfName|'
     )
 
-    # Remove a workflow.
+    #### REMOVE BLOCKING WORKFLOW ####
     features.folder.remove_blocked_workflow(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
-        workflow=r'\VED\Policy\Administration\Workflows\Stage 100 Check'
+        folder=r'|CertDn|\|FolderName|',
+        workflow=r'|WfDn|\|WfName|'
     )
 
 Searching Objects
@@ -117,10 +121,11 @@ Searching Objects
     api = Authenticate(...)
     features = Features(api)
 
+    #### SEARCH FOLDER ####
     items = features.folder.search(
-        object_name_pattern='*my-site?.com',
+        object_name_pattern='*awesome-domain?.com',
         object_types=[Attributes.certificate.__config_class__, Attributes.device.__config_class__],
-        starting_dn=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
+        starting_dn=r'|CertDn|\|FolderName|',
         recursive=True
     )
 
@@ -147,8 +152,9 @@ Managing Policies
     api = Authenticate(...)
     features = Features(api)
 
-    items = features.folder.read_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
+    #### READ POLICY VALUES ####
+    values, locked = features.folder.read_policy(
+        folder=r'|CertDn|\|FolderName|',
         class_name=Attributes.certificate.__config_class__,
         attribute_name=Attributes.certificate.certificate_authority
     )
@@ -169,12 +175,12 @@ Managing Policies
     api = Authenticate(...)
     features = Features(api)
 
-    # Use these approveres and remove the existing ones, if any.
+    #### WRITE POLICY VALUES ####
     features.folder.write_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
+        folder=r'|CertDn|\|FolderName|',
         class_name=Attributes.certificate.__config_class__,
         attributes={
-            Attributes.certificate.approver: ['local:approver-1', 'local:approver-1']
+            Attributes.certificate.approver: ['|LocalUser|', '|DomainUser|']
         },
         locked=True
     )
@@ -195,17 +201,24 @@ Managing Policies
     api = Authenticate(...)
     features = Features(api)
 
-    # Append these approveres to the existing ones, if any.
+    #### UPDATE POLICY VALUES ####
     features.folder.update_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
+        folder=r'|CertDn|\|FolderName|',
         class_name=Attributes.certificate.__config_class__,
         attributes={
-            Attributes.certificate.approver: ['local:approver-1', 'local:approver-1']
+            Attributes.certificate.approver: ['|LocalUser|', '|DomainUser|']
         },
         locked=True
     )
 
 .. rubric:: Clearing Policy Attributes
+
+.. note::
+    There are two options when clearing a policy attribute, determined by the type of the attributes parameter.
+
+    * ``Dictionary``: The key is the attribute name and the value is a list of values to be removed. If no values
+      remain for the attribute then the attribute is removed.
+    * ``List``: All items are attribute names that are to be removed from the object entirely.
 
 .. code-block:: python
 
@@ -214,18 +227,22 @@ Managing Policies
     api = Authenticate(...)
     features = Features(api)
 
+    #### CLEAR WITH DICTIONARY ####
+
     # Clear only one approver on the policy, but preserve the rest that may exist.
     features.folder.clear_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
+        folder=r'|CertDn|\|FolderName|',
         class_name=Attributes.certificate.__config_class__,
         attributes={
-            Attributes.certificate.approver: ['local:approver-1']
+            Attributes.certificate.approver: ['|LocalUser|']
         }
     )
 
+    #### CLEAR WITH LIST ####
+
     # Clear all approvers on the policy.
     features.folder.clear_policy(
-        folder=r'\VED\Policy\Certificates\MyTeam\SomeFolder',
+        folder=r'|CertDn|\|FolderName|',
         class_name=Attributes.certificate.__config_class__,
         attributes=[
             Attributes.certificate.approver

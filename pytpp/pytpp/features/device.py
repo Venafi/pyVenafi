@@ -12,7 +12,7 @@ class _DeviceBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, device: Union['Config.Object', str]):
+    def delete(self, device: 'Union[Config.Object, str]'):
         """
         Deletes the device object specified. Since there are no secret store data attached to this object,
         only a config delete is performed.
@@ -100,7 +100,7 @@ class Device(_DeviceBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def scan_for_ssh_keys(self, device: Union['Config.Object', str]):
+    def scan_for_ssh_keys(self, device: 'Union[Config.Object, str]'):
         """
         Submits Agentless discovery work for the given device.
 
@@ -196,7 +196,7 @@ class JumpServer(_DeviceBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def scan_for_ssh_keys(self, device: Union['Config.Object', str]):
+    def scan_for_ssh_keys(self, device: 'Union[Config.Object, str]'):
         """
         Submits Agentless discovery work for the given device.
 

@@ -3,7 +3,7 @@
 Certificate Manager
 ===================
 
-.. autoclass:: pytpp.features.platform.CertificateManager
+.. autoclass:: pytpp.features.platforms.CertificateManager
    :members:
    :undoc-members:
    :show-inheritance:

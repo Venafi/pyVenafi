@@ -3,7 +3,7 @@
 Bulk Provisioning Manager
 =========================
 
-.. autoclass:: pytpp.features.platform.BulkProvisioningManager
+.. autoclass:: pytpp.features.platforms.BulkProvisioningManager
    :members:
    :undoc-members:
    :show-inheritance:

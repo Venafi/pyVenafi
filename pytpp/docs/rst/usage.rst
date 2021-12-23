@@ -183,6 +183,9 @@ Config And Identity Objects
 .. _config_object:
 .. rubric:: Config Object
 
+.. note::
+    All feature-level inputs accepting ``Config.Object`` also accept :ref:`dn` and :ref:`guid` values.
+
 Config Objects are the basic definition of every object that can be created in TPP. Every feature with a
 ``create()``, ``get()``, or ``update()`` method will return a ``Config.Object``, which is defined below.
 
@@ -232,6 +235,9 @@ requiring a ``Config.Object`` or a :ref:`dn` value.
 
 .. _identity_object:
 .. rubric:: Identity Object
+
+.. note::
+    All feature-level inputs accepting ``Identity.Identity`` also accept :ref:`prefixed_name` values.
 
 The ``Identity`` object is much like the *Confg.Object* except that it applies to users and groups, or identities.
 All identities in TPP share common properties that make up this class.
@@ -392,3 +398,22 @@ call. By default, the logger is turned off. To use the logger:
         ...
 
 Visit the LogBoss documentation for more usage information.
+
+Parameter Interchangeability
+----------------------------
+
+**Config Objects**
+
+:ref:`config_object`, :ref:`dn`, and :ref:`guid` are interchangeable. The object's name is included in these cases:
+
+* Client Groups
+* Client Work
+* Custom Fields
+* Discoveries
+* Platforms
+* Reason Codes
+* Workflows Tickets
+
+**Identity Objects**
+
+:ref:`identity_object` and :ref:`prefixed_name` are always interchangeable.

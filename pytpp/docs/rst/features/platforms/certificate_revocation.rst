@@ -3,7 +3,7 @@
 Certificate Revocation
 ======================
 
-.. autoclass:: pytpp.features.platform.CertificateRevocation
+.. autoclass:: pytpp.features.platforms.CertificateRevocation
    :members:
    :undoc-members:
    :show-inheritance:

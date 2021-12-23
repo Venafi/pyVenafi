@@ -21,6 +21,7 @@ class Permissions:
         }
 
     def effective(self):
+        # "read" is implied when specifying the access permission, so it must be omitted.
         return [k for k, v in self.to_dict().items() if v is not None and k != 'read']
 
 

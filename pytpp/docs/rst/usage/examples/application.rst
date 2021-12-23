@@ -1,4 +1,4 @@
-.. _application:
+.. _application_usage:
 
 Application
 ===========
@@ -11,8 +11,8 @@ Application Types
 
 Refer to :ref:`application_feature_list` for the available application feature types.
 
-Creating an Application
------------------------
+Creating & Deleting Applications
+--------------------------------
 
 .. code-block:: python
 
@@ -21,48 +21,22 @@ Creating an Application
     api = Authenticate(...)
     features = Features(api)
 
-    features.application.apache.create(
-        name='example_apache_application',
-        device='\\VED\\Policy\\Installations\\Devices\\example_device',
+    #### CREATE ####
+
+    application = features.application.apache.create(
+        name='|AppName|',
+        device=r'|AppDn|',
+        contacts=['|LocalUser|', '|DomainUser|']
         private_key_file='/etc/example/private_key.p12',
         certificate_file='/etc/example/cert.crt',
     )
 
-Get an Application
-------------------
+    #### DELETE ####
 
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    # This will raise an error if it doesn't exist
-    application = features.application.apache.get(application_dn='\\VED\\Policy\\Installations\\Applications\\example_application')
-
-    # This will not raise an error if it doesn't exist
-    application = features.application.apache.get(application_dn='\\VED\\Policy\\Installations\\Applications\\example_application', raise_error_if_not_exists=False)
-
-Delete an Application
----------------------
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    # You can delete with the application object
-    application = features.application.apache.get(application_dn='\\VED\\Policy\\Installations\\Applications\\example_application')
     features.application.apache.delete(application=application)
 
-    # You can also delete with the DN
-    features.application.apache.delete(application='\\VED\\Policy\\Installations\\Applications\\example_application')
-
-Enable an Application
----------------------
+Enabling & Disabling Applications
+---------------------------------
 
 .. code-block:: python
 
@@ -71,32 +45,14 @@ Enable an Application
     api = Authenticate(...)
     features = Features(api)
 
-    # You can enable with the application object
-    application = features.application.apache.get(application_dn='\\VED\\Policy\\Installations\\Applications\\example_application')
-    features.application.apache.enable(application=application)
+    #### ENABLE ####
+    features.application.apache.enable(application=r'|AppDn|\|AppName|')
 
-    # You can also enable with the DN
-    features.application.apache.enable(application='\\VED\\Policy\\Installations\\Applications\\example_application')
+    #### DISABLE ####
+    features.application.apache.disable(application=r'|AppDn|\|AppName|')
 
-Disable an Application
-----------------------
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    # You can disable with the application object
-    application = features.application.apache.get(application_dn='\\VED\\Policy\\Installations\\Applications\\example_application')
-    features.application.apache.disable(application=application)
-
-    # You can also disable with the DN
-    features.application.apache.disable(application='\\VED\\Policy\\Installations\\Applications\\example_application')
-
-Get Application Certificate
----------------------------
+Getting Application Certificate
+-------------------------------
 
 .. code-block:: python
 
@@ -105,22 +61,10 @@ Get Application Certificate
     api = Authenticate(...)
     features = Features(api)
 
-    certificate = features.application.apache.get_associated_certificate(application='\\VED\\Policy\\Installations\\Applications\\example_application')
+    certificate = features.application.apache.get_associated_certificate(application=r'|AppDn|\|AppName|')
 
-Get Processing Stage of the Application
----------------------------------------
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    stage = features.application.apache.get_stage(application='\\VED\\Policy\\Installations\\Applications\\example_application')
-
-Get Processing Status of the Application
-----------------------------------------
+Getting Processing Stage & Status
+---------------------------------
 
 .. code-block:: python
 
@@ -129,10 +73,11 @@ Get Processing Status of the Application
     api = Authenticate(...)
     features = Features(api)
 
-    status = features.application.apache.get_status(application='\\VED\\Policy\\Installations\\Applications\\example_application')
+    stage = features.application.apache.get_stage(application=r'|AppDn|\|AppName|')
+    status = features.application.apache.get_status(application=r'|AppDn|\|AppName|')
 
-Wait for Certificate Installation to Complete
----------------------------------------------
+Installing A Certificate To An Application
+------------------------------------------
 
 .. code-block:: python
 
@@ -141,11 +86,12 @@ Wait for Certificate Installation to Complete
     api = Authenticate(...)
     features = Features(api)
 
-    # First we need to get the certificate to renew
-    certificate = features.application.apache.get_associated_certificate(application='\\VED\\Policy\\Installations\\Applications\\example_application')
+    # Push an existing certificate to the application.
+    certificate = features.application.apache.get_associated_certificate(application=r'|AppDn|\|AppName|')
+    features.certificate.push_to_applications(
+        certificate=certificate,
+        applications=[r'|AppDn|\|AppName|']
+    )
 
-    # Next we renew the certificate, you can also simply provide a DN if you have it already
-    features.certificate.renew(certificate=certificate)
-
-    # Now we can wait for the application to complete
-    features.application.apache.wait_for_installation_to_complete(application='\\VED\\Policy\\Installations\\Applications\\example_application')
+    # Wait 2 minutes for the installation to complete.
+    features.application.apache.wait_for_installation_to_complete(application=r'|AppDn|\|AppName|', timeout=120)

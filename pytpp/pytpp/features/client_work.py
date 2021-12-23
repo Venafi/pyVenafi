@@ -27,7 +27,7 @@ class _ClientWorkBase(FeatureBase):
         super().__init__(api)
         self._work_base_dn = r'\VED\Clients\Work'
 
-    def delete(self, work: Union['Config.Object', str]):
+    def delete(self, work: 'Union[Config.Object, str]'):
         """
         Deletes a client work
 
@@ -43,7 +43,7 @@ class _ClientWorkBase(FeatureBase):
                 code_description=response.result.credential_result
             )
 
-    def disable(self, work: Union['Config.Object', str]):
+    def disable(self, work: 'Union[Config.Object, str]'):
         """
         Disables a client work
 
@@ -61,7 +61,7 @@ class _ClientWorkBase(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def enable(self, work: Union['Config.Object', str]):
+    def enable(self, work: 'Union[Config.Object, str]'):
         """
         Enables a client work
 
@@ -113,7 +113,7 @@ class AgentConnectivity(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0):
         """
         Schedules the Agent Connectivity work to run
@@ -215,7 +215,7 @@ class AgentConnectivity(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: Union['Config.Object', str]):
+    def unschedule(self, work: 'Union[Config.Object, str]'):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
@@ -334,7 +334,7 @@ class CertificateDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0,
                  full_scan: bool = False):
@@ -503,7 +503,7 @@ class CertificateDiscovery(_ClientWorkBase):
         )
 
 
-    def unschedule(self, work: Union['Config.Object', str]):
+    def unschedule(self, work: 'Union[Config.Object, str]'):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
@@ -608,7 +608,7 @@ class CertificateInstallation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
@@ -724,7 +724,7 @@ class CertificateInstallation(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: Union['Config.Object', str]):
+    def unschedule(self, work: 'Union[Config.Object, str]'):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
@@ -750,7 +750,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]', 
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]',
                contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$",
                common_name: str = "$Client.DNSName$", organization: str = None,
                organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
@@ -827,7 +827,7 @@ class DynamicProvisioning(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]', 
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]',
                contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
                organization: str = None, organizational_unit: List[str] = None, city_locality: str = None,
                state_province: str = None, country: str = None, subject_alternative_names: str = "$Client.DNSname$",
@@ -953,7 +953,7 @@ class SSHDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_30_minutes: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, randomize_minutes: int = 0, full_scan: bool = False):
@@ -1099,7 +1099,7 @@ class SSHDiscovery(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: Union['Config.Object', str]):
+    def unschedule(self, work: 'Union[Config.Object, str]'):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
@@ -1125,7 +1125,7 @@ class SSHKeyUsage(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         Schedules the SSH KeyUsage work to run
@@ -1230,7 +1230,7 @@ class SSHKeyUsage(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: Union['Config.Object', str]):
+    def unschedule(self, work: 'Union[Config.Object, str]'):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
@@ -1256,7 +1256,7 @@ class SSHRemediation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: Union['Config.Object', str], start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, days_of_week: List[str] = None, days_of_month: List[str] = None,
                  every_x_minutes: int = None, randomize_minutes: int = 0):
         """
@@ -1375,7 +1375,7 @@ class SSHRemediation(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: Union['Config.Object', str]):
+    def unschedule(self, work: 'Union[Config.Object, str]'):
         """
         Removes any scheduling for the client work (does not delete the client work)
 
@@ -1401,7 +1401,7 @@ class UserCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]', 
+    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]',
                contacts: 'List[Identity.Identity, str]', description: str = None,
                naming_pattern: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.naming_pattern,
                common_name: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.common_name,

@@ -1,59 +1,46 @@
+.. _credential_usage:
+
 Credential
-===========
+==========
 
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
 
-Username password credential
+Credential Types
+----------------
+
+Refer to :ref:`credentials_feature_list` for the available credential feature types. Please note that, though the
+available feature type may not be listed, it doesn not mean that it cannot be used with the API layer, which is a
+pure interface with the |Websdk|.
+
+Creating & Deleting A Credential
+--------------------------------
+.. code-block:: python
+
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### CREATE ####
+    credential = features.credential.username_password.create(
+        name='|CredName|',
+        parent_folder=r'|CredDn|',
+        username=r'|DomainUser|',
+        password=r'SomePasword123!!!'
+    )
+
+    #### DELETE ####
+    features.credential.username_password.delete(credential=credential)
+
+Creating A Google Credential
 ----------------------------
-.. code-block:: python
 
-    from pytpp import Authenticate, Features
+.. code-block:: text
+    :name: google_credential.json
 
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12'
-        password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
-
-    credential = features.credential.username_password(
-        name='my_credential',
-        parent_folder= 'path/to/parent/folder',
-        username='my_user',
-        password='password'
-    )
-
-* The attributes of the username_password object are:
-    * name: Name of the credential object.
-    * parent_folder: ``Config.Object`` or DN of the parent folder.
-    * username: Username.
-    * password: Password.
-    * expiration: Number months from today at which the credential expires.
-    * description: Description of the credential object.
-    * encryption_key: Encryption Key used to protect the credential data.
-    * shared: If True, the credential can be shared between multiple objects.
-    * contacts: List of absolute paths to the users in TPP to be established as contacts.
-    * get_if_already_exists: bool = True
-
-Google password credential
----------------------------
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12'
-        password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
-
-    json content = {
+    {
         "type"                       : "service_account",
         "project_id"                 : "********",
         "private_key_id"             : "********",
@@ -65,21 +52,21 @@ Google password credential
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url"       : "https://www.googleapis.com/robot/v1/metadata/x509/********.iam.gserviceaccount.com"
     }
-    features.credential.google.create(
-        name='my_credential',
-        parent_folder= 'path/to/parent/folder',
-        json_content=json_content,
-        username='my_user',
-        password='password'
-    )
 
-* Google credential attributes:
-    * name: Name of the credential object.
-    * parent_folder: ``Config.Object`` or DN of the parent folder.
-    * json_content: JSON content as plain text.
-    * expiration: Number months from today at which the credential expires.
-    * description: Description of the credential object.
-    * encryption_key: Encryption Key used to protect the credential data.
-    * shared: If True, the credential can be shared between multiple objects.
-    * contacts: List of absolute paths to the users in TPP to be established as contacts.
-    * get_if_already_exists: bool = True
+.. code-block:: python
+
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    with open('google_credential.json', 'r') as f:
+        json_content = f.read()
+
+    credential = features.credential.google.create(
+        name='|CredName|',
+        parent_folder=r'|CredDn|',
+        description='Google credential description.',
+        contacts=['|LocalUser|', '|DomainUser|'],
+        json_content=json_content
+    )

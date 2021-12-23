@@ -4,6 +4,7 @@ Discovery And Placement
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
+.. _placement_usage:
 
 Managing Placement Rules
 ------------------------
@@ -17,36 +18,38 @@ Managing Placement Rules
 
     # Certificate Placement Rules
     certificate_placement_condiitons = [
-        features.placement_rule_condition.common_name.matches_regex('[a-z]*\.(my-team\.){0,1}*my-domain\.com'),
-        features.placement_rule_condition.organizational_unit.contains('WestRegion Engineering')
+        features.placement_rule_condition.common_name.matches_regex('[a-z]*\.(awesome-team\.){0,1}*awesome-domain\.com'),
+        features.placement_rule_condition.organizational_unit.contains('Awesome Team')
     ]
 
     certificate_placement_rule = features.placement_rules.create(
-        name='SomeCertificateRule',
-        rule_type=AttributeValues.PlacementRules.RuleType.ssh,
-        device_location_dn=r'\VED\Policy\Installations\WestRegion',
-        certificate_location_dn=r'\VED\Policy\Certificates\_Discovered\WestRegion\SomeTeam',
+        name='|PlacementRuleName| - Certificate',
+        rule_type=AttributeValues.PlacementRules.RuleType.certificate,
+        device_location_dn=r'|DevDn|',
+        certificate_location_dn=r'|CertDn|',
         conditions=certificate_placement_condiitons
     )
 
     # SSH Placement Rules
     ssh_placement_conditions = [
-        features.placement_rule_condition.hostname.ends_with('my-domain.com'),
+        features.placement_rule_condition.hostname.ends_with('awesome-domain.com'),
         features.placement_rule_condition.supports_ssh_v1.is_true()
     ]
 
     ssh_placement_rule = features.placement_rules.create(
-        name='SomeSSHRule',
+        name='|PlacementRuleName| - SSH',
         rule_type=AttributeValues.PlacementRules.RuleType.ssh,
-        device_location_dn=r'\VED\Policy\Installations\WestRegion',
+        device_location_dn=r'|DevDn|',
         conditions=ssh_placement_conditions
     )
+
+.. _network_discovery_usage:
 
 Network Discovery
 -----------------
 
-Creating Network Discovery Jobs
-*******************************
+Creating & Deleting Jobs
+************************
 
 .. code-block:: python
 
@@ -55,24 +58,24 @@ Creating Network Discovery Jobs
     api = Authenticate(...)
     features = Features(api)
 
-    certificate_placement_rule = features.placement_rules.get(name='SomeCertificateRule')
-    ssh_placement_rule = features.placement_rules.get(name='SomeSSHRule')
+    certificate_placement_rule = features.placement_rules.get(name='|PlacementRuleName| - Certificate')
+    ssh_placement_rule = features.placement_rules.get(name='|PlacementRuleName| - SSH')
 
     job = features.discovery.network.create(
-        name='West Region Discovery',
+        name='Awesome Discovery',
         hosts=[
             '172.168.0.0/16',
             '192.168.123.0/24'
         ],
         ports=[80, 443, 22],  # If empty, the default is used. Check out the default in the source code.
-        description='Discovery for certificates and SSH devices in the West Region.',
-        contacts=['local:job-creator', 'local:west-region-team-lead'],
-        default_certificate_location=r'\VED\Policy\Certificates\_Orphans',
+        description='Discovery for certificates and SSH devices in the Awesome Region.',
+        contacts=['|LocalUser|', '|DomainUser|'],
+        default_certificate_location=r'|OrphanDn|',
         placement_rules=[certificate_placement_rule, ssh_placement_rule]
     )
 
-Scheduling Network Discovery Jobs
-*********************************
+Scheduling, Unscheduling, And Blacking Out Jobs
+***********************************************
 
 .. code-block:: python
 
@@ -81,32 +84,26 @@ Scheduling Network Discovery Jobs
     api = Authenticate(...)
     features = Features(api)
 
-    # Schedule this job to run at
-    #  * 23:00 UTC
-    #  * Every Saturday and Sunday
-    #  * The 1st and 15th day of every month
-    #  * May 31st
+    #### SCHEDULE ####
     features.discovery.network.schedule(
-        job='West Region Discovery',
-        hour=23,  # 24-Hour Format (11 PM) in UTC
-        days_of_week=[0, 6],  # Sunday and Saturday, respectively
-        days_of_month=[1, 15],
-        days_of_year=['5/31']
+        job='Awesome Discovery',
+        hour=23,                # 24-Hour Format (11 PM) in UTC
+        days_of_week=[0, 6],    # Every Saturday and Sunday
+        days_of_month=[1, 15],  # The 1st and 15th day of every month
+        days_of_year=['5/31']   # May 31st
     )
 
-    # Blackout this job so that it does not run (or pauses) on
-    #   * Mondays and Thursdays
-    #   * 01:00 thru 04:00 UTC
+    #### BLACKOUT ####
     features.discovery.network.blackout_schedule(
-        job='West Region Discovery',
-        monday=list(range(1,4)),
-        thursday=list(range(1, 4))
+        job='Awesome Discovery',
+        monday=list(range(1,4)),    # Every Monday from 01:00 thru 04:00 UTC
+        thursday=list(range(1, 4))  # Every Thursday from 01:00 thru 04:00 UTC
     )
 
-    # Unschedule a job.
+    #### UNSCHEDULE ####
     features.discovery.network.unschedule(job='Deprecated Job')
 
-Run, Pause, And Cancel Discovery Jobs
+Running, Pausing, And Cancelling Jobs
 *************************************
 
 .. warning::
@@ -121,7 +118,7 @@ Run, Pause, And Cancel Discovery Jobs
     api = Authenticate(...)
     features = Features(api)
 
-    job = 'West Region Discovery'
+    job = 'Awesome Discovery'
     features.discovery.network.run_now(job=job)
     # Do some stuff...
     if features.discovery.network.is_in_progress(job=job):

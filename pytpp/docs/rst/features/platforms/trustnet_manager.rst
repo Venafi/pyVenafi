@@ -3,7 +3,7 @@
 TrustNet Manager
 ================
 
-.. autoclass:: pytpp.features.platform.TrustNetManager
+.. autoclass:: pytpp.features.platforms.TrustNetManager
    :members:
    :undoc-members:
    :show-inheritance:

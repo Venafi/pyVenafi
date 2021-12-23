@@ -1412,16 +1412,14 @@ class ClientGroupsAttributeValues(metaclass=_PropertyMeta):
         websdk = 'Web SDK'
 
     class AgentType(metaclass=_PropertyMeta):
-        agent_installed = 'AgentInstalled'
         agentless = 'NoAgent'
-        certificate_enrollment = 'EntMob'
-        deploy_user_and_device_certificates = 'Enrollment'
+        est = 'Enrollment'
+        venafi_agent = 'AgentInstalled'
 
     class DefaultRules(metaclass=_PropertyMeta):
-        agent_installed = 'ClientType == VenafiAgent'
         agentless = 'ClientType == Agentless'
-        certificate_enrollment = 'ClientType == Est'
-        deploy_user_and_device_certificates = '((ClientType In ["AgentJuniorUser","Portal"]))'
+        est = 'ClientType == Est'
+        venafi_agent = 'ClientType == VenafiAgent'
 
 
 class ClientGroupsClassNames(metaclass=_PropertyMeta):

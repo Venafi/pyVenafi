@@ -15,7 +15,7 @@ class Objects(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def clear(self, obj: Union['Config.Object', str], attributes: Union[dict, List[str]]):
+    def clear(self, obj: 'Union[Config.Object, str]', attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the DN attribute name along with all of its values.
         If ``attributes`` are provided, then only the corresponding policy attribute values
@@ -110,7 +110,7 @@ class Objects(FeatureBase):
         result = self._api.websdk.Config.IsValid.post(object_dn=dn)
         return result.is_valid_response() and result.result.code == 1
 
-    def find_policy(self, obj: Union['Config.Object', str], class_name: str, attribute_name: str):
+    def find_policy(self, obj: 'Union[Config.Object, str]', class_name: str, attribute_name: str):
         """
         Returns the folder that suggests or locks a particular attribute value to the specified object.
         A tuple of 3 elements is returned where the first element is the absolute path to the folder that
@@ -165,7 +165,7 @@ class Objects(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def read(self, obj: Union['Config.Object', str], attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
+    def read(self, obj: 'Union[Config.Object, str]', attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
         """
         Reads attributes on the given TPP Object and attribute name. Returns List[List, bool] where the
         first element of the list is a list of values and the second element a boolean indicating whether
@@ -233,7 +233,7 @@ class Objects(FeatureBase):
         raise TimeoutError(f'Could not read {attribute_name} on {obj_dn} because it did not exist '
                            f'after {timeout} seconds.')
 
-    def read_all(self, obj: Union['Config.Object', str]):
+    def read_all(self, obj: 'Union[Config.Object, str]'):
         """
         Reads all attributes on the given TPP Object.
 
@@ -265,7 +265,7 @@ class Objects(FeatureBase):
 
         return resp.name_values
 
-    def rename(self, obj: Union['Config.Object', str], new_object_dn: str):
+    def rename(self, obj: 'Union[Config.Object, str]', new_object_dn: str):
         """
         Renames an object DN. This method requires two absolute paths, the old one and the new one. This
         method also effectively moves objects from one folder to another.
@@ -286,7 +286,7 @@ class Objects(FeatureBase):
 
         return self.get(object_dn=new_object_dn, raise_error_if_not_exists=True)
 
-    def update(self, obj: Union['Config.Object', str], attributes: dict):
+    def update(self, obj: 'Union[Config.Object, str]', attributes: dict):
         """
         Updates attributes on an object. If the attribute is locked TPP will simply ignore the request. To avoid
         any confusion, it would be wise to consider validating the policy settings to ensure the desired attribute
@@ -325,7 +325,7 @@ class Objects(FeatureBase):
             if result.code != 1:
                 raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def wait_for(self, obj: Union['Config.Object', str], attribute_name: str, attribute_value: str, include_policy_values: bool = False,
+    def wait_for(self, obj: 'Union[Config.Object, str]', attribute_name: str, attribute_value: str, include_policy_values: bool = False,
                  timeout: int = 10):
         """
         Waits for the ``attribute_name`` to have the ``attribute_value`` on the object_dn for the timeout period. A
@@ -361,7 +361,7 @@ class Objects(FeatureBase):
             f'Got {attr.values} instead.'
         )
 
-    def write(self, obj: Union['Config.Object', str], attributes: dict):
+    def write(self, obj: 'Union[Config.Object, str]', attributes: dict):
         """
         Writes new attributes on an object. If the attribute is locked TPP will simply ignore the request. To avoid
         any confusion, it would be wise to consider validating the policy settings to ensure the desired attribute
@@ -400,7 +400,7 @@ class Objects(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def _read(self, obj: Union['Config.Object', str], attribute_name: str, include_policy_values: bool):
+    def _read(self, obj: 'Union[Config.Object, str]', attribute_name: str, include_policy_values: bool):
         obj_dn = self._get_dn(obj)
         if include_policy_values is True:
             resp = self._api.websdk.Config.ReadEffectivePolicy.post(

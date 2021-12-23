@@ -3,7 +3,7 @@
 SSH Manager
 ===========
 
-.. autoclass:: pytpp.features.platform.SSHManager
+.. autoclass:: pytpp.features.platforms.SSHManager
    :members:
    :undoc-members:
    :show-inheritance:

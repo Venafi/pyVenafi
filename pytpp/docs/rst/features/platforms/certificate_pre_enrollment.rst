@@ -3,7 +3,7 @@
 Certificate Pre-Enrollment
 ==========================
 
-.. autoclass:: pytpp.features.platform.CertificatePreEnrollment
+.. autoclass:: pytpp.features.platforms.CertificatePreEnrollment
    :members:
    :undoc-members:
    :show-inheritance:

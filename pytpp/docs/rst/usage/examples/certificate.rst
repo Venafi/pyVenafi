@@ -1,277 +1,235 @@
-Certificate Operations
-========================
+.. _certificate_usage:
+
+Certificate
+===========
 
 .. note::
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
-Create, Renew, Download, Revoke, Delete a Certificate
------------------------------------------------------
+Creating & Deleting Certiifcate Objects
+---------------------------------------
 
 .. code-block:: python
 
-    from pytpp import Features, Authenticate, Attributes, AttributeValues
+    from pytpp import Features, Authenticate, AttributeValues
 
     api = Authenticate(...)
     features = Features(api=api)
 
-    # Create a certificate object.
+    ### CREATE ####
     certificate = features.certificate.create(
-        name='my-team.domain.com',
-        parent_folder=r'\VED\Policy\Certificates\MyTeam',
-        common_name='my-team.domain.com',
+        name='|CertName|',
+        parent_folder=r'|CertDn|',
+        contacts=['|LocalUser|', '|DomainUser|'],
+        approvers=['|LocalUser|', '|DomainUser|'],
+        common_name='|CertName|',
         management_type=AttributeValues.Certificate.ManagementType.enrollment,
-        ca_template=r'\VED\Policy\Administration\CAs\AwesomeCA',
+        ca_template=r'|CaDn|\|CaName|',
         hash_algorithm=AttributeValues.Certificate.HashAlgorithm.sha256,
         city='Salt Lake City',
         state='Utah',
         country='US',
-        organization='My Company',
-        organization_unit=['MyTeam', 'MyRegion'],
+        organization='Awesome Company',
+        organization_unit=['Awesome Team'],
         disable_automatic_renewal=False,
         key_algorithm=AttributeValues.Certificate.KeyAlgorithm.rsa,
         key_strength=2048
     )
 
-Renewing A Certificate
-----------------------
+    #### DELETE ####
+    features.certificate.delete(certificate=certificate)
+
+Renewing & Downloading A Certificate
+------------------------------------
 
 .. code-block:: python
 
-    from pytpp import Features, Authenticate, Attributes, AttributeValues
+    from pytpp import Features, Authenticate, AttributeValues
 
     api = Authenticate(...)
     features = Features(api=api)
 
-    #Renew the certificate
+    certificate = features.certificate.get(certificate_dn=r'|CertDn|\|CertName|')
+
+    #### RENEW IT ####
     current_thumbprint = features.certificate.renew(certificate=certificate)
-    features.certificate.wait_for_enrollment_to_complete(certificate=certificate, current_thumbprint=current_thumbprint)
 
-Downloading A Certificate
--------------------------
+    #### WAIT FOR IT TO RENEW ####
+    features.certificate.wait_for_enrollment_to_complete(
+        certificate=certificate,
+        current_thumbprint=current_thumbprint
+    )
 
-.. code-block:: python
-
-    from pytpp import Features, Authenticate, Attributes, AttributeValues
-
-    api = Authenticate(...)
-    features = Features(api=api)
-
-    # Download the Certificate
-    downloaded_cert = features.certificate.download(certificate=certificate)
+    #### DOWNLOAD IT ####
+    downloaded_cert = features.certificate.download(
+        format=AttributeValues.Certificate.Format.base64,
+        certificate=certificate,
+        include_chain=True,
+        root_first_order=True
+    )
 
 Revoking A Certificate
 ----------------------
 
 .. code-block:: python
 
-    from pytpp import Features, Authenticate, Attributes, AttributeValues
+    from pytpp import Features, Authenticate
+    from datetime import datetime
 
     api = Authenticate(...)
     features = Features(api=api)
 
-    # Revoke a Certificate
-    features.certificate.revoke(certificate=certificate, thumbprint=current_thumbprint)
+    previous_versions = features.certificate.get_previous_versions(
+        certificate=r'|CertDn|\|CertName|',
+        exclude_revoked=True
+    )
+    # Revoke previous versions of a certificate if it is expired.
+    for pv in previous_versions:
+        if pv.certificate_details.valid_to < datetime.today():
+            features.certificate.revoke(
+                certificate=r'|CertDn|\|CertName|',
+                thumbprint=pv.certificate_details.thumbprint
+            ))
 
-Deleting A Certificate
-----------------------
-
-.. code-block:: python
-
-    from pytpp import Features, Authenticate, Attributes, AttributeValues
-
-    api = Authenticate(...)
-    features = Features(api=api)
-
-    # Delete the certificate
-    features.certificate.delete(certificate=certificate)
-
-Resetting And Retrying Certificate Requests
--------------------------------------------
+Resetting & Retrying Certificate Requests
+-----------------------------------------
 
 .. code-block:: python
 
     from pytpp import Features, Authenticate, AttributeValues
-        api = Authenticate(
-            host='tppserver.mycompany.com', username='username12'
-            password='passw0rd!@#$', application_id='pytpp',
-            scope='my_scope'
-        )
 
+    api = Authenticate(...)
     features = Features(api=api)
-     #Create certificate with a dictionary
-    certificate_attrs = {
-        common_name='certificate_common_name.com',
-        management_type=AttributeValues.Certificate.ManagementType.enrollment,
-        ca_template='path',
-        hash_algorithm=AttributeValues.Certificate.HashAlgorithm.sha256,
-        city='Salt Lake City',
-        state='Utah',
-        country='US',
-        organization='Venafi',
-        organization_unit=['SPI'],
-        disable_automatic_renewal=False,
-        key_algorithm='rsa',
-        key_strength='2048'
-    }
-    cert = features.certificate.create(
-         name='certificate.com',
-         parent_folder=parent_folder,
-         attributes=certificate_attrs
-    )
+
+    certificate_dn = r'|CertDn|\|CertName|'
+
     try:
-        current_thumbprint = features.certificate.renew(certificate=cert)
-        features.certificate.wait_for_enrollment_to_complete(certificate=cert, current_thumbprint=current_thumbprint)
+        current_thumbprint = features.certificate.renew(certificate=certificate_dn)
+        features.certificate.wait_for_enrollment_to_complete(certificate=certificate_dn, current_thumbprint=current_thumbprint)
     except:
-        features.certificate.retry_from_current_stage(certificate=cert)
+        features.certificate.retry_from_current_stage(certificate=certificate_dn)
+        # ---- OR ----
+        features.certificate.reset(certificate=certificate_dn)
 
-Validation
-----------
+File & SSL Validation
+---------------------
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### VALIDATE A CERTIFICATE ####
+    validated_certificates, warnings = features.certificate.validate(
+        certificates=[r'|CertDn|\|CertName|']
+    )
+    if len(warnings) > 0:
+        # Perhaps we should do something about these warnings...
+        ...
+
+    #### GET VALIDATION RESULTS ####
+    file_validation_results, ssl_validation_results = features.certificate.get_validation_results(
+        certificate=r'|CertDn|\|CertName|'
+    )
+    for result in file_validation_results:
+        # Let's check the file validation results...
+        ...
+    for result in ssl_validation_results:
+        # Let's check the SSL validation results...
+        ...
+
+Getting Certificate Data
+------------------------
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    details = features.certificate.details(
+        certificate=r'|CertDn|\|CertName|'
+    )
+    print(f'Available attributes: {dir(details)}')
+
+Associating/Dissociating A Certificate
+--------------------------------------
+
+.. code-block:: python
+
+    from pytpp import Features, Authenticate
+
+    api = Authenticate(...)
+    features = Features(api=api)
+
+    #### ASSOCIATE CERTIFICATE TO APPLICATION ####
+    features.certificate.associate_application(
+        certificate=r'|CertDn|\|CertName|',
+        applications=[
+            r'|AppDn|\|AppName| - 1',
+            r'|AppDn|\|AppName| - 2'
+        ],
+        push_to_new=True
+    )
+
+    #### DISSOCIATE CERTIFICATE TO APPLICATION ####
+    features.certificate.dissociate_application(
+        certificate=r'|CertDn|\|CertName|',
+        applications=[
+            r'|AppDn|\|AppName| - 1',
+            r'|AppDn|\|AppName| - 2'
+        ],
+        delete_orphans=True  # Orphaned applications will be deleted.
+    )
+
+Handling Workflows
+------------------
+
+.. note::
+    See :ref:`workflow_usage` for more info on handling workflows and tickets.
 
 .. code-block:: python
 
     from pytpp import Features, Authenticate, AttributeValues
 
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12'
-        password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
+    api = Authenticate(...)
     features = Features(api=api)
 
-    cert = features.certificate.create(
-        name='certificate.com',
-        parent_folder=parent_folder,
-        common_name='certificate_common_name.com',
-        management_type=AttributeValues.Certificate.ManagementType.enrollment,
-        ca_template='path',
-        hash_algorithm=AttributeValues.Certificate.HashAlgorithm.sha256,
-        city='Salt Lake City',
-        state='Utah',
-        country='US',
-        organization='Venafi',
-        organization_unit=['SPI'],
-        disable_automatic_renewal=False,
-        key_algorithm='rsa',
-        key_strength='2048'
-    )
-    validated_certificates, warnings = features.certificate.validate(certificate=cert)
-    cert_details = features.certificate.details(certificate=cert)
-    validation_results = features.certificate.get_validation_results(certificate=cert)
+    certificate_dn = r'|CertDn|\|CertName|'
 
-Getting Certifiate Data
------------------------
+    current_thumbprint = features.certificate.renew(certificate=certificate_dn)
 
-ADD ME.
+    #### Expect A Workflow Ticket ####
+    certificate_details = features.certificate.wait_for_stage(
+        certificate=certificate_dn,
+        expect_workflow=True,
+        stage=500
+    ).certificate_details
+    tickets = features.workflow.ticket.get(obj=certificate_dn)
+    for ticket in tickets:
+        ticket_info = features.workflow.ticket.details(ticket_name=ticket)
+        if ticket_info.status == AttributeValues.Workflow.Status.pending:
+            if certificate_details.key_algorithm != AttributeValues.Certificate.KeyAlgorithm.rsa:
+                features.workflow.ticket.update_status(
+                    ticket_name=ticket,
+                    status=AttributeValues.Workflow.Status.rejected,
+                    explanation='RSA is required.'
+                )
+            elif certificate_details.key_size < 2048:
+                features.workflow.ticket.update_status(
+                    ticket_name=ticket,
+                    status=AttributeValues.Workflow.Status.rejected,
+                    explanation='A minimum RSA key size of 2048 is required.'
+                )
+            else:
+                features.workflow.ticket.update_status(
+                    ticket_name=ticket,
+                    status=AttributeValues.Workflow.Status.approved,
+                    explanation='Looks good to me.'
+                )
 
-Associate/Dissociate A Certificate
-----------------------------------
-
-.. note:: Check out :ref:`application` and :ref:`device` for instructions on how to create and use applications and devices.
-
-This example uses a unix based device and PKCS11 application as an example to show you how to associate, disassociate an application, and how to provision a certificate.
-
-.. code-block:: python
-
-    from pytpp import Features, Authenticate, AttributeValues, Attributes
-    from settings.legacy_config.others import Pkcs11UnixDevice, Pkcs11WindowsDevice, Pkcs11Tokens
-
-    class PKCS11:
-        DEFAULT_SETTINGS = {
-            Attributes.application.pkcs11.hsm_requested_usecase:
-                AttributeValues.Application.PKCS11.UseCase.tls_client_rsa,
-            Attributes.application.pkcs11.hsm_cka_label_format:
-                AttributeValues.Application.PKCS11.LabelFormat.date_with_cn,
-            Attributes.application.pkcs11.hsm_import_certificate:
-                AttributeValues.Application.PKCS11.ImportCertificatesIntoHsm.import_certificate_and_chain,
-            Attributes.application.pkcs11.hsm_reverse_subject_dn: "No",
-            Attributes.application.pkcs11.hsm_embed_sans_in_csr: "No"
-        }
-        def __init__(self, device: 'Union[Pkcs11UnixDevice, Pkcs11WindowsDevice]', device_config: 'Types.Config.Object',
-                     application_attributes: dict):
-            self.device = device
-            self.device_config = device_config
-            self.application_attributes = self.DEFAULT_SETTINGS.copy()
-            self.application_attributes.update(application_attributes)
-
-    api = Authenticate(
-        host='tppserver.mycompany.com', username='username12'
-        password='passw0rd!@#$', application_id='pytpp',
-        scope='my_scope'
-    )
-
-    features = Features(api=api)
-    unix_config = dict(
-        connection_method=AttributeValues.Application.ConnectionMethod.ssh,
-        port=22,
-        protection_type=AttributeValues.Application.ProtectionType.softcard,
-        distribution_directory='/home/spi/dist',
-        cryptoki_file_with_path='/opt/nfast/toolkits/pkcs11/libcknfast.so',
-        hsm_client_tool_path='/opt/venafi',
-        openssl_type=AttributeValues.Application.PKCS11.OpenSslType.custom_openssl_directory,
-        openssl_directory='/opt/venafi',
-        openssl_config_file_with_path='/opt/venafi/openssl.cnf'
-    )
-
-    centos_device = features.device.create(
-            name=f'my_centos_device',
-            parent_folder='path/to/parent/folder',
-            attributes={
-                Attributes.device.host                       : ip_address,
-                Attributes.device.credential                 : 'path/to/credential',
-                Attributes.device.concurrent_connection_limit: "99",
-                Attributes.device.remote_server_type         : 'os_type'
-            }
-        )
-    centos = PKCS11(
-        device=CentOS_1,
-        device_config=centos_1_device,
-        application_attributes=unix_config
-    )
-    application = features.application.pkcs11.create(
-            name=f'{name}_{centos.device.name}',
-            device=centos.device_config.dn,
-            connection_method=centos.application_attributes['connection_method'],
-            port=centos.application_attributes['port'],
-            distribution_directory=centos.application_attributes['distribution_directory'],
-            cryptoki_file=centos.application_attributes['cryptoki_file_with_path'],
-            client_tools_directory=centos.application_attributes['hsm_client_tool_path'],
-            openssl_config_file=centos.application_attributes['openssl_config_file_with_path'],
-            openssl_directory=centos.application_attributes['openssl_directory'],
-            import_certificate_into_hsm=centos.application_attributes[
-                Attributes.application.pkcs11.hsm_import_certificate],
-            label_format=centos.application_attributes[Attributes.application.pkcs11.hsm_cka_label_format],
-            protection_type=centos.application_attributes['protection_type'],
-            token_pin=Pkcs11Tokens.all_spec_chars_token.password,
-            token_identifier=Pkcs11Tokens.all_spec_chars_token,
-            use_case=centos.application_attributes[Attributes.application.pkcs11.hsm_requested_usecase]
-        )
-        certificate = features.certificate.create(
-            name='certificate.com',
-            parent_folder=parent_folder,
-            common_name='certificate_common_name.com',
-            management_type=AttributeValues.Certificate.ManagementType.enrollment,
-            ca_template='path',
-            hash_algorithm=AttributeValues.Certificate.HashAlgorithm.sha256,
-            city='Salt Lake City',
-            state='Utah',
-            country='US',
-            organization='Venafi',
-            organization_unit=['SPI'],
-            disable_automatic_renewal=False,
-            key_algorithm='rsa',
-            key_strength='2048'
-        )
-        features.certificate.associate_application(
-            certificate=certificate,
-            applications=[application.dn]
-        )
-
-        current_thumbprint = features.certificate.renew(certificate=cert)
-        features.certificate.wait_for_enrollment_to_complete(certificate=cert, current_thumbprint=current_thumbprint)
-        features.application.pkcs11.wait_for_installation_to_complete(
-            application=application,
-            timeout=180
-        )
-
-        features.certificate.dissociate_application(certificate=certificate, applications=[application.dn])
+    #### Proceed To Wait For Renewal To Complete ####
+    features.certificate.wait_for_enrollment_to_complete(certificate=certificate_dn, current_thumbprint=current_thumbprint)

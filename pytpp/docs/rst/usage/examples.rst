@@ -6,8 +6,8 @@ Examples
 
     examples/application
     examples/authentication
-    examples/certificate_authority
     examples/certificate
+    examples/certificate_authority
     examples/client_groups
     examples/client_work
     examples/credential

@@ -1,4 +1,4 @@
-.. _permissions:
+.. _permissions_usage:
 
 Permissions
 ===========
@@ -7,45 +7,12 @@ Permissions
     Refer to :ref:`authentication` for ways to authenticate to the TPP WebSDK.
 
 
-Updating Permissions
---------------------
-Make sure you are authenticated, see: :ref:`authentication`
-
-This example demonstrates updating permissions to an 'example_folder' for a user named 'example_user"
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    example_folder = features.folder.get('\\VED\\Policy\\example_folder')
-    user = features.identity.user.get('local:example_user')
-
-    features.permissions.update(obj=example_folder,
-                                identity=user,
-                                is_associate_allowed=True,
-                                is_create_allowed=True,
-                                is_delete_allowed=True,
-                                is_manage_permissions_allowed=True,
-                                is_policy_write_allowed=True,
-                                is_private_key_read_allowed=True,
-                                is_private_key_write_allowed=True,
-                                is_read_allowed=True,
-                                is_rename_allowed=True,
-                                is_revoke_allowed=True,
-                                is_view_allowed=True,
-                                is_write_allowed=True
-                                )
+Creating, Updating, & Deleting Permissions
+------------------------------------------
 
 .. note::
-    Permissions can also be assigned using groups instead of users, please see: :ref:`identity_object`
-
-Deleting Permissions
---------------------
-
-How to remove permissions from an object
+    Creating and updating permissions use the same method: ``features.permissions.update()``. Updating
+    permissions will create them if they do not exist for the user or group.
 
 .. code-block:: python
 
@@ -54,47 +21,35 @@ How to remove permissions from an object
     api = Authenticate(...)
     features = Features(api)
 
-    example_folder = features.folder.get('\\VED\\Policy\\example_folder')
-    user = features.identity.user.get('local:example_user')
+    #### CREATE/UPDATE ####
+    features.permissions.update(
+        obj=r'|CaDn|',
+        identity='|DomainUser|',
+        is_associate_allowed=False,
+        is_create_allowed=True,
+        is_delete_allowed=True,
+        is_manage_permissions_allowed=False,
+        is_policy_write_allowed=False,
+        is_private_key_read_allowed=False,
+        is_private_key_write_allowed=False,
+        is_read_allowed=True,
+        is_rename_allowed=True,
+        is_revoke_allowed=False,
+        is_view_allowed=True,
+        is_write_allowed=True
+    )
 
-    features.permissions.delete(obj=example_folder, identity=user)
+    #### DELETE ####
+    features.permissions.delete(
+        obj=r'|CertDn|',
+        identity='|DomainUser|'
+    )
 
-Get Explicit Permissions
-------------------------
+Getting Explicit Permissions
+----------------------------
 
-Explicit permissions are the permissions that are `explicitly` granted to a user or group on a particular object.
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    permissions = feature.permissions.get_explicit(obj='\\VED\\Policy\\example_folder', identity='local:example_user')
-
-    print(permissions.__dict__)
-
-Get Implicit Permissions
-------------------------
-
-Implicit permissions are permissions inherited from other folders and group memberships.
-
-.. code-block:: python
-
-    from pytpp import Authenticate, Features
-
-    api = Authenticate(...)
-    features = Features(api)
-
-    permissions = feature.permissions.get_implicit(obj='\\VED\\Policy\\example_folder', identity='local:example_user')
-
-    print(permissions.__dict__)
-
-Get Effective Permissions
--------------------------
-
-Effective permissions are the permissions that are `effectively` enforced by TPP. All Master Admin, implicit, and explicit permissions are taken into account to evaluate the final effective permissions of a user or group.
+.. note::
+    Explicit permissions are the permissions that are *explicitly* granted to a user or group on the object.
 
 .. code-block:: python
 
@@ -103,14 +58,17 @@ Effective permissions are the permissions that are `effectively` enforced by TPP
     api = Authenticate(...)
     features = Features(api)
 
-    permissions = feature.permissions.get_effective(obj='\\VED\\Policy\\example_folder', identity='local:example_user')
+    #### GET EXPLICIT PERMISSIONS ####
+    permissions = feature.permissions.get_explicit(
+        obj=r'|CertDn|',
+        identity='|DomainUser|',
+    )
 
-    print(permissions.__dict__)
+Getting Implicit Permissions
+----------------------------
 
-List Identities
----------------
-
-Get a list of all identities that have permissions to an object
+.. note::
+    Implicit permissions are permissions inherited from other folders and group memberships.
 
 .. code-block:: python
 
@@ -119,7 +77,45 @@ Get a list of all identities that have permissions to an object
     api = Authenticate(...)
     features = Features(api)
 
-    identities = feature.permissions.list_identities(obj='\\VED\\Policy\\example_folder')
+    permissions = feature.permissions.get_implicit(
+        obj=r'|CaDn|',
+        identity='|DomainUser|',
+    )
+
+Getting Effective Permissions
+-----------------------------
+
+.. note::
+    Effective permissions are the permissions that are *effectively* enforced by TPP. All master admin, implicit,
+    and explicit permissions are taken into account to evaluate the final effective permissions of a user or group.
+
+.. code-block:: python
+
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
+
+    permissions = feature.permissions.get_effective(
+        obj=r'|CaDn|',
+        identity='|DomainUser|',
+    )
+
+Listing Identities Permitted On An Object
+-----------------------------------------
+
+.. note::
+    Identites returned are those having *effective* permissions on the object.
+
+.. code-block:: python
+
+    from pytpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
+
+    #### LIST ALL IDENTITY PERMISSIONS ####
+    identities = feature.permissions.list_identities(obj=r'|CaDn|')
 
     for identity in identities:
         print(identity.name)

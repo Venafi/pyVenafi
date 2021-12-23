@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path += [os.path.abspath('..'), os.path.abspath('../..')]
+import re
 from setup import __version__
 
 # -- Project information -----------------------------------------------------
@@ -71,11 +72,88 @@ link = lambda name, label, href:  f"""
    <a href="{href}">{label}</a>
 """
 
-variables = [
+doc_variables = [
+    string(name='Websdk', value='TPP WebSDK API'),
     string(name='Product', value='PyTPP'),
     link(name='Doc Home Page', label='Venafi TPP WebSDK Documentation', href='https://docs.venafi.com/index.php'),
     link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/')
 ]
 
-rst_prolog = '\n'.join(variables) + '\n'
+rst_prolog = '\n'.join(doc_variables) + '\n'
 # endregion Documentation Variables
+
+# region Code Block Variables
+ca_dn = r'\VED\Policy\Administration\CAs'
+ca = 'Awesome CA'
+
+folder = 'Awesome Folder'
+
+cert_dn = r'\VED\Policy\Certificates\Awesome Team'
+cert = 'awesome_cert.com'
+orppan_dn = r'\VED\Policy\_Orphans'
+
+client_group = 'Awesome Client Group'
+
+client_work = 'Awesome Client Work'
+
+cred_dn = r'\VED\Policy\Administration\Credentials'
+cred = 'Awesome Credential'
+
+custom_field_name = 'Awesome Custom Field'
+
+dev_dn = r'\VED\Policy\Installations\Awesome Devices'
+dev = 'awesome_device.com'
+jump_server = 'awesome_jump_server.com'
+
+appl_dn = fr'{dev_dn}\{dev}'
+appl = 'Awesome App'
+
+local_user = 'local:AwesomeUser'
+domain_user = 'AD+AwesomeAD:user123'
+local_group = 'local:AwesomeGroup'
+
+placement_rule_name = 'Awesome Placement Rule'
+
+wf_dn = r'\VED\Policy\Administration\Workflow'
+wf = 'Awesome Workflow'
+
+engine = 'Awesome Engine'
+
+code_block_variables = {
+    'AppDn': appl_dn,
+    'CaDn': ca_dn,
+    'CertDn': cert_dn,
+    'CredDn': cred_dn,
+    'DevDn': dev_dn,
+    'WfDn': wf_dn,
+    'AppName': appl,
+    'CaName': ca,
+    'CertName' : cert,
+    'ClientGroupName': client_group,
+    'ClientWorkName': client_work,
+    'CredName'  : cred,
+    'CustomFieldName': custom_field_name,
+    'DevName': dev,
+    'DomainUser': domain_user,
+    'EngineName': engine,
+    'FolderName': folder,
+    'JumpServerName': jump_server,
+    'LocalUser': local_user,
+    'LocalGroup': local_group,
+    'OrphanDn': orppan_dn,
+    'PlacementRuleName': placement_rule_name,
+    'WfName'     : wf,
+}
+
+
+def replace_variables_in_code_block(app, docname, source):
+    result = source[0]
+    for name, value in app.config.code_block_variables.items():
+        result = re.sub('\|(?!\|)' + name + '\|(?!\|)', value.replace('\\', '\\\\'), result)
+    source[0] = result
+
+
+def setup(app):
+    app.add_config_value('code_block_variables', {}, True)
+    app.connect('source-read', replace_variables_in_code_block)
+# endregion Code Block Variables

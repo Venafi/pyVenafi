@@ -34,7 +34,6 @@ from pytpp.features.definitions.classes import Classes
 from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.tools.helpers.date_converter import from_date_string
 from typing import Union, List, TYPE_CHECKING
-
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Config, Identity
 
@@ -45,7 +44,7 @@ class _ApplicationBase(FeatureBase):
         super().__init__(api=api)
         self._class_name = str(class_name)
 
-    def delete(self, application: Union['Config.Object', str]):
+    def delete(self, application: 'Union[Config.Object, str]'):
         """
         Delete an Application object.
 
@@ -56,7 +55,7 @@ class _ApplicationBase(FeatureBase):
         self._secret_store_delete(object_dn=application_dn)
         self._config_delete(object_dn=application_dn)
 
-    def disable(self, application: Union['Config.Object', str]):
+    def disable(self, application: 'Union[Config.Object, str]'):
         """
         Disables all processing and provisioning of the application.
 
@@ -74,7 +73,7 @@ class _ApplicationBase(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def enable(self, application: Union['Config.Object', str]):
+    def enable(self, application: 'Union[Config.Object, str]'):
         """
         Enables all processing and provisioning of the application.
 
@@ -104,7 +103,7 @@ class _ApplicationBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_associated_certificate(self, application: Union['Config.Object', str]):
+    def get_associated_certificate(self, application: 'Union[Config.Object, str]'):
         """
         Returns the Certificate object associated to the Application object.
 
@@ -152,7 +151,7 @@ class _ApplicationBase(FeatureBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def _get_stage(self, application: Union['Config.Object', str]):
+    def _get_stage(self, application: 'Union[Config.Object, str]'):
         """
         Returns the current processing stage of the application object.
 
@@ -170,7 +169,7 @@ class _ApplicationBase(FeatureBase):
 
         return int(response.values[0]) if response.values else None
 
-    def get_stage(self, application: Union['Config.Object', str]):
+    def get_stage(self, application: 'Union[Config.Object, str]'):
         """
         Returns the current processing stage of the application object.
 
@@ -182,7 +181,7 @@ class _ApplicationBase(FeatureBase):
         """
         self._get_stage(application=application)
 
-    def get_status(self, application: Union['Config.Object', str]):
+    def get_status(self, application: 'Union[Config.Object, str]'):
         """
         Returns the current processing status of the application object.
 
@@ -200,7 +199,7 @@ class _ApplicationBase(FeatureBase):
 
         return response.values[0] if response.values else None
 
-    def _is_in_error(self, application: Union['Config.Object', str]):
+    def _is_in_error(self, application: 'Union[Config.Object, str]'):
         """
         Returns ``True`` if the application object is in an error state.
 
@@ -218,7 +217,7 @@ class _ApplicationBase(FeatureBase):
 
         return bool(response.values[0]) if response.values else False
 
-    def wait_for_installation_to_complete(self, application: Union['Config.Object', str], timeout: int = 60):
+    def wait_for_installation_to_complete(self, application: 'Union[Config.Object, str]', timeout: int = 60):
         """
         Waits for the application object's "Last Pushed On" attribute to be a date greater than
         or equal to the "Last Renewed On" date on the associated certificate. If the certificate
@@ -2129,7 +2128,7 @@ class _ApplicationGroupBase(FeatureBase):
         self.class_name = class_name
         self.certificate_suffix = f'{class_name.split(maxsplit=1)[0]} App Group'
 
-    def delete(self, application_group: Union['Config.Object', str], dissociate: bool = True):
+    def delete(self, application_group: 'Union[Config.Object, str]', dissociate: bool = True):
         """
         Deletes an Application group object.
 
@@ -2169,7 +2168,7 @@ class _ApplicationGroupBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_applications_in_group(self, application_group: Union['Config.Object', str]):
+    def get_applications_in_group(self, application_group: 'Union[Config.Object, str]'):
         """
         Args:
             application_group: :ref:`config_object` or :ref:`dn` of the application group.
@@ -2208,7 +2207,7 @@ class _ApplicationGroupBase(FeatureBase):
 
         return app_group
 
-    def _get_applications_in_group(self, application_group: Union['Config.Object', str]):
+    def _get_applications_in_group(self, application_group: 'Union[Config.Object, str]'):
         application_group_dn = self._get_dn(application_group)
         certificate_dn = self._api.websdk.Config.Read.post(
             object_dn=application_group_dn,
@@ -2226,7 +2225,7 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache_application_group)
 
-    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
+    def create(self, applications: 'List[Union[Config.Object, str]]', certificate: 'Union[Config.Object, str]',
                common_data_location: str = None, attributes: dict = None):
         """
         Args:
@@ -2279,7 +2278,7 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11_application_group)
 
-    def create(self, applications: List[Union['Config.Object', str]], certificate: Union['Config.Object', str],
+    def create(self, applications: 'List[Union[Config.Object, str]]', certificate: 'Union[Config.Object, str]',
                attributes: dict = None):
         """
         Args:

@@ -35,7 +35,7 @@ class _CredentialBase(FeatureBase):
 
         return self._get_config_object(object_dn=dn)
 
-    def delete(self, credential: Union['Config.Object', str]):
+    def delete(self, credential: 'Union[Config.Object, str]'):
         """
         Deletes the credential object.
 
