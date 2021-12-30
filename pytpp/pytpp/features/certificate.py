@@ -267,7 +267,7 @@ class Certificate(FeatureBase):
             exclude_revoked: If ``True``, do not include revoked certificates.
 
         Returns:
-            List[:class:`.dataclasses.certificate.PreviousVersions`]
+            List[:class:`~.dataclasses.certificate.PreviousVersions`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
@@ -282,7 +282,7 @@ class Certificate(FeatureBase):
             certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
 
         Returns:
-            Tuple[:class:`.dataclasses.certificate.File`, :class:`.dataclasses.certificate.SslTls`]
+            Tuple[:class:`~.dataclasses.certificate.File`, :class:`~.dataclasses.certificate.SslTls`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
