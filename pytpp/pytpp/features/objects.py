@@ -1,13 +1,14 @@
+from dataclasses import dataclass
 from typing import List, Union
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat
 from pytpp.properties.response_objects.config import Config
 
 
-class _AttributeValue:
-    def __init__(self, values: List[str], locked: bool):
-        self.values = values
-        self.locked = locked
+@dataclass
+class AttributeValue:
+    values: List[str]
+    locked: bool
 
 
 @feature('Objects')
@@ -17,56 +18,15 @@ class Objects(FeatureBase):
 
     def clear(self, obj: 'Union[Config.Object, str]', attributes: Union[dict, List[str]]):
         """
-        If ``attributes`` are not provided, clears the DN attribute name along with all of its values.
-        If ``attributes`` are provided, then only the corresponding policy attribute values
-        will be cleared. No error is thrown if the attribute value doesn't exist to begin with. If the
-        same attribute name is defined in any ancestor folder, then this folder will inherit that setting.
-
-        Examples:
-        1. Clear all policy values by the given policy attribute names.
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                # Clear all values pertaining to Certificate Management Type and
-                # Certificate Organization.
-                obj = features.objects.get('\\VED\\Policy\\MyPolicy\\MyCert')
-                features.objects.clear(
-                    obj=obj,
-                    attributes=[
-                        AttributeNames.Certificate.management_type,
-                        AttributeNames.Certificate.organization
-                    ]
-                )
-
-        2. Clear only the specified values of the given policy attribute names.
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                # Clear all values pertaining to Certificate Organizational Unit only where
-                # the value equals "Venafi".
-                obj = features.objects.get('\\VED\\Policy\\MyPolicy\\MyCert')
-                features.objects.clear(
-                    obj=obj,
-                    attributes={
-                        AttributeNames.Certificate.organizational_unit: 'Venafi'
-                    }
-                )
-
+        Clears attributes from an object.
+        
         Args:
-            obj: Config.Object or DN of the TPP Object.
-            attributes: Either a list of attribute names or a dictionary of attribute
-                name/value pairs where the name is the attribute name and the value
-                is the attribute value.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            attributes: Two types are supported:
+
+                * ``list`` of attribute names to be cleared entirely.
+                * ``dict`` whose keys are attribute names and whose values are the values to be cleared
+                  from the attribute. If the attribute is left empty it is cleared.
         """
         obj_dn = self._get_dn(obj)
         if isinstance(attributes, list):
@@ -94,17 +54,15 @@ class Objects(FeatureBase):
                     if result.code != 1:
                         raise InvalidResultCode(code=result.code, code_description=result.config_result)
         else:
-            raise TypeError(f'Expected attributes to be of type "list[str]" or "dict", but got {type(attributes)} instead.')
+            raise TypeError(f'Expected attributes to be of type "list" or "dict", but got {type(attributes)} instead.')
 
     def exists(self, object_dn: str = None):
         """
-        Returns a boolean of the existence of the given object DN.
-
         Args:
-            object_dn: The object DN to check.
+            object_dn: The :ref:`dn` of the object.
 
         Returns:
-            A boolean of the existence of the given ``object_dn``.
+           bool: ``True`` if ``object_dn`` exist, else ``False``.
         """
         dn = self._get_dn(obj=object_dn)
         result = self._api.websdk.Config.IsValid.post(object_dn=dn)
@@ -112,20 +70,19 @@ class Objects(FeatureBase):
 
     def find_policy(self, obj: 'Union[Config.Object, str]', class_name: str, attribute_name: str):
         """
-        Returns the folder that suggests or locks a particular attribute value to the specified object.
-        A tuple of 3 elements is returned where the first element is the absolute path to the folder that
-        specifies the attribute values, the attribute values, and whether those values are locked or not.
+        Find the folder that defines the policy attribute of the ``class_name`` on a given object.
 
         Args:
-            obj: Config.Object or DN of the TPP Object.
-            class_name: TPP Class Name of TPP Object.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            class_name: TPP class name of the object.
             attribute_name: Name of the attribute.
 
         Returns:
-            A tuple of 3 elements:
-            1. Policy DN: the absolute path to the folder that suggests or locks a particular attribute.
-            2. Attribute Values: A list of all values corresponding to the given attribute name.
-            3. Locked: A boolean representing whether or not the returned values are locked.
+            Tuple[str, List[str], bool]: A ``tuple`` of
+
+                * A :ref:`dn` of the folder implementing the policy.
+                * A list of attribute values.
+                * ``True`` if the policy value is locked, else ``False``.
         """
         obj_dn = self._get_dn(obj)
         resp = self._api.websdk.Config.FindPolicy.post(
@@ -147,17 +104,15 @@ class Objects(FeatureBase):
 
     def get(self, object_dn: str = None, object_guid: str = None, raise_error_if_not_exists: bool = True):
         """
-        Converts an Object DN or Object GUID into a Config Object and returns it. Only
-        one of the parameters is required.
+        One of ``object_dn`` or ``object_guid`` is required.
 
         Args:
-            object_dn: Absolute path to the object.
+            object_dn: :ref:`dn` of the object.
             object_guid: GUID of the object.
-            raise_error_if_not_exists: If ``True``, an empty Config Object is returned where each property
-                is ``None``.
+            raise_error_if_not_exists: If ``True`` raise an exception if the obejct doesn't exist.
 
         Returns:
-            Config Object
+            :ref:`config_object` of the object.
         """
         return self._get_config_object(
             object_dn=object_dn,
@@ -167,54 +122,18 @@ class Objects(FeatureBase):
 
     def read(self, obj: 'Union[Config.Object, str]', attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
         """
-        Reads attributes on the given TPP Object and attribute name. Returns List[List, bool] where the
-        first element of the list is a list of values and the second element a boolean indicating whether
-        or not the value(s) are locked on the policy. An empty list of values may be returned.
-
-        Note that the values returned are the `effective` values for the given attribute name, meaning that
-        the policy values enforced by the object's ancestor folders that effectively override any setting
-        on the object are taken into account. If the goal is to read the attribute values for an attribute
-        without any regard to policy rules, do this:
-
-        .. code-block:: python
-
-            from pytpp import logger, Authenticate, AttributeNames
-
-            api = Authenticate(# params here)
-
-            resp = api.websdk.Config.ReadDn.post(
-                object_dn='\\VED\\Policy\\MyPolicy\\MyCert',
-                attribute_name=AttributeNames.Certificate.management_type
-            )
-
-            values, locked = resp.values, resp.locked
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                obj = features.objects.get('\\VED\\Policy\\MyPolicy\\MyCert')
-                values, locked = features.objects.read(
-                    obj=obj,
-                    attribute_name=AttributeNames.Certificate.management_type
-                )
-
         Args:
-            obj: Config.Object or DN of the TPP Object.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
             attribute_name: The attribute name.
             include_policy_values: If ``True``, the effective value(s) are returned.
-                Otherwise only values assigned to the DN explicitly are returned.
+                Otherwise only values explicitly assigned to the object are returned.
             timeout: Read timeout in seconds.
 
         Returns:
-            List[List, bool] where the first element of the list is a list of values and the second element a
-            boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
-            be returned.
+            An ``AttributeValue`` object with these properties
+
+            * **values** *(List[str])* - List of attribute values.
+            * **locked** *(bool)* - ``True`` if the value is locked by policy.
         """
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
@@ -235,26 +154,14 @@ class Objects(FeatureBase):
 
     def read_all(self, obj: 'Union[Config.Object, str]'):
         """
-        Reads all attributes on the given TPP Object.
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                obj = features.objects.get('\\VED\\Policy\\MyPolicy\\MyCert')
-                values, locked = features.folder.read_all(obj=obj)
-
         Args:
-            obj: Config.Object or DN of the TPP Object.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
 
         Returns:
-            A list of NameValue objects having ``name`` and ``values`` properties corresponding to each
-            attribute name and attribute value.
+            List of :class:`~.dataclasses.config.NameValues` where the
+
+            * name is the attribute name.
+            * values is the list of attribute values.
         """
         obj_dn = self._get_dn(obj)
         resp = self._api.websdk.Config.ReadAll.post(object_dn=obj_dn)
@@ -267,12 +174,12 @@ class Objects(FeatureBase):
 
     def rename(self, obj: 'Union[Config.Object, str]', new_object_dn: str):
         """
-        Renames an object DN. This method requires two absolute paths, the old one and the new one. This
-        method also effectively moves objects from one folder to another.
+        .. note::
+            This method can be used to rename objects and move their location.
 
         Args:
-            obj: Config.Object or DN of the TPP Object.
-            new_object_dn: Absolute path to the new object location.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            new_object_dn: :ref:`dn` of the new object.
         """
         obj_dn = self._get_dn(obj)
         if not new_object_dn.startswith('\\VED'):
@@ -288,29 +195,10 @@ class Objects(FeatureBase):
 
     def update(self, obj: 'Union[Config.Object, str]', attributes: dict):
         """
-        Updates attributes on an object. If the attribute is locked TPP will simply ignore the request. To avoid
-        any confusion, it would be wise to consider validating the policy settings to ensure the desired attribute
-        is not already locked. To do so, use :meth:`pytpp.features.folder.Folder.read_policy`.
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                obj = features.objects.get('\\VED\\Policy\\MyPolicy\\MyCert')
-                features.objects.update(
-                    obj=obj,
-                    attributes={
-                        AttributeNames.Certificate.organizational_unit: 'Engineering'
-                    }
-                )
+        Updates attributes on an object. If the attribute is locked TPP will simply ignore the request.
 
         Args:
-            obj: Config.Object or DN of the TPP Object.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
@@ -328,19 +216,22 @@ class Objects(FeatureBase):
     def wait_for(self, obj: 'Union[Config.Object, str]', attribute_name: str, attribute_value: str, include_policy_values: bool = False,
                  timeout: int = 10):
         """
-        Waits for the ``attribute_name`` to have the ``attribute_value`` on the object_dn for the timeout period. A
-        TimeoutError is thrown if the ``attribute_name`` does not have the ``attribute_value``.
+        Waits for the ``attribute_name`` to have the ``attribute_value`` on the object within the timeout period. A
+        ``TimeoutError`` is raised if the ``attribute_name`` does not have the ``attribute_value``.
 
         Args:
-            obj: Config.Object or DN of the TPP Object.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
             attribute_name: The name of the attribute.
             attribute_value: The expected value to the ``attribute_name``.
             include_policy_values: If ``True``, the effective value(s) are returned.
-                Otherwise only values assigned to the DN explicitly are returned.
+                Otherwise only values explicitly assigned to the object  are returned.
             timeout: Timeout period in seconds.
 
         Returns:
-            Values of the given ``attribute_name`` for the given ``object_dn``.
+            An ``AttributeValue`` object with these properties
+
+            * **values** *(List[str])* - List of attribute values.
+            * **locked** *(bool)* - ``True`` if the value is locked by policy.
         """
         obj_dn = self._get_dn(obj)
         with self._Timeout(timeout=timeout) as to:
@@ -363,29 +254,10 @@ class Objects(FeatureBase):
 
     def write(self, obj: 'Union[Config.Object, str]', attributes: dict):
         """
-        Writes new attributes on an object. If the attribute is locked TPP will simply ignore the request. To avoid
-        any confusion, it would be wise to consider validating the policy settings to ensure the desired attribute
-        is not already locked. To do so, use :meth:`pytpp.features.folder.Folder.read_policy`.
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                obj = features.objects.get('\\VED\\Policy\\MyPolicy\\MyCert')
-                features.objects.write(
-                    obj=obj,
-                    attributes={
-                        AttributeNames.Certificate.organizational_unit: 'Engineering'
-                    }
-                )
+        Writes new attributes on an object. If the attribute is locked TPP will simply ignore the request.
 
         Args:
-            obj: Config.Object or DN of the TPP Object.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
         """
@@ -407,10 +279,10 @@ class Objects(FeatureBase):
                 object_dn=obj_dn,
                 attribute_name=attribute_name
             )
-            return resp.result, _AttributeValue(values=resp.values, locked=resp.locked)
+            return resp.result, AttributeValue(values=resp.values, locked=resp.locked)
         else:
             resp = self._api.websdk.Config.Read.post(
                 object_dn=obj_dn,
                 attribute_name=attribute_name
             )
-            return resp.result, _AttributeValue(values=resp.values, locked=False)
+            return resp.result, AttributeValue(values=resp.values, locked=False)

@@ -52,34 +52,6 @@ class CustomField(FeatureBase):
         to be policyable and is locked to a specific value, only "X509 Certificate" objects under the policy folder
         will have that value locked.
 
-        The field ``data_types`` are stored in AttributeValues.
-
-        Examples:
-            .. code-block::python
-
-                from pytpp import Authenticate, Features, AttributeValues, Classes
-
-                api = Authenticate(...)
-                features = Features(api)
-
-                custom_field = features.custom_fields.create(
-                    label='What do you think about custom fields?',
-                    name='My Fancy Custom Field',
-                    classes=[
-                        Classes.Certificate.x509_certificate
-                    ],
-                    data_type=AttributeValues.CustomField.Type.list,
-                    mandatory=False,
-                    allowed_values=[
-                        'Cool',
-                        'Needs Improvement',
-                        'Dumb',
-                    ],
-                    error_message="Something ain't right...',
-                    single=False,  # Multiple selection enabled.
-                    policyable=True  # Set to True to enable locking values on policy folders.
-                )
-
         Args:
             label: The label text for the custom field.
             name: The name of the custom field object.
@@ -110,8 +82,7 @@ class CustomField(FeatureBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Metadata Item object.
-
+            The custom field :class:`~.dataclasses.metadata.Item` data.
         """
         item = {
             'AllowedCharacters': allowed_characters,
@@ -148,13 +119,13 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.item
 
-    def delete(self, custom_field: Union['CustomFields.Item', str], remove_data: bool = True):
+    def delete(self, custom_field: Union['Config.Object', 'CustomFields.Item', str], remove_data: bool = True):
         """
         Deletes a custom field and all instances of it, including policy settings. If ``remove_data = False``, then
         an exception will be raised if there is existing data for the custom field on any object.
 
         Args:
-            custom_field: Config.Object or name of the custom field
+            custom_field: :ref:`config_object` or name of the custom field.
             remove_data: If ``True``, then deletes the custom field regardless of data existing on the custom field
                 on any object that implements it.
         """
@@ -167,30 +138,25 @@ class CustomField(FeatureBase):
 
     def get(self, name: str = None, raise_error_if_not_exists: bool = True):
         """
-        Fetches the config object a custom field object.
-
         Args:
             name: The name of the custom field object.
             raise_error_if_not_exists: Raise an exception if the custom field does not exist.
 
         Returns:
-            Config object of the custom field.
+            :ref:`config_object` of the custom field object.
         """
         return self._get_config_object(
             object_dn=f'{self._metadata_root_dn}\\{name}',
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_item_details(self, custom_field: Union['CustomFields.Item', str] = None):
+    def get_item_details(self, custom_field: Union['Config.Object', 'CustomFields.Item', str] = None):
         """
-        Fetches the item details of a custom field object according to the data
-        returned by the WebSDK API "POST Metadata/LoadItem".
-
         Args:
-            custom_field: The Config.Object or name of the custom field object.
+            custom_field: :ref:`config_object` or name of the custom field object.
 
         Returns:
-            Metadata Item object.
+            The custom field :class:`~.dataclasses.metadata.Item` data.
         """
         custom_field_dn = self._get_dn(custom_field, parent_dn=self._metadata_root_dn)
         response = self._api.websdk.Metadata.LoadItem.post(dn=custom_field_dn)
@@ -202,25 +168,26 @@ class CustomField(FeatureBase):
         Lists all custom fields registered in TPP.
 
         Returns:
-            List of Metadata Item objects.
+            List of each custom field :class:`~.dataclasses.metadata.Item` data.
         """
         response = self._api.websdk.Metadata.Items.get()
         self._validate_result_code(response.result)
         return response.items
 
-    def read(self, obj: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str]) -> EffectiveValues:
+    def read(self, obj: 'Union[Config.Object, str]', custom_field: Union['Config.Object', 'CustomFields.Item', str]) -> EffectiveValues:
         """
-        Reads the actual value(s) of a custom field, accounting for policy settings. Value(s) may be None.
+        Reads the effective value(s) of a custom field (which includes for policy values). Value(s) may be None.
 
         Args:
-            obj: Config object or DN of the object having the custom field.
-            custom_field: Config.Object or name of the custom field.
+            obj: :ref:`config_object` or :ref:`dn` of the object having the custom field.
+            custom_field: :ref:`config_object` or name of the custom field..
 
         Returns:
-            EffectiveValues object:
-                * locked: Boolean. If ``True``, the ``values`` are locked by the policy.
-                * policy_dn: DN of the policy folder locking the values.
-                * values: List of values.
+            A *EffectiveValues* object with these properties
+
+            * **locked** *bool* - If ``True``, the ``values`` are locked by the policy.
+            * **policy_dn** *str* - :ref:`dn` of the policy folder locking the values.
+            * **values** *List[str]* - List of values.
         """
         obj_dn = self._get_dn(obj)
         custom_field_guid = self._get_guid(custom_field, parent_dn=self._metadata_root_dn)
@@ -231,19 +198,21 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return EffectiveValues(locked=response.locked, values=response.values, policy_dn=response.policy_dn)
 
-    def read_policy(self, folder: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str], class_name: str) -> PolicyValues:
+    def read_policy(self, folder: 'Union[Config.Object, str]', custom_field: Union['Config.Object', 'CustomFields.Item', str],
+                    class_name: str) -> PolicyValues:
         """
-        Reads the policy value(s) of a custom field, accounting for policy settings. Value(s) may be None.
+        Reads the effective value(s) of a custom field set on a policy. Value(s) may be None.
 
         Args:
-            folder: Config object or name of the folder.
-            custom_field: Config.Object or name of the custom field object.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            custom_field: :ref:`config_object` or name of the custom field. 
             class_name: Object class.
 
         Returns:
-            PolicyValues object:
-                * locked: Boolean. If ``True``, the ``values`` are locked by the policy.
-                * values: List of values.
+            A *PolicyValues* object with these properties
+
+            * **locked** *bool* - If ``True``, the ``values`` are locked by the policy.
+            * **values** *List[str]* - List of values.
         """
         folder_dn = self._get_dn(folder)
         custom_field_guid = self._get_guid(custom_field, parent_dn=self._metadata_root_dn)
@@ -255,19 +224,20 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return PolicyValues(locked=response.locked, values=response.values)
 
-    def update(self, custom_field: Union['CustomFields.Item', str], allowed_characters: List[str] = None, allowed_values: List[str] = None,
-               category: str = None, classes: list = None, data_type: int = None, date_only: bool = None,
-               default_values: str = None, display_after: str = None, error_message: str = None, help_text: str = None,
-               label: str = None, localization_table: str = None, localized_help: str = None, localized_label: str = None,
-               localized_set: str = None, mandatory: bool = None, mask: str = None, maximum_length: int = None,
-               minimum_length: int = None, name: str = None, policyable: bool = None, regular_expression: str = None,
-               render_hidden: bool = None, render_read_only: bool = None, single: bool = None, time_only: bool = None):
+    def update(self, custom_field: Union['Config.Object', 'CustomFields.Item', str], allowed_characters: List[str] = None,
+               allowed_values: List[str] = None, category: str = None, classes: list = None, data_type: int = None,
+               date_only: bool = None, default_values: str = None, display_after: str = None, error_message: str = None,
+               help_text: str = None, label: str = None, localization_table: str = None, localized_help: str = None,
+               localized_label: str = None, localized_set: str = None, mandatory: bool = None, mask: str = None,
+               maximum_length: int = None, minimum_length: int = None, name: str = None, policyable: bool = None,
+               regular_expression: str = None, render_hidden: bool = None, render_read_only: bool = None, single: bool = None,
+               time_only: bool = None):
         """
         Updates a custom field's properties. If a parameter is ``None`` it does not affect the current setting of that
         property. Property values are not reset to their defaults.
 
         Args:
-            custom_field: Config object or name of the metadata object.
+            custom_field: :ref:`config_object` or name of the metadata object.
             label: The label text for the custom field.
             name: The name of the custom field object.
             classes: The classes that this field applies to.
@@ -294,8 +264,9 @@ class CustomField(FeatureBase):
             render_read_only: If ``False``, the user can change the default values (if not locked by policy).
             single: If ``False``, the user can select/input multiple items.
             time_only: If ``True``, time of day is required.
+
         Returns:
-            Metadata Item object.
+            The custom field :class:`~.dataclasses.metadata.Item` data.
         """
         custom_field_dn = self._get_dn(custom_field, parent_dn=self._metadata_root_dn)
         listify = lambda x: [x] if x and not isinstance(x, list) else x
@@ -337,15 +308,15 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return self.get_item_details(custom_field=custom_field)
 
-    def write(self, obj: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str], values: List,
+    def write(self, obj: 'Union[Config.Object, str]', custom_field: Union['Config.Object', 'CustomFields.Item', str], values: List,
               keep_existing: bool = True):
         """
         Writes a set of values to a custom field on the specified ``obj``. If ``keep_existing = False``,
         then all custom fields related to the ``obj`` are reset to their default values.
 
         Args:
-            obj: Config object or name of the object with the custom field.
-            custom_field: Config.Object or name of the custom field object.
+            obj: :ref:`config_object` or :ref:`dn` of the object with the custom field.
+            custom_field: :ref:`config_object` or name of the custom field. object.
             values: List of values to write to ``object_dn``.
             keep_existing: If ``True``, all other custom fields remain unaffected.
         """
@@ -358,7 +329,7 @@ class CustomField(FeatureBase):
         )
         self._validate_result_code(result=response.result)
 
-    def write_policy(self, folder: 'Union[Config.Object, str]', custom_field: Union['CustomFields.Item', str], class_name: str,
+    def write_policy(self, folder: 'Union[Config.Object, str]', custom_field: Union['Config.Object', 'CustomFields.Item', str], class_name: str,
                      values: List, locked: bool = False):
         """
         Writes a set of values to a custom field on the specified ``folder``. The custom field MUST be policyable.
@@ -366,8 +337,8 @@ class CustomField(FeatureBase):
         :meth:``update`` to update the custom field with ``policyable=True``.
 
         Args:
-            folder: Config object of the folder.
-            custom_field: Config.Object or name of the custom field object.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            custom_field: :ref:`config_object` or name of the custom field. object.
             class_name: Name of the object class.
             values: List of values to write to ``obj``.
             locked: If ``True``, all subordinate objects inherit and cannot modify the ``values``.

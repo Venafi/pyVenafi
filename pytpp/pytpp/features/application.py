@@ -46,10 +46,10 @@ class _ApplicationBase(FeatureBase):
 
     def delete(self, application: 'Union[Config.Object, str]'):
         """
-        Delete an Application object.
+        Deletes an application object.
 
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
         """
         application_dn = self._get_dn(application)
         self._secret_store_delete(object_dn=application_dn)
@@ -60,7 +60,7 @@ class _ApplicationBase(FeatureBase):
         Disables all processing and provisioning of the application.
 
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
         """
         application_dn = self._get_dn(application)
         result = self._api.websdk.Config.Write.post(
@@ -78,7 +78,7 @@ class _ApplicationBase(FeatureBase):
         Enables all processing and provisioning of the application.
 
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
         """
         application_dn = self._get_dn(application)
         result = self._api.websdk.Config.ClearAttribute.post(
@@ -96,7 +96,7 @@ class _ApplicationBase(FeatureBase):
             raise_error_if_not_exists: Raise an exception if the application :ref:`dn` does not exist.
 
         Returns:
-            :ref:`config_object` of the application.
+            :ref:`config_object` of the application
         """
         return self._get_config_object(
             object_dn=application_dn,
@@ -105,13 +105,11 @@ class _ApplicationBase(FeatureBase):
 
     def get_associated_certificate(self, application: 'Union[Config.Object, str]'):
         """
-        Returns the Certificate object associated to the Application object.
-
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
 
         Returns:
-            :ref:`config_object` of the certificate object.
+            :ref:`config_object` of the certificate object associated to the application object.
         """
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
@@ -152,15 +150,6 @@ class _ApplicationBase(FeatureBase):
         )
 
     def _get_stage(self, application: 'Union[Config.Object, str]'):
-        """
-        Returns the current processing stage of the application object.
-
-        Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
-
-        Returns:
-            The current stage if it exists. Otherwise, returns ``None``.
-        """
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
@@ -171,25 +160,21 @@ class _ApplicationBase(FeatureBase):
 
     def get_stage(self, application: 'Union[Config.Object, str]'):
         """
-        Returns the current processing stage of the application object.
-
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
 
         Returns:
-            The current stage if it exists. Otherwise, returns ``None``.
+            int: The current stage if it exists. Otherwise, returns ``None``.
         """
         self._get_stage(application=application)
 
     def get_status(self, application: 'Union[Config.Object, str]'):
         """
-        Returns the current processing status of the application object.
-
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
 
         Returns:
-            The current status if it exists. Otherwise, returns ``None``.
+            str: The current processing status of the application object or ``None`` if a status does not exist.
         """
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
@@ -200,15 +185,6 @@ class _ApplicationBase(FeatureBase):
         return response.values[0] if response.values else None
 
     def _is_in_error(self, application: 'Union[Config.Object, str]'):
-        """
-        Returns ``True`` if the application object is in an error state.
-
-        Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
-
-        Returns:
-            Boolean
-        """
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
@@ -227,7 +203,7 @@ class _ApplicationBase(FeatureBase):
         ``push_to_new=True``.
 
         Args:
-            application: :ref:`config_object` or :ref:`dn` of the Application object.
+            application: :ref:`config_object` or :ref:`dn` of the application object.
             timeout: Timeout in seconds.
         """
         application_dn = self._get_dn(application)
@@ -290,34 +266,6 @@ class Adaptable(_ApplicationBase):
 
     @staticmethod
     def _calculate_hash(script_content: bytes):
-        """
-        Calculates the hash of the Adaptable Workflow script that TPP would store. This is useful when creating or modifying
-        an Adaptable Workflow script.
-
-        Examples:
-            .. code-block::python
-
-                from pytpp import Authenticate, Features
-
-                api = Authenticate(...)  # ... is short-hand for the parameters
-                features = Features(api)
-
-                with open('./local/path/to/script.ps1', 'rb') as f:
-                    content = f.read()
-
-                hash = features.workflow.adaptable._calculate_hash(script_content=content)
-                adaptable_workflow = features.workflow.adaptable.create(
-                    ...,
-                    powershell_script_hash=hash,
-                    ...
-                )
-
-        Args:
-            script_content: The raw content of the Adaptable Workflow script as bytes.
-
-        Returns:
-            Base64 data of the SHA 256 hash of the UTF-32LE encoded script.
-        """
         return b64encode(sha256(
             script_content.decode().encode('utf-32-le')
         ).hexdigest().encode()).decode()
@@ -332,12 +280,10 @@ class Adaptable(_ApplicationBase):
                port: 'int' = None, private_key_credential: 'str' = None, log_debug: 'bool' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Adaptable application object.
-
         Args:
             name: Name of the application object.
-            device: Absolute path to the parent folder of the application object.
-            policy_folder: Folder to implement the Adapatble PowerShell script.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
+            policy_folder: :ref:`config_object` or :ref:`dn` of the folder to write the Adapatble PowerShell script policy.
             powershell_script_name: Name of the PowerShell script.
             powershell_script_content: Content of the PowerShell script in bytes. Use ``open(ps_script, 'rb')``.
             locked: Lock this script on the ``policy_folder``.
@@ -345,8 +291,8 @@ class Adaptable(_ApplicationBase):
             description: Description for the application object.
             contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
             approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
-            application_credential: Application credential.
-            secondary_credential: Another credential to pass to PowerShell script.
+            application_credential: :ref:`config_object` or :ref:`dn` of the application credential object.
+            secondary_credential: :ref:`config_object` or :ref:`dn` of the supplemental application credential to pass to PowerShell script.
             port: Port number.
             private_key_credential: Optional private key credential.
             log_debug: Enable log debug.
@@ -354,7 +300,7 @@ class Adaptable(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
 
         # region Create The Policy Attributes
@@ -426,8 +372,6 @@ class AmazonAWS(_ApplicationBase):
                create_listener: 'bool' = None, cloudfront_distribution_id: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates an Amazon AWS application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -450,7 +394,7 @@ class AmazonAWS(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appamazon',
@@ -498,8 +442,6 @@ class Apache(_ApplicationBase):
                owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates an Apache application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -527,7 +469,7 @@ class Apache(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appapache',
@@ -584,8 +526,6 @@ class AzureKeyVault(_ApplicationBase):
                create_new_binding: 'bool' = None, create_san_dns_bindings: 'bool' = None, ssl_type: 'int' = None,
                binding_hostnames: 'List[str]' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates an Azure Key Vault application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -606,7 +546,7 @@ class AzureKeyVault(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appazurekeyvault',
@@ -654,8 +594,6 @@ class Basic(_ApplicationBase):
                approvers: 'List[Union[Identity.Identity, str]]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Basic application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -666,7 +604,7 @@ class Basic(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appbasic'
@@ -686,16 +624,16 @@ class Basic(_ApplicationBase):
 
     def convert(self, basic_application: 'Union[Config.Object, str]', new_class_name: str, attributes: dict = None):
         """
-        Converts the Basic Application to another application class type. If attributes are given,
+        Converts the Basic application to another application class type. If attributes are given,
         then those attributes will apply to the new application once conversion is complete.
 
         Args:
-            basic_application: :ref:`config_object` or :ref:`dn` of the Basic Application.
-            new_class_name: Application Class Name of the new application object.
+            basic_application: :ref:`config_object` or :ref:`dn` of the Basic application.
+            new_class_name: Application class name of the new application object.
             attributes: Attributes pertaining to the new application object.
 
         Returns:
-            :ref:`config_object` representation of the application object.
+            :ref:`config_object` of the application.
         """
         basic_application_dn = self._get_dn(basic_application)
         result = self._api.websdk.Config.MutateObject.post(
@@ -736,8 +674,6 @@ class BlueCoatSSLVA(_ApplicationBase):
                attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a BlueCoat SSLVA application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -755,7 +691,7 @@ class BlueCoatSSLVA(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appBlueCoat',
@@ -797,8 +733,6 @@ class CAPI(_ApplicationBase):
                binding_hostname: 'str' = None, create_binding: 'bool' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a CAPI application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -821,7 +755,7 @@ class CAPI(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appcapi',
@@ -877,8 +811,6 @@ class CitrixNetScaler(_ApplicationBase):
                virtual_server_name: 'str' = None,
                sni_certificate: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a CAPI application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -899,7 +831,7 @@ class CitrixNetScaler(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appnetscaler',
@@ -941,8 +873,6 @@ class ConnectDirect(_ApplicationBase):
                port: 'int' = None, node_name: 'str' = None, install_chain: 'bool' = None,
                key_certificate_alias: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Connect:Direct application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -959,7 +889,7 @@ class ConnectDirect(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name    : 'appConnectDirect',
@@ -994,19 +924,17 @@ class F5AuthenticationBundle(_ApplicationBase):
                certifictes_to_use: 'List[Union[Config.Object, str]]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a F5 Authentication Bundle application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
             bundle_file_name: Filename of the certificate bundle.
             description: Description for the application object.
-            certifictes_to_use: List of certificates to use.
+            certifictes_to_use: List of  :ref:`config_object` or :ref:`dn` of the certificates to use.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             F5AuthenticationBundleAttributes.advanced_settings_bundle_name: bundle_file_name,
@@ -1098,7 +1026,7 @@ class F5LTMAdvanced(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name                    : 'appf5ltmadvanced',
@@ -1162,8 +1090,6 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
                target_proxy_name: 'str' = None, target_resource: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Google Cloud Load Balancer application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1178,7 +1104,7 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appgooglecloudloadbalancer',
@@ -1218,8 +1144,6 @@ class IBMDataPower(_ApplicationBase):
                private_key_password_credential: 'Union[Config.Object, str]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates an IBM DataPower application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1245,7 +1169,7 @@ class IBMDataPower(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appdatapower',
@@ -1300,8 +1224,6 @@ class IBMGSK(_ApplicationBase):
                owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates an IBM GSK application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1331,7 +1253,7 @@ class IBMGSK(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appgsk',
@@ -1392,8 +1314,6 @@ class ImpervaMX(_ApplicationBase):
                server_group: 'str' = None, service: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates an Imperva MX application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1411,7 +1331,7 @@ class ImpervaMX(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name  : 'appimpervamx',
@@ -1460,8 +1380,6 @@ class JKS(_ApplicationBase):
                group_permissions: 'str' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a JKS application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1493,7 +1411,7 @@ class JKS(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name        : 'appjks',
@@ -1563,8 +1481,6 @@ class OracleIPlanet(_ApplicationBase):
                group: 'str' = None,
                group_permissions: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Oracle iPlanet application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1590,7 +1506,7 @@ class OracleIPlanet(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name : 'appiplanet',
@@ -1651,8 +1567,6 @@ class PaloAltoNetworkFW(_ApplicationBase):
                destination_addresses: 'List[str]' = None, lock_config: 'bool' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Palo Alto Network FW application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1674,7 +1588,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name                      : 'appPaloAlto',
@@ -1724,8 +1638,6 @@ class PEM(_ApplicationBase):
                group: 'str' = None, group_permissions: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates an Apache application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1747,8 +1659,7 @@ class PEM(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
-
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appPem',
@@ -1787,6 +1698,10 @@ class PEM(_ApplicationBase):
 
 @feature('PKCS11')
 class PKCS11(_ApplicationBase):
+    """
+    .. note::
+        The PKCS #11 VSE must be installed in order to use this driver.
+    """
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11)
 
@@ -1802,8 +1717,6 @@ class PKCS11(_ApplicationBase):
                client_tools_directory: 'str' = None, openssl_directory: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a PKCS11 application object. The PKCS #11 VSE must be installed in order to use this driver.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1831,7 +1744,7 @@ class PKCS11(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'apppkcs11',
@@ -1888,8 +1801,6 @@ class PKCS12(_ApplicationBase):
                owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a PKCS #12 application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1913,7 +1824,7 @@ class PKCS12(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'apppkcs12',
@@ -1974,8 +1885,6 @@ class RiverbedSteelHead(_ApplicationBase):
                install_chain_certificates: 'bool' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Riverbed SteelHead application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -1989,7 +1898,7 @@ class RiverbedSteelHead(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name       : 'appriverbedsteelhead',
@@ -2023,8 +1932,6 @@ class TealeafPCA(_ApplicationBase):
                application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
                passive_capture_setup_path: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Tealeaf PCA application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -2038,7 +1945,7 @@ class TealeafPCA(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'apptealeafpca',
@@ -2075,8 +1982,6 @@ class VAMnShield(_ApplicationBase):
                module_id: 'int' = None, restart_device: 'bool' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates a VAM nShield application object.
-
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
@@ -2092,7 +1997,7 @@ class VAMnShield(_ApplicationBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name   : 'appvamnshield',
@@ -2116,8 +2021,6 @@ class VAMnShield(_ApplicationBase):
             attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
-
-
 # endregion Applications
 
 
@@ -2130,10 +2033,10 @@ class _ApplicationGroupBase(FeatureBase):
 
     def delete(self, application_group: 'Union[Config.Object, str]', dissociate: bool = True):
         """
-        Deletes an Application group object.
+        Deletes an application group object.
 
         Args:
-            application_group: :ref:`config_object` or :ref:`dn` of the Application object.
+            application_group: :ref:`config_object` or :ref:`dn` of the application object.
             dissociate: If ``True``, dissociate all applications in the group from the certificate.
         """
         application_group_dn = self._get_dn(application_group)
@@ -2154,14 +2057,12 @@ class _ApplicationGroupBase(FeatureBase):
 
     def get(self, application_group_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Returns the :ref:`config_object` of the application :ref:`dn`.
-
         Args:
             application_group_dn: :ref:`dn` of the application group object.
             raise_error_if_not_exists: Raise an exception if the application :ref:`dn` does not exist.
 
         Returns:
-            :ref:`config_object` of the application group.
+            :ref:`config_object` of the application.
         """
         return self._get_config_object(
             object_dn=application_group_dn,
@@ -2237,7 +2138,7 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
                         be the shared attributes for the application group.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         application_dns = [self._get_dn(application) for application in applications]
         certificate = self._get_config_object(object_dn=certificate)
@@ -2275,6 +2176,10 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
 
 @feature('PKCS11 Group')
 class PKCS11ApplicationGroup(_ApplicationGroupBase):
+    """
+    .. note::
+        The PKCS #11 VSE must be installed in order to use this driver.
+    """
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11_application_group)
 
@@ -2289,7 +2194,7 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
                         be the shared attributes for the application group.
 
         Returns:
-            :ref:`config_object`
+            :ref:`config_object` of the application.
         """
         application_dns = [self._get_dn(application) for application in applications]
         certificate = self._get_config_object(object_dn=certificate)

@@ -29,10 +29,10 @@ class _ClientWorkBase(FeatureBase):
 
     def delete(self, work: 'Union[Config.Object, str]'):
         """
-        Deletes a client work
+        Deletes the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         response = self._api.websdk.Config.Delete.post(work_dn)
@@ -45,10 +45,10 @@ class _ClientWorkBase(FeatureBase):
 
     def disable(self, work: 'Union[Config.Object, str]'):
         """
-        Disables a client work
+        Disables the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         result = self._api.websdk.Config.Write.post(
@@ -63,10 +63,10 @@ class _ClientWorkBase(FeatureBase):
 
     def enable(self, work: 'Union[Config.Object, str]'):
         """
-        Enables a client work
+        Enables the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         result = self._api.websdk.Config.ClearAttribute.post(
@@ -79,14 +79,12 @@ class _ClientWorkBase(FeatureBase):
 
     def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
-        Gets a client work and returns a config object
-
         Args:
             name: The name of the client work.
             raise_error_if_not_exists: Raise an exception if the client work does not exist.
 
         Returns:
-            Config object representing a client work
+            :ref:`config_object` of the client work.
         """
         return self._get_config_object(
             object_dn=rf'{self._work_base_dn}\{name}',
@@ -95,10 +93,10 @@ class _ClientWorkBase(FeatureBase):
 
     def list(self):
         """
-        Gets a list of all client work
+        Lists all client work.
 
         Returns:
-            A list of config objects representing all of the client work
+            List of :ref:`config_object` of all client work.
         """
         response = self._api.websdk.Config.Enumerate.post(object_dn=self._work_base_dn)
 
@@ -116,13 +114,13 @@ class AgentConnectivity(_ClientWorkBase):
     def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0):
         """
-        Schedules the Agent Connectivity work to run
-
         .. note::
             Only one of daily, hourly, days_of_week or days_of_month can be set.
 
+        Schedules the Agent Connectivity work to run.
+
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -173,23 +171,21 @@ class AgentConnectivity(_ClientWorkBase):
         )
         response.assert_valid_response()
 
-    def create(self, name: str, server_url: str = "", proxy_url: str = "", proxy_credentials: str = "",
+    def create(self, name: str, server_url: str = "", proxy_url: str = "", proxy_credentials: 'Union[Config.Object, str]' = None,
                log_threshold: str = ClientWorkAttributeValues.AgentConnectivity.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates an Agent Connectivity client work
-
         Args:
             name: The name of the client work.
-            server_url: (optional) specify the server url
-            proxy_url: (optional) specify the proxy url
-            proxy_credentials: (optional) specify the proxy credentials
-            log_threshold: (optional) set the log threshold, defaults to INFO
+            server_url: The server url.
+            proxy_url: The proxy url.
+            proxy_credentials: :ref:`config_object` or :ref:`dn` of the proxy credentials.
+            log_threshold: The log threshold.
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         work_attributes = {
             ClientAgentConfigurationWorkAttributes.created_by   : ClientWorkAttributeValues.AgentConnectivity.CreatedBy.websdk,
@@ -202,7 +198,7 @@ class AgentConnectivity(_ClientWorkBase):
         if len(proxy_url) > 0:
             work_attributes[ClientAgentConfigurationWorkAttributes.proxy_host] = proxy_url
         if len(proxy_credentials) > 0:
-            work_attributes[ClientAgentConfigurationWorkAttributes.proxy_credential] = proxy_credentials
+            work_attributes[ClientAgentConfigurationWorkAttributes.proxy_credential] = self._get_dn(proxy_credentials)
 
         if attributes:
             work_attributes.update(attributes)
@@ -217,10 +213,10 @@ class AgentConnectivity(_ClientWorkBase):
 
     def unschedule(self, work: 'Union[Config.Object, str]'):
         """
-        Removes any scheduling for the client work (does not delete the client work)
+        Removes any scheduling for the client work, but does not delete the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
@@ -243,15 +239,13 @@ class AgentUpgrade(_ClientWorkBase):
 
     def create(self, name: str, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates an Agent Upgrade client work
-
         Args:
             name: The name of the client work.
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         work_attributes = {
             ClientAgentAutomaticUpgradeWorkAttributes.created_by: ClientWorkAttributeValues.AgentUpgrade.CreatedBy.websdk,
@@ -277,12 +271,10 @@ class CertificateDevicePlacement(_ClientWorkBase):
     def create(self, name: str, placement_folder: 'Union[Config.Object, str]', share_mode: int = 2,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Certificate Device Placement client work
-
         Args:
             name: The name of the client work.
-            placement_folder: ``Config.Object`` or DN of the folder to place devices.
-            share_mode: (optional) specify how newly discovered devices are de-duplicated
+            placement_folder: :ref:`config_object` or :ref:`dn` of the folder to place devices.
+            share_mode: specify how newly discovered devices are de-duplicated
                 0: search the entire policy tree
                 1: search the devices folder
                 2: search the devices folder and any sub-folders
@@ -291,7 +283,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         placement_folder_dn = self._get_dn(placement_folder)
         work_attributes = {
@@ -339,13 +331,13 @@ class CertificateDiscovery(_ClientWorkBase):
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0,
                  full_scan: bool = False):
         """
-        Schedules the Certificate Discovery work to run
-
         .. note::
 			Only one of daily, hourly, on_receipt, days_of_week or days_of_month can be set.
 
+        Schedules the Certificate Discovery work to run.
+
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -421,30 +413,28 @@ class CertificateDiscovery(_ClientWorkBase):
                log_threshold: str = ClientWorkAttributeValues.CertificateDiscovery.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Certificate Discovery client work
-
         Args:
             name: The name of the client work.
-            certificate_location: ``Config.Object`` or DN of the folder to place certificates.
-            recursive_paths: (optional) A list of file paths to recursively search for new certificates
-            non_recursive_paths: (optional) A lit of file paths to search for new certificates
-            max_filesize: (optional) A maximum file size (Ignores files larger than this size)
-            pkcs12_extensions: (optional) A list of pkcs#12 extensions to match (defaults to .p12, .pfx)
-            pkcs7_extensions: (optional) A list of pkcs#7 extensions to match (defaults to .p7b, .p7c, .p7)
-            pem_extensions: (optional) A list of PEM extensions to match (defaults to .cer, .der, .crt, .pem)
-            ibmcms_extensions: (optional) A list of IBM CMS extensions to match (defaults to .kdb)
-            jks_jceks_extensions: (optional) A list of JKS/JCKES(java) extensions to match (defaults to .jck, .jceks, .jks, cacerts)
-            iplanet_extensions: (optional) A list of iPlanet(Berkeley/NSS) extensions to match (defaults to .db)
-            exclude_recursive_paths: (optional) A list of file paths to exclude (recursively) from discovery
-            exclude_non_recursive_paths: (optional) A list of file paths to exclude from discovery
-            exclude_file_patterns: (optional) A list of file patterns to exclude from discovery
-            scan_mounted_file_systems: (optional) Scan file systems mounted via NFS/CIFS/NTFS junction points (defaults to False)
-            log_threshold: (optional) set the logging level (defaults to INFO)
+            certificate_location: :ref:`config_object` or :ref:`dn` of the folder to place certificates.
+            recursive_paths: A list of file paths to recursively search for new certificates
+            non_recursive_paths: A list of file paths to search for new certificates
+            max_filesize: A maximum file size (Ignores files larger than this size)
+            pkcs12_extensions: A list of pkcs#12 extensions to match (defaults to .p12, .pfx)
+            pkcs7_extensions: A list of pkcs#7 extensions to match (defaults to .p7b, .p7c, .p7)
+            pem_extensions: A list of PEM extensions to match (defaults to .cer, .der, .crt, .pem)
+            ibmcms_extensions: A list of IBM CMS extensions to match (defaults to .kdb)
+            jks_jceks_extensions: A list of JKS/JCKES(java) extensions to match (defaults to .jck, .jceks, .jks, cacerts)
+            iplanet_extensions: A list of iPlanet(Berkeley/NSS) extensions to match (defaults to .db)
+            exclude_recursive_paths: A list of file paths to exclude (recursively) from discovery
+            exclude_non_recursive_paths: A list of file paths to exclude from discovery
+            exclude_file_patterns: A list of file patterns to exclude from discovery
+            scan_mounted_file_systems: Scan file systems mounted via NFS/CIFS/NTFS junction points (defaults to False)
+            log_threshold: set the logging level (defaults to INFO)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         certificate_location_dn = self._get_dn(certificate_location)
         work_attributes = {
@@ -505,10 +495,10 @@ class CertificateDiscovery(_ClientWorkBase):
 
     def unschedule(self, work: 'Union[Config.Object, str]'):
         """
-        Removes any scheduling for the client work (does not delete the client work)
+        Removes any scheduling for the client work, but does not delete the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
@@ -536,32 +526,30 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
                authentication_credentials: 'Union[Config.Object, str]' = None, authenticate_only_by_password: bool = False,
                revoke_previous_version: bool = False,
                identity_verification: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.IdentityVerification.valid,
-               trusted_certs_and_cas: List[str] = None, get_if_already_exists: bool = False, attributes: dict = None):
+               trusted_certs_and_cas: 'List[Config.Object, str]' = None, get_if_already_exists: bool = False, attributes: dict = None):
         """
-        Creates a Certificate Enrollment Via EST Protocol client work
-
         Args:
             name: The name of the client work.
-            certificate_container: ``Config.Object`` or DN of the folder to create certificates.
+            certificate_container: :ref:`config_object` or :ref:`dn` of the folder to create certificates.
             naming_pattern: The object naming pattern (IE. $CSR.CN$)
-            ca_template: ``Config.Object`` or DN of the Certificate Authority.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.
-            certificate_origin: (optional) Specify the certificate origin value
-            certificate_description: (optional) Specify the certificate description value
-            validation_type: (optional) defaults to basic
-                                basic: Checks Expiration, Revocation, and Chain of Trust
-                                strict: Performs Basic Validation and checks Client Authentication Enhanced Key Usage
-            revocation_status_check: (optional) defaults to accept when unknown
-            authentication_credentials: (optional) ``Config.Object`` or DN of the credential to provide client password authentication.
-            authenticate_only_by_password: (optional) only accept requests that are authenticated by password
-            revoke_previous_version: (optional) Revoke previous versions of the certificate (defaults to False)
-            identity_verification: (optional) Proof of Possession
-            trusted_certs_and_cas: (optional) A List of Certificate Authorities and Certificates to trust
+            ca_template: :ref:`config_object` or DN of the Certificate Authority.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
+            certificate_origin: Specify the certificate origin value
+            certificate_description: Specify the certificate description value
+            validation_type:
+                * basic: (default) Checks Expiration, Revocation, and Chain of Trust
+                * strict: Performs Basic Validation and checks Client Authentication Enhanced Key Usage
+            revocation_status_check: Defaults to accept when unknown.
+            authentication_credentials: :ref:`config_object` or :ref:`dn` of the credential to provide client password authentication.
+            authenticate_only_by_password: Only accept requests that are authenticated by password
+            revoke_previous_version: Revoke previous versions of the certificate (defaults to False)
+            identity_verification: Proof of Possession
+            trusted_certs_and_cas: A List of :ref:`config_object` or :ref:`dn` of the Certificate Authorities and Certificates to trust.
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``
+            :ref:`config_object` of the client work.
         """
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
@@ -585,7 +573,9 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
             work_attributes[NetworkDeviceCertificateWorkAttributes.authentication_credentials] = self._get_dn(authentication_credentials)
 
         if trusted_certs_and_cas:
-            work_attributes[NetworkDeviceCertificateWorkAttributes.explicit_trust_anchors] = trusted_certs_and_cas
+            work_attributes[NetworkDeviceCertificateWorkAttributes.explicit_trust_anchors] = [
+                self._get_dn(c) for c in trusted_certs_and_cas
+            ]
             work_attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 0
         else:
             work_attributes[NetworkDeviceCertificateWorkAttributes.use_implicit_trust_anchors] = 1
@@ -613,13 +603,13 @@ class CertificateInstallation(_ClientWorkBase):
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
-        Schedules the Certificate Installation work to run
-
         .. note::
 			Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
+			
+        Schedules the Certificate Installation work to run.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -696,16 +686,14 @@ class CertificateInstallation(_ClientWorkBase):
     def create(self, name: str, log_threshold: str = ClientWorkAttributeValues.CertificateInstallation.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Certificate Installation client work
-
         Args:
             name: The name of the client work.
-            log_threshold: (optional) set the logging level (defaults to INFO)
+            log_threshold: set the logging level (defaults to INFO)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         work_attributes = {
             CertificateProvisioningWorkAttributes.created_by   : ClientWorkAttributeValues.CertificateInstallation.CreatedBy.websdk,
@@ -726,10 +714,10 @@ class CertificateInstallation(_ClientWorkBase):
 
     def unschedule(self, work: 'Union[Config.Object, str]'):
         """
-        Removes any scheduling for the client work (does not delete the client work)
+        Removes any scheduling for the client work, but does not delete the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
@@ -758,31 +746,29 @@ class DeviceCertificateCreation(_ClientWorkBase):
                renewal_days_before: int = 30, key_bit_strength: int = 2048, allow_certificate_sharing: bool = False,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Device Certificate Creation client work
-
         Args:
             name: The name of the client work
-            certificate_container: ``Config.Object`` or DN of the folder to place certificates.
-            ca_template: ``Config.Object`` or DN of the Certificate Authority.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.
-            description: (optional) A description for the certificates
-            naming_pattern: (optional) object naming pattern (defaults to: $Client.DNSName$)
-            common_name: (optional) common name for the certificate
-            organization: (optional) organization for the certificate
-            organizational_unit: (optional) A list of organizational units for the certificate
-            city_locality: (optional) a city or locality for the certificate
-            state_province: (optional) a state or province for the certificate
-            country: (optional) a country code for the certificate
-            subject_alternative_names: (optional) a subject alternative name for the certificate
-            automatic_renewal: enable automatic renewal (defaults to True)
-            renewal_days_before: days before expiration for automatic renewal (defaults to 30)
-            key_bit_strength: key size of the certificates (defaults to 2048)
-            allow_certificate_sharing: allow sharing with mobile devices (default sto False)
+            certificate_container: :ref:`config_object` or :ref:`dn` of the folder to place certificates.
+            ca_template: :ref:`config_object` or :ref:`dn` of the Certificate Authority.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
+            description: A description for the certificates
+            naming_pattern: Object naming pattern (defaults to: $Client.DNSName$)
+            common_name: Common name for the certificate
+            organization: Organization for the certificate
+            organizational_unit: A list of organizational units for the certificate
+            city_locality: A city or locality for the certificate
+            state_province: A state or province for the certificate
+            country: A country code for the certificate
+            subject_alternative_names: A subject alternative name for the certificate
+            automatic_renewal: Enable automatic renewal (defaults to True)
+            renewal_days_before: Days before expiration for automatic renewal (defaults to 30)
+            key_bit_strength: Key size of the certificates (defaults to 2048)
+            allow_certificate_sharing: Allow sharing with mobile devices (default sto False)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
@@ -836,33 +822,31 @@ class DynamicProvisioning(_ClientWorkBase):
                log_threshold: str = ClientWorkAttributeValues.DynamicProvisioning.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Dynamic Provisioning client work
-
         Args:
             name: The name of the client work
-            certificate_container: ``Config.Object``  or DN of the folder to place certificates.
-            ca_template: ``Config.Object`` or DN of the Certificate Authority.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.
-            description: (optional) A description for the certificates
-            naming_pattern: (optional) object naming pattern (defaults to: $Client.DNSName$)
-            common_name: (optional) common name for the certificate
-            organization: (optional) organization for the certificate
-            organizational_unit: (optional) A list of organizational units for the certificate
-            city_locality: (optional) a city or locality for the certificate
-            state_province: (optional) a state or province for the certificate
-            country: (optional) a country code for the certificate
-            subject_alternative_names: (optional) a subject alternative name for the certificate
-            capi_keystore: (optional) use a capi keystore (defaults to False)
-            capi_friendly_name: (optional) friendly name in the keystore
-            capi_trustee: (optional) Set the capi trustee
-            key_bit_strength: (optional) key size for the certificate (defaults to 2048)
-            retry_interval: (optional) An interval in minutes (15, 30, 45, 60) for the agent to retry
-            log_threshold: (optional) Set the logging level (defaults to INFO)
+            certificate_container: :ref:`config_object` or :ref:`dn` of the folder to place certificates.
+            ca_template: :ref:`config_object` or DN of the Certificate Authority.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
+            description: A description for the certificates
+            naming_pattern: object naming pattern (defaults to: $Client.DNSName$)
+            common_name: Common name for the certificate
+            organization: Organization for the certificate
+            organizational_unit: A list of organizational units for the certificate
+            city_locality: A city or locality for the certificate
+            state_province: A state or province for the certificate
+            country: A country code for the certificate
+            subject_alternative_names: A subject alternative name for the certificate
+            capi_keystore: Use a capi keystore (defaults to False)
+            capi_friendly_name: Friendly name in the keystore
+            capi_trustee: Set the capi trustee
+            key_bit_strength: Key size for the certificate (defaults to 2048)
+            retry_interval: An interval in minutes (15, 30, 45, 60) for the agent to retry
+            log_threshold: Set the logging level (defaults to INFO)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
@@ -913,21 +897,19 @@ class SSHDevicePlacement(_ClientWorkBase):
                share_mode: str = ClientWorkAttributeValues.SSHDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a SSH Device Placement client work
-
         Args:
             name: The name of the client work
-            devices_folder: ``Config.Object`` or DN of the folder to place newly discovered ssh devices.
-            share_mode: how to de-duplicate newly discovered devices:
-                    "WholeTree" : search the entire policy tree
-                    "SpecifiedFolderOnly" : search the devices folder
-                    "SpecifiedFolderAndSubFolders" : search the devices folder and all sub-folders
-                    "None" : create a duplicate device
+            devices_folder: :ref:`config_object` or :ref:`dn` of the folder to place newly discovered ssh devices.
+            share_mode: Mode to de-duplicate newly discovered devices:
+                * "WholeTree" : Search the entire policy tree
+                * "SpecifiedFolderOnly" : Search the devices folder
+                * "SpecifiedFolderAndSubFolders" : Search the devices folder and all sub-folders
+                * "None" : Create a duplicate device
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         devices_folder_dn = self._get_dn(devices_folder)
         work_attributes = {
@@ -958,13 +940,13 @@ class SSHDiscovery(_ClientWorkBase):
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, randomize_minutes: int = 0, full_scan: bool = False):
         """
-        Schedules the SSH Discovery work to run
-
         .. note::
 			Only one of daily, hourly, on_receipt, every_30_minutes, days_of_week or days_of_month can be set.
 
+        Schedules the SSH Discovery work to run.
+
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -1040,24 +1022,22 @@ class SSHDiscovery(_ClientWorkBase):
                log_threshold: str = ClientWorkAttributeValues.SSHDiscovery.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a SSH Discovery client work
-
         Args:
             name: The name of the client work
-            scan_default_paths: (optional) scan all of the default paths for ssh keys
-            host_key_paths: (optional) A list of paths to scan for host keys
-            user_key_paths: (optional) A list of paths to scan for user keys
-            user_or_host_paths: (optional) A list of paths to scan for both host and user keys
-            exclude_paths: (optional) A list of paths to exclude from scan
-            scan_mounted_fs: (optional) Scan file systems mounted via NFS/CIFS/NTFS junction points (defaults to False)
-            minimize_resources: (optional) Minimizes resource usage during scan (defaults to False)
-            max_filesize: (optional) Ignore files larger than this size (defaults to 1MB)
-            log_threshold: (optional) Set the logging level (defaults to INFO)
+            scan_default_paths: scan all of the default paths for ssh keys
+            host_key_paths: A list of paths to scan for host keys
+            user_key_paths: A list of paths to scan for user keys
+            user_or_host_paths: A list of paths to scan for both host and user keys
+            exclude_paths: A list of paths to exclude from scan
+            scan_mounted_fs: Scan file systems mounted via NFS/CIFS/NTFS junction points (defaults to False)
+            minimize_resources: Minimizes resource usage during scan (defaults to False)
+            max_filesize: Ignore files larger than this size (defaults to 1MB)
+            log_threshold: Set the logging level (defaults to INFO)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         work_attributes = {
             ClientAgentSSHDiscoveryWorkAttributes.created_by                   : ClientWorkAttributeValues.SSHDiscovery.CreatedBy.websdk,
@@ -1101,10 +1081,10 @@ class SSHDiscovery(_ClientWorkBase):
 
     def unschedule(self, work: 'Union[Config.Object, str]'):
         """
-        Removes any scheduling for the client work (does not delete the client work)
+        Removes any scheduling for the client work, but does not delete the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
@@ -1128,13 +1108,13 @@ class SSHKeyUsage(_ClientWorkBase):
     def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
-        Schedules the SSH KeyUsage work to run
-
         .. note::
 			Only one of daily, hourly, on_receipt, or every_x_minutes can be set.
 
+        Schedules the SSH KeyUsage work to run.
+
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -1200,17 +1180,15 @@ class SSHKeyUsage(_ClientWorkBase):
                log_threshold: str = ClientWorkAttributeValues.SSHKeyUsage.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a SSH Key Usage Creation client work
-
         Args:
             name: The name of the client work.
             limit_cache_size: maximum items in the cache
-            log_threshold: (optional) Set the logging level (defaults to INFO)
+            log_threshold: Set the logging level (defaults to INFO)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         work_attributes = {
             ClientAgentSSHKeyUsageWorkAttributes.created_by   : ClientWorkAttributeValues.SSHKeyUsage.CreatedBy.websdk,
@@ -1232,10 +1210,10 @@ class SSHKeyUsage(_ClientWorkBase):
 
     def unschedule(self, work: 'Union[Config.Object, str]'):
         """
-        Removes any scheduling for the client work (does not delete the client work)
+        Removes any scheduling for the client work, but does not delete the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
@@ -1260,13 +1238,13 @@ class SSHRemediation(_ClientWorkBase):
                  on_receipt: bool = False, days_of_week: List[str] = None, days_of_month: List[str] = None,
                  every_x_minutes: int = None, randomize_minutes: int = 0):
         """
-        Schedules the SSH Remediation work to run
-
         .. note::
 			Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
 
+        Schedules the SSH Remediation work to run.
+
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
             start_time: The 24-hour UTC hour format (i.e. 20 = 8PM UTC) for the job to start.
             daily: Runs the client work daily
             hourly: Runs the client work hourly
@@ -1347,16 +1325,14 @@ class SSHRemediation(_ClientWorkBase):
     def create(self, name: str, log_threshold: str = ClientWorkAttributeValues.SSHRemediation.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a SSH Remediation client work
-
         Args:
             name: The name of the client work.
-            log_threshold: (optional) Set the logging level (defaults to INFO)
+            log_threshold: Set the logging level (defaults to INFO)
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         work_attributes = {
             ClientAgentSSHDiscoveryWorkAttributes.created_by   : ClientWorkAttributeValues.SSHRemediation.CreatedBy.websdk,
@@ -1377,10 +1353,10 @@ class SSHRemediation(_ClientWorkBase):
 
     def unschedule(self, work: 'Union[Config.Object, str]'):
         """
-        Removes any scheduling for the client work (does not delete the client work)
+        Removes any scheduling for the client work, but does not delete the client work.
 
         Args:
-            work: The Config.Object or name of the client work
+            work: :ref:`config_object` or name of the client work.
         """
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         for attribute_name in {
@@ -1418,58 +1394,57 @@ class UserCertificateCreation(_ClientWorkBase):
                outlook_request_receipts: bool = False,
                publish_to_identity_provider: bool = False, publish_pre_enrollment: bool = False,
                install_previous_certs: bool = False, allow_mobile_sharing: bool = False,
-               lifecycle_groups: List[str] = None, lifecycle_revoke_cert: bool = False,
+               lifecycle_groups: 'List[Union[Config.Object, str]]' = None, lifecycle_revoke_cert: bool = False,
                lifecycle_disable_cert: bool = False,
                portal_friendly_name: str = None, portal_icon: int = 0, portal_download_limit: int = 3,
                portal_instructions: str = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a User Certificate Creation client work
-
         Args:
             name: The name of the client work.
-            certificate_container: ``Config.Object`` or DN of the folder to place certificates.
-            ca_template: ``Config.Object`` or DN of the Certificate Authority.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs for each contact.)
-            description: (optional) a description for the certificates
-            naming_pattern: (optional) object naming pattern
-            common_name: (optional) common name for the certificate
-            organization: (optional) organization for the certificate
-            organizational_unit: (optional) A list of organizational units for the certificate
-            city_locality: (optional) a city or locality for the certificate
-            state_province: (optional) a state or province for the certificate
-            country: optional) a country code for the certificate
-            user_email: add user's email to the certificate
-            subject_alt_names_email: (optional) use subject alternative name email for the certificate
-            subject_alt_names_upn: (optional) use subject alternative upn for the certificate
-            key_bit_strength: (optional) the key size of the certificate
-            automatic_renewal: (optional) enable automatic renewal for the certificate
-            renewal_days_before: (optional) the number of days before expiration to renew the certificate
-            configure_outlook: (optional) configure Microsoft Outlook for Windows
-            outlook_security_name: (optional) security settings name
-            outlook_encrypt_messages: (optional) encrypt outgoing messages
-            outlook_send_cleartext_signed: (optional) send cleartext signed messages
-            outlook_sign_outgoing: (optional) sign outgoing messages
-            outlook_request_receipts: (optional) request S/MIME receipts
-            publish_to_identity_provider: (optional) publish to identity provider
-            publish_pre_enrollment: (optional) publish when a new identity is found (pre-enrollment)
-            install_previous_certs: (optional) install previous certificate versions
-            allow_mobile_sharing: (optional) allow certificate sharing with mobile devices
-            lifecycle_groups: (optional) a list of groups guids [group1.guid, group2.guid] such that when a member is removed from all groups in the list the certificate can be revoked and/or disabled
-            lifecycle_revoke_cert: (optional) revoke certificates when a user's membership is removed from all lifecycle groups
-            lifecycle_disable_cert: (optional) disable certificates when a user's membership is removed from all lifecycle groups
-            portal_friendly_name: (optional) portal friendly name
-            portal_icon: (optional) portal icon:
+            certificate_container: :ref:`config_object` or :ref:`dn` of the folder to place certificates.
+            ca_template: :ref:`config_object` or DN of the Certificate Authority.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.)
+            description: Description for the certificates
+            naming_pattern: Object naming pattern
+            common_name: Common name for the certificate
+            organization: Organization for the certificate
+            organizational_unit: A list of organizational units for the certificate
+            city_locality: A city or locality for the certificate
+            state_province: A state or province for the certificate
+            country: A country code for the certificate
+            user_email: Add user's email to the certificate
+            subject_alt_names_email: Use subject alternative name email for the certificate
+            subject_alt_names_upn: Use subject alternative upn for the certificate
+            key_bit_strength: The key size of the certificate
+            automatic_renewal: Enable automatic renewal for the certificate
+            renewal_days_before: The number of days before expiration to renew the certificate
+            configure_outlook: Configure Microsoft Outlook for Windows
+            outlook_security_name: Security settings name
+            outlook_encrypt_messages: Encrypt outgoing messages
+            outlook_send_cleartext_signed: Send cleartext signed messages
+            outlook_sign_outgoing: Sign outgoing messages
+            outlook_request_receipts: Request S/MIME receipts
+            publish_to_identity_provider: Publish to identity provider
+            publish_pre_enrollment: Publish when a new identity is found (pre-enrollment)
+            install_previous_certs: Install previous certificate versions
+            allow_mobile_sharing: Allow certificate sharing with mobile devices
+            lifecycle_groups: A list of :ref:`config_object` or :ref:`dn` of groups such that when a member is removed
+                              from all groups in the list the certificate can be revoked and/or disabled
+            lifecycle_revoke_cert: Revoke certificates when a user's membership is removed from all lifecycle groups
+            lifecycle_disable_cert: Disable certificates when a user's membership is removed from all lifecycle groups
+            portal_friendly_name: Portal friendly name
+            portal_icon: Portal icon:
                                     0 - certificate
                                     1 - Envelope
                                     2 - Wi-Fi
                                     3 - VPN
-            portal_download_limit: (optional) limit the number of portal downloads
-            portal_instructions: (optional) text of portal download instructions
+            portal_download_limit: Limit the number of portal downloads
+            portal_instructions: Text of portal download instructions
             attributes: Additional attributes to apply to the object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            A config object representing the client work
+            :ref:`config_object` of the client work.
         """
         certificate_container_dn = self._get_dn(certificate_container)
         ca_template_dn = self._get_dn(ca_template)
@@ -1518,7 +1493,9 @@ class UserCertificateCreation(_ClientWorkBase):
             work_attributes[ClientUserCertificateWorkAttributes.outlook_profile_options] = option_value
 
         if lifecycle_groups:
-            work_attributes[ClientUserCertificateWorkAttributes.required_member_identity] = lifecycle_groups
+            work_attributes[ClientUserCertificateWorkAttributes.required_member_identity] = [
+                group.guid for group in lifecycle_groups
+            ]
             work_attributes[ClientUserCertificateWorkAttributes.membership_loss_disable] = lifecycle_disable_cert
             work_attributes[ClientUserCertificateWorkAttributes.membership_loss_revoke] = lifecycle_revoke_cert
 

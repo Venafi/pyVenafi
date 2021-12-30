@@ -13,13 +13,6 @@ class _PlatformComponentBase(FeatureBase):
         return f'{self._engines_dn}\\{engine_name}\\{self._module}'
 
     def _engine_has_module_enabled(self, engine_name: str):
-        """
-        Args:
-            engine_name: Name of the platform engine.
-
-        Returns:
-            Return ``True`` if the module is enabled on the platform, otherwise ``False``.
-        """
         engines = self._api.websdk.SystemStatus.get().engines
         for engine in engines:
             if engine.engine_name.lower() == engine_name.lower():
@@ -29,25 +22,12 @@ class _PlatformComponentBase(FeatureBase):
 
     def update_engines(self, attributes: Dict[str, List[str]], engine_names: List[str] = None):
         """
-        Updates a Platform's module attributes. Many platforms, or engines, can be provided.
-
-        Examples:
-
-            .. code-block:: python
-
-                features.platforms.discovery.update_engines(
-                    attributes={
-                        AttributeNames.Platforms.DiscoveryManager.connection_timeout: "1"
-                    },
-                    engine_names=[
-                        'COMPUTER_NAME_1234',
-                        'DISCOVERY_ENGINE_6'
-                    ]
-                )
+        Updates a Platform's module attributes. Each engine in ``engine_names`` will be updated
+        to have the given ``attributes``.
 
         Args:
             attributes: Dictionary of attributes and attribute values to update.
-            engine_names: List of platform, or engine, names.
+            engine_names: List of engine names.
         """
         engine_names = engine_names or [engine.engine_name for engine in self._api.websdk.ProcessingEngines.get().engines]
         for engine_name in engine_names:

@@ -20,38 +20,13 @@ class NetworkDiscovery(FeatureBase):
                ports: List[Union[str, int]] = None, priority: int = None, reschedule: bool = True,
                resolve_host: bool = True, utc: str = '1', get_if_already_exists: bool = True):
         """
-        Creates a network discovery job.
-
-        Examples:
-
-        .. code-block::python
-
-                features.discovery.create(
-                    name='My Discovery Job',
-                    hosts=['192.168.0.1/24', '10.0.1.64-10.0.1.75', '10.0.1.201:80'],
-                    default_certificate_dn=r'\VED\Policy\Certificates\Homeless',
-                    automatically_import=False,
-                    blackout={
-                        '0':list(map(str, range(13, 20))),  # Sunday from 1PM-8PM UTC
-                    },
-                    contacts=[user1.guid, user2.guid],
-                    days_of_week=['0', '3'],
-                    description='Does important scanning.',
-                    hour=4,  # 4AM UTC
-                    placement_rules=[rule1, rule2],
-                    ports=[22, 80, 443],
-                    priority=1,
-                    reschedule=True,
-                    resolve_host=True,
-                )
-
         Args:
             name: Name of the discovery job.
             hosts: A list of hosts. If specific hosts should scan different ports, then specify by appending the
                    port to the IP address or hostname (i.e. 192.168.0.10:80). If no port is specified, then the
                    `ports` parameter will be appended to those hosts.
-            default_certificate_location: Absolute path to the default folder that will contain all certificates not
-                                    matching a placement rule.
+            default_certificate_location: :ref:`config_object` or :ref:`dn` of the folder to place results not 
+                                          matching a placement rule.
             attributes: Additional attributes.
             automatically_import: If `True`, the job will terminate by placing the certificate objects, device
                                   objects, and application objects according to the placement rules.
@@ -59,15 +34,15 @@ class NetworkDiscovery(FeatureBase):
                       should be as follows: `[{<day>:[<hour>, <hour>, ...]}, {...}]` where `day` is the
                       zero-based index day of the week (i.e. Sunday = '0', etc.) and `hour` is the 24-hour
                       hour of the day (i.e. 1, 2, 3, ..., 23). For example:
-            contacts: List of identity prefixed universal GUIDs.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts.
             days_of_week: Zero-based index value of the days of the week to run the job.
             days_of_month: Day value(s) of the month to run the job.
             days_of_year: Days of the year to run the job in the format "MM/DD" where leading zeros can be ignored
                           (i.e. 1/23, 10/3).
             description: Description of the job.
-            exclusion_locations: List of absolute paths to exclusion DN folders.
+            exclusion_locations: List of :ref:`config_object` or :ref:`dn` of exclusion folders.
             hour: 24-hour UTC hour format of the day (i.e. 20 = 8 PM UTC).
-            placement_rules: List of :ref:`config_object` or GUIDs for the placement rules. The order of the list matters
+            placement_rules: List of :ref:`config_object` or :ref:`dn` for the placement rules. The order of the list matters
                              as the rules are prioritized accordingly.
             ports: List of ports to scan.
             priority: Priority of the job.
@@ -77,7 +52,7 @@ class NetworkDiscovery(FeatureBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object of the discovery job.
+            :ref:`config_object` of the discovery job.
 
         """
         placement_rule_guids = None
@@ -132,7 +107,7 @@ class NetworkDiscovery(FeatureBase):
         Deletes the discovery job.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
         """
         job_guid = self._get_guid(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Discovery.Guid(guid=job_guid).delete()
@@ -145,7 +120,7 @@ class NetworkDiscovery(FeatureBase):
             raise_error_if_not_exists: Raise an exception if the discovery job does not exist.
 
         Returns:
-            Config object of the discovery job.
+            :ref:`config_object` of the discovery job.
         """
         return self._get_config_object(
             object_dn=f'{self._discovery_dn}\\{name}',
@@ -154,13 +129,11 @@ class NetworkDiscovery(FeatureBase):
 
     def is_in_progress(self, job: 'Union[Config.Object, str]'):
         """
-        Returns a boolean value according to whether a job is currently in progress or not.
-
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
 
         Returns:
-            Boolean value
+            bool: ``True`` if the job is in progress or ``False`` if it is not.
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.Read.post(
@@ -180,7 +153,7 @@ class NetworkDiscovery(FeatureBase):
         Schedules an existing job.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
             hour: 24-hour UTC hour format (i.e. 20 = 8PM UTC).
             days_of_week: Zero-based index of the days of the week (i.e. Sunday = '0').
             days_of_month: Days of the month without leading zeros.
@@ -213,7 +186,7 @@ class NetworkDiscovery(FeatureBase):
         Removes a schedule from a job. This does not delete the job.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         for attribute_name in {
@@ -236,7 +209,7 @@ class NetworkDiscovery(FeatureBase):
         Times of the week to restrict a discovery job from processing.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
             sunday: List of hours without leading zeros to restrict processing on Sunday.
             monday: List of hours without leading zeros to restrict processing on Monday.
             tuesday: List of hours without leading zeros to restrict processing on Tuesday.
@@ -262,10 +235,11 @@ class NetworkDiscovery(FeatureBase):
 
     def run_now(self, job: 'Union[Config.Object, str]', timeout: int = 60):
         """
-        Runs a job despite any scheduling. This does not return until the job is processing, or has a `Processing` Attribute.
+        Runs a job despite any scheduling. This does not return until the job is processing,
+        or has a *Processing* Attribute.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
             timeout: Timeout in seconds within which the job should start.
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
@@ -291,7 +265,7 @@ class NetworkDiscovery(FeatureBase):
         Cancels a currently running job.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
@@ -306,7 +280,7 @@ class NetworkDiscovery(FeatureBase):
         Pauses a currently running job.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
@@ -321,7 +295,7 @@ class NetworkDiscovery(FeatureBase):
         Resumes a currently paused job.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
         """
         job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
         response = self._api.websdk.Config.WriteDn.post(
@@ -333,10 +307,14 @@ class NetworkDiscovery(FeatureBase):
 
     def place_results(self, job: 'Union[Config.Object, str]'):
         """
+        .. warning::
+            This functionality has been deprecated in TPP 21.1 and will have no effect
+            from this version forward.
+
         Places the results of the discovery job according to the placement rules.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
         """
         if self._is_version_compatible(maximum="20.4"):
             job_dn = self._get_dn(job, parent_dn=self._discovery_dn)
@@ -350,7 +328,7 @@ class NetworkDiscovery(FeatureBase):
     def get_all_jobs(self):
         """
         Returns:
-            List of all network discovery jobs.
+            List of :ref:`config_object` of all network discovery jobs.
         """
         jobs = self._api.websdk.Config.FindObjectsOfClass.post(
             class_name='Discovery',
@@ -361,11 +339,11 @@ class NetworkDiscovery(FeatureBase):
 
     def wait_for_job_to_finish(self, job: 'Union[Config.Object, str]', check_interval: int = 5, timeout: int = 300):
         """
-        Waits for the `Status` attribute to have a value other than `Pending Execution` and `Running`
+        Waits for the  *Status* attribute to have a value other than *Pending Execution* and *Running*
         on the discovery job. An error is raised if the timeout is exceeded.
 
         Args:
-            job: Config object or name of the discovery job.
+            job: :ref:`config_object` or :ref:`dn` of the discovery job.
             check_interval: Poll interval in seconds to validate that the job finished.
             timeout: Timeout in seconds to wait for the job to finish.
         """

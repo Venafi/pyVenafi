@@ -17,8 +17,8 @@ class Folder(FeatureBase):
         may block the workflow.
 
         Args:
-            folder: Config.Object or DN of the folder.
-            workflow: Config.Object or name of the workflow object.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            workflow: :ref:`config_object` or :ref:`dn` of the workflow object.
         """
         folder_dn = self._get_dn(folder)
         workflow_dn = self._get_dn(workflow)
@@ -36,8 +36,8 @@ class Folder(FeatureBase):
         enforcing a workflow on this folder and its subordinate objects.
 
         Args:
-            folder: Config.Object or DN of the folder.
-            workflow: Config.Object or name of the workflow object.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            workflow: :ref:`config_object` or :ref:`dn` of the workflow object.
         """
         folder_dn = self._get_dn(folder)
         workflow_dn = self._get_dn(workflow)
@@ -56,52 +56,14 @@ class Folder(FeatureBase):
         will be cleared. No error is thrown if the attribute value doesn't exist to begin with. If the
         same attribute name is defined in any ancestor folder, then this folder will inherit that setting.
 
-        Examples:
-        1. Clear all policy values by the given policy attribute names.
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames, \\
-                    AttributeValues, Classes
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
-                features.folder.clear_all_policy_values(
-                    folder=folder,
-                    class_name=Classes.Certificate.x509_certificate,
-                    attributes=[
-                        AttributeNames.Certificate.management_type,
-                        AttributeNames.Certificate.organization
-                    ]
-                )
-
-        2. Clear only the specified values of the given policy attribute names.
-
-        .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames, \\
-                    AttributeValues, Classes
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
-                features.folder.clear_policy_value(
-                    folder=folder,
-                    class_name=Classes.Certificate.x509_certificate,
-                    attributes={
-                        AttributeNames.Certificate.organizational_unit: 'Venafi'
-                    }
-                )
-
         Args:
-            folder: Config.Object or DN of the folder.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
             class_name: TPP Class Name for the attributes being locked.
-            attributes: Either a list of attribute names or a dictionary of attribute
-                name/value pairs where the name is the attribute name and the value
-                is the attribute value.
+            attributes: Two types are supported:
+
+                * ``list`` of attribute names to be cleared entirely.
+                * ``dict`` whose keys are attribute names and whose values are the values to be cleared
+                  from the attribute. If the attribute is left empty it is cleared.
         """
         folder_dn = self._get_dn(folder)
         if isinstance(attributes, list):
@@ -137,22 +99,20 @@ class Folder(FeatureBase):
                contacts: 'List[Union[Identity.Identity, str]]' = None, log_server: 'Union[Config.Object, str]' = None,
                engines: 'List[Union[Config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Folder, or Policy, object in TPP.
-
         Args:
             name: Name of the folder.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             description: Description of the policy folder.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts.
-            log_server: ``Config.Object`` or name of the log server.
-            engines: List of ``Config.Object`` or names of the processing engines for this folder.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
+            log_server: :ref:`config_object` or name of the log server.
+            engines: List of :ref:`config_object` or names of the processing engines for this folder.
             attributes: Attributes pertaining to the folder itself and NOT any of the policyable options.
                 In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
                 options on the folder, use :meth:`write_policy`.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the folder.
+            :ref:`config_object` of the folder object.
         """
         folder_attrs = {
             PolicyAttributes.description: description,
@@ -181,12 +141,12 @@ class Folder(FeatureBase):
 
     def delete(self, folder: 'Union[Config.Object, str]', recursive: bool = True):
         """
-        Deletes the folder. The folder is, by default, deleted recursively. All objects deleted will be deleted from config
-        and secret store.
+        Deletes the folder. The folder is, by default, deleted recursively. All deleted objects will also be removed from their
+        secret associations. If the secret association is then orphaned, then it is deleted.
 
         Args:
-            folder: Config.Object or DN of the folder.
-            recursive: If True, delete all sub-folders, etc., from config and secret store.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            recursive: If ``True``, delete all objects recursively.
         """
         folder_dn = self._get_dn(folder)
         if recursive:
@@ -204,24 +164,22 @@ class Folder(FeatureBase):
 
     def delete_engines(self, folder: 'Union[Config.Object, str]'):
         """
-        Deletes the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
+        Deletes all processing engines from the folder.
 
         Args:
-            folder: Config.Object or DN of the folder.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
         """
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).delete()
 
     def get(self, folder_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Returns the config object of the folder DN.
-
         Args:
-            folder_dn: DN of the folder.
-            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
+            folder_dn: :ref:`dn` of the folder.
+            raise_error_if_not_exists: Raise an exception if the object :ref:`dn` does not exist.
 
         Returns:
-            Config object representing the folder.
+            :ref:`config_object` of the folder object.
         """
         return self._get_config_object(
             object_dn=folder_dn,
@@ -230,10 +188,11 @@ class Folder(FeatureBase):
 
     def get_engines(self, folder: 'Union[Config.Object, str]'):
         """
-        Gets the desired TPP engine(s) that exclusively do work for all objects contained in the folder.
-
         Args:
-            folder: Config.Object or DN of the folder.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+
+        Returns:
+            List of all :class:`~.dataclasses.processing_engines.Engine` on the folder.
         """
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
@@ -242,26 +201,10 @@ class Folder(FeatureBase):
                starting_dn: str = None):
         """
         Searches for an object with the given object name pattern. The pattern is a regular expression. An object type
-        can be supplied to specify the TPP object type, such as 'X509 Certificate'. If a starting DN is given without
+        can be supplied to specify the TPP object type, such as 'X509 Certificate'. If a starting :ref:`dn` is given without
         an object type, a search will be performed from the starting DN. This can improve the efficiency of this method.
         However, if both a starting DN and object type is provided, due to limitations of the WebSDK API, a search will
         be performed against the object type first, and then filtered by matches to the starting DN.
-
-        If no objects are found, an empty list is returned.
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import Authenticate, Features
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                objects = features.folder.search(
-                    object_name_pattern='*some_object*.com',
-                    starting_dn='\\\VED\\\Policy\\\Certificates'
-                )
 
         Args:
             object_name_pattern: An expression for filtering DN matches.
@@ -270,7 +213,7 @@ class Folder(FeatureBase):
             starting_dn: DN of the folder to begin search
 
         Returns:
-            A list of Config Objects representing the objects found.
+            A list of :ref:`config_object` of the objects found.
         """
         if object_types:
             objects = self._api.websdk.Config.FindObjectsOfClass.post(
@@ -295,12 +238,12 @@ class Folder(FeatureBase):
     def set_engines(self, folder: 'Union[Config.Object, str]', engines: 'List[Union[Config.Object, str]]',
                     append_engines: bool = False):
         """
-        Sets the desired TPP engine(s) to exclusively do work for all objects contained in the folder.
+        Sets ``engines`` as processing engines for the folder.
 
         Args:
-            folder: Config.Object or DN of the folder.
-            engines: List of engine Config.Objects or engine names listed in TPP.
-            append_engines: If True, append `engines` to the current list on the folder. Otherwise
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            engines: List of engine :ref:`config_object` or engine names listed in TPP.
+            append_engines: If ``True``, append ``engines`` to the current list on the folder. Otherwise
                 overwrite the current setting.
         """
         folder_guid = self._get_guid(folder)
@@ -313,37 +256,18 @@ class Folder(FeatureBase):
 
     def read_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attribute_name: str):
         """
-        Reads policy settings for the given folder, class name, and attribute name. Returns List[List, bool] where the
-        first element of the list is a list of values and the second element a boolean indicating whether or not the
-        value(s) are locked on the policy. An empty list of values may be returned. In order to get engines on this
-        folder, use :meth:`get_engines`.
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames, \\
-                    AttributeValues, Classes
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
-                values, locked = features.folder.read_policy(
-                    folder=folder,
-                    class_name=Classes.Certificate.x509_certificate,
-                    attribute_name=AttributeNames.Certificate.management_type
-                )
+        Reads policy settings for the given folder, class name, and attribute name.
 
         Args:
-            folder: Config.Object or DN of the folder.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attribute_name: The attribute name.
 
         Returns:
-            List[List, bool] where the first element of the list is a list of values and the second element a
-            boolean indicating whether or not the value(s) are locked on the policy. An empty list of values may
-            be returned.
+            Tuple[List[str], bool]: A tuple of
+
+                * List of values
+                * Locked boolean
         """
         folder_dn = self._get_dn(folder)
         resp = self._api.websdk.Config.ReadPolicy.post(
@@ -363,8 +287,8 @@ class Folder(FeatureBase):
         Removes an applied workflow from a folder.
 
         Args:
-            folder: Config.Object or DN of the folder.
-            workflow: Config.Object or name of the workflow object.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            workflow: :ref:`config_object` or :ref:`dn` of the workflow object.
         """
         folder_dn = self._get_dn(folder)
         workflow_dn = self._get_dn(workflow)
@@ -381,8 +305,8 @@ class Folder(FeatureBase):
         Removes a blocked workflow from a folder.
 
         Args:
-            folder: Config.Object or DN of the folder.
-            workflow: Config.Object or name of the workflow object.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
+            workflow: :ref:`config_object` or :ref:`dn` of the workflow object.
         """
         folder_dn = self._get_dn(folder)
         workflow_dn = self._get_dn(workflow)
@@ -396,38 +320,11 @@ class Folder(FeatureBase):
 
     def write_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attributes: dict, locked: bool):
         """
-        Sets policy configurations on a folder. If the value is locked, then all objects derived
-        from the folder of the specified policy class will inherit the given attribute value and
-        cannot be changed by any child folders or objects. Otherwise the value will be set as a
-        default value.
-
-        In order to set engines on this folder, use :meth:`set_engines`.
-
+        Writes policy settings on a folder. In order to set engines on this folder, use :meth:`set_engines`.
         In order to set custom field policies, use :meth:`pytpp.features.custom_fields.CustomField.write_policy`.
 
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames, \\
-                    AttributeValues, Classes
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
-                features.folder.write_policy(
-                    folder=folder,
-                    class_name=Classes.Certificate.x509_certificate,
-                    attributes={
-                        AttributeNames.Certificate.management_type: 'Enrollment',
-                        AttributeNames.Certificate.organization: 'Venafi'
-                    },
-                    locked=True
-                )
-
         Args:
-            folder: Config.Object or DN of the folder.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.
@@ -451,34 +348,10 @@ class Folder(FeatureBase):
 
     def update_policy(self, folder: 'Union[Config.Object, str]', class_name: str, attributes: dict, locked: bool):
         """
-        Updates policy configurations on a folder. If the value is locked, then all objects derived
-        from the folder of the specified policy class will inherit the given attribute value and
-        cannot be changed by any child folders or objects. Otherwise the value will be set as a
-        default value.
-
-        Examples:
-
-            .. code-block:: python
-
-                from pytpp import logger, Authenticate, Features, AttributeNames, \\
-                    AttributeValues, Classes
-
-                api = Authenticate(# params here)
-                features = Features(api)
-
-                folder = features.objects.get(object_dn='\\\VED\\\Policy\\\MyPolicy')
-                features.folder.update_policy(
-                    folder=folder
-                    class_name=Classes.Certificate.x509_certificate,
-                    attributes={
-                        AttributeNames.Certificate.management_type: 'Enrollment',
-                        AttributeNames.Certificate.organization: 'Venafi'
-                    },
-                    locked=True
-                )
+        Updates policy configurations on a folder.
 
         Args:
-            folder: Config.Object or DN of the folder.
+            folder: :ref:`config_object` or :ref:`dn` of the folder.
             class_name: TPP Class Name for the attributes being locked.
             attributes: A dictionary of attribute name/value pairs where the name is the
                 attribute name and the value is the attribute value.

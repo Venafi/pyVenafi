@@ -22,8 +22,8 @@ class Permissions(FeatureBase):
         i.e. those that are inherited from group memberships and parent folders, are unaffected.
 
         Args:
-            obj: Config object of the object to act on.
-            identity: Identity object of the user or group.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         current_permissions = self.get_explicit(obj=obj, identity=identity)
@@ -41,16 +41,16 @@ class Permissions(FeatureBase):
 
     def get_effective(self, obj: 'Union[Config.Object, str]', identity: 'Union[Identity.Identity, str]'):
         """
-        Returns the `effective` permissions of a user or group on the ``obj``. Effective permissions are the
-        permissions that are `effectively` enforced by TPP. All Master Admin, implicit, and explicit permissions
-        are taken into account to evaluate the final effective permissions of a user or group.
+        Returns the *effective* permissions of a user or group on the ``obj``. Effective permissions are the
+        permissions that are take effect when the user authenticates to TPP. All Master Admin, implicit, and
+        explicit permissions are taken into account to evaluate the final effective permissions of a user or group.
 
         Args:
-            obj: Config object of the object to act on.
-            identity: Identity object of the user or group.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
 
         Returns:
-            Effective Permissions object.
+            :py:class:`~dataclasses.permissions.Permissions`: Effective permissions granted to the ``identity``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
@@ -68,14 +68,14 @@ class Permissions(FeatureBase):
         permissions that are `explicitly` granted to a user or group on a particular object. A user or group may
         have permissions to the object via `implicit` permissions, which are permissions inherited from other
         folders and group memberships. Implicit permissions are ignored. To get implicit permissions, use
-        :meth:`get_implicit`.
+        :meth:`~get_implicit`.
 
         Args:
-            obj: Config object of the object to act on.
-            identity: Identity object of the user or group.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
 
         Returns:
-            Explicit Permissions object.
+            :py:class:`~dataclasses.permissions.Permissions`: Explicit permissions granted to the ``identity``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
@@ -93,11 +93,11 @@ class Permissions(FeatureBase):
         inherited from other folders and group memberships. To get explicit permissions, use :meth:`get_explicit`.
 
         Args:
-            obj: Config object of the object to act on.
-            identity: Identity object of the user or group.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
 
         Returns:
-            Implicit Permissions object.
+            :py:class:`~dataclasses.permissions.Permissions`: Implicit permissions granted to the ``identity``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
@@ -117,10 +117,10 @@ class Permissions(FeatureBase):
         folders and group memberships. Implicit permissions are ignored.
 
         Args:
-            obj: Config object of the object to act on.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
 
         Returns:
-            List of Identity objects.
+            List of :ref:`identity_object`.
         """
         obj = self._get_config_object(obj)
         principals = self._api.websdk.Permissions.Object.Guid(obj.guid).get().principals
@@ -138,11 +138,12 @@ class Permissions(FeatureBase):
                is_read_allowed: bool = None, is_rename_allowed: bool = None, is_revoke_allowed: bool = None, is_view_allowed: bool = None,
                is_write_allowed: bool = None):
         """
-        Grants the specified permissions to a user or group identity.
+        Grants the specified permissions to a user or group identity. If any arguments are not specified as
+        ``True`` or ``False`` then that value will default to their existing permissions or ``False``.
 
         Args:
-            obj: Config object of the object to act on.
-            identity: Identity object of the user or group.
+            obj: :ref:`config_object` or :ref:`dn` of the object.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
             is_associate_allowed: Allows associating/dissociating applications to certificates and pushing certificates
                 to the associated applications.
             is_create_allowed: Allows creating subordinate objects to the ``obj``. Also grants View permission.

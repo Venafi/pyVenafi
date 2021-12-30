@@ -15,32 +15,6 @@ class _IdentityBase(FeatureBase):
 
     def _find(self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = False,
               is_user: bool = False):
-        """
-        Finds users and/or groups within the Identity Provider permissions of the caller having containing ``name`` within
-        its name. If the caller is an AD user and has permissions to view the Local Identity Provider in TPP, then that
-        user will be able to search for both users and groups within its own AD Identity Provider and the Local Identity
-        Provider.
-
-        Result can be filtered by group types (Security and/or Distribution groups) and be limited to a certain number of
-        results.
-
-        Examples:
-
-            .. code-block::python
-
-            cool_groups = self.features.identity.group.find(name='CoolGroup', limit=2)
-            cool_users = self.features.identity.user.find(name='CoolUser', limit=20)
-
-        Args:
-            name: String of characters contained within the names to be found.
-            limit: Maximum number of results to return.
-            is_distribution_group: If ``True``, results include AD Distribution Groups.
-            is_security_group: If ``True``, results include Local and AD/LDAP groups.
-            is_user: If ``True``, results include Local and AD/LDAP users.
-
-        Returns:
-            List of Identity objects for each identity found.
-        """
         identity_type = 0
         if is_user:
             identity_type += IdentityAttributeValues.Types.user
@@ -58,13 +32,11 @@ class _IdentityBase(FeatureBase):
 
     def exists(self, prefixed_name: str):
         """
-        Validates that a user or group exists in TPP and returns a boolean value.
-
         Args:
-            prefixed_name: The prefixed name of the Identity object.
+            prefixed_name: The :ref:`prefixed_name` of the identity.
 
         Returns:
-            ``True`` if the Identity exists, otherwise ``False``.
+            bool: ``True`` if the identity exists, otherwise ``False``.
         """
         response = self._api.websdk.Identity.Validate.post(
             identity=self._identity_dict(prefixed_name=prefixed_name)
@@ -76,17 +48,15 @@ class _IdentityBase(FeatureBase):
 
     def get(self, prefixed_name: str = None, prefixed_universal: str = None, raise_error_if_not_exists: bool = True):
         """
-        Get a user or group in TPP. An error is raised if the identity does not exist.
-
         One of ``prefixed_name`` or ``prefixed_universal`` must be provided.
 
         Args:
-            prefixed_name: The prefixed name of the Identity object.
-            prefixed_universal: The prefixed universal GUID of the Identity object.
+            prefixed_name: The :ref:`prefixed_name` of the identity object.
+            prefixed_universal: The prefixed universal of the identity object.
             raise_error_if_not_exists: Raise an exception if the identity does not exist.
 
         Returns:
-            An Identity object of the user or group.
+           :ref:`identity_object`
         """
         return self._get_identity_object(
             prefixed_name=prefixed_name,
@@ -96,13 +66,11 @@ class _IdentityBase(FeatureBase):
 
     def get_memberships(self, identity: 'Union[Identity.Identity, str]'):
         """
-        Finds all groups to which a user or group belongs.
-
         Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the identity.
 
         Returns:
-            List of Identity objects for each group.
+            List of :ref:`identity_object` for each group.
         """
         if isinstance(identity, str):
             identity = self._get_identity_object(prefixed_name=identity)
@@ -117,14 +85,12 @@ class _IdentityBase(FeatureBase):
 
     def read_attribute(self, identity: 'Union[Identity.Identity, str]', attribute_name: str):
         """
-        Returns the value associated to the given ``attribute_name``.
-
         Args:
-            identity: Identity.Identity or prefixed name of the user or group. The prefix is required.
+            identity: :ref:`identity_object` or :ref:`prefixed_name` of the identity.
             attribute_name: The name of the attribute.
 
         Returns:
-            List of attribute values.
+            List[str]: List of attribute values.
         """
         prefixed_name = self._get_prefixed_name(identity)
         result = self._api.websdk.Identity.ReadAttribute.post(
@@ -142,20 +108,17 @@ class User(_IdentityBase):
     def create(self, name: str, password: str, email_address: str, first_name: str = None, last_name: str = None,
                add_to_everyone_group: bool = True, get_if_already_exists: bool = True):
         """
-        Creates a local user in TPP with the given ``password`` and ``email_address``. By default, the
-        user is added to the Everyone group in the Local Identity Provider.
-
         Args:
-            name: Name of the user. The `"local:"` prefix is not required.
+            name: Name of the user. The *local:* prefix is not required.
             password: Password.
-            email_address: E-mail address. TPP requires it.
+            email_address: E-mail address.
             first_name: First name of the user.
             last_name: Last name of the user.
-            add_to_everyone_group: If ``True``, the user to the Local Identity group "Everyone".
+            add_to_everyone_group: Add the user to the ``local:Everyone`` group.
             get_if_already_exists: If the identity already exists, just return it as is.
 
         Returns:
-            Identity object of the user.
+            :ref:`identity_object` of the user.
         """
         attributes = {
             UserAttributes.internet_email_address: email_address,
@@ -184,7 +147,7 @@ class User(_IdentityBase):
         Deletes the user from the Local Identity Provider. The user is removed from all local groups.
 
         Args:
-            user: Identity.Identity or prefixed name of the user. The prefix is required.
+            user: :ref:`identity_object` or :ref:`prefixed_name` of the user.
         """
         if isinstance(user, str):
             user = self._get_identity_object(user)
@@ -199,24 +162,14 @@ class User(_IdentityBase):
 
     def find(self, name: str, limit: int = 100):
         """
-        Finds users within the Identity Provider permissions of the caller having containing ``name`` within its name.
-        If the caller is an AD user and has permissions to view the Local Identity Provider in TPP, then that user
-        will be able to search for users within its own AD Identity Provider and the Local Identity Provider.
-
-        Result can be limited to a certain number of results.
-
-        Examples:
-
-            .. code-block::python
-
-            cool_users = self.features.identity.user.find(name='CoolUser', limit=20)
-
+        Finds users within the the Identity Providers to which the authenticated user has view permissions.
+        
         Args:
             name: String of characters contained within the names to be found.
             limit: Maximum number of results to return.
 
         Returns:
-            List of Identity objects for each identity found.
+            List of :ref:`identity_object` for each user found.
         """
         return self._find(
             name=name,
@@ -232,12 +185,12 @@ class User(_IdentityBase):
         the ``old_password`` is not required.
 
         Args:
-            user: Identity.Identity or prefixed name of the user. The prefix is required.
+            user: :ref:`identity_object` or :ref:`prefixed_name` of the user.
             new_password: The new password for the user.
             old_password: The old password for the user. Required only if it exists.
 
         Returns:
-            Identity object of the user.
+            :ref:`identity_object` of the user.
         """
         prefixed_name = self._get_prefixed_name(user)
         response = self._api.websdk.Identity.SetPassword.post(
@@ -255,14 +208,12 @@ class Group(_IdentityBase):
 
     def add_members(self, group: 'Union[Identity.Identity, str]', members: 'List[Union[Identity.Identity, str]]'):
         """
-        Adds members to a local group.
-
         Args:
-            group: Identity.Identity or prefixed name of the group. The prefix is required.
-            members: List of ``Identity.Identity`` or prefixed names of each member.
+            group: :ref:`identity_object` or :ref:`prefixed_name` of the group.
+            members: List of :ref:`identity_object` or :ref:`prefixed_name` of each member.
 
         Returns:
-            List of Identity objects for each member.
+            List of :ref:`identity_object` for each member.
         """
         member_prefixed_names = [self._get_prefixed_name(i) for i in members]
         prefixed_name = self._get_prefixed_name(group)
@@ -285,16 +236,13 @@ class Group(_IdentityBase):
 
     def create(self, name: str, members: 'List[Union[Identity, Identity, str]]' = None, get_if_already_exists: bool = True):
         """
-        Creates a local group in TPP. Each member of the group inherits the permissions of this
-        group. To add members, provide a list of prefixed names for each member.
-
         Args:
-            name: Name of the user. The `"local:"` prefix is not required.
-            members: List of ``Identity.Identity`` or prefixed universal names of each member.
+            name: Name of the user. The *local:* prefix is not required.
+            members: List of :ref:`identity_object` or :ref:`prefixed_name` of each member.
             get_if_already_exists: If the identity already exists, just return it as is.
 
         Returns:
-            Identity object of the user.
+            :ref:`identity_object` of the group.
         """
         member_prefixed_names = [self._get_prefixed_name(i) for i in members] if members else []
         if not name.startswith('local:'):
@@ -325,7 +273,7 @@ class Group(_IdentityBase):
         Deletes a group, but not its members. All group permissions and privileges are deleted.
 
         Args:
-            group: Identity.Identity or prefixed name of the group. The prefix is required.
+            group: :ref:`identity_object` or :ref:`prefixed_name` of the group.
         """
         if isinstance(group, str):
             group = self._get_identity_object(group)
@@ -334,18 +282,7 @@ class Group(_IdentityBase):
 
     def find(self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = True):
         """
-        Finds groups within the Identity Provider permissions of the caller having containing ``name`` within its name.
-        If the caller is an AD user and has permissions to view the Local Identity Provider in TPP, then that user will
-        be able to search for groups within its own AD Identity Provider and the Local Identity Provider.
-
-        Result can be filtered by group types (Security and/or Distribution groups) and be limited to a certain number of
-        results.
-
-        Examples:
-
-            .. code-block::python
-
-                cool_groups = self.features.identity.group.find(name='CoolGroup', limit=2)
+        Finds groups within the the Identity Providers to which the authenticated user has view permissions.
 
         Args:
             name: String of characters contained within the names to be found.
@@ -354,7 +291,7 @@ class Group(_IdentityBase):
             is_security_group: If ``True``, results include Local and AD/LDAP groups.
 
         Returns:
-            List of Identity objects for each identity found.
+            List of :ref:`identity_object` for each group found.
         """
         return self._find(
             name=name,
@@ -366,15 +303,12 @@ class Group(_IdentityBase):
 
     def get_members(self, group: 'Union[Identity.Identity, str]', resolve_nested: bool = False):
         """
-        Finds all members of a group. If ``resolve_nested`` is ``True``, then members of groups within this group, etc.,
-        are included in the result.
-
         Args:
-            group: Identity.Identity or prefixed name of the group. The prefix is required.
-            resolve_nested: If ``True``, returns members of nested groups within this group.
+            group: :ref:`identity_object` or :ref:`prefixed_name` of the group.
+            resolve_nested: If ``True``, recursively returns members of groups within this group.
 
         Returns:
-            List of Identity objects for each member of the group.
+            List of :ref:`identity_object` for each member of the group.
         """
         prefixed_name = self._get_prefixed_name(group)
         result = self._api.websdk.Identity.GetMembers.post(
@@ -389,11 +323,11 @@ class Group(_IdentityBase):
         Removes members from a local group.
 
         Args:
-            group: Identity.Identity or prefixed name of the group. The prefix is required.
-            members: List of ``Identity.Identity`` or prefixed universal names of each member.
+            group: :ref:`identity_object` or :ref:`prefixed_name` of the group.
+            members: List of :ref:`identity_object` or :ref:`prefixed_name` of each member.
 
         Returns:
-            List of Identity objects for each remaining member. If no members remain, then
+            List of :ref:`identity_object` for each remaining member. If no members remain, then
             the list is empty.
         """
         member_prefixed_names = [self._get_prefixed_name(i) for i in members]
@@ -411,14 +345,14 @@ class Group(_IdentityBase):
 
     def rename(self, group: 'Union[Identity.Identity, str]', new_group_name: str):
         """
-        Renames a local group. The `"local:"` prefix is not required.
+        Renames a local group. The *local:* prefix is not required.
 
         Args:
-            group: Identity.Identity or prefixed name of the group. The prefix is required.
+            group: :ref:`identity_object` or :ref:`prefixed_name` of the group.
             new_group_name: New name of the group. No prefix required.
 
         Returns:
-            Identity object with the new group name.
+            :ref:`identity_object` with the new group name.
         """
         prefixed_name = self._get_prefixed_name(group)
         if not new_group_name.startswith('local:'):

@@ -1,29 +1,34 @@
 from pytpp.properties.resultcodes import ResultCodes
+from pytpp.properties.response_objects.dataclasses import config_schema
 
 
 class ConfigSchema:
-    class Result:
-        def __init__(self, code: int):
-            self.code = code  # type: int
-            self.config_result = ResultCodes.Config.get(code, 'Unknown')
+    @staticmethod
+    def Result(code: int):
+        return config_schema.Result(
+            code=code,
+            config_result=ResultCodes.Config.get(code, 'Unknown'),
+        )
 
-    class AttributeDefinition:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def AttributeDefinition(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return config_schema.AttributeDefinition(
+            name=response_object.get('Name'),
+            syntax=response_object.get('Syntax'),
+        )
 
-            self.name = response_object.get('Name')  # type: str
-            self.syntax = response_object.get('Syntax')  # type: str
-
-    class ClassDefinition:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.containment_names = response_object.get('ContainmentNames')  # type: list
-            self.containment_sub_names = response_object.get('ContainmentSubNames')  # type: list
-            self.mandatory_names = response_object.get('MandatoryNames')  # type: list
-            self.name = response_object.get('Name')  # type: str
-            self.naming_names = response_object.get('NamingNames')  # type: list
-            self.optional_names = response_object.get('OptionalNames')  # type: list
-            self.super_class_names = response_object.get('SuperClassNames')  # type: list
+    @staticmethod
+    def ClassDefinition(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return config_schema.ClassDefinition(
+            containment_names=response_object.get('ContainmentNames'),
+            containment_sub_names=response_object.get('ContainmentSubNames'),
+            mandatory_names=response_object.get('MandatoryNames'),
+            name=response_object.get('Name'),
+            naming_names=response_object.get('NamingNames'),
+            optional_names=response_object.get('OptionalNames'),
+            super_class_names=response_object.get('SuperClassNames'),
+        )

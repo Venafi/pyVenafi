@@ -14,11 +14,10 @@ class _DeviceBase(FeatureBase):
 
     def delete(self, device: 'Union[Config.Object, str]'):
         """
-        Deletes the device object specified. Since there are no secret store data attached to this object,
-        only a config delete is performed.
+        Deletes the device object specified.
 
         Args:
-            device: Config object of to the device object.
+            device: :ref:`config_object` or :ref:`dn` of to the device object.
         """
         dn = self._get_dn(device)
         self._config_delete(object_dn=dn)
@@ -36,28 +35,26 @@ class Device(_DeviceBase):
                use_sudo: 'bool' = None, sudo_credential: 'Union[Config.Object, str]' = None, enforce_host_key: 'bool' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a device object in TPP.
-
         Args:
             name: Name of the device object .
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             description: Description of the device object.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
             address: Hostname or IP address of the device.
             agent_provisioning_mode: Set provisioning mode to connect via Agent if ``True``.
             concurrent_connection_limit: Concurrent connection limit to this device.
-            device_credential: ``Config.Object`` or DN of the device credential.
+            device_credential: :ref:`config_object` or :ref:`dn` of the device credential.
             temp_directory: Temp directory.
             os_type: Operating Sytem type.
-            jump_server: ``Config.Object`` or DN of the jump server.
+            jump_server: :ref:`config_object` or :ref:`dn` of the jump server.
             use_sudo: Use sudo.
-            sudo_credential: ``Config.Object`` or DN of the sudo user credential.
+            sudo_credential: :ref:`config_object` or :ref:`dn` of the sudo user credential.
             enforce_host_key: Enforce host key policy.
             attributes: List of attributes pertaining to the device object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``
+            :ref:`config_object` of the device object.
         """
         dev_attrs = {
             DeviceAttributes.description: description,
@@ -86,14 +83,12 @@ class Device(_DeviceBase):
 
     def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Fetches the config object a device object.
-
         Args:
-            device_dn: DN of the device object.
+            device_dn: :ref:`dn` of the device object.
             raise_error_if_not_exists: Raise an exception if the device DN does not exist.
 
         Returns:
-            Config object representing the device.
+            :ref:`config_object` of the device object.
         """
         return self._get_config_object(
             object_dn=device_dn,
@@ -105,7 +100,7 @@ class Device(_DeviceBase):
         Submits Agentless discovery work for the given device.
 
         Args:
-            device: Config.Object, DN, or GUID of the device object in TPP.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
         """
         dn = self._get_dn(device)
         result = self._api.websdk.Config.Write.post(
@@ -130,29 +125,27 @@ class JumpServer(_DeviceBase):
                use_sudo: 'bool' = None, sudo_credential: 'Union[Config.Object, str]' = None,
                enforce_host_key: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a device object in TPP.
-
         Args:
             name: Name of the device object .
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             description: Description of the device object.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
             address: Hostname or IP address of the device.
             port: Connection port.
             concurrent_connection_limit: Concurrent connection limit to this device.
-            device_credential: ``Config.Object`` or DN of the device credential.
+            device_credential: :ref:`config_object` or :ref:`dn` of the device credential.
             temp_directory: Temp directory.
             os_type: Operating Sytem type.
             ssh_version: SSH version.
             ssh_syntax: SSH syntax.
             use_sudo: Use sudo.
-            sudo_credential: ``Config.Object`` or DN of the sudo user credential.
+            sudo_credential: :ref:`config_object` or :ref:`dn` of the sudo user credential.
             enforce_host_key: Enforce host key policy.
             attributes: List of attributes pertaining to the device object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``
+            :ref:`config_object` of the jump server object.
         """
         dev_attrs = {
             JumpServerAttributes.description                : description,
@@ -182,14 +175,12 @@ class JumpServer(_DeviceBase):
 
     def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Fetches the config object a device object.
-
         Args:
-            device_dn: DN of the device object.
+            device_dn: :ref:`dn` of the device object.
             raise_error_if_not_exists: Raise an exception if the device DN does not exist.
 
         Returns:
-            Config object representing the device.
+            :ref:`config_object` of the device object.
         """
         return self._get_config_object(
             object_dn=device_dn,
@@ -201,7 +192,7 @@ class JumpServer(_DeviceBase):
         Submits Agentless discovery work for the given device.
 
         Args:
-            device: Config.Object, DN, or GUID of the device object in TPP.
+            device: :ref:`config_object` or :ref:`dn` of the device object.
         """
         dn = self._get_dn(device)
         result = self._api.websdk.Config.Write.post(

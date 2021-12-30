@@ -63,6 +63,11 @@ html_logo = '_static/images/venafi_logo.png'
 html_favicon = '_static/images/favicon.ico'
 
 autoclass_content = 'both'
+add_module_names = False
+autodoc_typehints = 'description'
+napoleon_use_ivar = True
+napoleon_attr_annotations = True
+autodoc_unqualified_typehints = True
 
 # region Documentation Variables
 string = lambda name, value: f'.. |{name}| replace:: {value}'
@@ -151,9 +156,38 @@ def replace_variables_in_code_block(app, docname, source):
     for name, value in app.config.code_block_variables.items():
         result = re.sub('\|(?!\|)' + name + '\|(?!\|)', value.replace('\\', '\\\\'), result)
     source[0] = result
+# endregion Code Block Variables
 
 
 def setup(app):
     app.add_config_value('code_block_variables', {}, True)
     app.connect('source-read', replace_variables_in_code_block)
-# endregion Code Block Variables
+
+def main():
+    from pathlib import Path
+    from sphinx.application import Sphinx
+    from docs.compile_features_documentation import main as compile_docstrings
+
+    compile_docstrings()
+
+    docs_directory = Path('.').absolute()
+    source_directory = docs_directory
+    configuration_directory = docs_directory
+    build_directory = Path(configuration_directory, '_build')
+    doctree_directory = Path(build_directory, '.doctrees')
+    builder = 'html'
+
+    os.system('make clean')
+    app = Sphinx(
+        str(source_directory),
+        str(configuration_directory),
+        str(build_directory),
+        str(doctree_directory),
+        builder
+    )
+    app.build(force_all=True)
+
+
+if __name__ == '__main__':
+    main()
+

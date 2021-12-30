@@ -1,11 +1,15 @@
-class OAuth:
-    class Permissions:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+from pytpp.properties.response_objects.dataclasses import oauth
 
-            self.delete = response_object.get('delete')  # type: bool
-            self.discover = response_object.get('discover')  # type: bool
-            self.manage = response_object.get('manage')  # type: bool
-            self.read = response_object.get('read')  # type: bool
-            self.revoke = response_object.get('revoke')  # type: bool
+
+class OAuth:
+    @staticmethod
+    def Permissions(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return oauth.Permissions(
+            delete=response_object.get('delete'),
+            discover=response_object.get('discover'),
+            manage=response_object.get('manage'),
+            read=response_object.get('read'),
+            revoke=response_object.get('revoke'),
+        )

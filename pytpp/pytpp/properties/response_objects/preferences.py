@@ -1,13 +1,17 @@
-class Preferences:
-    class Preference:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+from pytpp.properties.response_objects.dataclasses import preferences
 
-            self.id = response_object.get('Id')  # type: int
-            self.universal = response_object.get('Universal')  # type: str
-            self.product = response_object.get('Product')  # type: str
-            self.category = response_object.get('Category')  # type: str
-            self.name = response_object.get('Name')  # type: str
-            self.value = response_object.get('Value')  # type: str
-            self.locked = response_object.get('Locked')  # type: bool
+
+class Preferences:
+    @staticmethod
+    def Preference(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return preferences.Preference(
+            id=response_object.get('Id'),
+            universal=response_object.get('Universal'),
+            product=response_object.get('Product'),
+            category=response_object.get('Category'),
+            name=response_object.get('Name'),
+            value=response_object.get('Value'),
+            locked=response_object.get('Locked'),
+        )

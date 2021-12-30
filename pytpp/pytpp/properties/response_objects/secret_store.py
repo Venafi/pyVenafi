@@ -1,17 +1,21 @@
+from pytpp.properties.response_objects.dataclasses import secret_store
 from pytpp.properties.resultcodes import ResultCodes
 
 
 class SecretStore:
-    class Result:
-        def __init__(self, code):
-            self.code = code  # type: int
-            self.secret_store_result = ResultCodes.SecretStore.get(code, 'Unknown')
+    @staticmethod
+    def Result(code: int):
+        return secret_store.Result(
+            code=code,
+            secret_store_result=ResultCodes.SecretStore.get(code, 'Unknown'),
+        )
 
-    class TypedNameValues:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.name= response_object.get('Name')  # type: str
-            self.type = response_object.get('Type')  # type: str
-            self.value = response_object.get('Value')  # type: str
+    @staticmethod
+    def TypedNameValues(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return secret_store.TypedNameValues(
+            name=response_object.get('Name'),
+            type=response_object.get('Type'),
+            value=response_object.get('Value'),
+        )

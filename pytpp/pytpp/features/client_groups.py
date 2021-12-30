@@ -1,5 +1,5 @@
 from pytpp.features.bases.feature_base import FeatureBase, feature
-from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue
+from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.properties.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
 from typing import Union, TYPE_CHECKING
@@ -40,21 +40,19 @@ class _ClientGroupBase(FeatureBase):
         Deletes a client group
 
         Args:
-            group: The Config.Object or name of the client group.
+            group: :ref:`config_object` or name of the client group.
         """
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         self._config_delete(object_dn=group_dn)
 
     def get(self, name: str, raise_error_if_not_exists: bool = True):
         """
-        Gets a client group by name and returns a config object
-
         Args:
             name: The name of the client group.
             raise_error_if_not_exists: Raise an exception if the client group does not exist.
 
         Returns:
-            Config object representing the client group.
+            :ref:`config_object` of the client group.
         """
         return self._get_config_object(
             object_dn=fr'{self._group_base_dn}\{name}',
@@ -63,12 +61,10 @@ class _ClientGroupBase(FeatureBase):
 
     def list(self):
         """
-        Gets all client groups as a list
-
-        Args:
+        Lists all client groups.
 
         Returns:
-            A list of config object representing the client groups.
+            List of :ref:`config_object` of the client groups.
         """
         response = self._api.websdk.Config.Enumerate.post(object_dn=self._group_base_dn)
 
@@ -86,9 +82,6 @@ class _ClientGroupBase(FeatureBase):
         Args:
             group: The :ref:`config_object` or name of the client group.
             work: The :ref:`config_object` or name of the work to be removed.
-
-        Returns:
-            A list of :ref:`config_object`.
         """
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
@@ -108,14 +101,12 @@ class _ClientGroupBase(FeatureBase):
 class Agentless(_ClientGroupBase):
     def create(self, name: str, get_if_already_exists: bool = True):
         """
-        Creates an Agentless client group.
-
         Args:
             name: The name of the client group.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the client group.
+            :ref:`config_object` of the client group.
         """
         attributes = {
             ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
@@ -136,14 +127,12 @@ class Agentless(_ClientGroupBase):
 class EstCertificateEnrollment(_ClientGroupBase):
     def create(self, name: str, get_if_already_exists: bool = True):
         """
-        Creates a "Certificate Enrollment Via EST Protocol" client group
-
         Args:
             name: The name of the client group.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the client group.
+            :ref:`config_object` of the client group.
         """
         attributes = {
             ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,
@@ -164,14 +153,12 @@ class EstCertificateEnrollment(_ClientGroupBase):
 class VenafiAgent(_ClientGroupBase):
     def create(self, name: str, get_if_already_exists: bool = True):
         """
-        Creates a Venafi Agent client group.
-
         Args:
             name: The name of the client group.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the client group.
+            :ref:`config_object` of the client group.
         """
         attributes = {
             ClientGroupAttributes.created_by: ClientGroupsAttributeValues.CreatedBy.websdk,

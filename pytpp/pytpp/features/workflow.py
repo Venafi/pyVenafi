@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from dataclasses import dataclass
 from typing import List, Union
 from datetime import datetime
 from pytpp.tools.vtypes import Config, Identity
@@ -20,7 +21,7 @@ class _WorkflowBase(FeatureBase):
         Deletes a workflow.
 
         Args:
-            workflow: Config.Object or DN of the workflow object.
+            workflow: :ref:`config_object` or :ref:`dn` of the workflow object.
         """
         workflow_dn = self._get_dn(workflow)
         self._secret_store_delete(object_dn=workflow_dn)
@@ -31,11 +32,11 @@ class _WorkflowBase(FeatureBase):
         Returns the config object of the folder DN.
 
         Args:
-            workflow_dn: DN of the workflow.
-            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
+            workflow_dn: :ref:`dn` of the workflow.
+            raise_error_if_not_exists: Raise an exception if the object :ref:`dn` does not exist.
 
         Returns:
-            Config object representing the workflow.
+            :ref:`config_object` of the workflow object.
         """
         return self._get_config_object(
             object_dn=workflow_dn,
@@ -96,43 +97,19 @@ class AdaptableWorkflow(_WorkflowBase):
                powershell_script_content: bytes, approvers: 'List[Union[Identity.Identity, str]]' = None, reason_code: int = None,
                use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates an Adaptable Workflow object. The ``powershell_script_name`` must be the name of an actual PowerShell script
-        located on the TPP server(s) that will process this workflow. The ``powershell_script_content`` is the content of the
-        PowerShell script as bytes. This is required to create the Base64 hash of the SHA256 hash of the UTF-32LE-encoded
-        PowerShell script. Without the PowerShell script hash TPP cannot trust using the Adaptable Workflow until the hash
-        is verified.
-
-         Examples:
-            .. code-block::python
-
-                from pytpp import Authenticate, Features
-
-                api = Authenticate(...)  # ... is short-hand for the parameters
-                features = Features(api)
-
-                with open('./local/path/to/SuperAwesomeScript.ps1', 'rb') as f:
-                    content = f.read()
-
-                adaptable_workflow = features.workflow.adaptable.create(
-                    ...,
-                    powershell_script_name='SuperAwesomeScript',
-                    powershell_script_content=content
-                    ...
-                )
-
-        If a list of approver identity objects is provided, they will be added to the workflow as dedicated
-        approvers of the workflow. If the approvers should come from the PowerShell script, do not supply this parameter.
-        Instead, set ``use_approvers_from_powershell_script = True``. If the approvers should come from the object requiring
-        the workflow, such as the certificate object, then do not supply ``approvers`` or
-        ``use_approvers_from_powershell_script``.
+        .. note::
+            If a list of approver identity objects is provided, they will be added directly to the workflow as approvers of the 
+            workflow. If the approvers should come from the PowerShell script, do not supply this parameter. Instead, set 
+            ``use_approvers_from_powershell_script = True``. If the approvers should come from the object requiring the workflow, 
+            such as the certificate object, then do not supply ``approvers`` or ``use_approvers_from_powershell_script``.
 
         Args:
             name: Name of the workflow object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             stage: One of the valid stages that represent the certificate lifecycle.
             powershell_script_name: Name (not path) of the actual PowerShell script on the TPP server.
             powershell_script_content: Contents of the PowerShell script as bytes.
-            approvers: List of identity objects for each approver.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` for each approver.
             reason_code: Integer reason code.
             use_approvers_from_powershell_script: If ``True`` and no ``approvers`` is supplied, then set the
                 workflow to use the approvers defined by the script.
@@ -140,7 +117,7 @@ class AdaptableWorkflow(_WorkflowBase):
             get_if_already_exists: If the objects already exists, it is modified according to these parameters. Else
                 and exception is raised..
         Returns:
-            Config Object of the workflow.
+            :ref:`config_object` of the workflow object.
         """
         if approvers:
             wf_approvers = ','.join([a.prefixed_universal for a in approvers])
@@ -184,34 +161,6 @@ class AdaptableWorkflow(_WorkflowBase):
 
     @staticmethod
     def _calculate_hash(script_content: bytes):
-        """
-        Calculates the hash of the Adaptable Workflow script that TPP would store. This is useful when creating or modifying
-        an Adaptable Workflow script.
-
-        Examples:
-            .. code-block::python
-
-                from pytpp import Authenticate, Features
-
-                api = Authenticate(...)  # ... is short-hand for the parameters
-                features = Features(api)
-
-                with open('./local/path/to/script.ps1', 'rb') as f:
-                    content = f.read()
-
-                hash = features.workflow.adaptable._calculate_hash(script_content=content)
-                adaptable_workflow = features.workflow.adaptable.create(
-                    ...,
-                    powershell_script_hash=hash,
-                    ...
-                )
-
-        Args:
-            script_content: The raw content of the Adaptable Workflow script as bytes.
-
-        Returns:
-            Base64 data of the SHA 256 hash of the UTF-32LE encoded script.
-        """
         return base64.b64encode(
             hashlib.sha256(
                 script_content.decode().encode('utf-32-le')
@@ -219,11 +168,11 @@ class AdaptableWorkflow(_WorkflowBase):
         ).decode()
 
 
+@dataclass
 class RC:
-    def __init__(self, code, name, description):
-        self.code = code
-        self.name = name
-        self.description = description
+    code: int 
+    name: str 
+    description: str
 
 
 @feature('Reason Code')
@@ -235,15 +184,17 @@ class ReasonCode(FeatureBase):
 
     def create(self, code: int, name: str, description: str):
         """
-        Creates a workflow result code.
-
         Args:
             code: An integer code.
             name: Name of the result code.
             description: Purpose of the result code.
 
         Returns:
-            List of ``code``, ``name``, and ``description``.
+            A ``ReasonCode`` object with these properties
+            
+            * **code** *(int)* - An integer code.
+            * **name** *(str)* - Name of the result code.
+            * **description** *(str)* - Purpose of the result code.
         """
         result = self._api.websdk.Config.AddValue.post(
             object_dn=self._workflow_dn,
@@ -292,34 +243,27 @@ class StandardWorkflow(_WorkflowBase):
                application_class_name: str = None, approvers: 'List[Union[Identity.Identity, str]]' = None, macro: str = None,
                reason_code: int = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Standard Workflow object.
+        One of ``injection_command`` or ``approvers`` must be given.
 
-        TPP requires that one of ``injection_command`` or ``approvers`` be supplied.
-
-        If a list of approver identity objects is provided, they will be added to the workflow as dedicated approvers of the workflow.
-        If the approvers should come from the object requiring the workflow, such as the certificate object, then do not supply
-        ``approvers``. If the approvers come from a TPP Macro, then supply ``macro`` with the desired macro.
-
-        If an ``injection_command`` is supplied, then that command will be invoked during the workflow.
-
-        If an ``application_class_name`` is supplied, then the workflow will only apply to application objects of this class.
-        Otherwise all applications are subject to this workflow.
+        If a list of approver identity objects is provided, they will be added directly to the workflow as approvers of the
+        workflow. If the approvers should come from the object requiring the workflow, such as the certificate object, then
+        do not supply ``approvers``. If the approvers come from a TPP Macro, then supply ``macro`` with the desired macro.
 
         Args:
             name: Name of the workflow object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
-            stage: One of the valid stages that represent the certificate lifecycle.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
+            stage: Workflow stage.
             injection_command: Command to be invoked on the target application.
-            application_class_name: Application Class Name to trigger this workflow.
-            approvers: List of identity objects for each approver.
-            macro: TPP Approver Macro.
+            application_class_name: Application class name to trigger this workflow.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` for each approver.
+            macro: TPP approver macro.
             reason_code: Integer reason code.
             attributes: Additional attributes to apply to the workflow object.
             get_if_already_exists: If the objects already exists, it is modified according to these parameters. Else
-                and exception is raised.
+                an exception is raised.
 
         Returns:
-            Config Object of the workflow.
+            :ref:`config_object` of the workflow object.
         """
         if approvers:
             wf_approvers = ','.join([a.prefixed_universal for a in approvers])
@@ -359,17 +303,17 @@ class Ticket(FeatureBase):
                approvers: Union['List[Identity.Identity]', List[str]], reason: Union[RC, int, str],
                user_data: str = None):
         """
-        Creates a workflow ticket on ``obj`` if the object is in a state to received a workflow ticket.
+        Creates a workflow ticket on ``obj`` only if the object is in a state to received a workflow ticket.
 
         Args:
-            obj: Config.Object or DN of the object requiring a workflow ticket.
-            workflow: Config.Object or DN of the workflow object.
-            approvers: List of Identity.Identity or prefixed names for each approver.
-            reason: RC or integer reason code.
+            obj: :ref:`config_object` or :ref:`dn` of the object requiring a workflow ticket.
+            workflow: :ref:`config_object` or :ref:`dn` of the workflow object.
+            approvers:  List of :ref:`identity_object` or :ref:`prefixed_name` for each approver.
+            reason: ``RC`` or integer reason code.
             user_data: User data.
 
         Returns:
-            Workflow ticket name.
+            str: Workflow ticket name.
         """
         obj_dn = self._get_dn(obj)
         workflow_dn = self._get_dn(workflow)
@@ -406,7 +350,7 @@ class Ticket(FeatureBase):
             ticket_name: Name of the workflow ticket.
 
         Returns:
-            Ticket Details object.
+            :class:`~.dataclasses.workflow.Details` of the workflow ticket.
         """
         response = self._api.websdk.Workflow.Ticket.Details.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
@@ -414,13 +358,11 @@ class Ticket(FeatureBase):
 
     def exists(self, ticket_name: str):
         """
-        Returns ``True`` when a particular workflow exists, otherwise ``False``.
-
         Args:
             ticket_name: Name of the workflow ticket.
 
         Returns:
-            ``True`` when a particular workflow exists, otherwise ``False``.
+            bool: ``True`` when a particular workflow exists, otherwise ``False``.
         """
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
@@ -431,17 +373,15 @@ class Ticket(FeatureBase):
         appear on the ``obj``, then a warning is logged and whatever was found is returned and no
         error is raised.
 
-        An optional ``timeout`` parameter can be used to wait for the above to be ``True``.
-
         Args:
-            obj: Config object of the object with a workflow ticket issued to it. If not given, only ``user_data`` has effect.
-            user_data: The string to filter results using the User Data attribute of the
-                workflow ticket.
+            obj: :ref:`config_object` or :ref:`dn` of the object with a workflow ticket issued to it. If not given, only
+                 ``user_data`` has effect.
+            user_data: The string to filter results using the User Data attribute of the workflow ticket.
             expected_num_tickets: Minimum number of tickets expected to be written for the certificate.
-            timeout: Time in seconds to wait for a ticket DN value. Default is 10 seconds.
+            timeout: Time in seconds to wait for a ticket to be issued. Default is 10 seconds.
 
         Returns:
-            List of Config Objects
+            List of :ref:`guid` for each ticket found.
         """
         if not obj:
             return self._api.websdk.Workflow.Ticket.Enumerate.post(
@@ -481,13 +421,11 @@ class Ticket(FeatureBase):
 
     def status(self, ticket_name: str):
         """
-        Returns the current status of a workflow ticket.
-
         Args:
             ticket_name: Name of the workflow ticket.
 
         Returns:
-            The current status of a workflow ticket.
+            str: The current status of a workflow ticket.
         """
         response = self._api.websdk.Workflow.Ticket.Status.post(guid=ticket_name)
         self._validate_result_code(result=response.result)
@@ -503,8 +441,8 @@ class Ticket(FeatureBase):
             ticket_name: Name of the workflow ticket.
             status: The new status of the workflow ticket.
             explanation: Reason for the new status.
-            scheduled_start: Date/time to continue the approval process.
-            scheduled_stop:  Date/time to expire the approval process.
+            scheduled_start: Datetime to continue the approval process.
+            scheduled_stop:  Datetime to expire the approval process.
         """
         result = self._api.websdk.Workflow.Ticket.UpdateStatus.post(
             guid=ticket_name,

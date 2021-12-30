@@ -156,9 +156,9 @@ Common Terminology
 .. _dn:
 .. rubric:: Distinguished Name (DN)
 
-A **Distinguished Name (DN)** is the path to an object relative to ``\VED``, the root of the tree.
+A **Distinguished Name (DN)** is the path to an object relative to ``\\VED``, the root of the tree.
 Policies are most commonly found under ``\VED\Policy`` and because that is so the Features layer can
-interpret paths relative to *\VED\Policy*. For example:
+interpret paths relative to *\\VED\\Policy*. For example:
 
 ``\VED\Policy\Certificates = \Policy\Certificates``.
 

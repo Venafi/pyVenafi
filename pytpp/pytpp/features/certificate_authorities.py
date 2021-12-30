@@ -12,10 +12,10 @@ class _CertificateAuthorityBase(FeatureBase):
 
     def delete(self, certificate_authority: 'Union[Config.Object, str]'):
         """
-        Deletes the Certificate Authority object from TPP, including all of the secrets associated to it.
+        Deletes the certificate authority object from TPP, including all of the secrets associated to it.
 
         Args:
-            certificate_authority: Config object of the CA object.
+            certificate_authority: :ref:`config_object` or :ref:`dn` for the certificate authority object.
         """
         certificate_authority_dn = self._get_dn(certificate_authority)
         self._secret_store_delete(object_dn=certificate_authority_dn)
@@ -23,14 +23,14 @@ class _CertificateAuthorityBase(FeatureBase):
 
     def get(self, certificate_authority_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Get the Certificate Authority object in TPP.
+        Get the certificate authority object in TPP.
 
         Args:
-            certificate_authority_dn: DN of the Certificate Authority.
-            raise_error_if_not_exists: Raise an exception if the object DN does not exist.
+            certificate_authority_dn: :ref:`dn` of the certificate authority.
+            raise_error_if_not_exists: Raise an exception if the object :ref:`dn` does not exist.
 
         Returns:
-            Config object representing the Certificate Authority.
+            :ref:`config_object` of the certificate authority.
         """
         return self._get_config_object(
             object_dn=certificate_authority_dn,
@@ -50,27 +50,25 @@ class MSCA(_CertificateAuthorityBase):
                allow_users_to_specify_end_date: 'bool' = None, enrollment_agent: 'Union[Config.Object, str]' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Microsoft Certificate Authority object.
-
         Args:
             name: Name of the CA object.
-            parent_folder: ``Config.Object`` or DN of the parent folder of this Certificate Authority object.
+            parent_folder: `:ref:`config_object` or :ref:`dn` of the parent folder of this certificate authority object.
             hostname: Hostname or IP Address of the CA.
             service_name: Service, or Given, Name of the certificate authority.
-            credential: ``Config.Object`` or DN of the MSCA creential.
+            credential: `:ref:`config_object` or :ref:`dn` of the CA creential.
             template: Name of the CA template.
             description: Description of the CA object.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
             manual_approvals: Require manual approvals.
             subject_alt_name_enabled: Enable Subject Alterntaive Names.
             automatically_include_cn_as_dns_san: Automatically include the common name (CN) as a DNS SAN.
             allow_users_to_specify_end_date: Allow users to specify the end date.
-            enrollment_agent: ``Config.Object`` or DN of the certificate credential, or enrollment agent.
+            enrollment_agent: `:ref:`config_object` or :ref:`dn` of the certificate credential, or enrollment agent.
             attributes: Additional attributes associated to the CA object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``
+            :ref:`config_object` of the certificate authority.
         """
         ca_attrs = {
             MicrosoftCAAttributes.driver_name: 'camicrosoft',
@@ -108,13 +106,11 @@ class SelfSignedCA(_CertificateAuthorityBase):
                client_authentication: 'bool' = None, code_signing: 'bool' = None, signature_algorithm: 'str' = None,
                valid_years: 'int' = None, valid_days: 'int' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
-        Creates a Self-Signed Certificate Authority object.
-
         Args:
             name: Name of the CA object.
-            parent_folder: ``Config.Object`` or DN of the parent folder of this Certificate Authority object.
+            parent_folder: `:ref:`config_object` or :ref:`dn` of the parent folder of this certificate authority object.
             description: Description of the CA object.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
             key_usage: List of key usages.
             server_authentication: Allow server authentication.
             client_authentication: Allow client authentication.
@@ -126,7 +122,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            ``Config.Object``
+            :ref:`config_object` of the certificate authority.
         """
         ca_attrs = {
             SelfSignedCAAttributes.driver_name: 'caselfsigned',

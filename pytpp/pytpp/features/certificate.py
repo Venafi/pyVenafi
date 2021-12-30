@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import List, Union, TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Config, Identity
@@ -6,6 +7,13 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import FeatureException, UnexpectedValue
 from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import logger, LogTags
+
+
+@dataclass
+class DownloadedCertificate:
+    certificate_data: str
+    filename: str
+    format: str
 
 
 @feature('Certificate')
@@ -34,12 +42,12 @@ class Certificate(FeatureBase):
     def associate_application(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]',
                               push_to_new: bool = False):
         """
-        Associate an application object to a certificate.
+        Associates an application object to a certificate object.
 
         Args:
-            certificate: Config object of the certificate.
-            applications: A list of ``Config.Object`` or DN for each application object.
-            push_to_new: If True, the certificate will be pushed to the application once associated.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
+            applications: A list of :ref:`config_object` or :ref:`dn` for each application object.
+            push_to_new: If ``True``, the certificate will be pushed to the application once associated.
         """
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Associate.post(
@@ -60,16 +68,15 @@ class Certificate(FeatureBase):
                disable_automatic_renewal: 'bool' = None, renewal_window: 'int' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
-        Creates the config object that represents the certificate.
-
-        .. note:: The certificate is NOT automatically requested. Use :meth:`renew` to obtain a certificate.
+        .. note::
+            The certificate is not automatically requested. Use :meth:`renew` to obtain a certificate.
 
         Args:
             name: Name of the Certificate object.
-            parent_folder: ``Config.Object`` or DN of the parent folder of the certificate object.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             description: Description of the certificate object.
-            contacts: List of ``Identity.Identity`` or prefixed universal GUIDs of the contacts for this certificate.
-            approvers: List of ``Identity.Identity`` or prefixed universal GUIDs of the approvers for this certificate.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts for this certificate.
+            approvers: List of :ref:`identity_object` or :ref:`prefixed_name` of the approvers for this certificate.
             management_type: Certificate management type.
             service_generated_csr: If ``True``, TPP generates the CSR.
             generate_key_on_application: If ``True``, the key/CSR are generated on the target application.
@@ -88,14 +95,14 @@ class Certificate(FeatureBase):
             key_algorithm: Signing key algorithm.
             key_strength: Key strength in bits.
             elliptic_curve: Elliptic curve.
-            ca_template: ``Config.Object`` or DN of the Certificate Authority template.
+            ca_template: :ref:`config_object` or :ref:`dn` of the Certificate Authority template.
             disable_automatic_renewal: If ``True``, disables automatic renewal.
             renewal_window: Number of days that make the renewal window.
             attributes: Additional attributes that define this certificate.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the certificate object.
+            :ref:`config_object`
         """
         cert_attrs = {
             X509CertificateAttributes.description: description,
@@ -138,10 +145,8 @@ class Certificate(FeatureBase):
         """
         Deletes the certificate object from TPP.
 
-        .. note:: This method does not affect the actual certificate installed on any application.
-
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).delete()
@@ -151,53 +156,25 @@ class Certificate(FeatureBase):
 
     def details(self, certificate: 'Union[Config.Object, str]'):
         """
-        Returns details of the actual certificate and not the renewal settings for the object.
-
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
 
         Returns:
-            A single object with these properties:
-            * C (Country)
-            * CN (Common Name)
-            * EnhancedKeyUsage
-            * Issuer
-            * KeyAlgorithm
-            * KeySize
-            * KeyUsage
-            * L (City or Location)
-            * O (Organization)
-            * OU (Organizational Units)
-            * PublicKeyHash
-            * S (State)
-            * SKIKeyIdentifier (Subject Key Identifier)
-            * Serial
-            * SignatureAlgorithm
-            * SignatureAlgorithmOID
-            * StoreAdded
-            * Subject
-            * SubjectAltNameDNS
-            * SubjectAltNameEmail
-            * SubjectAltNameIp
-            * SubjectAltNameUpn
-            * SubjectAltNameUri
-            * Thumbprint
-            * ValidFrom
-            * ValidTo
+            :class:`~.dataclasses.certificate.CertificateDetails`
         """
         return self._get(certificate=certificate).certificate_details
 
     def dissociate_application(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]',
                                delete_orphans: bool = False):
         """
-        Associate an application object to a certificate.
+        Dissociate an application object from a certificate.
 
         Args:
-            certificate: Config object of the certificate.
-            applications: A list of ``Config.Object`` or DNs to each application object.
-            delete_orphans: Delete the Application DN. Only delete the corresponding Device DN when it has no child objects.
-                Otherwise retain only the Device DN and its children. Use this option to completely remove the application
-                object and corresponding device objects.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
+            applications: A list of :ref:`config_object` or :ref:`dn` to each application object.
+            delete_orphans: Delete the application object. The corresponding device object will be delete if it has no
+                            child applications. Use this option to completely remove the application object and corresponding
+                            device objects.
         """
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Dissociate.post(
@@ -212,7 +189,7 @@ class Certificate(FeatureBase):
                  password: str = None, root_first_order: bool = False, vault_id: int = None):
         """
         Downloads a certificate and returns the encoded content, filename, and format as a single object. If ``vault_id``
-        is provided, then that specific version of a certificate is downloaded. This is particularly useful when
+        is provided, then that specific version of a certificate is downloaded, which is particularly useful when
         trying to download historical certificates.
 
         Args:
@@ -223,22 +200,23 @@ class Certificate(FeatureBase):
                 * JKS
                 * PKCS #7
                 * PKCS #12
-            certificate: Config object of the certificate. Not required if using vault id.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object. Not required if using vault id.
             friendly_name: Label or alias for the given format.
             include_chain: Include parent or root chain.
             include_private_key: Include the private key.
             keystore_password: JKS Keystore password.
             password: Password.
-            root_first_order: If True, show root certificate first, followed by intermediate, and finally the
+            root_first_order: If ``True``, show root certificate first, followed by intermediate, and finally the
                 end entity certificate.
             vault_id: If provided, downloads the certificate with the given Vault ID. Use this when trying
                 to download historical certificates. Not required if using certificate config object.
 
         Returns:
-            A single object with these properties:
-            * Encoded Certificate Data
-            * File Format
-            * File name
+            A *DownloadedCertificate* with these properties
+
+            * **certificate_data** *str* - Encoded certificate data.
+            * **format** *str* - File Format.
+            * **filename** *str* - File name.
         """
         if vault_id:
             result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
@@ -263,33 +241,33 @@ class Certificate(FeatureBase):
                 root_first_order=root_first_order
             )
 
-        return result
+        return DownloadedCertificate(
+            certificate_data=result.certificate_data,
+            filename=result.filename,
+            format=result.format
+        )
 
     def get(self, certificate_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Returns the config object of the certificate DN.
-
         Args:
-            certificate_dn: DN of the certificate object.
+            certificate_dn: :ref:`dn` of the certificate object.
             raise_error_if_not_exists: Raise an exception if the object DN does not exist.
 
         Returns:
-            Config Object of the certificate.
+            :ref:`config_object`
         """
         return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
     def get_previous_versions(self, certificate: 'Union[Config.Object, str]', exclude_expired: bool = False,
                               exclude_revoked: bool = False):
         """
-        Returns all of the historical certificates and their details related to the given certificate GUID.
-
         Args:
-            certificate: Config object of the certificate.
-            exclude_expired: If True, do not include expired certificates.
-            exclude_revoked: If True, do not include revoked certificates.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
+            exclude_expired: If ``True``, do not include expired certificates.
+            exclude_revoked: If ``True``, do not include revoked certificates.
 
         Returns:
-            A list of historical certificates related to the certificate GUID.
+            List[:class:`.dataclasses.certificate.PreviousVersions`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
@@ -300,15 +278,11 @@ class Certificate(FeatureBase):
 
     def get_validation_results(self, certificate: 'Union[Config.Object, str]'):
         """
-        Returns the file and SSL/TLS validation results for each of the applications
-        associated to the certificate.
-
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
 
         Returns:
-            File and SSL/TLS validation results for each of the applications
-            associated to the certificate.
+            Tuple[:class:`.dataclasses.certificate.File`, :class:`.dataclasses.certificate.SslTls`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
@@ -316,11 +290,11 @@ class Certificate(FeatureBase):
 
     def push_to_applications(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]' = None):
         """
-        Push the active certificate to the given Application DNs.
+        Pushes the active ``certificate`` to the ``applications``.
 
         Args:
-            certificate: Config object of the certificate.
-            applications: A list of ``Config.Object`` or DNs to each application object.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
+            applications: A list of :ref:`config_object` or :ref:`dn` to each application object.
         """
         if not applications:
             certificate_dn = self._get_dn(certificate)
@@ -340,15 +314,15 @@ class Certificate(FeatureBase):
         Renews or requests a certificate.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
             csr: If provided, uploads the PKCS10 CSR to TPP to send to the CA. If not provided, TPP generates the CSR.
             re_enable: The action to control a previously disabled certificate:
-                If False, do not renew a previously disabled certificate.
-                If True, clear the Disabled attribute, re-enable, and then renew the certificate (in this request).
+                If ``False``, do not renew a previously disabled certificate.
+                If ``True``, clear the Disabled attribute, re-enable, and then renew the certificate (in this request).
 
         Returns:
-            Certificate details regarding the request and renewal.
-
+            str: The current thumbprint of the active certificate. This should be used when checking the renewal status \
+                 to ensure that TPP has registered a new certificate to its vault with a new thumbprint.
         """
         certificate = self._get(certificate)
         current_thumbprint = certificate.certificate_details.thumbprint
@@ -361,7 +335,7 @@ class Certificate(FeatureBase):
         Resets the certificate to a non-processing state. No attempt to reprocess the certificate renewal is made.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
         """
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=False)
@@ -371,10 +345,10 @@ class Certificate(FeatureBase):
 
     def retry_from_current_stage(self, certificate: 'Union[Config.Object, str]'):
         """
-        Retries renewal from the current processing stage of the certificate.
+        Retries renewal from the current processing stage of the ``certificate``.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
         """
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate_dn)
@@ -386,7 +360,7 @@ class Certificate(FeatureBase):
         processing.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
         """
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Reset.post(certificate_dn=certificate_dn, restart=True)
@@ -397,18 +371,15 @@ class Certificate(FeatureBase):
     def revoke(self, certificate: 'Union[Config.Object, str]', comments: str = None, disable: bool = None,
                reason: int = None, thumbprint: str = None):
         """
-        Revokes the certificate. If a thumbprint is provided, then the particular historical certificate
+        Revokes the ``certificate``. If a thumbprint is provided, then the particular historical certificate
         associated to the certificate having that thumbprint will be revoked.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
             comments: Any comments to include in the revoke request.
-            disable: If True, disables the certificate object.
+            disable: If ``True``, disables the certificate object.
             reason: Reason for revoking.
             thumbprint: If given, the thumbprint of the historical certificate to be revoked.
-
-        Returns:
-
         """
         certificate_dn = self._get_dn(certificate)
         result = self._api.websdk.Certificates.Revoke.post(
@@ -434,18 +405,18 @@ class Certificate(FeatureBase):
 
         Args:
             certificate_data: Encoded certificate data.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             certificate_authority_attributes: Attributes pertaining to the Certificate Authority to store with the certificate
                 object. This is not a DN to a Certificate Authority in TPP.
             name: If given, the name of the new certificate object. If not given, then the Common Name is used.
             password: Password to decrypt the private key.
             private_key_data: Encoded private key data.
-            reconcile: If False, replaces the current certificate, if it exists, and stores the current certificate as a
-                historical certificate. If True, then TPP activates the certificate with the newest "ValidFrom" date and
+            reconcile: If ``False``, replaces the current certificate, if it exists, and stores the current certificate as a
+                historical certificate. If ``True``, then TPP activates the certificate with the newest "ValidFrom" date and
                 archives the other certificate as a historical certificate.
 
         Returns:
-            Config object representing the (new) certificate object.
+            :ref:`config_object` of the uploaded certificate.
         """
         if certificate_authority_attributes:
             certificate_authority_attributes = self._name_value_list(attributes=certificate_authority_attributes)
@@ -467,10 +438,10 @@ class Certificate(FeatureBase):
         Performs SSL/TLS network validation of certificate on all applications associated to certificate that are not disabled.
 
         Args:
-            certificates: List of certificate config objects to validate.
+            certificates: List of :ref:`config_object` or :ref:`dn` to validate.
 
         Returns:
-            A tuple of valid certificate DNs and validation warnings..
+            Tuple[str, List[str]]: Tuple of :ref:`dn` and validation warnings
         """
         certificate_dns = [self._get_dn(certificate) for certificate in certificates]
         result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
@@ -485,21 +456,18 @@ class Certificate(FeatureBase):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
-        thumbprint and either the processing stage is "none" or greater than or equal to 800, which is the start of the
+        thumbprint and either the processing stage is "None" or greater than or equal to 800, which is the start of the
         provisioning stage. If the certificate management type is set to *Provisioning*, use the application feature
-        :meth:`pytpp.pytpp.features.application._ApplicationBase`.
-
-        See TPP WebSDK documentation "GET Certificate/<GUID>" for details on what is returned. Only the "CertificateDetails"
-        is returned.
+        ``wait_for_installation_to_complete()``.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
             current_thumbprint: Thumbprint of the `current` certificate object.
             timeout: Timeout in seconds before raising an error.
             poll_interval: Interval to poll TPP for the renewal status.
 
         Returns:
-            Certificate details object.
+            :class:`~.dataclasses.certificate.CertificateDetails`
         """
         cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:
@@ -524,14 +492,28 @@ class Certificate(FeatureBase):
         ``timeout`` seconds. If the timeout is reached, an error is raised.
 
         Args:
-            certificate: Config object of the certificate.
+            certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
             stage: Stage at which to return
             expect_workflow: If ``True``, validates that a Ticket DN has been issued to the certificate.
             timeout: Timeout in seconds before throwing an error.
             poll_interval: Interval to poll TPP for the renewal status.
 
         Returns:
-            Certificate and processing details.
+            The values returned by the |Websdk|, namely
+
+            * **approver** *(List[str])* - List of approvers on the certificate object.
+            * **certificate_details** (:class:`~.dataclasses.certificate.CertificateDetails`) - Certificate details.
+            * **contact** *(List[str])* - List of contacts on the certificate object.
+            * **created_on** *(datetime)* - Date on which the certificate object was created.
+            * **custom_fields** *(List[dict])* - Custom fields on the certificate object.
+            * **dn** *(str)* - :ref:`dn` of the certificate object.
+            * **guid** *(str)* - :ref:`guid` of the certificate object.
+            * **name** *(str)* - Name of the certificate object.
+            * **parent_dn** *(str)* - Parent :ref:`dn` of the certificate object.
+            * **processing_details** (:class:`~.dataclasses.certificate.ProcessingDetails`) - Certificate processing details.
+            * **renewal_details** (:class:`~.dataclasses.certificate.RenewalDetails`) - Certificate renewal settings details.
+            * **schema_class** *(str)* - Schema class.
+            * **validation_details** (:class:`~.dataclasses.certificate.ValidationDetails`) - Certificate validation details.
         """
         cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:

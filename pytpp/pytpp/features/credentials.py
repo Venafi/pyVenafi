@@ -40,7 +40,7 @@ class _CredentialBase(FeatureBase):
         Deletes the credential object.
 
         Args:
-            credential: Config object of the credential object.
+            credential: :ref:`config_object` or :ref:`dn` of the credential object.
         """
         result = self._api.websdk.Credentials.Delete.post(credential_path=credential.dn).result
         if result.code != 1:
@@ -48,14 +48,12 @@ class _CredentialBase(FeatureBase):
 
     def get(self, credential_dn: str, raise_error_if_not_exists: bool = True):
         """
-        Gets the credential Config.Object from TPP.
-
         Args:
-            credential_dn: DN of the credential object.
-            raise_error_if_not_exists: Raise an exception if the credential DN does not exist.
+            credential_dn: :ref:`dn` of the credential object.
+            raise_error_if_not_exists: Raise an exception if the credential :ref:`dn` does not exist.
 
         Returns:
-            ``Config.Object``
+            :ref:`config_object` of the credential object.
         """
         return self._get_config_object(
             object_dn=credential_dn,
@@ -72,23 +70,21 @@ class AmazonCredential(_CredentialBase):
                     role: str, expiration: int = 6, description: str = None, encryption_key: str = None, shared: bool = False,
                     contacts: 'List[Union[Identity.Identity, str]]' = None, get_if_already_exists: bool = True):
         """
-        Creates a Local Amazon Credential object in TPP. By default, the credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
-            adfs_credential: ``Config.Object`` or DN of the ADFS username credential.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
+            adfs_credential: :ref:`config_object` or :ref:`dn` of the ADFS username credential.
             adfs_url: ADFS URL.
             role: Role.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value( name='Source', type='string', value='ADFS'),
@@ -113,11 +109,9 @@ class AmazonCredential(_CredentialBase):
                      external_id: str = None, expiration: int = 6, description: str = None, encryption_key: str = None,
                      shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None, get_if_already_exists: bool = True):
         """
-        Creates a Local Amazon Credential object in TPP. By default, the credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             access_key: Access Key.
             secret_key: Secret Key.
             role: Role.
@@ -125,12 +119,12 @@ class AmazonCredential(_CredentialBase):
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value(name='Source', type='string', value='Local'),
@@ -162,22 +156,20 @@ class CertificateCredential(_CredentialBase):
                description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Certificate Credential object in TPP. The credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             certificate: Base64-encoded PKCS#12 or PFX certificate.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value(name='Certificate', type='byte[]', value=certificate)
@@ -208,21 +200,19 @@ class GoogleCredential(_CredentialBase):
                description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Generic Password Credential object in TPP. The credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             json_content: JSON content as plain text.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         import json
         values = [
@@ -252,22 +242,20 @@ class GenericCredential(_CredentialBase):
                description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Generic Password Credential object in TPP. The credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             generic: Unclassified binary data.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value('Generic', 'byte[]', value=generic),
@@ -297,21 +285,19 @@ class PasswordCredential(_CredentialBase):
                encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Password Credential object in TPP. The credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value('Password', 'string', value=password)
@@ -340,22 +326,20 @@ class PrivateKeyCredential(_CredentialBase):
                description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Private Key Credential object in TPP. The credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             private_key: Base64-encoded (PKCS#8) private key.
             username: Username.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value('Key', 'byte[]', value=private_key),
@@ -385,23 +369,20 @@ class UsernamePasswordCredential(_CredentialBase):
                description: str = None, encryption_key: str = None, shared: bool = False, contacts: 'List[Union[Identity.Identity, str]]' = None,
                get_if_already_exists: bool = True):
         """
-        Creates a Username/Password Credential object in TPP. By default, the credential is set to expire 6 months from now.
-
         Args:
             name: Name of the credential object.
-            parent_folder: ``Config.Object`` or DN of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             username: Username.
             password: Password.
             expiration: Number months from today at which the credential expires.
             description: Description of the credential object.
             encryption_key: Encryption Key used to protect the credential data.
-            shared: If True, the credential can be shared between multiple objects.
-            contacts: List of absolute paths to the users in TPP to be established as contacts.
-            get_if_already_exists: bool = True
+            shared: If ``True``, the credential can be shared between multiple objects.
+            contacts: List of :ref:`identity_object` or :ref:`prefixed_name` to be set as contacts.
+            get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object representing the credential.
-
+            :ref:`config_object` of the credential object.
         """
         values = [
             self._name_type_value(name='Username', type='string', value=username),

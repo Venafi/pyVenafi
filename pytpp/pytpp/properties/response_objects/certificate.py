@@ -1,277 +1,288 @@
-from typing import List
 from pytpp.tools.helpers.date_converter import from_date_string
+from pytpp.properties.response_objects.dataclasses import certificate
 
 
 class Certificate:
-    class Certificate:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def Certificate(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
 
-            self.created_on = response_object.get('CreatedOn')  # type: str
-            self.dn = response_object.get('DN')  # type: str
-            self.guid = response_object.get('Guid')  # type: str
-            self.name = response_object.get('Name')  # type: str
-            self.parent_dn = response_object.get('ParentDn')  # type: str
-            self.schema_class = response_object.get('SchemaClass')  # type: str
-            self.x509 = Certificate._X509(response_object.get('X509'))
-            self.links = [Certificate.Link(link) for link in response_object.get('_links', [])]
+        return certificate.Certificate(
+            created_on=response_object.get('CreatedOn'),
+            dn=response_object.get('DN'),
+            guid=response_object.get('Guid'),
+            name=response_object.get('Name'),
+            parent_dn=response_object.get('ParentDn'),
+            schema_class=response_object.get('SchemaClass'),
+            x509=Certificate._X509(response_object.get('X509')),
+            links=[Certificate.Link(link) for link in response_object.get('_links', [])],
+        )
 
-    class Link:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-            self.details = response_object.get('Details')  # type: str
-            self.next = response_object.get('Next')  # type: str
-            self.previous = response_object.get('Previous')  # type: str
+    @staticmethod
+    def Link(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.Link(
+            details=response_object.get('Details'),
+            next=response_object.get('Next'),
+            previous=response_object.get('Previous'),
+        )
 
-    class CSR:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def CSR(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.CSR(
+            details=Certificate._CSRDetails(response_object.get('Details')),
+            enrollable=response_object.get('Enrollable'),
+        )
 
-            self.details = Certificate._CSRDetails(response_object.get('Details'))
-            self.enrollable = response_object.get('Enrollable')  # type: bool
+    @staticmethod
+    def Policy(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.Policy(
+            certificate_authority=Certificate._LockedSingleValue(response_object.get('CertificateAuthority')),
+            csr_generation=Certificate._LockedSingleValue(response_object.get('CsrGeneration')),
+            key_generation=Certificate._LockedSingleValue(response_object.get('KeyGeneration')),
+            key_pair=Certificate._LockedKeyPair(response_object.get('KeyPair')),
+            management_type=Certificate._LockedSingleValue(response_object.get('ManagementType')),
+            private_key_reuse_allowed=response_object.get('PrivateKeyReuseAllowed'),
+            subj_alt_name_dns_allowed=response_object.get('SubjAltNameDnsAllowed'),
+            subj_alt_name_email_allowed=response_object.get('SubjAltNameEmailAllowed'),
+            subj_alt_name_ip_allowed=response_object.get('SubjAltNameIpAllowed'),
+            subj_alt_name_upn_allowed=response_object.get('SubjAltNameUpnAllowed'),
+            subj_alt_name_uri_allowed=response_object.get('SubjAltNameUriAllowed'),
+            subject=Certificate._LockedSubject(response_object.get('Subject')),
+            unique_subject_enforced=response_object.get('UniqueSubjectEnforced'),
+            whitelisted_domains=response_object.get('WhitelistedDomains'),
+            wildcards_allowed=response_object.get('WildcardsAllowed'),
+        )
 
-    class Policy:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def CertificateDetails(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.CertificateDetails(
+            c=response_object.get('C'),
+            cn=response_object.get('CN'),
+            enhanced_key_usage=response_object.get('EnhancedKeyUsage'),
+            issuer=response_object.get('Issuer'),
+            key_algorithm=response_object.get('KeyAlgorithm'),
+            key_size=response_object.get('KeySize'),
+            key_usage=response_object.get('KeyUsage'),
+            l=response_object.get('L'),
+            o=response_object.get('O'),
+            ou=response_object.get('OU'),
+            public_key_hash=response_object.get('PublicKeyHash'),
+            s=response_object.get('S'),
+            ski_key_identifier=response_object.get('SKIKeyIdentifier'),
+            serial=response_object.get('Serial'),
+            signature_algorithm=response_object.get('SignatureAlgorithm'),
+            signature_algorithm_oid=response_object.get('SignatureAlgorithmOID'),
+            store_added=response_object.get('StoreAdded'),
+            subject=response_object.get('Subject'),
+            subject_alt_name_dns=response_object.get('SubjectAltNameDNS'),
+            subject_alt_name_email=response_object.get('SubjectAltNameEmail'),
+            subject_alt_name_ip=response_object.get('SubjectAltNameIp'),
+            subject_alt_name_upn=response_object.get('SubjectAltNameUpn'),
+            subject_alt_name_uri=response_object.get('SubjectAltNameUri'),
+            thumbprint=response_object.get('Thumbprint'),
+            valid_from=from_date_string(response_object.get('ValidFrom')),
+            valid_to=from_date_string(response_object.get('ValidTo')),
+        )
 
-            self.certificate_authority = Certificate._LockedSingleValue(response_object.get('CertificateAuthority'))
-            self.csr_generation = Certificate._LockedSingleValue(response_object.get('CsrGeneration'))
-            self.key_generation = Certificate._LockedSingleValue(response_object.get('KeyGeneration'))
-            self.key_pair = Certificate._LockedKeyPair(response_object.get('KeyPair'))
-            self.management_type = Certificate._LockedSingleValue(response_object.get('ManagementType'))
-            self.private_key_reuse_allowed = response_object.get('PrivateKeyReuseAllowed')  # type: bool
-            self.subj_alt_name_dns_allowed = response_object.get('SubjAltNameDnsAllowed')  # type: bool
-            self.subj_alt_name_email_allowed = response_object.get('SubjAltNameEmailAllowed')  # type: bool
-            self.subj_alt_name_ip_allowed = response_object.get('SubjAltNameIpAllowed')  # type: bool
-            self.subj_alt_name_upn_allowed = response_object.get('SubjAltNameUpnAllowed')  # type: bool
-            self.subj_alt_name_uri_allowed = response_object.get('SubjAltNameUriAllowed')  # type: bool
-            self.subject = Certificate._LockedSubject(response_object.get('Subject'))
-            self.unique_subject_enforced = response_object.get('UniqueSubjectEnforced')  # type: bool
-            self.whitelisted_domains = response_object.get('WhitelistedDomains')  # type: list
-            self.wildcards_allowed = response_object.get('WildcardsAllowed')  # type: bool
+    @staticmethod
+    def PreviousVersions(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.PreviousVersions(
+            certificate_details=Certificate.CertificateDetails(response_object.get('CertificateDetails')),
+            vault_id=response_object.get('VaultId'),
+        )
 
-    class CertificateDetails:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def ProcessingDetails(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.ProcessingDetails(
+            in_error=response_object.get('InError'),
+            stage=response_object.get('Stage'),
+            status=response_object.get('Status'),
+        )
 
-            self.c = response_object.get('C')  # type: str
-            self.cn = response_object.get('CN')  # type: str
-            self.enhanced_key_usage = response_object.get('EnhancedKeyUsage')  # type: str
-            self.issuer = response_object.get('Issuer')  # type: str
-            self.key_algorithm = response_object.get('KeyAlgorithm')  # type: str
-            self.key_size = response_object.get('KeySize')  # type: int
-            self.key_usage = response_object.get('KeyUsage')  # type: str
-            self.l = response_object.get('L')  # type: str
-            self.o = response_object.get('O')  # type: str
-            self.ou = response_object.get('OU')  # type: str
-            self.public_key_hash = response_object.get('PublicKeyHash')  # type: str
-            self.s = response_object.get('S')  # type: str
-            self.ski_key_identifier = response_object.get('SKIKeyIdentifier')  # type: str
-            self.serial = response_object.get('Serial')  # type: str
-            self.signature_algorithm = response_object.get('SignatureAlgorithm')  # type: str
-            self.signature_algorithm_oid = response_object.get('SignatureAlgorithmOID')  # type: str
-            self.store_added = response_object.get('StoreAdded')  # type: str
-            self.subject = response_object.get('Subject')  # type: str
-            self.subject_alt_name_dns = response_object.get('SubjectAltNameDNS')  # type: str
-            self.subject_alt_name_email = response_object.get('SubjectAltNameEmail')  # type: str
-            self.subject_alt_name_ip = response_object.get('SubjectAltNameIp')  # type: str
-            self.subject_alt_name_upn = response_object.get('SubjectAltNameUpn')  # type: str
-            self.subject_alt_name_uri = response_object.get('SubjectAltNameUri')  # type: str
-            self.thumbprint = response_object.get('Thumbprint')  # type: str
-            self.valid_from = from_date_string(response_object.get('ValidFrom'))
-            self.valid_to = from_date_string(response_object.get('ValidTo'))
+    @staticmethod
+    def RenewalDetails(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.RenewalDetails(
+            city=response_object.get('City'),
+            country=response_object.get('Country'),
+            organization=response_object.get('Organization'),
+            organizational_unit=response_object.get('OrganizationUnit'),
+            state=response_object.get('State'),
+            subject=response_object.get('Subject'),
+            subject_alt_name_dns=response_object.get('SubjectAltNameDNS'),
+            subject_alt_name_email=response_object.get('SubjectAltNameEmail'),
+            subject_alt_name_ip_address=response_object.get('SubjectAltNameIPAddress'),
+            subject_alt_name_other_name_upn=response_object.get('SubjectAltNameOtherNameUPN'),
+            subject_alt_name_uri=response_object.get('SubjectAltNameURI'),
+            valid_from=from_date_string(response_object.get('ValidFrom')),
+            valid_to=from_date_string(response_object.get('ValidTo')),
+        )
 
-    class PreviousVersions:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def ValidationDetails(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.ValidationDetails(
+            last_validation_state_update=response_object.get('LastValidationStateUpdate'),
+            validation_state=response_object.get('ValidationState'),
+        )
 
-            self.certificate_details = Certificate.CertificateDetails(response_object.get('CertificateDetails'))
-            self.vault_id = response_object.get('VaultId')  # type: int
+    @staticmethod
+    def SslTls(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.SslTls(
+            host=response_object.get('Host'),
+            ip_address=response_object.get('IpAddress'),
+            port=response_object.get('Port'),
+            result=Certificate._SslTlsResult(response_object.get('Result')),
+            sources=response_object.get('Sources'),
+        )
 
-    class ProcessingDetails:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def File(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate.File(
+            installation=response_object.get('Installation'),
+            performed_on=from_date_string(response_object.get('PerformedOn')),
+            result=response_object.get('Result'),
+        )
 
-            self.in_error = response_object.get('InError')  # type: bool
-            self.stage = response_object.get('Stage')  # type: int
-            self.status = response_object.get('Status')  # type: str
+    @staticmethod
+    def _SslTlsResult(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._SslTlsResult(
+            chain=Certificate._BitMaskValues(response_object.get('Chain')),
+            end_entity=Certificate._BitMaskValues(response_object.get('EndEntity')),
+            id=response_object.get('ID'),
+            protocols=Certificate._BitMaskValues(response_object.get('Protocols')),
+        )
 
-    class RenewalDetails:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def _BitMaskValues(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._BitMaskValues(
+            bitmask=response_object.get('BitMask'),
+            values=response_object.get('Values'),
+        )
 
-            self.city = response_object.get('City')  # type: str
-            self.country = response_object.get('Country')  # type: str
-            self.organization = response_object.get('Organization')  # type: str
-            self.organizational_unit = response_object.get('OrganizationUnit')  # type: str
-            self.state = response_object.get('State')  # type: str
-            self.subject = response_object.get('Subject')  # type: str
-            self.subject_alt_name_dns = response_object.get('SubjectAltNameDNS')  # type: str
-            self.subject_alt_name_email = response_object.get('SubjectAltNameEmail')  # type: str
-            self.subject_alt_name_ip_address = response_object.get('SubjectAltNameIPAddress')  # type: str
-            self.subject_alt_name_other_name_upn = response_object.get('SubjectAltNameOtherNameUPN')  # type: str
-            self.subject_alt_name_uri = response_object.get('SubjectAltNameURI')  # type: str
-            self.valid_from = from_date_string(response_object.get('ValidFrom'))
-            self.valid_to = from_date_string(response_object.get('ValidTo'))
+    @staticmethod
+    def _SANS(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._SANS(
+            dns=response_object.get('DNS'),
+            ip=response_object.get('IP'),
+        )
 
-    class ValidationDetails:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def _X509(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._X509(
+            cn=response_object.get('CN'),
+            issuer=response_object.get('Issuer'),
+            key_algorithm=response_object.get('KeyAlgorithm'),
+            key_size=response_object.get('KeySize'),
+            sans=response_object.get('SANS'),
+            serial=response_object.get('Serial'),
+            subject=response_object.get('Subject'),
+            thumbprint=response_object.get('Thumbprint'),
+            valid_from=from_date_string(response_object.get('ValidFrom')),
+            valid_to=from_date_string(response_object.get('ValidTo')),
+        )
 
-            self.last_validation_state_update = response_object.get('LastValidationStateUpdate')  # type: str
-            self.validation_state = response_object.get('ValidationState')  # type: str
+    @staticmethod
+    def _CompliantSingleValue(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._CompliantSingleValue(
+            compliant=response_object.get('Compliant'),
+            value=response_object.get('Value'),
+        )
 
-    class SslTls:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def _CompliantMultiValue(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._CompliantMultiValue(
+            compliant=response_object.get('Compliant'),
+            values=response_object.get('Values'),
+        )
 
-            self.host = response_object.get('Host')  # type: str
-            self.ip_address = response_object.get('IpAddress')  # type: str
-            self.port = response_object.get('Port')  # type: int
-            self.result = Certificate._SslTlsResult(response_object.get('Result'))
-            self.sources = response_object.get('Sources')  # type: list
+    @staticmethod
+    def _LockedSingleValue(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._LockedSingleValue(
+            locked=response_object.get('Locked'),
+            value=response_object.get('Value'),
+        )
 
-    class File:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def _LockedMultiValue(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._LockedMultiValue(
+            locked=response_object.get('Locked'),
+            values=response_object.get('Values'),
+        )
 
-            self.installation = response_object.get('Installation')  # type: str
-            self.performed_on = from_date_string(response_object.get('PerformedOn'))
-            self.result = response_object.get('Result')  # type: List[str]
+    @staticmethod
+    def _LockedKeyPair(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._LockedKeyPair(
+            key_algorithm=Certificate._LockedSingleValue(response_object.get('KeyAlgorithm')),
+            key_size=Certificate._LockedSingleValue(response_object.get('KeySize')),
+        )
 
-    class _SslTlsResult:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def _LockedSubject(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._LockedSubject(
+            city=Certificate._LockedSingleValue(response_object.get('City')),
+            country=Certificate._LockedSingleValue(response_object.get('Country')),
+            organization=Certificate._LockedSingleValue(response_object.get('Organization')),
+            organizational_units=Certificate._LockedMultiValue(response_object.get('OrganizationalUnit')),
+            state=Certificate._LockedSingleValue(response_object.get('State')),
+        )
 
-            self.chain = Certificate._BitMaskValues(response_object.get('Chain'))
-            self.end_entity = Certificate._BitMaskValues(response_object.get('EndEntity'))
-            self.id = response_object.get('ID')  # type: int
-            self.protocols = Certificate._BitMaskValues(response_object.get('Protocols'))
-
-    class _BitMaskValues:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.bitmask = response_object.get('BitMask')  # type: int
-            self.values = response_object.get('Values')  # type: List[str]
-
-    class _SANS:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.dns = response_object.get('DNS')  # type: str
-            self.ip = response_object.get('IP')  # type: str
-
-    class _X509:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.cn = response_object.get('CN')  # type: str
-            self.issuer = response_object.get('Issuer')  # type: str
-            self.key_algorithm = response_object.get('KeyAlgorithm')  # type: str
-            self.key_size = response_object.get('KeySize')  # type: str
-            self.sans = response_object.get('SANS')  # type: str
-            self.serial = response_object.get('Serial')  # type: str
-            self.subject = response_object.get('Subject')  # type: str
-            self.thumbprint = response_object.get('Thumbprint')  # type: str
-            self.valid_from = from_date_string(response_object.get('ValidFrom'))
-            self.valid_to = from_date_string(response_object.get('ValidTo'))
-
-    class _Compliant:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-            self.compliant = response_object.get('Compliant')  # type: bool
-
-    class _CompliantSingleValue(_Compliant):
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            super().__init__(response_object)
-            self.value = response_object.get('Value')  # type: str
-
-    class _CompliantMultiValue(_Compliant):
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            super().__init__(response_object)
-            self.values = response_object.get('Values')  # type: list
-
-    class _Locked:
-        def __init__(self, response_object):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.locked = response_object.get('Locked')  # type: bool
-
-    class _LockedSingleValue(_Locked):
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            super().__init__(response_object)
-            self.value = response_object.get('Value')  # type: str
-
-    class _LockedMultiValue(_Locked):
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            super().__init__(response_object)
-            self.values = response_object.get('Values')  # type: list
-
-    class _LockedKeyPair:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.key_algorithm = Certificate._LockedSingleValue(response_object.get('KeyAlgorithm'))
-            self.key_size = Certificate._LockedSingleValue(response_object.get('KeySize'))
-
-    class _LockedSubject:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.city = Certificate._LockedSingleValue(response_object.get('City'))
-            self.country = Certificate._LockedSingleValue(response_object.get('Country'))
-            self.organization = Certificate._LockedSingleValue(response_object.get('Organization'))
-            self.organizational_units = Certificate._LockedMultiValue(response_object.get('OrganizationalUnit'))
-            self.state = Certificate._LockedSingleValue(response_object.get('State'))
-
-    class _CSRDetails:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.city = Certificate._CompliantSingleValue(response_object.get('City'))
-            self.common_name = Certificate._CompliantSingleValue(response_object.get('CommonName'))
-            self.country = Certificate._CompliantSingleValue(response_object.get('Country'))
-            self.key_algorithm = Certificate._CompliantSingleValue(response_object.get('KeyAlgorithm'))
-            self.key_size = Certificate._CompliantSingleValue(response_object.get('KeySize'))
-            self.organization = Certificate._CompliantSingleValue(response_object.get('Organization'))
-            self.organizational_unit = Certificate._CompliantMultiValue(response_object.get('OrganizationalUnit'))
-            self.private_key_reused = Certificate._CompliantSingleValue(response_object.get('PrivateKeyReused'))
-            self.state = Certificate._CompliantSingleValue(response_object.get('State'))
-            self.subj_alt_name_dns = Certificate._CompliantMultiValue(response_object.get('SubjAltNameDns'))
-            self.subj_alt_name_email = Certificate._CompliantMultiValue(response_object.get('SubjAltNameEmail'))
-            self.subj_alt_name_ip = Certificate._CompliantMultiValue(response_object.get('SubjAltNameIp'))
-            self.subj_alt_name_upn = Certificate._CompliantMultiValue(response_object.get('SubjAltNameUpn'))
-            self.subj_alt_name_uri = Certificate._CompliantMultiValue(response_object.get('SubjAltNameUri'))
+    @staticmethod
+    def _CSRDetails(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return certificate._CSRDetails(
+            city=Certificate._CompliantSingleValue(response_object.get('City')),
+            common_name=Certificate._CompliantSingleValue(response_object.get('CommonName')),
+            country=Certificate._CompliantSingleValue(response_object.get('Country')),
+            key_algorithm=Certificate._CompliantSingleValue(response_object.get('KeyAlgorithm')),
+            key_size=Certificate._CompliantSingleValue(response_object.get('KeySize')),
+            organization=Certificate._CompliantSingleValue(response_object.get('Organization')),
+            organizational_unit=Certificate._CompliantMultiValue(response_object.get('OrganizationalUnit')),
+            private_key_reused=Certificate._CompliantSingleValue(response_object.get('PrivateKeyReused')),
+            state=Certificate._CompliantSingleValue(response_object.get('State')),
+            subj_alt_name_dns=Certificate._CompliantMultiValue(response_object.get('SubjAltNameDns')),
+            subj_alt_name_email=Certificate._CompliantMultiValue(response_object.get('SubjAltNameEmail')),
+            subj_alt_name_ip=Certificate._CompliantMultiValue(response_object.get('SubjAltNameIp')),
+            subj_alt_name_upn=Certificate._CompliantMultiValue(response_object.get('SubjAltNameUpn')),
+            subj_alt_name_uri=Certificate._CompliantMultiValue(response_object.get('SubjAltNameUri')),
+        )

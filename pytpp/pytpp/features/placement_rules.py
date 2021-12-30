@@ -7,79 +7,94 @@ from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
 
 @feature('Placement Rule Condition')
 class PlacementRuleCondition:
-    def __init__(self):
-        pass
-
     @property
     def city(self):
+        """Base condition on the certificate city value."""
         return self._Operators(field='Certificate.City')
 
     @property
     def common_name(self):
+        """Base condition on the certificate common name value."""
         return self._Operators(field='Certificate.CN')
 
     @property
     def country(self):
+        """Base condition on the certificate country value."""
         return self._Operators(field='Certificate.C')
 
     @property
     def domain_component(self):
+        """Base condition on the certificate domain component value."""
         return self._Operators(field='Certificate.DC')
 
     @property
     def expired(self):
+        """Base condition on the certificate expiration value."""
         return self._Operators(field='Certificate.Expired')
 
     @property
     def hostname(self):
+        """Base condition on the discovered hostname value."""
         return self._Operators(field='Discovery.Hostname')
 
     @property
     def ip_address(self):
+        """Base condition on the discovered IP Address value."""
         return self._Operators(field='Discovery.Address')
 
     @property
     def issuer_dn(self):
+        """Base condition on the certificate issuer :ref:`dn` value."""
         return self._Operators(field='Certificate.Issuer')
 
     @property
     def operating_system(self):
+        """Base condition on the discovered Operating System value."""
         return self._Operators(field='Discovery.OS')
 
     @property
     def organization(self):
+        """Base condition on the certificate organization value."""
         return self._Operators(field='Certificate.O')
 
     @property
     def organizational_unit(self):
+        """Base condition on the certificate organizational unit value."""
         return self._Operators(field='Certificate.OU')
 
     @property
     def port(self):
+        """Base condition on the discovered port value."""
         return self._Operators(field='Discovery.Port')
 
     @property
     def san(self):
+        """Base condition on the certificate SAN DNS value."""
         return self._Operators(field='Certificate.SANDNS')
 
     @property
     def self_signed(self):
+        """Base condition on whether or not the certificate is self-signed."""
         return self._Operators(field='Certificate.SelfSigned')
 
     @property
     def server_version(self):
+        """Base condition on the SSH server version value."""
         return self._Operators(field='SSH.ServerVersion')
 
     @property
     def state(self):
+        """Base condition on the certificate state value."""
         return self._Operators(field='Certificate.State')
 
     @property
     def supports_ssh_v1(self):
+        """Base condition on if the target supports SSH V1."""
         return self._Operators(field='SSH.Version', force_value='1')
 
     @property
     def supports_ssh_v2(self):
+        """Base condition on if the target supports SSH V2."""
         return self._Operators(field='SSH.Version', force_value='2')
 
     class _Operators:
@@ -184,35 +199,17 @@ class PlacementRules(FeatureBase):
                certificate_location: 'Union[Config.Object, str]' = None, rule_type: str = 'X509 Certificate',
                get_if_already_exists: bool = True):
         """
-        Creates a placement rule.
-
-        Examples:
-
-            .. code-block:: python
-
-                rule = features.placement_rules.create(
-                    name=name,
-                    conditions=[
-                        features.placement_rule_condition.country.matches('US'),
-                        features.placement_rule_condition.common_name.matches_regex('.*my_host\\.com'),
-                    ],
-                    device_location_dn='\VED\Policy\Certificates',
-                    certificate_location_dn='\VED\Policy\Devices'
-                )
-
         Args:
             name: Name of the placement rule.
-            conditions: The conditional logic that defines the rule. Requires a specific dictionary with `field`, `comparison`,
-                        and `value` keys. Alternatively, use the ``condition`` method to create the condition dictionary.
-            device_location: Absolute path to folder that should received all device and application objects that apply to
-                                this rule.
-            certificate_location: Absolute path to folder that should received all certificate objects that apply to this
-                                     rule.
+            conditions: A list of strings that define the conditions of the rule. Use :class:`PlacementRuleCondition` to 
+                        create the rule conditions. See :ref:`placement_usage` for examples.
+            device_location: :ref:`config_object` or :ref:`dn` of the folder in which to place applicable devices.
+            certificate_location: :ref:`config_object` or :ref:`dn` of the folder in which to place applicable certificates.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            Config object of the placement rule.
+            :ref:`config_object` of the placement rule object.
         """
         rule_attr = self._format_rule_attribute(
             conditions=conditions,
@@ -236,7 +233,7 @@ class PlacementRules(FeatureBase):
         Deletes a placement rule.
 
         Args:
-            rule: Config.Object or name of the placement rule.
+            rule: :ref:`config_object` or name of the placement rule.
         """
         rule_dn = self._get_dn(rule, parent_dn=self._layout_rules_dn)
         response = self._config_delete(object_dn=rule_dn)
@@ -248,29 +245,12 @@ class PlacementRules(FeatureBase):
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten
         to the object. In other words, only the parameters given are updated.
 
-        Examples:
-
-            .. code-block:: python
-
-                rule = features.placement_rules.get('JobName')
-                features.placement_rules.update(
-                    rule=rule,
-                    conditions=[
-                        features.placement_rule_condition.country.matches('US'),
-                        features.placement_rule_condition.common_name.matches_regex('.*my_host\\.com'),
-                    ],
-                    device_location_dn='\VED\Policy\Certificates',
-                    certificate_location_dn='\VED\Policy\Devices'
-                )
-
         Args:
-            rule: Config.Object or name of the placement rule.
-            conditions: The conditional logic that defines the rule. This will overwrite the existing rules.
-                        Use ``:meth:`pytpp.features.placement_rules.PlacementRuleCondition`` to create a list of rules.
-            device_location: Absolute path to folder that should received all device and application objects that apply to
-                                this rule.
-            certificate_location: Absolute path to folder that should received all certificate objects that apply to this
-                                     rule.
+            rule: :ref:`config_object` or name of the placement rule.
+            conditions: A list of strings that define the conditions of the rule. Use :class:`PlacementRuleCondition` to
+                        create the rule conditions. See :ref:`placement_usage` for examples.
+            device_location: :ref:`config_object` or :ref:`dn` of the folder in which to place applicable devices.
+            certificate_location: :ref:`config_object` or :ref:`dn` of the folder in which to place applicable certificates.
             rule_type: Default is 'X509 Certificate'. 'SSH' may be specified instead for SSH discovery.
         """
         rule_dn = self._get_dn(rule, parent_dn=self._layout_rules_dn)
@@ -327,7 +307,7 @@ class PlacementRules(FeatureBase):
             raise_error_if_not_exists: Raise an exception if the placement rule does not exist.
 
         Returns:
-            Config object of the placement rule.
+            :ref:`config_object` of the placement rule object.
         """
         return self._get_config_object(
             object_dn=f'{self._layout_rules_dn}\\{name}',

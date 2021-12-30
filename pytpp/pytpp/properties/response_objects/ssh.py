@@ -1,101 +1,110 @@
-from typing import List
+from pytpp.properties.response_objects.dataclasses import ssh
 from pytpp.properties.resultcodes import ResultCodes
 from pytpp.tools.helpers.date_converter import from_date_string
 
 
 class SSH:
-    class Response:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def Response(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        error_code = response_object.get('ErrorCode')
+        return ssh.Response(
+            success=response_object.get('Success'),
+            error_code=error_code,
+            error_message=ResultCodes.SSHErrorCodes.get(error_code, 'Unknown') if error_code else None,
+        )
 
-            self.success = response_object.get('Success')  # type: bool
-            self.error_code = response_object.get('ErrorCode')  # type: int
-            self.error_message = ResultCodes.SSHErrorCodes.get(self.error_code, 'Unknown') if self.error_code else None  # type: str
+    @staticmethod
+    def ConnectionResult(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return ssh.ConnectionResult(
+            device_guid=response_object.get('DeviceGuid'),
+            error=response_object.get('Error'),
+            success=response_object.get('Success'),
+        )
 
-    class ConnectionResult:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def DeviceData(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return ssh.DeviceData(
+            dn=response_object.get('DN'),
+            device_guid=response_object.get('DeviceGuid'),
+            host_name=response_object.get('HostName'),
+            is_compliant=response_object.get('IsCompliant'),
+            type=response_object.get('Type'),
+        )
 
-            self.device_guid = response_object.get('DeviceGuid')  # type: str
-            self.error = response_object.get('Error')  # type: str
-            self.success = response_object.get('Success')  # type: bool
+    @staticmethod
+    def KeyData(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return ssh.KeyData(
+            active_from=from_date_string(response_object.get('ActiveFrom')),
+            algorithm=response_object.get('Algorithm'),
+            allowed_source_restriction=response_object.get('AllowedSourceRestriction'),
+            approver=response_object.get('Approver'),
+            comment=response_object.get('Comment'),
+            denied_source_restriction=response_object.get('DeniedSourceRestriction'),
+            device_guid=response_object.get('DeviceGuid'),
+            filepath=response_object.get('Filepath'),
+            forced_command=response_object.get('ForcedCommand'),
+            format=response_object.get('Format'),
+            is_encrypted=response_object.get('IsEncrypted'),
+            key_id=response_object.get('KeyId'),
+            keysetid=response_object.get('KeysetId'),
+            last_used=from_date_string(response_object.get('LastUsed')),
+            length=response_object.get('Length'),
+            notes=response_object.get('Notes'),
+            options=response_object.get('Options'),
+            process_error=response_object.get('ProcessError'),
+            process_status=response_object.get('ProcessStatus'),
+            reason=response_object.get('Reason'),
+            rotation_stage=response_object.get('RotationStage'),
+            type=response_object.get('Type'),
+            username=response_object.get('Username'),
+            violation_status=response_object.get('ViolationStatus'),
+        )
 
-    class DeviceData:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
+    @staticmethod
+    def KeySetData(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return ssh.KeySetData(
+            access=response_object.get('Access'),
+            algorithm=response_object.get('Algorithm'),
+            fingerprint_md5=response_object.get('FingerprintMD5'),
+            fingerprint_sha256=response_object.get('FingerprintSHA256'),
+            keysetid=response_object.get('KeysetId'),
+            last_rotation_date=from_date_string(response_object.get('LastRotationDate')),
+            last_used=from_date_string(response_object.get('LastUsed')),
+            length=response_object.get('Length'),
+            private_keys=[SSH.KeyData(data) for data in
+                          response_object.get('PrivateKeys')] if 'PrivateKeys' in response_object.keys() else [],
+            process_error=response_object.get('ProcessError'),
+            process_status=response_object.get('ProcessStatus'),
+            public_keys=[SSH.KeyData(data) for data in
+                         response_object.get('PublicKeys')] if 'PublicKeys' in response_object.keys() else [],
+            rotation_stage=response_object.get('RotationStage'),
+            type=response_object.get('Type'),
+            violation_status=response_object.get('ViolationStatus'),
+        )
 
-            self.dn = response_object.get('DN')  # type: str
-            self.device_guid = response_object.get('DeviceGuid')  # type: str
-            self.host_name = response_object.get('HostName')  # type: str
-            self.is_compliant = response_object.get('IsCompliant')  # type: bool
-            self.type = response_object.get('Type')  # type: str
-
-    class KeyData:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-                
-            self.active_from = from_date_string(response_object.get('ActiveFrom'))
-            self.algorithm = response_object.get('Algorithm')  # type: str
-            self.allowed_source_restriction = response_object.get('AllowedSourceRestriction')  # type: List[str]
-            self.approver = response_object.get('Approver')  # type: List[str]
-            self.comment = response_object.get('Comment')  # type: str
-            self.denied_source_restriction = response_object.get('DeniedSourceRestriction')  # type: List[str]
-            self.device_guid = response_object.get('DeviceGuid')  # type: str
-            self.filepath = response_object.get('Filepath')  # type: str
-            self.forced_command = response_object.get('ForcedCommand')  # type: str
-            self.format = response_object.get('Format')  # type: str
-            self.is_encrypted = response_object.get('IsEncrypted')  # type: bool
-            self.key_id = response_object.get('KeyId')  # type: int
-            self.keysetid = response_object.get('KeysetId')  # type: str
-            self.last_used = from_date_string(response_object.get('LastUsed'))
-            self.length = response_object.get('Length')  # type: int
-            self.notes = response_object.get('Notes')  # type: str
-            self.options = response_object.get('Options')  # type: List[str]
-            self.process_error = response_object.get('ProcessError')  # type: str
-            self.process_status = response_object.get('ProcessStatus')  # type: str
-            self.reason = response_object.get('Reason')  # type: str
-            self.rotation_stage = response_object.get('RotationStage')  # type: int
-            self.type = response_object.get('Type')  # type: str
-            self.username = response_object.get('Username')  # type: str
-            self.violation_status = response_object.get('ViolationStatus')  # type: List[int]
-            
-    class KeySetData:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-                
-            self.access = response_object.get('Access')  # type: str
-            self.algorithm = response_object.get('Algorithm')  # type: str
-            self.fingerprint_md5 = response_object.get('FingerprintMD5')  # type: str
-            self.fingerprint_sha256 = response_object.get('FingerprintSHA256')  # type: str
-            self.keysetid = response_object.get('KeysetId')  # type: str
-            self.last_rotation_date = from_date_string(response_object.get('LastRotationDate'))
-            self.last_used = from_date_string(response_object.get('LastUsed'))
-            self.length = response_object.get('Length')  # type: int
-            self.private_keys = [SSH.KeyData(data) for data in response_object.get('PrivateKeys')] if 'PrivateKeys' in response_object.keys() else []
-            self.process_error = response_object.get('ProcessError')  # type: str
-            self.process_status = response_object.get('ProcessStatus')  # type: str
-            self.public_keys = [SSH.KeyData(data) for data in response_object.get('PublicKeys')] if 'PublicKeys' in response_object.keys() else []
-            self.rotation_stage = response_object.get('RotationStage')  # type: int
-            self.type = response_object.get('Type')  # type: str
-            self.violation_status = response_object.get('ViolationStatus')  # type: list
-
-    class KeyUsageData:
-        def __init__(self, response_object: dict):
-            if not isinstance(response_object, dict):
-                response_object = {}
-
-            self.alert = response_object.get('Alert')
-            self.authorized_key_id = response_object.get('AuthorizedKeyId')
-            self.client_name = response_object.get('ClientName')
-            self.fingerprint = response_object.get('Fingerprint')
-            self.key_usage_id = response_object.get('KeyUsageId')
-            self.keyset_id = response_object.get('KeysetId')
-            self.last_used = response_object.get('LastUsed')
-            self.private_key_id = response_object.get('PrivateKeyId')
-            self.server_account = response_object.get('ServerAccount')
-            self.server_name = response_object.get('ServerName')
+    @staticmethod
+    def KeyUsageData(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
+        return ssh.KeyUsageData(
+            alert=response_object.get('Alert'),
+            authorized_key_id=response_object.get('AuthorizedKeyId'),
+            client_name=response_object.get('ClientName'),
+            fingerprint=response_object.get('Fingerprint'),
+            key_usage_id=response_object.get('KeyUsageId'),
+            keyset_id=response_object.get('KeysetId'),
+            last_used=response_object.get('LastUsed'),
+            private_key_id=response_object.get('PrivateKeyId'),
+            server_account=response_object.get('ServerAccount'),
+            server_name=response_object.get('ServerName'),
+        )
