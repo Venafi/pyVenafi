@@ -1,30 +1,30 @@
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.config import Config
+from pytpp.properties.response_objects.dataclasses import config as Config
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.certificate import Certificate
+from pytpp.properties.response_objects.dataclasses import certificate as Certificate
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.log import Log
+from pytpp.properties.response_objects.dataclasses import log as Log
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.identity import Identity
+from pytpp.properties.response_objects.dataclasses import identity as Identity
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.credential import Credential
+from pytpp.properties.response_objects.dataclasses import credential as Credential
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.client import Client
+from pytpp.properties.response_objects.dataclasses import client as Client
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.permissions import Permissions
+from pytpp.properties.response_objects.dataclasses import permissions as Permissions
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.metadata import Metadata as CustomFields
+from pytpp.properties.response_objects.dataclasses import metadata as CustomFields
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.secret_store import SecretStore
+from pytpp.properties.response_objects.dataclasses import secret_store as SecretStore
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.ssh import SSH
+from pytpp.properties.response_objects.dataclasses import ssh as SSH
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.worfklow import Workflow
+from pytpp.properties.response_objects.dataclasses import worfklow as Workflow
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.processing_engines import ProcessingEngines
+from pytpp.properties.response_objects.dataclasses import processing_engines as ProcessingEngines
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.stats import Stats
+from pytpp.properties.response_objects.dataclasses import stats as Stats
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.system_status import SystemStatus
+from pytpp.properties.response_objects.dataclasses import system_status as SystemStatus
 # noinspection PyUnresolvedReferences
 from pytpp.features.workflow import RC as ReasonCode

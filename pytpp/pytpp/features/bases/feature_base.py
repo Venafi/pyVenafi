@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 from pytpp.features.definitions.exceptions import InvalidResultCode, ObjectDoesNotExist
 from pytpp.properties.response_objects.config import Config
 from pytpp.properties.response_objects.identity import Identity
+from pytpp.properties.response_objects.dataclasses.config import Object as ConfigObject
+from pytpp.properties.response_objects.dataclasses.identity import Identity
 from pytpp.tools.logger import logger, LogTags
 from pytpp.properties.secret_store import Namespaces
 from typing import List, Dict, Union
@@ -57,9 +59,9 @@ class FeatureBase:
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
         obj = Config.Object({})
-        if isinstance(object_dn, Config.Object):
+        if isinstance(object_dn, ConfigObject):
             obj = object_dn
-        elif isinstance(object_guid, Config.Object):
+        elif isinstance(object_guid, ConfigObject):
             obj = object_guid
         else:
             response = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
@@ -80,9 +82,9 @@ class FeatureBase:
             raise ValueError(
                 'Must supply either an prefixed_name or prefixed_universal, but neither was provided.'
             )
-        if isinstance(prefixed_name, Identity.Identity):
+        if isinstance(prefixed_name, Identity):
             return prefixed_name
-        if isinstance(prefixed_universal, Identity.Identity):
+        if isinstance(prefixed_universal, Identity):
             return prefixed_universal
 
         result = self._api.websdk.Identity.Validate.post(
@@ -134,14 +136,14 @@ class FeatureBase:
         regex = '^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$'
         return isinstance(obj, str) and bool(re.match(pattern=regex, string=obj))
 
-    def _get_prefixed_name(self, identity: 'Union[Identity.Identity, str]'):
+    def _get_prefixed_name(self, identity: 'Union[Identity, str]'):
         if hasattr(identity, 'prefixed_name'):
             return identity.prefixed_name
         if self._is_prefixed_universal(identity):
             return self._get_identity_object(prefixed_universal=identity).prefixed_name
         return identity
 
-    def _get_prefixed_universal(self, identity: 'Union[Identity.Identity, str]'):
+    def _get_prefixed_universal(self, identity: 'Union[Identity, str]'):
         if hasattr(identity, 'prefixed_universal'):
             return identity.prefixed_universal
         if self._is_prefixed_universal(identity):

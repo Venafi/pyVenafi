@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Union
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat
-from pytpp.properties.response_objects.config import Config
+from pytpp.tools.vtypes import Config
 
 
 @dataclass
