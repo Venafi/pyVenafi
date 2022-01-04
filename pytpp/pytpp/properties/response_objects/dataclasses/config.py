@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -18,10 +19,10 @@ class Object:
     absolute_guid: str
     dn: str
     guid: str
-    config_id: int
+    config_id: Optional[int]
     name: str
     parent: str
-    revision: int
+    revision: Optional[int]
     type_name: str
 
 

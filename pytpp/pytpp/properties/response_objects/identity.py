@@ -4,6 +4,8 @@ from pytpp.properties.response_objects.dataclasses import identity
 class Identity:
     @staticmethod
     def Identity(response_object: dict):
+        if not isinstance(response_object, dict):
+            response_object = {}
         return identity.Identity(
             full_name=response_object.get('FullName'),
             is_container=response_object.get('IsContainer'),
