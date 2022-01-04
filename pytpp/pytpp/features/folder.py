@@ -1,6 +1,7 @@
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.attributes.policy import PolicyAttributes
+from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List, Union, TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Config, Identity
@@ -139,7 +140,7 @@ class Folder(FeatureBase):
             self.set_engines(folder=folder, engines=engines, append_engines=True)
         return folder
 
-    def delete(self, folder: 'Union[Config.Object, str]', recursive: bool = True):
+    def delete(self, folder: 'Union[Config.Object, str]', recursive: bool = True, delete_owners_from_secrets: bool = True, concurrency: int = 1):
         """
         Deletes the folder. The folder is, by default, deleted recursively. All deleted objects will also be removed from their
         secret associations. If the secret association is then orphaned, then it is deleted.
@@ -147,18 +148,19 @@ class Folder(FeatureBase):
         Args:
             folder: :ref:`config_object` or :ref:`dn` of the folder.
             recursive: If ``True``, delete all objects recursively.
+            delete_owners_from_secrets: If ``True``, the owners will be removed from the associated secrets.
+            concurrency: If greater than one a thread pool of this size will be used to delete the owner from the secret store association. If ``delete_owners_from_secrets`` is ``False`` then this has no effect.
         """
         folder_dn = self._get_dn(folder)
-        if recursive:
+        response = self._api.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=recursive)
+        result = response.result
+        if result.code != 1:
+            raise InvalidResultCode(code=result.code, code_description=result.config_result)
+        all_child_objects = response.objects
+        if delete_owners_from_secrets:
             # Must delete all of the secrets first.
-            response = self._api.websdk.Config.Enumerate.post(object_dn=folder_dn, recursive=True)
-            result = response.result
-            if result.code != 1:
-                raise InvalidResultCode(code=result.code, code_description=result.config_result)
-
-            all_child_dns = response.objects
-            for child in all_child_dns:
-                self._secret_store_delete(object_dn=child.dn)
+            with ThreadPoolExecutor(max_workers=concurrency) as pool:
+                pool.map(self._secret_store_delete, all_child_objects)
             self._secret_store_delete(object_dn=folder_dn)
         self._config_delete(object_dn=folder_dn, recursive=recursive)
 
