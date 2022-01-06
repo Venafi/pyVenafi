@@ -1,4 +1,3 @@
-from warnings import warn
 from pytpp.api.authenticate import Authenticate
 from pytpp.properties.oauth import Scope
 from pytpp.features.definitions.features import Features
