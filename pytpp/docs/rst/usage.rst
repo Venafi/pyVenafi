@@ -374,7 +374,8 @@ Logging
 
 .. warning::
 
-    Only enable logging for debugging purposes. It is not recommended to enable logging in Production.
+    Only enable logging for debugging purposes. It is not recommended to enable logging in Production. Logging can
+    potentially log sensitive information, such as private keys or credentials.
 
 |Product| uses `logboss <https://pypi.org/project/logboss>`_ to log the inputs and outputs to each API and Feature
 call. By default, the logger is turned off. To use the logger:

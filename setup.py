@@ -27,8 +27,8 @@ if __name__ == '__main__':
             'jsonpickle',
             'python-dateutil',
             'isodate',
-            'logboss',
             'packaging'
+            'logboss~=0.1.6',
         ],
         classifiers=[
             'Development Status :: 4 - Beta',

@@ -1,16 +1,7 @@
 #!/usr/bin/env python
 import os
-import sys
-from pathlib import Path
-import ftplib
-from tempfile import NamedTemporaryFile
 from setuptools import sandbox
 from setup import __version__
-import threading
-import requests
-import shutil
-from typing import List
-from packaging.version import Version
 from paramiko import SSHClient, AutoAddPolicy
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
