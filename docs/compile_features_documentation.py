@@ -1,4 +1,3 @@
-import inspect
 import re
 from textwrap import dedent
 from pathlib import Path
@@ -7,11 +6,11 @@ from typing import List
 import shutil
 
 
-PYTPP_PATH = Path(__file__).parent.parent
-FEATURES_PATH = Path(PYTPP_PATH, 'pytpp', 'features')
-FEATURES_DOC_PATH = Path(PYTPP_PATH, 'docs', 'rst', 'features')
-DATACLASSES_PATH = Path(PYTPP_PATH, 'pytpp', 'properties', 'response_objects', 'dataclasses')
-DATACLASSES_DOC_PATH = Path(PYTPP_PATH, 'docs', 'rst', 'dataclasses')
+PROJECT_ROOT = Path(__file__).parent.parent
+FEATURES_PATH = Path(PROJECT_ROOT, 'pytpp', 'features')
+FEATURES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'features')
+DATACLASSES_PATH = Path(PROJECT_ROOT, 'pytpp', 'properties', 'response_objects', 'dataclasses')
+DATACLASSES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'dataclasses')
 
 
 def dataclass_module_rst_template(module: type, title: str):
@@ -77,7 +76,7 @@ def get_feature_docs():
                                  key=lambda x: x.__name__)
 
         # Get the module path for Sphinx's .. autoclass:: directive.
-        rel_file_path = Path(classes['__file__']).relative_to(PYTPP_PATH)
+        rel_file_path = Path(classes['__file__']).relative_to(PROJECT_ROOT)
         module_path = Path(str(rel_file_path).replace('/', '.')).stem
 
         # Create the rst/features/<feature> folder.
@@ -142,7 +141,8 @@ def get_property_docs():
 
 
 def main():
-    # get_feature_docs()
+    print('\n\n\n############RECOMPILING FEATURES AND PROPERTIES!!!############\n\n\n')
+    get_feature_docs()
     get_property_docs()
 
 

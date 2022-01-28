@@ -2,13 +2,14 @@ import os
 import sys
 sys.path += [os.path.abspath('..'), os.path.abspath('../..')]
 import re
-from setup import __version__
+from pytpp import __version__, __author__
+import time
 
 # -- Project information -----------------------------------------------------
 
 project = 'PyTPP'
-copyright = '2021, Venafi'
-author = 'Venafi SPI Team'
+copyright = time.strftime('%Y, Venafi')
+author = __author__
 version = __version__
 
 

@@ -3,7 +3,7 @@ venv/
 *.pyc
 testfile.py
 /test/
-/pytpp/docs/_build/
+/docs/_build/
 *.egg-info
 /dist
 */logs

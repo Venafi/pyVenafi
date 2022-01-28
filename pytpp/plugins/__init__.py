@@ -1,4 +1,11 @@
+# noinspection PyUnresolvedReferences
+from pytpp._about import (
+    __version__, __author__, __author_email__, __project_name__,
+    __project_url__,
+)
+# noinspection PyUnresolvedReferences
 from pytpp.plugins.api.authenticate import Authenticate
+# noinspection PyUnresolvedReferences
 from pytpp.plugins.features.definitions.features import Features
 # noinspection PyUnresolvedReferences
 from pytpp.properties.oauth import Scope
@@ -22,9 +29,8 @@ from pytpp.features.definitions.legacy_classes import Classes as __C
 
 
 def __getattr__(name):
-    attr = None
     if name == 'AttributeNames':
-        attr = __AN
+        return __AN
     elif name == 'Classes':
-        attr = __C
-    return attr
+        return __C
+    raise ImportError(f'{name} cannot be imported because it does not exist.')

@@ -1,4 +1,10 @@
-__version__ = "0.5.17"
+# All of these attributes are defined in _about.py, but it must be imported this way.
+__project_name__ = None
+__version__ = None
+__author__ = None
+__author_email__= None
+__project_url__ = None
+exec(open('pytpp/_about.py', 'r').read())
 
 from setuptools import setup, find_packages
 import os
@@ -6,30 +12,25 @@ import os
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
     long_description = f.read()
 
+with open('requirements/prod.txt', 'r') as f:
+    requirements = f.readlines()
+
 if __name__ == '__main__':
     setup(
-        name='pytpp-dev',
-        packages=find_packages(where='pytpp', exclude=['docs']),
+        name=__project_name__,
+        url=__project_url__,
+        version=__version__,
+        author=__author__,
+        author_email=__author_email__,
+        packages=find_packages(include=('pytpp*',)),
         package_dir={
-            '': 'pytpp'
+            '': '.'
         },
         description='Venafi TPP Features and WebSDK API In Python',
         long_description=long_description,
         long_description_content_type='text/markdown',
-        url='https://coolsolutions.venafi.com/spi/pytpp',
-        version=__version__,
-        author='Venafi SPI Team',
-        author_email='spi@venafi.com',
-        keywords=['pytpp', 'venafi', 'tpp', 'trust protection platform', 'vcert'],
-        install_requires=[
-            'requests',
-            'datetime',
-            'jsonpickle',
-            'python-dateutil',
-            'isodate',
-            'packaging'
-            'logboss~=0.1.6',
-        ],
+        keywords=['pytpp', 'venafi', 'tpp', 'trust protection platform'],
+        install_requires=requirements,
         classifiers=[
             'Development Status :: 4 - Beta',
             'Intended Audience :: Developers',
