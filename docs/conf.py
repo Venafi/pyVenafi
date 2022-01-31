@@ -10,7 +10,7 @@ import time
 project = 'PyTPP'
 copyright = time.strftime('%Y, Venafi')
 author = __author__
-version = f'{project} {__version__}'
+version = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -42,7 +42,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = "sphinx_rtd_theme"
 html_theme_path = ["_themes", ]
 html_theme_options = {
-    'logo_only': True,
+    'logo_only': False,
     'display_version': True,
     'prev_next_buttons_location': 'both',
     'style_external_links': False,
@@ -62,8 +62,8 @@ html_static_path = ['_static']
 html_css_files = [
     'css/custom.css'
 ]
-html_logo = '_static/images/venafi_orange_logo.svg'
-html_favicon = '_static/images/venafi_orange_favicon.svg'
+html_logo = '_static/images/Venafi_LOGO_OrangeWhite_rgb_f.svg'
+html_favicon = '_static/images/Venafi_ICON_Orange_rgb_f.svg'
 
 autoclass_content = 'both'
 add_module_names = False
