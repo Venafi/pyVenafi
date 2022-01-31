@@ -1,3 +1,4 @@
 Sphinx~=4.3.2
 sphinxcontrib-napoleon~=0.7
-sphinx-rtd-theme~=0.4.3
+sphinx-rtd-theme~=1.0.0
+sphinx-rtd-dark-mode~=1.2.4

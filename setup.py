@@ -9,13 +9,18 @@ exec(open('pytpp/_about.py', 'r').read())
 from setuptools import setup, find_packages
 import os
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
-    long_description = f.read()
-
-with open('requirements/prod.txt', 'r') as f:
-    requirements = f.readlines()
 
 if __name__ == '__main__':
+    with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
+        long_description = f.read()
+
+    if os.path.exists('requirements/prod.txt'):
+        with open('requirements/prod.txt', 'r') as f:
+            requirements = f.readlines()
+    else:
+        with open('requirements.txt', 'r') as f:
+            requirements = f.readlines()
+
     setup(
         name=__project_name__,
         url=__project_url__,
@@ -38,5 +43,5 @@ if __name__ == '__main__':
             'Natural Language :: English',
             'Programming Language :: Python :: 3.8',
             'Topic :: Software Development :: Libraries :: Python Modules',
-        ]
+        ],
     )

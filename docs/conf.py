@@ -21,11 +21,12 @@ version = __version__
 extensions = [
     'sphinx.ext.autodoc',
     'sphinxcontrib.napoleon',
-    'sphinx.ext.inheritance_diagram'
+    'sphinx.ext.inheritance_diagram',
+    'sphinx_rtd_dark_mode'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+# templates_path = ['_templates']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -52,6 +53,7 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+default_dark_mode = True
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -60,8 +62,8 @@ html_static_path = ['_static']
 html_css_files = [
     'css/custom.css'
 ]
-html_logo = '_static/images/venafi_logo.png'
-html_favicon = '_static/images/favicon.ico'
+html_logo = '_static/images/venafi_orange_logo.svg'
+html_favicon = '_static/images/venafi_orange_favicon.svg'
 
 autoclass_content = 'both'
 add_module_names = False
