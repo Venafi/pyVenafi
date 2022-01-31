@@ -10,7 +10,7 @@ import time
 project = 'PyTPP'
 copyright = time.strftime('%Y, Venafi')
 author = __author__
-version = __version__
+version = f'{project} {__version__}'
 
 
 # -- General configuration ---------------------------------------------------
