@@ -50,6 +50,14 @@ html {
 
 /* endregion Side Bar */
 
+/* Footer */
+footer {
+    font-size: 0;
+}
+
+footer .rst-footer-buttons {
+    font-size: initial;
+}
 /*********** Dark theme ***********/
 
 /* region Search Bar And Search Results */
@@ -57,7 +65,7 @@ html[data-theme='dark'] .wy-side-nav-search input[type='text'] {
     background-color: #272f36;
 }
 
-.rst-content .highlighted {
+html[data-theme='dark'] .rst-content .highlighted {
     background: var(--venafi-secondary);
     box-shadow: 0 0 12px 0 lightgrey;
     display: inline;
@@ -65,7 +73,7 @@ html[data-theme='dark'] .wy-side-nav-search input[type='text'] {
     color: var(--venafi-primary-dark);
 }
 
-/* region Search Bar And Search Results */
+/* endregion Search Bar And Search Results */
 
 /* region Document Body */
 html[data-theme='dark'] .wy-nav-content {
@@ -247,7 +255,7 @@ html[data-theme='dark'] div[role="navigation"] > .btn-neutral {
 /* endregion Navigation Buttons */
 
 /* region Tables */
-.wy-table-responsive tbody .row-even td {
+html[data-theme='dark'] .wy-table-responsive tbody .row-even td {
     background: var(--venafi-primary-dark) !important;
 }
 
