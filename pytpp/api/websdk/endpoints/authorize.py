@@ -1,5 +1,6 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
+import warnings
 from datetime import datetime
+from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.tools.helpers.date_converter import from_date_string
 
 
@@ -18,6 +19,8 @@ class _Authorize(API):
         This POST method is written differently in order to effectively omit the password from being logged.
         """
         self._log_api_deprecated_warning(alternate_api=self.OAuth._url)
+        warnings.warn('Authorizing to TPP with only a username and password is being deprecated. '
+                      'Refer to product documentation on using OAuth authentication.')
         body = {
             "Username": username,
             "Password": password

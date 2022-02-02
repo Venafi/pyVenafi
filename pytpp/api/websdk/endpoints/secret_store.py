@@ -7,7 +7,6 @@ class _SecretStore:
     def __init__(self, api_obj):
         self.Add = self._Add(api_obj=api_obj)
         self.Associate = self._Associate(api_obj=api_obj)
-        self.Delete = self._Delete(api_obj=api_obj)
         self.Dissociate = self._Dissociate(api_obj=api_obj)
         self.EncryptionKeysInUse = self._EncryptionKeysInUse(api_obj=api_obj)
         self.Lookup = self._Lookup(api_obj=api_obj)

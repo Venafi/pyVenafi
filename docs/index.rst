@@ -4,7 +4,7 @@
 The intended audience is anyone having access to the Venafi Trust Protection Platform (TPP) WebSDK API
 that is seeking an advanced Python programmable interface to TPP.
 
-|Product| is a programmable interface that supplements the TPP WebSDK. It is layers: the API layer and the
+|Product| is a programmable interface that leverages the TPP WebSDK. It has layers: the API layer and the
 Features layer. The API layer provides serialization and deserialization for using the WebSDK API while the
 Features layer serves as an abstraction of the API layer. This allows the programmer to use either the API
 layer or the Features layer to accomplish the same task; the Features layer just simplifies everything.
