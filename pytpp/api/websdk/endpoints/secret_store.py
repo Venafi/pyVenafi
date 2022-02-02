@@ -76,26 +76,6 @@ class _SecretStore:
 
             return _Response(response=self._post(data=body))
 
-    class _Delete(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SecretStore/Delete')
-
-        def post(self, vault_id: int):
-            body = {
-                'VaultID': vault_id
-            }
-
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
-
     class _Dissociate(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Dissociate')

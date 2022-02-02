@@ -249,38 +249,6 @@ class _Identity:
 
             return _Response(response=self._put(data=body))
 
-    class _RemoveGroupOwners(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/RemoveGroupOwners')
-
-        def put(self, group: str, owners: list, show_members: bool = False):
-            body = {
-                'Group': group,
-                'Owners': owners,
-                'ShowMembers': show_members
-            }
-
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
-
-                @property
-                @api_response_property()
-                def members(self):
-                    return [Identity.Identity(m) for m in self._from_json('Members', return_on_error=list)]
-
-                @property
-                @api_response_property()
-                def message(self) -> str:
-                    return self._from_json('Message')
-
-                @property
-                @api_response_property()
-                def owners(self):
-                    return [Identity.Identity(m) for m in self._from_json('Owners', return_on_error=list)]
-
-            return _Response(response=self._put(data=body))
-
     class _RenameGroup(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/RenameGroup')

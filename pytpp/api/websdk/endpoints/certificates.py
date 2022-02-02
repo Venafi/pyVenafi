@@ -231,7 +231,7 @@ class _Certificates(API):
 
             return _Response(response=self._get())
 
-        def put(self, attribute_data: [dict]):
+        def put(self, attribute_data: List[dict]):
             body = {
                 "AttributeData": attribute_data
             }
@@ -392,39 +392,41 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Request')
 
-        def post(self, policy_dn: str, approvers: [dict] = None, cadn: str = None, ca_specific_attributes: [dict] = None,
-                 certificate_type: str = None, city: str = None, contacts: [dict] = None, country: str=None,
-                 custom_fields: [dict] = None, created_by: str = None, devices: [dict] = None,
-                 disable_automatic_renewal: bool = False, elliptic_curve: str = None, key_algorithm: str = None,
-                 key_bit_size: int = None, management_type: str = None, object_name: str = None, organization: str = None,
-                 organizational_unit: str = None, pkcs10: str = None, reenable: bool = False, set_work_todo: bool = True,
-                 state: str = None, subject: str = None, subject_alt_names: [dict] = None):
+        def post(self, policy_dn: str, approvers: List[dict] = None, cadn: str = None,
+                 ca_specific_attributes: List[dict] = None, certificate_type: str = None, city: str = None,
+                 contacts: List[dict] = None, country: str=None, custom_fields: List[dict] = None, created_by: str = None,
+                 devices: List[dict] = None, disable_automatic_renewal: bool = False, elliptic_curve: str = None,
+                 key_algorithm: str = None, key_bit_size: int = None, management_type: str = None, object_name: str = None,
+                 organization: str = None, organizational_unit: str = None, origin: str = None, pkcs10: str = None,
+                 reenable: bool = False, set_work_todo: bool = True, state: str = None, subject: str = None,
+                 subject_alt_names: List[dict] = None):
             body = {
-                'Approvers': approvers,
-                'CADN': cadn,
-                'CASpecificAttributes': ca_specific_attributes,
-                'CertificateType': certificate_type,
-                'City': city,
-                'Contacts': contacts,
-                'Country': country,
-                'CustomFields': custom_fields,
-                'CreatedBy': created_by,
-                'Devices': devices,
+                'Approvers'              : approvers,
+                'CADN'                   : cadn,
+                'CASpecificAttributes'   : ca_specific_attributes,
+                'CertificateType'        : certificate_type,
+                'City'                   : city,
+                'Contacts'               : contacts,
+                'Country'                : country,
+                'CustomFields'           : custom_fields,
+                'CreatedBy'              : created_by,
+                'Devices'                : devices,
                 'DisableAutomaticRenewal': disable_automatic_renewal,
-                'EllipticCurve': elliptic_curve,
-                'KeyAlgorithm': key_algorithm,
-                'KeyBitSize': key_bit_size,
-                'ManagementType': management_type,
-                'ObjectName': object_name,
-                'Organization': organization,
-                'OrganizationalUnit': organizational_unit,
-                'PKCS10': pkcs10,
-                'PolicyDN': policy_dn,
-                'Reenable': reenable,
-                'SetWorkToDo': set_work_todo,
-                'State': state,
-                'Subject': subject,
-                'SubjectAltNames': subject_alt_names
+                'EllipticCurve'          : elliptic_curve,
+                'KeyAlgorithm'           : key_algorithm,
+                'KeyBitSize'             : key_bit_size,
+                'ManagementType'         : management_type,
+                'ObjectName'             : object_name,
+                'Origin'                 : origin,
+                'Organization'           : organization,
+                'OrganizationalUnit'     : organizational_unit,
+                'PKCS10'                 : pkcs10,
+                'PolicyDN'               : policy_dn,
+                'Reenable'               : reenable,
+                'SetWorkToDo'            : set_work_todo,
+                'State'                  : state,
+                'Subject'                : subject,
+                'SubjectAltNames'        : subject_alt_names,
             }
 
             class _Response(APIResponse):
@@ -650,7 +652,7 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Validate')
 
-        def post(self, certificate_dns: [str] = None, certificate_guids: [str] = None):
+        def post(self, certificate_dns: List[str] = None, certificate_guids: List[str] = None):
             body = {
                 'CertificateDNs': certificate_dns,
                 'CertificateGUIDs': certificate_guids

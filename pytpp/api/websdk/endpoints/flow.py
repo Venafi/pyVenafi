@@ -57,7 +57,6 @@ class _Flow:
 
                         return _Response(response=self._post(data=body))
 
-
     class _Tickets:
         def __init__(self, api_obj):
             self.Approve = self._Approve(api_obj=api_obj)

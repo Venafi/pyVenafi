@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Union
 from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.codesign import CodeSign
 
@@ -8,9 +8,11 @@ class _Codesign:
         self.AddAdministrator = self._AddAdministrator(api_obj=api_obj)
         self.AddApplicationAdministrator = self._AddApplicationAdministrator(api_obj=api_obj)
         self.AddProjectAdministrator = self._AddProjectAdministrator(api_obj=api_obj)
+        self.AddProjectApprover = self._AddProjectApprover(api_obj=api_obj)
         self.CountReferences = self._CountReferences(api_obj=api_obj)
         self.CreateApplication = self._CreateApplication(api_obj=api_obj)
         self.CreateApplicationCollection = self._CreateApplicationCollection(api_obj=api_obj)
+        self.CreateEnvironment = self._CreateEnvironment(api_obj=api_obj)
         self.CreateProject = self._CreateProject(api_obj=api_obj)
         self.CreateTemplate = self._CreateTemplate(api_obj=api_obj)
         self.DeleteApplication = self._DeleteApplication(api_obj=api_obj)
@@ -137,6 +139,37 @@ class _Codesign:
                     return self._from_json(key='Success')
 
             return _Response(response=self._post(data=body))
+
+    class _AddProjectApprover(API):
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='Codesign/AddProjectApprover')
+            
+        def post(self, trustee: str):
+            body = {
+                'Trustee': trustee
+            }
+            
+            class _Response(APIResponse):
+                def __init__(self, response):
+                    super().__init__(response=response)
+
+                @property
+                @api_response_property()
+                def error(self) -> str:
+                    return self._from_json(key='Error')
+
+                @property
+                @api_response_property()
+                def result(self):
+                    return CodeSign.ResultCode(self._from_json(key='Result'))
+
+                @property
+                @api_response_property()
+                def success(self) -> bool:
+                    return self._from_json(key='Success')
+                    
+            return _Response(response=self._post(data=body))
+        
 
     class _AddPreApproval(API):
         def __init__(self, api_obj):
@@ -268,6 +301,86 @@ class _Codesign:
                 @api_response_property()
                 def error(self) -> str:
                     return self._from_json(key='Error')
+
+                @property
+                @api_response_property()
+                def result(self):
+                    return CodeSign.ResultCode(self._from_json(key='Result'))
+
+                @property
+                @api_response_property()
+                def success(self) -> bool:
+                    return self._from_json(key='Success')
+
+            return _Response(response=self._post(data=body))
+
+    class _CreateEnvironment(API):
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='Codesign/CreateEnvironment')
+
+        def post(self, dn: str, environment_name: str, project: Dict[str, Union[str, int]],
+                 template: List[Dict[str, str]], template_dn: str = None):
+            body = {
+                'Dn': dn,
+                'EnvironmentName': environment_name,
+                'Project': project,
+                'Template': template,
+                'TemplateDn': template_dn
+            }
+
+            class _Response(APIResponse):
+                def __init__(self, response):
+                    super().__init__(response=response)
+
+                @property
+                @api_response_property()
+                def apple_environment(self) -> str:
+                    return CodeSign.AppleEnvironment(self._from_json(key='AppleEnvironment'))
+
+                @property
+                @api_response_property()
+                def csp_environment(self) -> str:
+                    return CodeSign.CSPEnvironment(self._from_json(key='CSPEnvironment'))
+
+                @property
+                @api_response_property()
+                def dot_net_environment(self) -> str:
+                    return CodeSign.DotNetEnvironment(self._from_json(key='DotNetEnvironment'))
+
+                @property
+                @api_response_property()
+                def gpg_environment(self) -> str:
+                    return CodeSign.GPGEnvironment(self._from_json(key='GPGEnvironment'))
+
+                @property
+                @api_response_property()
+                def key_pair_environment(self) -> str:
+                    return CodeSign.KeyPairEnvironment(self._from_json(key='KeyPairEnvironment'))
+
+                @property
+                @api_response_property()
+                def apple_template(self) -> str:
+                    return CodeSign.AppleTemplate(self._from_json(key='AppleTemplate'))
+
+                @property
+                @api_response_property()
+                def csp_template(self) -> str:
+                    return CodeSign.CSPTemplate(self._from_json(key='EnviCSPTemplateronment'))
+
+                @property
+                @api_response_property()
+                def dot_net_template(self) -> str:
+                    return CodeSign.DotNetTemplate(self._from_json(key='DotNetTemplate'))
+
+                @property
+                @api_response_property()
+                def gpg_template(self) -> str:
+                    return CodeSign.GPGTemplate(self._from_json(key='GPGTemplate'))
+
+                @property
+                @api_response_property()
+                def key_pair_environment(self) -> str:
+                    return CodeSign.KeyPairTemplate(self._from_json(key='KeyPairTemplate'))
 
                 @property
                 @api_response_property()
@@ -1198,6 +1311,36 @@ class _Codesign:
     class _RemoveProjectAdministrator(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RemoveProjectAdministrator')
+
+        def post(self, trustee: str):
+            body = {
+                'Trustee': trustee
+            }
+
+            class _Response(APIResponse):
+                def __init__(self, response):
+                    super().__init__(response=response)
+
+                @property
+                @api_response_property()
+                def error(self) -> str:
+                    return self._from_json(key='Error')
+
+                @property
+                @api_response_property()
+                def result(self):
+                    return CodeSign.ResultCode(self._from_json(key='Result'))
+
+                @property
+                @api_response_property()
+                def success(self) -> bool:
+                    return self._from_json(key='Success')
+
+            return _Response(response=self._post(data=body))
+
+    class _RemoveProjectApprover(API):
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='Codesign/RemoveProjectApprover')
 
         def post(self, trustee: str):
             body = {

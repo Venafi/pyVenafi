@@ -1,4 +1,5 @@
 import time
+from typing import List, Dict
 from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.credential import Credential
 from pytpp.tools.helpers.date_converter import from_date_string
@@ -6,6 +7,8 @@ from pytpp.tools.helpers.date_converter import from_date_string
 
 class _Credentials:
     def __init__(self, api_obj):
+        self.Adaptable = self._Adaptable(api_obj=api_obj)
+        self.Connector = self._Connector(api_obj=api_obj)
         self.Create = self._Create(api_obj=api_obj)
         self.Delete = self._Delete(api_obj=api_obj)
         self.Enumerate = self._Enumerate(api_obj=api_obj)
@@ -13,6 +16,139 @@ class _Credentials:
         self.Retrieve = self._Retrieve(api_obj=api_obj)
         self.Update = self._Update(api_obj=api_obj)
         self.CyberArk = self._CyberArk(api_obj=api_obj)
+
+    class _Adaptable:
+        def __init__(self, api_obj):
+            self.Update = self._Update(api_obj=api_obj)
+        
+        class _Update(API):
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Update')
+            
+            def post(self, credential_path: str, credential_type: str, connector_name: str,
+                     custom_fields: List[Dict[str, str]]):
+                body = {
+                    'CredentialPath': credential_path,
+                    'CredentialType': credential_type,
+                    'ConnectorName': connector_name,
+                    'CustomFields': custom_fields
+                }
+                
+                class _Response(APIResponse):
+                    def __init__(self, response):
+                        super().__init__(response=response)
+
+                    @property
+                    @api_response_property()
+                    def result(self):
+                        return Credential.Result(self._from_json(key='Result'))
+                        
+                return _Response(response=self._post(data=body))
+
+    class _Connector:
+        def __init__(self, api_obj):
+            self.Adaptable = self._Adaptable(api_obj=api_obj)
+
+        class _Adaptable(API):
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Credentials/Connector/Adaptable')
+
+            def post(self, connector_name: str, powershell_script: str, service_address: str,
+                     service_credential: str, allowed_identities: List[str] = None,
+                     description: str = None):
+                body = {
+                    'AllowedIdentities': allowed_identities,
+                    'ConnectorName': connector_name,
+                    'Description': description,
+                    'PowershellScript': powershell_script,
+                    'ServiceAddress': service_address,
+                    'ServiceCredential': service_credential
+                }
+
+                class _Response(APIResponse):
+                    def __init__(self, response):
+                        super().__init__(response=response)
+
+                    @property
+                    @api_response_property()
+                    def succcess(self) -> bool:
+                        return self._from_json(key='Succcess')
+
+                return _Response(response=self._post(data=body))
+
+            def Guid(self, guid: str):
+                return self._Guid(api_obj=self._api_obj, guid=guid)
+
+            class _Guid(API):
+                def __init__(self, api_obj, guid: str):
+                    super().__init__(api_obj=api_obj, url=f'/Credentials/Connector/Adaptable/{guid}')
+
+                def delete(self):
+                    class _Response(APIResponse):
+                        def __init__(self, response):
+                            super().__init__(response=response)
+
+                        @property
+                        @api_response_property()
+                        def success(self) -> bool:
+                            return self._from_json(key='Success')
+
+                    return _Response(response=self._delete())
+
+                def get(self):
+                    class _Response(APIResponse):
+                        def __init__(self, response):
+                            super().__init__(response=response)
+
+                        @property
+                        @api_response_property()
+                        def allowed_identities(self) -> List[str]:
+                            return self._from_json(key='AllowedIdentities')
+
+                        @property
+                        @api_response_property()
+                        def powershell_script(self) -> str:
+                            return self._from_json(key='PowershellScript')
+
+                        @property
+                        @api_response_property()
+                        def service_address(self) -> str:
+                            return self._from_json(key='ServiceAddress')
+
+                        @property
+                        @api_response_property()
+                        def service_credential(self) -> str:
+                            return self._from_json(key='ServiceCredential')
+
+                        @property
+                        @api_response_property()
+                        def success(self) -> bool:
+                            return self._from_json(key='Success')
+
+                    return _Response(response=self._get())
+
+                def put(self, connector_name: str = None, powershell_script: str = None,
+                        service_address: str = None, service_credential: str = None,
+                        allowed_identities: List[str] = None, description: str = None):
+                    body = {
+                        'AllowedIdentities': allowed_identities,
+                        'ConnectorName'    : connector_name,
+                        'Description'      : description,
+                        'PowershellScript' : powershell_script,
+                        'ServiceAddress'   : service_address,
+                        'ServiceCredential': service_credential
+                    }
+
+                    class _Response(APIResponse):
+                        def __init__(self, response):
+                            super().__init__(response=response)
+
+                        @property
+                        @api_response_property()
+                        def succcess(self) -> bool:
+                            return self._from_json(key='Succcess')
+
+                    return _Response(response=self._put(data=body))
 
     class _Create(API):
         def __init__(self, api_obj):

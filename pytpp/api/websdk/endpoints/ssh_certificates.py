@@ -1,13 +1,91 @@
 from typing import List
 from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.properties.response_objects.ssh_certificates import SSHCertificate
+from pytpp.tools.helpers.date_converter import from_date_string
 
 
 class _SSHCertificates:
     def __init__(self, api_obj):
+        self.CAKeyPair = self._CAKeyPair(api_obj=api_obj)
         self.Request = self._Request(api_obj=api_obj)
         self.Retrieve = self._Retrieve(api_obj=api_obj)
         self.Template = self._Template(api_obj=api_obj)
+
+    class _CAKeyPair:
+        def __init__(self, api_obj):
+            self.Create = self._Create(api_obj=api_obj)
+        
+        class _Create(API):
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='SSHCertificates/CAKeyPair/Create')
+            
+            def post(self, name: str, parent_dn: str = None, key_algorithm: str = None,
+                     key_storage: str = None, private_key_data: str = None,
+                     private_key_passphrase: str = None):
+                body = {
+                    'Name': name,
+                    'ParentDN': parent_dn,
+                    'KeyAlgorithm': key_algorithm,
+                    'KeyStorage': key_storage,
+                    'PrivateKeyData': private_key_data,
+                    'PrivateKeyPassphrase': private_key_passphrase
+                }
+                
+                class _Response(APIResponse):
+                    def __init__(self, response):
+                        super().__init__(response=response)
+
+                    @property
+                    @api_response_property()
+                    def created_on(self):
+                        return from_date_string(self._from_json(key='CreatedOn'))
+
+                    @property
+                    @api_response_property()
+                    def dn(self) -> str:
+                        return self._from_json(key='DN')
+
+                    @property
+                    @api_response_property()
+                    def fingerprint_sha_256(self) -> str:
+                        return self._from_json(key='FingerprintSHA256')
+
+                    @property
+                    @api_response_property()
+                    def guid(self) -> str:
+                        return self._from_json(key='Guid')
+
+                    @property
+                    @api_response_property()
+                    def key_algorithm(self) -> str:
+                        return self._from_json(key='KeyAlgorithm')
+
+                    @property
+                    @api_response_property()
+                    def key_storage(self) -> str:
+                        return self._from_json(key='KeyStorage')
+
+                    @property
+                    @api_response_property()
+                    def name(self) -> str:
+                        return self._from_json(key='Name')
+
+                    @property
+                    @api_response_property()
+                    def processing_details(self):
+                        return SSHCertificate.ProcessingDetails(self._from_json(key='ProcessingDetails'))
+
+                    @property
+                    @api_response_property()
+                    def public_key_data(self) -> str:
+                        return self._from_json(key='PublicKeyData')
+
+                    @property
+                    @api_response_property()
+                    def response(self):
+                        return SSHCertificate.Response(self._from_json(key='Response'))
+                        
+                return _Response(response=self._post(data=body))
 
     class _Request(API):
         def __init__(self, api_obj):
