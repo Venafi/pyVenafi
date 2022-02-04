@@ -19,4 +19,4 @@ python:
      extra_requirements:
         - doc
    - method: setuptools
-     path: package
+     path: .
