@@ -1,3 +1,0 @@
--r requirements/dev.txt
--r requirements/prod.txt
--r docs/requirements.txt
