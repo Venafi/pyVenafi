@@ -12,15 +12,20 @@ from threading import Lock
 
 PRINT_LOCK = Lock()
 
+DB_ADDRESS = '10.100.209.57'
+DB_NAME = 'tpp'
+DB_USERNAME = 'sa'
+DB_PASSWORD = 'newPassw0rd!'
+
 class UpdateConfig:
-    def __init__(self, version: str):
+    def __init__(self, version: str, update_pkcs11: bool):
         sql = pyodbc.connect(
             p_str='',
-            server='10.100.206.20',
+            server=DB_ADDRESS,
             port=1433,
-            database='TPP',
-            user='sa',
-            password='newPassw0rd!',
+            database=DB_NAME,
+            user=DB_USERNAME,
+            password=DB_PASSWORD,
             driver='SQL Server',
             autocommit=True
         )
@@ -38,8 +43,11 @@ class UpdateConfig:
         sql.close()
         columns = [x[0] for x in cursor.description]
         core_results = response
-        pkcs11_results = self.add_pkcs11_vse()
-        all_results = core_results + pkcs11_results
+        if update_pkcs11:
+            pkcs11_results = self.add_pkcs11_vse()
+            all_results = core_results + pkcs11_results
+        else:
+            all_results = core_results
         results = dict(zip(columns, zip(*all_results)))
         self.config_relations = pd.DataFrame(results)
         self.version = Version(version)
@@ -161,7 +169,7 @@ class UpdateConfig:
                     script += f'\t{self.option_to_variable(value, str(schema_version))}\n'
             if data.get('children'):
                 self.dump_attributes(data['children'])
-            file_path = Path(f'pytpp/pytpp/attributes/{file_name}.py')
+            file_path = Path(f'pytpp/attributes/{file_name}.py')
             if not file_path.parent.exists():
                 file_path.parent.mkdir(parents=True, exist_ok=True)
             with file_path.open('w') as f:
@@ -290,7 +298,7 @@ class UpdateConfig:
             f'\t{classes}',
             ''
         ])
-        file_path = Path(f'pytpp/pytpp/features/definitions/classes.py')
+        file_path = Path(f'pytpp/features/definitions/classes.py')
         with file_path.open('w') as f:
             print(script, end='', file=f)
 
@@ -310,6 +318,7 @@ class UpdateConfig:
 if __name__ == '__main__':
     parser = ArgumentParser('Update config schema in pytpp.')
     parser.add_argument('-v', '--version', required=True, help='Version of TPP')
+    parser.add_argument('-p', '--pkcs11', action='store_true', required=False, help='Update PKCS11')
     args = parser.parse_args()
 
-    UpdateConfig(args.version).main()
+    UpdateConfig(args.version, update_pkcs11=args.pkcs11).main()
