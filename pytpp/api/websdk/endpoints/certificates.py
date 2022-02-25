@@ -44,7 +44,7 @@ class _Certificates(API):
             @property
             @api_response_property()
             def x_record_count(self) -> int:
-                xrc = self.api_response.headers.get('X-Record-Count')
+                xrc = int(self.api_response.headers.get('X-Record-Count'))
                 return xrc
 
             @property
@@ -62,6 +62,21 @@ class _Certificates(API):
             @api_response_property()
             def total_count(self) -> int:
                 return self._from_json(key='TotalCount')
+
+        return _Response(response=self._get(params=params))
+
+    def head(self, filters: dict = None):
+        params = filters
+
+        class _Response(APIResponse):
+            def __init__(self, response):
+                super().__init__(response=response)
+
+            @property
+            @api_response_property()
+            def x_record_count(self) -> int:
+                xrc = int(self.api_response.headers.get('X-Record-Count'))
+                return xrc
 
         return _Response(response=self._get(params=params))
 

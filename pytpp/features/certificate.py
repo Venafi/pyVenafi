@@ -1,5 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import List, Union, TYPE_CHECKING
+from datetime import datetime
+from typing import List, Union, TYPE_CHECKING, Tuple, Dict
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Config, Identity
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
@@ -7,6 +9,9 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import FeatureException, UnexpectedValue
 from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import logger, LogTags
+
+
+StringParam = Union[str, List[str], List[Tuple[str, ...]]]
 
 
 @dataclass
@@ -287,6 +292,242 @@ class Certificate(FeatureBase):
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
         return result.file, result.ssl_tls
+
+    def list(self, country: StringParam = None, certificate_type: StringParam = None, common_name: StringParam = None,
+             issuer: StringParam = None, is_self_signed: bool = None, is_wild_card: bool = None,
+             key_algorithm: StringParam = None, key_size: StringParam = None, key_size_greater: StringParam = None,
+             key_size_less: StringParam = None, city: StringParam = None, organization: StringParam = None,
+             organization_unit: StringParam = None, state: StringParam = None, san_dns: StringParam = None,
+             san_email: StringParam = None, san_ip: StringParam = None, san_upn: StringParam = None, san_uri: StringParam = None,
+             serial: StringParam = None, signature_algorithm: StringParam = None, thumbprint: StringParam = None,
+             valid_from: Union[datetime, str] = None, valid_from_greater: Union[datetime, str] = None,
+             valid_from_less: Union[datetime, str] = None, valid_to: Union[datetime, str] = None,
+             valid_to_greater: Union[datetime, str] = None, chain_validation_error: StringParam = None,
+             created_on: Union[datetime, str] = None, created_on_greater: Union[datetime, str] = None,
+             created_on_less: Union[datetime, str] = None, disabled: bool = None, in_error: bool = None,
+             management_type: StringParam = None, name: StringParam = None, network_validation_disabled: bool = None,
+             parent: 'Union[Config.Object, str]' = None, recursive: bool = True, pending_workflow: bool = None,
+             ssl_tls_protocol: StringParam = None, stage: StringParam = None, stage_greater: str = None,
+             stage_less: str = None, tls_validation_failure: StringParam = None, validation_disabled: bool = None,
+             validation_state: StringParam = None, valid_to_less: Union[datetime, str] = None,
+             additional_filters: Dict[str, str] = None, limit: int = 1000, offset: int = None, return_limit: bool = False,
+             include_issuer: bool = None, include_key_algorithm: bool = None, include_key_size: bool = None,
+             include_subject: bool = None, concurrency: int = 16):
+        """
+        Lists all certificates with the given parameters. Some parameters allow a union of values:
+
+        * If ``datetime``, then the ISO format is used.
+        * If a list of strings, then each value is joined by an ampersand (&) and appended to the query string.
+        * If a list of a tuple of strings, then each value in the tuple is joined by a comma (,) and each tuple in
+          the list is joined by an ampersand (&), and the whole joined to the query string.
+
+        Refer to the |Doc Home Page| for detailed parameter descriptions.
+
+        Args:
+            country: Country attribute of the Subject DN.
+            certificate_type: Use CodeSigning, Device, Server, and/or User.
+            common_name: CN of the Subject DN.
+            issuer: Issuer.
+            is_self_signed: Include only self-signed (``True``) or CA-signed (``False``) certificates.
+            is_wild_card: Include only certificates that have wild card notation (``True``) or those that do not (``False``).
+            key_algorithm: Public key algorithm.
+            key_size: Public key size.
+            key_size_greater: Minimum key size, non-inclusive.
+            key_size_less: Maximum key size, inclusive.
+            city: City attribute of the Subject DN.
+            organization: Organization attribute of the Subject DN.
+            organization_unit: Organization Unit attribute of the Subject DN.
+            state: State attribute of the Subject DN.
+            san_dns: SAN DNS of the certificate.
+            san_email: SAN E-mail of the certificate.
+            san_ip: SAN IP of the certificate.
+            san_upn: SAN UPN of the certificate.
+            san_uri: SAN URI of the certificate.
+            serial: Serial number of the certificate.
+            signature_algorithm: Signature algorithm used to sign the certificate.
+            thumbprint: Certificate thumbprint.
+            valid_from: Issuance date of the certificate.
+            valid_from_greater: Minimum expiration date of the certificate.
+            valid_from_less: Maximum expiration date of the certificate.
+            valid_to: Expiration date of the certificate.
+            valid_to_greater: Minimum expiration date of the certificate.
+            valid_to_less: Maximum expiration date of the certificate.
+            chain_validation_error: Chain Validation Error code.
+            created_on: Creation date of the certifcate.
+            created_on_greater: Minimum creation date of the certificate.
+            created_on_less: Maximum creation date of the certificate.
+            disabled: Include only enabled (``False``) or disabled (``True``) certificates.
+            in_error: Include only certificates in an error state (``True``) or a healthy state (``False``).
+            management_type: Management type (Unassigned, Monitoring, Enrollment, or Provisioning) of the certificate.
+            name: Name of the certificate object.
+            network_validation_disabled: Include only certificates with Network Validation enabled (``False``) or disabled (``True``).
+            parent: :ref:`config_object` or :ref:`dn` of the parent folder.
+            recursive: Requires ``parent`` to be given. If ``True``, search for certificates recursively.
+            pending_workflow: Include only certificates pendind workflow resolution.
+            ssl_tls_protocol: SSL/TLS Protocols (Ssl2, Ssl3, Tls, Tls11, Tls12) that failed to communicate with the target host.
+            stage: Processing stage of the certificate.
+            stage_greater: Minimum processing stage of the certificate.
+            stage_less: Maximum processing stage of the certificate.
+            tls_validation_failure: TLS Validation Failure code.
+            validation_disabled: Include only certificates with validation enabled (``False``) or disabled (``True``).
+            validation_state: Include only certificates having a validation state of "Blank", "Success", or "Failure".
+            additional_filters: A dictionary of additional filters as would be passed directly to the GET Certificates API.
+            limit: The maximum number of certificates to return.
+            offset: The offset from the filtered list that will be the first item of the returned list of certificates.
+                Obsolete if ``return_limit`` is ``False``.
+            include_issuer: Show the DN of the issuing CA.
+            include_key_algorithm: Show the public key algorithm.
+            include_key_size: Show the public key size.
+            include_subject: Show the certificate subject DN.
+            return_limit: If ``True``, then only one API call is sent to the server and the amount of certificates up to the
+                ``limit`` will be returned. If ``False`` then return all certificates that apply to the given filters.
+            concurrency: When return_limit is ``False``, then this is the amount of threads to spawn when querying for certificates.
+                This is done by first submitting a HEAD Certificates request to get the count of certificates that apply
+                to the filters and then by creating a thread pool for as many offsets are required to retrieve the total amount
+                of certificates.
+
+        Returns:
+            List[:class:`~.dataclasses.certificate.Certificate`]
+        """
+        # region Filters
+        filters = {
+            "C": country,
+            "CertificateType": certificate_type,
+            "CN": common_name,
+            "Issuer": issuer,
+            "IsSelfSigned": is_self_signed,
+            "IsWildcard": is_wild_card,
+            "KeyAlgorithm": key_algorithm,
+            "KeySize": key_size,
+            "KeySizeGreater": key_size_greater,
+            "KeySizeLess": key_size_less,
+            "L": city,
+            "O": organization,
+            "OU": organization_unit,
+            "S": state,
+            "SAN-DNS": san_dns,
+            "SAN-Email": san_email,
+            "SAN-IP": san_ip,
+            "SAN-UPN": san_upn,
+            "SAN-URI": san_uri,
+            "Serial": serial,
+            "SignatureAlgorithm": signature_algorithm,
+            "Thumbprint": thumbprint,
+            "ValidFrom": valid_from,
+            "ValidFromGreater": valid_from_greater,
+            "ValidFromLess": valid_from_less,
+            "ValidTo": valid_to,
+            "ValidToGreater": valid_to_greater,
+            "ValidToLess": valid_to_less,
+            "ChainValidationFailure": chain_validation_error,
+            "CreatedOn": created_on,
+            "CreatedOnGreater": created_on_greater,
+            "CreatedOnLess": created_on_less,
+            "Disabled": disabled,
+            "InError": in_error,
+            "ManagementType": management_type,
+            "Name": name,
+            "NetworkValidationDisabled": network_validation_disabled,
+            "ParentDn": self._get_dn(parent) if parent and not recursive else None,
+            "ParentDnRecursive": self._get_dn(parent) if parent and recursive else None,
+            "PendingWorkflow": pending_workflow,
+            "SslTlsProtocol": ssl_tls_protocol,
+            "Stage": stage,
+            "StageGreater": stage_greater,
+            "StageLess": stage_less,
+            "TlsValidationFailure": tls_validation_failure,
+            "ValidationDisabled": validation_disabled,
+            "ValidationState": validation_state,
+        }
+
+        def format_value(v):
+            if isinstance(v, datetime):
+                return v.isoformat()
+            if isinstance(v, bool):
+                return int(v)
+            return v
+
+        for key, value in filters.items():
+            if isinstance(value, list):
+                filters[key] = [
+                    ",".join(format_value(i) for i in item)
+                    if isinstance(item, (tuple, list))
+                    else format_value(item)
+                    for item in value
+                ]
+            else:
+                filters[key] = format_value(value)
+        filters.update(additional_filters or {})
+        # endregion Filters
+
+        # region Optional Fields
+        optional_fields = [k for k, v in {
+            "Issuer"      : include_issuer,
+            "KeyAlgorithm": include_key_algorithm,
+            "KeySize"     : include_key_size,
+            "Subject"     : include_subject
+        }.items() if v is True]
+        # endregion Optional Fields
+
+        response = self._api.websdk.Certificates.get(
+            filters=filters,
+            limit=limit,
+            offset=offset,
+            optional_fields=optional_fields
+        )
+        if return_limit is True or limit >= response.total_count:
+            return response.certificates
+
+        certificates = response.certificates
+        total_count = response.total_count
+        offsets = list(range(limit, total_count, limit))
+
+        with ThreadPoolExecutor(max_workers=concurrency) as pool:
+            results = list(pool.map(
+                lambda o: self._api.websdk.Certificates.get(
+                    filters=filters,
+                    limit=limit,
+                    offset=o,
+                    optional_fields=optional_fields
+                ),
+                offsets
+            ))
+        for result in results:
+            certificates += result.certificates
+
+        # Keep these comments in case we need to approach this a different way.
+        # from threading import Lock
+        #
+        # COUNTER_LOCK = Lock()
+        # CERTIFICATES_LOCK = Lock()
+        # current_offset = 0
+        #
+        # def _get():
+        #     nonlocal current_offset, certificates
+        #
+        #     while True:
+        #         with COUNTER_LOCK:
+        #             o = current_offset
+        #             current_offset += limit
+        #         try:
+        #             r = self._api.websdk.Certificates.get(
+        #                 filters=filters,
+        #                 limit=limit,
+        #                 offset=o,
+        #                 optional_fields=optional_fields
+        #             )
+        #             with CERTIFICATES_LOCK:
+        #                 certificates += r.certificates
+        #             if len(r.certificates) < limit:
+        #                 return
+        #         except:
+        #             return
+        #
+        # with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        #     for _ in range(concurrency):
+        #         pool.submit(_get)
+
+        return certificates
 
     def push_to_applications(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]' = None):
         """
