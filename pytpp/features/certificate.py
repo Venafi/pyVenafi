@@ -484,7 +484,7 @@ class Certificate(FeatureBase):
             return response.certificates[:cap]
 
         certificates = response.certificates
-        total_count = cap or response.total_count
+        total_count = min(cap, response.total_count) if cap else response.total_count
         offsets = list(range(limit, total_count, limit))
 
         with logger.rule('critical'):
