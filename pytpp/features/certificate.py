@@ -482,18 +482,19 @@ class Certificate(FeatureBase):
         total_count = response.total_count
         offsets = list(range(limit, total_count, limit))
 
-        with ThreadPoolExecutor(max_workers=concurrency) as pool:
-            results = list(pool.map(
-                lambda o: self._api.websdk.Certificates.get(
-                    filters=filters,
-                    limit=limit,
-                    offset=o,
-                    optional_fields=optional_fields
-                ),
-                offsets
-            ))
-        for result in results:
-            certificates += result.certificates
+        with logger.rule('critical'):
+            with ThreadPoolExecutor(max_workers=concurrency) as pool:
+                results = list(pool.map(
+                    lambda o: self._api.websdk.Certificates.get(
+                        filters=filters,
+                        limit=limit,
+                        offset=o,
+                        optional_fields=optional_fields
+                    ),
+                    offsets
+                ))
+            for result in results:
+                certificates += result.certificates
 
         # Keep these comments in case we need to approach this a different way.
         # from threading import Lock
