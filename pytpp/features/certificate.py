@@ -312,7 +312,7 @@ class Certificate(FeatureBase):
              validation_state: StringParam = None, valid_to_less: Union[datetime, str] = None,
              additional_filters: Dict[str, str] = None, limit: int = 1000, offset: int = None, return_limit: bool = False,
              include_issuer: bool = None, include_key_algorithm: bool = None, include_key_size: bool = None,
-             include_subject: bool = None, concurrency: int = 16):
+             include_subject: bool = None, concurrency: int = 16, cap: int = None):
         """
         Lists all certificates with the given parameters. Some parameters allow a union of values:
 
@@ -385,6 +385,9 @@ class Certificate(FeatureBase):
                 This is done by first submitting a HEAD Certificates request to get the count of certificates that apply
                 to the filters and then by creating a thread pool for as many offsets are required to retrieve the total amount
                 of certificates.
+            cap: When the desired amount of certifcates exceeds the desired limit, the cap defines how many certificates from the
+                offset and beyond the limit to retrieve. For example, with ``offset=10``, ``limit=200``, and ``cap=400``, then
+                certificates 10 thru 410 will be returned at a rate of 200 retrievals.
 
         Returns:
             List[:class:`~.dataclasses.certificate.Certificate`]
@@ -477,9 +480,11 @@ class Certificate(FeatureBase):
         )
         if return_limit is True or limit >= response.total_count:
             return response.certificates
+        if cap and len(response.certificates) >= cap:
+            return response.certificates[:cap]
 
         certificates = response.certificates
-        total_count = response.total_count
+        total_count = cap or response.total_count
         offsets = list(range(limit, total_count, limit))
 
         with logger.rule('critical'):
