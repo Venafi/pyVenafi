@@ -306,7 +306,7 @@ class Certificate(FeatureBase):
              created_on: Union[datetime, str] = None, created_on_greater: Union[datetime, str] = None,
              created_on_less: Union[datetime, str] = None, disabled: bool = None, in_error: bool = None,
              management_type: StringParam = None, name: StringParam = None, network_validation_disabled: bool = None,
-             parent: 'Union[Config.Object, str]' = None, recursive: bool = True, pending_workflow: bool = None,
+             parent_folder: 'Union[Config.Object, str]' = None, recursive: bool = True, pending_workflow: bool = None,
              ssl_tls_protocol: StringParam = None, stage: StringParam = None, stage_greater: str = None,
              stage_less: str = None, tls_validation_failure: StringParam = None, validation_disabled: bool = None,
              validation_state: StringParam = None, valid_to_less: Union[datetime, str] = None,
@@ -361,7 +361,7 @@ class Certificate(FeatureBase):
             management_type: Management type (Unassigned, Monitoring, Enrollment, or Provisioning) of the certificate.
             name: Name of the certificate object.
             network_validation_disabled: Include only certificates with Network Validation enabled (``False``) or disabled (``True``).
-            parent: :ref:`config_object` or :ref:`dn` of the parent folder.
+            parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             recursive: Requires ``parent`` to be given. If ``True``, search for certificates recursively.
             pending_workflow: Include only certificates pendind workflow resolution.
             ssl_tls_protocol: SSL/TLS Protocols (Ssl2, Ssl3, Tls, Tls11, Tls12) that failed to communicate with the target host.
@@ -431,8 +431,8 @@ class Certificate(FeatureBase):
             "ManagementType": management_type,
             "Name": name,
             "NetworkValidationDisabled": network_validation_disabled,
-            "ParentDn": self._get_dn(parent) if parent and not recursive else None,
-            "ParentDnRecursive": self._get_dn(parent) if parent and recursive else None,
+            "ParentDn": self._get_dn(parent_folder) if parent_folder and not recursive else None,
+            "ParentDnRecursive": self._get_dn(parent_folder) if parent_folder and recursive else None,
             "PendingWorkflow": pending_workflow,
             "SslTlsProtocol": ssl_tls_protocol,
             "Stage": stage,
