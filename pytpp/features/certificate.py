@@ -191,11 +191,15 @@ class Certificate(FeatureBase):
 
     def download(self, format: str, certificate: 'Union[Config.Object, str]' = None, friendly_name: str = None,
                  include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
-                 password: str = None, root_first_order: bool = False, vault_id: int = None):
+                 password: str = None, root_first_order: bool = False, vault_id: int = None, timeout: int = 60,
+                 poll_interval: float = 0.5):
         """
         Downloads a certificate and returns the encoded content, filename, and format as a single object. If ``vault_id``
         is provided, then that specific version of a certificate is downloaded, which is particularly useful when
         trying to download historical certificates.
+
+        Attempts to download the certificate occur every ``poll_interval`` seconds for up to a ``timeout`` threshold. This
+        is because the certificate may be currently processing and not ready for download.
 
         Args:
             format: One of the following:
@@ -215,6 +219,8 @@ class Certificate(FeatureBase):
                 end entity certificate.
             vault_id: If provided, downloads the certificate with the given Vault ID. Use this when trying
                 to download historical certificates. Not required if using certificate config object.
+            timeout: Timeout threshold in seconds until a TimeoutError is raised.
+            poll_interval: Time in seconds to attempt a retry of downloading the certificate.
 
         Returns:
             A *DownloadedCertificate* with these properties
@@ -223,34 +229,44 @@ class Certificate(FeatureBase):
             * **format** *str* - File Format.
             * **filename** *str* - File name.
         """
-        if vault_id:
-            result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
-                format=format,
-                friendly_name=friendly_name,
-                include_chain=include_chain,
-                include_private_key=include_private_key,
-                keystore_password=keystore_password,
-                password=password,
-                root_first_order=root_first_order
-            )
-        else:
-            certificate_dn = self._get_dn(certificate)
-            result = self._api.websdk.Certificates.Retrieve.post(
-                certificate_dn=certificate_dn,
-                format=format,
-                friendly_name=friendly_name,
-                include_chain=include_chain,
-                include_private_key=include_private_key,
-                keystore_password=keystore_password,
-                password=password,
-                root_first_order=root_first_order
-            )
+        exception = None
+        with self._Timeout(timeout=timeout) as to:
+            while not to.is_expired():
+                if vault_id:
+                    result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
+                        format=format,
+                        friendly_name=friendly_name,
+                        include_chain=include_chain,
+                        include_private_key=include_private_key,
+                        keystore_password=keystore_password,
+                        password=password,
+                        root_first_order=root_first_order
+                    )
 
-        return DownloadedCertificate(
-            certificate_data=result.certificate_data,
-            filename=result.filename,
-            format=result.format
-        )
+                else:
+                    certificate_dn = self._get_dn(certificate)
+                    result = self._api.websdk.Certificates.Retrieve.post(
+                        certificate_dn=certificate_dn,
+                        format=format,
+                        friendly_name=friendly_name,
+                        include_chain=include_chain,
+                        include_private_key=include_private_key,
+                        keystore_password=keystore_password,
+                        password=password,
+                        root_first_order=root_first_order
+                    )
+                try:
+                    return DownloadedCertificate(
+                        certificate_data=result.certificate_data,
+                        filename=result.filename,
+                        format=result.format
+                    )
+                except Exception as e:
+                    exception = e
+                to.poll(poll_interval)
+        if exception:
+            raise TimeoutError('Failed to download the certificate.') from exception
+        raise TimeoutError('Failed to download the certificate.')
 
     def get(self, certificate_dn: str, raise_error_if_not_exists: bool = True):
         """
@@ -699,7 +715,7 @@ class Certificate(FeatureBase):
         return result.validated_certificate_dns, result.warnings
 
     def wait_for_enrollment_to_complete(self, certificate: 'Union[Config.Object, str]', current_thumbprint: str,
-                                        timeout: int = 60, poll_interval: int = 1):
+                                        timeout: int = 60, poll_interval: float = 0.5):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new

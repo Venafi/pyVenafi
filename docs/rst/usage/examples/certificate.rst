@@ -93,20 +93,15 @@ Renewing & Downloading A Certificate
     certificate = features.certificate.get(certificate_dn=r'|CertDn|\|CertName|')
 
     #### RENEW IT ####
-    current_thumbprint = features.certificate.renew(certificate=certificate)
+    features.certificate.renew(certificate=certificate)
 
     #### WAIT FOR IT TO RENEW ####
-    features.certificate.wait_for_enrollment_to_complete(
-        certificate=certificate,
-        current_thumbprint=current_thumbprint
-    )
-
-    #### DOWNLOAD IT ####
-    downloaded_cert = features.certificate.download(
+    features.certificate.download(
         format=AttributeValues.Certificate.Format.base64,
         certificate=certificate,
         include_chain=True,
-        root_first_order=True
+        root_first_order=True,
+        timeout=60,  # Try downloading for 60 seconds (default) before giving up.
     )
 
 Revoking A Certificate
@@ -145,8 +140,13 @@ Resetting & Retrying Certificate Requests
     certificate_dn = r'|CertDn|\|CertName|'
 
     try:
-        current_thumbprint = features.certificate.renew(certificate=certificate_dn)
-        features.certificate.wait_for_enrollment_to_complete(certificate=certificate_dn, current_thumbprint=current_thumbprint)
+        features.certificate.renew(certificate=certificate_dn)
+        features.certificate.download(
+            format=AttributeValues.Certificate.Format.base64,
+            certificate=certificate,
+            include_chain=True,
+            root_first_order=True
+        )
     except:
         features.certificate.retry_from_current_stage(certificate=certificate_dn)
         # ---- OR ----
@@ -241,14 +241,15 @@ Handling Workflows
 
     certificate_dn = r'|CertDn|\|CertName|'
 
-    current_thumbprint = features.certificate.renew(certificate=certificate_dn)
+    features.certificate.renew(certificate=certificate_dn)
 
-    #### Expect A Workflow Ticket ####
+    #### EXPECT A WORKFLOW TICKET AT STAGE 500 ####
     certificate_details = features.certificate.wait_for_stage(
         certificate=certificate_dn,
         expect_workflow=True,
         stage=500
     ).certificate_details
+
     tickets = features.workflow.ticket.get(obj=certificate_dn)
     for ticket in tickets:
         ticket_info = features.workflow.ticket.details(ticket_name=ticket)
@@ -272,5 +273,10 @@ Handling Workflows
                     explanation='Looks good to me.'
                 )
 
-    #### Proceed To Wait For Renewal To Complete ####
-    features.certificate.wait_for_enrollment_to_complete(certificate=certificate_dn, current_thumbprint=current_thumbprint)
+    #### DOWNLOAD IT ####
+    features.certificate.download(
+        format=AttributeValues.Certificate.Format.base64,
+        certificate=certificate,
+        include_chain=True,
+        root_first_order=True
+     )

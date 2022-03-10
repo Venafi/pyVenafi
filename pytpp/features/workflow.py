@@ -398,7 +398,7 @@ class Ticket(FeatureBase):
         if timeout:
             tickets = []
             with self._Timeout(timeout=timeout) as to:
-                while not to.is_expired():
+                while not to.is_expired(poll=0.5):
                     tickets = get_tickets()
                     if len(tickets) >= expected_num_tickets:
                         return tickets
