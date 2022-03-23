@@ -232,30 +232,31 @@ class Certificate(FeatureBase):
         exception = None
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired():
-                if vault_id:
-                    result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
-                        format=format,
-                        friendly_name=friendly_name,
-                        include_chain=include_chain,
-                        include_private_key=include_private_key,
-                        keystore_password=keystore_password,
-                        password=password,
-                        root_first_order=root_first_order
-                    )
-
-                else:
-                    certificate_dn = self._get_dn(certificate)
-                    result = self._api.websdk.Certificates.Retrieve.post(
-                        certificate_dn=certificate_dn,
-                        format=format,
-                        friendly_name=friendly_name,
-                        include_chain=include_chain,
-                        include_private_key=include_private_key,
-                        keystore_password=keystore_password,
-                        password=password,
-                        root_first_order=root_first_order
-                    )
                 try:
+                    if vault_id:
+                        result = self._api.websdk.Certificates.Retrieve.VaultId(vault_id).post(
+                            format=format,
+                            friendly_name=friendly_name,
+                            include_chain=include_chain,
+                            include_private_key=include_private_key,
+                            keystore_password=keystore_password,
+                            password=password,
+                            root_first_order=root_first_order
+                        )
+
+                    else:
+                        certificate_dn = self._get_dn(certificate)
+                        result = self._api.websdk.Certificates.Retrieve.post(
+                            certificate_dn=certificate_dn,
+                            format=format,
+                            friendly_name=friendly_name,
+                            include_chain=include_chain,
+                            include_private_key=include_private_key,
+                            keystore_password=keystore_password,
+                            password=password,
+                            root_first_order=root_first_order
+                        )
+
                     return DownloadedCertificate(
                         certificate_data=result.certificate_data,
                         filename=result.filename,
