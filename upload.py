@@ -5,7 +5,8 @@ from setup import __version__
 from paramiko import SSHClient, AutoAddPolicy
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-REMOTE_PACKAGES_DIR = '/spi/packages/data'
+REMOTE_PACKAGES_DIR = '/spi/web/packages/data'
+
 
 class UploadFiles:
     def __init__(self):
