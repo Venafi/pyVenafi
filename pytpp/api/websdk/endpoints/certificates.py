@@ -385,16 +385,47 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Renew')
 
-        def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False):
+        def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False, format: str = None,
+                 password: str = None, include_private_key: bool = None, include_chain: bool = None,
+                 friendly_name: str = None, root_first_order: bool = None, keystore_password: str = None,
+                 work_to_do_timeout: int = None):
             body = {
                 'CertificateDN': certificate_dn,
                 'PKCS10': pkcs10,
-                'Reenable': reenable
+                'Reenable': reenable,
+                'Format'  : format,
+                'Password': password,
+                'IncludePrivateKey': include_private_key,
+                'IncludeChain': include_chain,
+                'FriendlyName': friendly_name,
+                'RootFirstOrder': root_first_order,
+                'KeystorePassword': keystore_password,
+                'WorkToDoTimeout': work_to_do_timeout
             }
 
             class _Response(APIResponse):
                 def __init__(self, response):
                     super().__init__(response=response)
+
+                @property
+                @api_response_property()
+                def certificate_data(self) -> str:
+                    return self._from_json(key='CertificateData')
+
+                @property
+                @api_response_property()
+                def certificate_dn(self) -> str:
+                    return self._from_json(key='CertificateDN')
+
+                @property
+                @api_response_property()
+                def filename(self) -> str:
+                    return self._from_json(key='Filename')
+
+                @property
+                @api_response_property()
+                def format(self) -> str:
+                    return self._from_json(key='Format')
 
                 @property
                 @api_response_property()
@@ -409,7 +440,7 @@ class _Certificates(API):
 
         def post(self, policy_dn: str, approvers: List[dict] = None, cadn: str = None,
                  ca_specific_attributes: List[dict] = None, certificate_type: str = None, city: str = None,
-                 contacts: List[dict] = None, country: str=None, custom_fields: List[dict] = None, created_by: str = None,
+                 contacts: List[dict] = None, country: str = None, custom_fields: List[dict] = None, created_by: str = None,
                  devices: List[dict] = None, disable_automatic_renewal: bool = False, elliptic_curve: str = None,
                  key_algorithm: str = None, key_bit_size: int = None, management_type: str = None, object_name: str = None,
                  organization: str = None, organizational_unit: str = None, origin: str = None, pkcs10: str = None,

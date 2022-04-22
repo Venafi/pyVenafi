@@ -10,6 +10,7 @@ class Record:
     is_risk: bool
     is_legend: bool
 
+
 @dataclass
 class Trend:
     date: datetime

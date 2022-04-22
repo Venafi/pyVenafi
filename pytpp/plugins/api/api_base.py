@@ -1,5 +1,5 @@
 from pytpp.api.api_base import *
-del globals()['API'] # We want to rename this and inherit it.
+del globals()['API']  # We want to rename this and inherit it.
 del globals()['APIResponse']  # We want to rename this and inherit it.
 from pytpp.api.api_base import API as _API, APIResponse as _APIResponse
 import re

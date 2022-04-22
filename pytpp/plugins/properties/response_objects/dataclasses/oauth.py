@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from pytpp.properties.response_objects.dataclasses.oauth import Permissions
+from pytpp.properties.oauth import Permissions
 from typing import List
 
 
 @dataclass
 class ApplicationScope:
-    hidden_subsystems: 'List[OAuth.Subsystem]'
-    subsystems: 'List[OAuth.Subsystem]'
+    hidden_subsystems: 'List[Subsystem]'
+    subsystems: 'List[Subsystem]'
 
 
 @dataclass

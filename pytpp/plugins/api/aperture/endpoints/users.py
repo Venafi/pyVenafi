@@ -1,4 +1,6 @@
+import logging
 from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
+from pytpp.tools.logger import api_logger
 
 
 class _Users:
@@ -22,14 +24,16 @@ class _Users:
             }
 
             class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+                def __init__(self, r, api_source):
+                    super().__init__(response=r, api_source=api_source)
 
                 @property
                 @api_response_property()
                 def token(self) -> dict:
                     return self._from_json('apiKey')
 
-            return _Response(
-                response=self._post(data=body),
-                api_source=self._api_source)
+            api_logger.debug(f'Authenticating to Aperture as "{username}"...')
+            with api_logger.suppressed(logging.WARNING):
+                response = self._post(data=body)
+            api_logger.debug(f'Authenticated as "{username}"!')
+            return _Response(response, api_source=self._api_source)

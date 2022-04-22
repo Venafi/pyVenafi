@@ -1,5 +1,6 @@
 from pytpp.attributes._helper import IterableMeta
 
+
 class Classes(metaclass=IterableMeta):
 	a10_ax_traffic_manager = "A10 AX Traffic Manager"
 	acme_account = "ACME Account"

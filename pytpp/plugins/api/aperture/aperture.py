@@ -1,4 +1,3 @@
-from pytpp.tools.logger import logger, LogTags
 from pytpp.api.session import Session
 from pytpp.plugins.api.aperture.endpoints.application_integration import _ApplicationIntegration
 from pytpp.plugins.api.aperture.endpoints.approvers import _Approvers
@@ -21,7 +20,6 @@ class Aperture:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
-    @logger.wrap_func(log_tag=LogTags.api, mask_input_regexes=['password', 'token'])
     def __init__(self, host: str, username: str, password: str, token: str = None, cookie: str = None,
                  proxies: dict = None):
         """
@@ -60,7 +58,7 @@ class Aperture:
         if not token:
             response = self.Users.Authorize.post(username=username, password=password)
             token = f'VENAFI {response.token}'
-            cookie =''
+            cookie = ''
             for c in response.api_response.cookies:
                 cookie = f'{c.name}={c.value}'
         self._token = token

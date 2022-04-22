@@ -3,7 +3,6 @@ from pytpp.plugins.api.websdk.endpoints.rights import _Rights
 
 
 class WebSDK(WebSDK):
-    @logger.wrap_func(LogTags.api, mask_input_regexes=['password', 'token'])
     def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
                  scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
                  certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False):

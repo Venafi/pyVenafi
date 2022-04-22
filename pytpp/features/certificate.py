@@ -8,7 +8,7 @@ from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import FeatureException, UnexpectedValue
 from pytpp.features.definitions.classes import Classes
-from pytpp.tools.logger import logger, LogTags
+from pytpp.tools.logger import features_logger
 
 
 StringParam = Union[str, List[str], List[Tuple[str, ...]]]
@@ -37,7 +37,7 @@ class Certificate(FeatureBase):
             if 'Rerun the transaction' not in result.api_response.reason:
                 result.assert_valid_response()
                 return result
-            logger.log('Rerunning Certificates/Get transaction due to deadlock...', log_tag=LogTags.feature)
+            features_logger.debug('Rerunning Certificates/Get transaction due to deadlock...')
             result = self._api.websdk.Certificates.Guid(certificate_guid).get()
         # It's likely at this point that we failed to get the certificate. Let the result.assert_valid_response()
         # handle the errors. In some unknown case where the response is valid, return it just in case.
@@ -504,19 +504,18 @@ class Certificate(FeatureBase):
         total_count = min(cap, response.total_count) if cap else response.total_count
         offsets = list(range(limit, total_count, limit))
 
-        with logger.rule('critical'):
-            with ThreadPoolExecutor(max_workers=concurrency) as pool:
-                results = list(pool.map(
-                    lambda o: self._api.websdk.Certificates.get(
-                        filters=filters,
-                        limit=limit,
-                        offset=o,
-                        optional_fields=optional_fields
-                    ),
-                    offsets
-                ))
-            for result in results:
-                certificates += result.certificates
+        with ThreadPoolExecutor(max_workers=concurrency) as pool:
+            results = list(pool.map(
+                lambda o: self._api.websdk.Certificates.get(
+                    filters=filters,
+                    limit=limit,
+                    offset=o,
+                    optional_fields=optional_fields
+                ),
+                offsets
+            ))
+        for result in results:
+            certificates += result.certificates
 
         # Keep these comments in case we need to approach this a different way.
         # from threading import Lock

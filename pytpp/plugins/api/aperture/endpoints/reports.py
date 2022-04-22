@@ -14,18 +14,19 @@ class _Reports(API):
         )
         self.RunNow = self._RunNow(api_obj=api_obj)
 
-    def post(self, name: str, title: str, inventory: str, summary: str = None, description: str = None, filter: Dict[str, List[Any]] = None, formats: List[str] = None, columns = None, skip_empty: bool = False):
-        encoded_filter = "/".join(f"{k}:{quote_plus(v)}" for k,values in filter.items() for v in values)
+    def post(self, name: str, title: str, inventory: str, summary: str = None, description: str = None, filter: Dict[str, List[Any]] = None, formats: List[str] = None, columns=None,
+             skip_empty: bool = False):
+        encoded_filter = "/".join(f"{k}:{quote_plus(v)}" for k, values in filter.items() for v in values)
         body = {
-            "name" : name,
-            "title": title,
-            "inventory": inventory,
-            "summary": summary,
+            "name"       : name,
+            "title"      : title,
+            "inventory"  : inventory,
+            "summary"    : summary,
             "description": description,
-            "filter": encoded_filter,
-            "formats": formats,
-            "columns": columns,
-            "skipEmpty": skip_empty
+            "filter"     : encoded_filter,
+            "formats"    : formats,
+            "columns"    : columns,
+            "skipEmpty"  : skip_empty
         }
 
         class _Response(APIResponse):
@@ -115,14 +116,13 @@ class _Reports(API):
                 @api_response_property()
                 def dn(self) -> str:
                     return self._from_json(key='dn')
-                
+
                 @property
                 @api_response_property()
                 def last_run(self):
                     return from_date_string(self._from_json(key='lastRun'))
 
             return _Response(response=self._get())
-
 
     class _RunNow:
         def __init__(self, api_obj):

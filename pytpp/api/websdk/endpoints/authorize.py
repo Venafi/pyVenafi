@@ -1,5 +1,7 @@
+import logging
 import warnings
 from datetime import datetime
+from pytpp.tools.logger import api_logger
 from pytpp.api.api_base import API, APIResponse, api_response_property
 from pytpp.tools.helpers.date_converter import from_date_string
 
@@ -18,7 +20,6 @@ class _Authorize(API):
         """
         This POST method is written differently in order to effectively omit the password from being logged.
         """
-        self._log_api_deprecated_warning(alternate_api=self.OAuth._url)
         warnings.warn('Authorizing to TPP with only a username and password is being deprecated. '
                       'Refer to product documentation on using OAuth authentication.')
         body = {
@@ -27,16 +28,19 @@ class _Authorize(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+            def __init__(self, r):
+                super().__init__(response=r)
 
             @property
             @api_response_property()
             def token(self) -> str:
                 return self._from_json('APIKey')
 
-        return _Response(
-            response=self._post(data=body))
+        api_logger.debug(f'Authenticating to TPP as "{username}"...')
+        with api_logger.suppressed(logging.WARNING):
+            response = self._post(data=body)
+        api_logger.debug(f'Authenticated as "{username}"!')
+        return _Response(response)
 
     class _Certificate(API):
         def __init__(self, api_obj):
@@ -50,8 +54,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+                def __init__(self, r):
+                    super().__init__(response=r)
 
                 @property
                 @api_response_property()
@@ -93,7 +97,12 @@ class _Authorize(API):
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
-            return _Response(response=self._post(data=body))
+            api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
+                             f'with scope "{scope}" using a certificate file...')
+            with api_logger.suppressed(logging.WARNING):
+                response = self._post(data=body)
+            api_logger.debug(f'Authenticated!')
+            return _Response(response)
 
     class _Integrated(API):
         def __init__(self, api_obj):
@@ -170,8 +179,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+                def __init__(self, r):
+                    super().__init__(response=r)
 
                 @property
                 @api_response_property()
@@ -203,8 +212,12 @@ class _Authorize(API):
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
-            return _Response(
-                response=self._post(data=body))
+            api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
+                             f'with scope "{scope}" as "{username}"...')
+            with api_logger.suppressed(logging.WARNING):
+                response = self._post(data=body)
+            api_logger.debug(f'Authenticated as {username}!')
+            return _Response(response)
 
     class _Token(API):
         def __init__(self, api_obj):
@@ -218,8 +231,8 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+                def __init__(self, r):
+                    super().__init__(response=r)
 
                 @property
                 @api_response_property()
@@ -251,7 +264,11 @@ class _Authorize(API):
                 def token_type(self) -> str:
                     return self._from_json('token_type')
 
-            return _Response(response=self._post(data=body))
+            api_logger.debug(f'Authenticating to TPP OAuth application with a refresh token...')
+            with api_logger.suppressed(logging.WARNING):
+                response = self._post(data=body)
+            api_logger.debug(f'Authenticated!')
+            return _Response(response)
 
     class _Verify(API):
         def __init__(self, api_obj):
