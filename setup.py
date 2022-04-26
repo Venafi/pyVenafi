@@ -2,7 +2,7 @@
 __project_name__ = None
 __version__ = None
 __author__ = None
-__author_email__= None
+__author_email__ = None
 __project_url__ = None
 exec(open('pytpp/_about.py', 'r').read())
 
@@ -22,7 +22,7 @@ DEV_REQUIREMENTS = [
     'pyodbc==4.0.30',
     'lxml==4.4.1',
     'pandas==1.3.3',
-    'paramiko==2.7.1'
+    'paramiko==2.10.4'
 ]
 
 DOC_REQUIREMENTS = [
