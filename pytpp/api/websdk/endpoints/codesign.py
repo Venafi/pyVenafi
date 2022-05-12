@@ -175,7 +175,7 @@ class _Codesign:
             super().__init__(api_obj=api_obj, url='Codesign/AddPreApproval')
 
         def post(self, dn: str, comment: str, user: str, hours: int = None, ip_address: str = None,
-                 signing_executable: str = None, single_use: bool = None):
+                 signing_executable: str = None, single_use: bool = None, not_before: str = None, ):
             body = {
                 'Dn'               : dn,
                 'Comment'          : comment,
@@ -183,7 +183,8 @@ class _Codesign:
                 'IPAddress'        : ip_address,
                 'SigningExecutable': signing_executable,
                 'SingleUse'        : single_use,
-                'User'             : user
+                'User'             : user,
+                'NotBefore'        : not_before
             }
 
             class _Response(APIResponse):
@@ -1215,9 +1216,9 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetTrusteeRights')
 
-        def post(self, dn: str):
+        def post(self, trustee: str):
             body = {
-                'Dn': dn
+                'Trustee': trustee
             }
 
             class _Response(APIResponse):

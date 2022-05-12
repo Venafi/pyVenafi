@@ -110,7 +110,10 @@ class _Client(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Client/Work')
 
-        def get(self):
+        def get(self, work_type: str = None):
+            params = {
+                'WorkType': work_type
+            }
             class _Response(APIResponse):
                 def __init__(self, response):
                     super().__init__(response=response)
@@ -120,4 +123,4 @@ class _Client(API):
                 def works(self):
                     return [Client.Work(work) for work in self._from_json()]
 
-            return _Response(response=self._get())
+            return _Response(response=self._get(params=params))

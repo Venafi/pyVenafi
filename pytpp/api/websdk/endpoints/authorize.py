@@ -11,6 +11,7 @@ class _Authorize(API):
         super().__init__(api_obj=api_obj, url='/Authorize')
 
         self.Certificate = self._Certificate(api_obj=api_obj)
+        self.Device = self._Device(api_obj=api_obj)
         self.Integrated = self._Integrated(api_obj=api_obj)
         self.OAuth = self._OAuth(api_obj=api_obj)
         self.Token = self._Token(api_obj=api_obj)
@@ -104,17 +105,72 @@ class _Authorize(API):
             api_logger.debug(f'Authenticated!')
             return _Response(response)
 
+    class _Device(API):
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='Authorize/Device')
+            self._url = self._url.replace('vedsdk', 'vedauth')
+
+        def post(self, client_id: str, scope: str):
+            body = {
+                'client_id': client_id,
+                'scope'    : scope
+            }
+
+            class _Response(APIResponse):
+                def __init__(self, r):
+                    super().__init__(response=r)
+
+                @property
+                @api_response_property()
+                def device_code(self) -> str:
+                    return self._from_json('device_code')
+
+                @property
+                @api_response_property()
+                def interval(self) -> int:
+                    return self._from_json('interval')
+
+                @property
+                @api_response_property()
+                def user_code(self) -> str:
+                    return self._from_json(key='user_code')
+
+                @property
+                @api_response_property()
+                def verification_uri(self) -> str:
+                    return self._from_json('verification_uri')
+
+                @property
+                @api_response_property()
+                def verification_url_complete(self) -> str:
+                    return self._from_json('verification_uri_complete')
+
+                @property
+                @api_response_property()
+                def expires_in(self) -> int:
+                    return self._from_json(key='expires_in')
+
+                @property
+                @api_response_property()
+                def expires(self) -> int:
+                    return self._from_json('expires')
+
+            api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
+                             f'with scope "{scope}" using a certificate file...')
+            with api_logger.suppressed(logging.WARNING):
+                response = self._post(data=body)
+            api_logger.debug(f'Authenticated!')
+            return _Response(response)
+
     class _Integrated(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Authorize/Integrated')
             self._url = self._url.replace('vedsdk', 'vedauth')
 
-        def post(self, client_id: str, password: str, scope: str, username: str, state: str = None):
+        def post(self, client_id: str, scope: str, state: str = None):
             body = {
                 'client_id': client_id,
-                'password' : password,
                 'scope'    : scope,
-                'username' : username,
                 'state'    : state
             }
 
@@ -224,10 +280,12 @@ class _Authorize(API):
             super().__init__(api_obj=api_obj, url='/Authorize/Token')
             self._url = self._url.replace('vedsdk', 'vedauth')
 
-        def post(self, client_id: str, refresh_token: str):
+        def post(self, client_id: str, refresh_token: str, grant_type: str = None, device_code: str = None):
             body = {
                 'client_id': client_id,
-                'refresh_token': refresh_token
+                'refresh_token': refresh_token,
+                'grant_type': grant_type,
+                'device_code': device_code
             }
 
             class _Response(APIResponse):

@@ -91,7 +91,8 @@ class _SSHCertificates:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSHCertificates/Request')
 
-        def post(self, ca_dn: str,
+        def post(self,
+                 ca_dn: str,
                  key_id: str,
                  destination_address: str = None,
                  extensions: str = None,
@@ -102,7 +103,11 @@ class _SSHCertificates:
                  principals: List[str] = None,
                  public_key_data: str = None,
                  source_addresses: List[str] = None,
-                 validity_period: str = None
+                 validity_period: str = None,
+                 include_certificate_details: bool = False,
+                 include_private_key_data: bool = False,
+                 private_key_passphrase: str = None,
+                 processing_timeout: int = None
                  ):
             body = {
                 'CADN'              : ca_dn,
@@ -116,7 +121,11 @@ class _SSHCertificates:
                 'Principals'        : principals,
                 'PublicKeyData'     : public_key_data,
                 'SourceAddresses'   : source_addresses,
-                'ValidityPeriod'    : validity_period
+                'ValidityPeriod'    : validity_period,
+                'IncludeCertificateDetails': include_certificate_details,
+                'IncludePrivateKeyData': include_private_key_data,
+                'PrivateKeyPassphrase': private_key_passphrase,
+                'ProcessingTimeout': processing_timeout
             }
 
             class _Response(APIResponse):

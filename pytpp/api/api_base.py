@@ -278,15 +278,13 @@ class API:
 
 class APIResponse:
     def __init__(self, response: Response):
-        """
-        """
         self._api_response = response
         self._decoded_api_response = None
         self._validated = False
 
     @property
-    def api_response(self):
-        return self._api_response
+    def api_response(self) -> Response:
+         return self._api_response
 
     @api_response.setter
     def api_response(self, value):
