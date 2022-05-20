@@ -12,10 +12,11 @@ from threading import Lock
 
 PRINT_LOCK = Lock()
 
-DB_ADDRESS = '10.100.209.57'
+DB_ADDRESS = '10.100.211.46'
 DB_NAME = 'tpp'
 DB_USERNAME = 'sa'
 DB_PASSWORD = 'newPassw0rd!'
+
 
 class UpdateConfig:
     def __init__(self, version: str, update_pkcs11: bool):

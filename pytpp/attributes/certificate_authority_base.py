@@ -16,6 +16,7 @@ class CertificateAuthorityBaseAttributes(DriverBaseAttributes, metaclass=Iterabl
 	port = Attribute('Port')
 	protection_key = Attribute('Protection Key')
 	renewal_window = Attribute('Renewal Window')
+	retrieval_period = Attribute('Retrieval Period', min_version='22.1')
 	retry_count = Attribute('Retry Count')
 	retry_interval = Attribute('Retry Interval')
 	san_enabled = Attribute('SAN Enabled')

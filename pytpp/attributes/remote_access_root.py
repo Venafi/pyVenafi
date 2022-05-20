@@ -14,6 +14,8 @@ class RemoteAccessRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
 	expiration = Attribute('Expiration', min_version='20.1')
 	grant_validity = Attribute('Grant Validity', min_version='19.2')
 	mapping_table = Attribute('Mapping Table', min_version='20.1')
+	oauth_device_authorization_verification_uri = Attribute('OAuth Device Authorization Verification URI', min_version='22.1')
+	oauth_device_authorization_verification_uri_complete_format = Attribute('OAuth Device Authorization Verification URI Complete Format', min_version='22.1')
 	refresh_api_enabled = Attribute('Refresh API Enabled', min_version='20.1')
 	refresh_token_enabled = Attribute('Refresh Token Enabled', min_version='19.2')
 	session_pool_entries = Attribute('Session Pool Entries', min_version='19.2')

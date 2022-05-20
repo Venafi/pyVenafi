@@ -49,3 +49,4 @@ class CAImportAttributes(ScheduleBaseAttributes, TopAttributes, metaclass=Iterab
 	status = Attribute('Status')
 	stop_requested = Attribute('Stop Requested')
 	template_name_certificate_origin = Attribute('Template Name Certificate Origin', min_version='19.2')
+	use_external_msca_communicator = Attribute('Use External MSCA Communicator', min_version='22.1')

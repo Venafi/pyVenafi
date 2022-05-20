@@ -44,6 +44,7 @@ class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttri
 	maximum_threads = Attribute('Maximum Threads')
 	migration_task = Attribute('Migration Task', min_version='19.2')
 	minimum_threads = Attribute('Minimum Threads')
+	oauth_device_authorization_flow_dn = Attribute('OAuth Device Authorization Flow DN', min_version='22.1')
 	operational_certificate_dn = Attribute('Operational Certificate DN')
 	options = Attribute('Options')
 	pending_migration_task = Attribute('Pending Migration Task', min_version='19.2')

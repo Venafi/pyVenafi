@@ -4,6 +4,7 @@ from pytpp.attributes.application_base import ApplicationBaseAttributes
 
 class AzureKeyVaultAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
 	__config_class__ = "Azure Key Vault"
+	app_service_subscription_id = Attribute('App Service Subscription ID', min_version='22.1')
 	binding_hostnames = Attribute('Binding Hostnames', min_version='19.2')
 	binding_ssl_type = Attribute('Binding SSL Type', min_version='19.2')
 	certificate_credential = Attribute('Certificate Credential', min_version='17.2')

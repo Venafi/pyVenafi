@@ -11,6 +11,7 @@ class Pkcs11EncryptionDriverAttributes(EncryptionDriverAttributes, metaclass=Ite
 	default_key = Attribute('Default Key', min_version='18.1')
 	encrypted_pin = Attribute('Encrypted Pin', min_version='18.1')
 	fallback_pin = Attribute('Fallback Pin', min_version='21.2')
+	key_derivation = Attribute('Key Derivation', min_version='22.1')
 	key_generation = Attribute('Key Generation', min_version='18.1')
 	key_storage = Attribute('Key Storage', min_version='19.2')
 	key_validation = Attribute('Key Validation')

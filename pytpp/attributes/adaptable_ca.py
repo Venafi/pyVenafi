@@ -1,9 +1,9 @@
 from pytpp.attributes._helper import IterableMeta, Attribute
-from pytpp.attributes.certificate_authority_base import CertificateAuthorityBaseAttributes
+from pytpp.attributes.http_ca_base import HTTPCABaseAttributes
 from pytpp.attributes.proxy import ProxyAttributes
 
 
-class AdaptableCAAttributes(CertificateAuthorityBaseAttributes, ProxyAttributes, metaclass=IterableMeta):
+class AdaptableCAAttributes(HTTPCABaseAttributes, ProxyAttributes, metaclass=IterableMeta):
 	__config_class__ = "Adaptable CA"
 	allow_reissue = Attribute('Allow Reissue', min_version='16.2')
 	certificate_credential = Attribute('Certificate Credential', min_version='16.2')
@@ -11,6 +11,9 @@ class AdaptableCAAttributes(CertificateAuthorityBaseAttributes, ProxyAttributes,
 	custom_fields = Attribute('Custom Fields', min_version='16.2')
 	interoperability_script = Attribute('Interoperability Script', min_version='16.2')
 	log_debug = Attribute('Log Debug', min_version='19.3')
+	oauth_token_application_id = Attribute('OAuth Token Application Id', min_version='22.1')
+	oauth_token_credential = Attribute('OAuth Token Credential', min_version='22.1')
+	oauth_token_scope = Attribute('OAuth Token Scope', min_version='22.1')
 	powershell_script_hash_vault_id = Attribute('PowerShell Script Hash Vault Id', min_version='18.4')
 	profile_string = Attribute('Profile String', min_version='20.1')
 	renewal_window = Attribute('Renewal Window', min_version='16.2')
