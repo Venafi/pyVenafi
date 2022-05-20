@@ -235,7 +235,8 @@ class API:
         The current API token expired and the session needs to be re-authenticated.
         """
         api_logger.debug(
-            f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...'
+            f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
+            stacklevel=2
         )
         self._api_obj.re_authenticate()
 
@@ -243,7 +244,7 @@ class API:
         msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
         if alternate_api:
             msg += f'\nUse {alternate_api} instead.'
-        api_logger.warning(msg)
+        api_logger.warning(msg, stacklevel=2)
 
     def _log_rest_call(self, method: str, data: dict = None):
         """
@@ -252,11 +253,13 @@ class API:
         if data:
             payload = json_pickler.dumps(data)
             api_logger.debug(
-                f'{method}\nURL: {self._url}\nBODY: {payload}'
+                f'{method}\nURL: {self._url}\nBODY: {payload}',
+                stacklevel=2
             )
         else:
             api_logger.debug(
-                msg=f'{method}\nURL: {self._url}'
+                msg=f'{method}\nURL: {self._url}',
+                stacklevel=2
             )
 
     def _log_response(self, response: Response):
@@ -272,7 +275,8 @@ class API:
             pretty_json = 'No Content'
 
         api_logger.debug(
-            msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}'
+            msg=f'URL: "{self._url}"\nRESPONSE CODE: {response.status_code}\nCONTENT: {pretty_json}',
+            stacklevel=2
         )
 
 

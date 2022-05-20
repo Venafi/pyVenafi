@@ -180,7 +180,7 @@ class FeatureBase:
 
     @staticmethod
     def _log_warning_message(msg: str):
-        features_logger.warning(msg)
+        features_logger.warning(msg, stacklevel=2)
 
     @staticmethod
     def __no_op(*args, **kwargs):
@@ -213,10 +213,12 @@ class FeatureBase:
 
     def _is_version_compatible(self, minimum: str = '', maximum: str = ''):
         if minimum and self._api._tpp_version <= Version(minimum):
-            features_logger.error(f'Incompatible version. This feature requires at least TPP {minimum}.')
+            features_logger.error(f'Incompatible version. This feature requires at least TPP {minimum}.',
+                                  stacklevel=2)
             return False
         if maximum and self._api._tpp_version >= Version(maximum):
-            features_logger.error(f'Incompatible version. This feature is no longer available after TPP {maximum}.')
+            features_logger.error(f'Incompatible version. This feature is no longer available after TPP {maximum}.',
+                                  stacklevel=2)
             return False
         return True
 

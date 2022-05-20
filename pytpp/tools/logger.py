@@ -3,10 +3,10 @@ import jsonpickle
 import re
 import simplejson
 import threading
-import traceback
 from contextlib import contextmanager
 from functools import wraps
-from logging import getLoggerClass
+# noinspection PyUnresolvedReferences
+from logging import getLoggerClass, _acquireLock as acquireLoggingLock, _releaseLock as releaseLoggingLock
 from pathlib import Path
 from typing import List, Tuple, Set
 
@@ -18,26 +18,49 @@ class Logger(getLoggerClass()):
         self._json_pickle_dumps = lambda d: jsonpickle.dumps(d, max_depth=2, unpicklable=False, indent=2)
         self._children: 'List[Logger]' = []
         self.manager.loggerClass = Logger
+        self.msg_char_limit = 0
+        self._suppressed_lock = threading.Lock()
 
-    def _log(self, level, *args, **kwargs) -> None:
+    def _log(self, level, msg, *args, exc_info=None, **kwargs) -> None:
         current_thread = threading.current_thread()
-        for s_thread, s_level in self._suppressed:
-            if s_thread == current_thread and level < s_level:
-                return
-        return super()._log(level, *args, **kwargs)
+        with self._suppressed_lock:
+            for s_thread, s_level in self._suppressed:
+                if s_thread == current_thread and level < s_level:
+                    return
+        if not exc_info and isinstance(self.msg_char_limit, int) and self.msg_char_limit > 0:
+            msg = msg[:self.msg_char_limit]
+        return super()._log(level, msg, *args, **kwargs)
 
     @contextmanager
     def suppressed(self, level: int, include_child_loggers: bool = True):
-        thread = threading.current_thread()
-        self._suppressed.add((thread, level))
-        if include_child_loggers:
-            for cl in self._children:
-                cl._suppressed.add((thread, level))
+        with self._suppressed_lock:
+            thread = threading.current_thread()
+            self._suppressed.add((thread, level))
+            if include_child_loggers:
+                for cl in self._children:
+                    cl._suppressed.add((thread, level))
         yield
-        self._suppressed.remove((thread, level))
-        if include_child_loggers:
-            for cl in self._children:
-                cl._suppressed.remove((thread, level))
+        with self._suppressed_lock:
+            try:
+                self._suppressed.remove((thread, level))
+                if include_child_loggers:
+                    for cl in self._children:
+                        cl._suppressed.remove((thread, level))
+            except:
+                # Don't let this exception stop the running program.
+                self.warning(f'Failed to remove suppressed logging for thread <{thread.name}> and level <{level}>.')
+                pass
+
+    def suppress_function(self, level: int, include_child_loggers: bool = True):
+        def dec(f):
+            @wraps(f)
+            def wrap(*args, **kwargs):
+                with self.suppressed(level=level, include_child_loggers=include_child_loggers):
+                    return f(*args, **kwargs)
+
+            return wrap
+
+        return dec
 
     def wrap_class(self, level: int, include: str = '', exclude: str = '__.*',
                    *logging_args, **logging_kwargs):
@@ -104,7 +127,7 @@ class Logger(getLoggerClass()):
                     )
                     return result
                 except:
-                    self.exception(msg=traceback.format_exc(), extra=extra)
+                    self.exception(f'An error occurred in {extra["_funcName"]}.', extra=extra)
                     raise
 
             return wrap
@@ -112,7 +135,14 @@ class Logger(getLoggerClass()):
         return dec
 
     def getChild(self, suffix: str) -> 'Logger':
-        child = super().getChild(suffix=suffix)
+        acquireLoggingLock()
+        try:
+            original_logger_class = self.manager.loggerClass
+            self.manager.loggerClass = Logger
+            child = super().getChild(suffix=suffix)
+            self.manager.loggerClass = original_logger_class
+        finally:
+            releaseLoggingLock()
         self._children.append(child)
         return child
 
