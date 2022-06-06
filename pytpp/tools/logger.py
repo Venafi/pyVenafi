@@ -1,3 +1,4 @@
+import logging
 import inspect
 import jsonpickle
 import re
@@ -5,13 +6,11 @@ import simplejson
 import threading
 from contextlib import contextmanager
 from functools import wraps
-# noinspection PyUnresolvedReferences
-from logging import getLoggerClass, _acquireLock as acquireLoggingLock, _releaseLock as releaseLoggingLock
 from pathlib import Path
-from typing import List, Tuple, Set
+from typing import Any, List, Tuple, Set
 
 
-class Logger(getLoggerClass()):
+class Logger(logging.getLoggerClass()):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._suppressed: Set[Tuple[threading.Thread, int]] = set()
@@ -21,35 +20,80 @@ class Logger(getLoggerClass()):
         self.msg_char_limit = 0
         self._suppressed_lock = threading.Lock()
 
-    def _log(self, level, msg, *args, exc_info=None, **kwargs) -> None:
-        current_thread = threading.current_thread()
+    def _copy_suppressed(self):
         with self._suppressed_lock:
-            for s_thread, s_level in self._suppressed:
-                if s_thread == current_thread and level < s_level:
-                    return
-        if not exc_info and isinstance(self.msg_char_limit, int) and self.msg_char_limit > 0:
+            copy = self._suppressed.copy()
+        return copy
+
+    def _add_suppressed(self, value: Tuple[threading.Thread, int]):
+        with self._suppressed_lock:
+            self._suppressed.add(value)
+
+    def _remove_suppressed(self, value: Tuple[threading.Thread, int]):
+        with self._suppressed_lock:
+            self._suppressed.remove(value)
+
+    def _log(self, level, msg, *args, exc_info=None, truncate=True, **kwargs) -> None:
+        current_thread = threading.current_thread()
+        for s_thread, s_level in self._copy_suppressed():
+            if s_thread == current_thread and level < s_level:
+                return
+        if truncate and not exc_info and isinstance(self.msg_char_limit, int) and self.msg_char_limit > 0:
             msg = msg[:self.msg_char_limit]
-        return super()._log(level, msg, *args, **kwargs)
+        return super()._log(level, msg, *args, exc_info=exc_info, **kwargs)
+
+    def debug(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+              extra=None, truncate=True, **kwargs: Any) -> None:
+        kwargs['truncate'] = truncate
+        return super().debug(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+                             stacklevel=stacklevel + 2, extra=extra, **kwargs)
+
+    def info(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+             extra=None, truncate=True, **kwargs: Any) -> None:
+        kwargs['truncate'] = truncate
+        return super().info(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+                            stacklevel=stacklevel + 2, extra=extra, **kwargs)
+
+    def warning(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+                extra=None, truncate=True, **kwargs: Any) -> None:
+        kwargs['truncate'] = truncate
+        return super().warning(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+                               stacklevel=stacklevel + 2, extra=extra, **kwargs)
+
+    def error(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+              extra=None, truncate=True, **kwargs: Any) -> None:
+        kwargs['truncate'] = truncate
+        return super().error(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+                             stacklevel=stacklevel + 2, extra=extra, **kwargs)
+
+    def critical(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+                 extra=None, truncate=True, **kwargs: Any) -> None:
+        kwargs['truncate'] = truncate
+        return super().critical(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+                                stacklevel=stacklevel + 2, extra=extra, **kwargs)
+
+    def exception(self, msg, *args, exc_info=True, stack_info=None, stacklevel=1,
+                  extra=None, truncate=True, **kwargs: Any) -> None:
+        kwargs['truncate'] = truncate
+        return super().exception(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+                                 stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
     @contextmanager
     def suppressed(self, level: int, include_child_loggers: bool = True):
-        with self._suppressed_lock:
-            thread = threading.current_thread()
-            self._suppressed.add((thread, level))
+        thread = threading.current_thread()
+        self._add_suppressed((thread, level))
+        if include_child_loggers:
+            for cl in self._children:
+                cl._add_suppressed((thread, level))
+        yield
+        try:
+            self._remove_suppressed((thread, level))
             if include_child_loggers:
                 for cl in self._children:
-                    cl._suppressed.add((thread, level))
-        yield
-        with self._suppressed_lock:
-            try:
-                self._suppressed.remove((thread, level))
-                if include_child_loggers:
-                    for cl in self._children:
-                        cl._suppressed.remove((thread, level))
-            except:
-                # Don't let this exception stop the running program.
-                self.warning(f'Failed to remove suppressed logging for thread <{thread.name}> and level <{level}>.')
-                pass
+                    cl._remove_suppressed((thread, level))
+        except:
+            # Don't let this exception stop the running program.
+            pass
 
     def suppress_function(self, level: int, include_child_loggers: bool = True):
         def dec(f):
@@ -135,19 +179,37 @@ class Logger(getLoggerClass()):
         return dec
 
     def getChild(self, suffix: str) -> 'Logger':
-        acquireLoggingLock()
-        try:
-            original_logger_class = self.manager.loggerClass
-            self.manager.loggerClass = Logger
-            child = super().getChild(suffix=suffix)
-            self.manager.loggerClass = original_logger_class
-        finally:
-            releaseLoggingLock()
+        self.manager.loggerClass = Logger
+        child = super().getChild(suffix=suffix)
         self._children.append(child)
         return child
 
 
-logger = Logger('pytpp')
+def get_logger(name: str = None) -> Logger:
+    _original_global_logging_class = logging.getLoggerClass()
+    if not isinstance(_original_global_logging_class, type) or not issubclass(
+            _original_global_logging_class, logging.Logger):
+        _original_global_logging_class = logging.Logger
+
+    _original_root_manager_logging_class = logging.root.manager.loggerClass
+    if not isinstance(_original_root_manager_logging_class, type) or not issubclass(
+            _original_root_manager_logging_class, logging.Logger):
+        _original_root_manager_logging_class = logging.Logger
+    # noinspection PyUnresolvedReferences
+    logging._acquireLock()
+    try:
+        logging.setLoggerClass(Logger)
+        logging.root.manager.setLoggerClass(Logger)
+        new_logger = logging.getLogger(name=name)
+        logging.setLoggerClass(_original_global_logging_class)
+        logging.root.manager.setLoggerClass(_original_root_manager_logging_class)
+        return new_logger
+    finally:
+        # noinspection PyUnresolvedReferences
+        logging._releaseLock()
+
+
+logger = get_logger('pytpp')
 api_logger = logger.getChild('api')
 features_logger = logger.getChild('features')
 
