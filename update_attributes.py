@@ -169,7 +169,7 @@ class UpdateConfig:
             else:
                 class_def = f'class {class_name}(metaclass=IterableMeta):'
             script += f'\n{class_def}\n'
-            script += '    __config_class__ = "{key}"\n'
+            script += f'    __config_class__ = "{key}"\n'
             if data.get('options'):
                 for value, schema_version in data['options']:
                     script += f'    {self.option_to_variable(value, str(schema_version))}\n'
