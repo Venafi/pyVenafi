@@ -43,6 +43,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddAuthorizedKey')
 
+        # noinspection ALL
         def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, allowed_source_restriction: list = None,
                  denied_source_restriction: list = None, forced_command: str = None, format: str = None, options: list = None):
             body = {
@@ -77,6 +78,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddHostPrivateKey')
 
+        # noinspection ALL
         def post(self, device_guid: str, filepath: str, username: str, format: str = None, policy_dn: str = None):
             body = {
                 'DeviceGuid': device_guid,
@@ -111,6 +113,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddKnownHostKey')
 
+        # noinspection ALL
         def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, format: str = None):
             body = {
                 'DeviceGuid': device_guid,
@@ -220,7 +223,9 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddUserPrivateKey')
 
-        def post(self, device_guid: str, filepath: str, username: str, format: str = None, keyset_id: str = None, passphrase: str = None, policy_dn: str = None):
+        # noinspection ALL
+        def post(self, device_guid: str, filepath: str, username: str, format: str = None, keyset_id: str = None,
+                 passphrase: str = None, policy_dn: str = None):
             body = {
                 'DeviceGuid': device_guid,
                 'Filepath': filepath,
@@ -453,6 +458,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServiceAuthorizedKey')
 
+        # noinspection ALL
         def post(self, key_id: str, format: str = None):
             body = {
                 'KeyId': key_id,
@@ -479,6 +485,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServicePrivateKey')
 
+        # noinspection ALL
         def post(self, key_id: str, format: str = None, passphrase: str = None):
             body = {
                 'KeyId': key_id,
@@ -516,6 +523,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ImportAuthorizedKey')
 
+        # noinspection ALL
         def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str):
             body = {
                 'DeviceGuid': device_guid,
@@ -565,7 +573,9 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ImportPrivateKey')
 
-        def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str, passphrase: str = None):
+        # noinspection ALL
+        def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str,
+                 passphrase: str = None):
             body = {
                 'DeviceGuid': device_guid,
                 'Filepath': filepath,

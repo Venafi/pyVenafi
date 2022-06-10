@@ -189,6 +189,7 @@ class Certificate(FeatureBase):
         )
         result.assert_valid_response()
 
+    # noinspection ALL
     def download(self, format: str, certificate: 'Union[Config.Object, str]' = None, friendly_name: str = None,
                  include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
                  password: str = None, root_first_order: bool = False, vault_id: int = None, timeout: int = 60,

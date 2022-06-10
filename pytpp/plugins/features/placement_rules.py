@@ -211,7 +211,7 @@ class PlacementRules(_OriginalPlacementRules):
     def create(self, name: str, conditions: List[str], device_location: 'Union[Config.Object, str]',
                certificate_location: 'Union[Config.Object, str]' = None, rule_type: str = 'X509 Certificate',
                get_if_already_exists: bool = True):
-        """
+        r"""
         Creates a placement rule.
 
         Examples:
@@ -266,7 +266,7 @@ class PlacementRules(_OriginalPlacementRules):
 
     def update(self, rule: 'Union[Config.Object, str]', conditions: List[str] = None, device_location: str = None,
                certificate_location: str = None, rule_type: str = 'X509 Certificate'):
-        """
+        r"""
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten
         to the object. In other words, only the parameters given are updated.
 

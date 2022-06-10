@@ -39,6 +39,7 @@ def api_response_property(return_on_204: type = None):
     Returns: Key of response content returned by TPP.
 
     """
+
     def pre_validation(func):
         def wrap(self: APIResponse, *args, **kwargs):
             if not self._validated:
@@ -49,7 +50,9 @@ def api_response_property(return_on_204: type = None):
                 else:
                     return return_on_204
             return func(self, *args, **kwargs)
+
         return wrap
+
     return pre_validation
 
 
@@ -288,7 +291,7 @@ class APIResponse:
 
     @property
     def api_response(self) -> Response:
-         return self._api_response
+        return self._api_response
 
     @api_response.setter
     def api_response(self, value):

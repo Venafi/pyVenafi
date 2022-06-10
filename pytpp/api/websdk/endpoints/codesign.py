@@ -631,6 +631,7 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateApplications')
 
+        # noinspection ALL
         def post(self, filter: str = None):
             body = {
                 'Filter': filter
@@ -668,6 +669,7 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateApplicationCollections')
 
+        # noinspection ALL
         def post(self, filter: str = None):
             body = {
                 'Filter': filter
@@ -706,6 +708,7 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateProjects')
 
+        # noinspection ALL
         def post(self, filter: str = None, rights: int = None):
             body = {
                 'Filter': filter,
@@ -784,6 +787,7 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateTemplates')
 
+        # noinspection ALL
         def post(self, filter: str = None):
             body = {
                 'Filter': filter

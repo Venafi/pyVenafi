@@ -385,6 +385,7 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Renew')
 
+        # noinspection ALL
         def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False, format: str = None,
                  password: str = None, include_private_key: bool = None, include_chain: bool = None,
                  friendly_name: str = None, root_first_order: bool = None, keystore_password: str = None,
@@ -548,6 +549,7 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Retrieve')
 
+        # noinspection ALL
         def get(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
                 root_first_order: bool = False, work_to_do_timeout: int = None):
@@ -565,6 +567,7 @@ class _Certificates(API):
 
             return APIResponse(response=self._get(params=params))
 
+        # noinspection ALL
         def post(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
                  include_private_key: bool = False, keystore_password: str = None, password: str = None,
                  root_first_order: bool = False, work_to_do_timeout: int = None):
@@ -609,6 +612,7 @@ class _Certificates(API):
                 super().__init__(api_obj=api_obj, url='/Certificates/Retrieve/{vault_id}'.format(vault_id=vault_id))
                 self._vault_id = vault_id
 
+            # noinspection ALL
             def get(self, format: str, friendly_name: str, include_chain: bool = False,
                     include_private_key: bool = False, keystore_password: str = None, password: str = None,
                     root_first_order: bool = False):
@@ -624,6 +628,7 @@ class _Certificates(API):
 
                 return APIResponse(response=self._get(params=params))
 
+            # noinspection ALL
             def post(self, format: str, friendly_name: str, include_chain: bool = False,
                      include_private_key: bool = False, keystore_password: str = None, password: str = None,
                      root_first_order: bool = False):

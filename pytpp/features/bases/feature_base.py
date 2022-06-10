@@ -186,6 +186,7 @@ class FeatureBase:
     def __no_op(*args, **kwargs):
         pass
 
+    # noinspection ALL
     @staticmethod
     def _name_type_value(name: str, type: str, value):
         return {'Name': str(name), 'Type': str(type), 'Value': str(value)}

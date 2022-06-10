@@ -125,7 +125,9 @@ class UpdateConfig:
         if children:
             for child in children:
                 attributes['children'].update(self.get_attributes(child))
-        return {reference: attributes}
+        return {
+            reference: attributes
+        }
 
     def dump_attributes(self, d: dict):
         for key, data in d.items():
@@ -139,6 +141,7 @@ class UpdateConfig:
             )['Reference'].values)
             parent_classes = []
             superclasses = []
+
             def get_superclass_hierarchy(x):
                 ps = list(self.config_relations.query(
                     f'ClassName == "{x}" and Flags == "SuperClass"'
@@ -147,6 +150,7 @@ class UpdateConfig:
                 for p in ps:
                     results += get_superclass_hierarchy(p)
                 return results
+
             for parent in parents:
                 superclasses += get_superclass_hierarchy(parent)
             for parent in parents:
@@ -164,10 +168,11 @@ class UpdateConfig:
                 class_def = f'class {class_name}({", ".join(parent_classes)}, metaclass=IterableMeta):'
             else:
                 class_def = f'class {class_name}(metaclass=IterableMeta):'
-            script += f'\n{class_def}\n\t__config_class__ = "{key}"\n'
+            script += f'\n{class_def}\n'
+            script += '    __config_class__ = "{key}"\n'
             if data.get('options'):
                 for value, schema_version in data['options']:
-                    script += f'\t{self.option_to_variable(value, str(schema_version))}\n'
+                    script += f'    {self.option_to_variable(value, str(schema_version))}\n'
             if data.get('children'):
                 self.dump_attributes(data['children'])
             file_path = Path(f'pytpp/attributes/{file_name}.py')
@@ -280,7 +285,7 @@ class UpdateConfig:
             opts = {}
             for cls_name, cls_dict in d.items():
                 opts[cls_name] = {
-                    'options': [],
+                    'options' : [],
                     'children': {}
                 }
                 for opt in cls_dict['options']:
@@ -292,11 +297,11 @@ class UpdateConfig:
         return new_attrs
 
     def dump_classes(self):
-        classes = '\n\t'.join(f'{self.snake_case(c)} = "{c}"' for c in sorted(set(self.all_classes)))
+        classes = '\n    '.join(f'{self.snake_case(c)} = "{c}"' for c in sorted(set(self.all_classes)))
         script = '\n'.join([
-            'from pytpp.attributes._helper import IterableMeta\n',
+            'from pytpp.attributes._helper import IterableMeta\n\n',
             'class Classes(metaclass=IterableMeta):',
-            f'\t{classes}',
+            f'    {classes}',
             ''
         ])
         file_path = Path(f'pytpp/features/definitions/classes.py')
@@ -305,12 +310,14 @@ class UpdateConfig:
 
     def main(self):
         roots = self.get_root_classes()
+
         def doit(root):
             with PRINT_LOCK:
                 print(f'Processing {root} tree...')
             attrs = self.get_attributes(root)
             attrs = self.apply_version_to_attrs(attrs)
             self.dump_attributes(attrs)
+
         with ThreadPoolExecutor(4) as pool:
             list(pool.map(doit, roots))
         self.dump_classes()

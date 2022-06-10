@@ -33,49 +33,49 @@ class Logger(logging.getLoggerClass()):
         with self._suppressed_lock:
             self._suppressed.remove(value)
 
-    def _log(self, level, msg, *args, exc_info=None, truncate=True, **kwargs) -> None:
+    def _log(self, level, msg, args, exc_info=None, truncate=True, **kwargs) -> None:
         current_thread = threading.current_thread()
         for s_thread, s_level in self._copy_suppressed():
             if s_thread == current_thread and level < s_level:
                 return
         if truncate and not exc_info and isinstance(self.msg_char_limit, int) and self.msg_char_limit > 0:
             msg = msg[:self.msg_char_limit]
-        return super()._log(level, msg, *args, exc_info=exc_info, **kwargs)
+        return super()._log(level, msg, args=args, exc_info=exc_info, **kwargs)
 
-    def debug(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+    def debug(self, *args, exc_info=None, stack_info=None, stacklevel=1,
               extra=None, truncate=True, **kwargs: Any) -> None:
         kwargs['truncate'] = truncate
-        return super().debug(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+        return super().debug(*args, exc_info=exc_info, stack_info=stack_info,
                              stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
-    def info(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+    def info(self, *args, exc_info=None, stack_info=None, stacklevel=1,
              extra=None, truncate=True, **kwargs: Any) -> None:
         kwargs['truncate'] = truncate
-        return super().info(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+        return super().info(*args, exc_info=exc_info, stack_info=stack_info,
                             stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
-    def warning(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+    def warning(self, *args, exc_info=None, stack_info=None, stacklevel=1,
                 extra=None, truncate=True, **kwargs: Any) -> None:
         kwargs['truncate'] = truncate
-        return super().warning(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+        return super().warning(*args, exc_info=exc_info, stack_info=stack_info,
                                stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
-    def error(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+    def error(self, *args, exc_info=None, stack_info=None, stacklevel=1,
               extra=None, truncate=True, **kwargs: Any) -> None:
         kwargs['truncate'] = truncate
-        return super().error(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+        return super().error(*args, exc_info=exc_info, stack_info=stack_info,
                              stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
-    def critical(self, msg, *args, exc_info=None, stack_info=None, stacklevel=1,
+    def critical(self, *args, exc_info=None, stack_info=None, stacklevel=1,
                  extra=None, truncate=True, **kwargs: Any) -> None:
         kwargs['truncate'] = truncate
-        return super().critical(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+        return super().critical(*args, exc_info=exc_info, stack_info=stack_info,
                                 stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
-    def exception(self, msg, *args, exc_info=True, stack_info=None, stacklevel=1,
+    def exception(self, *args, exc_info=True, stack_info=None, stacklevel=1,
                   extra=None, truncate=True, **kwargs: Any) -> None:
         kwargs['truncate'] = truncate
-        return super().exception(msg=msg, *args, exc_info=exc_info, stack_info=stack_info,
+        return super().exception(*args, exc_info=exc_info, stack_info=stack_info,
                                  stacklevel=stacklevel + 2, extra=extra, **kwargs)
 
     @contextmanager

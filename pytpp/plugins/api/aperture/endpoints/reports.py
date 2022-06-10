@@ -14,7 +14,9 @@ class _Reports(API):
         )
         self.RunNow = self._RunNow(api_obj=api_obj)
 
-    def post(self, name: str, title: str, inventory: str, summary: str = None, description: str = None, filter: Dict[str, List[Any]] = None, formats: List[str] = None, columns=None,
+    # noinspection ALL
+    def post(self, name: str, title: str, inventory: str, summary: str = None, description: str = None,
+             filter: Dict[str, List[Any]] = None, formats: List[str] = None, columns=None,
              skip_empty: bool = False):
         encoded_filter = "/".join(f"{k}:{quote_plus(v)}" for k, values in filter.items() for v in values)
         body = {

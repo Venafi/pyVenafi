@@ -93,6 +93,7 @@ class _Identity:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/Browse')
 
+        # noinspection ALL
         def post(self, filter: str, limit: int, identity_type: int):
             body = {
                 "Filter": filter,
