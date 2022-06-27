@@ -38,7 +38,8 @@ class WebSDK:
     """
     def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
                  scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
-                 certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False):
+                 certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
+                 connection_timeout: float = None, read_timeout: float = None):
         """
         Authenticates the given user to WebSDK. The only supported method for authentication at this time
         is with a username and password. Either an OAuth bearer token can be obtained, which requires
@@ -61,6 +62,8 @@ class WebSDK:
             certificate_path: Absolute path to the public certificate file.
             key_file_path: Absolute path to the private key file.
             verify_ssl: If ``True``, verify the SSL certificate of the target endpoints.
+            connection_timeout: Timeout in seconds to establish a connection to the API service.
+            read_timeout: Timeout in seconds between each byte received from the server.
         """
         # region Instance Variables
         self._host = host
@@ -73,6 +76,8 @@ class WebSDK:
         self._certificate_path = certificate_path
         self._key_file_path = key_file_path
         self._verify_ssl = verify_ssl
+        self._connection_timeout = connection_timeout
+        self._read_timeout = read_timeout
 
         # This is used by the endpoints to avoid redundancy.
         self._base_url = f'https://{host}/vedsdk'
@@ -83,7 +88,9 @@ class WebSDK:
         self._session = Session(
             headers={'Content-Type': 'application/json'}, proxies=self._proxies,
             certificate_path=certificate_path, key_file_path=key_file_path,
-            verify_ssl=verify_ssl
+            verify_ssl=verify_ssl,
+            connection_timeout=connection_timeout,
+            read_timeout=read_timeout
         )
 
         # Authorize the WebSDK session and store the API token.
@@ -182,6 +189,8 @@ class WebSDK:
                 application_id=self._application_id,
                 scope=self._oauth.scope,
                 refresh_token=self._oauth.refresh_token,
+                connection_timeout=self._connection_timeout,
+                read_timeout=self._read_timeout,
             )
         else:
             self.__init__(
@@ -191,5 +200,7 @@ class WebSDK:
                 certificate_path=self._certificate_path,
                 key_file_path=self._key_file_path,
                 verify_ssl=self._verify_ssl,
-                proxies=self._proxies
+                proxies=self._proxies,
+                connection_timeout=self._connection_timeout,
+                read_timeout=self._read_timeout,
             )

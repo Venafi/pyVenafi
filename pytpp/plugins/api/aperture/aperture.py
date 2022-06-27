@@ -21,7 +21,7 @@ class Aperture:
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
     def __init__(self, host: str, username: str, password: str, token: str = None, cookie: str = None,
-                 proxies: dict = None):
+                 proxies: dict = None, connection_timeout: float = None, read_timeout: float = None):
         """
         Args:
             host: Hostname or IP Address of TPP
@@ -30,12 +30,16 @@ class Aperture:
             token: Either an Authorization Token created by Aperture or an OAuth Access Bearer Token.
             cookie: Older versions of Aperture require this.
             proxies: An OrderedDict used by the python Requests library.
+            connection_timeout: Timeout in seconds to establish a connection to the API service.
+            read_timeout: Timeout in seconds between each byte received from the server.
         """
         # region Instance Variables
         self._host = host
         self._username = username
         self._password = password
         self._proxies = proxies
+        self._connection_timeout = connection_timeout
+        self._read_timeout = read_timeout
 
         # This is used by the endpoints to avoid redundancy.
         self._base_url = f'https://{host}/aperture/api'
@@ -48,7 +52,9 @@ class Aperture:
                 'Content-Type': 'application/json',
                 'Referer': self._base_url.rstrip('/api')
             },
-            proxies=proxies
+            proxies=proxies,
+            connection_timeout=connection_timeout,
+            read_timeout=read_timeout
         )
 
         # Authorize the Aperture session and store the API token.
@@ -94,4 +100,5 @@ class Aperture:
             token: OAuth token created via WebSDK.
         """
         self.__init__(host=self._host, username=self._username, password=self._password, token=token,
-                      proxies=self._proxies)
+                      proxies=self._proxies, connection_timeout=self._connection_timeout,
+                      read_timeout=self._read_timeout)
