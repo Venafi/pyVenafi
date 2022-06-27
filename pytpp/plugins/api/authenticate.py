@@ -68,8 +68,8 @@ class Authenticate(_OriginalAuthenticate):
                 password=self.password,
                 token=self.websdk._token,
                 proxies=self._proxies,
-                connection_timeout=kwargs.get('connection_timeout'),
-                read_timeout=kwargs.get('read_timeout'),
+                connection_timeout=self._connection_timeout,
+                read_timeout=self._read_timeout,
             )
         else:
             self.aperture = Aperture(
@@ -78,8 +78,8 @@ class Authenticate(_OriginalAuthenticate):
                 password=self.password,
                 token=aperture_token,
                 proxies=self._proxies,
-                connection_timeout=kwargs.get('connection_timeout'),
-                read_timeout=kwargs.get('read_timeout'),
+                connection_timeout=self._connection_timeout,
+                read_timeout=self._read_timeout,
             )
         self.preference = preference.lower()
         if self.preference not in {'websdk', 'aperture'}:
