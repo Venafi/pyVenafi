@@ -40,6 +40,7 @@ class Aperture:
         self._proxies = proxies
         self._connection_timeout = connection_timeout
         self._read_timeout = read_timeout
+        self._token = token
 
         # This is used by the endpoints to avoid redundancy.
         self._base_url = f'https://{host}/aperture/api'

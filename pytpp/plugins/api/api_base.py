@@ -2,7 +2,6 @@ from pytpp.api.api_base import *
 del globals()['API']  # We want to rename this and inherit it.
 del globals()['APIResponse']  # We want to rename this and inherit it.
 from pytpp.api.api_base import API as _API, APIResponse as _APIResponse
-import re
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from requests import Response
@@ -26,27 +25,6 @@ class API(_API):
         """
         super().__init__(api_obj=api_obj, url=url)
         self._api_source = api_obj.__class__.__name__.lower()
-
-    def _is_api_key_invalid(self, response: 'Response'):
-        """
-        Uses a regular expression to search the response text for an indication that the API key
-        is expired.
-
-        Args:
-            response: The raw response object.
-
-        Returns:
-            Returns True if the API key expired. Otherwise False.
-
-        """
-        if self._api_source == 'websdk':
-            invalid_api_message_match = bool(re.match('.*API key.*is not valid.*', response.text))
-        elif self._api_source == 'aperture':
-            invalid_api_message_match = bool(re.match('.*The authorization header is incorrect.*', response.text))
-        else:
-            invalid_api_message_match = False
-
-        return response.status_code == 401 and invalid_api_message_match
 
 
 class APIResponse(_APIResponse):
