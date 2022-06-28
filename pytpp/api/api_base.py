@@ -4,6 +4,7 @@ import time
 from requests import Response, HTTPError
 from pytpp.tools.logger import api_logger, json_pickler
 from typing import Union, Protocol, TYPE_CHECKING
+
 if TYPE_CHECKING:
     from pytpp.api.session import Session
 
@@ -90,8 +91,12 @@ class API:
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
-        self.retries = 3
+        self._retries = 3
         self.retry_interval = 0.5
+
+    @property
+    def retries(self):
+        return self._retries + 1  # The first time isn't a "retry".
 
     @property
     def _session(self) -> 'Session':
