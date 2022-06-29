@@ -1,7 +1,6 @@
 from typing import Union
 from pytpp.properties.oauth import Scope
 from pytpp.api.websdk.websdk import WebSDK
-from packaging.version import Version, parse
 
 
 class Authenticate:
@@ -39,9 +38,7 @@ class Authenticate:
                              certificate_path=certificate_path, key_file_path=key_file_path,
                              verify_ssl=verify_ssl, connection_timeout=connection_timeout,
                              read_timeout=read_timeout)
-        tpp_version = parse(self.websdk.SystemStatus.Version.get().version)
-        self._tpp_version = tpp_version
-        self.websdk._session.tpp_version = Version(f'{tpp_version.major}.{tpp_version.minor}')
+        self._tpp_version = self.websdk.tpp_version
         self._host = host
         self._username = username
         self._password = password

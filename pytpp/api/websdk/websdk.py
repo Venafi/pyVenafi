@@ -1,4 +1,5 @@
-from typing import Union
+from typing import Optional, Union
+from packaging.version import Version, parse as parse_version
 from pytpp.api.session import Session
 from pytpp.properties.oauth import Scope
 from pytpp.api.websdk.endpoints.authorize import _Authorize
@@ -28,6 +29,9 @@ from pytpp.api.websdk.endpoints.system_status import _SystemStatus
 from pytpp.api.websdk.endpoints.teams import _Teams
 from pytpp.api.websdk.endpoints.workflow import _Workflow
 from pytpp.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
+
+
+_TPP_VERSION: Optional[Version] = None
 
 
 class WebSDK:
@@ -172,6 +176,18 @@ class WebSDK:
         self.Workflow = _Workflow(self)
         self.X509CertificateStore = _X509CertificateStore(self)
         # endregion Initialize All WebSDK Endpoints
+
+        # region Set TPP Version
+        self._session.tpp_version = Version(f'{self.tpp_version.major}.{self.tpp_version.minor}')
+        # endregion Set TPP Version
+
+    @property
+    def tpp_version(self):
+        global _TPP_VERSION
+        if _TPP_VERSION:
+            return _TPP_VERSION
+        _TPP_VERSION = parse_version(self.SystemStatus.Version.get().version)
+        return _TPP_VERSION
 
     def re_authenticate(self):
         """
