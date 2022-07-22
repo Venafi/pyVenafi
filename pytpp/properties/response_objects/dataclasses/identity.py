@@ -1,22 +1,20 @@
-from dataclasses import dataclass
+from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 
 
-@dataclass
-class Identity:
-    full_name: str
-    is_container: bool
-    is_group: bool
-    name: str
-    prefix: str
-    prefixed_name: str
-    prefixed_universal: str
-    type: str
-    universal: str
+class Identity(PayloadModel):
+    full_name: str = PayloadField(alias='FullName', default=None)
+    is_container: bool = PayloadField(alias='IsContainer', default=None)
+    is_group: bool = PayloadField(alias='IsGroup', default=None)
+    name: str = PayloadField(alias='Name', default=None)
+    prefix: str = PayloadField(alias='Prefix', default=None)
+    prefixed_name: str = PayloadField(alias='PrefixedName', default=None)
+    prefixed_universal: str = PayloadField(alias='PrefixedUniversal', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    universal: str = PayloadField(alias='Universal', default=None)
 
 
-@dataclass
-class InvalidIdentity:
-    prefix: str
-    prefixed_name: str
-    prefixed_universal: str
-    universal: str
+class InvalidIdentity(PayloadModel):
+    prefix: str = PayloadField(alias='Prefix', default=None)
+    prefixed_name: str = PayloadField(alias='PrefixedName', default=None)
+    prefixed_universal: str = PayloadField(alias='PrefixedUniversal', default=None)
+    universal: str = PayloadField(alias='Universal', default=None)

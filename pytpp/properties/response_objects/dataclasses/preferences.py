@@ -1,12 +1,11 @@
-from dataclasses import dataclass
+from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 
 
-@dataclass
-class Preference:
-    id: int
-    universal: str
-    product: str
-    category: str
-    name: str
-    value: str
-    locked: bool
+class Preference(PayloadModel):
+    id: int = PayloadField(alias='Id', default=None)
+    universal: str = PayloadField(alias='Universal', default=None)
+    product: str = PayloadField(alias='Product', default=None)
+    category: str = PayloadField(alias='Category', default=None)
+    name: str = PayloadField(alias='Name', default=None)
+    value: str = PayloadField(alias='Value', default=None)
+    locked: bool = PayloadField(alias='Locked', default=None)

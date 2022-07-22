@@ -1,6 +1,6 @@
 from typing import List 
 from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.config import Config
+from pytpp.properties.response_objects.dataclasses import config
 
 
 class _Config:
@@ -59,7 +59,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
                     
             return _Response(response=self._post(data=body))
 
@@ -83,7 +83,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
 
             return _Response(response=self._post(data=body))
 
@@ -105,7 +105,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -126,7 +126,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -148,7 +148,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -173,7 +173,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -201,7 +201,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -223,12 +223,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def object(self):
-                    return Config.Object(self._from_json(key='Object'))
+                    return config.Object(**self._from_json(key='Object'))
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
 
             return _Response(response=self._post(data=body))
 
@@ -270,7 +270,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -310,7 +310,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -332,12 +332,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
+                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -357,12 +357,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
+                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -383,12 +383,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
+                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -408,12 +408,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def policies(self):
-                    return [Config.Policy(obj) for obj in self._from_json(key='Policies')]
+                    return [config.Policy(**obj) for obj in self._from_json(key='Policies')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -434,12 +434,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
+                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -460,12 +460,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
+                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -491,12 +491,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json(key='Objects')]
+                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -533,7 +533,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -559,7 +559,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -584,7 +584,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -624,7 +624,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -664,7 +664,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -687,12 +687,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def object(self):
-                    return Config.Object(self._from_json(key='Object'))
+                    return config.Object(**self._from_json(key='Object'))
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -713,7 +713,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -749,7 +749,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -769,12 +769,12 @@ class _Config:
                 @property
                 @api_response_property()
                 def name_values(self):
-                    return [Config.NameValues(nv) for nv in self._from_json(key='NameValues')]
+                    return [config.NameValues(**nv) for nv in self._from_json(key='NameValues')]
 
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
 
             return _Response(response=self._post(data=body))
 
@@ -800,7 +800,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
 
             return _Response(response=self._post(data=body))
 
@@ -827,7 +827,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
 
             return _Response(response=self._post(data=body))
 
@@ -868,7 +868,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -900,7 +900,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -922,7 +922,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))                    
+                    return config.Result(code=self._from_json(key='Result'))                    
             
             return _Response(response=self._post(data=body))
 
@@ -945,7 +945,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -966,7 +966,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
 
             return _Response(response=self._post(data=body))
 
@@ -987,7 +987,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -1009,7 +1009,7 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))
 
@@ -1033,6 +1033,6 @@ class _Config:
                 @property
                 @api_response_property()
                 def result(self):
-                    return Config.Result(self._from_json(key='Result'))
+                    return config.Result(code=self._from_json(key='Result'))
             
             return _Response(response=self._post(data=body))

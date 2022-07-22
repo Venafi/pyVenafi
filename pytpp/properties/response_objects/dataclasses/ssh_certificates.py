@@ -1,67 +1,60 @@
 from typing import List
-from dataclasses import dataclass
+from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 
 
-@dataclass
-class Response:
-    success: bool
-    error_code: int
-    error_message: str
+class Response(PayloadModel):
+    success: bool = PayloadField(alias='Success', default=None)
+    error_code: int = PayloadField(alias='ErrorCode', default=None)
+    error_message: str = PayloadField(alias='ErrorMessage', default=None)
 
 
-@dataclass
-class ProcessingDetails:
-    status: str
-    status_description: str
+class ProcessingDetails(PayloadModel):
+    status: str = PayloadField(alias='Status', default=None)
+    status_description: str = PayloadField(alias='StatusDescription', default=None)
 
 
-@dataclass
-class CertificateDetails:
-    ca_fingerprint_sha256: str
-    certificate_fingerprint_sha256: str
-    certificate_type: str
-    extensions: dict
-    key_id: str
-    key_type: str
-    principals: List[str]
-    public_key_fingerprint_sha256: str
-    serial_number: str
-    valid_from: int
-    valid_to: int
+class CertificateDetails(PayloadModel):
+    ca_fingerprint_sha256: str = PayloadField(alias='CaFingerprintSha256', default=None)
+    certificate_fingerprint_sha256: str = PayloadField(alias='CertificateFingerprintSha256', default=None)
+    certificate_type: str = PayloadField(alias='CertificateType', default=None)
+    extensions: dict = PayloadField(alias='Extensions', default=None)
+    key_id: str = PayloadField(alias='KeyId', default=None)
+    key_type: str = PayloadField(alias='KeyType', default=None)
+    principals: List[str] = PayloadField(alias='Principals', default=None)
+    public_key_fingerprint_sha256: str = PayloadField(alias='PublicKeyFingerprintSha256', default=None)
+    serial_number: str = PayloadField(alias='SerialNumber', default=None)
+    valid_from: int = PayloadField(alias='ValidFrom', default=None)
+    valid_to: int = PayloadField(alias='ValidTo', default=None)
 
 
-@dataclass
-class RequestDetails:
-    originating_ip: str
-    requested_by: str
+class RequestDetails(PayloadModel):
+    originating_ip: str = PayloadField(alias='OriginatingIp', default=None)
+    requested_by: str = PayloadField(alias='RequestedBy', default=None)
 
 
-@dataclass
-class APIClient:
-    allowed_to_request_certificate_identifier: bool
-    allowed_to_request_extensions: bool
-    allowed_to_request_force_command: bool
-    allowed_to_request_principals: bool
-    allowed_to_request_source_addresses: bool
+class APIClient(PayloadModel):
+    allowed_to_request_certificate_identifier: bool = PayloadField(alias='AllowedToRequestCertificateIdentifier', default=None)
+    allowed_to_request_extensions: bool = PayloadField(alias='AllowedToRequestExtensions', default=None)
+    allowed_to_request_force_command: bool = PayloadField(alias='AllowedToRequestForceCommand', default=None)
+    allowed_to_request_principals: bool = PayloadField(alias='AllowedToRequestPrincipals', default=None)
+    allowed_to_request_source_addresses: bool = PayloadField(alias='AllowedToRequestSourceAddresses', default=None)
 
 
-@dataclass
-class Certificate:
-    allowed_private_key_algorithms: List[str]
-    allowed_private_key_reuse: bool
-    certificate_destination_dn: str
-    default_private_key_algorithm: str
-    signature_hashing_algorithm: str
-    type: str
-    validity_period: str
+class Certificate(PayloadModel):
+    allowed_private_key_algorithms: List[str] = PayloadField(alias='AllowedPrivateKeyAlgorithms', default=None)
+    allowed_private_key_reuse: bool = PayloadField(alias='AllowedPrivateKeyReuse', default=None)
+    certificate_destination_dn: str = PayloadField(alias='CertificateDestinationDn', default=None)
+    default_private_key_algorithm: str = PayloadField(alias='DefaultPrivateKeyAlgorithm', default=None)
+    signature_hashing_algorithm: str = PayloadField(alias='SignatureHashingAlgorithm', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    validity_period: str = PayloadField(alias='ValidityPeriod', default=None)
 
 
-@dataclass
-class CAKeyPair:
-    created_on: str
-    dn: str
-    fingerprint_sha256: str
-    guid: str
-    key_algorithm: str
-    name: str
-    public_key_data: str
+class CAKeyPair(PayloadModel):
+    created_on: str = PayloadField(alias='CreatedOn', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    fingerprint_sha256: str = PayloadField(alias='FingerprintSha256', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    key_algorithm: str = PayloadField(alias='KeyAlgorithm', default=None)
+    name: str = PayloadField(alias='Name', default=None)
+    public_key_data: str = PayloadField(alias='PublicKeyData', default=None)

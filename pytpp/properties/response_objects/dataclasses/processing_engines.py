@@ -1,26 +1,22 @@
-from dataclasses import dataclass
+from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 
 
-@dataclass
-class Engine:
-    links: 'Link'
-    engine_dn: str
-    engine_guid: str
-    engine_name: str
+class Engine(PayloadModel):
+    links: 'Link' = PayloadField(alias='Links', default=None)
+    engine_dn: str = PayloadField(alias='EngineDn', default=None)
+    engine_guid: str = PayloadField(alias='EngineGuid', default=None)
+    engine_name: str = PayloadField(alias='EngineName', default=None)
 
 
-@dataclass
-class Folder:
-    folder_dn: str
-    folder_guid: str
-    folder_name: str
+class Folder(PayloadModel):
+    folder_dn: str = PayloadField(alias='FolderDn', default=None)
+    folder_guid: str = PayloadField(alias='FolderGuid', default=None)
+    folder_name: str = PayloadField(alias='FolderName', default=None)
 
 
-@dataclass
-class Link:
-    self: 'Self'
+class Link(PayloadModel):
+    self: 'Self' = PayloadField(alias='Self', default=None)
 
 
-@dataclass
-class Self:
-    href: str
+class Self(PayloadModel):
+    href: str = PayloadField(alias='Href', default=None)

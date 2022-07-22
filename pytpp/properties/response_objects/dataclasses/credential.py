@@ -1,20 +1,17 @@
-from dataclasses import dataclass
+from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 
 
-@dataclass
-class Result:
-    code: int
-    credential_result: str
+class Result(PayloadModel):
+    code: int = PayloadField(alias='Code', default=None)
+    credential_result: str = PayloadField(alias='CredentialResult', default=None)
 
 
-@dataclass
-class CredentialInfo:
-    class_name: str
-    full_name: str
+class CredentialInfo(PayloadModel):
+    class_name: str = PayloadField(alias='ClassName', default=None)
+    full_name: str = PayloadField(alias='FullName', default=None)
 
 
-@dataclass
-class NameTypeValue:
-    name: str
-    type: str
-    value: str
+class NameTypeValue(PayloadModel):
+    name: str = PayloadField(alias='Name', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    value: str = PayloadField(alias='Value', default=None)

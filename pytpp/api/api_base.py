@@ -2,6 +2,7 @@ import re
 import json
 import time
 from requests import Response, HTTPError
+from pydantic import BaseModel, root_validator
 from pytpp.tools.logger import api_logger, json_pickler
 from typing import Union, Protocol, TYPE_CHECKING
 
@@ -287,14 +288,131 @@ class API:
         )
 
 
-class APIResponse:
+from typing import Type, TypeVar
+
+T_ = TypeVar('T_')
+
+
+def ResponseFactory(response: Response, response_cls: Type[T_]) -> T_:
+    try:
+        result = response.json()
+        response_inst = response_cls(api_response=response, **result)
+        if isinstance(result, dict) and (error_key := response_inst.get('__error_key__')) in result.keys():
+            raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
+        return response_inst
+    except json.decoder.JSONDecodeError:
+        raise InvalidResponseError(f'{response.url} return no content. Got status code {response.status_code}.')
+
+
+class APIResponse(BaseModel):
+    api_response: Response
+    _validated: bool = False
+    __return_on_error__: callable = None
+    __error_key__: str = None
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    @root_validator(pre=True, allow_reuse=True)
+    def _case_insensitive_validator(cls, values: dict):
+        new_values = {}
+        lowered_values = {k.lower(): v for k, v in values.items()}
+        for fk, fv in cls.__fields__.items():
+            try:
+                new_values[fv.alias] = lowered_values[fk.lower()]
+            except KeyError:
+                raise KeyError(f'"{fk}" not found in the response.')
+        return new_values
+
+    def assert_valid_response(self):
+        """
+        Use this method when no response property is available after an API call or to simply
+        throw an error if the return code is invalid. This simply asserts that a valid response
+        status code was returned by TPP.
+        """
+        if not self._validated:
+            self._validate()
+
+    def is_valid_response(self):
+        """
+        Returns ``True`` when the response is valid, meaning a valid return code was returned by
+        TPP, otherwise ``False``.
+        """
+        try:
+            self._validate()
+            return True
+        except:
+            return False
+
+    def _from_json(self, key: str = None, error_key: str = None, return_on_error: type = None):
+        """
+        Returns the particular key within the response dictionary. If no key is provided, then
+        the full response is returned as a dictionary.
+
+        If ``key`` is provided, then it is searched in the response content. It is not case
+        sensitive. If ``key`` is not found, an error is thrown and logged.
+
+        TPP often returns a key with an error message. When an ``error_key`` is provided and an
+        error message is returned an error is thrown and logged with the message provided by TPP.
+
+        Args:
+            key: Key within the top level of the response content.
+            error_key: Error key within the top level of the response content.
+            return_on_error: If an error occurs in retrieving content or accessing a key, this
+                type will be returned instead of throwing an error.
+
+        Returns:
+            If a key is provided, returns the response content at that key. Otherwise, the full
+            response content.
+        """
+        try:
+            result = self.api_response.json()
+        except json.decoder.JSONDecodeError:
+            if return_on_error:
+                return return_on_error()
+            raise InvalidResponseError(f'{self.api_response.url} return no content. '
+                                       f'Got status code {self.api_response.status_code}.')
+        if error_key and error_key in result.keys():
+            raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
+        if not key:
+            return result
+        try:
+            return result[key]
+        except KeyError:
+            # Try avoiding case-sensitive typos and search by lower-case comparison.
+            for k in result.keys():
+                if key.lower() == k.lower():
+                    return result[k]
+
+        if return_on_error:
+            return return_on_error()
+        raise KeyError(f'{key} was not returned by TPP.')
+
+    def _validate(self):
+        """
+        Validates the current response property by validating that there are expected return codes
+        and that the actual return code is one of the valid return codes. If the return code is
+        invalid, an error is thrown and logged.
+        """
+        self._validated = True
+        try:
+            self.api_response.raise_for_status()
+        except HTTPError as err:
+            error_msg = self.api_response.text or self.api_response.reason or 'No error message found.'
+            body = json_pickler.dumps(
+                json.loads(err.request.body)
+            ) if err.request.body else ''
+            error_msg = '\n'.join(err.args) + f"\nERROR: {error_msg}\nCONTENT: {body}"
+            raise InvalidResponseError(error_msg)
+
+
+class APIResponse1:
     def __init__(self, response: Response):
         self._api_response = response
-        self._decoded_api_response = None
         self._validated = False
 
     @property
-    def api_response(self) -> Response:
+    def api_response(self):
         return self._api_response
 
     @api_response.setter
@@ -355,9 +473,13 @@ class APIResponse:
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key])
         if not key:
             return result
-        for k in result.keys():
-            if key.lower() == k.lower():
-                return result[k]
+        try:
+            return result[key]
+        except KeyError:
+            # Try avoiding case-sensitive typos and search by lower-case comparison.
+            for k in result.keys():
+                if key.lower() == k.lower():
+                    return result[k]
 
         if return_on_error:
             return return_on_error()

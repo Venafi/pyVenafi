@@ -1,9 +1,9 @@
 import logging
 import warnings
 from datetime import datetime
+from pydantic import Field
 from pytpp.tools.logger import api_logger
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.tools.helpers.date_converter import from_date_string
+from pytpp.api.api_base import API, APIResponse, ResponseFactory
 
 
 class _Authorize(API):
@@ -29,19 +29,13 @@ class _Authorize(API):
         }
 
         class _Response(APIResponse):
-            def __init__(self, r):
-                super().__init__(response=r)
-
-            @property
-            @api_response_property()
-            def token(self) -> str:
-                return self._from_json('APIKey')
+            token = Field(default=None, alias='APIKey')
 
         api_logger.debug(f'Authenticating to TPP as "{username}"...')
         with api_logger.suppressed(logging.WARNING):
             response = self._post(data=body)
         api_logger.debug(f'Authenticated as "{username}"!')
-        return _Response(response)
+        return ResponseFactory(response=response, response_cls=_Response)
 
     class _Certificate(API):
         def __init__(self, api_obj):
@@ -55,55 +49,21 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, r):
-                    super().__init__(response=r)
-
-                @property
-                @api_response_property()
-                def access_token(self) -> str:
-                    return self._from_json('access_token')
-
-                @property
-                @api_response_property()
-                def expires(self):
-                    return datetime.fromtimestamp(self._from_json('expires'))
-
-                @property
-                @api_response_property()
-                def expires_in(self) -> int:
-                    return self._from_json(key='expires_in')
-
-                @property
-                @api_response_property()
-                def identity(self) -> str:
-                    return self._from_json('identity')
-
-                @property
-                @api_response_property()
-                def refresh_token(self) -> str:
-                    return self._from_json('refresh_token')
-
-                @property
-                @api_response_property()
-                def refresh_until(self):
-                    return datetime.fromtimestamp(self._from_json(key='refresh_until'))
-
-                @property
-                @api_response_property()
-                def scope(self) -> str:
-                    return self._from_json('scope')
-
-                @property
-                @api_response_property()
-                def token_type(self) -> str:
-                    return self._from_json('token_type')
+                access_token = Field(default=None, alias='access_token')
+                expires = Field(default=None, alias='expires')
+                expires_in = Field(default=None, alias='expires_in')
+                identity = Field(default=None, alias='identity')
+                refresh_token = Field(default=None, alias='refresh_token')
+                refresh_until = Field(default=None, alias='refresh_until')
+                scope = Field(default=None, alias='scope')
+                token_type = Field(default=None, alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return _Response(response)
+            return ResponseFactory(response=response, response_cls=_Response)
 
     class _Device(API):
         def __init__(self, api_obj):
@@ -117,50 +77,20 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, r):
-                    super().__init__(response=r)
-
-                @property
-                @api_response_property()
-                def device_code(self) -> str:
-                    return self._from_json('device_code')
-
-                @property
-                @api_response_property()
-                def interval(self) -> int:
-                    return self._from_json('interval')
-
-                @property
-                @api_response_property()
-                def user_code(self) -> str:
-                    return self._from_json(key='user_code')
-
-                @property
-                @api_response_property()
-                def verification_uri(self) -> str:
-                    return self._from_json('verification_uri')
-
-                @property
-                @api_response_property()
-                def verification_url_complete(self) -> str:
-                    return self._from_json('verification_uri_complete')
-
-                @property
-                @api_response_property()
-                def expires_in(self) -> int:
-                    return self._from_json(key='expires_in')
-
-                @property
-                @api_response_property()
-                def expires(self) -> int:
-                    return self._from_json('expires')
+                device_code = Field(default=None, alias='device_code')
+                interval = Field(default=None, alias='interval')
+                user_code = Field(default=None, alias='user_code')
+                verification_uri = Field(default=None, alias='verification_uri')
+                verification_url_complete = Field(default=None, alias='verification_uri_complete')
+                expires_in = Field(default=None, alias='expires_in')
+                expires = Field(default=None, alias='expires')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return _Response(response)
+            return ResponseFactory(response=response, response_cls=_Response)
 
     class _Integrated(API):
         def __init__(self, api_obj):
@@ -175,50 +105,16 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+                access_token: str = Field(alias='access_token', default=None)
+                expires: datetime = Field(default=None, alias='expires')
+                expires_in = Field(default=None, alias='expires_in')
+                identity = Field(default=None, alias='identity')
+                refresh_token = Field(default=None, alias='refresh_token')
+                refresh_until = Field(default=None, alias='refresh_until')
+                scope = Field(default=None, alias='scope')
+                token_type = Field(default=None, alias='token_type')
 
-                @property
-                @api_response_property()
-                def access_token(self) -> str:
-                    return self._from_json('access_token')
-
-                @property
-                @api_response_property()
-                def expires(self):
-                    return datetime.fromtimestamp(self._from_json('expires'))
-
-                @property
-                @api_response_property()
-                def expires_in(self) -> int:
-                    return self._from_json(key='expires_in')
-
-                @property
-                @api_response_property()
-                def identity(self) -> str:
-                    return self._from_json('identity')
-
-                @property
-                @api_response_property()
-                def refresh_token(self) -> str:
-                    return self._from_json('refresh_token')
-
-                @property
-                @api_response_property()
-                def refresh_until(self):
-                    return datetime.fromtimestamp(self._from_json(key='refresh_until'))
-
-                @property
-                @api_response_property()
-                def scope(self) -> str:
-                    return self._from_json('scope')
-
-                @property
-                @api_response_property()
-                def token_type(self) -> str:
-                    return self._from_json('token_type')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=_Response)
 
     class _OAuth(API):
         def __init__(self, api_obj):
@@ -235,45 +131,19 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, r):
-                    super().__init__(response=r)
-
-                @property
-                @api_response_property()
-                def access_token(self) -> str:
-                    return self._from_json('access_token')
-
-                @property
-                @api_response_property()
-                def expires(self) -> str:
-                    return self._from_json('expires')
-
-                @property
-                @api_response_property()
-                def identity(self) -> str:
-                    return self._from_json('identity')
-
-                @property
-                @api_response_property()
-                def refresh_token(self) -> str:
-                    return self._from_json('refresh_token')
-
-                @property
-                @api_response_property()
-                def scope(self) -> str:
-                    return self._from_json('scope')
-
-                @property
-                @api_response_property()
-                def token_type(self) -> str:
-                    return self._from_json('token_type')
+                access_token: str = Field(alias='access_token', default=None)
+                expires: str = Field(alias='expires', default=None)
+                identity: str = Field(alias='identity', default=None)
+                refresh_token: str = Field(alias='refresh_token', default=None)
+                scope: str = Field(alias='scope', default=None)
+                token_type: str = Field(alias='token_type', default=None)
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" as "{username}"...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated as {username}!')
-            return _Response(response)
+            return ResponseFactory(response=response, response_cls=_Response)
 
     class _Token(API):
         def __init__(self, api_obj):
@@ -289,44 +159,18 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                def __init__(self, r):
-                    super().__init__(response=r)
-
-                @property
-                @api_response_property()
-                def access_token(self) -> str:
-                    return self._from_json('access_token')
-
-                @property
-                @api_response_property()
-                def expires(self) -> str:
-                    return self._from_json('expires')
-
-                @property
-                @api_response_property()
-                def refresh_token(self) -> str:
-                    return self._from_json('refresh_token')
-
-                @property
-                @api_response_property()
-                def refresh_until(self) -> str:
-                    return self._from_json('refresh_until')
-
-                @property
-                @api_response_property()
-                def scope(self) -> str:
-                    return self._from_json('scope')
-
-                @property
-                @api_response_property()
-                def token_type(self) -> str:
-                    return self._from_json('token_type')
+                access_token = Field(default=None, alias='access_token')
+                expires = Field(default=None, alias='expires')
+                refresh_token = Field(default=None, alias='refresh_token')
+                refresh_until = Field(default=None, alias='refresh_until')
+                scope = Field(default=None, alias='scope')
+                token_type = Field(default=None, alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth application with a refresh token...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return _Response(response)
+            return ResponseFactory(response=response, response_cls=_Response)
 
     class _Verify(API):
         def __init__(self, api_obj):
@@ -335,72 +179,36 @@ class _Authorize(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
-
+                access_issued_on_unix_time = Field(default=None, alias='access_issued_on_unix_time')
+                application = Field(default=None, alias='application')
+                expires_unix_time = Field(default=None, alias='expires_unix_time')
+                grant_issued_on_unix_time = Field(default=None, alias='grant_issued_on_unix_time')
+                identity = Field(default=None, alias='identity')
+                scope = Field(default=None, alias='scope')
+                valid_for = Field(default=None, alias='valid_for')
+        
                 @property
-                @api_response_property()
                 def access_issued_on(self):
-                    return from_date_string(self._from_json(key='access_issued_on'))
-
+                    return self.access_issued_on_unix_time
+                
                 @property
-                @api_response_property()
                 def access_issued_on_ISO8601(self):
-                    return from_date_string(self._from_json(key='access_issued_on_ISO8601'))
-
+                    return self.access_issued_on_unix_time
+            
                 @property
-                @api_response_property()
-                def access_issued_on_unix_time(self):
-                    return datetime.fromtimestamp(self._from_json(key='access_issued_on_unix_time'))
-
+                def expires(self): 
+                    return self.expires_unix_time
+        
                 @property
-                @api_response_property()
-                def application(self) -> str:
-                    return self._from_json(key='application')
-
-                @property
-                @api_response_property()
-                def expires(self):
-                    return from_date_string(self._from_json(key='expires'))
-
-                @property
-                @api_response_property()
                 def expires_ISO8601(self):
-                    return from_date_string(self._from_json(key='expires_ISO8601'))
-
+                    return self.expires_unix_time
+        
                 @property
-                @api_response_property()
-                def expires_unix_time(self):
-                    return datetime.fromtimestamp(self._from_json(key='expires_unix_time'))
-
-                @property
-                @api_response_property()
                 def grant_issued_on(self):
-                    return from_date_string(self._from_json(key='grant_issued_on'))
-
+                    return self.grant_issued_on_unix_time
+                
                 @property
-                @api_response_property()
                 def grant_issued_on_ISO8601(self):
-                    return from_date_string(self._from_json(key='grant_issued_on_ISO8601'))
+                    return self.grant_issued_on_unix_time
 
-                @property
-                @api_response_property()
-                def grant_issued_on_unix_time(self):
-                    return datetime.fromtimestamp(self._from_json(key='grant_issued_on_unix_time'))
-
-                @property
-                @api_response_property()
-                def identity(self) -> str:
-                    return self._from_json(key='identity')
-
-                @property
-                @api_response_property()
-                def scope(self) -> str:
-                    return self._from_json(key='scope')
-
-                @property
-                @api_response_property()
-                def valid_for(self) -> int:
-                    return self._from_json(key='valid_for')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response=self._get(), response_cls=_Response)

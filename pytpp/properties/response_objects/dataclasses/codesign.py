@@ -1,367 +1,342 @@
-from dataclasses import dataclass
+from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 from datetime import datetime
 from typing import List
 
 
-@dataclass
-class ResultCode:
-    code: int
-    codesign_result: str
+class ResultCode(PayloadModel):
+    code: int = PayloadField(alias='Code', default=None)
+    codesign_result: str = PayloadField(alias='CodesignResult', default=None)
 
 
-@dataclass
-class Items:
-    items: List[str]
+class Items(PayloadModel):
+    items: List[str] = PayloadField(alias='Items', default=None)
 
 
-@dataclass
-class InfoValue:
-    info: int
-    value: 'Items'
+class InfoValue(PayloadModel):
+    info: int = PayloadField(alias='Info', default=None)
+    value: 'Items' = PayloadField(alias='Value', default=None)
 
 
-@dataclass
-class CustomFieldAttributes:
-    field_name: str
-    values: List[str]
+class CustomFieldAttributes(PayloadModel):
+    field_name: str = PayloadField(alias='FieldName', default=None)
+    values: List[str] = PayloadField(alias='Values', default=None)
 
 
-@dataclass
 class EnvironmentTemplateDetails(InfoValue):
-    template_values: 'InfoValue'
+    template_values: 'InfoValue' = PayloadField(alias='TemplateValues', default=None)
 
 
-@dataclass
-class RightsKeyValue:
-    key: str
-    value: int
+class RightsKeyValue(PayloadModel):
+    key: str = PayloadField(alias='Key', default=None)
+    value: int = PayloadField(alias='Value', default=None)
 
 
-@dataclass
-class AppleTemplate:
-    allow_user_key_import: bool
-    cn_pattern: str
-    dn: str
-    guid: str
-    id: int
-    key_storage_location: 'InfoValue'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    read_only: bool
-    target_policy_dn: str
-    type: str
-    visible_to: 'Items'
+class AppleTemplate(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    cn_pattern: str = PayloadField(alias='CnPattern', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    read_only: bool = PayloadField(alias='ReadOnly', default=None)
+    target_policy_dn: str = PayloadField(alias='TargetPolicyDn', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    visible_to: 'Items' = PayloadField(alias='VisibleTo', default=None)
 
 
-@dataclass
-class AppleEnvironment:
-    allow_user_key_import: bool
-    apple_template: 'AppleTemplate'
-    custom_field_attributes: 'List[CustomFieldAttributes]'
-    dirty: bool
-    dn: str
-    guid: str
-    id: int
-    ip_address_restriction: 'Items'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    per_user: bool
-    template_dn: str
+class AppleEnvironment(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    apple_template: 'AppleTemplate' = PayloadField(alias='AppleTemplate', default=None)
+    custom_field_attributes: 'List[CustomFieldAttributes]' = PayloadField(alias='CustomFieldAttributes', default=None)
+    dirty: bool = PayloadField(alias='Dirty', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    ip_address_restriction: 'Items' = PayloadField(alias='IpAddressRestriction', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    template_dn: str = PayloadField(alias='TemplateDn', default=None)
 
 
-@dataclass
-class CertificateTemplate:
-    allow_user_key_import: bool
-    certificate_authority_dn: 'InfoValue'
-    certificate_subject: str
-    city: 'InfoValue'
-    country: 'InfoValue'
-    dn: str
-    guid: str
-    id: int
-    key_algorithm: 'InfoValue'
-    key_storage_location: 'InfoValue'
-    key_use_flow_dn: str
-    object_naming_pattern: str
-    organization: 'InfoValue'
-    organization_unit: 'InfoValue'
-    per_user: bool
-    read_only: bool
-    san_email: 'InfoValue'
-    state: 'InfoValue'
-    target_policy_dn: str
-    type: str
-    visible_to: 'Items'
+class CertificateTemplate(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    certificate_authority_dn: 'InfoValue' = PayloadField(alias='CertificateAuthorityDn', default=None)
+    certificate_subject: str = PayloadField(alias='CertificateSubject', default=None)
+    city: 'InfoValue' = PayloadField(alias='City', default=None)
+    country: 'InfoValue' = PayloadField(alias='Country', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_algorithm: 'InfoValue' = PayloadField(alias='KeyAlgorithm', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    object_naming_pattern: str = PayloadField(alias='ObjectNamingPattern', default=None)
+    organization: 'InfoValue' = PayloadField(alias='Organization', default=None)
+    organization_unit: 'InfoValue' = PayloadField(alias='OrganizationUnit', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    read_only: bool = PayloadField(alias='ReadOnly', default=None)
+    san_email: 'InfoValue' = PayloadField(alias='SanEmail', default=None)
+    state: 'InfoValue' = PayloadField(alias='State', default=None)
+    target_policy_dn: str = PayloadField(alias='TargetPolicyDn', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    visible_to: 'Items' = PayloadField(alias='VisibleTo', default=None)
 
 
-@dataclass
-class CertificateEnvironment:
-    allow_user_key_import: bool
-    ca_specific_attributes: 'Items'
-    certificate_authority_dn: 'InfoValue'
-    certificate_subject: str
-    certificate_template: 'CertificateTemplate'
-    city: 'InfoValue'
-    country: 'InfoValue'
-    custom_field_attributes: 'List[CustomFieldAttributes]'
-    dn: str
-    guid: str
-    id: int
-    ip_address_restriction: 'Items'
-    key_algorithm: 'InfoValue'
-    key_storage_location: 'InfoValue'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    organization: 'InfoValue'
-    organization_unit: 'InfoValue'
-    per_user: bool
-    san_email: 'InfoValue'
-    state: 'InfoValue'
-    status: int
-    target_store: str
-    template_dn: str
-    type: str
+class CertificateEnvironment(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    ca_specific_attributes: 'Items' = PayloadField(alias='CaSpecificAttributes', default=None)
+    certificate_authority_dn: 'InfoValue' = PayloadField(alias='CertificateAuthorityDn', default=None)
+    certificate_subject: str = PayloadField(alias='CertificateSubject', default=None)
+    certificate_template: 'CertificateTemplate' = PayloadField(alias='CertificateTemplate', default=None)
+    city: 'InfoValue' = PayloadField(alias='City', default=None)
+    country: 'InfoValue' = PayloadField(alias='Country', default=None)
+    custom_field_attributes: 'List[CustomFieldAttributes]' = PayloadField(alias='CustomFieldAttributes', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    ip_address_restriction: 'Items' = PayloadField(alias='IpAddressRestriction', default=None)
+    key_algorithm: 'InfoValue' = PayloadField(alias='KeyAlgorithm', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    organization: 'InfoValue' = PayloadField(alias='Organization', default=None)
+    organization_unit: 'InfoValue' = PayloadField(alias='OrganizationUnit', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    san_email: 'InfoValue' = PayloadField(alias='SanEmail', default=None)
+    state: 'InfoValue' = PayloadField(alias='State', default=None)
+    status: int = PayloadField(alias='Status', default=None)
+    target_store: str = PayloadField(alias='TargetStore', default=None)
+    template_dn: str = PayloadField(alias='TemplateDn', default=None)
+    type: str = PayloadField(alias='Type', default=None)
 
 
-@dataclass
-class CSPTemplate:
-    allow_user_key_import: bool
-    dirty: bool
-    dn: str
-    encryption_key_algorithm: 'InfoValue'
-    expiration: 'InfoValue'
-    guid: str
-    id: int
-    key_container_dn: str
-    key_storage_location: 'InfoValue'
-    max_uses: 'InfoValue'
-    object_naming_pattern: str
-    per_user: bool
-    signing_key_algorithm: 'InfoValue'
-    type: str
-    visible_to: 'Items'
+class CSPTemplate(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    dirty: bool = PayloadField(alias='Dirty', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    encryption_key_algorithm: 'InfoValue' = PayloadField(alias='EncryptionKeyAlgorithm', default=None)
+    expiration: 'InfoValue' = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_container_dn: str = PayloadField(alias='KeyContainerDn', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    max_uses: 'InfoValue' = PayloadField(alias='MaxUses', default=None)
+    object_naming_pattern: str = PayloadField(alias='ObjectNamingPattern', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    signing_key_algorithm: 'InfoValue' = PayloadField(alias='SigningKeyAlgorithm', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    visible_to: 'Items' = PayloadField(alias='VisibleTo', default=None)
 
 
-@dataclass
-class CSPEnvironment:
-    allow_user_key_import: bool
-    csp_template: 'CSPTemplate'
-    disabled: bool
-    dn: str
-    encryption_key_algorithm: 'EnvironmentTemplateDetails'
-    encryption_key_dn: str
-    expiration: int
-    guid: str
-    id: int
-    ip_address_restriction: 'Items'
-    key_storage_location: 'EnvironmentTemplateDetails'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    max_uses: int
-    per_user: bool
-    signing_key_algorithm: 'EnvironmentTemplateDetails'
-    signing_key_dn: str
-    template_dn: str
+class CSPEnvironment(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    csp_template: 'CSPTemplate' = PayloadField(alias='CspTemplate', default=None)
+    disabled: bool = PayloadField(alias='Disabled', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    encryption_key_algorithm: 'EnvironmentTemplateDetails' = PayloadField(alias='EncryptionKeyAlgorithm', default=None)
+    encryption_key_dn: str = PayloadField(alias='EncryptionKeyDn', default=None)
+    expiration: int = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    ip_address_restriction: 'Items' = PayloadField(alias='IpAddressRestriction', default=None)
+    key_storage_location: 'EnvironmentTemplateDetails' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    max_uses: int = PayloadField(alias='MaxUses', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    signing_key_algorithm: 'EnvironmentTemplateDetails' = PayloadField(alias='SigningKeyAlgorithm', default=None)
+    signing_key_dn: str = PayloadField(alias='SigningKeyDn', default=None)
+    template_dn: str = PayloadField(alias='TemplateDn', default=None)
 
 
-@dataclass
-class DotNetTemplate:
-    allow_user_key_import: bool
-    disabled: bool
-    dn: str
-    expiration: 'InfoValue'
-    guid: str
-    id: int
-    key_algorithm: 'InfoValue'
-    key_container_dn: 'InfoValue'
-    key_storage_location: 'InfoValue'
-    key_use_flow_dn: str
-    max_uses: 'InfoValue'
-    object_naming_pattern: str
-    per_user: bool
-    type: str
-    visible_to: 'Items'
+class DotNetTemplate(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    disabled: bool = PayloadField(alias='Disabled', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    expiration: 'InfoValue' = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_algorithm: 'InfoValue' = PayloadField(alias='KeyAlgorithm', default=None)
+    key_container_dn: 'InfoValue' = PayloadField(alias='KeyContainerDn', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    max_uses: 'InfoValue' = PayloadField(alias='MaxUses', default=None)
+    object_naming_pattern: str = PayloadField(alias='ObjectNamingPattern', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    visible_to: 'Items' = PayloadField(alias='VisibleTo', default=None)
 
 
-@dataclass
-class DotNetEnvironment:
-    allow_user_key_import: bool
-    dot_net_template: 'DotNetTemplate'
-    disabled: bool
-    dn: str
-    expiration: int
-    guid: str
-    id: int
-    ip_address_restriction: 'Items'
-    key_algorithm: 'EnvironmentTemplateDetails'
-    key_dn: str
-    key_storage_location: 'EnvironmentTemplateDetails'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    max_uses: int
-    per_user: bool
-    template_dn: str
+class DotNetEnvironment(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    dot_net_template: 'DotNetTemplate' = PayloadField(alias='DotNetTemplate', default=None)
+    disabled: bool = PayloadField(alias='Disabled', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    expiration: int = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    ip_address_restriction: 'Items' = PayloadField(alias='IpAddressRestriction', default=None)
+    key_algorithm: 'EnvironmentTemplateDetails' = PayloadField(alias='KeyAlgorithm', default=None)
+    key_dn: str = PayloadField(alias='KeyDn', default=None)
+    key_storage_location: 'EnvironmentTemplateDetails' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    max_uses: int = PayloadField(alias='MaxUses', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    template_dn: str = PayloadField(alias='TemplateDn', default=None)
 
 
-@dataclass
-class GPGTemplate:
-    allow_user_key_import: bool
-    authentication_key_algorithm: 'InfoValue'
-    dn: str
-    email: 'InfoValue'
-    encryption_key_algorithm: 'InfoValue'
-    expiration: 'InfoValue'
-    guid: str
-    id: int
-    key_storage_location: 'InfoValue'
-    key_use_flow_dn: str
-    max_uses: 'InfoValue'
-    object_naming_pattern: str
-    per_user: bool
-    read_only: bool
-    real_name: 'InfoValue'
-    signing_key_algorithm: 'InfoValue'
-    type: str
-    visible_to: 'Items'
+class GPGTemplate(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    authentication_key_algorithm: 'InfoValue' = PayloadField(alias='AuthenticationKeyAlgorithm', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    email: 'InfoValue' = PayloadField(alias='Email', default=None)
+    encryption_key_algorithm: 'InfoValue' = PayloadField(alias='EncryptionKeyAlgorithm', default=None)
+    expiration: 'InfoValue' = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    max_uses: 'InfoValue' = PayloadField(alias='MaxUses', default=None)
+    object_naming_pattern: str = PayloadField(alias='ObjectNamingPattern', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    read_only: bool = PayloadField(alias='ReadOnly', default=None)
+    real_name: 'InfoValue' = PayloadField(alias='RealName', default=None)
+    signing_key_algorithm: 'InfoValue' = PayloadField(alias='SigningKeyAlgorithm', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    visible_to: 'Items' = PayloadField(alias='VisibleTo', default=None)
 
 
-@dataclass
-class GPGEnvironment:
-    allow_user_key_import: bool
-    authentication_key_algorithm: 'EnvironmentTemplateDetails'
-    custom_fields_attributes: 'List[CustomFieldAttributes]'
-    dirty: bool
-    dn: str
-    email: List[str]
-    encryption_key_algorithm: 'EnvironmentTemplateDetails'
-    expiration: int
-    guid: str
-    gpg_template: 'GPGTemplate'
-    id: int
-    ip_address_restriction: 'Items'
-    key_storage_location: 'EnvironmentTemplateDetails'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    max_uses: int
-    per_user: bool
-    real_name: 'EnvironmentTemplateDetails'
-    read_only: bool
-    signing_key_algorithm: 'EnvironmentTemplateDetails'
-    status: int
-    template_dn: str
-    type: str
+class GPGEnvironment(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    authentication_key_algorithm: 'EnvironmentTemplateDetails' = PayloadField(alias='AuthenticationKeyAlgorithm', default=None)
+    custom_fields_attributes: 'List[CustomFieldAttributes]' = PayloadField(alias='CustomFieldsAttributes', default=None)
+    dirty: bool = PayloadField(alias='Dirty', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    email: List[str] = PayloadField(alias='Email', default=None)
+    encryption_key_algorithm: 'EnvironmentTemplateDetails' = PayloadField(alias='EncryptionKeyAlgorithm', default=None)
+    expiration: int = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    gpg_template: 'GPGTemplate' = PayloadField(alias='GpgTemplate', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    ip_address_restriction: 'Items' = PayloadField(alias='IpAddressRestriction', default=None)
+    key_storage_location: 'EnvironmentTemplateDetails' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    max_uses: int = PayloadField(alias='MaxUses', default=None)
+    per_user: bool = PayloadField(alias='PerUser', default=None)
+    real_name: 'EnvironmentTemplateDetails' = PayloadField(alias='RealName', default=None)
+    read_only: bool = PayloadField(alias='ReadOnly', default=None)
+    signing_key_algorithm: 'EnvironmentTemplateDetails' = PayloadField(alias='SigningKeyAlgorithm', default=None)
+    status: int = PayloadField(alias='Status', default=None)
+    template_dn: str = PayloadField(alias='TemplateDn', default=None)
+    type: str = PayloadField(alias='Type', default=None)
 
 
-@dataclass
-class KeyPairTemplate:
-    allow_user_key_import: bool
-    description: str
-    dirty: bool
-    dn: str
-    expiration: 'InfoValue'
-    guid: str
-    id: int
-    key_algorithm: 'InfoValue'
-    key_container_dn: str
-    key_storage_location: 'InfoValue'
-    max_uses: int
-    type: str
-    validity_period: int
-    visible_to: 'Items'
+class KeyPairTemplate(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    description: str = PayloadField(alias='Description', default=None)
+    dirty: bool = PayloadField(alias='Dirty', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    expiration: 'InfoValue' = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_algorithm: 'InfoValue' = PayloadField(alias='KeyAlgorithm', default=None)
+    key_container_dn: str = PayloadField(alias='KeyContainerDn', default=None)
+    key_storage_location: 'InfoValue' = PayloadField(alias='KeyStorageLocation', default=None)
+    max_uses: int = PayloadField(alias='MaxUses', default=None)
+    type: str = PayloadField(alias='Type', default=None)
+    validity_period: int = PayloadField(alias='ValidityPeriod', default=None)
+    visible_to: 'Items' = PayloadField(alias='VisibleTo', default=None)
 
 
-@dataclass
-class KeyPairEnvironment:
-    allow_user_key_import: bool
-    custom_fields_attributes: 'List[CustomFieldAttributes]'
-    dn: str
-    expiration: int
-    guid: str
-    id: int
-    ip_address_restriction: 'Items'
-    key_algorithm: 'InfoValue'
-    key_dn: str
-    key_pair_template: 'KeyPairTemplate'
-    key_storage_location: 'EnvironmentTemplateDetails'
-    key_time_constraints: 'Items'
-    key_use_flow_dn: str
-    status: int
-    template_dn: str
-    type: str
+class KeyPairEnvironment(PayloadModel):
+    allow_user_key_import: bool = PayloadField(alias='AllowUserKeyImport', default=None)
+    custom_fields_attributes: 'List[CustomFieldAttributes]' = PayloadField(alias='CustomFieldsAttributes', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    expiration: int = PayloadField(alias='Expiration', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    ip_address_restriction: 'Items' = PayloadField(alias='IpAddressRestriction', default=None)
+    key_algorithm: 'InfoValue' = PayloadField(alias='KeyAlgorithm', default=None)
+    key_dn: str = PayloadField(alias='KeyDn', default=None)
+    key_pair_template: 'KeyPairTemplate' = PayloadField(alias='KeyPairTemplate', default=None)
+    key_storage_location: 'EnvironmentTemplateDetails' = PayloadField(alias='KeyStorageLocation', default=None)
+    key_time_constraints: 'Items' = PayloadField(alias='KeyTimeConstraints', default=None)
+    key_use_flow_dn: str = PayloadField(alias='KeyUseFlowDn', default=None)
+    status: int = PayloadField(alias='Status', default=None)
+    template_dn: str = PayloadField(alias='TemplateDn', default=None)
+    type: str = PayloadField(alias='Type', default=None)
 
 
-@dataclass
-class KeyStorageLocations:
-    items: List[str]
+class KeyStorageLocations(PayloadModel):
+    items: List[str] = PayloadField(alias='Items', default=None)
 
 
-@dataclass
-class Application:
-    dn: str
-    guid: str
-    id: int
+class Application(PayloadModel):
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
 
 
-@dataclass
-class ApplicationCollection:
-    application_dns: 'Items'
-    dn: str
-    guid: str
-    id: int
+class ApplicationCollection(PayloadModel):
+    application_dns: 'Items' = PayloadField(alias='ApplicationDns', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
 
 
-@dataclass
-class GlobalConfiguration:
-    approved_key_storage_locations: 'KeyStorageLocations'
-    available_key_storage_locations: 'KeyStorageLocations'
-    default_ca_container: str
-    default_certificate_container: str
-    default_credential_container: str
-    key_use_timeout: int
-    project_description_tooltip: str
-    request_in_progress_message: str
+class GlobalConfiguration(PayloadModel):
+    approved_key_storage_locations: 'KeyStorageLocations' = PayloadField(alias='ApprovedKeyStorageLocations', default=None)
+    available_key_storage_locations: 'KeyStorageLocations' = PayloadField(alias='AvailableKeyStorageLocations', default=None)
+    default_ca_container: str = PayloadField(alias='DefaultCaContainer', default=None)
+    default_certificate_container: str = PayloadField(alias='DefaultCertificateContainer', default=None)
+    default_credential_container: str = PayloadField(alias='DefaultCredentialContainer', default=None)
+    key_use_timeout: int = PayloadField(alias='KeyUseTimeout', default=None)
+    project_description_tooltip: str = PayloadField(alias='ProjectDescriptionTooltip', default=None)
+    request_in_progress_message: str = PayloadField(alias='RequestInProgressMessage', default=None)
 
 
-@dataclass
-class Project:
-    application_dns: 'Items'
-    applications: 'List[Application]'
-    auditors: 'Items'
-    certificate_environments: 'List[CertificateEnvironment]'
-    collections: 'List[SignApplicationCollection]'
-    created_on: datetime
-    description: str
-    dn: str
-    guid: str
-    id: int
-    key_use_approvers: 'Items'
-    key_users: 'Items'
-    owners: 'Items'
-    status: int
+class Project(PayloadModel):
+    application_dns: 'Items' = PayloadField(alias='ApplicationDns', default=None)
+    applications: 'List[Application]' = PayloadField(alias='Applications', default=None)
+    auditors: 'Items' = PayloadField(alias='Auditors', default=None)
+    certificate_environments: 'List[CertificateEnvironment]' = PayloadField(alias='CertificateEnvironments', default=None)
+    collections: 'List[SignApplicationCollection]' = PayloadField(alias='Collections', default=None)
+    created_on: datetime = PayloadField(alias='CreatedOn', default=None)
+    description: str = PayloadField(alias='Description', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    key_use_approvers: 'Items' = PayloadField(alias='KeyUseApprovers', default=None)
+    key_users: 'Items' = PayloadField(alias='KeyUsers', default=None)
+    owners: 'Items' = PayloadField(alias='Owners', default=None)
+    status: int = PayloadField(alias='Status', default=None)
 
 
-@dataclass
-class Rights:
-    none: int
-    admin: int
-    use: int
-    audit: int
-    owner: int
-    project_approval: int
-    application_admin: int
-    approve_use: int
+class Rights(PayloadModel):
+    none: int = PayloadField(alias='None', default=None)
+    admin: int = PayloadField(alias='Admin', default=None)
+    use: int = PayloadField(alias='Use', default=None)
+    audit: int = PayloadField(alias='Audit', default=None)
+    owner: int = PayloadField(alias='Owner', default=None)
+    project_approval: int = PayloadField(alias='ProjectApproval', default=None)
+    application_admin: int = PayloadField(alias='ApplicationAdmin', default=None)
+    approve_use: int = PayloadField(alias='ApproveUse', default=None)
 
 
-@dataclass
-class SignApplicationCollection:
-    description: str
-    dn: str
-    guid: str
-    hash: str
-    id: int
-    location: str
-    permitted_argument_pattern: str
-    signatory_issuer: str
-    signatory_subject: str
-    size: int
-    version: str
+class SignApplicationCollection(PayloadModel):
+    description: str = PayloadField(alias='Description', default=None)
+    dn: str = PayloadField(alias='Dn', default=None)
+    guid: str = PayloadField(alias='Guid', default=None)
+    hash: str = PayloadField(alias='Hash', default=None)
+    id: int = PayloadField(alias='Id', default=None)
+    location: str = PayloadField(alias='Location', default=None)
+    permitted_argument_pattern: str = PayloadField(alias='PermittedArgumentPattern', default=None)
+    signatory_issuer: str = PayloadField(alias='SignatoryIssuer', default=None)
+    signatory_subject: str = PayloadField(alias='SignatorySubject', default=None)
+    size: int = PayloadField(alias='Size', default=None)
+    version: str = PayloadField(alias='Version', default=None)
