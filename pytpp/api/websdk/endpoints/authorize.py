@@ -1,9 +1,8 @@
 import logging
 import warnings
 from datetime import datetime
-from pydantic import Field
 from pytpp.tools.logger import api_logger
-from pytpp.api.api_base import API, APIResponse, ResponseFactory
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Authorize(API):
@@ -29,7 +28,7 @@ class _Authorize(API):
         }
 
         class _Response(APIResponse):
-            token = Field(default=None, alias='APIKey')
+            token = ResponseField(default=None, alias='APIKey')
 
         api_logger.debug(f'Authenticating to TPP as "{username}"...')
         with api_logger.suppressed(logging.WARNING):
@@ -49,14 +48,14 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                access_token = Field(default=None, alias='access_token')
-                expires = Field(default=None, alias='expires')
-                expires_in = Field(default=None, alias='expires_in')
-                identity = Field(default=None, alias='identity')
-                refresh_token = Field(default=None, alias='refresh_token')
-                refresh_until = Field(default=None, alias='refresh_until')
-                scope = Field(default=None, alias='scope')
-                token_type = Field(default=None, alias='token_type')
+                access_token = ResponseField(default=None, alias='access_token')
+                expires = ResponseField(default=None, alias='expires')
+                expires_in = ResponseField(default=None, alias='expires_in')
+                identity = ResponseField(default=None, alias='identity')
+                refresh_token = ResponseField(default=None, alias='refresh_token')
+                refresh_until = ResponseField(default=None, alias='refresh_until')
+                scope = ResponseField(default=None, alias='scope')
+                token_type = ResponseField(default=None, alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
@@ -77,13 +76,13 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                device_code = Field(default=None, alias='device_code')
-                interval = Field(default=None, alias='interval')
-                user_code = Field(default=None, alias='user_code')
-                verification_uri = Field(default=None, alias='verification_uri')
-                verification_url_complete = Field(default=None, alias='verification_uri_complete')
-                expires_in = Field(default=None, alias='expires_in')
-                expires = Field(default=None, alias='expires')
+                device_code = ResponseField(default=None, alias='device_code')
+                interval = ResponseField(default=None, alias='interval')
+                user_code = ResponseField(default=None, alias='user_code')
+                verification_uri = ResponseField(default=None, alias='verification_uri')
+                verification_url_complete = ResponseField(default=None, alias='verification_uri_complete')
+                expires_in = ResponseField(default=None, alias='expires_in')
+                expires = ResponseField(default=None, alias='expires')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
@@ -105,14 +104,14 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                access_token: str = Field(alias='access_token', default=None)
-                expires: datetime = Field(default=None, alias='expires')
-                expires_in = Field(default=None, alias='expires_in')
-                identity = Field(default=None, alias='identity')
-                refresh_token = Field(default=None, alias='refresh_token')
-                refresh_until = Field(default=None, alias='refresh_until')
-                scope = Field(default=None, alias='scope')
-                token_type = Field(default=None, alias='token_type')
+                access_token: str = ResponseField(alias='access_token', default=None)
+                expires: datetime = ResponseField(default=None, alias='expires')
+                expires_in = ResponseField(default=None, alias='expires_in')
+                identity = ResponseField(default=None, alias='identity')
+                refresh_token = ResponseField(default=None, alias='refresh_token')
+                refresh_until = ResponseField(default=None, alias='refresh_until')
+                scope = ResponseField(default=None, alias='scope')
+                token_type = ResponseField(default=None, alias='token_type')
 
             return ResponseFactory(response=self._post(data=body), response_cls=_Response)
 
@@ -131,12 +130,12 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                access_token: str = Field(alias='access_token', default=None)
-                expires: str = Field(alias='expires', default=None)
-                identity: str = Field(alias='identity', default=None)
-                refresh_token: str = Field(alias='refresh_token', default=None)
-                scope: str = Field(alias='scope', default=None)
-                token_type: str = Field(alias='token_type', default=None)
+                access_token: str = ResponseField(alias='access_token', default=None)
+                expires: str = ResponseField(alias='expires', default=None)
+                identity: str = ResponseField(alias='identity', default=None)
+                refresh_token: str = ResponseField(alias='refresh_token', default=None)
+                scope: str = ResponseField(alias='scope', default=None)
+                token_type: str = ResponseField(alias='token_type', default=None)
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" as "{username}"...')
@@ -159,12 +158,12 @@ class _Authorize(API):
             }
 
             class _Response(APIResponse):
-                access_token = Field(default=None, alias='access_token')
-                expires = Field(default=None, alias='expires')
-                refresh_token = Field(default=None, alias='refresh_token')
-                refresh_until = Field(default=None, alias='refresh_until')
-                scope = Field(default=None, alias='scope')
-                token_type = Field(default=None, alias='token_type')
+                access_token = ResponseField(default=None, alias='access_token')
+                expires = ResponseField(default=None, alias='expires')
+                refresh_token = ResponseField(default=None, alias='refresh_token')
+                refresh_until = ResponseField(default=None, alias='refresh_until')
+                scope = ResponseField(default=None, alias='scope')
+                token_type = ResponseField(default=None, alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth application with a refresh token...')
             with api_logger.suppressed(logging.WARNING):
@@ -179,13 +178,13 @@ class _Authorize(API):
 
         def get(self):
             class _Response(APIResponse):
-                access_issued_on_unix_time = Field(default=None, alias='access_issued_on_unix_time')
-                application = Field(default=None, alias='application')
-                expires_unix_time = Field(default=None, alias='expires_unix_time')
-                grant_issued_on_unix_time = Field(default=None, alias='grant_issued_on_unix_time')
-                identity = Field(default=None, alias='identity')
-                scope = Field(default=None, alias='scope')
-                valid_for = Field(default=None, alias='valid_for')
+                access_issued_on_unix_time = ResponseField(default=None, alias='access_issued_on_unix_time')
+                application = ResponseField(default=None, alias='application')
+                expires_unix_time = ResponseField(default=None, alias='expires_unix_time')
+                grant_issued_on_unix_time = ResponseField(default=None, alias='grant_issued_on_unix_time')
+                identity = ResponseField(default=None, alias='identity')
+                scope = ResponseField(default=None, alias='scope')
+                valid_for = ResponseField(default=None, alias='valid_for')
         
                 @property
                 def access_issued_on(self):
