@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.client import Client
+from properties.response_objects.dataclasses import client
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Client(API):
@@ -32,16 +32,10 @@ class _Client(API):
             'VirtualMachineId' : virtual_machine_id
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+        class Response(APIResponse):
+            clients: List[client.Client] = ResponseField(default_factory=list)
 
-            @property
-            @api_response_property(return_on_204=list)
-            def clients(self):
-                return [Client.Client(client) for client in self._from_json()]
-
-        return _Response(response=self._get(params=params))
+        return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='clients')
 
     class _Delete(API):
         def __init__(self, api_obj):
@@ -53,21 +47,10 @@ class _Client(API):
                 'DeleteAssociatedDevices': delete_associated_devices
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                deleted_count: int = ResponseField(default=None, alias='DeletedCount')
 
-                @property
-                @api_response_property()
-                def deleted_count(self) -> int:
-                    return self._from_json(key='DeletedCount')
-
-                @property
-                @api_response_property()
-                def errors(self) -> List[str]:
-                    return self._from_json(key='Errors')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _Details(API):
         def __init__(self, api_obj):
@@ -95,16 +78,10 @@ class _Client(API):
                 'VirtualMachineId' : virtual_machine_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                details: List[client.ClientDetails] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property(return_on_204=list)
-                def details(self):
-                    return [Client.ClientDetails(client) for client in self._from_json()]
-
-            return _Response(response=self._get(params=params))
+            return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='details')
 
     class _Work(API):
         def __init__(self, api_obj):
@@ -115,13 +92,7 @@ class _Client(API):
                 'WorkType': work_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                works: List[client.Work] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property(return_on_204=list)
-                def works(self):
-                    return [Client.Work(work) for work in self._from_json()]
-
-            return _Response(response=self._get(params=params))
+            return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='works')

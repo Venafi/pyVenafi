@@ -1,6 +1,8 @@
 import re
 import json
 import time
+
+from pydantic.fields import FieldInfo
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from pytpp.tools.logger import api_logger, json_pickler
@@ -293,8 +295,27 @@ class API:
 ResponseField = Field
 
 
-def ResponseFactory(response: Response, response_cls: Type[T_]) -> T_:
-    result = response.json() if response.status_code == 204 else {}
+def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str = None) -> T_:
+    """
+    Args:
+        response: Response instance returned by the ``requests`` call to the server.
+        response_cls: Custom APIResponse class.
+        root_field: In the case that the returned JSON is an array of objects, then the ``root_field``
+            is used to assign that value.
+
+    Returns:
+        An instance of ``response_cls``.
+    """
+    try:
+        result = response.json()
+    except:
+        result = {}
+    if not isinstance(result, dict):
+        if not root_field:
+            raise AttributeError('Unable to assign ')
+        result = {
+            str(root_field): result
+        }
     response_inst = response_cls(api_response=response, **result)
     try:
         response.raise_for_status()

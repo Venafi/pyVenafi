@@ -156,8 +156,10 @@ class _Certificates(API):
                 }
                 
                 class Response(APIResponse):
-                    success: str = ResponseField(default=None, alias='Success')
-                    previous_versions: List[certificate.PreviousVersions] = ResponseField(default_factory=list, alias='PreviousVersions')
+                    success: str = ResponseField(default='', alias='Success')
+                    previous_versions: List[certificate.PreviousVersions] = ResponseField(
+                        default_factory=list, alias='PreviousVersions'
+                    )
 
                 return ResponseFactory(response=self._get(params=params), response_cls=Response)
 
@@ -240,11 +242,11 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                certificate_data: str = Field(default=None, alias='CertificateData')
-                certificate_dn: str = Field(default=None, alias='CertificateDN')
-                filename: str = Field(default=None, alias='Filename')
-                format: str = Field(default=None, alias='Format')
-                success: bool = Field(default=None, alias='Success')
+                certificate_data: str = ResponseField(default=None, alias='CertificateData')
+                certificate_dn: str = ResponseField(default=None, alias='CertificateDN')
+                filename: str = ResponseField(default=None, alias='Filename')
+                format: str = ResponseField(default=None, alias='Format')
+                success: bool = ResponseField(default=None, alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
