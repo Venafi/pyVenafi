@@ -33,10 +33,10 @@ class _Certificates(API):
 
         class Response(APIResponse):
             links: List[certificate.Link] = ResponseField(default_factory=list, alias='_links')
-            x_record_count: int = ResponseField(default=None, alias='X-Record-Count')
+            x_record_count: int = ResponseField(alias='X-Record-Count')
             certificates: List[certificate.Certificate] = ResponseField(default_factory=list, alias='Certificates')
-            data_range: str = ResponseField(default=None, alias='DataRange')
-            total_count: int = ResponseField(default=None, alias='TotalCount')
+            data_range: str = ResponseField(alias='DataRange')
+            total_count: int = ResponseField(alias='TotalCount')
 
         return ResponseFactory(response=self._get(params=params), response_cls=Response)
 
@@ -63,7 +63,7 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                success: bool = ResponseField(default=None, alias='Success')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -78,8 +78,8 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                csr: certificate.CSR = ResponseField(default=None, alias='CSR')
-                policy: certificate.Policy = ResponseField(default=None, alias='Policy')
+                csr: certificate.CSR = ResponseField(alias='CSR')
+                policy: certificate.Policy = ResponseField(alias='Policy')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -95,7 +95,7 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                success: bool = ResponseField(default=None, alias='Success')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -108,7 +108,7 @@ class _Certificates(API):
 
         def delete(self):
             class Response(APIResponse):
-                success: bool = ResponseField(default=None, alias='Success')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._delete(), response_cls=Response)
 
@@ -117,17 +117,17 @@ class _Certificates(API):
                 approver: List[str] = ResponseField(default_factory=list, alias='Approver')
                 certificate_details: certificate.CertificateDetails = ResponseField(default_factory=None, alias='CertificateDetails')
                 contact: List[str] = ResponseField(default_factory=list, alias='Contact')
-                created_on: datetime = ResponseField(default=None, alias='CreatedOn')
+                created_on: datetime = ResponseField(alias='CreatedOn')
                 custom_fields: List[dict] = ResponseField(default_factory=list, alias='CustomFields')
-                dn: str = ResponseField(default=None, alias='DN')
-                guid: str = ResponseField(default=None, alias='Guid')
-                name: str = ResponseField(default=None, alias='Name')
-                parent_dn: str = ResponseField(default=None, alias='ParentDN')
-                processing_details: certificate.ProcessingDetails = ResponseField(default=None, alias='ProcessingDetails')
-                renewal_details: certificate.RenewalDetails = ResponseField(default=None, alias='RenewalDetails')
-                schema_class: str = ResponseField(default=None, alias='SchemaClass')
-                success: str = ResponseField(default=None, alias='Success')
-                validation_details: certificate.ValidationDetails = ResponseField(default=None, alias='ValidationDetails')
+                dn: str = ResponseField(alias='DN')
+                guid: str = ResponseField(alias='Guid')
+                name: str = ResponseField(alias='Name')
+                parent_dn: str = ResponseField(alias='ParentDN')
+                processing_details: certificate.ProcessingDetails = ResponseField(alias='ProcessingDetails')
+                renewal_details: certificate.RenewalDetails = ResponseField(alias='RenewalDetails')
+                schema_class: str = ResponseField(alias='SchemaClass')
+                success: str = ResponseField(alias='Success')
+                validation_details: certificate.ValidationDetails = ResponseField(alias='ValidationDetails')
 
             return ResponseFactory(response=self._get(), response_cls=Response)
 
@@ -137,7 +137,7 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                success: str = ResponseField(default=None, alias='Success')
+                success: str = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._put(data=body), response_cls=Response)
 
@@ -195,10 +195,10 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                certificate_dn: str = ResponseField(default=None, alias='CertificateDN')
-                certificate_vault_id: int = ResponseField(default=None, alias='CertificateVaultID')
-                guid: str = ResponseField(default=None, alias='Guid')
-                private_key_vault_id: int = ResponseField(default=None, alias='PrivateKeyVaultID')
+                certificate_dn: str = ResponseField(alias='CertificateDN')
+                certificate_vault_id: int = ResponseField(alias='CertificateVaultID')
+                guid: str = ResponseField(alias='Guid')
+                private_key_vault_id: int = ResponseField(alias='PrivateKeyVaultID')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -214,7 +214,7 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                success: bool = ResponseField(default=None, alias='Success')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -242,11 +242,11 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                certificate_data: str = ResponseField(default=None, alias='CertificateData')
-                certificate_dn: str = ResponseField(default=None, alias='CertificateDN')
-                filename: str = ResponseField(default=None, alias='Filename')
-                format: str = ResponseField(default=None, alias='Format')
-                success: bool = ResponseField(default=None, alias='Success')
+                certificate_data: str = ResponseField(alias='CertificateData')
+                certificate_dn: str = ResponseField(alias='CertificateDN')
+                filename: str = ResponseField(alias='Filename')
+                format: str = ResponseField(alias='Format')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -293,11 +293,11 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                certificate_data: str = ResponseField(default=None, alias='CertificateData') 
-                filename: str = ResponseField(default=None, alias='Filename') 
-                format: str = ResponseField(default=None, alias='Format') 
-                certificate_dn: str = ResponseField(default=None, alias='CertificateDN') 
-                guid: str = ResponseField(default=None, alias='Guid')
+                certificate_data: str = ResponseField(alias='CertificateData') 
+                filename: str = ResponseField(alias='Filename') 
+                format: str = ResponseField(alias='Format') 
+                certificate_dn: str = ResponseField(alias='CertificateDN') 
+                guid: str = ResponseField(alias='Guid')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -313,10 +313,10 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                private_key_mismatch_reset_completed: bool = ResponseField(default=None, alias='PrivateKeyMismatchResetCompleted')
-                processing_reset_completed: bool = ResponseField(default=None, alias='ProcessingResetCompleted')
-                restart_completed: bool = ResponseField(default=None, alias='RestartCompleted')
-                revocation_reset_completed: bool = ResponseField(default=None, alias='RevocationResetCompleted')
+                private_key_mismatch_reset_completed: bool = ResponseField(alias='PrivateKeyMismatchResetCompleted')
+                processing_reset_completed: bool = ResponseField(alias='ProcessingResetCompleted')
+                restart_completed: bool = ResponseField(alias='RestartCompleted')
+                revocation_reset_completed: bool = ResponseField(alias='RevocationResetCompleted')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -359,9 +359,9 @@ class _Certificates(API):
             }
             
             class Response(APIResponse):
-                certificate_data: str = ResponseField(default=None, alias='CertificateData')
-                filename: str = ResponseField(default=None, alias='Filename')
-                format: str = ResponseField(default=None, alias='Format')
+                certificate_data: str = ResponseField(alias='CertificateData')
+                filename: str = ResponseField(alias='Filename')
+                format: str = ResponseField(alias='Format')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -404,9 +404,9 @@ class _Certificates(API):
                 }
 
                 class Response(APIResponse):
-                    certificate_data: str = ResponseField(default=None, alias='CertificateData')
-                    filename: str = ResponseField(default=None, alias='Filename')
-                    format: str = ResponseField(default=None, alias='Format')
+                    certificate_data: str = ResponseField(alias='CertificateData')
+                    filename: str = ResponseField(alias='Filename')
+                    format: str = ResponseField(alias='Format')
 
                 return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -421,7 +421,7 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                success: bool = ResponseField(default=None, alias='Success')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -441,8 +441,8 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                requested: bool = ResponseField(default=None, alias='Requested')
-                success: bool = ResponseField(default=None, alias='Success')
+                requested: bool = ResponseField(alias='Requested')
+                success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -457,7 +457,7 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                success: bool = ResponseField(default=None, alias='Success')
+                success: bool = ResponseField(alias='Success')
                 validated_certificate_dns: List[str] = ResponseField(default_factory=list, alias='ValidatedCertificateDNs')
                 validated_certificate_guids: List[str] = ResponseField(default_factory=list, alias='ValidatedCertificateGUIDs')
                 warnings: List[str] = ResponseField(default_factory=list, alias='Warnings')

@@ -34,6 +34,8 @@ class _Client(API):
 
         class Response(APIResponse):
             clients: List[client.Client] = ResponseField(default_factory=list)
+            error_description: str = ResponseField(alias='error_description')
+            error: str = ResponseField(alias='error')
 
         return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='clients')
 
@@ -48,7 +50,9 @@ class _Client(API):
             }
 
             class Response(APIResponse):
-                deleted_count: int = ResponseField(default=None, alias='DeletedCount')
+                deleted_count: int = ResponseField(alias='DeletedCount')
+                error_description: str = ResponseField(alias='error_description')
+                error: str = ResponseField(alias='error')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -80,6 +84,8 @@ class _Client(API):
 
             class Response(APIResponse):
                 details: List[client.ClientDetails] = ResponseField(default_factory=list)
+                error_description: str = ResponseField(alias='error_description')
+                error: str = ResponseField(alias='error')
 
             return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='details')
 
@@ -94,5 +100,7 @@ class _Client(API):
 
             class Response(APIResponse):
                 works: List[client.Work] = ResponseField(default_factory=list)
+                error_description: str = ResponseField(alias='error_description')
+                error: str = ResponseField(alias='error')
 
             return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='works')

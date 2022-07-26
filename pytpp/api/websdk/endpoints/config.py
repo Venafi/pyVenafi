@@ -1,5 +1,5 @@
-from typing import List 
-from pytpp.api.api_base import API, APIResponse, api_response_property
+from typing import List
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 from pytpp.properties.response_objects.dataclasses import config
 
 
@@ -47,21 +47,15 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
-                'ObjectDN': object_dn,
+                'ObjectDN'     : object_dn,
                 'AttributeName': attribute_name,
-                'Value': value
+                'Value'        : value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-                    
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _AddPolicyValue(API):
         def __init__(self, api_obj):
@@ -69,23 +63,17 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, class_name: str, value: str, locked: bool):
             body = {
-                'ObjectDN': object_dn,
+                'ObjectDN'     : object_dn,
                 'AttributeName': attribute_name,
-                'Class': class_name,
-                'Value': value,
-                'Locked': locked
+                'Class'        : class_name,
+                'Value'        : value,
+                'Locked'       : locked
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _AddValue(API):
         def __init__(self, api_obj):
@@ -93,21 +81,15 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
-                'ObjectDN': object_dn,
+                'ObjectDN'     : object_dn,
                 'AttributeName': attribute_name,
-                'Value': value,
+                'Value'        : value,
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ClearAttribute(API):
         def __init__(self, api_obj):
@@ -115,20 +97,14 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
-                'ObjectDN': object_dn,
+                'ObjectDN'     : object_dn,
                 'AttributeName': attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ClearPolicyAttribute(API):
         def __init__(self, api_obj):
@@ -136,21 +112,15 @@ class _Config:
 
         def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = {
-                'ObjectDN': object_dn,
-                'Class': class_name,
+                'ObjectDN'     : object_dn,
+                'Class'        : class_name,
                 'AttributeName': attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ContainableClasses(API):
         def __init__(self, api_obj):
@@ -161,21 +131,11 @@ class _Config:
                 'ObjectDN': object_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                class_names: List[str] = ResponseField(alias='ClassNames', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def class_names(self) -> List[str]:
-                    return self._from_json(key='ClassNames')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CountObjects(API):
         def __init__(self, api_obj):
@@ -183,27 +143,17 @@ class _Config:
 
         def post(self, object_dn: str, type_name: str, recursive: bool = False, pattern: str = None):
             body = {
-                'ObjectDN': object_dn,
-                'Type': type_name,
-                'Pattern': pattern,
+                'ObjectDN' : object_dn,
+                'Type'     : type_name,
+                'Pattern'  : pattern,
                 'Recursive': recursive
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                count: int = ResponseField(alias='Count')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def count(self) -> int:
-                    return self._from_json(key='Count')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _Create(API):
         def __init__(self, api_obj):
@@ -211,47 +161,27 @@ class _Config:
 
         def post(self, object_dn: str, class_name: str, name_attribute_list: list):
             body = {
-                "ObjectDN": object_dn,
-                "Class": class_name,
+                "ObjectDN"         : object_dn,
+                "Class"            : class_name,
                 "NameAttributeList": name_attribute_list
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: config.Object = ResponseField(alias='Object')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def object(self):
-                    return config.Object(**self._from_json(key='Object'))
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DefaultDN(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/DefaultDN')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                default_dn: str = ResponseField(alias='DefaultDN')
+                result: int = ResponseField(alias='Result')
 
-                @property
-                @api_response_property()
-                def default_dn(self) -> str:
-                    return self._from_json(key='DefaultDN')
-
-                @property
-                @api_response_property()
-                def result(self) -> int:
-                    return self._from_json(key='Result')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response=self._get(), response_cls=Response)
 
     class _Delete(API):
         def __init__(self, api_obj):
@@ -259,20 +189,14 @@ class _Config:
 
         def post(self, object_dn: str, recursive: bool = False):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN" : object_dn,
                 "Recursive": recursive
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DnToGuid(API):
         def __init__(self, api_obj):
@@ -283,36 +207,14 @@ class _Config:
                 "ObjectDN": object_dn,
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                class_name: str = ResponseField(alias='ClassName')
+                guid: str = ResponseField(alias='GUID')
+                revision: str = ResponseField(alias='Revision')
+                hierarchical_guid: str = ResponseField(alias='HierarchicalGUID')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def class_name(self) -> str:
-                    return self._from_json(key='ClassName')
-
-                @property
-                @api_response_property()
-                def guid(self) -> str:
-                    return self._from_json(key='GUID')
-
-                @property
-                @api_response_property()
-                def revision(self) -> str:
-                    return self._from_json(key='Revision')
-
-                @property
-                @api_response_property()
-                def hierarchical_guid(self) -> str:
-                    return self._from_json(key='HierarchicalGUID')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _Enumerate(API):
         def __init__(self, api_obj):
@@ -320,26 +222,16 @@ class _Config:
 
         def post(self, object_dn: str = None, recursive: bool = False, pattern: str = None):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN" : object_dn,
                 "Recursive": recursive,
-                "Pattern": pattern
+                "Pattern"  : pattern
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateAll(API):
         def __init__(self, api_obj):
@@ -350,21 +242,11 @@ class _Config:
                 "Pattern": pattern
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateObjectsDerivedFrom(API):
         def __init__(self, api_obj):
@@ -373,24 +255,14 @@ class _Config:
         def post(self, derived_from: str, pattern: str = None):
             body = {
                 "DerivedFrom": derived_from,
-                "Pattern": pattern
+                "Pattern"    : pattern
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumeratePolicies(API):
         def __init__(self, api_obj):
@@ -401,21 +273,11 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                policies: List[config.Policy] = ResponseField(alias='Policies', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def policies(self):
-                    return [config.Policy(**obj) for obj in self._from_json(key='Policies')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _Find(API):
         def __init__(self, api_obj):
@@ -423,25 +285,15 @@ class _Config:
 
         def post(self, pattern: str, attribute_names: str = None):
             body = {
-                "Pattern": pattern,
+                "Pattern"       : pattern,
                 "AttributeNames": attribute_names
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _FindContainers(API):
         def __init__(self, api_obj):
@@ -449,25 +301,15 @@ class _Config:
 
         def post(self, object_dn: str, recursive: bool = False):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN" : object_dn,
                 "Recursive": recursive
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _FindObjectsOfClass(API):
         def __init__(self, api_obj):
@@ -477,28 +319,18 @@ class _Config:
             if not (classes or class_name):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = {
-                "Classes": classes,
-                "Class": class_name,
-                'ObjectDN': object_dn,
-                'Pattern': pattern,
+                "Classes"  : classes,
+                "Class"    : class_name,
+                'ObjectDN' : object_dn,
+                'Pattern'  : pattern,
                 'Recursive': recursive
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [config.Object(**obj) for obj in self._from_json(key='Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _FindPolicy(API):
         def __init__(self, api_obj):
@@ -506,36 +338,18 @@ class _Config:
 
         def post(self, object_dn: str, class_name: str, attribute_name: str):
             body = {
-                "ObjectDN": object_dn,
-                "Class": class_name,
+                "ObjectDN"     : object_dn,
+                "Class"        : class_name,
                 "AttributeName": attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                policy_dn: str = ResponseField(alias='PolicyDN')
+                values: List[str] = ResponseField(alias='Values', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json(key='Locked')
-
-                @property
-                @api_response_property()
-                def policy_dn(self) -> str:
-                    return self._from_json(key='PolicyDN')
-
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json(key='Values')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetHighestRevision(API):
         def __init__(self, api_obj):
@@ -544,24 +358,14 @@ class _Config:
         def post(self, object_dn: str, classes: str = None):
             body = {
                 "ObjectDN": object_dn,
-                'Classes': classes
+                'Classes' : classes
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                revision: str = ResponseField(alias='Revision')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def revision(self) -> str:
-                    return self._from_json(key='Revision')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetRevision(API):
         def __init__(self, api_obj):
@@ -572,21 +376,11 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                revision: str = ResponseField(alias='Revision')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def revision(self) -> str:
-                    return self._from_json(key='Revision')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GuidToDn(API):
         def __init__(self, api_obj):
@@ -597,36 +391,14 @@ class _Config:
                 "ObjectGUID": object_guid
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object_dn: str = ResponseField(alias='ObjectDN')
+                class_name: str = ResponseField(alias='ClassName')
+                revision: str = ResponseField(alias='Revision')
+                hierarchical_guid: str = ResponseField(alias='HierarchicalGUID')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def object_dn(self) -> str:
-                    return self._from_json(key='ObjectDN')
-
-                @property
-                @api_response_property()
-                def class_name(self) -> str:
-                    return self._from_json(key='ClassName')
-
-                @property
-                @api_response_property()
-                def revision(self) -> str:
-                    return self._from_json(key='Revision')
-
-                @property
-                @api_response_property()
-                def hierarchical_guid(self) -> str:
-                    return self._from_json(key='HierarchicalGUID')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _IdInfo(API):
         def __init__(self, api_obj):
@@ -637,64 +409,30 @@ class _Config:
                 "ObjectID": object_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                guid: str = ResponseField(alias='GUID')
+                class_name: str = ResponseField(alias='ClassName')
+                revision: str = ResponseField(alias='Revision')
+                hierarchical_guid: str = ResponseField(alias='HierarchicalGUID')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def guid(self) -> str:
-                    return self._from_json(key='GUID')
-
-                @property
-                @api_response_property()
-                def class_name(self) -> str:
-                    return self._from_json(key='ClassName')
-
-                @property
-                @api_response_property()
-                def revision(self) -> str:
-                    return self._from_json(key='Revision')
-
-                @property
-                @api_response_property()
-                def hierarchical_guid(self) -> str:
-                    return self._from_json(key='HierarchicalGUID')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _IsValid(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/IsValid')
 
         def post(self, object_dn: str = None, object_guid: str = None):
-            if not (object_dn or object_guid):
-                raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = {
                 "ObjectGUID": object_guid,
-                "ObjectDN": object_dn
+                "ObjectDN"  : object_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object: config.Object = ResponseField(alias='Object')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def object(self):
-                    return config.Object(**self._from_json(key='Object'))
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _MutateObject(API):
         def __init__(self, api_obj):
@@ -703,19 +441,13 @@ class _Config:
         def post(self, object_dn: str, class_name: str):
             body = {
                 "ObjectDN": object_dn,
-                "Class": class_name
+                "Class"   : class_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _Read(API):
         def __init__(self, api_obj):
@@ -723,35 +455,17 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                object_dn: str = ResponseField(alias='ObjectDN')
+                attribute_name: str = ResponseField(alias='AttributeName')
+                values: List[str] = ResponseField(alias='Values', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def object_dn(self) -> str:
-                    return self._from_json(key='ObjectDN')
-
-                @property
-                @api_response_property()
-                def attribute_name(self) -> str:
-                    return self._from_json(key='AttributeName')
-
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json(key='Values')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ReadAll(API):
         def __init__(self, api_obj):
@@ -762,21 +476,11 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                name_values: List[config.NameValues] = ResponseField(alias='NameValues', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def name_values(self):
-                    return [config.NameValues(**nv) for nv in self._from_json(key='NameValues')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ReadDn(API):
         def __init__(self, api_obj):
@@ -784,25 +488,15 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                values: List[str] = ResponseField(alias='Values', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json(key='Values')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ReadDnReferences(API):
         def __init__(self, api_obj):
@@ -810,26 +504,16 @@ class _Config:
 
         def post(self, object_dn: str, reference_attribute_name: str, attribute_name: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"              : object_dn,
                 "ReferenceAttributeName": reference_attribute_name,
-                "AttributeName": attribute_name
+                "AttributeName"         : attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                values: List[str] = ResponseField(alias='Values', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json(key='Values', return_on_error=list)
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ReadEffectivePolicy(API):
         def __init__(self, api_obj):
@@ -837,40 +521,18 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                values: List[str] = ResponseField(alias='Values', default_factory=list)
+                locked: bool = ResponseField(alias='Locked')
+                overridden: bool = ResponseField(alias='Overridden')
+                policy_dn: str = ResponseField(alias='PolicyDN')
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json(key='Values')
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json(key='Locked')
-
-                @property
-                @api_response_property()
-                def overridden(self) -> bool:
-                    return self._from_json(key='Overridden')
-
-                @property
-                @api_response_property()
-                def policy_dn(self) -> str:
-                    return self._from_json(key='PolicyDN')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _ReadPolicy(API):
         def __init__(self, api_obj):
@@ -878,31 +540,17 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, class_name: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name,
-                "Class": class_name
+                "Class"        : class_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                values: List[str] = ResponseField(alias='Values', default_factory=list)
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json(key='Locked')
-
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json(key='Values', return_on_error=list)
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RemoveDnValue(API):
         def __init__(self, api_obj):
@@ -910,21 +558,15 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, value: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name,
-                "Value": value
+                "Value"        : value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))                    
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RemovePolicyValue(API):
         def __init__(self, api_obj):
@@ -932,22 +574,16 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, class_name: str, value: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name,
-                "Class": class_name,
-                "Value": value
+                "Class"        : class_name,
+                "Value"        : value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RenameObject(API):
         def __init__(self, api_obj):
@@ -955,20 +591,14 @@ class _Config:
 
         def post(self, object_dn: str, new_object_dn: str):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"   : object_dn,
                 "NewObjectDN": new_object_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _Write(API):
         def __init__(self, api_obj):
@@ -976,20 +606,14 @@ class _Config:
 
         def post(self, object_dn: str, attribute_data: dict):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeData": attribute_data
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _WriteDn(API):
         def __init__(self, api_obj):
@@ -997,21 +621,15 @@ class _Config:
 
         def post(self, object_dn: str, attribute_name: str, values: List[str]):
             body = {
-                "ObjectDN": object_dn,
+                "ObjectDN"     : object_dn,
                 "AttributeName": attribute_name,
-                "Values": values
+                "Values"       : values
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _WritePolicy(API):
         def __init__(self, api_obj):
@@ -1019,20 +637,14 @@ class _Config:
 
         def post(self, object_dn: str, class_name: str, attribute_name: str, locked: bool = False, values: str = None):
             body = {
-                "ObjectDN": object_dn,
-                "Class": class_name,
+                "ObjectDN"     : object_dn,
+                "Class"        : class_name,
                 "AttributeName": attribute_name,
-                "Locked": locked,
-                "Values": values
+                "Locked"       : locked,
+                "Values"       : values
             }
-            
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return config.Result(code=self._from_json(key='Result'))
-            
-            return _Response(response=self._post(data=body))
+            class Response(APIResponse):
+                result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
+
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)

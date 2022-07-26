@@ -1,12 +1,13 @@
 import re
 import json
 import time
-
-from pydantic.fields import FieldInfo
+from pydantic.fields import Undefined
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from pytpp.tools.logger import api_logger, json_pickler
-from typing import Union, Protocol, TYPE_CHECKING, Type, TypeVar
+from typing import Any, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar
+if TYPE_CHECKING:
+    from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
 
 if TYPE_CHECKING:
     from pytpp.api.session import Session
@@ -14,54 +15,54 @@ if TYPE_CHECKING:
 T_ = TypeVar('T_')
 
 
-# def api_response_property(return_on_204: type = None):
-#     """
-#     This function serves as a decorator for all API response objects. Each
-#     response property must be validated before returning the object. This
-#     function depends upon the API class.
-#
-#     The ``on_204`` parameter suggests what data type is expected to be
-#     returned when the response status code is valid, but has no content.
-#     Since there is no content to return, an empty object representing that
-#     object will be returned instead. For example,
-#
-#     .. code-block:: python
-#
-#         # No 204 should ever be returned, so just validate the response
-#         # status codes and return the object on 200.
-#         @property
-#         @api_response_property()
-#         def value1(self) -> str:
-#             return self._from_json(key='Value1')
-#
-#         # 204 could be returned by TPP, so just send an empty response
-#         # of the same object type as the expected response.
-#         @property
-#         @api_response_property(on_204=list)
-#         def value2(self) -> list:
-#             return self._from_json(key='Value2')
-#
-#     Args:
-#         return_on_204: type
-#
-#     Returns: Key of response content returned by TPP.
-#
-#     """
-#
-#     def pre_validation(func):
-#         def wrap(self: APIResponse, *args, **kwargs):
-#             if not self._validated:
-#                 self._validate()
-#             if return_on_204 and self.api_response.status_code == 204:
-#                 if callable(return_on_204):
-#                     return return_on_204()
-#                 else:
-#                     return return_on_204
-#             return func(self, *args, **kwargs)
-#
-#         return wrap
-#
-#     return pre_validation
+def api_response_property(return_on_204: type = None):
+    """
+    This function serves as a decorator for all API response objects. Each
+    response property must be validated before returning the object. This
+    function depends upon the API class.
+
+    The ``on_204`` parameter suggests what data type is expected to be
+    returned when the response status code is valid, but has no content.
+    Since there is no content to return, an empty object representing that
+    object will be returned instead. For example,
+
+    .. code-block:: python
+
+        # No 204 should ever be returned, so just validate the response
+        # status codes and return the object on 200.
+        @property
+        @api_response_property()
+        def value1(self) -> str:
+            return self._from_json(key='Value1')
+
+        # 204 could be returned by TPP, so just send an empty response
+        # of the same object type as the expected response.
+        @property
+        @api_response_property(on_204=list)
+        def value2(self) -> list:
+            return self._from_json(key='Value2')
+
+    Args:
+        return_on_204: type
+
+    Returns: Key of response content returned by TPP.
+
+    """
+
+    def pre_validation(func):
+        def wrap(self: APIResponse, *args, **kwargs):
+            if not self._validated:
+                self._validate()
+            if return_on_204 and self.api_response.status_code == 204:
+                if callable(return_on_204):
+                    return return_on_204()
+                else:
+                    return return_on_204
+            return func(self, *args, **kwargs)
+
+        return wrap
+
+    return pre_validation
 
 
 class APISource(Protocol):
@@ -292,7 +293,63 @@ class API:
         )
 
 
-ResponseField = Field
+def ResponseField(
+        default: Any = None,
+        *,
+        default_factory: 'Optional[NoArgAnyCallable]' = None,
+        alias: str = None,
+        title: str = None,
+        description: str = None,
+        exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
+        include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
+        const: bool = None,
+        gt: float = None,
+        ge: float = None,
+        lt: float = None,
+        le: float = None,
+        multiple_of: float = None,
+        max_digits: int = None,
+        decimal_places: int = None,
+        min_items: int = None,
+        max_items: int = None,
+        unique_items: bool = None,
+        min_length: int = None,
+        max_length: int = None,
+        allow_mutation: bool = True,
+        regex: str = None,
+        discriminator: str = None,
+        repr: bool = True,
+        **extra: Any,
+) -> Any:
+    if callable(default_factory):
+        default = Undefined
+    return Field(
+        default=default,
+        default_factory=default_factory,
+        alias=alias,
+        title=title,
+        description=description,
+        exclude=exclude,
+        include=include,
+        const=const,
+        gt=gt,
+        ge=ge,
+        lt=lt,
+        le=le,
+        multiple_of=multiple_of,
+        max_digits=max_digits,
+        decimal_places=decimal_places,
+        min_items=min_items,
+        max_items=max_items,
+        unique_items=unique_items,
+        min_length=min_length,
+        max_length=max_length,
+        allow_mutation=allow_mutation,
+        regex=regex,
+        discriminator=discriminator,
+        repr=repr,
+        **extra
+    )
 
 
 def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str = None) -> T_:
@@ -319,18 +376,18 @@ def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str 
     response_inst = response_cls(api_response=response, **result)
     try:
         response.raise_for_status()
-        if isinstance(result, dict) and (error_key := getattr(response_inst, '__error_key__')) in result.keys():
+        if isinstance(result, dict) and (error_key := getattr(response_inst, 'error', 'Unknown')) in result.keys():
             raise InvalidResponseError('An error occurred: "%s"' % result[error_key], response=response)
         return response_inst
     except HTTPError as error:
-        if isinstance(result, dict) and (error_key := getattr(response_inst, '__error_key__')) in result.keys():
-            raise InvalidResponseError('An error occurred: "%s"' % result[error_key], response=response)
+        if isinstance(result, dict) and (error_msg := getattr(response_inst, 'error', None)) is not None:
+            raise InvalidResponseError(f'An error occurred: "{error_msg}"', response=response) from error
         raise InvalidResponseError(str(error), response=response)
 
 
 class APIResponse(BaseModel):
     api_response: Response
-    __error_key__: str = ResponseField(default=None, alias='Error')
+    error: str = ResponseField(default=None, alias='Error')
 
     class Config:
         arbitrary_types_allowed = True
@@ -341,7 +398,9 @@ class APIResponse(BaseModel):
         lowered_values = {k.lower(): v for k, v in values.items()}
         for fk, fv in cls.__fields__.items():
             try:
-                new_value = lowered_values[fk.lower()]
+                if fk.lower() not in lowered_values:
+                    continue
+                new_value = lowered_values.get(fk.lower())
                 if (converter := fv.field_info.extra.get('converter')) is not None:
                     new_value = converter(new_value)
                 new_values[fv.alias] = new_value
