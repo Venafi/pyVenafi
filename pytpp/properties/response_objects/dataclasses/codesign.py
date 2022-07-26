@@ -1,3 +1,4 @@
+from properties.resultcodes import ResultCodes
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 from datetime import datetime
 from typing import List
@@ -5,7 +6,10 @@ from typing import List
 
 class ResultCode(PayloadModel):
     code: int = PayloadField(alias='Code', default=None)
-    codesign_result: str = PayloadField(alias='CodesignResult', default=None)
+
+    @property
+    def codesign_result(self):
+        return ResultCodes.CodeSign.get(self.code, 'Unknown')
 
 
 class Items(PayloadModel):

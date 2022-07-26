@@ -1,6 +1,6 @@
 from typing import List, Dict, Union
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.codesign import CodeSign
+from properties.response_objects.dataclasses import codesign
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Codesign:
@@ -60,26 +60,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _AddApplicationAdministrator(API):
         def __init__(self, api_obj):
@@ -90,26 +76,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _AddProjectAdministrator(API):
         def __init__(self, api_obj):
@@ -120,26 +92,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _AddProjectApprover(API):
         def __init__(self, api_obj):
@@ -150,26 +108,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _AddPreApproval(API):
         def __init__(self, api_obj):
@@ -188,26 +132,12 @@ class _Codesign:
                 'NotBefore'        : not_before
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CountReferences(API):
         def __init__(self, api_obj):
@@ -219,31 +149,13 @@ class _Codesign:
                 'ApplicationCollection': application_collection
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                count: int = ResponseField(alias='Count')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def count(self) -> int:
-                    return self._from_json(key='Count')
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CreateApplication(API):
         def __init__(self, api_obj):
@@ -254,31 +166,13 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application: codesign.Application = ResponseField(alias='Application')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application(self):
-                    return CodeSign.Application(self._from_json(key='Application'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CreateApplicationCollection(API):
         def __init__(self, api_obj):
@@ -289,31 +183,13 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application(self):
-                    return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CreateEnvironment(API):
         def __init__(self, api_obj):
@@ -329,71 +205,21 @@ class _Codesign:
                 'TemplateDn'     : template_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
+                csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
+                dot_net_environment: codesign.DotNetEnvironment = ResponseField(alias='DotNetEnvironment')
+                gpg_environment: codesign.GPGEnvironment = ResponseField(alias='GPGEnvironment')
+                key_pair_environment: codesign.KeyPairEnvironment = ResponseField(alias='KeyPairEnvironment')
+                apple_template: codesign.AppleTemplate = ResponseField(alias='AppleTemplate')
+                csp_template: codesign.CSPTemplate = ResponseField(alias='EnviCSPTemplateronment')
+                dot_net_template: codesign.DotNetTemplate = ResponseField(alias='DotNetTemplate')
+                gpg_template: codesign.GPGTemplate = ResponseField(alias='GPGTemplate')
+                key_pair_template: codesign.KeyPairTemplate = ResponseField(alias='KeyPairTemplate')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def apple_environment(self) -> str:
-                    return CodeSign.AppleEnvironment(self._from_json(key='AppleEnvironment'))
-
-                @property
-                @api_response_property()
-                def csp_environment(self) -> str:
-                    return CodeSign.CSPEnvironment(self._from_json(key='CSPEnvironment'))
-
-                @property
-                @api_response_property()
-                def dot_net_environment(self) -> str:
-                    return CodeSign.DotNetEnvironment(self._from_json(key='DotNetEnvironment'))
-
-                @property
-                @api_response_property()
-                def gpg_environment(self) -> str:
-                    return CodeSign.GPGEnvironment(self._from_json(key='GPGEnvironment'))
-
-                @property
-                @api_response_property()
-                def key_pair_environment(self) -> str:
-                    return CodeSign.KeyPairEnvironment(self._from_json(key='KeyPairEnvironment'))
-
-                @property
-                @api_response_property()
-                def apple_template(self) -> str:
-                    return CodeSign.AppleTemplate(self._from_json(key='AppleTemplate'))
-
-                @property
-                @api_response_property()
-                def csp_template(self) -> str:
-                    return CodeSign.CSPTemplate(self._from_json(key='EnviCSPTemplateronment'))
-
-                @property
-                @api_response_property()
-                def dot_net_template(self) -> str:
-                    return CodeSign.DotNetTemplate(self._from_json(key='DotNetTemplate'))
-
-                @property
-                @api_response_property()
-                def gpg_template(self) -> str:
-                    return CodeSign.GPGTemplate(self._from_json(key='GPGTemplate'))
-
-                @property
-                @api_response_property()
-                def key_pair_environment(self) -> str:
-                    return CodeSign.KeyPairTemplate(self._from_json(key='KeyPairTemplate'))
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CreateProject(API):
         def __init__(self, api_obj):
@@ -404,31 +230,13 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                project: codesign.Project = ResponseField(alias='Project')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def project(self):
-                    return CodeSign.Project(self._from_json(key='Project'))
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _CreateTemplate(API):
         def __init__(self, api_obj):
@@ -441,31 +249,13 @@ class _Codesign:
                 'PerUser'     : per_user
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def certificate_template(self):
-                    return CodeSign.CertificateTemplate(self._from_json(key='CertificateTemplate'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DeleteApplication(API):
         def __init__(self, api_obj):
@@ -478,26 +268,12 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DeleteApplicationCollection(API):
         def __init__(self, api_obj):
@@ -510,26 +286,12 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DeleteEnvironment(API):
         def __init__(self, api_obj):
@@ -542,26 +304,12 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DeleteProject(API):
         def __init__(self, api_obj):
@@ -574,26 +322,12 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _DeleteTemplate(API):
         def __init__(self, api_obj):
@@ -607,26 +341,12 @@ class _Codesign:
                 'Id'   : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateApplications(API):
         def __init__(self, api_obj):
@@ -638,33 +358,13 @@ class _Codesign:
                 'Filter': filter
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                applications: List[codesign.Application] = ResponseField(alias='Applications')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def applications(self):
-                    return [
-                        CodeSign.Application(a) for a in self._from_json(key='Applications')
-                    ]
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateApplicationCollections(API):
         def __init__(self, api_obj):
@@ -676,34 +376,13 @@ class _Codesign:
                 'Filter': filter
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application_collections: List[codesign].ApplicationCollection = ResponseField(alias='ApplicationCollections')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application_collections(self):
-                    return [
-                        CodeSign.ApplicationCollection(ac)
-                        for ac in self._from_json(key='ApplicationCollections')
-                    ]
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateProjects(API):
         def __init__(self, api_obj):
@@ -716,31 +395,13 @@ class _Codesign:
                 'Rights': rights
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                projects: List[codesign.Project] = ResponseField(alias='Projects')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def projects(self):
-                    return [CodeSign.Project(p) for p in self._from_json(key='Projects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateReferences(API):
         def __init__(self, api_obj):
@@ -758,31 +419,13 @@ class _Codesign:
                 'CollectionGuid'       : collection_guid
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                reference_dns: List[str] = ResponseField(alias='ReferenceDNs')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def reference_dns(self) -> List[str]:
-                    return self._from_json(key='ReferenceDNs')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _EnumerateTemplates(API):
         def __init__(self, api_obj):
@@ -794,58 +437,16 @@ class _Codesign:
                 'Filter': filter
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                certificate_templates: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplates')
+                csp_templates: codesign.CSPTemplate = ResponseField(alias='CSPTemplates')
+                dot_net_templates: codesign.DotNetTemplate = ResponseField(alias='DotNetTemplates')
+                gpg_templates: codesign.GPGTemplate = ResponseField(alias='GPGTemplates')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def certificate_templates(self):
-                    return [
-                        CodeSign.CertificateTemplate(t)
-                        for t in self._from_json(key='CertificateTemplates')
-                    ]
-
-                @property
-                @api_response_property()
-                def csp_templates(self):
-                    return [
-                        CodeSign.CSPTemplate(t)
-                        for t in self._from_json(key='CSPTemplates')
-                    ]
-
-                @property
-                @api_response_property()
-                def dot_net_templates(self):
-                    return [
-                        CodeSign.DotNetTemplate(t)
-                        for t in self._from_json(key='DotNetTemplates')
-                    ]
-
-                @property
-                @api_response_property()
-                def gpg_templates(self):
-                    return [
-                        CodeSign.GPGTemplate(t)
-                        for t in self._from_json(key='GPGTemplates')
-                    ]
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetApplication(API):
         def __init__(self, api_obj):
@@ -858,31 +459,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application: codesign.Application = ResponseField(alias='Application')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application(self):
-                    return CodeSign.Application(self._from_json(key='Application'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetApplicationCollection(API):
         def __init__(self, api_obj):
@@ -895,31 +478,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application_collection(self):
-                    return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetApplicationCollectionMembers(API):
         def __init__(self, api_obj):
@@ -932,31 +497,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application_collection(self):
-                    return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetApplicationCollectionMemberDNs(API):
         def __init__(self, api_obj):
@@ -969,41 +516,15 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
+                application_collection_dns: List[str] = ResponseField(alias='ApplicationCollectionDNs')
+                application_dns: List[str] = ResponseField(alias='ApplicationDNs')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def application_collection(self):
-                    return CodeSign.ApplicationCollection(self._from_json(key='ApplicationCollection'))
-
-                @property
-                @api_response_property()
-                def application_collection_dns(self) -> List[str]:
-                    return self._from_json(key='ApplicationCollectionDNs')
-
-                @property
-                @api_response_property()
-                def application_dns(self) -> List[str]:
-                    return self._from_json(key='ApplicationDNs')
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetEnvironment(API):
         def __init__(self, api_obj):
@@ -1016,62 +537,26 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def certificate_environment(self):
-                    return CodeSign.CertificateEnvironment(self._from_json(key='CertificateEnvironment'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetGlobalConfiguration(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetGlobalConfiguration')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                global_configuration: codesign.GlobalConfiguration = ResponseField(alias='GlobalConfiguration')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def global_configuration(self):
-                    return CodeSign.GlobalConfiguration(self._from_json(key='GlobalConfiguration'))
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response=self._get(), response_cls=Response)
 
     class _GetObjectRights(API):
         def __init__(self, api_obj):
@@ -1082,31 +567,13 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                rights_list: List[codesign.RightsKeyValue] = ResponseField(alias='RightsList')
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def rights_list(self):
-                    return [CodeSign.RightsKeyValue(r) for r in self._from_json(key='RightsList')]
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetProject(API):
         def __init__(self, api_obj):
@@ -1119,31 +586,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                project: codesign.Project = ResponseField(alias='Project')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def project(self):
-                    return CodeSign.Project(self._from_json(key='Project'))
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetRight(API):
         def __init__(self, api_obj):
@@ -1154,31 +603,13 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                rights: codesign.Rights = ResponseField(alias='Rights')
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def rights(self):
-                    return CodeSign.Rights(self._from_json(key='Rights'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetTemplate(API):
         def __init__(self, api_obj):
@@ -1191,31 +622,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def certificate_template(self):
-                    return CodeSign.CertificateTemplate(self._from_json(key='CertificateTemplate'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _GetTrusteeRights(API):
         def __init__(self, api_obj):
@@ -1226,31 +639,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                rights_list : List[codesign.RightsKeyValue] = ResponseField(alias='RightsList')
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def rights_list(self):
-                    return [CodeSign.RightsKeyValue(r) for r in self._from_json(key='RightsList')]
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RemoveAdministrator(API):
         def __init__(self, api_obj):
@@ -1261,26 +656,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RemoveApplicationAdministrator(API):
         def __init__(self, api_obj):
@@ -1291,26 +672,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RemoveProjectAdministrator(API):
         def __init__(self, api_obj):
@@ -1321,26 +688,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RemoveProjectApprover(API):
         def __init__(self, api_obj):
@@ -1351,26 +704,12 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RenameApplication(API):
         def __init__(self, api_obj):
@@ -1382,26 +721,12 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RenameApplicationCollection(API):
         def __init__(self, api_obj):
@@ -1413,26 +738,12 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RenameProject(API):
         def __init__(self, api_obj):
@@ -1446,26 +757,12 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _RenameTemplate(API):
         def __init__(self, api_obj):
@@ -1478,26 +775,12 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _SetGlobalConfiguration(API):
         def __init__(self, api_obj):
@@ -1508,26 +791,12 @@ class _Codesign:
                 'GlobalConfiguration': global_configuration
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _UpdateApplication(API):
         def __init__(self, api_obj):
@@ -1538,26 +807,12 @@ class _Codesign:
                 'Application': application
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _UpdateApplicationCollection(API):
         def __init__(self, api_obj):
@@ -1568,26 +823,12 @@ class _Codesign:
                 'ApplicationCollection': application_collection
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _UpdateEnvironment(API):
         def __init__(self, api_obj):
@@ -1598,31 +839,13 @@ class _Codesign:
                 'CertificateEnvironment': certificate_environment
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def certificate_environment(self):
-                    return CodeSign.CertificateEnvironment(self._from_json(key='CertificateEnvironment'))
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _UpdateProject(API):
         def __init__(self, api_obj):
@@ -1633,26 +856,12 @@ class _Codesign:
                 'Project': project
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _UpdateProjectStatus(API):
         def __init__(self, api_obj):
@@ -1666,26 +875,12 @@ class _Codesign:
                 'ProjectStatus': project_status,
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _UpdateTemplate(API):
         def __init__(self, api_obj):
@@ -1698,23 +893,9 @@ class _Codesign:
                 'ObjectNamingPattern': object_naming_pattern
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                error: str = ResponseField(alias='Error')
+                result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
