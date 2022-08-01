@@ -4,30 +4,30 @@ from typing import List
 
 
 class Counter(PayloadModel):
-    a_name: str = PayloadField(alias='AName', default=None)
-    b_name: str = PayloadField(alias='BName', default=None)
-    c_name: str = PayloadField(alias='CName', default=None)
-    description: str = PayloadField(alias='Description', default=None)
-    name: str = PayloadField(alias='Name', default=None)
-    stats_type: int = PayloadField(alias='StatsType', default=None)
+    a_name: str = PayloadField(alias='AName')
+    b_name: str = PayloadField(alias='BName')
+    c_name: str = PayloadField(alias='CName')
+    description: str = PayloadField(alias='Description')
+    name: str = PayloadField(alias='Name')
+    stats_type: int = PayloadField(alias='StatsType')
 
 
 class Result(PayloadModel):
-    key: 'Key' = PayloadField(alias='Key', default=None)
-    value: 'List[Value]' = PayloadField(alias='Value', default=None)
+    key: 'Key' = PayloadField(alias='Key')
+    value: 'List[Value]' = PayloadField(alias='Value')
 
 
 class Key(PayloadModel):
-    m_item1: str = PayloadField(alias='MItem1', default=None)
-    m_item2: str = PayloadField(alias='MItem2', default=None)
-    m_item3: str = PayloadField(alias='MItem3', default=None)
+    m_item1: str = PayloadField(alias='MItem1')
+    m_item2: str = PayloadField(alias='MItem2')
+    m_item3: str = PayloadField(alias='MItem3')
 
 
 class Value(PayloadModel):
-    count: int = PayloadField(alias='Count', default=None)
-    sum_value: int = PayloadField(alias='SumValue', default=None)
-    tag_a: str = PayloadField(alias='TagA', default=None)
-    tag_b: str = PayloadField(alias='TagB', default=None)
-    tag_c: str = PayloadField(alias='TagC', default=None)
-    time_frame: datetime = PayloadField(alias='TimeFrame', default=None)
-    type: int = PayloadField(alias='Type', default=None)
+    count: int = PayloadField(alias='Count')
+    sum_value: int = PayloadField(alias='SumValue')
+    tag_a: str = PayloadField(alias='TagA')
+    tag_b: str = PayloadField(alias='TagB')
+    tag_c: str = PayloadField(alias='TagC')
+    time_frame: datetime = PayloadField(alias='TimeFrame')
+    type: int = PayloadField(alias='Type')

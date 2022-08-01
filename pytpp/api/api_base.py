@@ -8,9 +8,8 @@ from pytpp.tools.logger import api_logger, json_pickler
 from typing import Any, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar
 if TYPE_CHECKING:
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
-
-if TYPE_CHECKING:
     from pytpp.api.session import Session
+
 
 T_ = TypeVar('T_')
 

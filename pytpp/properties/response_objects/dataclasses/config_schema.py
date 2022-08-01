@@ -2,20 +2,20 @@ from pytpp.properties.response_objects.dataclasses._base import PayloadModel, Pa
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(alias='Code', default=None)
-    config_result: str = PayloadField(alias='ConfigResult', default=None)
+    code: int = PayloadField(alias='Code')
+    config_result: str = PayloadField(alias='ConfigResult')
 
 
 class AttributeDefinition(PayloadModel):
-    name: str = PayloadField(alias='Name', default=None)
-    syntax: str = PayloadField(alias='Syntax', default=None)
+    name: str = PayloadField(alias='Name')
+    syntax: str = PayloadField(alias='Syntax')
 
 
 class ClassDefinition(PayloadModel):
-    containment_names: list = PayloadField(alias='ContainmentNames', default=None)
-    containment_sub_names: list = PayloadField(alias='ContainmentSubNames', default=None)
-    mandatory_names: list = PayloadField(alias='MandatoryNames', default=None)
-    name: str = PayloadField(alias='Name', default=None)
-    naming_names: list = PayloadField(alias='NamingNames', default=None)
-    optional_names: list = PayloadField(alias='OptionalNames', default=None)
-    super_class_names: list = PayloadField(alias='SuperClassNames', default=None)
+    containment_names: list = PayloadField(alias='ContainmentNames')
+    containment_sub_names: list = PayloadField(alias='ContainmentSubNames')
+    mandatory_names: list = PayloadField(alias='MandatoryNames')
+    name: str = PayloadField(alias='Name')
+    naming_names: list = PayloadField(alias='NamingNames')
+    optional_names: list = PayloadField(alias='OptionalNames')
+    super_class_names: list = PayloadField(alias='SuperClassNames')

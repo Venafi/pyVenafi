@@ -12,24 +12,24 @@ class Result(PayloadModel):
 
 
 class NameValues(PayloadModel):
-    name: str = PayloadField(alias='Name', default=None)
-    values: list = PayloadField(alias='Values', default=None)
+    name: str = PayloadField(alias='Name')
+    values: list = PayloadField(alias='Values')
 
 
 class Object(PayloadModel):
-    absolute_guid: str = PayloadField(alias='AbsoluteGUID', default=None)
-    dn: str = PayloadField(alias='DN', default=None)
-    guid: str = PayloadField(alias='GUID', default=None)
-    config_id: Optional[int] = PayloadField(alias='Id', default=None)
-    name: str = PayloadField(alias='Name', default=None)
-    parent: str = PayloadField(alias='Parent', default=None)
-    revision: Optional[int] = PayloadField(alias='Revision', default=None)
-    type_name: str = PayloadField(alias='TypeName', default=None)
+    absolute_guid: str = PayloadField(alias='AbsoluteGUID')
+    dn: str = PayloadField(alias='DN')
+    guid: str = PayloadField(alias='GUID')
+    config_id: Optional[int] = PayloadField(alias='Id')
+    name: str = PayloadField(alias='Name')
+    parent: str = PayloadField(alias='Parent')
+    revision: Optional[int] = PayloadField(alias='Revision')
+    type_name: str = PayloadField(alias='TypeName')
 
 
 class Policy(PayloadModel):
-    attribute_name: str = PayloadField(alias='AttributeName', default=None)
-    guid: str = PayloadField(alias='GUID', default=None)
-    property: str = PayloadField(alias='Property', default=None)
-    type_name: str = PayloadField(alias='TypeName', default=None)
-    value_list: list = PayloadField(alias='ValueList', default=None)
+    attribute_name: str = PayloadField(alias='AttributeName')
+    guid: str = PayloadField(alias='GUID')
+    property: str = PayloadField(alias='Property')
+    type_name: str = PayloadField(alias='TypeName')
+    value_list: list = PayloadField(alias='ValueList')

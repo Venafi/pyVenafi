@@ -1,4 +1,6 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
+from pydantic import Field
+
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, api_response_property
 from pytpp.properties.response_objects.system_status import SystemStatus
 from pytpp.tools.helpers.date_converter import from_date_string
 
@@ -155,12 +157,6 @@ class _SystemStatus(API):
 
         def get(self):
             class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+                version: str = Field(alias='Version', default=None)
 
-                @property
-                @api_response_property()
-                def version(self) -> str:
-                    return self._from_json('Version')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response=self._get(), response_cls=_Response)

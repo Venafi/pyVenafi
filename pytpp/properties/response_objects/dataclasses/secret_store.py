@@ -2,11 +2,11 @@ from pytpp.properties.response_objects.dataclasses._base import PayloadModel, Pa
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(alias='Code', default=None)
-    secret_store_result: str = PayloadField(alias='SecretStoreResult', default=None)
+    code: int = PayloadField(alias='Code')
+    secret_store_result: str = PayloadField(alias='SecretStoreResult')
 
 
 class TypedNameValues(PayloadModel):
-    name: str = PayloadField(alias='Name', default=None)
-    type: str = PayloadField(alias='Type', default=None)
-    value: str = PayloadField(alias='Value', default=None)
+    name: str = PayloadField(alias='Name')
+    type: str = PayloadField(alias='Type')
+    value: str = PayloadField(alias='Value')

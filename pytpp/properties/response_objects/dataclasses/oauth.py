@@ -2,8 +2,8 @@ from pytpp.properties.response_objects.dataclasses._base import PayloadModel, Pa
 
 
 class Permissions(PayloadModel):
-    delete: bool = PayloadField(alias='Delete', default=None)
-    discover: bool = PayloadField(alias='Discover', default=None)
-    manage: bool = PayloadField(alias='Manage', default=None)
-    read: bool = PayloadField(alias='Read', default=None)
-    revoke: bool = PayloadField(alias='Revoke', default=None)
+    delete: bool = PayloadField(alias='Delete')
+    discover: bool = PayloadField(alias='Discover')
+    manage: bool = PayloadField(alias='Manage')
+    read: bool = PayloadField(alias='Read')
+    revoke: bool = PayloadField(alias='Revoke')

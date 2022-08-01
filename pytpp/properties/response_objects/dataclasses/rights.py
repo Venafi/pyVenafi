@@ -2,10 +2,10 @@ from pytpp.properties.response_objects.dataclasses._base import PayloadModel, Pa
 
 
 class Rights(PayloadModel):
-    checksum: str = PayloadField(alias='Checksum', default=None)
-    is_container: bool = PayloadField(alias='IsContainer', default=None)
-    is_group: bool = PayloadField(alias='IsGroup', default=None)
-    object: str = PayloadField(alias='Object', default=None)
-    principal: str = PayloadField(alias='Principal', default=None)
-    rights: str = PayloadField(alias='Rights', default=None)
-    sub_system: str = PayloadField(alias='SubSystem', default=None)
+    checksum: str = PayloadField(alias='Checksum')
+    is_container: bool = PayloadField(alias='IsContainer')
+    is_group: bool = PayloadField(alias='IsGroup')
+    object: str = PayloadField(alias='Object')
+    principal: str = PayloadField(alias='Principal')
+    rights: str = PayloadField(alias='Rights')
+    sub_system: str = PayloadField(alias='SubSystem')

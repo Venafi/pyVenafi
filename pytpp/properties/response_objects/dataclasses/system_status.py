@@ -4,64 +4,64 @@ from typing import List
 
 
 class Engine(PayloadModel):
-    dn: str = PayloadField(alias='Dn', default=None)
-    display_name: str = PayloadField(alias='DisplayName', default=None)
-    guid: str = PayloadField(alias='Guid', default=None)
-    id: int = PayloadField(alias='Id', default=None)
-    name: str = PayloadField(alias='Name', default=None)
+    dn: str = PayloadField(alias='Dn')
+    display_name: str = PayloadField(alias='DisplayName')
+    guid: str = PayloadField(alias='Guid')
+    id: int = PayloadField(alias='Id')
+    name: str = PayloadField(alias='Name')
 
 
 class Services(PayloadModel):
-    vplatform: 'Service' = PayloadField(alias='Vplatform', default=None)
-    log_server: 'Service' = PayloadField(alias='LogServer', default=None)
-    iis: 'Service' = PayloadField(alias='Iis', default=None)
+    vplatform: 'Service' = PayloadField(alias='Vplatform')
+    log_server: 'Service' = PayloadField(alias='LogServer')
+    iis: 'Service' = PayloadField(alias='Iis')
 
 
 class Service(PayloadModel):
-    modules: list = PayloadField(alias='Modules', default=None)
-    time_since_first_seen: datetime = PayloadField(alias='TimeSinceFirstSeen', default=None)
-    time_since_last_seen: datetime = PayloadField(alias='TimeSinceLastSeen', default=None)
-    status: str = PayloadField(alias='Status', default=None)
+    modules: list = PayloadField(alias='Modules')
+    time_since_first_seen: datetime = PayloadField(alias='TimeSinceFirstSeen')
+    time_since_last_seen: datetime = PayloadField(alias='TimeSinceLastSeen')
+    status: str = PayloadField(alias='Status')
 
 
 class SystemStatus(PayloadModel):
-    engine_name: str = PayloadField(alias='EngineName', default=None)
-    services: 'Services' = PayloadField(alias='Services', default=None)
-    version: str = PayloadField(alias='Version', default=None)
+    engine_name: str = PayloadField(alias='EngineName')
+    services: 'Services' = PayloadField(alias='Services')
+    version: str = PayloadField(alias='Version')
 
 
 class Task(PayloadModel):
-    display_name: str = PayloadField(alias='DisplayName', default=None)
-    name: str = PayloadField(alias='Name', default=None)
-    start_time: datetime = PayloadField(alias='StartTime', default=None)
-    stop_time: datetime = PayloadField(alias='StopTime', default=None)
-    warning_count: int = PayloadField(alias='WarningCount', default=None)
+    display_name: str = PayloadField(alias='DisplayName')
+    name: str = PayloadField(alias='Name')
+    start_time: datetime = PayloadField(alias='StartTime')
+    stop_time: datetime = PayloadField(alias='StopTime')
+    warning_count: int = PayloadField(alias='WarningCount')
 
 
 class UpgradeInfo(PayloadModel):
-    id: str = PayloadField(alias='Id', default=None)
-    start_time: datetime = PayloadField(alias='StartTime', default=None)
-    versions: List[str] = PayloadField(alias='Versions', default=None)
+    id: str = PayloadField(alias='Id')
+    start_time: datetime = PayloadField(alias='StartTime')
+    versions: List[str] = PayloadField(alias='Versions')
 
 
 class UpgradeStatus(PayloadModel):
-    engine: 'Engine' = PayloadField(alias='Engine', default=None)
-    status: str = PayloadField(alias='Status', default=None)
-    upgrade_start_time: datetime = PayloadField(alias='UpgradeStartTime', default=None)
-    upgrade_stop_time: datetime = PayloadField(alias='UpgradeStopTime', default=None)
-    tasks_completed: 'List[Task]' = PayloadField(alias='TasksCompleted', default=None)
-    tasks_pending: 'List[Task]' = PayloadField(alias='TasksPending', default=None)
-    tasks_running: 'List[Task]' = PayloadField(alias='TasksRunning', default=None)
+    engine: 'Engine' = PayloadField(alias='Engine')
+    status: str = PayloadField(alias='Status')
+    upgrade_start_time: datetime = PayloadField(alias='UpgradeStartTime')
+    upgrade_stop_time: datetime = PayloadField(alias='UpgradeStopTime')
+    tasks_completed: 'List[Task]' = PayloadField(alias='TasksCompleted')
+    tasks_pending: 'List[Task]' = PayloadField(alias='TasksPending')
+    tasks_running: 'List[Task]' = PayloadField(alias='TasksRunning')
 
 
 class UpgradeSummary(PayloadModel):
-    status: str = PayloadField(alias='Status', default=None)
-    upgrade_start_time: datetime = PayloadField(alias='UpgradeStartTime', default=None)
-    upgrade_stop_time: datetime = PayloadField(alias='UpgradeStopTime', default=None)
-    completed_tasks: int = PayloadField(alias='CompletedTasks', default=None)
-    target_version: str = PayloadField(alias='TargetVersion', default=None)
-    engines_complete: int = PayloadField(alias='EnginesComplete', default=None)
-    engines_running: int = PayloadField(alias='EnginesRunning', default=None)
-    engines_blocked: int = PayloadField(alias='EnginesBlocked', default=None)
-    engines_in_error: int = PayloadField(alias='EnginesInError', default=None)
-    engines_pending_install: int = PayloadField(alias='EnginesPendingInstall', default=None)
+    status: str = PayloadField(alias='Status')
+    upgrade_start_time: datetime = PayloadField(alias='UpgradeStartTime')
+    upgrade_stop_time: datetime = PayloadField(alias='UpgradeStopTime')
+    completed_tasks: int = PayloadField(alias='CompletedTasks')
+    target_version: str = PayloadField(alias='TargetVersion')
+    engines_complete: int = PayloadField(alias='EnginesComplete')
+    engines_running: int = PayloadField(alias='EnginesRunning')
+    engines_blocked: int = PayloadField(alias='EnginesBlocked')
+    engines_in_error: int = PayloadField(alias='EnginesInError')
+    engines_pending_install: int = PayloadField(alias='EnginesPendingInstall')

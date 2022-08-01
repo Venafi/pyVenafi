@@ -1,8 +1,8 @@
 import time
+from datetime import datetime
 from typing import List, Dict
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.credential import Credential
-from pytpp.tools.helpers.date_converter import from_date_string
+from properties.response_objects.dataclasses import credential
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Credentials:
@@ -20,30 +20,24 @@ class _Credentials:
     class _Adaptable:
         def __init__(self, api_obj):
             self.Update = self._Update(api_obj=api_obj)
-        
+
         class _Update(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Update')
-            
+
             def post(self, credential_path: str, credential_type: str, connector_name: str,
                      custom_fields: List[Dict[str, str]]):
                 body = {
                     'CredentialPath': credential_path,
                     'CredentialType': credential_type,
-                    'ConnectorName': connector_name,
-                    'CustomFields': custom_fields
+                    'ConnectorName' : connector_name,
+                    'CustomFields'  : custom_fields
                 }
-                
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Credential.Result(self._from_json(key='Result'))
-                        
-                return _Response(response=self._post(data=body))
+                class Response(APIResponse):
+                    result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
+
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Connector:
         def __init__(self, api_obj):
@@ -58,23 +52,17 @@ class _Credentials:
                      description: str = None):
                 body = {
                     'AllowedIdentities': allowed_identities,
-                    'ConnectorName': connector_name,
-                    'Description': description,
-                    'PowershellScript': powershell_script,
-                    'ServiceAddress': service_address,
+                    'ConnectorName'    : connector_name,
+                    'Description'      : description,
+                    'PowershellScript' : powershell_script,
+                    'ServiceAddress'   : service_address,
                     'ServiceCredential': service_credential
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    succcess: bool = ResponseField(alias='Succcess')
 
-                    @property
-                    @api_response_property()
-                    def succcess(self) -> bool:
-                        return self._from_json(key='Succcess')
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
             def Guid(self, guid: str):
                 return self._Guid(api_obj=self._api_obj, guid=guid)
@@ -84,48 +72,20 @@ class _Credentials:
                     super().__init__(api_obj=api_obj, url=f'/Credentials/Connector/Adaptable/{guid}')
 
                 def delete(self):
-                    class _Response(APIResponse):
-                        def __init__(self, response):
-                            super().__init__(response=response)
+                    class Response(APIResponse):
+                        success: bool = ResponseField(alias='Success')
 
-                        @property
-                        @api_response_property()
-                        def success(self) -> bool:
-                            return self._from_json(key='Success')
-
-                    return _Response(response=self._delete())
+                    return ResponseFactory(response_cls=Response, response=self._delete())
 
                 def get(self):
-                    class _Response(APIResponse):
-                        def __init__(self, response):
-                            super().__init__(response=response)
+                    class Response(APIResponse):
+                        allowed_identities: List[str] = ResponseField(default_factory=list, alias='AllowedIdentities')
+                        powershell_script: str = ResponseField(alias='PowershellScript')
+                        service_address: str = ResponseField(alias='ServiceAddress')
+                        service_credential: str = ResponseField(alias='ServiceCredential')
+                        success: bool = ResponseField(alias='Success')
 
-                        @property
-                        @api_response_property()
-                        def allowed_identities(self) -> List[str]:
-                            return self._from_json(key='AllowedIdentities')
-
-                        @property
-                        @api_response_property()
-                        def powershell_script(self) -> str:
-                            return self._from_json(key='PowershellScript')
-
-                        @property
-                        @api_response_property()
-                        def service_address(self) -> str:
-                            return self._from_json(key='ServiceAddress')
-
-                        @property
-                        @api_response_property()
-                        def service_credential(self) -> str:
-                            return self._from_json(key='ServiceCredential')
-
-                        @property
-                        @api_response_property()
-                        def success(self) -> bool:
-                            return self._from_json(key='Success')
-
-                    return _Response(response=self._get())
+                    return ResponseFactory(response_cls=Response, response=self._get())
 
                 def put(self, connector_name: str = None, powershell_script: str = None,
                         service_address: str = None, service_credential: str = None,
@@ -139,16 +99,10 @@ class _Credentials:
                         'ServiceCredential': service_credential
                     }
 
-                    class _Response(APIResponse):
-                        def __init__(self, response):
-                            super().__init__(response=response)
+                    class Response(APIResponse):
+                        succcess: bool = ResponseField(alias='Succcess')
 
-                        @property
-                        @api_response_property()
-                        def succcess(self) -> bool:
-                            return self._from_json(key='Succcess')
-
-                    return _Response(response=self._put(data=body))
+                    return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     class _Create(API):
         def __init__(self, api_obj):
@@ -158,26 +112,20 @@ class _Credentials:
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
             body = {
                 'CredentialPath': credential_path,
-                'Password': password,
-                'FriendlyName': friendly_name,
-                'Values': values,
-                'Expiration': f'/Date({expiration})/',
-                'Description': description,
-                'EncryptionKey': encryption_key,
-                'Shared': shared,
-                'Contact': contact
+                'Password'      : password,
+                'FriendlyName'  : friendly_name,
+                'Values'        : values,
+                'Expiration'    : f'/Date({expiration})/',
+                'Description'   : description,
+                'EncryptionKey' : encryption_key,
+                'Shared'        : shared,
+                'Contact'       : contact
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return Credential.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Delete(API):
         def __init__(self, api_obj):
@@ -188,16 +136,10 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return Credential.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Enumerate(API):
         def __init__(self, api_obj):
@@ -206,25 +148,15 @@ class _Credentials:
         def post(self, credential_path: str, pattern: str = None, recursive: bool = False):
             body = {
                 'CredentialPath': credential_path,
-                'Recursive': recursive,
-                'Pattern': pattern
+                'Recursive'     : recursive,
+                'Pattern'       : pattern
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
+                credential_infos: List[credential.CredentialInfo] = ResponseField(default_factory=list, alias='CredentialInfos')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return Credential.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def credential_infos(self):
-                    return [Credential.CredentialInfo(cred_info) for cred_info in self._from_json(key='CredentialInfos')]
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Rename(API):
         def __init__(self, api_obj):
@@ -236,16 +168,10 @@ class _Credentials:
                 'NewCredentialPath': new_credential_path
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return Credential.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -256,41 +182,15 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                classname: str = ResponseField(alias='Classname')
+                description: str = ResponseField(alias='Description')
+                expiration: datetime = ResponseField(alias='Expiration')
+                friendly_name: str = ResponseField(alias='FriendlyName')
+                result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
+                values: List[credential.NameTypeValue] = ResponseField(default_factory=list, alias='Values')
 
-                @property
-                @api_response_property()
-                def classname(self) -> str:
-                    return self._from_json(key='Classname')
-
-                @property
-                @api_response_property()
-                def description(self) -> str:
-                    return self._from_json(key='Description')
-
-                @property
-                @api_response_property()
-                def expiration(self):
-                    return from_date_string(self._from_json(key='Expiration'))
-
-                @property
-                @api_response_property()
-                def friendly_name(self) -> str:
-                    return self._from_json(key='FriendlyName')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Credential.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def values(self):
-                    return [Credential.NameTypeValue(ntv) for ntv in self._from_json(key='Values')]
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Update(API):
         def __init__(self, api_obj):
@@ -300,12 +200,12 @@ class _Credentials:
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
             body = {
                 'CredentialPath': credential_path,
-                'FriendlyName': friendly_name,
-                'Values': values,
-                'Description': description,
-                'EncryptionKey': encryption_key,
-                'Shared': shared,
-                'Contact': contact
+                'FriendlyName'  : friendly_name,
+                'Values'        : values,
+                'Description'   : description,
+                'EncryptionKey' : encryption_key,
+                'Shared'        : shared,
+                'Contact'       : contact
             }
 
             if expiration:
@@ -314,18 +214,14 @@ class _Credentials:
                 # Expire in 10 years.
                 exp_date = int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
 
-            body.update({'Expiration': r'/Date(%s)/' % exp_date})
-            
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            body.update({
+                            'Expiration': r'/Date(%s)/' % exp_date
+                        })
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return Credential.Result(self._from_json(key='Result'))
+            class Response(APIResponse):
+                result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _CyberArk:
         def __init__(self, api_obj):
@@ -341,24 +237,18 @@ class _Credentials:
                 body = {
                     'CyberArkUsername': cyber_ark_username,
                     'CyberArkPassword': cyber_ark_password,
-                    'Username': username,
-                    'AppID': app_id,
-                    'SafeName': safe_name,
-                    'FolderName': folder_name,
-                    'AccountName': account_name,
-                    'CredentialsPath': credentials_path
+                    'Username'        : username,
+                    'AppID'           : app_id,
+                    'SafeName'        : safe_name,
+                    'FolderName'      : folder_name,
+                    'AccountName'     : account_name,
+                    'CredentialsPath' : credentials_path
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Credential.Result(self._from_json(key='Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Update(API):
             def __init__(self, api_obj):
@@ -369,21 +259,15 @@ class _Credentials:
                 body = {
                     'CyberArkUsername': cyber_ark_username,
                     'CyberArkPassword': cyber_ark_password,
-                    'Username': username,
-                    'AppID': app_id,
-                    'SafeName': safe_name,
-                    'FolderName': folder_name,
-                    'AccountName': account_name,
-                    'CredentialsPath': credentials_path
+                    'Username'        : username,
+                    'AppID'           : app_id,
+                    'SafeName'        : safe_name,
+                    'FolderName'      : folder_name,
+                    'AccountName'     : account_name,
+                    'CredentialsPath' : credentials_path
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Credential.Result(self._from_json(key='Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
