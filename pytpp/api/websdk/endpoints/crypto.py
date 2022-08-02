@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Crypto:
@@ -12,29 +12,17 @@ class _Crypto:
             super().__init__(api_obj=api_obj, url='/Crypto/AvailableKeys')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                keynames: List[str] = ResponseField(alias='Keynames', default_factory=list)
 
-                @property
-                @api_response_property()
-                def keynames(self) -> List[str]:
-                    return self._from_json('Keynames')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response=self._get(), response_cls=Response)
 
     class _DefaultKey(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Crypto/DefaultKey')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                default_key: str = ResponseField(alias='DefaultKey')
 
-                @property
-                @api_response_property()
-                def default_key(self) -> str:
-                    return self._from_json('DefaultKey')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response=self._get(), response_cls=Response)

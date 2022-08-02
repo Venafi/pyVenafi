@@ -1,11 +1,15 @@
+from properties.resultcodes import ResultCodes
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 from datetime import datetime
 from typing import List
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(alias='Code')
-    workflow_result: str = PayloadField(alias='WorkflowResult')
+    code: int = PayloadField()
+
+    @property
+    def workflow_result(self) -> str:
+        return ResultCodes.Client.get(self.code, 'Unknown')
 
 
 class Details(PayloadModel):

@@ -215,8 +215,8 @@ class _Credentials:
                 exp_date = int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
 
             body.update({
-                            'Expiration': r'/Date(%s)/' % exp_date
-                        })
+                'Expiration': r'/Date(%s)/' % exp_date
+            })
 
             class Response(APIResponse):
                 result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))

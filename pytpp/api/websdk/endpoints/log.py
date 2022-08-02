@@ -1,5 +1,6 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.log import Log
+from typing import List
+from properties.response_objects.dataclasses import log
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Log(API):
@@ -12,55 +13,43 @@ class _Log(API):
             text2: str = None, to_time: str = None, value1: str = None, value2: str = None):
         params = {
             'Component': component,
-            'FromTime': from_time,
-            'Grouping': grouping,
-            'Id': id,
-            'Limit': limit,
-            'Offset': offset,
-            'Order': order,
-            'Severity': severity,
-            'Text1': text1,
-            'Text2': text2,
-            'ToTime': to_time,
-            'Value1': value1,
-            'Value2': value2
+            'FromTime' : from_time,
+            'Grouping' : grouping,
+            'Id'       : id,
+            'Limit'    : limit,
+            'Offset'   : offset,
+            'Order'    : order,
+            'Severity' : severity,
+            'Text1'    : text1,
+            'Text2'    : text2,
+            'ToTime'   : to_time,
+            'Value1'   : value1,
+            'Value2'   : value2
         }
-        
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
 
-            @property
-            @api_response_property()
-            def log_events(self):
-                return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
+        class Response(APIResponse):
+            log_events: List[log.LogEvent] = ResponseField(default_factory=list, alias='LogEvents')
 
-        return _Response(response=self._get(params=params))
+        return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
     def post(self, component: str, id: int, grouping: int = None, severity: int = None, source_ip: str = None,
              text1: str = None, text2: str = None, value1: str = None, value2: str = None):
         body = {
             'Component': component,
-            'ID': id,
-            'Grouping': grouping,
-            'Severity': severity,
-            'SourceIp': source_ip,
-            'Text1': text1,
-            'Text2': text2,
-            'Value1': value1,
-            'Value2': value2
+            'ID'       : id,
+            'Grouping' : grouping,
+            'Severity' : severity,
+            'SourceIp' : source_ip,
+            'Text1'    : text1,
+            'Text2'    : text2,
+            'Value1'   : value1,
+            'Value2'   : value2
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+        class Response(APIResponse):
+            log_result: int = ResponseField(alias='LogResult')
 
-            @property
-            @api_response_property()
-            def log_result(self) -> int:
-                return self._from_json('LogResult')
-
-        return _Response(response=self._post(data=body))
+        return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     def Guid(self, guid: str):
         return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -70,41 +59,19 @@ class _Log(API):
             super().__init__(api_obj=api_obj, url=f'/Log/{guid}')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                log_events: List[log.LogEvent] = ResponseField(default_factory=list, alias='LogEvents')
 
-                @property
-                @api_response_property()
-                def log_events(self):
-                    return [Log.LogEvent(log) for log in self._from_json('LogEvents')]
-
-            return _Response(response=self._get())
+            return ResponseFactory(response_cls=Response, response=self._get())
 
     class _LogSchema(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Log/LogSchema')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                log_event_application_definitions: List[log.LogEventApplicationDefinition] = ResponseField(alias='LogEventApplicationDefinitions')
+                log_event_definitions: List[log.LogEventDefinition] = ResponseField(alias='LogEventDefinitions')
+                log_result: int = ResponseField(alias='LogResult')
 
-                @property
-                @api_response_property()
-                def log_event_application_definitions(self):
-                    return [Log.LogEventApplicationDefinition(lead) for lead in
-                            self._from_json(key='LogEventApplicationDefinitions')]
-
-                @property
-                @api_response_property()
-                def log_event_definitions(self):
-                    return [Log.LogEventDefinition(led) for led in
-                            self._from_json(key='LogEventDefinitions')]
-
-                @property
-                @api_response_property()
-                def log_result(self) -> int:
-                    return self._from_json(key='LogResult')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response_cls=Response, response=self._get())

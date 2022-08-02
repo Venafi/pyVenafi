@@ -1,7 +1,6 @@
-from typing import List 
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.metadata import Metadata
-from pytpp.properties.response_objects.config import Config
+from typing import List
+from properties.response_objects.dataclasses import config, metadata
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Metadata(API):
@@ -34,31 +33,13 @@ class _Metadata(API):
                 'Item': item
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                dn: str = ResponseField(alias='DN')
+                item: metadata.Item = ResponseField(alias='Item')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def dn(self) -> str:
-                    return self._from_json('DN')
-
-                @property
-                @api_response_property()
-                def item(self):
-                    return Metadata.Item(self._from_json('Item'))
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Find(API):
         def __init__(self, api_obj):
@@ -71,26 +52,12 @@ class _Metadata(API):
                 'Value': value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                objects: List[config.Object] = ResponseField(default_factory=list, alias='Objects')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def objects(self):
-                    return [Config.Object(obj) for obj in self._from_json('Objects')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _FindItem(API):
         def __init__(self, api_obj):
@@ -101,26 +68,12 @@ class _Metadata(API):
                 'Name': name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                item_guid: str = ResponseField(alias='ItemGuid')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def item_guid(self) -> str:
-                    return self._from_json('ItemGuid')
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Get(API):
         def __init__(self, api_obj):
@@ -132,26 +85,12 @@ class _Metadata(API):
                 'All': all_included
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                data: metadata.Data = ResponseField(alias='Data')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def data(self):
-                    return [Metadata.Data(self._from_json('Data'))]
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _GetItemGuids(API):
         def __init__(self, api_obj):
@@ -162,26 +101,12 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                item_guids: List[str] = ResponseField(default_factory=list, alias='ItemGuids')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def item_guids(self) -> List[str]:
-                    return self._from_json('ItemGuids')
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _GetItems(API):
         def __init__(self, api_obj):
@@ -192,26 +117,12 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                items: List[metadata.Item] = ResponseField(default_factory=list, alias='Items')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def items(self):
-                    return [Metadata.Item(item) for item in self._from_json('Items')]
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _GetItemsForClass(API):
         def __init__(self, api_obj):
@@ -222,26 +133,12 @@ class _Metadata(API):
                 'ConfigClass': config_class
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                items: List[metadata.Item] = ResponseField(default_factory=list, alias='Items')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def items(self):
-                    return [Metadata.Item(item) for item in self._from_json('Items')]
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _GetPolicyItems(API):
         def __init__(self, api_obj):
@@ -252,52 +149,24 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                policy_items: List[metadata.PolicyItem] = ResponseField(default_factory=list, alias='PolicyItems')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def policy_items(self):
-                    return [Metadata.PolicyItem(item) for item in self._from_json('PolicyItems')]
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Items(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/Items')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                items: List[metadata.Item] = ResponseField(default_factory=list, alias='Items')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def items(self):
-                    return [Metadata.Item(item) for item in self._from_json('Items')]
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._get())
+            return ResponseFactory(response_cls=Response, response=self._get())
 
     class _LoadItem(API):
         def __init__(self, api_obj):
@@ -308,26 +177,12 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                item: metadata.Item = ResponseField(alias='Item')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def item(self):
-                    return Metadata.Item(self._from_json('Item'))
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _LoadItemGuid(API):
         def __init__(self, api_obj):
@@ -338,26 +193,12 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                item_guid: str = ResponseField(alias='ItemGuid')
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def item_guid(self) -> str:
-                    return self._from_json('ItemGuid')
-
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _ReadEffectiveValues(API):
         def __init__(self, api_obj):
@@ -369,31 +210,13 @@ class _Metadata(API):
                 'ItemGuid': item_guid
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                policy_dn: str = ResponseField(alias='PolicyDn')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
+                values: List[str] = ResponseField(default_factory=list, alias='Values')
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def policy_dn(self) -> str:
-                    return self._from_json('PolicyDn')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json('Values')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _ReadPolicy(API):
         def __init__(self, api_obj):
@@ -406,26 +229,12 @@ class _Metadata(API):
                 'Type': obj_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
+                values: List[str] = ResponseField(default_factory=list, alias='Values')
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-                @property
-                @api_response_property()
-                def values(self) -> List[str]:
-                    return self._from_json('Values')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Set(API):
         def __init__(self, api_obj):
@@ -438,21 +247,11 @@ class _Metadata(API):
                 'KeepExisting': keep_existing
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _SetPolicy(API):
         def __init__(self, api_obj):
@@ -466,21 +265,11 @@ class _Metadata(API):
                 'Locked': locked
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _UndefineItem(API):
         def __init__(self, api_obj):
@@ -492,21 +281,11 @@ class _Metadata(API):
                 'RemoveData': remove_data
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _UpdateItem(API):
         def __init__(self, api_obj):
@@ -518,18 +297,8 @@ class _Metadata(API):
                 'Update': update
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                locked: bool = ResponseField(alias='Locked')
+                result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-                @property
-                @api_response_property()
-                def locked(self) -> bool:
-                    return self._from_json('Locked')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return Metadata.Result(self._from_json('Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))

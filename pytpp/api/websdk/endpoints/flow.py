@@ -1,6 +1,5 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.flow import Flow
-from pytpp.properties.response_objects.codesign import CodeSign
+from properties.response_objects.dataclasses import codesign, flow
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 from typing import List
 
 
@@ -28,34 +27,19 @@ class _Flow:
                     def post(self, comment: str, data: str, dn: str, user: str, hours: int = None,
                              single_use: bool = None):
                         body = {
-                            'Comment': comment,
-                            'Data': data,
-                            'Dn': dn,
-                            'Hours': hours,
+                            'Comment'  : comment,
+                            'Data'     : data,
+                            'Dn'       : dn,
+                            'Hours'    : hours,
                             'SingleUse': single_use,
-                            'User': user
+                            'User'     : user
                         }
 
-                        class _Response(APIResponse):
-                            def __init__(self, response):
-                                super().__init__(response=response)
+                        class Response(APIResponse):
+                            result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                            success: bool = ResponseField(alias='Success')
 
-                            @property
-                            @api_response_property()
-                            def error(self) -> str:
-                                return self._from_json(key='Error')
-
-                            @property
-                            @api_response_property()
-                            def result(self):
-                                return CodeSign.ResultCode(self._from_json(key='Result'))
-
-                            @property
-                            @api_response_property()
-                            def success(self) -> bool:
-                                return self._from_json(key='Success')
-
-                        return _Response(response=self._post(data=body))
+                        return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Tickets:
         def __init__(self, api_obj):
@@ -83,73 +67,35 @@ class _Flow:
                     'useCount' : use_count
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
+                    message: str = ResponseField(alias='Message')
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Count(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Count')
 
             def post(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    count: int = ResponseField(alias='Count')
+                    message: str = ResponseField(alias='Message')
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                    @property
-                    @api_response_property()
-                    def count(self) -> int:
-                        return self._from_json(key='Count')
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                return _Response(response=self._post(data={}))
+                return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
         class _CountApproved(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/CountApproved')
 
             def post(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    count: int = ResponseField(alias='Count')
+                    message: str = ResponseField(alias='Message')
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                    @property
-                    @api_response_property()
-                    def count(self) -> int:
-                        return self._from_json(key='Count')
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                return _Response(response=self._post(data={}))
+                return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
         class _Enumerate(API):
             def __init__(self, api_obj):
@@ -162,26 +108,12 @@ class _Flow:
                     'TicketPageNumber': ticket_page_number
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
+                    message: str = ResponseField(alias='Message')
+                    tickets: List[flow.Ticket] = ResponseField(alias='Tickets', default_factory=list)
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                    @property
-                    @api_response_property()
-                    def tickets(self):
-                        return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _EnumerateApproved(API):
             def __init__(self, api_obj):
@@ -194,26 +126,12 @@ class _Flow:
                     'TicketPageNumber': ticket_page_number
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
+                    message: str = ResponseField(alias='Message')
+                    tickets: List[flow.Ticket] = ResponseField(alias='Tickets', default_factory=list)
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                    @property
-                    @api_response_property()
-                    def tickets(self):
-                        return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Load(API):
             def __init__(self, api_obj):
@@ -225,26 +143,12 @@ class _Flow:
                     'TicketIds': ticket_ids
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
+                    message: str = ResponseField(alias='Message')
+                    tickets: List[flow.Ticket] = ResponseField(alias='Tickets', default_factory=list)
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                    @property
-                    @api_response_property()
-                    def tickets(self):
-                        return [Flow.Ticket(ticket) for ticket in self._from_json(key='Tickets')]
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Reject(API):
             def __init__(self, api_obj):
@@ -259,26 +163,12 @@ class _Flow:
                     'TicketIds'     : ticket_ids
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    invalid_ticket_id: List[int] = ResponseField(default_factory=list, alias='InvalidTicketIds')
+                    message: str = ResponseField(alias='Message')
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                    @property
-                    @api_response_property()
-                    def invalid_ticket_ids(self) -> List[int]:
-                        return self._from_json(key='InvalidTicketIds')
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Update(API):
             def __init__(self, api_obj):
@@ -295,18 +185,8 @@ class _Flow:
                     'useCount' : use_count
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
+                    message: str = ResponseField(alias='Message')
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Flow.Result(self._from_json(key='Result'))
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))

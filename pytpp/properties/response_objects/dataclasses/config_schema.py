@@ -1,9 +1,13 @@
+from properties.resultcodes import ResultCodes
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(alias='Code')
-    config_result: str = PayloadField(alias='ConfigResult')
+    code: int = PayloadField()
+
+    @property
+    def config_result(self) -> str:
+        return ResultCodes.Config.get(self.code, 'Unknown')
 
 
 class AttributeDefinition(PayloadModel):

@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _HSMAPI:
@@ -35,26 +35,12 @@ class _HSMAPI:
                 'WrappingKeyId'   : wrapping_key_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result_data: str = ResponseField(alias='ResultData')
+                success: bool = ResponseField(alias='Success')
+                try_later: bool = ResponseField(alias='TryLater')
 
-                @property
-                @api_response_property()
-                def result_data(self) -> str:
-                    return self._from_json(key='ResultData')
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-                @property
-                @api_response_property()
-                def try_later(self) -> bool:
-                    return self._from_json(key='TryLater')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _SignJWT(API):
         def __init__(self, api_obj):
@@ -71,21 +57,11 @@ class _HSMAPI:
                 'Payload'    : payload
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result_data: str = ResponseField(alias='ResultData')
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def result_data(self) -> str:
-                    return self._from_json(key='ResultData')
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _GetGPGPublicKey(API):
         def __init__(self, api_obj):
@@ -98,29 +74,10 @@ class _HSMAPI:
                 'KeyContext': key_context
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                fingerprint: str = ResponseField(alias='Fingerprint')
+                location: str = ResponseField(alias='Location')
+                public_key: str = ResponseField(alias='PublicKey')
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def fingerprint(self) -> str:
-                    return self._from_json(key='Fingerprint')
-
-                @property
-                @api_response_property()
-                def location(self) -> str:
-                    return self._from_json(key='Location')
-
-                @property
-                @api_response_property()
-                def public_key(self) -> str:
-                    return self._from_json(key='PublicKey')
-
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json(key='Success')
-
-            return _Response(response=self._post(data=body))
-
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))

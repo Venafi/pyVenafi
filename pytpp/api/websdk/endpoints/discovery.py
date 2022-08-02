@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import API, APIResponse, api_response_property
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Discovery:
@@ -15,16 +15,10 @@ class _Discovery:
             super().__init__(api_obj=api_obj, url=f'/Discovery/{guid}')
 
         def delete(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                success: bool = ResponseField(alias='Success')
 
-                @property
-                @api_response_property()
-                def success(self) -> bool:
-                    return self._from_json('Success')
-
-            return _Response(response=self._delete())
+            return ResponseFactory(response=self._delete(), response_cls=Response)
 
     class _Import(API):
         def __init__(self, api_obj):
@@ -36,39 +30,13 @@ class _Discovery:
                 'endpoints': endpoints
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                created_certificates: int = ResponseField(alias='createdCertificates')
+                created_instances: int = ResponseField(alias='createdInstances')
+                updated_certificates: int = ResponseField(alias='updatedCertificates')
+                updated_instances: int = ResponseField(alias='updatedInstances')
+                warnings: List[str] = ResponseField(alias='warnings')
+                zone_name: str = ResponseField(alias='zoneName')
 
-                @property
-                @api_response_property()
-                def created_certificates(self) -> int:
-                    return self._from_json('createdCertificates')
-
-                @property
-                @api_response_property()
-                def created_instances(self) -> int:
-                    return self._from_json('createdInstances')
-
-                @property
-                @api_response_property()
-                def updated_certificates(self) -> int:
-                    return self._from_json('updatedCertificates')
-
-                @property
-                @api_response_property()
-                def updated_instances(self) -> int:
-                    return self._from_json('updatedInstances')
-
-                @property
-                @api_response_property()
-                def warnings(self) -> List[str]:
-                    return self._from_json('warnings')
-
-                @property
-                @api_response_property()
-                def zone_name(self) -> str:
-                    return self._from_json('zoneName')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 

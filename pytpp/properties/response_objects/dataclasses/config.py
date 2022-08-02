@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(default=None)
+    code: int = PayloadField()
 
     @property
     def config_result(self):

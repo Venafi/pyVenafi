@@ -5,7 +5,7 @@ from typing import List
 
 
 class ResultCode(PayloadModel):
-    code: int = PayloadField(alias='Code')
+    code: int = PayloadField()
 
     @property
     def codesign_result(self):

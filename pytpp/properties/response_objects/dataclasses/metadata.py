@@ -1,10 +1,14 @@
+from properties.resultcodes import ResultCodes
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 from typing import List
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(alias='Code')
-    metadata_result: str = PayloadField(alias='MetadataResult')
+    code: int = PayloadField()
+
+    @property
+    def metadata_result(self) -> str:
+        return ResultCodes.Metadata.get(self.code, 'Unknown')
 
 
 class Item(PayloadModel):

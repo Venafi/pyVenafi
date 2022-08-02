@@ -3,10 +3,10 @@ from pytpp.properties.response_objects.dataclasses._base import PayloadModel, Pa
 
 
 class Result(PayloadModel):
-    code: int = PayloadField(default=None)
+    code: int = PayloadField()
 
     @property
-    def config_result(self):
+    def credential_result(self):
         return ResultCodes.Credential.get(self.code, 'Unknown')
 
 
