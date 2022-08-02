@@ -1,5 +1,6 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.preferences import Preferences
+from typing import List
+from pytpp.properties.response_objects.dataclasses import preferences
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Preferences(API):
@@ -13,23 +14,17 @@ class _Preferences(API):
             'Product': product
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+        class Response(APIResponse):
+            preferences: List[preferences.Preference] = ResponseField(alias='Preferences', default_factory=list)
 
-            @property
-            @api_response_property()
-            def preferences(self):
-                return [Preferences.Preference(p) for p in self._from_json(key='Preferences')]
-
-        return _Response(response=self._get(params=params))
+        return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
     def post(self, preferences: dict):
         body = {
             'Preferences': preferences
         }
 
-        return APIResponse(response=self._post(data=body))
+        return ResponseFactory(response_cls=APIResponse, response=self._post(data=body))
 
     def delete(self, category: str = None, name: str = None, product: str = None):
         params = {
@@ -38,4 +33,4 @@ class _Preferences(API):
             'Product': product
         }
 
-        return APIResponse(response=self._delete(params=params))
+        return ResponseFactory(response_cls=APIResponse, response=self._delete(params=params))

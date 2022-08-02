@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.processing_engines import ProcessingEngines
+from properties.response_objects.dataclasses import processing_engines
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _ProcessingEngines(API):
@@ -11,16 +11,10 @@ class _ProcessingEngines(API):
         self.Folder = self._Folder(api_obj=api_obj)
 
     def get(self):
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+        class Response(APIResponse):
+            engines: List[processing_engines.Engine] = ResponseField(alias='Engines', default_factory=list)
 
-            @property
-            @api_response_property()
-            def engines(self):
-                return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
-
-        return _Response(response=self._get())
+        return ResponseFactory(response_cls=Response, response=self._get())
 
     class _Engine:
         def __init__(self, api_obj):
@@ -34,37 +28,21 @@ class _ProcessingEngines(API):
                 super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Engine/{guid}')
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    folders: List[processing_engines.Folder] = ResponseField(alias='Folders', default_factory=list)
 
-                    @property
-                    @api_response_property(return_on_204=list)
-                    def folders(self):
-                        return [ProcessingEngines.Folder(folder) for folder in self._from_json('Folders')][0]
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get())
 
             def post(self, folder_guids: list):
                 body = {
                     'FolderGuids': folder_guids
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    added_count: int = ResponseField(alias='AddedCount')
+                    errors: List[str] = ResponseField(alias='Errors', default_factory=list)
 
-                    @property
-                    @api_response_property(return_on_204=str)
-                    def added_count(self) -> int:
-                        return self._from_json('AddedCount')
-
-                    @property
-                    @api_response_property(return_on_204=list)
-                    def errors(self) -> List[str]:
-                        return self._from_json('Errors')
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Folder:
         def __init__(self, api_obj):
@@ -79,26 +57,20 @@ class _ProcessingEngines(API):
                 self._folder_guid = guid
 
             def delete(self):
-                return APIResponse(response=self._delete())
+                return ResponseFactory(response_cls=APIResponse, response=self._delete())
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    engines: List[processing_engines.Engine] = ResponseField(alias='Engines', default_factory=list)
 
-                    @property
-                    @api_response_property(return_on_204=list)
-                    def engines(self):
-                        return [ProcessingEngines.Engine(engine) for engine in self._from_json('Engines')]
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get())
 
             def put(self, engine_guids: list):
                 body = {
                     'EngineGuids': engine_guids
                 }
 
-                return APIResponse(response=self._put(data=body))
+                return ResponseFactory(response_cls=APIResponse, response=self._put(data=body))
 
             def EngineGuid(self, guid):
                 return self._EngineGuid(guid=self._folder_guid, engine_guid=guid, api_obj=self._api_obj)
@@ -108,4 +80,4 @@ class _ProcessingEngines(API):
                     super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Folder/{guid}/{engine_guid}')
 
                 def delete(self):
-                    return APIResponse(response=self._delete())
+                    return ResponseFactory(response_cls=APIResponse, response=self._delete())

@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.permissions import Permissions
+from properties.response_objects.dataclasses import permissions
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Permissions:
@@ -21,16 +21,10 @@ class _Permissions:
                 self._guid = guid
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    principals: List[str] = ResponseField(default_factory=list)
 
-                    @property
-                    @api_response_property()
-                    def principals(self) -> List[str]:
-                        return self._from_json()
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get(), root_field='principals')
 
             def Ptype(self, ptype='Local'):
                 return self._Ptype(guid=self._guid, ptype=ptype, api_obj=self._api_obj)
@@ -67,24 +61,14 @@ class _Permissions:
                             self.Effective = self._Effective(guid=guid, ptype=ptype, pname=pname, principal=principal, api_obj=api_obj)
 
                         def delete(self):
-                            return APIResponse(response=self._delete())
+                            return ResponseFactory(response_cls=APIResponse, response=self._delete())
 
                         def get(self):
-                            class _Response(APIResponse):
-                                def __init__(self, response):
-                                    super().__init__(response=response)
+                            class Response(APIResponse):
+                                explicit_permissions: permissions.Permissions = ResponseField(alias='ExplicitPermissions')
+                                implicit_permissions: permissions.Permissions = ResponseField(alias='ImplicitPermissions')
 
-                                @property
-                                @api_response_property()
-                                def explicit_permissions(self):
-                                    return Permissions.Permissions(self._from_json(key='ExplicitPermissions'))
-
-                                @property
-                                @api_response_property()
-                                def implicit_permissions(self):
-                                    return Permissions.Permissions(self._from_json(key='ImplicitPermissions'))
-
-                            return _Response(response=self._get())
+                            return ResponseFactory(response_cls=Response, response=self._get())
 
                         def post(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
                                  is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
@@ -106,7 +90,7 @@ class _Permissions:
                                 'IsWriteAllowed'            : is_write_allowed
                             }
 
-                            return APIResponse(response=self._post(data=body))
+                            return ResponseFactory(response_cls=APIResponse, response=self._post(data=body))
 
                         def put(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
                                 is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
@@ -128,7 +112,7 @@ class _Permissions:
                                 'IsWriteAllowed'            : is_write_allowed
                             }
 
-                            return APIResponse(response=self._put(data=body))
+                            return ResponseFactory(response_cls=APIResponse, response=self._put(data=body))
 
                         class _Effective(API):
                             def __init__(self, guid: str, ptype: str, pname: str, principal: str, api_obj):
@@ -138,16 +122,10 @@ class _Permissions:
                                 )
 
                             def get(self):
-                                class _Response(APIResponse):
-                                    def __init__(self, response):
-                                        super().__init__(response=response)
+                                class Response(APIResponse):
+                                    effective_permissions: permissions.Permissions = ResponseField(alias='EffectivePermissions')
 
-                                    @property
-                                    @api_response_property()
-                                    def effective_permissions(self):
-                                        return Permissions.Permissions(self._from_json('EffectivePermissions'))
-
-                                return _Response(response=self._get())
+                                return ResponseFactory(response_cls=Response, response=self._get())
 
                 class _Principal(API):
                     def __init__(self, guid: str, ptype: str, uuid: str, api_obj):
@@ -158,24 +136,14 @@ class _Permissions:
                         self.Effective = self._Effective(guid=guid, uuid=uuid, api_obj=api_obj)
 
                     def delete(self):
-                        return APIResponse(response=self._delete())
+                        return ResponseFactory(response_cls=APIResponse, response=self._delete())
 
                     def get(self):
-                        class _Response(APIResponse):
-                            def __init__(self, response):
-                                super().__init__(response=response)
+                        class Response(APIResponse):
+                            explicit_permissions: permissions.Permissions = ResponseField(alias='ExplicitPermissions')
+                            implicit_permissions: permissions.Permissions = ResponseField(alias='ImplicitPermissions')
 
-                            @property
-                            @api_response_property()
-                            def explicit_permissions(self):
-                                return Permissions.Permissions(self._from_json('ExplicitPermissions'))
-
-                            @property
-                            @api_response_property()
-                            def implicit_permissions(self):
-                                return Permissions.Permissions(self._from_json('ImplicitPermissions'))
-
-                        return _Response(response=self._get())
+                        return ResponseFactory(response_cls=Response, response=self._get())
 
                     def post(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
                              is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
@@ -197,7 +165,7 @@ class _Permissions:
                             'IsWriteAllowed'            : is_write_allowed
                         }
 
-                        return APIResponse(response=self._post(data=body))
+                        return ResponseFactory(response_cls=APIResponse, response=self._post(data=body))
 
                     def put(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
                             is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
@@ -219,7 +187,7 @@ class _Permissions:
                             'IsWriteAllowed'            : is_write_allowed
                         }
 
-                        return APIResponse(response=self._put(data=body))
+                        return ResponseFactory(response_cls=APIResponse, response=self._put(data=body))
 
                     class _Effective(API):
                         def __init__(self, guid: str, uuid: str, api_obj):
@@ -229,29 +197,17 @@ class _Permissions:
                             )
 
                         def get(self):
-                            class _Response(APIResponse):
-                                def __init__(self, response):
-                                    super().__init__(response=response)
+                            class Response(APIResponse):
+                                effective_permissions: permissions.Permissions = ResponseField(alias='EffectivePermissions')
 
-                                @property
-                                @api_response_property()
-                                def effective_permissions(self):
-                                    return Permissions.Permissions(self._from_json('EffectivePermissions'))
-
-                            return _Response(response=self._get())
+                            return ResponseFactory(response_cls=Response, response=self._get())
 
     class _Refresh(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Permissions/Refresh')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: int = ResponseField(alias='Result')
 
-                @property
-                @api_response_property()
-                def result(self) -> int:
-                    return self._from_json('Result')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response_cls=Response, response=self._get())
