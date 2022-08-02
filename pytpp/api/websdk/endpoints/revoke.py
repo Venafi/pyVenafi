@@ -1,4 +1,4 @@
-from pytpp.api.api_base import API, APIResponse
+from pytpp.api.api_base import API, APIResponse, ResponseFactory
 
 
 class _Revoke:
@@ -11,7 +11,7 @@ class _Revoke:
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            response = APIResponse(response=self._get())
+            response = ResponseFactory(response_cls=APIResponse, response=self._get())
             # Set this to None to avoid erroneous re-authentication.
             self._api_obj._token = None
             return response

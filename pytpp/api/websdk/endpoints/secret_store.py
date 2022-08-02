@@ -1,6 +1,6 @@
-from typing import List 
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.secret_store import SecretStore
+from typing import List
+from properties.response_objects.dataclasses import secret_store
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _SecretStore:
@@ -35,21 +35,11 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_id: int = ResponseField(alias='VaultID')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_id(self) -> int:
-                    return self._from_json(key='VaultID')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Associate(API):
         def __init__(self, api_obj):
@@ -64,16 +54,10 @@ class _SecretStore:
                 'StringValue': string_value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Dissociate(API):
         def __init__(self, api_obj):
@@ -88,58 +72,32 @@ class _SecretStore:
                 'DateValue': date_value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _EncryptionKeysInUse(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/EncryptionKeysInUse')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                encryption_keys: List[str] = ResponseField(default_factory=list, alias='EncryptionKeys')
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def encryption_keys(self) -> List[str]:
-                    return self._from_json(key='EncryptionKeys')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._get())
+            return ResponseFactory(response_cls=Response, response=self._get())
 
     class _Lookup(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Lookup')
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIDs')
-
-            return _Response(response=self._get())
+            return ResponseFactory(response_cls=Response, response=self._get())
 
     class _LookupAllAssociationsbyVaultid(API):
         def __init__(self, api_obj):
@@ -150,21 +108,11 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                typed_name_values: List[secret_store.TypedNameValues] = ResponseField(default_factory=list, alias='TypedNameValues')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def typed_name_values(self):
-                    return [SecretStore.TypedNameValues(tnv) for tnv in self._from_json('TypedNameValues')]
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _LookupByAssociation(API):
         def __init__(self, api_obj):
@@ -178,21 +126,11 @@ class _SecretStore:
                 'DateValue': date_value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIDs')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _LookupAssociationbyVaultID(API):
         def __init__(self, api_obj):
@@ -204,21 +142,11 @@ class _SecretStore:
                 'Name': name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                value: str = ResponseField(alias='Value')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def value(self) -> str:
-                    return self._from_json(key='Value')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _LookupByOwner(API):
         def __init__(self, api_obj):
@@ -231,21 +159,11 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIDs')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _LookupByVaultType(API):
         def __init__(self, api_obj):
@@ -256,21 +174,11 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIDs')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Mutate(API):
         def __init__(self, api_obj):
@@ -282,16 +190,10 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _OrphanLookup(API):
         def __init__(self, api_obj):
@@ -302,21 +204,11 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIDs')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _OwnerAdd(API):
         def __init__(self, api_obj):
@@ -329,16 +221,10 @@ class _SecretStore:
                 'VaultId': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _OwnerDelete(API):
         def __init__(self, api_obj):
@@ -351,16 +237,10 @@ class _SecretStore:
                 'VaultId': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _OwnerLookup(API):
         def __init__(self, api_obj):
@@ -372,21 +252,11 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                owners: List[str] = ResponseField(default_factory=list, alias='Owners')
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def owners(self) -> List[str]:
-                    return self._from_json(key='Owners')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -397,23 +267,9 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                base_64_data: str = ResponseField(alias='Base64Data')
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_type: str = ResponseField(alias='VaultType')
 
-                @property
-                @api_response_property()
-                def base_64_data(self) -> str:
-                    return self._from_json(key='Base64Data')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_type(self) -> str:
-                    return self._from_json(key='VaultType')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
