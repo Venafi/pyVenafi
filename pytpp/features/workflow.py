@@ -16,7 +16,7 @@ class _WorkflowBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, workflow: 'Union[Config.Object, str]'):
+    def delete(self, workflow: 'Union[config.Object, str]'):
         """
         Deletes a workflow.
 
@@ -43,7 +43,7 @@ class _WorkflowBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def _create(self, name: str, parent_folder: 'Union[Config.Object, str]', is_adaptable: bool, stage: int, injection_command: str = None,
+    def _create(self, name: str, parent_folder: 'Union[config.Object, str]', is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,
                 get_if_already_exists: bool = True):
         workflow = self._config_create(
@@ -93,7 +93,7 @@ class AdaptableWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, powershell_script_name: str,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, powershell_script_name: str,
                powershell_script_content: bytes, approvers: 'List[Union[Identity.Identity, str]]' = None, reason_code: int = None,
                use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -239,7 +239,7 @@ class StandardWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', stage: int, injection_command: str = None,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, injection_command: str = None,
                application_class_name: str = None, approvers: 'List[Union[Identity.Identity, str]]' = None, macro: str = None,
                reason_code: int = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -299,7 +299,7 @@ class Ticket(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
-    def create(self, obj: 'Union[Config.Object, str]', workflow: 'Union[Config.Object, str]',
+    def create(self, obj: 'Union[config.Object, str]', workflow: 'Union[config.Object, str]',
                approvers: Union['List[Identity.Identity]', List[str]], reason: Union[RC, int, str],
                user_data: str = None):
         """
@@ -369,7 +369,7 @@ class Ticket(FeatureBase):
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def get(self, obj: 'Union[Config.Object, str]' = None, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
+    def get(self, obj: 'Union[config.Object, str]' = None, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
         """
         Gets all tickets associated to ``obj``. If the minimum expected number of tickets do not
         appear on the ``obj``, then a warning is logged and whatever was found is returned and no

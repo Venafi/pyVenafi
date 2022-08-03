@@ -10,7 +10,7 @@ class _CertificateAuthorityBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, certificate_authority: 'Union[Config.Object, str]'):
+    def delete(self, certificate_authority: 'Union[config.Object, str]'):
         """
         Deletes the certificate authority object from TPP, including all of the secrets associated to it.
 
@@ -43,11 +43,11 @@ class MSCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', hostname: str, service_name: str,
-               credential: 'Union[Config.Object, str]', template: str, description: 'str' = None,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', hostname: str, service_name: str,
+               credential: 'Union[config.Object, str]', template: str, description: 'str' = None,
                contacts: 'List[Identity.Identity, str]' = None, manual_approvals: 'bool' = None,
                subject_alt_name_enabled: 'bool' = None, automatically_include_cn_as_dns_san: 'bool' = None,
-               allow_users_to_specify_end_date: 'bool' = None, enrollment_agent: 'Union[Config.Object, str]' = None,
+               allow_users_to_specify_end_date: 'bool' = None, enrollment_agent: 'Union[config.Object, str]' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
         Args:
@@ -101,7 +101,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Identity.Identity, str]' = None, key_usage: 'List[str]' = None, server_authentication: 'bool' = None,
                client_authentication: 'bool' = None, code_signing: 'bool' = None, signature_algorithm: 'str' = None,
                valid_years: 'int' = None, valid_days: 'int' = None, attributes: dict = None, get_if_already_exists: bool = True):

@@ -4,10 +4,7 @@ import os
 import re
 from typing import TYPE_CHECKING
 from pytpp.features.definitions.exceptions import InvalidResultCode, ObjectDoesNotExist
-from pytpp.properties.response_objects.config import Config
-from pytpp.properties.response_objects.identity import Identity
-from pytpp.properties.response_objects.dataclasses.config import Object as ConfigObject
-from pytpp.properties.response_objects.dataclasses.identity import Identity
+from pytpp.properties.response_objects.dataclasses import config, identity as ident
 from pytpp.tools.logger import logger, features_logger
 from pytpp.properties.secret_store import Namespaces
 from typing import List, Dict, Union
@@ -61,16 +58,16 @@ class FeatureBase:
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
             )
-        obj = Config.Object({})
-        if isinstance(object_dn, ConfigObject):
+        if isinstance(object_dn, config.Object):
             obj = object_dn
-        elif isinstance(object_guid, ConfigObject):
+        elif isinstance(object_guid, config.Object):
             obj = object_guid
         else:
             response = self._api.websdk.Config.IsValid.post(object_dn=object_dn, object_guid=object_guid)
             if response.result.code == 400:
                 if raise_error_if_not_exists:
                     raise ObjectDoesNotExist(f'"{object_dn or object_guid}" does not exist.')
+                obj = config.Object()
             else:
                 obj = response.object
         if valid_class_names and obj.type_name not in valid_class_names:
@@ -87,9 +84,9 @@ class FeatureBase:
             raise ValueError(
                 'Must supply either an prefixed_name or prefixed_universal, but neither was provided.'
             )
-        if isinstance(prefixed_name, Identity):
+        if isinstance(prefixed_name, ident.Identity):
             return prefixed_name
-        if isinstance(prefixed_universal, Identity):
+        if isinstance(prefixed_universal, ident.Identity):
             return prefixed_universal
 
         result = self._api.websdk.Identity.Validate.post(
@@ -101,7 +98,7 @@ class FeatureBase:
             target = prefixed_name or prefixed_universal
             raise ObjectDoesNotExist(f'Could not find identity "{target}".')
         else:
-            identity = Identity.Identity(response_object={})
+            identity = ident.Identity()
         return identity
 
     @staticmethod
@@ -141,21 +138,21 @@ class FeatureBase:
         regex = '^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$'
         return isinstance(obj, str) and bool(re.match(pattern=regex, string=obj))
 
-    def _get_prefixed_name(self, identity: 'Union[Identity, str]'):
+    def _get_prefixed_name(self, identity: 'Union[ident.Identity, str]'):
         if hasattr(identity, 'prefixed_name'):
             return identity.prefixed_name
         if self._is_prefixed_universal(identity):
             return self._get_identity_object(prefixed_universal=identity).prefixed_name
         return identity
 
-    def _get_prefixed_universal(self, identity: 'Union[Identity, str]'):
+    def _get_prefixed_universal(self, identity: 'Union[ident.Identity, str]'):
         if hasattr(identity, 'prefixed_universal'):
             return identity.prefixed_universal
         if self._is_prefixed_universal(identity):
             return identity
         return self._get_identity_object(prefixed_name=identity).prefixed_universal
 
-    def _get_dn(self, obj: 'Union[Config.Object, str]', parent_dn: str = None):
+    def _get_dn(self, obj: 'Union[config.Object, str]', parent_dn: str = None):
         if hasattr(obj, 'dn'):
             return obj.dn
         if self._is_obj_guid(obj):
@@ -167,7 +164,7 @@ class FeatureBase:
         else:
             return obj
 
-    def _get_guid(self, obj: 'Union[Config.Object, str]', parent_dn: str = None):
+    def _get_guid(self, obj: 'Union[config.Object, str]', parent_dn: str = None):
         if hasattr(obj, 'guid'):
             return obj.guid
         if self._is_obj_guid(obj):

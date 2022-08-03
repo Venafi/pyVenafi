@@ -11,12 +11,12 @@ class NetworkDiscovery(FeatureBase):
         super().__init__(api=api)
         self._discovery_dn = r'\VED\Discovery'
 
-    def create(self, name: str, hosts: List[str], default_certificate_location: 'Union[Config.Object, str]',
+    def create(self, name: str, hosts: List[str], default_certificate_location: 'Union[config.Object, str]',
                attributes: dict = None, automatically_import: bool = False, blackout: Dict[str, List] = None,
                contacts: 'List[Union[Identity, str]]' = None, days_of_week: List[str] = None, days_of_month: List[str] = None,
                days_of_year: List[str] = None, description: str = None,
-               exclusion_locations: 'Union[Config.Object, str]' = None, hour: int = None,
-               placement_rules: 'List[Union[Config.Object, str]]' = None,
+               exclusion_locations: 'Union[config.Object, str]' = None, hour: int = None,
+               placement_rules: 'List[Union[config.Object, str]]' = None,
                ports: List[Union[str, int]] = None, priority: int = None, reschedule: bool = True,
                resolve_host: bool = True, utc: str = '1', get_if_already_exists: bool = True):
         """
@@ -102,7 +102,7 @@ class NetworkDiscovery(FeatureBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def delete(self, job: 'Union[Config.Object, str]'):
+    def delete(self, job: 'Union[config.Object, str]'):
         """
         Deletes the discovery job.
 
@@ -127,7 +127,7 @@ class NetworkDiscovery(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def is_in_progress(self, job: 'Union[Config.Object, str]'):
+    def is_in_progress(self, job: 'Union[config.Object, str]'):
         """
         Args:
             job: :ref:`config_object` or :ref:`dn` of the discovery job.
@@ -147,7 +147,7 @@ class NetworkDiscovery(FeatureBase):
                 return status in in_progress_states
         return False
 
-    def schedule(self, job: 'Union[Config.Object, str]', hour: Union[str, int], days_of_week: List[Union[int, str]] = None,
+    def schedule(self, job: 'Union[config.Object, str]', hour: Union[str, int], days_of_week: List[Union[int, str]] = None,
                  days_of_month: List[Union[int, str]] = None, days_of_year: List[str] = None):
         """
         Schedules an existing job.
@@ -181,7 +181,7 @@ class NetworkDiscovery(FeatureBase):
         )
         response.assert_valid_response()
 
-    def unschedule(self, job: 'Union[Config.Object, str]'):
+    def unschedule(self, job: 'Union[config.Object, str]'):
         """
         Removes a schedule from a job. This does not delete the job.
 
@@ -201,7 +201,7 @@ class NetworkDiscovery(FeatureBase):
                 attribute_name=attribute_name
             ).assert_valid_response()
 
-    def blackout_schedule(self, job: 'Union[Config.Object, str]', sunday: List[Union[str, int]] = None,
+    def blackout_schedule(self, job: 'Union[config.Object, str]', sunday: List[Union[str, int]] = None,
                           monday: List[Union[str, int]] = None, tuesday: List[Union[str, int]] = None,
                           wednesday: List[Union[str, int]] = None, thursday: List[Union[str, int]] = None,
                           friday: List[Union[str, int]] = None, saturday: List[Union[str, int]] = None):
@@ -233,7 +233,7 @@ class NetworkDiscovery(FeatureBase):
         )
         response.assert_valid_response()
 
-    def run_now(self, job: 'Union[Config.Object, str]', timeout: int = 60):
+    def run_now(self, job: 'Union[config.Object, str]', timeout: int = 60):
         """
         Runs a job despite any scheduling. This does not return until the job is processing,
         or has a *Processing* Attribute.
@@ -260,7 +260,7 @@ class NetworkDiscovery(FeatureBase):
             f'Expected the job "{job_dn}" to start progress, but it did not.'
         )
 
-    def cancel(self, job: 'Union[Config.Object, str]'):
+    def cancel(self, job: 'Union[config.Object, str]'):
         """
         Cancels a currently running job.
 
@@ -275,7 +275,7 @@ class NetworkDiscovery(FeatureBase):
         )
         response.assert_valid_response()
 
-    def pause(self, job: 'Union[Config.Object, str]'):
+    def pause(self, job: 'Union[config.Object, str]'):
         """
         Pauses a currently running job.
 
@@ -290,7 +290,7 @@ class NetworkDiscovery(FeatureBase):
         )
         response.assert_valid_response()
 
-    def resume(self, job: 'Union[Config.Object, str]'):
+    def resume(self, job: 'Union[config.Object, str]'):
         """
         Resumes a currently paused job.
 
@@ -305,7 +305,7 @@ class NetworkDiscovery(FeatureBase):
         )
         response.assert_valid_response()
 
-    def place_results(self, job: 'Union[Config.Object, str]'):
+    def place_results(self, job: 'Union[config.Object, str]'):
         """
         .. warning::
             This functionality has been deprecated in TPP 21.1 and will have no effect
@@ -340,7 +340,7 @@ class NetworkDiscovery(FeatureBase):
 
         return jobs.objects
 
-    def wait_for_job_to_finish(self, job: 'Union[Config.Object, str]', check_interval: int = 5, timeout: int = 300):
+    def wait_for_job_to_finish(self, job: 'Union[config.Object, str]', check_interval: int = 5, timeout: int = 300):
         """
         Waits for the  *Status* attribute to have a value other than *Pending Execution* and *Running*
         on the discovery job. An error is raised if the timeout is exceeded.

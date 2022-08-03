@@ -44,7 +44,7 @@ class _ApplicationBase(FeatureBase):
         super().__init__(api=api)
         self._class_name = str(class_name)
 
-    def delete(self, application: 'Union[Config.Object, str]'):
+    def delete(self, application: 'Union[config.Object, str]'):
         """
         Deletes an application object.
 
@@ -55,7 +55,7 @@ class _ApplicationBase(FeatureBase):
         self._secret_store_delete(object_dn=application_dn)
         self._config_delete(object_dn=application_dn)
 
-    def disable(self, application: 'Union[Config.Object, str]'):
+    def disable(self, application: 'Union[config.Object, str]'):
         """
         Disables all processing and provisioning of the application.
 
@@ -73,7 +73,7 @@ class _ApplicationBase(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def enable(self, application: 'Union[Config.Object, str]'):
+    def enable(self, application: 'Union[config.Object, str]'):
         """
         Enables all processing and provisioning of the application.
 
@@ -103,7 +103,7 @@ class _ApplicationBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_associated_certificate(self, application: 'Union[Config.Object, str]'):
+    def get_associated_certificate(self, application: 'Union[config.Object, str]'):
         """
         Args:
             application: :ref:`config_object` or :ref:`dn` of the application object.
@@ -123,7 +123,7 @@ class _ApplicationBase(FeatureBase):
         certificate_dn = response.values[0]
         return self._api.websdk.Config.IsValid.post(object_dn=certificate_dn).object
 
-    def _create(self, name: 'str', device: 'Union[Config.Object, str]', description: 'str' = None,
+    def _create(self, name: 'str', device: 'Union[config.Object, str]', description: 'str' = None,
                 contacts: 'List[Union[Identity.Identity, str]]' = None,
                 approvers: 'List[Union[Identity.Identity, str]]' = None,
                 attributes: dict = None, get_if_already_exists: bool = True):
@@ -149,7 +149,7 @@ class _ApplicationBase(FeatureBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def _get_stage(self, application: 'Union[Config.Object, str]'):
+    def _get_stage(self, application: 'Union[config.Object, str]'):
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
@@ -158,7 +158,7 @@ class _ApplicationBase(FeatureBase):
 
         return int(response.values[0]) if response.values else None
 
-    def get_stage(self, application: 'Union[Config.Object, str]'):
+    def get_stage(self, application: 'Union[config.Object, str]'):
         """
         Args:
             application: :ref:`config_object` or :ref:`dn` of the application object.
@@ -168,7 +168,7 @@ class _ApplicationBase(FeatureBase):
         """
         self._get_stage(application=application)
 
-    def get_status(self, application: 'Union[Config.Object, str]'):
+    def get_status(self, application: 'Union[config.Object, str]'):
         """
         Args:
             application: :ref:`config_object` or :ref:`dn` of the application object.
@@ -184,7 +184,7 @@ class _ApplicationBase(FeatureBase):
 
         return response.values[0] if response.values else None
 
-    def _is_in_error(self, application: 'Union[Config.Object, str]'):
+    def _is_in_error(self, application: 'Union[config.Object, str]'):
         application_dn = self._get_dn(application)
         response = self._api.websdk.Config.Read.post(
             object_dn=application_dn,
@@ -193,7 +193,7 @@ class _ApplicationBase(FeatureBase):
 
         return bool(response.values[0]) if response.values else False
 
-    def wait_for_installation_to_complete(self, application: 'Union[Config.Object, str]', timeout: int = 60):
+    def wait_for_installation_to_complete(self, application: 'Union[config.Object, str]', timeout: int = 60):
         """
         Waits for the application object's "Last Pushed On" attribute to be a date greater than
         or equal to the "Last Renewed On" date on the associated certificate. If the certificate
@@ -270,13 +270,13 @@ class Adaptable(_ApplicationBase):
             script_content.decode().encode('utf-32-le')
         ).hexdigest().encode()).decode()
 
-    def create(self, name: 'str', device: 'Union[Config.Object, str]', policy_folder: 'Union[Config.Object, str]',
+    def create(self, name: 'str', device: 'Union[config.Object, str]', policy_folder: 'Union[config.Object, str]',
                powershell_script_name: 'str', powershell_script_content: 'bytes', locked: 'bool' = False,
                retry_after_scipt_hash_mismatch: 'bool' = None, description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None,
-               secondary_credential: 'Union[Config.Object, str]' = None,
+               application_credential: 'Union[config.Object, str]' = None,
+               secondary_credential: 'Union[config.Object, str]' = None,
                port: 'int' = None, private_key_credential: 'str' = None, log_debug: 'bool' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -362,7 +362,7 @@ class AmazonAWS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.amazon_app)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', aws_credential: 'Union[Config.Object, str]',
+    def create(self, name: str, device: 'Union[config.Object, str]', aws_credential: 'Union[config.Object, str]',
                description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
@@ -430,14 +430,14 @@ class Apache(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', private_key_file: 'str', certificate_file: 'str',
+    def create(self, name: str, device: 'Union[config.Object, str]', private_key_file: 'str', certificate_file: 'str',
                description: 'str' = None, contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
                private_key_location: 'str' = None, client_tools_path: 'str' = None,
                protection_type: 'str' = None, softcard_identifier: 'str' = None, ocs_identifier: 'str' = None,
-               partition_password_credential: 'Union[Config.Object, str]' = None,
-               private_key_credential: 'Union[Config.Object, str]' = None,
+               partition_password_credential: 'Union[config.Object, str]' = None,
+               private_key_credential: 'Union[config.Object, str]' = None,
                certificate_chain_file: 'str' = None, overwrite_existing_chain: 'bool' = None, owner: 'str' = None,
                owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
@@ -518,8 +518,8 @@ class AzureKeyVault(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.azure_key_vault)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', application_id: 'str',
-               certificate_credential: 'Union[Config.Object, str]', azure_key_vault_name: 'str',
+    def create(self, name: str, device: 'Union[config.Object, str]', application_id: 'str',
+               certificate_credential: 'Union[config.Object, str]', azure_key_vault_name: 'str',
                description: 'str' = None, contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None, certificate_name: 'str' = None,
                private_key_exportable: 'bool' = None, web_application_name: 'str' = None,
@@ -589,7 +589,7 @@ class Basic(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.basic)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
@@ -622,7 +622,7 @@ class Basic(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def convert(self, basic_application: 'Union[Config.Object, str]', new_class_name: str, attributes: dict = None):
+    def convert(self, basic_application: 'Union[config.Object, str]', new_class_name: str, attributes: dict = None):
         """
         Converts the Basic application to another application class type. If attributes are given,
         then those attributes will apply to the new application once conversion is complete.
@@ -664,10 +664,10 @@ class BlueCoatSSLVA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.bluecoat_sslva)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None,
+               application_credential: 'Union[config.Object, str]' = None,
                port: 'int' = None, device_certificate: 'bool' = None, replace_existing: 'bool' = None,
                install_chain: 'bool' = None,
                create_lists: 'bool' = None, known_certificates_with_keys_lists: 'List[str]' = None,
@@ -722,10 +722,10 @@ class CAPI(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.capi)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, winrm_port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, winrm_port: 'int' = None,
                private_key_location: 'str' = None, key_label: 'str' = None, friendly_name: 'str' = None,
                exportable: 'bool' = None,
                private_key_trustee: 'str' = None, web_site_name: 'str' = None, binding_ip_address: 'str' = None,
@@ -800,12 +800,12 @@ class CitrixNetScaler(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.netscaler)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
                install_certificate_chain: 'bool' = None,
-               use_fips: 'bool' = None, private_key_credential: 'Union[Config.Object, str]' = None,
+               use_fips: 'bool' = None, private_key_credential: 'Union[config.Object, str]' = None,
                import_only: 'bool' = None,
                subfolder_relative_path: 'str' = None, certificate_binding: 'str' = None,
                virtual_server_name: 'str' = None,
@@ -866,10 +866,10 @@ class ConnectDirect(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.connectdirect)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, api_protocol: 'str' = None,
+               application_credential: 'Union[config.Object, str]' = None, api_protocol: 'str' = None,
                port: 'int' = None, node_name: 'str' = None, install_chain: 'bool' = None,
                key_certificate_alias: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -920,8 +920,8 @@ class F5AuthenticationBundle(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.f5_authentication_bundle)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', bundle_file_name: str, description: 'str' = None,
-               certifictes_to_use: 'List[Union[Config.Object, str]]' = None, attributes: dict = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', bundle_file_name: str, description: 'str' = None,
+               certifictes_to_use: 'List[Union[config.Object, str]]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Args:
@@ -960,14 +960,14 @@ class F5LTMAdvanced(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.f5_ltm_advanced)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, https_port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, https_port: 'int' = None,
                ssh_port: 'int' = None,
                device_certificate: 'bool' = None, provisioning_mode: 'int' = None,
                certificate_and_key_file: 'str' = None,
-               private_key_credential: 'Union[Config.Object, str]' = None, force_profile_update: 'bool' = None,
+               private_key_credential: 'Union[config.Object, str]' = None, force_profile_update: 'bool' = None,
                install_chain: 'bool' = None, bundle_certificate: 'bool' = None, overwrite_chain_file: 'bool' = None,
                ca_chain_file: 'str' = None, use_fips: 'bool' = None, overwrite_certificate_and_key: 'bool' = None,
                delete_previous_cert_and_key: 'bool' = None, provisioning_target: 'str' = None,
@@ -979,7 +979,7 @@ class F5LTMAdvanced(_ApplicationBase):
                client_certificate_requirement: 'str' = None,
                server_certificate_requirement: 'str' = None, frequency: 'str' = None,
                chain_traversal_depth: 'int' = None,
-               certificate_bundle: 'Union[Config.Object, str]' = None, authentication_name: 'str' = None,
+               certificate_bundle: 'Union[config.Object, str]' = None, authentication_name: 'str' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
         Creates a F5 LTM Advanced application object.
@@ -1083,10 +1083,10 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.google_cloud_app)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               google_credential: 'Union[Config.Object, str]' = None, target_proxy_type: 'str' = None,
+               google_credential: 'Union[config.Object, str]' = None, target_proxy_type: 'str' = None,
                target_proxy_name: 'str' = None, target_resource: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
@@ -1133,15 +1133,15 @@ class IBMDataPower(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.datapower)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None, xml_port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None, xml_port: 'int' = None,
                basic_provisioning_mode: 'bool' = None, crypto_certificate: 'str' = None, crypto_key: 'str' = None,
                application_domain: 'str' = None, associate_to_profile: 'bool' = None, credential_type: 'str' = None,
                profile_type: 'str' = None, crypto_profile_name: 'str' = None, ssl_profile_name: 'str' = None,
                certificate_folder: 'str' = None, install_certificate_chain: 'bool' = None,
-               private_key_password_credential: 'Union[Config.Object, str]' = None, attributes: dict = None,
+               private_key_password_credential: 'Union[config.Object, str]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Args:
@@ -1211,12 +1211,12 @@ class IBMGSK(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.gsk)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None, version: 'str' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None, version: 'str' = None,
                gsk_utility_path: 'str' = None, java_home_path: 'str' = None, key_store_path: 'str' = None,
-               key_store_credential: 'Union[Config.Object, str]' = None, create: 'bool' = None,
+               key_store_credential: 'Union[config.Object, str]' = None, create: 'bool' = None,
                replace_existing: 'bool' = None,
                certificate_label: 'str' = None, reuse_label: 'bool' = None, use_fips: 'bool' = None,
                password_validity: 'int' = None,
@@ -1306,11 +1306,11 @@ class ImpervaMX(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.imperva_mx)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
-               user_credential: 'Union[Config.Object, str]' = None, ssl_key_tool_path: 'str' = None, site: 'str' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+               user_credential: 'Union[config.Object, str]' = None, ssl_key_tool_path: 'str' = None, site: 'str' = None,
                server_group: 'str' = None, service: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
@@ -1364,16 +1364,16 @@ class JKS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.jks)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
                private_key_location: 'str' = None,
                slot_number: 'int' = None, java_vendor: 'str' = None, protection_type: 'str' = None,
                softcard_identifier: 'str' = None,
                keytool_path: 'str' = None, version: 'str' = None, store_type: 'str' = None, keystore_path: 'str' = None,
-               keystore_credential: 'Union[Config.Object, str]' = None,
-               private_key_credential: 'Union[Config.Object, str]' = None,
+               keystore_credential: 'Union[config.Object, str]' = None,
+               private_key_credential: 'Union[config.Object, str]' = None,
                create: 'bool' = None, replace_existing: 'bool' = None, certificate_alias: 'str' = None,
                reuse_alias: 'bool' = None,
                owner: 'str' = None, owner_permissions: 'str' = None, group: 'str' = None,
@@ -1468,12 +1468,12 @@ class OracleIPlanet(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.iplanet)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
                certificate_database_type: 'str' = None, certificate_database_path: 'str' = None,
-               certificate_database_credential: 'Union[Config.Object, str]' = None,
+               certificate_database_credential: 'Union[config.Object, str]' = None,
                certificate_database_prefix: 'str' = None,
                create: 'bool' = None, replace_existing: 'bool' = None, certutil_path: 'str' = None,
                pk12util_path: 'str' = None,
@@ -1556,11 +1556,11 @@ class PaloAltoNetworkFW(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.palo_alto_network_fw)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
-               provision_certificate_only: 'bool' = None, private_key_password: 'Union[Config.Object, str]' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+               provision_certificate_only: 'bool' = None, private_key_password: 'Union[config.Object, str]' = None,
                install_chain: 'bool' = None, replace_certificate: 'bool' = None,
                decryption_policy_rule_name: 'str' = None,
                create_decryption_policy_rule: 'bool' = None, decryption_profile_name: 'str' = None,
@@ -1629,11 +1629,11 @@ class PEM(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pem)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', private_key_file: 'str', certificate_file: 'str',
+    def create(self, name: str, device: 'Union[config.Object, str]', private_key_file: 'str', certificate_file: 'str',
                description: 'str' = None, contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
-               private_key_credential: 'Union[Config.Object, str]' = None, certificate_chain_file: 'str' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+               private_key_credential: 'Union[config.Object, str]' = None, certificate_chain_file: 'str' = None,
                overwrite_existing_chain: 'bool' = None, owner: 'str' = None, owner_permissions: 'str' = None,
                group: 'str' = None, group_permissions: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
@@ -1705,14 +1705,14 @@ class PKCS11(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', connection_method: 'str', port: 'int',
-               protection_type: 'str', token_identifier: 'str', token_pin: 'Union[Config.Object, str]',
+    def create(self, name: str, device: 'Union[config.Object, str]', connection_method: 'str', port: 'int',
+               protection_type: 'str', token_identifier: 'str', token_pin: 'Union[config.Object, str]',
                label_format: 'str',
                use_case: 'str', import_certificate_into_hsm: 'str', distribution_directory: 'str', cryptoki_file: 'str',
                openssl_config_file: 'str', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None,
+               application_credential: 'Union[config.Object, str]' = None,
                reverse_subject_dn: 'bool' = None, embed_sans_in_csr: 'bool' = None, requested_label: 'str' = None,
                client_tools_directory: 'str' = None, openssl_directory: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
@@ -1791,11 +1791,11 @@ class PKCS12(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs_12)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', pkcs12_file: 'str', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', pkcs12_file: 'str', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
-               private_key_credential: 'Union[Config.Object, str]' = None, friendly_name: 'str' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+               private_key_credential: 'Union[config.Object, str]' = None, friendly_name: 'str' = None,
                certificate_chain_file: 'str' = None, create: 'bool' = None, replace_existing: 'bool' = None,
                reuse_friendly_name: 'bool' = None, owner: 'str' = None,
                owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
@@ -1878,7 +1878,7 @@ class RiverbedSteelHead(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.riverbed_steelhead)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
                certificate_type: 'str' = None, replace_existing: 'bool' = None,
@@ -1926,10 +1926,10 @@ class TealeafPCA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.tealeaf_pca)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
                passive_capture_setup_path: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Args:
@@ -1974,10 +1974,10 @@ class VAMnShield(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.vam_nshield)
 
-    def create(self, name: str, device: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None,
                approvers: 'List[Union[Identity.Identity, str]]' = None,
-               application_credential: 'Union[Config.Object, str]' = None, port: 'int' = None,
+               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
                nshield_setup_path: 'str' = None,
                module_id: 'int' = None, restart_device: 'bool' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
@@ -2031,7 +2031,7 @@ class _ApplicationGroupBase(FeatureBase):
         self.class_name = class_name
         self.certificate_suffix = f'{class_name.split(maxsplit=1)[0]} App Group'
 
-    def delete(self, application_group: 'Union[Config.Object, str]', dissociate: bool = True):
+    def delete(self, application_group: 'Union[config.Object, str]', dissociate: bool = True):
         """
         Deletes an application group object.
 
@@ -2069,7 +2069,7 @@ class _ApplicationGroupBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def get_applications_in_group(self, application_group: 'Union[Config.Object, str]'):
+    def get_applications_in_group(self, application_group: 'Union[config.Object, str]'):
         """
         Args:
             application_group: :ref:`config_object` or :ref:`dn` of the application group.
@@ -2080,7 +2080,7 @@ class _ApplicationGroupBase(FeatureBase):
         consumer_dns, certificate_dn = self._get_applications_in_group(application_group=application_group)
         return consumer_dns
 
-    def _create(self, application_dns: List[str], certificate: 'Config.Object', attributes: dict = None):
+    def _create(self, application_dns: List[str], certificate: 'config.Object', attributes: dict = None):
         # Create the Application Group.
         app_group = self._config_create(
             name=f'{certificate.name} - {self.certificate_suffix}',
@@ -2108,7 +2108,7 @@ class _ApplicationGroupBase(FeatureBase):
 
         return app_group
 
-    def _get_applications_in_group(self, application_group: 'Union[Config.Object, str]'):
+    def _get_applications_in_group(self, application_group: 'Union[config.Object, str]'):
         application_group_dn = self._get_dn(application_group)
         certificate_dn = self._api.websdk.Config.Read.post(
             object_dn=application_group_dn,
@@ -2126,7 +2126,7 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache_application_group)
 
-    def create(self, applications: 'List[Union[Config.Object, str]]', certificate: 'Union[Config.Object, str]',
+    def create(self, applications: 'List[Union[config.Object, str]]', certificate: 'Union[config.Object, str]',
                common_data_location: str = None, attributes: dict = None):
         """
         Args:
@@ -2183,7 +2183,7 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11_application_group)
 
-    def create(self, applications: 'List[Union[Config.Object, str]]', certificate: 'Union[Config.Object, str]',
+    def create(self, applications: 'List[Union[config.Object, str]]', certificate: 'Union[config.Object, str]',
                attributes: dict = None):
         """
         Args:

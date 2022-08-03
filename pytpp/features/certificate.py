@@ -26,7 +26,7 @@ class Certificate(FeatureBase):
     def __init__(self, api):
         super().__init__(api)
 
-    def _get(self, certificate: 'Union[Config.Object, str]'):
+    def _get(self, certificate: 'Union[config.Object, str]'):
         # High volume concurrency can cause a 500 internal error in IIS due to a deadlock.
         # In this case the error requests the client to "rerun the transaction".
         certificate_guid = self._get_guid(certificate)
@@ -44,7 +44,7 @@ class Certificate(FeatureBase):
         result.assert_valid_response()
         return result
 
-    def associate_application(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]',
+    def associate_application(self, certificate: 'Union[config.Object, str]', applications: 'List[Union[config.Object, str]]',
                               push_to_new: bool = False):
         """
         Associates an application object to a certificate object.
@@ -63,13 +63,13 @@ class Certificate(FeatureBase):
         if not result.success:
             raise FeatureException(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None, approvers: 'List[Union[Identity.Identity, str]]' = None,
                management_type: 'str' = None, service_generated_csr: 'bool' = None, generate_key_on_application: 'bool' = None,
                hash_algorithm: 'str' = None, common_name: 'str' = None, organization: 'str' = None, organization_unit: 'List[str]' = None,
                city: 'str' = None, state: 'str' = None, country: 'str' = None, san_dns: 'List[str]' = None, san_email: 'List[str]' = None,
                san_upn: 'List[str]' = None, san_ip: 'List[str]' = None, san_uri: 'List[str]' = None, key_algorithm: 'str' = None,
-               key_strength: 'int' = None, elliptic_curve: 'str' = None, ca_template: 'Union[Config.Object, str]' = None,
+               key_strength: 'int' = None, elliptic_curve: 'str' = None, ca_template: 'Union[config.Object, str]' = None,
                disable_automatic_renewal: 'bool' = None, renewal_window: 'int' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
@@ -146,7 +146,7 @@ class Certificate(FeatureBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def delete(self, certificate: 'Union[Config.Object, str]'):
+    def delete(self, certificate: 'Union[config.Object, str]'):
         """
         Deletes the certificate object from TPP.
 
@@ -159,7 +159,7 @@ class Certificate(FeatureBase):
             certificate_dn = self._get_dn(certificate)
             raise FeatureException(f'Could not delete certificate {certificate_dn}.')
 
-    def details(self, certificate: 'Union[Config.Object, str]'):
+    def details(self, certificate: 'Union[config.Object, str]'):
         """
         Args:
             certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
@@ -169,7 +169,7 @@ class Certificate(FeatureBase):
         """
         return self._get(certificate=certificate).certificate_details
 
-    def dissociate_application(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]',
+    def dissociate_application(self, certificate: 'Union[config.Object, str]', applications: 'List[Union[config.Object, str]]',
                                delete_orphans: bool = False):
         """
         Dissociate an application object from a certificate.
@@ -190,7 +190,7 @@ class Certificate(FeatureBase):
         result.assert_valid_response()
 
     # noinspection ALL
-    def download(self, format: str, certificate: 'Union[Config.Object, str]' = None, friendly_name: str = None,
+    def download(self, format: str, certificate: 'Union[config.Object, str]' = None, friendly_name: str = None,
                  include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
                  password: str = None, root_first_order: bool = False, vault_id: int = None, timeout: int = 60,
                  poll_interval: float = 0.5):
@@ -281,7 +281,7 @@ class Certificate(FeatureBase):
         """
         return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
-    def get_previous_versions(self, certificate: 'Union[Config.Object, str]', exclude_expired: bool = False,
+    def get_previous_versions(self, certificate: 'Union[config.Object, str]', exclude_expired: bool = False,
                               exclude_revoked: bool = False):
         """
         Args:
@@ -299,7 +299,7 @@ class Certificate(FeatureBase):
         )
         return result.previous_versions
 
-    def get_validation_results(self, certificate: 'Union[Config.Object, str]'):
+    def get_validation_results(self, certificate: 'Union[config.Object, str]'):
         """
         Args:
             certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
@@ -324,7 +324,7 @@ class Certificate(FeatureBase):
              created_on: Union[datetime, str] = None, created_on_greater: Union[datetime, str] = None,
              created_on_less: Union[datetime, str] = None, disabled: bool = None, in_error: bool = None,
              management_type: StringParam = None, name: StringParam = None, network_validation_disabled: bool = None,
-             parent_folder: 'Union[Config.Object, str]' = None, recursive: bool = True, pending_workflow: bool = None,
+             parent_folder: 'Union[config.Object, str]' = None, recursive: bool = True, pending_workflow: bool = None,
              ssl_tls_protocol: StringParam = None, stage: StringParam = None, stage_greater: str = None,
              stage_less: str = None, tls_validation_failure: StringParam = None, validation_disabled: bool = None,
              validation_state: StringParam = None, valid_to_less: Union[datetime, str] = None,
@@ -552,7 +552,7 @@ class Certificate(FeatureBase):
 
         return certificates
 
-    def push_to_applications(self, certificate: 'Union[Config.Object, str]', applications: 'List[Union[Config.Object, str]]' = None):
+    def push_to_applications(self, certificate: 'Union[config.Object, str]', applications: 'List[Union[config.Object, str]]' = None):
         """
         Pushes the active ``certificate`` to the ``applications``.
 
@@ -573,7 +573,7 @@ class Certificate(FeatureBase):
             push_to_new=True
         )
 
-    def renew(self, certificate: 'Union[Config.Object, str]', csr: str = None, re_enable: bool = False):
+    def renew(self, certificate: 'Union[config.Object, str]', csr: str = None, re_enable: bool = False):
         """
         Renews or requests a certificate.
 
@@ -594,7 +594,7 @@ class Certificate(FeatureBase):
         result.assert_valid_response()
         return current_thumbprint
 
-    def reset(self, certificate: 'Union[Config.Object, str]'):
+    def reset(self, certificate: 'Union[config.Object, str]'):
         """
         Resets the certificate to a non-processing state. No attempt to reprocess the certificate renewal is made.
 
@@ -607,7 +607,7 @@ class Certificate(FeatureBase):
         if not result.processing_reset_completed:
             raise UnexpectedValue(f'Processing reset was not completed for {certificate_dn}.')
 
-    def retry_from_current_stage(self, certificate: 'Union[Config.Object, str]'):
+    def retry_from_current_stage(self, certificate: 'Union[config.Object, str]'):
         """
         Retries renewal from the current processing stage of the ``certificate``.
 
@@ -618,7 +618,7 @@ class Certificate(FeatureBase):
         result = self._api.websdk.Certificates.Retry.post(certificate_dn=certificate_dn)
         result.assert_valid_response()
 
-    def retry_from_stage_0(self, certificate: 'Union[Config.Object, str]'):
+    def retry_from_stage_0(self, certificate: 'Union[config.Object, str]'):
         """
         Retries renewal from stage 0. This clears all current processing data and restarts
         processing.
@@ -632,7 +632,7 @@ class Certificate(FeatureBase):
         if not result.restart_completed:
             raise UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate_dn}.')
 
-    def revoke(self, certificate: 'Union[Config.Object, str]', comments: str = None, disable: bool = None,
+    def revoke(self, certificate: 'Union[config.Object, str]', comments: str = None, disable: bool = None,
                reason: int = None, thumbprint: str = None):
         """
         Revokes the ``certificate``. If a thumbprint is provided, then the particular historical certificate
@@ -659,7 +659,7 @@ class Certificate(FeatureBase):
                 f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
             )
 
-    def upload(self, certificate_data: str, parent_folder: 'Union[Config.Object, str]', certificate_authority_attributes: dict = None,
+    def upload(self, certificate_data: str, parent_folder: 'Union[config.Object, str]', certificate_authority_attributes: dict = None,
                name: str = None, password: str = None, private_key_data: str = None, reconcile: bool = False):
         """
         Uploads the certificate data to TPP to create a certificate object under the given parent folder DN. If the BEGIN/END
@@ -697,7 +697,7 @@ class Certificate(FeatureBase):
         result.assert_valid_response()
         return self._api.websdk.Config.IsValid.post(object_dn=result.certificate_dn).object
 
-    def validate(self, certificates: 'List[Union[Config.Object, str]]'):
+    def validate(self, certificates: 'List[Union[config.Object, str]]'):
         """
         Performs SSL/TLS network validation of certificate on all applications associated to certificate that are not disabled.
 
@@ -715,7 +715,7 @@ class Certificate(FeatureBase):
             )
         return result.validated_certificate_dns, result.warnings
 
-    def wait_for_enrollment_to_complete(self, certificate: 'Union[Config.Object, str]', current_thumbprint: str,
+    def wait_for_enrollment_to_complete(self, certificate: 'Union[config.Object, str]', current_thumbprint: str,
                                         timeout: int = 60, poll_interval: float = 0.5):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
@@ -749,7 +749,7 @@ class Certificate(FeatureBase):
             f'status "{cert.processing_details.status}".'
         )
 
-    def wait_for_stage(self, certificate: 'Union[Config.Object, str]', stage: int, expect_workflow: bool = True,
+    def wait_for_stage(self, certificate: 'Union[config.Object, str]', stage: int, expect_workflow: bool = True,
                        timeout: int = 60, poll_interval: int = 1):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of

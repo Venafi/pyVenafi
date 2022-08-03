@@ -28,7 +28,7 @@ class _ClientWorkBase(FeatureBase):
         super().__init__(api)
         self._work_base_dn = r'\VED\Clients\Work'
 
-    def delete(self, work: 'Union[Config.Object, str]'):
+    def delete(self, work: 'Union[config.Object, str]'):
         """
         Deletes the client work.
 
@@ -44,7 +44,7 @@ class _ClientWorkBase(FeatureBase):
                 code_description=response.result.credential_result
             )
 
-    def disable(self, work: 'Union[Config.Object, str]'):
+    def disable(self, work: 'Union[config.Object, str]'):
         """
         Disables the client work.
 
@@ -62,7 +62,7 @@ class _ClientWorkBase(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def enable(self, work: 'Union[Config.Object, str]'):
+    def enable(self, work: 'Union[config.Object, str]'):
         """
         Enables the client work.
 
@@ -114,7 +114,7 @@ class AgentConnectivity(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0):
         """
         .. note::
@@ -174,7 +174,7 @@ class AgentConnectivity(_ClientWorkBase):
         )
         response.assert_valid_response()
 
-    def create(self, name: str, server_url: str = "", proxy_url: str = "", proxy_credentials: 'Union[Config.Object, str]' = None,
+    def create(self, name: str, server_url: str = "", proxy_url: str = "", proxy_credentials: 'Union[config.Object, str]' = None,
                log_threshold: str = ClientWorkAttributeValues.AgentConnectivity.LogThreshold.info,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -214,7 +214,7 @@ class AgentConnectivity(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: 'Union[Config.Object, str]'):
+    def unschedule(self, work: 'Union[config.Object, str]'):
         """
         Removes any scheduling for the client work, but does not delete the client work.
 
@@ -271,7 +271,7 @@ class CertificateDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, placement_folder: 'Union[Config.Object, str]', share_mode: int = 2,
+    def create(self, name: str, placement_folder: 'Union[config.Object, str]', share_mode: int = 2,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
         Args:
@@ -329,7 +329,7 @@ class CertificateDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None, days_of_month: List[str] = None, randomize_minutes: int = 0,
                  full_scan: bool = False):
@@ -403,7 +403,7 @@ class CertificateDiscovery(_ClientWorkBase):
         response.assert_valid_response()
 
     def create(self,
-               name: str, certificate_location: 'Union[Config.Object, str]', recursive_paths: List[str] = None, non_recursive_paths: List[str] = None,
+               name: str, certificate_location: 'Union[config.Object, str]', recursive_paths: List[str] = None, non_recursive_paths: List[str] = None,
                max_filesize: str = ClientWorkAttributeValues.CertificateDiscovery.MaxFilesize.less_than_10k,
                pkcs12_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs12_extensions,
                pkcs7_extensions: List[str] = ClientWorkAttributeValues.CertificateDiscovery.Extensions.default_pkcs7_extensions,
@@ -495,7 +495,7 @@ class CertificateDiscovery(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: 'Union[Config.Object, str]'):
+    def unschedule(self, work: 'Union[config.Object, str]'):
         """
         Removes any scheduling for the client work, but does not delete the client work.
 
@@ -521,14 +521,14 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', naming_pattern: str, ca_template: 'Union[Config.Object, str]',
+    def create(self, name: str, certificate_container: 'Union[config.Object, str]', naming_pattern: str, ca_template: 'Union[config.Object, str]',
                contacts: 'List[Identity.Identity, str]', certificate_origin: str = None, certificate_description: str = None,
                validation_type: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.ValidationType.basic,
                revocation_status_check: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.RevocationStatusCheck.accept_when_unknown,
-               authentication_credentials: 'Union[Config.Object, str]' = None, authenticate_only_by_password: bool = False,
+               authentication_credentials: 'Union[config.Object, str]' = None, authenticate_only_by_password: bool = False,
                revoke_previous_version: bool = False,
                identity_verification: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.IdentityVerification.valid,
-               trusted_certs_and_cas: 'List[Config.Object, str]' = None, get_if_already_exists: bool = False, attributes: dict = None):
+               trusted_certs_and_cas: 'List[config.Object, str]' = None, get_if_already_exists: bool = False, attributes: dict = None):
         """
         Args:
             name: The name of the client work.
@@ -600,7 +600,7 @@ class CertificateInstallation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
@@ -714,7 +714,7 @@ class CertificateInstallation(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: 'Union[Config.Object, str]'):
+    def unschedule(self, work: 'Union[config.Object, str]'):
         """
         Removes any scheduling for the client work, but does not delete the client work.
 
@@ -740,7 +740,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]',
+    def create(self, name: str, certificate_container: 'Union[config.Object, str]', ca_template: 'Union[config.Object, str]',
                contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$",
                common_name: str = "$Client.DNSName$", organization: str = None,
                organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
@@ -815,7 +815,7 @@ class DynamicProvisioning(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]',
+    def create(self, name: str, certificate_container: 'Union[config.Object, str]', ca_template: 'Union[config.Object, str]',
                contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
                organization: str = None, organizational_unit: List[str] = None, city_locality: str = None,
                state_province: str = None, country: str = None, subject_alternative_names: str = "$Client.DNSname$",
@@ -895,7 +895,7 @@ class SSHDevicePlacement(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, devices_folder: 'Union[Config.Object, str]',
+    def create(self, name: str, devices_folder: 'Union[config.Object, str]',
                share_mode: str = ClientWorkAttributeValues.SSHDevicePlacement.DeviceSharedMode.devices_folder_and_sub_folders,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
@@ -937,7 +937,7 @@ class SSHDiscovery(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_30_minutes: bool = False,
                  days_of_week: List[str] = None,
                  days_of_month: List[str] = None, randomize_minutes: int = 0, full_scan: bool = False):
@@ -1081,7 +1081,7 @@ class SSHDiscovery(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: 'Union[Config.Object, str]'):
+    def unschedule(self, work: 'Union[config.Object, str]'):
         """
         Removes any scheduling for the client work, but does not delete the client work.
 
@@ -1107,7 +1107,7 @@ class SSHKeyUsage(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         .. note::
@@ -1210,7 +1210,7 @@ class SSHKeyUsage(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: 'Union[Config.Object, str]'):
+    def unschedule(self, work: 'Union[config.Object, str]'):
         """
         Removes any scheduling for the client work, but does not delete the client work.
 
@@ -1236,7 +1236,7 @@ class SSHRemediation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def schedule(self, work: 'Union[Config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
+    def schedule(self, work: 'Union[config.Object, str]', start_time: int = None, daily: bool = False, hourly: bool = False,
                  on_receipt: bool = False, days_of_week: List[str] = None, days_of_month: List[str] = None,
                  every_x_minutes: int = None, randomize_minutes: int = 0):
         """
@@ -1353,7 +1353,7 @@ class SSHRemediation(_ClientWorkBase):
             get_if_already_exists=get_if_already_exists
         )
 
-    def unschedule(self, work: 'Union[Config.Object, str]'):
+    def unschedule(self, work: 'Union[config.Object, str]'):
         """
         Removes any scheduling for the client work, but does not delete the client work.
 
@@ -1379,7 +1379,7 @@ class UserCertificateCreation(_ClientWorkBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, certificate_container: 'Union[Config.Object, str]', ca_template: 'Union[Config.Object, str]',
+    def create(self, name: str, certificate_container: 'Union[config.Object, str]', ca_template: 'Union[config.Object, str]',
                contacts: 'List[Identity.Identity, str]', description: str = None,
                naming_pattern: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.naming_pattern,
                common_name: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.common_name,
@@ -1396,7 +1396,7 @@ class UserCertificateCreation(_ClientWorkBase):
                outlook_request_receipts: bool = False,
                publish_to_identity_provider: bool = False, publish_pre_enrollment: bool = False,
                install_previous_certs: bool = False, allow_mobile_sharing: bool = False,
-               lifecycle_groups: 'List[Union[Config.Object, str]]' = None, lifecycle_revoke_cert: bool = False,
+               lifecycle_groups: 'List[Union[config.Object, str]]' = None, lifecycle_revoke_cert: bool = False,
                lifecycle_disable_cert: bool = False,
                portal_friendly_name: str = None, portal_icon: int = 0, portal_download_limit: int = 3,
                portal_instructions: str = None, attributes: dict = None, get_if_already_exists: bool = True):

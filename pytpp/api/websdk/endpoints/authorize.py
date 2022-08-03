@@ -27,14 +27,14 @@ class _Authorize(API):
             "Password": password
         }
 
-        class _Response(APIResponse):
+        class Response(APIResponse):
             token = ResponseField(alias='APIKey')
 
         api_logger.debug(f'Authenticating to TPP as "{username}"...')
         with api_logger.suppressed(logging.WARNING):
             response = self._post(data=body)
         api_logger.debug(f'Authenticated as "{username}"!')
-        return ResponseFactory(response=response, response_cls=_Response)
+        return ResponseFactory(response=response, response_cls=Response)
 
     class _Certificate(API):
         def __init__(self, api_obj):
@@ -47,22 +47,22 @@ class _Authorize(API):
                 'scope': scope
             }
 
-            class _Response(APIResponse):
-                access_token = ResponseField(alias='access_token')
-                expires = ResponseField(alias='expires')
-                expires_in = ResponseField(alias='expires_in')
-                identity = ResponseField(alias='identity')
-                refresh_token = ResponseField(alias='refresh_token')
-                refresh_until = ResponseField(alias='refresh_until')
-                scope = ResponseField(alias='scope')
-                token_type = ResponseField(alias='token_type')
+            class Response(APIResponse):
+                access_token: str = ResponseField(alias='access_token')
+                expires: datetime = ResponseField(alias='expires')
+                expires_in: int = ResponseField(alias='expires_in')
+                identity: str = ResponseField(alias='identity')
+                refresh_token: str = ResponseField(alias='refresh_token')
+                refresh_until: datetime = ResponseField(alias='refresh_until')
+                scope: str = ResponseField(alias='scope')
+                token_type: str = ResponseField(alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return ResponseFactory(response=response, response_cls=_Response)
+            return ResponseFactory(response=response, response_cls=Response)
 
     class _Device(API):
         def __init__(self, api_obj):
@@ -75,21 +75,21 @@ class _Authorize(API):
                 'scope'    : scope
             }
 
-            class _Response(APIResponse):
-                device_code = ResponseField(alias='device_code')
-                interval = ResponseField(alias='interval')
-                user_code = ResponseField(alias='user_code')
-                verification_uri = ResponseField(alias='verification_uri')
-                verification_url_complete = ResponseField(alias='verification_uri_complete')
-                expires_in = ResponseField(alias='expires_in')
-                expires = ResponseField(alias='expires')
+            class Response(APIResponse):
+                device_code: str = ResponseField(alias='device_code')
+                interval: int = ResponseField(alias='interval')
+                user_code: str = ResponseField(alias='user_code')
+                verification_uri: str = ResponseField(alias='verification_uri')
+                verification_url_complete: str = ResponseField(alias='verification_uri_complete')
+                expires_in: int = ResponseField(alias='expires_in')
+                expires: datetime = ResponseField(alias='expires')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return ResponseFactory(response=response, response_cls=_Response)
+            return ResponseFactory(response=response, response_cls=Response)
 
     class _Integrated(API):
         def __init__(self, api_obj):
@@ -103,17 +103,17 @@ class _Authorize(API):
                 'state'    : state
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 access_token: str = ResponseField(alias='access_token', default=None)
                 expires: datetime = ResponseField(alias='expires')
-                expires_in = ResponseField(alias='expires_in')
-                identity = ResponseField(alias='identity')
-                refresh_token = ResponseField(alias='refresh_token')
-                refresh_until = ResponseField(alias='refresh_until')
-                scope = ResponseField(alias='scope')
-                token_type = ResponseField(alias='token_type')
+                expires_in: int = ResponseField(alias='expires_in')
+                identity: str = ResponseField(alias='identity')
+                refresh_token: str = ResponseField(alias='refresh_token')
+                refresh_until: datetime = ResponseField(alias='refresh_until')
+                scope: str = ResponseField(alias='scope')
+                token_type: str = ResponseField(alias='token_type')
 
-            return ResponseFactory(response=self._post(data=body), response_cls=_Response)
+            return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
     class _OAuth(API):
         def __init__(self, api_obj):
@@ -129,20 +129,22 @@ class _Authorize(API):
                 'state': state
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 access_token: str = ResponseField(alias='access_token', default=None)
-                expires: str = ResponseField(alias='expires', default=None)
-                identity: str = ResponseField(alias='identity', default=None)
-                refresh_token: str = ResponseField(alias='refresh_token', default=None)
-                scope: str = ResponseField(alias='scope', default=None)
-                token_type: str = ResponseField(alias='token_type', default=None)
+                expires: datetime = ResponseField(alias='expires')
+                expires_in: int = ResponseField(alias='expires_in')
+                identity: str = ResponseField(alias='identity')
+                refresh_token: str = ResponseField(alias='refresh_token')
+                refresh_until: datetime = ResponseField(alias='refresh_until')
+                scope: str = ResponseField(alias='scope')
+                token_type: str = ResponseField(alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" as "{username}"...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated as {username}!')
-            return ResponseFactory(response=response, response_cls=_Response)
+            return ResponseFactory(response=response, response_cls=Response)
 
     class _Token(API):
         def __init__(self, api_obj):
@@ -157,19 +159,20 @@ class _Authorize(API):
                 'device_code': device_code
             }
 
-            class _Response(APIResponse):
-                access_token = ResponseField(alias='access_token')
-                expires = ResponseField(alias='expires')
-                refresh_token = ResponseField(alias='refresh_token')
-                refresh_until = ResponseField(alias='refresh_until')
-                scope = ResponseField(alias='scope')
-                token_type = ResponseField(alias='token_type')
+            class Response(APIResponse):
+                access_token: str = ResponseField(alias='access_token', default=None)
+                expires: datetime = ResponseField(alias='expires')
+                expires_in: int = ResponseField(alias='expires_in')
+                refresh_token: str = ResponseField(alias='refresh_token')
+                refresh_until: datetime = ResponseField(alias='refresh_until')
+                scope: str = ResponseField(alias='scope')
+                token_type: str = ResponseField(alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth application with a refresh token...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return ResponseFactory(response=response, response_cls=_Response)
+            return ResponseFactory(response=response, response_cls=Response)
 
     class _Verify(API):
         def __init__(self, api_obj):
@@ -177,14 +180,14 @@ class _Authorize(API):
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            class _Response(APIResponse):
-                access_issued_on_unix_time = ResponseField(alias='access_issued_on_unix_time')
-                application = ResponseField(alias='application')
-                expires_unix_time = ResponseField(alias='expires_unix_time')
-                grant_issued_on_unix_time = ResponseField(alias='grant_issued_on_unix_time')
-                identity = ResponseField(alias='identity')
-                scope = ResponseField(alias='scope')
-                valid_for = ResponseField(alias='valid_for')
+            class Response(APIResponse):
+                access_issued_on_unix_time: datetime = ResponseField(alias='access_issued_on_unix_time')
+                application: str = ResponseField(alias='application')
+                expires_unix_time: datetime = ResponseField(alias='expires_unix_time')
+                grant_issued_on_unix_time: datetime = ResponseField(alias='grant_issued_on_unix_time')
+                identity: str = ResponseField(alias='identity')
+                scope: str = ResponseField(alias='scope')
+                valid_for: int = ResponseField(alias='valid_for')
         
                 @property
                 def access_issued_on(self):
@@ -210,4 +213,4 @@ class _Authorize(API):
                 def grant_issued_on_ISO8601(self):
                     return self.grant_issued_on_unix_time
 
-            return ResponseFactory(response=self._get(), response_cls=_Response)
+            return ResponseFactory(response=self._get(), response_cls=Response)

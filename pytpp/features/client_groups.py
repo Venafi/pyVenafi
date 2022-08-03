@@ -14,7 +14,7 @@ class _ClientGroupBase(FeatureBase):
         self._group_base_dn = r'\VED\Clients\Groups'
         self._work_base_dn = r'\VED\Clients\Work'
 
-    def assign_work(self, group: 'Union[Config.Object, str]', work: 'Union[Config.Object, str]'):
+    def assign_work(self, group: 'Union[config.Object, str]', work: 'Union[config.Object, str]'):
         """
         Assigns work to the client group
 
@@ -37,7 +37,7 @@ class _ClientGroupBase(FeatureBase):
                 code_description=response.result.credential_result
             )
 
-    def delete(self, group: 'Union[Config.Object, str]'):
+    def delete(self, group: 'Union[config.Object, str]'):
         """
         Deletes a client group
 
@@ -77,7 +77,7 @@ class _ClientGroupBase(FeatureBase):
             )
         return response.objects
 
-    def remove_work(self, group: 'Union[Config.Object, str]', work: 'Union[Config.Object, str]'):
+    def remove_work(self, group: 'Union[config.Object, str]', work: 'Union[config.Object, str]'):
         """
         Removes work from a client group
 

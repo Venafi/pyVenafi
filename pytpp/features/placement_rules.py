@@ -179,8 +179,8 @@ class PlacementRules(FeatureBase):
         super().__init__(api=api)
         self._layout_rules_dn = r'\VED\Layout Root\Rules'
 
-    def _format_rule_attribute(self, conditions: List[str], device_location: 'Union[Config.Object, str]',
-                               certificate_location: 'Union[Config.Object, str]' = None,
+    def _format_rule_attribute(self, conditions: List[str], device_location: 'Union[config.Object, str]',
+                               certificate_location: 'Union[config.Object, str]' = None,
                                rule_type: str = 'X509 Certificate'):
         """
         Formats the rule attribute on the Placement Rule object.
@@ -195,8 +195,8 @@ class PlacementRules(FeatureBase):
 
         return f"{context}\n{rule_types}\n{conditions}\n{locations}\nEND"
 
-    def create(self, name: str, conditions: List[str], device_location: 'Union[Config.Object, str]',
-               certificate_location: 'Union[Config.Object, str]' = None, rule_type: str = 'X509 Certificate',
+    def create(self, name: str, conditions: List[str], device_location: 'Union[config.Object, str]',
+               certificate_location: 'Union[config.Object, str]' = None, rule_type: str = 'X509 Certificate',
                get_if_already_exists: bool = True):
         """
         Args:
@@ -228,7 +228,7 @@ class PlacementRules(FeatureBase):
         )
         return rule
 
-    def delete(self, rule: 'Union[Config.Object, str]'):
+    def delete(self, rule: 'Union[config.Object, str]'):
         """
         Deletes a placement rule.
 
@@ -239,7 +239,7 @@ class PlacementRules(FeatureBase):
         response = self._config_delete(object_dn=rule_dn)
         response.assert_valid_response()
 
-    def update(self, rule: 'Union[Config.Object, str]', conditions: List[str] = None, device_location: str = None,
+    def update(self, rule: 'Union[config.Object, str]', conditions: List[str] = None, device_location: str = None,
                certificate_location: str = None, rule_type: str = 'X509 Certificate'):
         """
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten

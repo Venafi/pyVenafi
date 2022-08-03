@@ -12,7 +12,7 @@ class _DeviceBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def delete(self, device: 'Union[Config.Object, str]'):
+    def delete(self, device: 'Union[config.Object, str]'):
         """
         Deletes the device object specified.
 
@@ -28,11 +28,11 @@ class Device(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None, address: 'str' = None, agent_provisioning_mode: 'bool' = None,
-               concurrent_connection_limit: 'int' = None, device_credential: 'Union[Config.Object, str]' = None,
-               temp_directory: 'str' = None, os_type: 'str' = None, jump_server: 'Union[Config.Object, str]' = None,
-               use_sudo: 'bool' = None, sudo_credential: 'Union[Config.Object, str]' = None, enforce_host_key: 'bool' = None,
+               concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
+               temp_directory: 'str' = None, os_type: 'str' = None, jump_server: 'Union[config.Object, str]' = None,
+               use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None, enforce_host_key: 'bool' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
         """
         Args:
@@ -95,7 +95,7 @@ class Device(_DeviceBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def scan_for_ssh_keys(self, device: 'Union[Config.Object, str]'):
+    def scan_for_ssh_keys(self, device: 'Union[config.Object, str]'):
         """
         Submits Agentless discovery work for the given device.
 
@@ -118,11 +118,11 @@ class JumpServer(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[Config.Object, str]', description: 'str' = None,
+    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[Identity.Identity, str]]' = None, address: 'str' = None, port: 'int' = None,
-               concurrent_connection_limit: 'int' = None, device_credential: 'Union[Config.Object, str]' = None,
+               concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
                temp_directory: 'str' = None, os_type: 'str' = None, ssh_version: 'str' = None, ssh_syntax: 'str' = None,
-               use_sudo: 'bool' = None, sudo_credential: 'Union[Config.Object, str]' = None,
+               use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None,
                enforce_host_key: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Args:
@@ -187,7 +187,7 @@ class JumpServer(_DeviceBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def scan_for_ssh_keys(self, device: 'Union[Config.Object, str]'):
+    def scan_for_ssh_keys(self, device: 'Union[config.Object, str]'):
         """
         Submits Agentless discovery work for the given device.
 
