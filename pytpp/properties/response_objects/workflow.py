@@ -1,4 +1,4 @@
-from pytpp.properties.response_objects.dataclasses import worfklow
+from pytpp.properties.response_objects.dataclasses import workflow
 from pytpp.properties.resultcodes import ResultCodes
 from pytpp.tools.helpers.date_converter import from_date_string
 

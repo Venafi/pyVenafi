@@ -60,7 +60,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -80,7 +80,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 response: ssh.Response = ResponseField(alias='Response')
 
@@ -101,7 +101,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -126,7 +126,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 notes: str = ResponseField(alias='Notes')
                 response: ssh.Response = ResponseField(alias='Response')
@@ -172,7 +172,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 response: ssh.Response = ResponseField(alias='Response')
 
@@ -182,7 +182,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ApproveKeyOperation')
 
-        def post(self, key_id: str, comment: str):
+        def post(self, key_id: int, comment: str):
             body = {
                 'KeyId': key_id,
                 'Comment': comment
@@ -197,7 +197,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/CancelKeyOperation')
 
-        def post(self, key_id: str):
+        def post(self, key_id: int):
             body = {
                 'KeyId': key_id
             }
@@ -225,7 +225,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ChangePrivateKeyPassphrase')
 
-        def post(self, key_id: str, passphrase: str):
+        def post(self, key_id: int, passphrase: str):
             body = {
                 'KeysetId': key_id,
                 'Passphrase': passphrase
@@ -284,7 +284,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/EditKeyOptions')
 
-        def post(self, key_id: str, allowed_source_restriction: list = None, denied_source_restriction: list = None,
+        def post(self, key_id: int, allowed_source_restriction: list = None, denied_source_restriction: list = None,
                  forced_command: str = None, options: list = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
@@ -303,7 +303,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/EditSelfServiceAuthorizedKey')
 
-        def post(self, key_id: str, allowed_source_restriction: list = None,
+        def post(self, key_id: int, allowed_source_restriction: list = None,
                  denied_source_restriction: list = None, forced_command: str = None,
                  location: str = None, notes: str = None, options: list = None):
             body = {
@@ -326,7 +326,7 @@ class _SSH:
             super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServiceAuthorizedKey')
 
         # noinspection ALL
-        def post(self, key_id: str, format: str = None):
+        def post(self, key_id: int, format: str = None):
             body = {
                 'KeyId': key_id,
                 'Format': format
@@ -343,7 +343,7 @@ class _SSH:
             super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServicePrivateKey')
 
         # noinspection ALL
-        def post(self, key_id: str, format: str = None, passphrase: str = None):
+        def post(self, key_id: int, format: str = None, passphrase: str = None):
             body = {
                 'KeyId': key_id,
                 'Format': format,
@@ -351,7 +351,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 notes: str = ResponseField(alias='Notes')
                 response: ssh.Response = ResponseField(alias='Response')
@@ -373,7 +373,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='SshWebResponse')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -409,7 +409,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: str = ResponseField(alias='KeyId')
+                key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='SshWebResponse')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -418,21 +418,21 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/KeyDetails')
 
-        def post(self, key_id: list):
+        def post(self, key_id: int):
             body = {
                 'KeyId': key_id
             }
 
             class Response(APIResponse):
-                key_data: List[ssh.KeyData] = ResponseField(default_factory=list, alias='KeyData')
+                key_data: List[ssh.KeyData] = ResponseField(default_factory=list)
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='key_data')
 
     class _KeysetDetails(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/KeysetDetails')
 
-        def get(self, keyset_id: list, load_key_data: bool = None):
+        def get(self, keyset_id: str, load_key_data: bool = None):
             params = {
                 'KeysetId': keyset_id,
                 'LoadKeyData': load_key_data
@@ -448,11 +448,11 @@ class _SSH:
                 last_used: datetime = ResponseField(alias='LastUsed')
                 length: int = ResponseField(alias='Length')
                 private_keys: List[ssh.KeyData] = ResponseField(default_factory=list, alias='PrivateKeys')
-                process_status: str = ResponseField(alias='ProcessStatus')
+                process_status: int = ResponseField(alias='ProcessStatus')
                 public_keys: List[ssh.KeyData] = ResponseField(default_factory=list, alias='PublicKeys')
                 rotation_stage: int = ResponseField(alias='RotationStage')
                 type: str = ResponseField(alias='Type')
-                violation_status: str = ResponseField(alias='ViolationStatus')
+                violation_status: List[int] = ResponseField(alias='ViolationStatus')
 
             return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
@@ -505,7 +505,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RejectKeyOperation')
 
-        def post(self, key_id: str, comment: str):
+        def post(self, key_id: int, comment: str):
             body = {
                 'KeyId': key_id,
                 'Comment': comment
@@ -520,7 +520,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RemoveKey')
 
-        def post(self, key_id: str):
+        def post(self, key_id: int):
             body = {
                 'KeyId': key_id
             }
@@ -534,7 +534,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RetryKeyOperation')
 
-        def post(self, key_id: str):
+        def post(self, key_id: int):
             body = {
                 'KeyId': key_id
             }
@@ -593,7 +593,7 @@ class _SSH:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/SkipKeyRotation')
 
-        def post(self, key_id: str):
+        def post(self, key_id: int):
             body = {
                 'KeyId': key_id
             }
@@ -613,9 +613,9 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                connection_results: List[ssh.ConnectionResult] = ResponseField(default_factory=list, alias='ConnectionResults')
+                connection_results: List[ssh.ConnectionResult] = ResponseField(default_factory=list)
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='connection_results')
 
     class _Widget:
         def __init__(self, api_obj):

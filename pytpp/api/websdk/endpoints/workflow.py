@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.worfklow import Workflow
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.properties.response_objects.dataclasses import workflow
 
 
 class _Workflow:
@@ -30,21 +31,11 @@ class _Workflow:
                     'WorkflowDN': workflow_dn
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    guid: str = ResponseField(alias='GUID')
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def guid(self) -> str:
-                        return self._from_json('GUID')
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Delete(API):
             def __init__(self, api_obj):
@@ -55,16 +46,10 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Details(API):
             def __init__(self, api_obj):
@@ -75,21 +60,18 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    approval_explanation: str = ResponseField(alias='ApprovalExplanation')
+                    approval_from: str = ResponseField(alias='ApprovalFrom')
+                    approvers: List[str] = ResponseField(alias='Approvers')
+                    blocking: str = ResponseField(alias='Blocking')
+                    created: datetime = ResponseField(alias='Created')
+                    issued_due_to: str = ResponseField(alias='IssuedDueTo')
+                    status: str = ResponseField(alias='Status')
+                    updated: datetime = ResponseField(alias='Updated')
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def details(self):
-                        return Workflow.Details(self._from_json())
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Enumerate(API):
             def __init__(self, api_obj):
@@ -101,21 +83,11 @@ class _Workflow:
                     'UserData': user_data
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    guids: List[str] = ResponseField(default_factory=list, alias='GUIDS')
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def guids(self) -> List[str]:
-                        return self._from_json('GUIDS')
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Exists(API):
             def __init__(self, api_obj):
@@ -126,16 +98,10 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Status(API):
             def __init__(self, api_obj):
@@ -146,21 +112,11 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    status: str = ResponseField(alias='Status')
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def status(self) -> str:
-                        return self._from_json('Status')
-
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _UpdateStatus(API):
             def __init__(self, api_obj):
@@ -189,13 +145,7 @@ class _Workflow:
                     'UserData'      : user_data
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    result: workflow.Result = ResponseField(alias='Result')
 
-                    @property
-                    @api_response_property()
-                    def result(self):
-                        return Workflow.Result(self._from_json('Result'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))

@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.identity import Identity
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.properties.response_objects.dataclasses import identity as ident
 
 
 class _Teams(API):
@@ -23,21 +23,11 @@ class _Teams(API):
             'Products': products
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+        class Response(APIResponse):
+            identity: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
+            invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
 
-            @property
-            @api_response_property()
-            def identity(self):
-                return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
-
-            @property
-            @api_response_property()
-            def invalid_members(self):
-                return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-        return _Response(response=self._post(data=body))
+        return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _AddTeamMembers(API):
         def __init__(self, api_obj):
@@ -50,26 +40,12 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                message: str = ResponseField(alias='Message')
 
-                @property
-                @api_response_property()
-                def invalid_members(self):
-                    return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-                @property
-                @api_response_property()
-                def members(self):
-                    return [Identity.Identity(member) for member in self._from_json(key='Members')]
-
-                @property
-                @api_response_property()
-                def message(self) -> str:
-                    return self._from_json(key='Message')
-
-            return _Response(response=self._put(data=body))
+            return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     class _AddTeamOwners(API):
         def __init__(self, api_obj):
@@ -82,26 +58,12 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                message: str = ResponseField(alias='Message')
 
-                @property
-                @api_response_property()
-                def owners(self):
-                    return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
-
-                @property
-                @api_response_property()
-                def members(self):
-                    return [Identity.Identity(member) for member in self._from_json(key='Members')]
-
-                @property
-                @api_response_property()
-                def message(self) -> str:
-                    return self._from_json(key='Message')
-
-            return _Response(response=self._put(data=body))
+            return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     class _DemoteTeamOwners(API):
         def __init__(self, api_obj):
@@ -114,31 +76,13 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                invalid_owners: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidOwners') 
+                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                message: str = ResponseField(alias='Message')
 
-                @property
-                @api_response_property()
-                def invalid_owners(self):
-                    return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
-
-                @property
-                @api_response_property()
-                def owners(self):
-                    return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
-
-                @property
-                @api_response_property()
-                def members(self):
-                    return [Identity.Identity(member) for member in self._from_json(key='Members')]
-
-                @property
-                @api_response_property()
-                def message(self) -> str:
-                    return self._from_json(key='Message')
-
-            return _Response(response=self._put(data=body))
+            return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     def Prefix(self, prefix='local'):
         return self._Prefix(prefix=prefix, api_obj=self._api_obj)
@@ -160,49 +104,21 @@ class _Teams(API):
                 super().__init__(api_obj=api_obj, url=f'/Teams/{prefix}/{universal}')
 
             def delete(self):
-                
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    message: str = ResponseField(alias='Message')
 
-                return _Response(response=self._delete())
+                return ResponseFactory(response_cls=Response, response=self._delete())
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    assets: List[str] = ResponseField(default_factory=list, alias='Assets')
+                    description: str = ResponseField(alias='Description')
+                    identity: ident.Identity = ResponseField(alias='ID')
+                    members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                    owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
+                    products: List[str] = ResponseField(default_factory=list, alias='Products')
 
-                    @property
-                    @api_response_property()
-                    def assets(self) -> List[str]:
-                        return self._from_json(key='Assets')
-
-                    @property
-                    @api_response_property()
-                    def description(self) -> str:
-                        return self._from_json(key='Description')
-
-                    @property
-                    @api_response_property()
-                    def identity(self):
-                        return Identity.Identity(self._from_json(key='ID'))
-
-                    @property
-                    @api_response_property()
-                    def members(self):
-                        return [Identity.Identity(member) for member in self._from_json(key='Members')]
-
-                    @property
-                    @api_response_property()
-                    def owners(self):
-                        return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
-
-                    @property
-                    @api_response_property()
-                    def products(self) -> List[str]:
-                        return self._from_json(key='Products')
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get())
 
             def put(self, assets: list, description: str, name: str, owners: list, members: list, products: list):
                 body = {
@@ -214,31 +130,13 @@ class _Teams(API):
                     'Products': products
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    identity: ident.Identity = ResponseField(alias='ID')
+                    invalid_owners: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidOwners') 
+                    invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
+                    message: str = ResponseField(alias='Message')
 
-                    @property
-                    @api_response_property()
-                    def identity(self):
-                        return Identity.Identity(self._from_json(key='ID'))
-
-                    @property
-                    @api_response_property()
-                    def invalid_owners(self):
-                        return [Identity.InvalidIdentity(owner) for owner in self._from_json(key='InvalidOwners')]
-
-                    @property
-                    @api_response_property()
-                    def invalid_members(self):
-                        return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-                    @property
-                    @api_response_property()
-                    def message(self) -> str:
-                        return self._from_json(key='Message')
-
-                return _Response(response=self._put(data=body))
+                return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     class _RemoveTeamMembers(API):
         def __init__(self, api_obj):
@@ -251,31 +149,13 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                message: str = ResponseField(alias='Message')
+                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
 
-                @property
-                @api_response_property()
-                def invalid_members(self):
-                    return [Identity.InvalidIdentity(member) for member in self._from_json(key='InvalidMembers')]
-
-                @property
-                @api_response_property()
-                def members(self):
-                    return [Identity.Identity(member) for member in self._from_json(key='Members')]
-
-                @property
-                @api_response_property()
-                def message(self) -> str:
-                    return self._from_json(key='Message')
-
-                @property
-                @api_response_property()
-                def owners(self):
-                    return [Identity.Identity(owner) for owner in self._from_json(key='Owners')]
-
-            return _Response(response=self._put(data=body))
+            return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     class _RenameTeam(API):
         def __init__(self, api_obj):
@@ -287,18 +167,8 @@ class _Teams(API):
                 'NewTeamName': new_team_name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                identity: ident.Identity = ResponseField(alias='ID')
+                message: str = ResponseField(alias='Message')
 
-                @property
-                @api_response_property()
-                def identity(self):
-                    return Identity.Identity(self._from_json(key='ID'))
-
-                @property
-                @api_response_property()
-                def message(self) -> str:
-                    return self._from_json(key='Message')
-
-            return _Response(response=self._put(data=body))
+            return ResponseFactory(response_cls=Response, response=self._put(data=body))

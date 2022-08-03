@@ -1,8 +1,8 @@
-from pydantic import Field
+from datetime import datetime
+from typing import List
 
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, api_response_property
-from pytpp.properties.response_objects.system_status import SystemStatus
-from pytpp.tools.helpers.date_converter import from_date_string
+from properties.response_objects.dataclasses import system_status
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _SystemStatus(API):
@@ -12,16 +12,10 @@ class _SystemStatus(API):
         self.Version = self._Version(api_obj=api_obj)
 
     def get(self):
-        class _Response(APIResponse):
-            def __init__(self, response):
-                super().__init__(response=response)
+        class Response(APIResponse):
+            engines: List[system_status.SystemStatus] = ResponseField(default_factory=list)
 
-            @property
-            @api_response_property()
-            def engines(self):
-                return [SystemStatus.SystemStatus(status) for status in self._from_json()]
-
-        return _Response(response=self._get())
+        return ResponseFactory(response_cls=Response, response=self._get(), root_field='engines')
 
     class _Upgrade:
         def __init__(self, api_obj):
@@ -42,46 +36,19 @@ class _SystemStatus(API):
                     'UpgradeId': upgrade_id
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    engine: system_status.Engine = ResponseField(alias='Engine')
 
-                    @property
-                    @api_response_property()
-                    def engine(self):
-                        return SystemStatus.Engine(self._from_json(key='Engine'))
+                    status: str = ResponseField(alias='Status')
+                    upgrade_start_time: datetime = ResponseField(alias='UpgradeStartTime')
 
-                    @property
-                    @api_response_property()
-                    def status(self) -> str:
-                        return self._from_json(key='Status')
+                    upgrade_stop_time: datetime = ResponseField(alias='UpgradeStopTime')
 
-                    @property
-                    @api_response_property()
-                    def upgrade_start_time(self):
-                        return from_date_string(self._from_json(key='UpgradeStartTime'))
+                    tasks_completed: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksCompleted') 
+                    tasks_pending: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksPending') 
+                    tasks_running: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksRunning') 
 
-                    @property
-                    @api_response_property()
-                    def upgrade_stop_time(self):
-                        return from_date_string(self._from_json(key='UpgradeStopTime'))
-
-                    @property
-                    @api_response_property()
-                    def tasks_completed(self):
-                        return [SystemStatus.Task(task) for task in self._from_json(key='TasksCompleted')]
-
-                    @property
-                    @api_response_property()
-                    def tasks_pending(self):
-                        return [SystemStatus.Task(task) for task in self._from_json(key='TasksPending')]
-
-                    @property
-                    @api_response_property()
-                    def tasks_running(self):
-                        return [SystemStatus.Task(task) for task in self._from_json(key='TasksRunning')]
-
-                return _Response(response=self._get(params=params))
+                return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
         class _Engines(API):
             def __init__(self, api_obj):
@@ -92,71 +59,47 @@ class _SystemStatus(API):
                     'UpgradeId': upgrade_id
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    engines: List[system_status.UpgradeStatus] = ResponseField(default_factory=list, alias='Engines') 
 
-                    @property
-                    @api_response_property()
-                    def engines(self):
-                        return [SystemStatus.UpgradeStatus(engine) for engine in self._from_json(key='Engines')]
-
-                return _Response(response=self._get(params=params))
+                return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
         class _History(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/History')
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    upgrade_history: List[system_status.UpgradeInfo] = ResponseField(default_factory=list, alias='UpgradeHistory') 
 
-                    @property
-                    @api_response_property()
-                    def upgrade_history(self):
-                        return [SystemStatus.UpgradeInfo(info) for info in self._from_json(key='UpgradeHistory')]
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get())
 
         class _Status(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Status')
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    upgrade_in_progress: bool = ResponseField(alias='UpgradeInProgress')
 
-                    @property
-                    @api_response_property()
-                    def upgrade_in_progress(self) -> bool:
-                        return self._from_json(key='UpgradeInProgress')
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get())
 
         class _Summary(API):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Summary')
 
             def get(self):
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    upgrade_summary: system_status.UpgradeSummary = ResponseField(alias='UpgradeSummary')
 
-                    @property
-                    @api_response_property()
-                    def upgrade_summary(self):
-                        return SystemStatus.UpgradeSummary(self._from_json(key='UpgradeSummary'))
-
-                return _Response(response=self._get())
+                return ResponseFactory(response_cls=Response, response=self._get())
 
     class _Version(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SystemStatus/Version')
 
         def get(self):
-            class _Response(APIResponse):
-                version: str = Field(alias='Version', default=None)
+            class Response(APIResponse):
+                version: str = ResponseField(alias='Version')
 
-            return ResponseFactory(response=self._get(), response_cls=_Response)
+            return ResponseFactory(response=self._get(), response_cls=Response)

@@ -19,7 +19,7 @@ from pytpp.properties.response_objects.dataclasses import secret_store as Secret
 # noinspection PyUnresolvedReferences
 from pytpp.properties.response_objects.dataclasses import ssh as SSH
 # noinspection PyUnresolvedReferences
-from pytpp.properties.response_objects.dataclasses import worfklow as Workflow
+from pytpp.properties.response_objects.dataclasses import workflow as Workflow
 # noinspection PyUnresolvedReferences
 from pytpp.properties.response_objects.dataclasses import processing_engines as ProcessingEngines
 # noinspection PyUnresolvedReferences

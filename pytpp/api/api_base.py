@@ -320,6 +320,11 @@ def ResponseField(
         repr: bool = True,
         **extra: Any,
 ) -> Any:
+    """
+
+    Returns:
+        object:
+    """
     if callable(default_factory):
         default = Undefined
     return Field(

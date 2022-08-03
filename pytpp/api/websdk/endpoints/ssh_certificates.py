@@ -1,7 +1,7 @@
+from datetime import datetime
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.ssh_certificates import SSHCertificate
-from pytpp.tools.helpers.date_converter import from_date_string
+from properties.response_objects.dataclasses import ssh_certificates
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _SSHCertificates:
@@ -31,61 +31,19 @@ class _SSHCertificates:
                     'PrivateKeyPassphrase': private_key_passphrase
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    created_on: datetime = ResponseField(alias='CreatedOn')
+                    dn: str = ResponseField(alias='DN')
+                    fingerprint_sha_256: str = ResponseField(alias='FingerprintSHA256')
+                    guid: str = ResponseField(alias='Guid')
+                    key_algorithm: str = ResponseField(alias='KeyAlgorithm')
+                    key_storage: str = ResponseField(alias='KeyStorage')
+                    name: str = ResponseField(alias='Name')
+                    processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
+                    public_key_data: str = ResponseField(alias='PublicKeyData')
+                    response: ssh_certificates.Response = ResponseField(alias='Response')
 
-                    @property
-                    @api_response_property()
-                    def created_on(self):
-                        return from_date_string(self._from_json(key='CreatedOn'))
-
-                    @property
-                    @api_response_property()
-                    def dn(self) -> str:
-                        return self._from_json(key='DN')
-
-                    @property
-                    @api_response_property()
-                    def fingerprint_sha_256(self) -> str:
-                        return self._from_json(key='FingerprintSHA256')
-
-                    @property
-                    @api_response_property()
-                    def guid(self) -> str:
-                        return self._from_json(key='Guid')
-
-                    @property
-                    @api_response_property()
-                    def key_algorithm(self) -> str:
-                        return self._from_json(key='KeyAlgorithm')
-
-                    @property
-                    @api_response_property()
-                    def key_storage(self) -> str:
-                        return self._from_json(key='KeyStorage')
-
-                    @property
-                    @api_response_property()
-                    def name(self) -> str:
-                        return self._from_json(key='Name')
-
-                    @property
-                    @api_response_property()
-                    def processing_details(self):
-                        return SSHCertificate.ProcessingDetails(self._from_json(key='ProcessingDetails'))
-
-                    @property
-                    @api_response_property()
-                    def public_key_data(self) -> str:
-                        return self._from_json(key='PublicKeyData')
-
-                    @property
-                    @api_response_property()
-                    def response(self):
-                        return SSHCertificate.Response(self._from_json(key='Response'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Request(API):
         def __init__(self, api_obj):
@@ -110,49 +68,31 @@ class _SSHCertificates:
                  processing_timeout: int = None
                  ):
             body = {
-                'CADN'              : ca_dn,
-                'KeyId'             : key_id,
-                'DestinationAddress': destination_address,
-                'Extensions'        : extensions,
-                'ForceCommand'      : force_command,
-                'ObjectName'        : object_name,
-                'Origin'            : origin,
-                'PolicyDN'          : policy_dn,
-                'Principals'        : principals,
-                'PublicKeyData'     : public_key_data,
-                'SourceAddresses'   : source_addresses,
-                'ValidityPeriod'    : validity_period,
+                'CADN'                     : ca_dn,
+                'KeyId'                    : key_id,
+                'DestinationAddress'       : destination_address,
+                'Extensions'               : extensions,
+                'ForceCommand'             : force_command,
+                'ObjectName'               : object_name,
+                'Origin'                   : origin,
+                'PolicyDN'                 : policy_dn,
+                'Principals'               : principals,
+                'PublicKeyData'            : public_key_data,
+                'SourceAddresses'          : source_addresses,
+                'ValidityPeriod'           : validity_period,
                 'IncludeCertificateDetails': include_certificate_details,
-                'IncludePrivateKeyData': include_private_key_data,
-                'PrivateKeyPassphrase': private_key_passphrase,
-                'ProcessingTimeout': processing_timeout
+                'IncludePrivateKeyData'    : include_private_key_data,
+                'PrivateKeyPassphrase'     : private_key_passphrase,
+                'ProcessingTimeout'        : processing_timeout
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                ssh_certificate_dn: str = ResponseField(alias='DN')
+                ssh_certificate_guid: str = ResponseField(alias='Guid')
+                response: ssh_certificates.Response = ResponseField(alias='Response')
+                processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
 
-                @property
-                @api_response_property()
-                def ssh_certificate_dn(self) -> str:
-                    return self._from_json('DN')
-
-                @property
-                @api_response_property()
-                def ssh_certificate_guid(self) -> str:
-                    return self._from_json('Guid')
-
-                @property
-                @api_response_property()
-                def response(self) -> SSHCertificate.Response:
-                    return SSHCertificate.Response(self._from_json('Response'))
-
-                @property
-                @api_response_property()
-                def processing_details(self) -> SSHCertificate.ProcessingDetails:
-                    return SSHCertificate.ProcessingDetails(self._from_json('ProcessingDetails'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -171,66 +111,20 @@ class _SSHCertificates:
                 'PrivateKeyPassphrase'     : private_key_passphrase
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                ca_dn: str = ResponseField(alias='CADN')
+                ca_guid: str = ResponseField(alias='CAGuid')
+                certificate_data: str = ResponseField(alias='CertificateData')
+                certificate_details: ssh_certificates.CertificateDetails = ResponseField(alias='CertificateDetails')
+                guid: str = ResponseField(alias='Guid')
+                key_id: str = ResponseField(alias='KeyID')
+                private_key_data: str = ResponseField(alias='PrivateKeyData')
+                processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
+                public_key_data: str = ResponseField(alias='PublicKeyData')
+                request_details: ssh_certificates.RequestDetails = ResponseField(alias='RequestDetails')
+                response: ssh_certificates.Response = ResponseField(alias='Response')
 
-                @property
-                @api_response_property()
-                def ca_dn(self) -> str:
-                    return self._from_json('CADN')
-
-                @property
-                @api_response_property()
-                def ca_guid(self) -> str:
-                    return self._from_json('CAGuid')
-
-                @property
-                @api_response_property()
-                def certificate_data(self) -> str:
-                    return self._from_json('CertificateData')
-
-                @property
-                @api_response_property()
-                def certificate_details(self) -> SSHCertificate.CertificateDetails:
-                    return SSHCertificate.CertificateDetails(self._from_json('CertificateDetails'))
-
-                @property
-                @api_response_property()
-                def guid(self) -> str:
-                    return self._from_json('Guid')
-
-                @property
-                @api_response_property()
-                def key_id(self) -> str:
-                    return self._from_json('KeyID')
-
-                @property
-                @api_response_property()
-                def private_key_data(self) -> str:
-                    return self._from_json('PrivateKeyData')
-
-                @property
-                @api_response_property()
-                def processing_details(self) -> SSHCertificate.ProcessingDetails:
-                    return SSHCertificate.ProcessingDetails(self._from_json('ProcessingDetails'))
-
-                @property
-                @api_response_property()
-                def public_key_data(self) -> str:
-                    return self._from_json('PublicKeyData')
-
-                @property
-                @api_response_property()
-                def request_details(self) -> SSHCertificate.RequestDetails:
-                    return SSHCertificate.RequestDetails(self._from_json('RequestDetails'))
-
-                @property
-                @api_response_property()
-                def response(self):
-                    return SSHCertificate.Response(self._from_json('Response'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Template(API):
         def __init__(self, api_obj):
@@ -249,66 +143,20 @@ class _SSHCertificates:
                     'IncludeCAKeyPairDetails': include_ca_keypair_details
                 }
 
-                class _Response(APIResponse):
-                    def __init__(self, response):
-                        super().__init__(response=response)
+                class Response(APIResponse):
+                    access_control: dict = ResponseField(alias='AccessControl')
+                    api_client: ssh_certificates.APIClient = ResponseField(alias='APIClient')
+                    ca_keypair_guid: str = ResponseField(alias='CAKeyPairGuid')
+                    ca_keypair_dn: str = ResponseField(alias='CAKeyPairDN')
+                    ca_keypair: ssh_certificates.CAKeyPair = ResponseField(alias='CAKeyPair')
+                    certificate: ssh_certificates.Certificate = ResponseField(alias='Certificate')
+                    contacts: List[str] = ResponseField(default_factory=list, alias='Contacts')
+                    created_on: str = ResponseField(alias='CreatedOn')
+                    guid: str = ResponseField(alias='Guid')
+                    name: str = ResponseField(alias='Name')
+                    response: ssh_certificates.Response = ResponseField(alias='Response')
 
-                    @property
-                    @api_response_property()
-                    def access_control(self) -> dict:
-                        return self._from_json('AccessControl')
-
-                    @property
-                    @api_response_property()
-                    def api_client(self) -> SSHCertificate.APIClient:
-                        return SSHCertificate.APIClient(self._from_json('APIClient'))
-
-                    @property
-                    @api_response_property()
-                    def ca_keypair_guid(self) -> str:
-                        return self._from_json('CAKeyPairGuid')
-
-                    @property
-                    @api_response_property()
-                    def ca_keypair_dn(self) -> str:
-                        return self._from_json('CAKeyPairDN')
-
-                    @property
-                    @api_response_property()
-                    def ca_keypair(self) -> SSHCertificate.CAKeyPair:
-                        return SSHCertificate.CAKeyPair(self._from_json('CAKeyPair'))
-
-                    @property
-                    @api_response_property()
-                    def certificate(self) -> SSHCertificate.Certificate:
-                        return SSHCertificate.Certificate(self._from_json('Certificate'))
-
-                    @property
-                    @api_response_property()
-                    def contacts(self) -> List[str]:
-                        return self._from_json('Contacts')
-
-                    @property
-                    @api_response_property()
-                    def created_on(self) -> str:
-                        return self._from_json('CreatedOn')
-
-                    @property
-                    @api_response_property()
-                    def guid(self) -> str:
-                        return self._from_json('Guid')
-
-                    @property
-                    @api_response_property()
-                    def name(self) -> str:
-                        return self._from_json('Name')
-
-                    @property
-                    @api_response_property()
-                    def response(self):
-                        return SSHCertificate.Response(self._from_json('Response'))
-
-                return _Response(response=self._post(data=body))
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
             class _PublicKeyData(API):
                 def __init__(self, api_obj):
@@ -320,12 +168,9 @@ class _SSHCertificates:
                         'Guid': template_guid,
                     }
 
-                    class _Response(APIResponse):
-                        def __init__(self, response):
-                            super().__init__(response=response)
-
+                    class Response(APIResponse):
                         @property
                         def response(self) -> str:
                             return self.response
 
-                    return _Response(response=self._get(params=params))
+                    return ResponseFactory(response_cls=Response, response=self._get(params=params))

@@ -1,5 +1,6 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.stats import Stats
+from typing import List
+from properties.response_objects.dataclasses import stats
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _Stats:
@@ -12,22 +13,10 @@ class _Stats:
             super().__init__(api_obj=api_obj, url='Stats/GetCounters')
 
         def post(self):
-            
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                counters: List[stats.Counter] = ResponseField(alias='Counters', default_factory=list)
 
-                @property
-                @api_response_property()
-                def counters(self):
-                    return [Stats.Counter(counter) for counter in self._from_json(key='Counters')]
-
-                @property
-                @api_response_property()
-                def error(self) -> str:
-                    return self._from_json(key='Error')
-
-            return _Response(response=self._post(data={}))
+            return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
     class _Query(API):
         def __init__(self, api_obj):
@@ -47,13 +36,7 @@ class _Stats:
                 'FilterC': filter_c
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                results: List[stats.Result] = ResponseField(alias='Results', default_factory=list)
 
-                @property
-                @api_response_property()
-                def results(self):
-                    return [Stats.Result(result) for result in self._from_json(key='Results')]
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
