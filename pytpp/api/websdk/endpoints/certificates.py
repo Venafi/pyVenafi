@@ -25,8 +25,8 @@ class _Certificates(API):
 
     def get(self, limit: int = None, offset: int = None, optional_fields: list = None, filters: dict = None):
         params = {
-            'Limit': limit,
-            'Offset': offset,
+            'Limit'         : limit,
+            'Offset'        : offset,
             'OptionalFields': optional_fields
         }
         params.update(filters or {})
@@ -55,11 +55,11 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Associate')
 
-        def post(self, application_dn: str, certificate_dn: str, push_to_new: bool):
+        def post(self, application_dn: str, certificate_dn: str, push_to_new: bool = False):
             body = {
                 'CertificateDN': certificate_dn,
                 'ApplicationDN': application_dn,
-                'PushToNew': push_to_new
+                'PushToNew'    : push_to_new
             }
 
             class Response(APIResponse):
@@ -74,7 +74,7 @@ class _Certificates(API):
         def post(self, policy_dn: str, pkcs10: str = None):
             body = {
                 'PolicyDN': policy_dn,
-                'PKSC10': pkcs10
+                'PKSC10'  : pkcs10
             }
 
             class Response(APIResponse):
@@ -87,7 +87,7 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Dissociate')
 
-        def post(self, certificate_dn: str, application_dn: list, delete_orphans: bool = False):
+        def post(self, certificate_dn: str, application_dn: List[str], delete_orphans: bool = False):
             body = {
                 'CertificateDN': certificate_dn,
                 'ApplicationDN': application_dn,
@@ -115,12 +115,17 @@ class _Certificates(API):
         def get(self):
             class Response(APIResponse):
                 approver: List[str] = ResponseField(default_factory=list, alias='Approver')
+                certificate_authority_dn: datetime = ResponseField(alias='CertificateAuthorityDN')
                 certificate_details: certificate.CertificateDetails = ResponseField(default_factory=None, alias='CertificateDetails')
+                consumers: List[str] = ResponseField(alias='Consumers', default_factory=list)
                 contact: List[str] = ResponseField(default_factory=list, alias='Contact')
+                created_by: str = ResponseField(alias='CreatedBy')
                 created_on: datetime = ResponseField(alias='CreatedOn')
-                custom_fields: List[dict] = ResponseField(default_factory=list, alias='CustomFields')
+                custom_fields: List[certificate.NameTypeValue] = ResponseField(default_factory=list, alias='CustomFields')
+                disabled: bool = ResponseField(alias='Disabled')
                 dn: str = ResponseField(alias='DN')
                 guid: str = ResponseField(alias='Guid')
+                management_type: str = ResponseField(alias='ManagementType')
                 name: str = ResponseField(alias='Name')
                 parent_dn: str = ResponseField(alias='ParentDN')
                 processing_details: certificate.ProcessingDetails = ResponseField(alias='ProcessingDetails')
@@ -154,7 +159,7 @@ class _Certificates(API):
                     'ExcludeExpired': exclude_expired,
                     'ExcludeRevoked': exclude_revoked
                 }
-                
+
                 class Response(APIResponse):
                     success: str = ResponseField(default='', alias='Success')
                     previous_versions: List[certificate.PreviousVersions] = ResponseField(
@@ -172,8 +177,8 @@ class _Certificates(API):
                 )
 
             def get(self):
-                class Response(APIResponse): 
-                    file: List[certificate.File] = ResponseField(default_factory=list, alias='File') 
+                class Response(APIResponse):
+                    file: List[certificate.File] = ResponseField(default_factory=list, alias='File')
                     ssl_tls: List[certificate.SslTls] = ResponseField(default_factory=list, alias='SslTls')
 
                 return ResponseFactory(response=self._get(), response_cls=Response)
@@ -185,13 +190,13 @@ class _Certificates(API):
         def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
                  password: str = None, private_key_data: str = None, reconcile: bool = False):
             body = {
-                'CertificateData': certificate_data,
-                'PolicyDN': policy_dn,
+                'CertificateData'     : certificate_data,
+                'PolicyDN'            : policy_dn,
                 'CASpecificAttributes': ca_specific_attributes,
-                'ObjectName': object_name,
-                'Password': password,
-                'PrivateKeyData': private_key_data,
-                'Reconcile': reconcile
+                'ObjectName'          : object_name,
+                'Password'            : password,
+                'PrivateKeyData'      : private_key_data,
+                'Reconcile'           : reconcile
             }
 
             class Response(APIResponse):
@@ -210,7 +215,7 @@ class _Certificates(API):
             body = {
                 'ApplicationDN': application_dn,
                 'CertificateDN': certificate_dn,
-                'PushToAll': push_to_all
+                'PushToAll'    : push_to_all
             }
 
             class Response(APIResponse):
@@ -223,29 +228,29 @@ class _Certificates(API):
             super().__init__(api_obj=api_obj, url='/Certificates/Renew')
 
         # noinspection ALL
-        def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False, format: str = None,
+        def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False, format: certificate.CertificateFormat = None,
                  password: str = None, include_private_key: bool = None, include_chain: bool = None,
                  friendly_name: str = None, root_first_order: bool = None, keystore_password: str = None,
                  work_to_do_timeout: int = None):
             body = {
-                'CertificateDN': certificate_dn,
-                'PKCS10': pkcs10,
-                'Reenable': reenable,
-                'Format'  : format,
-                'Password': password,
+                'CertificateDN'    : certificate_dn,
+                'PKCS10'           : pkcs10,
+                'Reenable'         : reenable,
+                'Format'           : format,
+                'Password'         : password,
                 'IncludePrivateKey': include_private_key,
-                'IncludeChain': include_chain,
-                'FriendlyName': friendly_name,
-                'RootFirstOrder': root_first_order,
-                'KeystorePassword': keystore_password,
-                'WorkToDoTimeout': work_to_do_timeout
+                'IncludeChain'     : include_chain,
+                'FriendlyName'     : friendly_name,
+                'RootFirstOrder'   : root_first_order,
+                'KeystorePassword' : keystore_password,
+                'WorkToDoTimeout'  : work_to_do_timeout
             }
 
             class Response(APIResponse):
                 certificate_data: str = ResponseField(alias='CertificateData')
                 certificate_dn: str = ResponseField(alias='CertificateDN')
                 filename: str = ResponseField(alias='Filename')
-                format: str = ResponseField(alias='Format')
+                format: certificate.CertificateFormat = ResponseField(alias='Format')
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
@@ -258,10 +263,12 @@ class _Certificates(API):
                  ca_specific_attributes: List[dict] = None, certificate_type: str = None, city: str = None,
                  contacts: List[dict] = None, country: str = None, custom_fields: List[dict] = None, created_by: str = None,
                  devices: List[dict] = None, disable_automatic_renewal: bool = False, elliptic_curve: str = None,
-                 key_algorithm: str = None, key_bit_size: int = None, management_type: str = None, object_name: str = None,
+                 format: certificate.CertificateFormat = None, friendly_name: str = None, include_private_key: bool = False,
+                 include_chain: bool = None, key_algorithm: str = None, key_bit_size: int = None, keystore_password: str = None,
+                 management_type: str = None, password: str = None, object_name: str = None,
                  organization: str = None, organizational_unit: str = None, origin: str = None, pkcs10: str = None,
-                 reenable: bool = False, set_work_todo: bool = True, state: str = None, subject: str = None,
-                 subject_alt_names: List[dict] = None, work_to_do_timeout: int = None):
+                 reenable: bool = False, root_first_order: bool = None, set_work_todo: bool = True, state: str = None,
+                 subject: str = None, subject_alt_names: List[dict] = None, work_to_do_timeout: int = None):
             body = {
                 'Approvers'              : approvers,
                 'CADN'                   : cadn,
@@ -275,6 +282,11 @@ class _Certificates(API):
                 'Devices'                : devices,
                 'DisableAutomaticRenewal': disable_automatic_renewal,
                 'EllipticCurve'          : elliptic_curve,
+                'Format'                 : format,
+                'FriendlyName'           : friendly_name,
+                'IncludePrivateKey'      : include_private_key,
+                'IncludeChain'           : include_chain,
+                'KeystorePassword'       : keystore_password,
                 'KeyAlgorithm'           : key_algorithm,
                 'KeyBitSize'             : key_bit_size,
                 'ManagementType'         : management_type,
@@ -282,9 +294,11 @@ class _Certificates(API):
                 'Origin'                 : origin,
                 'Organization'           : organization,
                 'OrganizationalUnit'     : organizational_unit,
+                'Password'               : password,
                 'PKCS10'                 : pkcs10,
                 'PolicyDN'               : policy_dn,
                 'Reenable'               : reenable,
+                'RootFirstOrder'         : root_first_order,
                 'SetWorkToDo'            : set_work_todo,
                 'State'                  : state,
                 'Subject'                : subject,
@@ -293,10 +307,10 @@ class _Certificates(API):
             }
 
             class Response(APIResponse):
-                certificate_data: str = ResponseField(alias='CertificateData') 
-                filename: str = ResponseField(alias='Filename') 
-                format: str = ResponseField(alias='Format') 
-                certificate_dn: str = ResponseField(alias='CertificateDN') 
+                certificate_data: str = ResponseField(alias='CertificateData')
+                filename: str = ResponseField(alias='Filename')
+                format: certificate.CertificateFormat = ResponseField(alias='Format')
+                certificate_dn: str = ResponseField(alias='CertificateDN')
                 guid: str = ResponseField(alias='Guid')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
@@ -307,8 +321,8 @@ class _Certificates(API):
 
         def post(self, certificate_dn: str, restart: bool = False, work_to_do_timeout: int = None):
             body = {
-                'CertificateDN': certificate_dn,
-                'Restart': restart,
+                'CertificateDN'  : certificate_dn,
+                'Restart'        : restart,
                 'WorkToDoTimeout': work_to_do_timeout
             }
 
@@ -325,43 +339,42 @@ class _Certificates(API):
             super().__init__(api_obj=api_obj, url='/Certificates/Retrieve')
 
         # noinspection ALL
-        def get(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
+        def get(self, certificate_dn: str, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
                 root_first_order: bool = False, work_to_do_timeout: int = None):
             params = {
-                'CertificateDN': certificate_dn,
-                'Format': format,
-                'FriendlyName': friendly_name,
-                'IncludeChain': include_chain,
+                'CertificateDN'    : certificate_dn,
+                'Format'           : format,
+                'FriendlyName'     : friendly_name,
+                'IncludeChain'     : include_chain,
                 'IncludePrivateKey': include_private_key,
-                'KeystorePassword': keystore_password,
-                'Password': password,
-                'RootFirstOrder': root_first_order,
-                'WorkToDoTimeout': work_to_do_timeout
+                'KeystorePassword' : keystore_password,
+                'Password'         : password,
+                'RootFirstOrder'   : root_first_order,
+                'WorkToDoTimeout'  : work_to_do_timeout
             }
 
             return ResponseFactory(response=self._get(params=params), response_cls=APIResponse)
 
-        # noinspection ALL
-        def post(self, certificate_dn: str, format: str, friendly_name: str, include_chain: bool = False,
+        def post(self, certificate_dn: str, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
                  include_private_key: bool = False, keystore_password: str = None, password: str = None,
                  root_first_order: bool = False, work_to_do_timeout: int = None):
             body = {
-                'CertificateDN': certificate_dn,
-                'Format': format,
-                'FriendlyName': friendly_name,
-                'IncludeChain': include_chain,
+                'CertificateDN'    : certificate_dn,
+                'Format'           : format,
+                'FriendlyName'     : friendly_name,
+                'IncludeChain'     : include_chain,
                 'IncludePrivateKey': include_private_key,
-                'KeystorePassword': keystore_password,
-                'Password': password,
-                'RootFirstOrder': root_first_order,
-                'WorkToDoTimeout': work_to_do_timeout
+                'KeystorePassword' : keystore_password,
+                'Password'         : password,
+                'RootFirstOrder'   : root_first_order,
+                'WorkToDoTimeout'  : work_to_do_timeout
             }
-            
+
             class Response(APIResponse):
                 certificate_data: str = ResponseField(alias='CertificateData')
                 filename: str = ResponseField(alias='Filename')
-                format: str = ResponseField(alias='Format')
+                format: certificate.CertificateFormat = ResponseField(alias='Format')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -374,39 +387,39 @@ class _Certificates(API):
                 self._vault_id = vault_id
 
             # noinspection ALL
-            def get(self, format: str, friendly_name: str, include_chain: bool = False,
+            def get(self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
                     include_private_key: bool = False, keystore_password: str = None, password: str = None,
                     root_first_order: bool = False):
                 params = {
-                    'Format': format,
-                    'FriendlyName': friendly_name,
-                    'IncludeChain': include_chain,
+                    'Format'           : format,
+                    'FriendlyName'     : friendly_name,
+                    'IncludeChain'     : include_chain,
                     'IncludePrivateKey': include_private_key,
-                    'KeystorePassword': keystore_password,
-                    'Password': password,
-                    'RootFirstOrder': root_first_order
+                    'KeystorePassword' : keystore_password,
+                    'Password'         : password,
+                    'RootFirstOrder'   : root_first_order
                 }
 
                 return ResponseFactory(response=self._get(params=params), response_cls=APIResponse)
 
             # noinspection ALL
-            def post(self, format: str, friendly_name: str, include_chain: bool = False,
+            def post(self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
                      include_private_key: bool = False, keystore_password: str = None, password: str = None,
                      root_first_order: bool = False):
                 body = {
-                    'Format': format,
-                    'FriendlyName': friendly_name,
-                    'IncludeChain': include_chain,
+                    'Format'           : format,
+                    'FriendlyName'     : friendly_name,
+                    'IncludeChain'     : include_chain,
                     'IncludePrivateKey': include_private_key,
-                    'KeystorePassword': keystore_password,
-                    'Password': password,
-                    'RootFirstOrder': root_first_order
+                    'KeystorePassword' : keystore_password,
+                    'Password'         : password,
+                    'RootFirstOrder'   : root_first_order
                 }
 
                 class Response(APIResponse):
                     certificate_data: str = ResponseField(alias='CertificateData')
                     filename: str = ResponseField(alias='Filename')
-                    format: str = ResponseField(alias='Format')
+                    format: certificate.CertificateFormat = ResponseField(alias='Format')
 
                 return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
@@ -416,7 +429,7 @@ class _Certificates(API):
 
         def post(self, certificate_dn: str, work_to_do_timeout: int = None):
             body = {
-                'CertificateDN': certificate_dn,
+                'CertificateDN'  : certificate_dn,
                 'WorkToDoTimeout': work_to_do_timeout
             }
 
@@ -429,14 +442,14 @@ class _Certificates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Certificates/Revoke')
 
-        def post(self, certificate_dn: str = None, thumbprint: str = None, reason: str = None, comments: str = None,
+        def post(self, certificate_dn: str = None, thumbprint: str = None, reason: int = None, comments: str = None,
                  disable: bool = None, work_to_do_timeout: int = None):
             body = {
-                'CertificateDN': certificate_dn,
-                'Thumbprint': thumbprint,
-                'Reason': reason,
-                'Comments': comments,
-                'Disable': disable,
+                'CertificateDN'  : certificate_dn,
+                'Thumbprint'     : thumbprint,
+                'Reason'         : reason,
+                'Comments'       : comments,
+                'Disable'        : disable,
                 'WorkToDoTimeout': work_to_do_timeout
             }
 
@@ -452,7 +465,7 @@ class _Certificates(API):
 
         def post(self, certificate_dns: List[str] = None, certificate_guids: List[str] = None):
             body = {
-                'CertificateDNs': certificate_dns,
+                'CertificateDNs'  : certificate_dns,
                 'CertificateGUIDs': certificate_guids
             }
 

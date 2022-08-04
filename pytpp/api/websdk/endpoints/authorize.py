@@ -28,7 +28,8 @@ class _Authorize(API):
         }
 
         class Response(APIResponse):
-            token = ResponseField(alias='APIKey')
+            token: str = ResponseField(alias='APIKey')
+            valid_until: datetime = ResponseField(alias='ValidUntil')
 
         api_logger.debug(f'Authenticating to TPP as "{username}"...')
         with api_logger.suppressed(logging.WARNING):
@@ -160,7 +161,7 @@ class _Authorize(API):
             }
 
             class Response(APIResponse):
-                access_token: str = ResponseField(alias='access_token', default=None)
+                access_token: str = ResponseField(alias='access_token')
                 expires: datetime = ResponseField(alias='expires')
                 expires_in: int = ResponseField(alias='expires_in')
                 refresh_token: str = ResponseField(alias='refresh_token')

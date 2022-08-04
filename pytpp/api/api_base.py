@@ -1,11 +1,14 @@
 import re
 import json
 import time
+from datetime import datetime
+import pydantic.main
 from pydantic.fields import Undefined
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from pytpp.tools.logger import api_logger, json_pickler
-from typing import Any, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar
+from typing import Any, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
+
 if TYPE_CHECKING:
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
     from pytpp.api.session import Session
@@ -320,11 +323,6 @@ def ResponseField(
         repr: bool = True,
         **extra: Any,
 ) -> Any:
-    """
-
-    Returns:
-        object:
-    """
     if callable(default_factory):
         default = Undefined
     return Field(
@@ -381,7 +379,8 @@ def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str 
     try:
         response.raise_for_status()
         if isinstance(result, dict) and (error_key := getattr(response_inst, 'error', 'Unknown')) in result.keys():
-            raise InvalidResponseError('An error occurred: "%s"' % result[error_key], response=response)
+            # There is an error message, but the status is a valid status, so just log the error instead.
+            api_logger.error('An error occurred: "%s"' % result[error_key], response=response)
         return response_inst
     except HTTPError as error:
         if isinstance(result, dict) and (error_msg := getattr(response_inst, 'error', None)) is not None:
@@ -389,7 +388,19 @@ def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str 
         raise InvalidResponseError(str(error), response=response)
 
 
-class APIResponse(BaseModel):
+class APIResponseModelMetaclass(pydantic.main.ModelMetaclass):
+    def __new__(mcs, name, bases, namespaces, **kwargs):
+        annotations = namespaces.get('__annotations__', {})
+        for base in bases:
+            annotations.update(getattr(base, '__annotations__', {}))
+        for field in annotations:
+            if not field.startswith('__') and get_origin(annotations[field]) is not Union:
+                annotations[field] = Union[annotations[field], Any]
+        namespaces['__annotations__'] = annotations
+        return super().__new__(mcs, name, bases, namespaces, **kwargs)
+
+
+class APIResponse(BaseModel, metaclass=APIResponseModelMetaclass):
     api_response: Response
     error: str = ResponseField(default=None, alias='Error')
 
@@ -401,15 +412,18 @@ class APIResponse(BaseModel):
         new_values = {}
         lowered_values = {k.lower(): v for k, v in values.items()}
         for fk, fv in cls.__fields__.items():
+            alias = fv.alias
             try:
-                if fk.lower() not in lowered_values:
+                if alias.lower() not in lowered_values:
                     continue
-                new_value = lowered_values.get(fk.lower())
+                new_value = lowered_values.get(alias.lower())
+                if fv.type_ is datetime:
+                    new_value = re.sub(r'\D', '', new_value)
                 if (converter := fv.field_info.extra.get('converter')) is not None:
                     new_value = converter(new_value)
-                new_values[fv.alias] = new_value
+                new_values[alias] = new_value
             except KeyError:
-                raise KeyError(f'"{fk}" not found in the response.')
+                raise KeyError(f'"{alias}" not found in the response.')
         return new_values
 
     def assert_valid_response(self):

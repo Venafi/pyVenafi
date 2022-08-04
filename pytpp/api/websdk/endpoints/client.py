@@ -10,13 +10,13 @@ class _Client(API):
         self.Details = self._Details(api_obj=api_obj)
         self.Work = self._Work(api_obj=api_obj)
 
-    def get(self, client_version: int = None, client_type: str = None, host_name: str = None, ip_address: str = None,
+    def get(self, client_version: str = None, client_type: client.ClientType = None, host_name: str = None, ip_address: str = None,
             last_seen_on: str = None, last_seen_on_greater: str = None, last_seen_on_less: str = None, mac_address: str = None,
-            os_name: str = None, os_version: str = None, region: str = None, serial_number: int = None, sid: str = None,
+            os_name: client.OSNameType = None, os_version: str = None, region: str = None, serial_number: int = None, sid: str = None,
             user_name: str = None, virtual_machine_id: int = None):
         params = {
             'ClientVersion'    : client_version,
-            'ClientType'       : client_type,
+            'client.ClientType'       : client_type,
             'HostName'         : host_name,
             'IpAddress'        : ip_address,
             'LastSeenOn'       : last_seen_on,
@@ -62,11 +62,11 @@ class _Client(API):
 
         def get(self, client_version: int = None, client_type: str = None, host_name: str = None, ip_address: str = None,
                 last_seen_on: str = None, last_seen_on_greater: str = None, last_seen_on_less: str = None, mac_address: str = None,
-                os_name: str = None, os_version: str = None, region: str = None, serial_number: int = None, sid: str = None, user_name: str = None,
-                virtual_machine_id: int = None):
+                os_name: client.OSNameType = None, os_version: str = None, region: str = None, serial_number: int = None,
+                sid: str = None, user_name: str = None, virtual_machine_id: int = None):
             params = {
                 'ClientVersion'    : client_version,
-                'ClientType'       : client_type,
+                'client.ClientType'       : client_type,
                 'HostName'         : host_name,
                 'IpAddress'        : ip_address,
                 'LastSeenOn'       : last_seen_on,
@@ -93,9 +93,9 @@ class _Client(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Client/Work')
 
-        def get(self, work_type: str = None):
+        def get(self, work_type: client.WorkType = None):
             params = {
-                'WorkType': work_type
+                'client.WorkType': work_type
             }
 
             class Response(APIResponse):

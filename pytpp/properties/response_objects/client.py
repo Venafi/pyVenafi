@@ -72,7 +72,7 @@ class Client:
     def _Network(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return client._Network(
+        return client.Network(
             ip_address=response_object.get('IpAddress'),
             mac_address=response_object.get('MacAddress'),
         )

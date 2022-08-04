@@ -167,7 +167,7 @@ class Certificate:
     def _SslTlsResult(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._SslTlsResult(
+        return certificate.SslTlsResult(
             chain=Certificate._BitMaskValues(response_object.get('Chain')),
             end_entity=Certificate._BitMaskValues(response_object.get('EndEntity')),
             id=response_object.get('ID'),
@@ -178,7 +178,7 @@ class Certificate:
     def _BitMaskValues(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._BitMaskValues(
+        return certificate.BitMaskValues(
             bitmask=response_object.get('BitMask'),
             values=response_object.get('Values'),
         )
@@ -187,7 +187,7 @@ class Certificate:
     def _SANS(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._SANS(
+        return certificate.SANS(
             dns=response_object.get('DNS'),
             ip=response_object.get('IP'),
         )
@@ -196,7 +196,7 @@ class Certificate:
     def _X509(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._X509(
+        return certificate.X509(
             cn=response_object.get('CN'),
             issuer=response_object.get('Issuer'),
             key_algorithm=response_object.get('KeyAlgorithm'),
@@ -213,7 +213,7 @@ class Certificate:
     def _CompliantSingleValue(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._CompliantSingleValue(
+        return certificate.CompliantSingleValue(
             compliant=response_object.get('Compliant'),
             value=response_object.get('Value'),
         )
@@ -222,7 +222,7 @@ class Certificate:
     def _CompliantMultiValue(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._CompliantMultiValue(
+        return certificate.CompliantMultiValue(
             compliant=response_object.get('Compliant'),
             values=response_object.get('Values'),
         )
@@ -231,7 +231,7 @@ class Certificate:
     def _LockedSingleValue(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._LockedSingleValue(
+        return certificate.LockedSingleValue(
             locked=response_object.get('Locked'),
             value=response_object.get('Value'),
         )
@@ -240,7 +240,7 @@ class Certificate:
     def _LockedMultiValue(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._LockedMultiValue(
+        return certificate.LockedMultiValue(
             locked=response_object.get('Locked'),
             values=response_object.get('Values'),
         )
@@ -249,7 +249,7 @@ class Certificate:
     def _LockedKeyPair(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._LockedKeyPair(
+        return certificate.LockedKeyPair(
             key_algorithm=Certificate._LockedSingleValue(response_object.get('KeyAlgorithm')),
             key_size=Certificate._LockedSingleValue(response_object.get('KeySize')),
         )
@@ -258,7 +258,7 @@ class Certificate:
     def _LockedSubject(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._LockedSubject(
+        return certificate.LockedSubject(
             city=Certificate._LockedSingleValue(response_object.get('City')),
             country=Certificate._LockedSingleValue(response_object.get('Country')),
             organization=Certificate._LockedSingleValue(response_object.get('Organization')),
@@ -270,7 +270,7 @@ class Certificate:
     def _CSRDetails(response_object: dict):
         if not isinstance(response_object, dict):
             response_object = {}
-        return certificate._CSRDetails(
+        return certificate.CSRDetails(
             city=Certificate._CompliantSingleValue(response_object.get('City')),
             common_name=Certificate._CompliantSingleValue(response_object.get('CommonName')),
             country=Certificate._CompliantSingleValue(response_object.get('Country')),

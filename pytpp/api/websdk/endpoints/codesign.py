@@ -151,7 +151,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 count: int = ResponseField(alias='Count')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -207,11 +206,13 @@ class _Codesign:
 
             class Response(APIResponse):
                 apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
+                certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
                 csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
                 dot_net_environment: codesign.DotNetEnvironment = ResponseField(alias='DotNetEnvironment')
                 gpg_environment: codesign.GPGEnvironment = ResponseField(alias='GPGEnvironment')
                 key_pair_environment: codesign.KeyPairEnvironment = ResponseField(alias='KeyPairEnvironment')
                 apple_template: codesign.AppleTemplate = ResponseField(alias='AppleTemplate')
+                certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
                 csp_template: codesign.CSPTemplate = ResponseField(alias='EnviCSPTemplateronment')
                 dot_net_template: codesign.DotNetTemplate = ResponseField(alias='DotNetTemplate')
                 gpg_template: codesign.GPGTemplate = ResponseField(alias='GPGTemplate')
@@ -377,7 +378,7 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                application_collections: List[codesign].ApplicationCollection = ResponseField(alias='ApplicationCollections')
+                application_collections: List[codesign.ApplicationCollection] = ResponseField(alias='ApplicationCollections')
                 error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
@@ -509,11 +510,12 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollectionMemberDNs')
 
-        def post(self, dn: str = None, guid: str = None, id: int = None):
+        def post(self, dn: str = None, guid: str = None, id: int = None, application: dict = None):
             body = {
-                'Dn'  : dn,
-                'Guid': guid,
-                'Id'  : id
+                'Application': application,
+                'Dn'         : dn,
+                'Guid'       : guid,
+                'Id'         : id
             }
 
             class Response(APIResponse):
