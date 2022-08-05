@@ -1,5 +1,6 @@
 from typing import List, Dict, Union
 from properties.response_objects.dataclasses import codesign
+from properties.response_objects.dataclasses.codesign import TemplateType
 from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
@@ -61,7 +62,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -77,7 +77,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -93,7 +92,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -109,7 +107,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -133,7 +130,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -167,7 +163,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 application: codesign.Application = ResponseField(alias='Application')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -184,7 +179,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 application: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -232,7 +226,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 project: codesign.Project = ResponseField(alias='Project')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
@@ -243,7 +236,7 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CreateTemplate')
 
-        def post(self, dn: str, template_type: str, per_user: bool):
+        def post(self, dn: str, template_type: TemplateType = None, per_user: bool = None):
             body = {
                 'Dn'          : dn,
                 'TemplateType': template_type,
@@ -252,7 +245,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -270,7 +262,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -288,7 +279,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -306,7 +296,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -324,7 +313,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -343,7 +331,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -361,7 +348,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 applications: List[codesign.Application] = ResponseField(alias='Applications')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -379,7 +365,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 application_collections: List[codesign.ApplicationCollection] = ResponseField(alias='ApplicationCollections')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -397,7 +382,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 projects: List[codesign.Project] = ResponseField(alias='Projects')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
@@ -421,7 +405,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 reference_dns: List[str] = ResponseField(alias='ReferenceDNs')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
@@ -439,11 +422,12 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                certificate_templates: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplates')
-                csp_templates: codesign.CSPTemplate = ResponseField(alias='CSPTemplates')
-                dot_net_templates: codesign.DotNetTemplate = ResponseField(alias='DotNetTemplates')
-                gpg_templates: codesign.GPGTemplate = ResponseField(alias='GPGTemplates')
-                error: str = ResponseField(alias='Error')
+                apple_templates: List[codesign.AppleTemplate] = ResponseField(alias='AppleTemplates')
+                certificate_templates: List[codesign.CertificateTemplate] = ResponseField(alias='CertificateTemplates')
+                csp_templates: List[codesign.CSPTemplate] = ResponseField(alias='CSPTemplates')
+                dot_net_templates: List[codesign.DotNetTemplate] = ResponseField(alias='DotNetTemplates')
+                gpg_templates: List[codesign.GPGTemplate] = ResponseField(alias='GPGTemplates')
+                key_pair_templates: List[codesign.KeyPairTemplate] = ResponseField(alias='KeyPairTemplates')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -462,7 +446,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 application: codesign.Application = ResponseField(alias='Application')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -481,7 +464,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -500,7 +482,6 @@ class _Codesign:
 
             class Response(APIResponse):
                 application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -522,7 +503,6 @@ class _Codesign:
                 application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
                 application_collection_dns: List[str] = ResponseField(alias='ApplicationCollectionDNs')
                 application_dns: List[str] = ResponseField(alias='ApplicationDNs')
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -540,8 +520,12 @@ class _Codesign:
             }
 
             class Response(APIResponse):
+                apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
                 certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
-                error: str = ResponseField(alias='Error')
+                csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
+                dot_net_environment: codesign.DotNetEnvironment = ResponseField(alias='DotNetEnvironment')
+                gpg_environment: codesign.GPGEnvironment = ResponseField(alias='GPGEnvironment')
+                key_pair_environment: codesign.KeyPairEnvironment = ResponseField(alias='KeyPairEnvironment')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -553,7 +537,6 @@ class _Codesign:
 
         def get(self):
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 global_configuration: codesign.GlobalConfiguration = ResponseField(alias='GlobalConfiguration')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
@@ -570,7 +553,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 rights_list: List[codesign.RightsKeyValue] = ResponseField(alias='RightsList')
                 success: bool = ResponseField(alias='Success')
@@ -589,7 +571,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 project: codesign.Project = ResponseField(alias='Project')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
@@ -606,9 +587,8 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
-                rights: codesign.Rights = ResponseField(alias='Rights')
+                rights: codesign.Rights = ResponseField(alias='Rights', converter=lambda x: codesign.Rights(value=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
@@ -625,8 +605,12 @@ class _Codesign:
             }
 
             class Response(APIResponse):
+                apple_template: codesign.AppleTemplate = ResponseField(alias='AppleTemplate')
                 certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
-                error: str = ResponseField(alias='Error')
+                csp_template: codesign.CSPTemplate = ResponseField(alias='CSPTemplate')
+                dot_net_template: codesign.DotNetTemplate = ResponseField(alias='DotNetTemplate')
+                gpg_template: codesign.GPGTemplate = ResponseField(alias='GPGTemplate')
+                key_pair_template: codesign.KeyPairTemplate = ResponseField(alias='KeyPairTemplate')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -642,7 +626,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 rights_list : List[codesign.RightsKeyValue] = ResponseField(alias='RightsList')
                 success: bool = ResponseField(alias='Success')
@@ -659,7 +642,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -675,7 +657,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -691,7 +672,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -707,7 +687,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -724,7 +703,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -741,7 +719,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -760,7 +737,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -770,15 +746,15 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RenameTemplate')
 
-        def post(self, dn: str = None, guid: str = None, id: int = None):
+        def post(self, new_dn: str, dn: str = None, guid: str = None):
             body = {
                 'Dn'  : dn,
                 'Guid': guid,
-                'Id'  : id
+                'Id'  : id,
+                'NewDn': new_dn
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -794,7 +770,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -810,7 +785,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -826,7 +800,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -836,14 +809,24 @@ class _Codesign:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateEnvironment')
 
-        def post(self, certificate_environment: dict):
+        def post(self, certificate_environment: dict = None, apple_environment: dict = None, csp_environment: dict = None,
+                 dot_net_environment: dict = None, gpg_environment: dict = None, key_pair_environment: dict = None):
             body = {
-                'CertificateEnvironment': certificate_environment
+                'AppleEnvironment'      : apple_environment,
+                'CertificateEnvironment': certificate_environment,
+                'CSPEnvironment'        : csp_environment,
+                'DotNetEnvironment'     : dot_net_environment,
+                'GPGEnvironment'        : gpg_environment,
+                'KeyPairEnvironment'    : key_pair_environment
             }
 
             class Response(APIResponse):
+                apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
                 certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
-                error: str = ResponseField(alias='Error')
+                csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
+                dot_net_environment: codesign.DotNetEnvironment = ResponseField(alias='DotNetEnvironment')
+                gpg_environment: codesign.GPGEnvironment = ResponseField(alias='GPGEnvironment')
+                key_pair_environment: codesign.KeyPairEnvironment = ResponseField(alias='KeyPairEnvironment')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -859,7 +842,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -878,7 +860,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
@@ -896,7 +877,6 @@ class _Codesign:
             }
 
             class Response(APIResponse):
-                error: str = ResponseField(alias='Error')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
