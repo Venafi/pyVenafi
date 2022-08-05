@@ -1,5 +1,11 @@
 from properties.resultcodes import ResultCodes
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
+from typing import Literal
+
+CredentialType = Literal[
+    'Username and Password Credential',
+    'Password Credential'
+]
 
 
 class Result(PayloadModel):

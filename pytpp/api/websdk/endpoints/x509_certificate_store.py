@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.secret_store import SecretStore
+from properties.response_objects.dataclasses import secret_store
+from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
 class _X509CertificateStore:
@@ -25,26 +25,12 @@ class _X509CertificateStore:
                 'TypedNameValues': typed_name_values
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                leaf_existed: bool = ResponseField(alias='LeafExisted')
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_id: int = ResponseField(alias='VaultId')
 
-                @property
-                @api_response_property()
-                def leaf_existed(self) -> bool:
-                    return self._from_json(key='LeafExisted')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def vault_id(self) -> int:
-                    return self._from_json(key='VaultId')
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Lookup(API):
         def __init__(self, api_obj):
@@ -58,31 +44,13 @@ class _X509CertificateStore:
                 'Value': value
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_id: int = ResponseField(alias='VaultId')
+                vault_ids: List[int] = ResponseField(alias='VaultIds')
+                certificate_collection_strings: List[str] = ResponseField(alias='CertificateCollectionStrings')
 
-                @property
-                @api_response_property()
-                def vault_id(self) -> int:
-                    return self._from_json(key='VaultId')
-
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIds')
-
-                @property
-                @api_response_property()
-                def certificate_collection_strings(self) -> List[str]:
-                    return self._from_json(key='CertificateCollectionStrings')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _LookupExpiring(API):
         def __init__(self, api_obj):
@@ -94,21 +62,11 @@ class _X509CertificateStore:
                 'OwnerDN': owner_dn
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                vault_ids: List[int] = ResponseField(alias='VaultIds')
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def vault_ids(self) -> List[int]:
-                    return self._from_json(key='VaultIds')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Remove(API):
         def __init__(self, api_obj):
@@ -121,16 +79,10 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
     class _Retrieve(API):
         def __init__(self, api_obj):
@@ -141,23 +93,9 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Response(APIResponse):
+                certificate_string: str = ResponseField(alias='CertificateString')
+                typed_name_values: List[secret_store.TypedNameValues] = ResponseField(alias='TypedNameValues')
+                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-                @property
-                @api_response_property()
-                def certificate_string(self) -> str:
-                    return self._from_json(key='CertificateString')
-
-                @property
-                @api_response_property()
-                def result(self):
-                    return SecretStore.Result(self._from_json(key='Result'))
-
-                @property
-                @api_response_property()
-                def typed_name_values(self):
-                    return SecretStore.TypedNameValues(self._from_json(key='TypedNameValues'))
-
-            return _Response(response=self._post(data=body))
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))

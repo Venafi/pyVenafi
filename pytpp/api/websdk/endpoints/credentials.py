@@ -1,7 +1,7 @@
 import time
 from datetime import datetime
 from typing import List, Dict
-from properties.response_objects.dataclasses import credential
+from properties.response_objects.dataclasses import credential, identity
 from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
@@ -19,7 +19,26 @@ class _Credentials:
 
     class _Adaptable:
         def __init__(self, api_obj):
+            self.Create = self._Create(api_obj=api_obj)
             self.Update = self._Update(api_obj=api_obj)
+
+        class _Create(API):
+            def __init__(self, api_obj):
+                super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Create')
+
+            def post(self, credential_path: str, credential_type: credential.CredentialType, connector_name: str,
+                     custom_fields: List[Dict[str, str]]):
+                body = {
+                    'CredentialPath': credential_path,
+                    'CredentialType': credential_type,
+                    'ConnectorName' : connector_name,
+                    'CustomFields'  : custom_fields
+                }
+
+                class Response(APIResponse):
+                    result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
+
+                return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
         class _Update(API):
             def __init__(self, api_obj):
@@ -184,6 +203,7 @@ class _Credentials:
 
             class Response(APIResponse):
                 classname: str = ResponseField(alias='Classname')
+                contact: List[identity.Identity] = ResponseField(alias='Contact')
                 description: str = ResponseField(alias='Description')
                 expiration: datetime = ResponseField(alias='Expiration')
                 friendly_name: str = ResponseField(alias='FriendlyName')
@@ -233,7 +253,7 @@ class _Credentials:
                 super().__init__(api_obj=api_obj, url='/Credentials/CyberArk/Create')
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
-                     folder_name: str, account_name: str, credentials_path: str):
+                     folder_name: str, account_name: str, credential_path: str):
                 body = {
                     'CyberArkUsername': cyber_ark_username,
                     'CyberArkPassword': cyber_ark_password,
@@ -242,7 +262,7 @@ class _Credentials:
                     'SafeName'        : safe_name,
                     'FolderName'      : folder_name,
                     'AccountName'     : account_name,
-                    'CredentialsPath' : credentials_path
+                    'CredentialPath' : credential_path
                 }
 
                 class Response(APIResponse):
@@ -255,7 +275,7 @@ class _Credentials:
                 super().__init__(api_obj=api_obj, url='/Credentials/CyberArk/Update')
 
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
-                     folder_name: str, account_name: str, credentials_path: str):
+                     folder_name: str, account_name: str, credential_path: str):
                 body = {
                     'CyberArkUsername': cyber_ark_username,
                     'CyberArkPassword': cyber_ark_password,
@@ -264,7 +284,7 @@ class _Credentials:
                     'SafeName'        : safe_name,
                     'FolderName'      : folder_name,
                     'AccountName'     : account_name,
-                    'CredentialsPath' : credentials_path
+                    'CredentialPath' : credential_path
                 }
 
                 class Response(APIResponse):
