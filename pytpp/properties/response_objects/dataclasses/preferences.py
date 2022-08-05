@@ -1,4 +1,13 @@
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
+from typing import Literal
+
+ProductType = Literal[
+    'CodeSign Protect',
+    'Client Protect',
+    'Platform',
+    'SSH Protect',
+    'TLS Protect',
+]
 
 
 class Preference(PayloadModel):

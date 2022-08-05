@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 from pytpp.properties.response_objects.dataclasses import config
 
@@ -283,7 +283,7 @@ class _Config:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Find')
 
-        def post(self, pattern: str, attribute_names: str = None):
+        def post(self, pattern: str, attribute_names: List[str] = None):
             body = {
                 "Pattern"       : pattern,
                 "AttributeNames": attribute_names
@@ -315,7 +315,8 @@ class _Config:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/FindObjectsOfClass')
 
-        def post(self, classes: str = None, class_name: str = None, object_dn: str = None, pattern: str = None, recursive: bool = False):
+        def post(self, classes: str = None, class_name: str = None, object_dn: str = None, pattern: str = None,
+                 recursive: bool = False):
             if not (classes or class_name):
                 raise AssertionError('One of "classes" or "class_name" parameters must be provided.')
             body = {
@@ -362,7 +363,7 @@ class _Config:
             }
 
             class Response(APIResponse):
-                revision: str = ResponseField(alias='Revision')
+                revision: int = ResponseField(alias='Revision')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
@@ -377,7 +378,7 @@ class _Config:
             }
 
             class Response(APIResponse):
-                revision: str = ResponseField(alias='Revision')
+                revision: int = ResponseField(alias='Revision')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
@@ -460,8 +461,6 @@ class _Config:
             }
 
             class Response(APIResponse):
-                object_dn: str = ResponseField(alias='ObjectDN')
-                attribute_name: str = ResponseField(alias='AttributeName')
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
@@ -477,7 +476,7 @@ class _Config:
             }
 
             class Response(APIResponse):
-                name_values: List[config.NameValues] = ResponseField(alias='NameValues', default_factory=list)
+                name_values: List[config.NameValues[str]] = ResponseField(alias='NameValues', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
@@ -604,7 +603,7 @@ class _Config:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Write')
 
-        def post(self, object_dn: str, attribute_data: dict):
+        def post(self, object_dn: str, attribute_data: List[Dict[str, List[str]]]):
             body = {
                 "ObjectDN"     : object_dn,
                 "AttributeData": attribute_data
@@ -635,7 +634,7 @@ class _Config:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/WritePolicy')
 
-        def post(self, object_dn: str, class_name: str, attribute_name: str, locked: bool = False, values: str = None):
+        def post(self, object_dn: str, class_name: str, attribute_name: str, locked: bool = False, values: List[str] = None):
             body = {
                 "ObjectDN"     : object_dn,
                 "Class"        : class_name,

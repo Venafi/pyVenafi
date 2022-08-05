@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import List
-
 from properties.response_objects.dataclasses import system_status
 from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
@@ -38,13 +37,10 @@ class _SystemStatus(API):
 
                 class Response(APIResponse):
                     engine: system_status.Engine = ResponseField(alias='Engine')
-
                     status: str = ResponseField(alias='Status')
                     upgrade_start_time: datetime = ResponseField(alias='UpgradeStartTime')
-
                     upgrade_stop_time: datetime = ResponseField(alias='UpgradeStopTime')
-
-                    tasks_completed: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksCompleted') 
+                    tasks_completed: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksCompleted')
                     tasks_pending: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksPending') 
                     tasks_running: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksRunning') 
 

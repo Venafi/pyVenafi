@@ -24,8 +24,10 @@ class _Teams(API):
         }
 
         class Response(APIResponse):
-            identity: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
-            invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
+            identity: ident.Identity = ResponseField(default_factory=list, alias='ID')
+            invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers')
+            invalid_owners: List[ident.InvalidIdentity] = ResponseField(alias='InvalidOwners')
+            message: str = ResponseField(alias='Message')
 
         return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
@@ -59,9 +61,9 @@ class _Teams(API):
             }
 
             class Response(APIResponse):
-                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
-                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
                 message: str = ResponseField(alias='Message')
+                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
@@ -77,10 +79,10 @@ class _Teams(API):
             }
 
             class Response(APIResponse):
-                invalid_owners: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidOwners') 
-                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
-                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers')
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
                 message: str = ResponseField(alias='Message')
+                owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
@@ -114,7 +116,8 @@ class _Teams(API):
                     assets: List[str] = ResponseField(default_factory=list, alias='Assets')
                     description: str = ResponseField(alias='Description')
                     identity: ident.Identity = ResponseField(alias='ID')
-                    members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                    members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
+                    message: str = ResponseField(alias='Message')
                     owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
                     products: List[str] = ResponseField(default_factory=list, alias='Products')
 
@@ -150,8 +153,8 @@ class _Teams(API):
             }
 
             class Response(APIResponse):
-                invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
-                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
+                invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers')
+                members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
                 message: str = ResponseField(alias='Message')
                 owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners') 
 

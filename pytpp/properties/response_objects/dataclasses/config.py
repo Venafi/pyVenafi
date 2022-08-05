@@ -1,6 +1,8 @@
 from pytpp.properties.response_objects.dataclasses._base import PayloadModel, PayloadField
 from properties.resultcodes import ResultCodes
-from typing import Optional
+from typing import List, Optional, TypeVar, Generic
+
+T = TypeVar('T')
 
 
 class Result(PayloadModel):
@@ -11,9 +13,9 @@ class Result(PayloadModel):
         return ResultCodes.Config.get(self.code, 'Unknown')
 
 
-class NameValues(PayloadModel):
+class NameValues(PayloadModel, Generic[T]):
     name: str = PayloadField(alias='Name')
-    values: list = PayloadField(alias='Values')
+    values: List[T] = PayloadField(alias='Values')
 
 
 class Object(PayloadModel):
@@ -32,4 +34,4 @@ class Policy(PayloadModel):
     guid: str = PayloadField(alias='GUID')
     property: str = PayloadField(alias='Property')
     type_name: str = PayloadField(alias='TypeName')
-    value_list: list = PayloadField(alias='ValueList')
+    value_list: List[str] = PayloadField(alias='ValueList')

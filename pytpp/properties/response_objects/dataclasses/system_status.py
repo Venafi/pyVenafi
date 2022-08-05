@@ -11,23 +11,40 @@ class Engine(PayloadModel):
     name: str = PayloadField(alias='Name')
 
 
+class IisService(PayloadModel):
+    modules: List[str] = PayloadField(alias='modules')
+    time_since_first_seen: datetime = PayloadField(alias='timeSinceFirstSeen')
+    time_since_last_seen: datetime = PayloadField(alias='timeSinceLastSeen')
+    status: str = PayloadField(alias='status')
+
+
+class LogServerService(IisService): ...  # This is currently the same.
+
+
+class vPlatformService(PayloadModel):
+    configured_latency: int = PayloadField(alias='configuredLatency')
+    configured_mode: str = PayloadField(alias='configuredMode')
+    configured_work: int = PayloadField(alias='configuredWork')
+    current_latency: int = PayloadField(alias='currentLatency')
+    current_mode: str = PayloadField(alias='currentMode')
+    current_work: int = PayloadField(alias='currentWork')
+    modules: List[str] = PayloadField(alias='modules')
+    status: str = PayloadField(alias='status')
+    time_since_first_seen: datetime = PayloadField(alias='timeSinceFirstSeen')
+    time_since_last_seen: datetime = PayloadField(alias='timeSinceLastSeen')
+
+
 class Services(PayloadModel):
-    vplatform: 'Service' = PayloadField(alias='Vplatform')
-    log_server: 'Service' = PayloadField(alias='LogServer')
-    iis: 'Service' = PayloadField(alias='Iis')
-
-
-class Service(PayloadModel):
-    modules: list = PayloadField(alias='Modules')
-    time_since_first_seen: datetime = PayloadField(alias='TimeSinceFirstSeen')
-    time_since_last_seen: datetime = PayloadField(alias='TimeSinceLastSeen')
-    status: str = PayloadField(alias='Status')
+    vplatform: vPlatformService = PayloadField(alias='Vplatform')
+    log_server: LogServerService = PayloadField(alias='LogServer')
+    iis: IisService = PayloadField(alias='Iis')
 
 
 class SystemStatus(PayloadModel):
-    engine_name: str = PayloadField(alias='EngineName')
-    services: 'Services' = PayloadField(alias='Services')
-    version: str = PayloadField(alias='Version')
+    engine_dn: str = PayloadField(alias='engineDn')
+    engine_name: str = PayloadField(alias='engineName')
+    services: Services = PayloadField(alias='services')
+    version: str = PayloadField(alias='version')
 
 
 class Task(PayloadModel):
@@ -49,9 +66,9 @@ class UpgradeStatus(PayloadModel):
     status: str = PayloadField(alias='Status')
     upgrade_start_time: datetime = PayloadField(alias='UpgradeStartTime')
     upgrade_stop_time: datetime = PayloadField(alias='UpgradeStopTime')
-    tasks_completed: 'List[Task]' = PayloadField(alias='TasksCompleted')
-    tasks_pending: 'List[Task]' = PayloadField(alias='TasksPending')
-    tasks_running: 'List[Task]' = PayloadField(alias='TasksRunning')
+    tasks_completed: List[Task] = PayloadField(alias='TasksCompleted')
+    tasks_pending: List[Task] = PayloadField(alias='TasksPending')
+    tasks_running: List[Task] = PayloadField(alias='TasksRunning')
 
 
 class UpgradeSummary(PayloadModel):

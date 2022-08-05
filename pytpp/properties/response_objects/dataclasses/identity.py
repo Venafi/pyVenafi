@@ -9,8 +9,20 @@ class Identity(PayloadModel):
     prefix: str = PayloadField(alias='Prefix')
     prefixed_name: str = PayloadField(alias='PrefixedName')
     prefixed_universal: str = PayloadField(alias='PrefixedUniversal')
-    type: str = PayloadField(alias='Type')
+    type: int = PayloadField(alias='Type')
     universal: str = PayloadField(alias='Universal')
+
+    @property
+    def is_user(self):
+        return self.type & 1 == 1
+
+    @property
+    def is_security_group(self):
+        return self.type & 2 == 2
+
+    @property
+    def is_distribution_group(self):
+        return self.type & 8 == 8
 
 
 class InvalidIdentity(PayloadModel):

@@ -29,11 +29,12 @@ class _ProcessingEngines(API):
 
             def get(self):
                 class Response(APIResponse):
+                    links: processing_engines.Link = ResponseField(alias='_links')
                     folders: List[processing_engines.Folder] = ResponseField(alias='Folders', default_factory=list)
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
-            def post(self, folder_guids: list):
+            def post(self, folder_guids: List[str]):
                 body = {
                     'FolderGuids': folder_guids
                 }
@@ -61,11 +62,12 @@ class _ProcessingEngines(API):
 
             def get(self):
                 class Response(APIResponse):
+                    links: processing_engines.Link = ResponseField(alias='_links')
                     engines: List[processing_engines.Engine] = ResponseField(alias='Engines', default_factory=list)
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
-            def put(self, engine_guids: list):
+            def put(self, engine_guids: List[str]):
                 body = {
                     'EngineGuids': engine_guids
                 }

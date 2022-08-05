@@ -14,10 +14,10 @@ class _ConfigSchema:
 
         def post(self):
             class Response(APIResponse):
-                result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
                 attribute_definitions: List[config_schema.AttributeDefinition] = ResponseField(
                     default_factory=list, alias='AttributeDefinitions'
                 )
+                result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
             return ResponseFactory(response=self._post(data={}), response_cls=Response)
 
@@ -31,7 +31,7 @@ class _ConfigSchema:
             }
 
             class Response(APIResponse):
-                result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
                 class_definition: config_schema.ClassDefinition = ResponseField(alias='ClassDefinition')
+                result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)

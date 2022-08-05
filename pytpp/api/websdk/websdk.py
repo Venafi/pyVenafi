@@ -18,6 +18,7 @@ from pytpp.api.websdk.endpoints.log import _Log
 from pytpp.api.websdk.endpoints.metadata import _Metadata
 from pytpp.api.websdk.endpoints.permissions import _Permissions
 from pytpp.api.websdk.endpoints.pki import _PKI
+from pytpp.api.websdk.endpoints.platform import _Platform
 from pytpp.api.websdk.endpoints.preferences import _Preferences
 from pytpp.api.websdk.endpoints.processing_engines import _ProcessingEngines
 from pytpp.api.websdk.endpoints.revoke import _Revoke
@@ -164,6 +165,7 @@ class WebSDK:
         self.Metadata = _Metadata(self)
         self.Permissions = _Permissions(self)
         self.PKI = _PKI(self)
+        self.Platorm = _Platform(self)
         self.Preferences = _Preferences(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.Revoke = _Revoke(self)
