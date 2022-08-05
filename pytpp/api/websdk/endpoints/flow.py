@@ -36,7 +36,9 @@ class _Flow:
                         }
 
                         class Response(APIResponse):
-                            result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
+                            result: codesign.ResultCode = ResponseField(
+                                alias='Result', converter=lambda x: codesign.ResultCode(code=x)
+                            )
                             success: bool = ResponseField(alias='Success')
 
                         return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -164,7 +166,7 @@ class _Flow:
                 }
 
                 class Response(APIResponse):
-                    invalid_ticket_id: List[int] = ResponseField(default_factory=list, alias='InvalidTicketIds')
+                    invalid_ticket_ids: List[int] = ResponseField(default_factory=list, alias='InvalidTicketIds')
                     message: str = ResponseField(alias='Message')
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
