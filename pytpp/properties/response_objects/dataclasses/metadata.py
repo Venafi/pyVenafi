@@ -44,10 +44,10 @@ class Item(PayloadModel):
 
 
 class Data(PayloadModel):
-    key: 'Item' = PayloadField(alias='Key')
-    value: list = PayloadField(alias='Value')
+    key: Item = PayloadField(alias='Key')
+    value: List[str] = PayloadField(alias='Value')
 
 
 class PolicyItem(PayloadModel):
     key: str = PayloadField(alias='Key')
-    value: 'List[Item]' = PayloadField(alias='Value')
+    value: List[Item] = PayloadField(alias='Value')

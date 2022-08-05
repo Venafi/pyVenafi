@@ -70,7 +70,9 @@ class _Log(API):
 
         def get(self):
             class Response(APIResponse):
-                log_event_application_definitions: List[log.LogEventApplicationDefinition] = ResponseField(alias='LogEventApplicationDefinitions')
+                log_event_application_definitions: List[log.LogEventApplicationDefinition] = ResponseField(
+                    alias='LogEventApplicationDefinitions'
+                )
                 log_event_definitions: List[log.LogEventDefinition] = ResponseField(alias='LogEventDefinitions')
                 log_result: int = ResponseField(alias='LogResult')
 

@@ -28,6 +28,7 @@ class LogEventApplicationDefinition(PayloadModel):
 class LogEventDefinition(PayloadModel):
     data_format: str = PayloadField(alias='DataFormat')
     data_title: str = PayloadField(alias='DataTitle')
+    data_type: str = PayloadField(alias='DataType')
     description: str = PayloadField(alias='Description')
     grouping_title: str = PayloadField(alias='GroupingTitle')
     grouping_type: str = PayloadField(alias='GroupingType')
