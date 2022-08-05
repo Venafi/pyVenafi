@@ -1,3 +1,5 @@
+from typing import List
+from pytpp.properties.response_objects.dataclasses import hsm_api
 from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
 
 
@@ -78,6 +80,30 @@ class _HSMAPI:
                 fingerprint: str = ResponseField(alias='Fingerprint')
                 location: str = ResponseField(alias='Location')
                 public_key: str = ResponseField(alias='PublicKey')
+                success: bool = ResponseField(alias='Success')
+
+            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+
+    class _GetObjects(API):
+        def __init__(self, api_obj):
+            super().__init__(api_obj=api_obj, url='API/GetObjects')
+
+        def post(self, environment_filter: List[int] = None, include_chains: bool = None, include_archived: bool = None,
+                 key_id: str = None, key_context: str = None, object_type_filter: List[int] = None):
+            body = {
+                'EnvironmentFilter': environment_filter,
+                'IncludeChains'    : include_chains,
+                'IncludeArchived'  : include_archived,
+                'KeyId'            : key_id,
+                'KeyContext'       : key_context,
+                'ObjectTypeFilter' : object_type_filter,
+            }
+
+            class Response(APIResponse):
+                certificates: List[hsm_api.Certificate] = ResponseField(alias='Certificates', default_factory=list)
+                pending: bool = ResponseField(alias='PendingDeprecationWarningbool')
+                private_keys: List[hsm_api.PrivateKey] = ResponseField(alias='PrivateKeys')
+                public_keys: List[hsm_api.PublicKey] = ResponseField(alias='PublicKeys')
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
