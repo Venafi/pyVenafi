@@ -63,13 +63,14 @@ class _Workflow:
                 class Response(APIResponse):
                     approval_explanation: str = ResponseField(alias='ApprovalExplanation')
                     approval_from: str = ResponseField(alias='ApprovalFrom')
+                    approval_reason: str = ResponseField(alias='ApprovalReason')
                     approvers: List[str] = ResponseField(alias='Approvers')
                     blocking: str = ResponseField(alias='Blocking')
                     created: datetime = ResponseField(alias='Created')
                     issued_due_to: str = ResponseField(alias='IssuedDueTo')
+                    result: workflow.Result = ResponseField(alias='Result')
                     status: str = ResponseField(alias='Status')
                     updated: datetime = ResponseField(alias='Updated')
-                    result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
@@ -122,17 +123,9 @@ class _Workflow:
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/UpdateStatus')
 
-            def post(self,
-                     guid: str,
-                     status: str,
-                     explanation: str = None,
-                     scheduled_start: str = None,
-                     scheduled_stop: str = None,
-                     approvers: List[str] = None,
-                     object_dn: str = None,
-                     reason: str = None,
-                     user_data=None
-                     ):
+            def post(self, guid: str, status: str, explanation: str = None, scheduled_start: str = None,
+                     scheduled_stop: str = None, approvers: List[str] = None, object_dn: str = None,
+                     reason: str = None, user_data=None):
                 body = {
                     'GUID'          : guid,
                     'Status'        : status,

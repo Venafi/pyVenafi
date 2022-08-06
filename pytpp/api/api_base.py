@@ -375,6 +375,11 @@ def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str 
         result = {
             str(root_field): result
         }
+    elif root_field:
+        result = {
+            str(root_field): result,
+            **result
+        }
     response_inst = response_cls(api_response=response, **result)
     try:
         response.raise_for_status()
@@ -400,6 +405,9 @@ class APIResponseModelMetaclass(pydantic.main.ModelMetaclass):
         return super().__new__(mcs, name, bases, namespaces, **kwargs)
 
 
+class EMPTY_VALUE: ...
+
+
 class APIResponse(BaseModel, metaclass=APIResponseModelMetaclass):
     api_response: Response
     error: str = ResponseField(default=None, alias='Error')
@@ -416,8 +424,9 @@ class APIResponse(BaseModel, metaclass=APIResponseModelMetaclass):
             try:
                 if alias.lower() not in lowered_values:
                     continue
-                new_value = lowered_values.get(alias.lower())
-                if fv.type_ is datetime:
+                if (new_value := lowered_values.get(alias.lower(), EMPTY_VALUE)) is EMPTY_VALUE:
+                    continue
+                if fv.type_ is datetime and '\\Date' in new_value:
                     new_value = re.sub(r'\D', '', new_value)
                 if (converter := fv.field_info.extra.get('converter')) is not None:
                     new_value = converter(new_value)

@@ -10,11 +10,7 @@ class Counter(PayloadModel):
     description: str = PayloadField(alias='Description')
     name: str = PayloadField(alias='Name')
     stats_type: int = PayloadField(alias='StatsType')
-
-
-class Result(PayloadModel):
-    key: 'Key' = PayloadField(alias='Key')
-    value: 'List[Value]' = PayloadField(alias='Value')
+    value_description: str = PayloadField(alias='ValueDescription')
 
 
 class Key(PayloadModel):
@@ -31,3 +27,8 @@ class Value(PayloadModel):
     tag_c: str = PayloadField(alias='TagC')
     time_frame: datetime = PayloadField(alias='TimeFrame')
     type: int = PayloadField(alias='Type')
+
+
+class Result(PayloadModel):
+    key: Key = PayloadField(alias='Key')
+    value: List[Value] = PayloadField(alias='Value')

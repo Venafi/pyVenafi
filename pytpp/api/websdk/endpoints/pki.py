@@ -72,7 +72,7 @@ class _PKI:
                         folder_dn: str = ResponseField(alias='FolderDn')
                         installation: pki.Installation = ResponseField(alias='Installation')
                         pki_path: str = ResponseField(alias='PkiPath')
-                        roles: list = ResponseField(alias='Roles')
+                        roles: List[str] = ResponseField(alias='Roles')
 
                     return ResponseFactory(response_cls=Response, response=self._get())
 

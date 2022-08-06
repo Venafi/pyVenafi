@@ -23,6 +23,7 @@ class CertificateDetails(PayloadModel):
     principals: List[str] = PayloadField(alias='Principals')
     public_key_fingerprint_sha256: str = PayloadField(alias='PublicKeyFingerprintSha256')
     serial_number: str = PayloadField(alias='SerialNumber')
+    source_addresses: List[str] = PayloadField(alias='SourceAddresses')
     valid_from: int = PayloadField(alias='ValidFrom')
     valid_to: int = PayloadField(alias='ValidTo')
 
@@ -30,6 +31,19 @@ class CertificateDetails(PayloadModel):
 class RequestDetails(PayloadModel):
     originating_ip: str = PayloadField(alias='OriginatingIp')
     requested_by: str = PayloadField(alias='RequestedBy')
+
+
+class AccessControl(PayloadModel):
+    allowed_certificate_identifier_patterns: List[str] = PayloadField(alias='AllowedCertificateIdentifierPatterns')
+    allowed_extensions: List[str] = PayloadField(alias='AllowedExtensions')
+    allowed_force_command_patterns: List[str] = PayloadField(alias='AllowedForceCommandPatterns')
+    allowed_principals_patterns: List[str] = PayloadField(alias='AllowedPrincipalsPatterns')
+    allowed_source_addresses: List[str] = PayloadField(alias='AllowedSourceAddresses')
+    default_certificate_identifier: str = PayloadField(alias='DefaultCertificateIdentifier')
+    default_extensions: List[str] = PayloadField(alias='DefaultExtensions')
+    default_force_command: str = PayloadField(alias='DefaultForceCommand')
+    default_principals: List[str] = PayloadField(alias='DefaultPrincipals')
+    default_source_addresses: List[str] = PayloadField(alias='DefaultSourceAddresses')
 
 
 class APIClient(PayloadModel):

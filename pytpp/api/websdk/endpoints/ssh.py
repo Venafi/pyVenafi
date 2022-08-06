@@ -148,8 +148,9 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                owner: str = ResponseField(alias='Owner')
-                location: str = ResponseField(alias='Location')
+                key_id: int = ResponseField(alias='KeyId')
+                keyset_id: str = ResponseField(alias='KeysetId')
+                notes: str = ResponseField(alias='Notes')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -351,9 +352,7 @@ class _SSH:
             }
 
             class Response(APIResponse):
-                key_id: int = ResponseField(alias='KeyId')
-                keyset_id: str = ResponseField(alias='KeysetId')
-                notes: str = ResponseField(alias='Notes')
+                key_material: str = ResponseField(alias='KeyMaterial')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -438,21 +437,8 @@ class _SSH:
                 'LoadKeyData': load_key_data
             }
 
-            class Response(APIResponse):
-                access: str = ResponseField(alias='Access')
-                algorithm: str = ResponseField(alias='Algorithm')
-                fingerprint_md5: str = ResponseField(alias='FingerprintMD5')
-                fingerprint_sha256: str = ResponseField(alias='FingerprintSHA256')
-                keyset_id: str = ResponseField(alias='KeysetId')
-                last_rotation_date: datetime = ResponseField(alias='LastRotationDate')
-                last_used: datetime = ResponseField(alias='LastUsed')
-                length: int = ResponseField(alias='Length')
-                private_keys: List[ssh.KeyData] = ResponseField(default_factory=list, alias='PrivateKeys')
-                process_status: int = ResponseField(alias='ProcessStatus')
-                public_keys: List[ssh.KeyData] = ResponseField(default_factory=list, alias='PublicKeys')
-                rotation_stage: int = ResponseField(alias='RotationStage')
-                type: str = ResponseField(alias='Type')
-                violation_status: List[int] = ResponseField(alias='ViolationStatus')
+            class Response(APIResponse, ssh.KeySetData):
+                pass
 
             return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
@@ -633,11 +619,11 @@ class _SSH:
                 }
 
                 class Response(APIResponse):
-                    root_orphans: int = ResponseField(alias='RootOrphans')
-                    non_root_orphans: int = ResponseField(alias='NonRootOrphans')
                     accessible_root_accounts: int = ResponseField(alias='AccessibleRootAccounts')
-                    shared_private_keys: int = ResponseField(alias='SharedPrivateKeys')
                     non_compliant_duplicate_private_keys: int = ResponseField(alias='NonCompliantDuplicatePrivateKeys')
+                    non_root_orphans: int = ResponseField(alias='NonRootOrphans')
+                    root_orphans: int = ResponseField(alias='RootOrphans')
+                    shared_private_keys: int = ResponseField(alias='SharedPrivateKeys')
                     very_small_key: int = ResponseField(alias='VerySmallKey')
 
                 return ResponseFactory(response_cls=Response, response=self._get(params=params))
@@ -648,17 +634,17 @@ class _SSH:
 
             def get(self):
                 class Response(APIResponse):
-                    non_compliant_force_command: str = ResponseField(alias='NonCompliantForceCommand')
-                    non_compliant_source_restriction: str = ResponseField(alias='NonCompliantSourceRestriction')
+                    duplicate_private_keys: List[str] = ResponseField(alias='DuplicatePrivateKeys')
+                    key_older_than_policy: str = ResponseField(alias='KeyOlderThanPolicy')
+                    key_smaller_than_policy: str = ResponseField(alias='KeySmallerThanPolicy')
                     missing_options: List[str] = ResponseField(alias='MissingOptions')
                     non_compliant_algorithm: str = ResponseField(alias='NonCompliantAlgorithm')
-                    vulnerable_protocol: str = ResponseField(alias='VulnerableProtocol')
+                    non_compliant_force_command: str = ResponseField(alias='NonCompliantForceCommand')
+                    non_compliant_source_restriction: str = ResponseField(alias='NonCompliantSourceRestriction')
                     non_compliant_vendor_format: str = ResponseField(alias='NonCompliantVendorFormat')
-                    key_older_than_policy: str = ResponseField(alias='KeyOlderThanPolicy')
-                    shared_server_account: str = ResponseField(alias='SharedServerAccount')
-                    key_smaller_than_policy: str = ResponseField(alias='KeySmallerThanPolicy')
-                    duplicate_private_keys: List[str] = ResponseField(alias='DuplicatePrivateKeys')
                     root_access: str = ResponseField(alias='RootAccess')
+                    shared_server_account: str = ResponseField(alias='SharedServerAccount')
+                    vulnerable_protocol: str = ResponseField(alias='VulnerableProtocol')
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
@@ -672,6 +658,7 @@ class _SSH:
                 }
 
                 class Response(APIResponse):
-                    name_value_pairs: dict = ResponseField()
+                    stats: dict = ResponseField()
 
-                return ResponseFactory(response_cls=Response, response=self._get(params=params), root_field='name_value_pairs')
+                return ResponseFactory(response_cls=Response, response=self._get(params=params),
+                                       root_field='stats')

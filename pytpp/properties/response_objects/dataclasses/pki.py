@@ -2,6 +2,11 @@ from pytpp.properties.response_objects.dataclasses._base import PayloadModel, Pa
 from typing import List
 
 
+class SANS(PayloadModel):
+    name: str = PayloadField(alias='Name')
+    typename: str = PayloadField(alias='Typename')
+
+
 class PKI(PayloadModel):
     certificate_dn: str = PayloadField(alias='CertificateDn')
     certificate_guid: str = PayloadField(alias='CertificateGuid')
@@ -17,15 +22,10 @@ class Certificate(PayloadModel):
     key_bit_size: str = PayloadField(alias='KeyBitSize')
     organization: str = PayloadField(alias='Organization')
     organizational_units: List[str] = PayloadField(alias='OrganizationalUnits')
-    sans: 'List[SANS]' = PayloadField(alias='Sans')
+    sans: List[SANS] = PayloadField(alias='Sans')
     state: str = PayloadField(alias='State')
 
 
 class Installation(PayloadModel):
     credential_dn: str = PayloadField(alias='CredentialDn')
     host: str = PayloadField(alias='Host')
-
-
-class SANS(PayloadModel):
-    name: str = PayloadField(alias='Name')
-    typename: str = PayloadField(alias='Typename')

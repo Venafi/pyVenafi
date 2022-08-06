@@ -49,24 +49,11 @@ class _SSHCertificates:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSHCertificates/Request')
 
-        def post(self,
-                 ca_dn: str,
-                 key_id: str,
-                 destination_address: str = None,
-                 extensions: str = None,
-                 force_command: str = None,
-                 object_name: str = None,
-                 origin: str = None,
-                 policy_dn: str = None,
-                 principals: List[str] = None,
-                 public_key_data: str = None,
-                 source_addresses: List[str] = None,
-                 validity_period: str = None,
-                 include_certificate_details: bool = False,
-                 include_private_key_data: bool = False,
-                 private_key_passphrase: str = None,
-                 processing_timeout: int = None
-                 ):
+        def post(self, ca_dn: str, key_id: str, destination_address: str = None, extensions: str = None, force_command: str = None,
+                 object_name: str = None, origin: str = None, policy_dn: str = None, principals: List[str] = None,
+                 public_key_data: str = None, source_addresses: List[str] = None, validity_period: str = None,
+                 include_certificate_details: bool = False, include_private_key_data: bool = False,
+                 private_key_passphrase: str = None, processing_timeout: int = None):
             body = {
                 'CADN'                     : ca_dn,
                 'KeyId'                    : key_id,
@@ -87,10 +74,10 @@ class _SSHCertificates:
             }
 
             class Response(APIResponse):
-                ssh_certificate_dn: str = ResponseField(alias='DN')
-                ssh_certificate_guid: str = ResponseField(alias='Guid')
-                response: ssh_certificates.Response = ResponseField(alias='Response')
+                dn: str = ResponseField(alias='Dn')
+                guid: str = ResponseField(alias='Guid')
                 processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
+                response: ssh_certificates.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
@@ -98,14 +85,11 @@ class _SSHCertificates:
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSHCertificates/Retrieve')
 
-        def post(self, certificate_dn: str = None,
-                 certificate_guid: str = None,
-                 include_certificate_details: bool = None,
-                 include_private_key_data: bool = None,
-                 private_key_passphrase: str = None):
+        def post(self, dn: str = None, guid: str = None, include_certificate_details: bool = None,
+                 include_private_key_data: bool = None, private_key_passphrase: str = None):
             body = {
-                'DN'                       : certificate_dn,
-                'Guid'                     : certificate_guid,
+                'DN'                       : dn,
+                'Guid'                     : guid,
                 'IncludeCertificateDetails': include_certificate_details,
                 'IncludePrivateKeyData'    : include_private_key_data,
                 'PrivateKeyPassphrase'     : private_key_passphrase
@@ -116,6 +100,7 @@ class _SSHCertificates:
                 ca_guid: str = ResponseField(alias='CAGuid')
                 certificate_data: str = ResponseField(alias='CertificateData')
                 certificate_details: ssh_certificates.CertificateDetails = ResponseField(alias='CertificateDetails')
+                dn: str = ResponseField(alias='DN')
                 guid: str = ResponseField(alias='Guid')
                 key_id: str = ResponseField(alias='KeyID')
                 private_key_data: str = ResponseField(alias='PrivateKeyData')
@@ -144,14 +129,15 @@ class _SSHCertificates:
                 }
 
                 class Response(APIResponse):
-                    access_control: dict = ResponseField(alias='AccessControl')
+                    access_control: ssh_certificates.AccessControl = ResponseField(alias='AccessControl')
                     api_client: ssh_certificates.APIClient = ResponseField(alias='APIClient')
                     ca_keypair_guid: str = ResponseField(alias='CAKeyPairGuid')
                     ca_keypair_dn: str = ResponseField(alias='CAKeyPairDN')
                     ca_keypair: ssh_certificates.CAKeyPair = ResponseField(alias='CAKeyPair')
                     certificate: ssh_certificates.Certificate = ResponseField(alias='Certificate')
                     contacts: List[str] = ResponseField(default_factory=list, alias='Contacts')
-                    created_on: str = ResponseField(alias='CreatedOn')
+                    created_on: datetime = ResponseField(alias='CreatedOn')
+                    dn: str = ResponseField(alias='DN')
                     guid: str = ResponseField(alias='Guid')
                     name: str = ResponseField(alias='Name')
                     response: ssh_certificates.Response = ResponseField(alias='Response')
@@ -169,8 +155,6 @@ class _SSHCertificates:
                     }
 
                     class Response(APIResponse):
-                        @property
-                        def response(self) -> str:
-                            return self.response
+                        response: ssh_certificates.Response = ResponseField(alias='Response')
 
                     return ResponseFactory(response_cls=Response, response=self._get(params=params))
