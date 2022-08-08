@@ -15,7 +15,7 @@ class _Version:
             )
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(
                         response=response, 
@@ -47,7 +47,7 @@ class _Version:
                 def schema_version(self) -> str:
                     return self._from_json(key='schemaVersion')
 
-            return _Response(
+            return Response(response_cls=Response, 
                 response=self._get(),
                 api_source=self._api_source
             )

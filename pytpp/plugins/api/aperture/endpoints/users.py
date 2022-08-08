@@ -24,7 +24,7 @@ class _Users:
                 "password": password
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, r, api_source):
                     super().__init__(response=r, api_source=api_source)
 
@@ -37,7 +37,7 @@ class _Users:
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated as "{username}"!')
-            return _Response(response, api_source=self._api_source)
+            return Response(response_cls=Response, response, api_source=self._api_source)
 
     class _Current:
         def __init__(self, api_obj):
@@ -53,11 +53,11 @@ class _Users:
             def post(self):
                 body = {}
 
-                class _Response(APIResponse):
+                class Response(APIResponse):
                     def __init__(self, response, api_source):
                         super().__init__(response=response, api_source=api_source)
 
-                resp = _Response(response=self._post(data=body), api_source=self._api_source)
+                resp = Response(response=self._post(data=body), api_source=self._api_source)
                 # Set this to None to avoid erroneous re-authentication.
                 self._api_obj._token = None
                 return resp

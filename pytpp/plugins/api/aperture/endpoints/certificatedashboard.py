@@ -24,7 +24,7 @@ class _CertificateDashboard:
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateKeyLength')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -33,14 +33,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetCertificateIssuers(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateIssuers')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -49,14 +49,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetCertificateSigningAlgorithms(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateSigningAlgorithms')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -65,14 +65,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetCertificateValidityPeriods(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateValidityPeriods')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -81,14 +81,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetValidationEndEntity(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationEndEntity')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -97,14 +97,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetValidationChain(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationChain')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -113,14 +113,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetCertificateExpireDates(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateExpireDates')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -129,14 +129,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetValidationProtocols(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationProtocols')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -145,14 +145,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetProtectionStatus(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetProtectionStatus')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -161,14 +161,14 @@ class _CertificateDashboard:
                 def records(self):
                     return [CertificateDashboard.Record(record) for record in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _Trends(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/Trends')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -177,7 +177,7 @@ class _CertificateDashboard:
                 def trends(self):
                     return [CertificateDashboard.Trend(trend) for trend in self._from_json()]
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountCertsWithStatus(API):
         def __init__(self, api_obj):
@@ -188,7 +188,7 @@ class _CertificateDashboard:
                 'status': status
             }
             
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -197,14 +197,14 @@ class _CertificateDashboard:
                 def value(self):
                     return self._from_json()
             
-            return _Response(response=self._get(params=params), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(params=params), api_source=self._api_source)
 
     class _GetTotalCount(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalCount')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -213,7 +213,7 @@ class _CertificateDashboard:
                 def value(self):
                     return self._from_json()
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetTotalDisabledCount(API):
         def __init__(self, api_obj):
@@ -221,7 +221,7 @@ class _CertificateDashboard:
 
         def get(self):
             
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -230,14 +230,14 @@ class _CertificateDashboard:
                 def value(self):
                     return self._from_json()
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetTotalManagedCount(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalManagedCount')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -246,4 +246,4 @@ class _CertificateDashboard:
                 def value(self):
                     return self._from_json()
             
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)

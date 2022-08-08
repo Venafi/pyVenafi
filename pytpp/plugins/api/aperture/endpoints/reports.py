@@ -31,7 +31,7 @@ class _Reports(API):
             "skipEmpty"  : skip_empty
         }
 
-        class _Response(APIResponse):
+        class Response(APIResponse):
             def __init__(self, response):
                 super().__init__(response=response, api_source='aperture')
 
@@ -40,7 +40,7 @@ class _Reports(API):
             def guid(self):
                 return self._from_json()
 
-        return _Response(response=self._post(data=body))
+        return Response(response_cls=Response, response=self._post(data=body))
 
     def Guid(self, guid: str):
         return self._Guid(api_obj=self._api_obj, guid=guid)
@@ -50,7 +50,7 @@ class _Reports(API):
             super().__init__(api_obj=api_obj, url=f'/reports/{guid}')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response):
                     super().__init__(response=response, api_source='aperture')
 
@@ -124,7 +124,7 @@ class _Reports(API):
                 def last_run(self):
                     return from_date_string(self._from_json(key='lastRun'))
 
-            return _Response(response=self._get())
+            return Response(response_cls=Response, response=self._get())
 
     class _RunNow:
         def __init__(self, api_obj):
@@ -141,8 +141,8 @@ class _Reports(API):
                 )
 
             def post(self):
-                class _Response(APIResponse):
+                class Response(APIResponse):
                     def __init__(self, response):
                         super().__init__(response=response, api_source='aperture')
 
-                return _Response(response=self._post(data={}))
+                return Response(response_cls=Response, response=self._post(data={}))

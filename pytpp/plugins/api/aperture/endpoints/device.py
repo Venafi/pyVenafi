@@ -34,7 +34,7 @@ class _Device(API):
             "Limit"            : limit
         }
 
-        class _Response(APIResponse):
+        class Response(APIResponse):
             def __init__(self, response, api_source):
                 super().__init__(response=response, api_source=api_source)
 
@@ -48,7 +48,7 @@ class _Device(API):
             def devices_list_items(self):
                 return [Device(device) for device in self._from_json(key='devicesListItems')]
 
-        return _Response(response=self._post(data=body), api_source=self._api_source)
+        return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)
 
     class _GetStatus(API):
         def __init__(self, api_obj):
@@ -62,7 +62,7 @@ class _Device(API):
                 'deviceGuid': device_guid
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -81,7 +81,7 @@ class _Device(API):
                 def discovery_status(self):
                     return self._from_json(key='discoveryStatus')
 
-            return _Response(response=self._get(params=params), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(params=params), api_source=self._api_source)
 
     class _BulkOperations:
         def __init__(self, api_obj):

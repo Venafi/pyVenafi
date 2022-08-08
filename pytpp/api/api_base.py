@@ -2,6 +2,8 @@ import re
 import json
 import time
 from datetime import datetime
+from enum import Enum, auto
+
 import pydantic.main
 from pydantic.fields import Undefined
 from requests import Response, HTTPError
@@ -67,15 +69,9 @@ def api_response_property(return_on_204: type = None):
     return pre_validation
 
 
-class APISource(Protocol):
-    _host: str
-    _username: str
-    _password: str
-    _token: str
-    _base_url: str
-    _session: 'Session'
-
-    def re_authenticate(self): ...
+class ApiApp(Enum):
+    aperture = auto()
+    websdk = auto()
 
 
 class API:
@@ -85,7 +81,7 @@ class API:
     class MUST be inherited by all API definitions.
     """
 
-    def __init__(self, api_obj, url: str):
+    def __init__(self, api_obj, url: str, api_app: ApiApp = ApiApp.websdk):
         """
         Args:
             api_obj: This is passed down from the API type object (eg. WebSDK, etc.) and
@@ -101,6 +97,7 @@ class API:
         self._url = self._api_obj._base_url + url
         self._retries = 3
         self.retry_interval = 0.5
+        self._api_app = api_app
 
     @property
     def retries(self):
@@ -354,13 +351,14 @@ def ResponseField(
     )
 
 
-def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str = None) -> T_:
+def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str = None, **kwargs) -> T_:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
         response_cls: Custom APIResponse class.
         root_field: In the case that the returned JSON is an array of objects, then the ``root_field``
             is used to assign that value.
+        kwargs: Keyword arguments to pass to ``response_cls``.
 
     Returns:
         An instance of ``response_cls``.
@@ -411,6 +409,7 @@ class EMPTY_VALUE: ...
 class APIResponse(BaseModel, metaclass=APIResponseModelMetaclass):
     api_response: Response
     error: str = ResponseField(default=None, alias='Error')
+    __api_app__: ApiApp = Field(default=ApiApp.websdk)
 
     class Config:
         arbitrary_types_allowed = True

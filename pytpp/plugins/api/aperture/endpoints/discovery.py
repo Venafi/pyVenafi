@@ -28,14 +28,14 @@ class _Discovery:
                 'type': 'Certificate' if cert_location_dn else 'Ssh'
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
                 @property
                 @api_response_property()
                 def cert_location(self):
-                    return Config.Object(self._from_json(key='certLocation'), self._api_source)
+                    return Config.Object(self._from_json(key='certLocation'), self.__api_app__)
 
                 @property
                 @api_response_property()
@@ -45,7 +45,7 @@ class _Discovery:
                 @property
                 @api_response_property()
                 def device_location(self):
-                    return Config.Object(self._from_json(key='deviceLocation'), self._api_source)
+                    return Config.Object(self._from_json(key='deviceLocation'), self.__api_app__)
 
                 @property
                 @api_response_property()
@@ -65,14 +65,14 @@ class _Discovery:
                 @property
                 @api_response_property()
                 def rule_container(self):
-                    return Config.Object(self._from_json(key='ruleContainer'), self._api_source)
+                    return Config.Object(self._from_json(key='ruleContainer'), self.__api_app__)
 
                 @property
                 @api_response_property()
                 def type(self) -> str:
                     return self._from_json(key='type')
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)
 
         def put(self, guid: str, name: str, conditions: List[dict], device_location_dn: dict, cert_location_dn: dict = None):
             body = {
@@ -91,14 +91,14 @@ class _Discovery:
                 'type': 'Certificate' if cert_location_dn else 'Ssh'
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
                 @property
                 @api_response_property()
                 def cert_location(self):
-                    return Config.Object(self._from_json(key='certLocation'), self._api_source)
+                    return Config.Object(self._from_json(key='certLocation'), self.__api_app__)
 
                 @property
                 @api_response_property()
@@ -108,7 +108,7 @@ class _Discovery:
                 @property
                 @api_response_property()
                 def device_location(self):
-                    return Config.Object(self._from_json(key='deviceLocation'), self._api_source)
+                    return Config.Object(self._from_json(key='deviceLocation'), self.__api_app__)
 
                 @property
                 @api_response_property()
@@ -128,14 +128,14 @@ class _Discovery:
                 @property
                 @api_response_property()
                 def rule_container(self):
-                    return Config.Object(self._from_json(key='ruleContainer'), self._api_source)
+                    return Config.Object(self._from_json(key='ruleContainer'), self.__api_app__)
 
                 @property
                 @api_response_property()
                 def type(self) -> str:
                     return self._from_json(key='type')
 
-            return _Response(response=self._put(data=body), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._put(data=body), api_source=self._api_source)
 
         def Guid(self, guid: str):
             return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -145,14 +145,14 @@ class _Discovery:
                 super().__init__(api_obj=api_obj, url=f'discovery/placementrules/{guid}')
 
             def get(self):
-                class _Response(APIResponse):
+                class Response(APIResponse):
                     def __init__(self, response, api_source):
                         super().__init__(response=response, api_source=api_source)
 
                     @property
                     @api_response_property()
                     def cert_location(self):
-                        return Config.Object(self._from_json(key='certLocation'), self._api_source)
+                        return Config.Object(self._from_json(key='certLocation'), self.__api_app__)
 
                     @property
                     @api_response_property()
@@ -162,7 +162,7 @@ class _Discovery:
                     @property
                     @api_response_property()
                     def device_location(self):
-                        return Config.Object(self._from_json(key='deviceLocation'), self._api_source)
+                        return Config.Object(self._from_json(key='deviceLocation'), self.__api_app__)
 
                     @property
                     @api_response_property()
@@ -187,18 +187,18 @@ class _Discovery:
                     @property
                     @api_response_property()
                     def rule_container(self):
-                        return Config.Object(self._from_json(key='ruleContainer'), self._api_source)
+                        return Config.Object(self._from_json(key='ruleContainer'), self.__api_app__)
 
                     @property
                     @api_response_property()
                     def type(self) -> str:
                         return self._from_json(key='type')
 
-                return _Response(response=self._get(), api_source=self._api_source)
+                return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
             def delete(self):
-                class _Response(APIResponse):
+                class Response(APIResponse):
                     def __init__(self, response, api_source):
                         super().__init__(response=response, api_source=api_source)
 
-                return _Response(response=self._delete(), api_source=self._api_source)
+                return Response(response_cls=Response, response=self._delete(), api_source=self._api_source)

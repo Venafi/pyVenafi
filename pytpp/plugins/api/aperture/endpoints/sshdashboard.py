@@ -29,7 +29,7 @@ class _SshDashboard:
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountAccessOrphan')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -38,14 +38,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountKeysetsInError(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountKeysetsInError')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -54,14 +54,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountNeedsActionFromMe(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountNeedsActionFromMe')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -70,14 +70,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountNistNonComplaint(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountNistNonComplaint')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -91,14 +91,14 @@ class _SshDashboard:
                 def all_codes(self):
                     return self._from_json(key='allCodes')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountPendingMyApprovalKeys(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountPendingMyApprovalKeys')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -107,14 +107,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountPrivateKeyOrphans(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountPrivateKeyOrphans')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -123,14 +123,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountRootAuthorization(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountRootAuthorization')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -139,14 +139,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountSmallKeyLength(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountSmallKeyLength')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -155,14 +155,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountTotal(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountTotal')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -171,14 +171,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountUnknownClientAccess(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUnknownClientAccess')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -187,14 +187,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountUntrackedKeys(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUntrackedKeys')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -203,14 +203,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _CountUnusedAuthorizedKeys(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUnusedAuthorizedKeys')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -219,14 +219,14 @@ class _SshDashboard:
                 def value(self):
                     return self._from_json()
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _GetCriticalAlertsPrefs(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/GetCriticalAlertsPrefs')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -250,14 +250,14 @@ class _SshDashboard:
                 def has_permissions_to_lock(self):
                     return self._from_json(key='hasPermissionsToLock')
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _KeyAlgorithms(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/KeyAlgorithms')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -266,14 +266,14 @@ class _SshDashboard:
                 def records(self):
                     return [SshDashboard.Record(record) for record in self._from_json()]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _KeyLengths(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/keylengths')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -282,14 +282,14 @@ class _SshDashboard:
                 def records(self):
                     return [SshDashboard.Record(record) for record in self._from_json()]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _PolicyViolations(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/PolicyViolations')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -298,14 +298,14 @@ class _SshDashboard:
                 def policy_violations(self):
                     return [SshDashboard.PolicyViolation(violation) for violation in self._from_json()]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _Trends(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/Trends')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -314,14 +314,14 @@ class _SshDashboard:
                 def trends(self):
                     return [SshDashboard.Trend(trend) for trend in self._from_json()]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
     class _TrustsPerUserKeyset(API):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/TrustsPerUserKeyset')
 
         def get(self):
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
@@ -330,7 +330,7 @@ class _SshDashboard:
                 def records(self):
                     return [SshDashboard.Record(record) for record in self._from_json()]
 
-            return _Response(response=self._get(), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
 
 
 

@@ -11,7 +11,7 @@ class _Approvers(API):
             'filter': name_filter
         }
         
-        class _Response(APIResponse):
+        class Response(APIResponse):
             def __init__(self, response, api_source):
                 super().__init__(
                     response=response, 
@@ -21,9 +21,9 @@ class _Approvers(API):
             @property
             @api_response_property()
             def identities(self):
-                return [Identity.Identity(i, api_type=self._api_source) for i in self._from_json()]
+                return [Identity.Identity(i, api_type=self.__api_app__) for i in self._from_json()]
             
-        return _Response(
+        return Response(response_cls=Response, 
             response=self._get(params=params),
             api_source=self._api_source
         )

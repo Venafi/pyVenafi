@@ -15,13 +15,13 @@ class _ConfigObjects:
                 "DN": container + "\\" + name
             }
 
-            class _Response(APIResponse):
+            class Response(APIResponse):
                 def __init__(self, response, api_source):
                     super().__init__(response=response, api_source=api_source)
 
                 @property
                 @api_response_property()
                 def object(self):
-                    return Config.Object(self._from_json(), self._api_source)
+                    return Config.Object(self._from_json(), self.__api_app__)
 
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)

@@ -11,7 +11,7 @@ class _ReportDefaults(API):
         )
 
     def get(self):
-        class _Response(APIResponse):
+        class Response(APIResponse):
             def __init__(self, response):
                 super().__init__(response=response, api_source='aperture')
 
@@ -80,4 +80,4 @@ class _ReportDefaults(API):
             def dn(self) -> str:
                 return self._from_json(key='dn')
 
-        return _Response(response=self._get())
+        return Response(response_cls=Response, response=self._get())

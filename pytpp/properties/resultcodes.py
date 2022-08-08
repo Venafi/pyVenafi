@@ -349,6 +349,24 @@ class ResultCodes:
         25: 'RemoteError'
     }
 
+    RecycleBin = {
+        0: 'Success',
+        1: 'AdminRequired',
+        2: 'ObjectDoesNotExist',
+        3: 'InvalidGuid',
+        4: 'InvalidRecycleBinItem',
+        5: 'ItemCannotBeRestored',
+        6: 'FaildToGetConfigAccess',
+        7: 'FaildToGetSecretStoreAccess',
+        8: 'ItemCleanupFailed',
+        9: 'ActionNotSupported',
+        10: 'ActionFailed',
+        11: 'RemoteIdentityRequired',
+        12: 'ActionException',
+        13: 'RemoteTransportFailure',
+        14: 'ToDoRequestFailed'
+    }
+
     SecretStore = {
         0 : 'Success',
         1 : 'InvalidCallingAssembly',
@@ -482,3 +500,10 @@ class ResultCodes:
         7: 'RemoteError',
         8: 'WorkflowObjectDoesNotExist',
     }
+
+    RecycleBin.update({
+        int(k) + 20000: v for k, v in Config.items()
+    })
+    RecycleBin.update({
+        int(k) + 30000: v for k, v in SecretStore.items()
+    })

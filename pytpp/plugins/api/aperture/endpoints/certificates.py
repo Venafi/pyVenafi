@@ -46,7 +46,7 @@ class _Certificates:
                     'sortField': sort_field
                 }
 
-                class _Response(APIResponse):
+                class Response(APIResponse):
                     def __init__(self, response, api_source):
                         super().__init__(response=response, api_source=api_source)
                         
@@ -55,4 +55,4 @@ class _Certificates:
                     def certificates(self):
                         return [CertificateDetails(cert) for cert in self._from_json()]
 
-                return _Response(response=self._post(data=body), api_source=self._api_source)
+                return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)

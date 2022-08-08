@@ -1,6 +1,8 @@
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
-from pytpp.plugins.properties.response_objects.identity import Identity
-from pytpp.plugins.properties.response_objects.oauth import OAuth
+from typing import List
+from api.api_base import ResponseFactory, ResponseField
+from properties.response_objects.dataclasses import identity
+from plugins.properties.response_objects.dataclasses import oauth
+from pytpp.plugins.api.api_base import API, APIResponse, ApiApp
 
 
 class _ApplicationIntegration(API):
@@ -25,16 +27,11 @@ class _ApplicationIntegration(API):
             'vendor'                   : vendor
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+        class Response(APIResponse):
+            __api_app__ = ApiApp.aperture
+            application_id: str = ResponseField()
 
-            @property
-            @api_response_property()
-            def application_id(self) -> str:
-                return self._from_json()
-
-        return _Response(response=self._post(data=body), api_source=self._api_source)
+        return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='application_id')
 
     def put(self, application_id: str, application_name: str, application_scope: dict,
             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -53,16 +50,11 @@ class _ApplicationIntegration(API):
             'vendor'                   : vendor
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+        class Response(APIResponse):
+            __api_app__ = ApiApp.aperture
+            application_id: str = ResponseField()
 
-            @property
-            @api_response_property()
-            def application_id(self) -> str:
-                return self._from_json()
-
-        return _Response(response=self._put(data=body), api_source=self._api_source)
+        return ResponseFactory(response_cls=Response, response=self._put(data=body), root_field='application_id')
 
     def ApplicationId(self, id: str):
         return self._ApplicationId(id=id, api_obj=self._api_obj)
@@ -80,8 +72,11 @@ class _ApplicationIntegration(API):
 
             def put(self, identities: list):
                 body = identities
+                
+                class Response(APIResponse):
+                    __api_app__ = ApiApp.aperture
 
-                return APIResponse(response=self._put(data=body), api_source=self._api_source)
+                return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
     class _ApplicationId(API):
         def __init__(self, id: str, api_obj):
@@ -91,70 +86,23 @@ class _ApplicationIntegration(API):
             )
 
         def delete(self):
-            class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
-
-            return _Response(response=self._delete(), api_source=self._api_source)
+            class Response(APIResponse):
+                __api_app__ = ApiApp.aperture
+                
+            return ResponseFactory(response_cls=Response, response=self._delete())
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(APIResponse):
+                access_granted: int = ResponseField(alias='accessGranted')
+                access_validity_days: int = ResponseField(alias='accessValidityDays')
+                allowed_identities : List[identity.Identity] = ResponseField(default_factory=list, alias='allowedIdentities')
+                application_id: str = ResponseField(alias='applicationId')
+                application_name: str = ResponseField(alias='applicationName')
+                application_scope: oauth.ApplicationScope = ResponseField(alias='applicationScope')
+                default_access_settings_used: bool = ResponseField(alias='defaultAccessSettingsUsed')
+                description: str = ResponseField(alias='description')
+                grant_validity_days: int = ResponseField(alias='grantValidityDays')
+                renewable: bool = ResponseField(alias='renewable')
+                vendor: str = ResponseField(alias='vendor')
 
-                @property
-                @api_response_property()
-                def access_granted(self) -> int:
-                    return self._from_json(key='accessGranted')
-
-                @property
-                @api_response_property()
-                def access_validity_days(self) -> int:
-                    return self._from_json(key='accessValidityDays')
-
-                @property
-                @api_response_property()
-                def allowed_identities(self):
-                    return [Identity.Identity(id, self._api_source) for id in self._from_json(key='allowedIdentities')]
-
-                @property
-                @api_response_property()
-                def application_id(self) -> str:
-                    return self._from_json(key='applicationId')
-
-                @property
-                @api_response_property()
-                def application_name(self) -> str:
-                    return self._from_json(key='applicationName')
-
-                @property
-                @api_response_property()
-                def application_scope(self):
-                    return OAuth.ApplicationScope(self._from_json(key='applicationScope'))
-
-                @property
-                @api_response_property()
-                def default_access_settings_used(self) -> bool:
-                    return self._from_json(key='defaultAccessSettingsUsed')
-
-                @property
-                @api_response_property()
-                def description(self) -> str:
-                    return self._from_json(key='description')
-
-                @property
-                @api_response_property()
-                def grant_validity_days(self) -> int:
-                    return self._from_json(key='grantValidityDays')
-
-                @property
-                @api_response_property()
-                def renewable(self) -> bool:
-                    return self._from_json(key='renewable')
-
-                @property
-                @api_response_property()
-                def vendor(self) -> str:
-                    return self._from_json(key='vendor')
-
-            return _Response(response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get())
