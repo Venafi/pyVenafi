@@ -1,11 +1,11 @@
 from typing import List
-from api.api_base import ResponseFactory, ResponseField
-from properties.response_objects.dataclasses import identity
-from plugins.properties.response_objects.dataclasses import oauth
-from pytpp.plugins.api.api_base import API, APIResponse, ApiApp
+from pytpp.api.api_base import ResponseFactory, ResponseField
+from pytpp.properties.response_objects.dataclasses import identity
+from pytpp.plugins.properties.response_objects.dataclasses import oauth
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
 
 
-class _ApplicationIntegration(API):
+class _ApplicationIntegration(ApertureEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/application-integration')
         self.Access = self._Access(api_obj=api_obj)
@@ -27,8 +27,7 @@ class _ApplicationIntegration(API):
             'vendor'                   : vendor
         }
 
-        class Response(APIResponse):
-            __api_app__ = ApiApp.aperture
+        class Response(ApertureResponse):
             application_id: str = ResponseField()
 
         return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='application_id')
@@ -50,8 +49,7 @@ class _ApplicationIntegration(API):
             'vendor'                   : vendor
         }
 
-        class Response(APIResponse):
-            __api_app__ = ApiApp.aperture
+        class Response(ApertureResponse):
             application_id: str = ResponseField()
 
         return ResponseFactory(response_cls=Response, response=self._put(data=body), root_field='application_id')
@@ -66,19 +64,15 @@ class _ApplicationIntegration(API):
         def ApplicationId(self, id: str):
             return self._ApplicationId(id=id, api_obj=self._api_obj)
 
-        class _ApplicationId(API):
+        class _ApplicationId(ApertureEndpoint):
             def __init__(self, id: str, api_obj):
                 super().__init__(api_obj=api_obj, url=f'/application-integration/access/?id={id}')
 
             def put(self, identities: list):
                 body = identities
-                
-                class Response(APIResponse):
-                    __api_app__ = ApiApp.aperture
+                return ResponseFactory(response_cls=ApertureResponse, response=self._put(data=body))
 
-                return ResponseFactory(response_cls=Response, response=self._put(data=body))
-
-    class _ApplicationId(API):
+    class _ApplicationId(ApertureEndpoint):
         def __init__(self, id: str, api_obj):
             super().__init__(
                 api_obj=api_obj,
@@ -86,13 +80,10 @@ class _ApplicationIntegration(API):
             )
 
         def delete(self):
-            class Response(APIResponse):
-                __api_app__ = ApiApp.aperture
-                
-            return ResponseFactory(response_cls=Response, response=self._delete())
+            return ResponseFactory(response_cls=ApertureResponse, response=self._delete())
 
         def get(self):
-            class Response(APIResponse):
+            class Response(ApertureResponse):
                 access_granted: int = ResponseField(alias='accessGranted')
                 access_validity_days: int = ResponseField(alias='accessValidityDays')
                 allowed_identities : List[identity.Identity] = ResponseField(default_factory=list, alias='allowedIdentities')

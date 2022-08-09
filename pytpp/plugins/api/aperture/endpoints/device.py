@@ -1,11 +1,10 @@
+from pytpp.api.api_base import ResponseField, ResponseFactory
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from pytpp.plugins.properties.response_objects.dataclasses import device
 from typing import List
 
-from pytpp.api.api_base import api_response_property
-from pytpp.plugins.api.api_base import API, APIResponse
-from pytpp.plugins.properties.response_objects.device import Device
 
-
-class _Device(API):
+class _Device(ApertureEndpoint):
     def __init__(self, api_obj):
         super().__init__(
             api_obj=api_obj,
@@ -34,23 +33,13 @@ class _Device(API):
             "Limit"            : limit
         }
 
-        class Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+        class Response(ApertureResponse):
+            total_count: int = ResponseField(key='totalCount')
+            devices_list_items: List[device.Device] = ResponseField(alias='devicesListItems', default_factory=list)
 
-            @property
-            @api_response_property()
-            def total_count(self):
-                return int(self._from_json(key='totalCount'))
+        return Response(response_cls=Response, response=self._post(data=body))
 
-            @property
-            @api_response_property()
-            def devices_list_items(self):
-                return [Device(device) for device in self._from_json(key='devicesListItems')]
-
-        return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)
-
-    class _GetStatus(API):
+    class _GetStatus(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(
                 api_obj=api_obj,
@@ -62,26 +51,12 @@ class _Device(API):
                 'deviceGuid': device_guid
             }
 
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                is_out_of_compliance: bool = ResponseField(alias='isOutOfCompliance')
+                discovery_stage: int = ResponseField(alias='discoveryStage')
+                discovery_status: str = ResponseField(alias='discoveryStatus')
 
-                @property
-                @api_response_property()
-                def is_out_of_compliance(self):
-                    return bool(self._from_json(key='isOutOfCompliance'))
-
-                @property
-                @api_response_property()
-                def discovery_stage(self):
-                    return int(self._from_json(key='discoveryStage'))
-
-                @property
-                @api_response_property()
-                def discovery_status(self):
-                    return self._from_json(key='discoveryStatus')
-
-            return Response(response_cls=Response, response=self._get(params=params), api_source=self._api_source)
+            return Response(response_cls=Response, response=self._get(params=params))
 
     class _BulkOperations:
         def __init__(self, api_obj):
@@ -89,22 +64,16 @@ class _Device(API):
             self.SetAgentlessDiscoveryToDo = self._SetAgentlessDiscoveryToDo(api_obj=self._api_obj)
             self.ResetFailedAuthAttempts = self._ResetFailedAuthAttempts(api_obj=self._api_obj)
 
-        class _SetAgentlessDiscoveryToDo(API):
+        class _SetAgentlessDiscoveryToDo(ApertureEndpoint):
             def __init__(self, api_obj):
-                super().__init__(
-                    api_obj=api_obj,
-                    url=f'/device/bulkOperations/SetAgentlessDiscoveryToDo'
-                )
+                super().__init__(api_obj=api_obj, url=f'/device/bulkOperations/SetAgentlessDiscoveryToDo')
 
             def post(self, device_guids: List[str]):
-                return APIResponse(response=self._post(data=device_guids), api_source=self._api_source)
+                return ResponseFactory(response_cls=ApertureResponse, response=self._post(data=device_guids))
 
-        class _ResetFailedAuthAttempts(API):
+        class _ResetFailedAuthAttempts(ApertureEndpoint):
             def __init__(self, api_obj):
-                super().__init__(
-                    api_obj=api_obj,
-                    url=f'/device/bulkOperations/resetFailedAuthAttempts'
-                )
+                super().__init__(api_obj=api_obj, url=f'/device/bulkOperations/resetFailedAuthAttempts')
 
             def post(self, device_guids: List[str]):
-                return APIResponse(response=self._post(data=device_guids), api_source=self._api_source)
+                return ResponseFactory(response_cls=ApertureResponse, response=self._post(data=device_guids))

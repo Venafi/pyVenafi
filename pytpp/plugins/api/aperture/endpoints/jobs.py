@@ -1,4 +1,5 @@
-from pytpp.plugins.api.api_base import API, APIResponse
+from pytpp.api.api_base import ResponseFactory
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
 
 
 class _Jobs:
@@ -17,7 +18,7 @@ class _Jobs:
                 self._api_obj = api_obj
                 self.Actions = self._Actions(guid=guid, api_obj=api_obj)
 
-            class _Actions(API):
+            class _Actions(ApertureEndpoint):
                 def __init__(self, guid: str, api_obj):
                     super().__init__(
                         api_obj=api_obj,
@@ -29,4 +30,4 @@ class _Jobs:
                         'jobAction': job_action
                     }
 
-                    return APIResponse(response=self._post(data=body), api_source=self._api_source)
+                    return ResponseFactory(response_cls=ApertureResponse, response=self._post(data=body))

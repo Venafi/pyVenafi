@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 from typing import List, Dict
 from properties.response_objects.dataclasses import credential, identity
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _Credentials:
@@ -22,7 +22,7 @@ class _Credentials:
             self.Create = self._Create(api_obj=api_obj)
             self.Update = self._Update(api_obj=api_obj)
 
-        class _Create(API):
+        class _Create(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Create')
 
@@ -35,12 +35,12 @@ class _Credentials:
                     'CustomFields'  : custom_fields
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Update(API):
+        class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Update')
 
@@ -53,7 +53,7 @@ class _Credentials:
                     'CustomFields'  : custom_fields
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -62,7 +62,7 @@ class _Credentials:
         def __init__(self, api_obj):
             self.Adaptable = self._Adaptable(api_obj=api_obj)
 
-        class _Adaptable(API):
+        class _Adaptable(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Credentials/Connector/Adaptable')
 
@@ -78,7 +78,7 @@ class _Credentials:
                     'ServiceCredential': service_credential
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     succcess: bool = ResponseField(alias='Succcess')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -86,18 +86,18 @@ class _Credentials:
             def Guid(self, guid: str):
                 return self._Guid(api_obj=self._api_obj, guid=guid)
 
-            class _Guid(API):
+            class _Guid(WebSdkEndpoint):
                 def __init__(self, api_obj, guid: str):
                     super().__init__(api_obj=api_obj, url=f'/Credentials/Connector/Adaptable/{guid}')
 
                 def delete(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         success: bool = ResponseField(alias='Success')
 
                     return ResponseFactory(response_cls=Response, response=self._delete())
 
                 def get(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         allowed_identities: List[str] = ResponseField(default_factory=list, alias='AllowedIdentities')
                         powershell_script: str = ResponseField(alias='PowershellScript')
                         service_address: str = ResponseField(alias='ServiceAddress')
@@ -118,12 +118,12 @@ class _Credentials:
                         'ServiceCredential': service_credential
                     }
 
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         succcess: bool = ResponseField(alias='Succcess')
 
                     return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _Create(API):
+    class _Create(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Credentials/Create')
 
@@ -141,12 +141,12 @@ class _Credentials:
                 'Contact'       : contact
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Delete(API):
+    class _Delete(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Credentials/Delete')
 
@@ -155,12 +155,12 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Enumerate(API):
+    class _Enumerate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Credentials/Enumerate')
 
@@ -171,13 +171,13 @@ class _Credentials:
                 'Pattern'       : pattern
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
                 credential_infos: List[credential.CredentialInfo] = ResponseField(default_factory=list, alias='CredentialInfos')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Rename(API):
+    class _Rename(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Credentials/Rename')
 
@@ -187,12 +187,12 @@ class _Credentials:
                 'NewCredentialPath': new_credential_path
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Retrieve(API):
+    class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Credentials/Retrieve')
 
@@ -201,7 +201,7 @@ class _Credentials:
                 'CredentialPath': credential_path
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 classname: str = ResponseField(alias='Classname')
                 contact: List[identity.Identity] = ResponseField(alias='Contact')
                 description: str = ResponseField(alias='Description')
@@ -212,7 +212,7 @@ class _Credentials:
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Update(API):
+    class _Update(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Credentials/Update')
 
@@ -238,7 +238,7 @@ class _Credentials:
                 'Expiration': r'/Date(%s)/' % exp_date
             })
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -248,7 +248,7 @@ class _Credentials:
             self.Create = self._Create(api_obj=api_obj)
             self.Update = self._Update(api_obj=api_obj)
 
-        class _Create(API):
+        class _Create(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Credentials/CyberArk/Create')
 
@@ -265,12 +265,12 @@ class _Credentials:
                     'CredentialPath' : credential_path
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Update(API):
+        class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Credentials/CyberArk/Update')
 
@@ -287,7 +287,7 @@ class _Credentials:
                     'CredentialPath' : credential_path
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: credential.Result = ResponseField(alias='Result', converter=lambda x: credential.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))

@@ -1,9 +1,9 @@
 from typing import List
 from properties.response_objects.dataclasses import log
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
-class _Log(API):
+class _Log(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Log')
         self.LogSchema = self._LogSchema(api_obj=api_obj)
@@ -27,7 +27,7 @@ class _Log(API):
             'Value2'   : value2
         }
 
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             log_events: List[log.LogEvent] = ResponseField(default_factory=list, alias='LogEvents')
 
         return ResponseFactory(response_cls=Response, response=self._get(params=params))
@@ -46,7 +46,7 @@ class _Log(API):
             'Value2'   : value2
         }
 
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             log_result: int = ResponseField(alias='LogResult')
 
         return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -54,22 +54,22 @@ class _Log(API):
     def Guid(self, guid: str):
         return self._Guid(guid=guid, api_obj=self._api_obj)
 
-    class _Guid(API):
+    class _Guid(WebSdkEndpoint):
         def __init__(self, guid: str, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Log/{guid}')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 log_events: List[log.LogEvent] = ResponseField(default_factory=list, alias='LogEvents')
 
             return ResponseFactory(response_cls=Response, response=self._get())
 
-    class _LogSchema(API):
+    class _LogSchema(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Log/LogSchema')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 log_event_application_definitions: List[log.LogEventApplicationDefinition] = ResponseField(
                     alias='LogEventApplicationDefinitions'
                 )

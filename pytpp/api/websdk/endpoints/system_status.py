@@ -1,17 +1,17 @@
 from datetime import datetime
 from typing import List
 from properties.response_objects.dataclasses import system_status
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
-class _SystemStatus(API):
+class _SystemStatus(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/SystemStatus')
         self.Upgrade = self._Upgrade(api_obj=api_obj)
         self.Version = self._Version(api_obj=api_obj)
 
     def get(self):
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             engines: List[system_status.SystemStatus] = ResponseField(default_factory=list)
 
         return ResponseFactory(response_cls=Response, response=self._get(), root_field='engines')
@@ -24,7 +24,7 @@ class _SystemStatus(API):
             self.Status = self._Status(api_obj=api_obj)
             self.Summary = self._Summary(api_obj=api_obj)
 
-        class _Engine(API):
+        class _Engine(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Engine')
 
@@ -35,7 +35,7 @@ class _SystemStatus(API):
                     'UpgradeId': upgrade_id
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     engine: system_status.Engine = ResponseField(alias='Engine')
                     status: str = ResponseField(alias='Status')
                     upgrade_start_time: datetime = ResponseField(alias='UpgradeStartTime')
@@ -46,7 +46,7 @@ class _SystemStatus(API):
 
                 return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
-        class _Engines(API):
+        class _Engines(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Engines')
 
@@ -55,47 +55,47 @@ class _SystemStatus(API):
                     'UpgradeId': upgrade_id
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     engines: List[system_status.UpgradeStatus] = ResponseField(default_factory=list, alias='Engines') 
 
                 return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
-        class _History(API):
+        class _History(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/History')
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     upgrade_history: List[system_status.UpgradeInfo] = ResponseField(default_factory=list, alias='UpgradeHistory') 
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
-        class _Status(API):
+        class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Status')
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     upgrade_in_progress: bool = ResponseField(alias='UpgradeInProgress')
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
-        class _Summary(API):
+        class _Summary(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Summary')
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     upgrade_summary: system_status.UpgradeSummary = ResponseField(alias='UpgradeSummary')
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
-    class _Version(API):
+    class _Version(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SystemStatus/Version')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 version: str = ResponseField(alias='Version')
 
             return ResponseFactory(response=self._get(), response_cls=Response)

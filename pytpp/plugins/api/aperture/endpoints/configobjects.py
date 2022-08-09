@@ -1,12 +1,13 @@
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
-from pytpp.plugins.properties.response_objects.config import Config
+from pytpp.api.api_base import ResponseFactory, ResponseField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from pytpp.plugins.properties.response_objects.dataclasses import config
 
 
 class _ConfigObjects:
     def __init__(self, api_obj):
         self.Policies = self._Policies(api_obj)
 
-    class _Policies(API):
+    class _Policies(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/configobjects/policies')
 
@@ -15,13 +16,7 @@ class _ConfigObjects:
                 "DN": container + "\\" + name
             }
 
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                object: config.Object = ResponseField()
 
-                @property
-                @api_response_property()
-                def object(self):
-                    return Config.Object(self._from_json(), self.__api_app__)
-
-            return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='object')

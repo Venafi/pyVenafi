@@ -1,6 +1,6 @@
 from typing import List
 from properties.response_objects.dataclasses import pki
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _PKI:
@@ -12,7 +12,7 @@ class _PKI:
             self.CA = self._CA(api_obj=api_obj)
             self.Role = self._Role(api_obj=api_obj)
 
-        class _CA(API):
+        class _CA(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/HashiCorp/CA')
                 self._api_obj = api_obj
@@ -21,7 +21,7 @@ class _PKI:
                 return self._Guid(guid=guid, api_obj=self._api_obj)
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     pkis : List[pki.PKI] = ResponseField(default_factory=list, alias='pkis')
 
                 return ResponseFactory(response_cls=Response, response=self._get())
@@ -43,21 +43,21 @@ class _PKI:
                     'Roles'                     : roles
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     certificate_dn: str = ResponseField(alias='CertificateDN')
                     certificate_guid: str = ResponseField(alias='CertificateGuid')
                     guid: str = ResponseField(alias='Guid')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-            class _Guid(API):
+            class _Guid(WebSdkEndpoint):
                 def __init__(self, guid: str, api_obj):
                     super().__init__(api_obj=api_obj, url=f'/HashiCorp/CA/{guid}')
                     self._guid = guid
                     self.Renew = self._Renew(guid=guid, api_obj=api_obj)
 
                 def delete(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         certificate_dn: str = ResponseField(alias='CertificateDN')
                         certificate_guid: str = ResponseField(alias='CertificateGuid')
                         guid: str = ResponseField(alias='Guid')
@@ -65,7 +65,7 @@ class _PKI:
                     return ResponseFactory(response_cls=Response, response=self._delete())
 
                 def get(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         certificate : pki.Certificate = ResponseField(alias='Certificate')
                         create_certificate_authority: bool = ResponseField(alias='CreateCertificateAuthority')
                         create_pki_role: bool = ResponseField(alias='CreatePKIRole')
@@ -77,7 +77,7 @@ class _PKI:
                     return ResponseFactory(response_cls=Response, response=self._get())
 
                 def post(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         certificate_dn: str = ResponseField(alias='CertificateDN')
                         certificate_guid: str = ResponseField(alias='CertificateGuid')
                         guid: str = ResponseField(alias='Guid')
@@ -101,26 +101,26 @@ class _PKI:
                         'Roles'                     : roles
                     }
 
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         certificate_dn: str = ResponseField(alias='CertificateDN')
                         certificate_guid: str = ResponseField(alias='CertificateGuid')
                         guid: str = ResponseField(alias='Guid')
 
                     return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-                class _Renew(API):
+                class _Renew(WebSdkEndpoint):
                     def __init__(self, guid: str, api_obj):
                         super().__init__(api_obj=api_obj, url=f'HashiCorp/{guid}/Renew')
 
                     def post(self):
-                        class Response(APIResponse):
+                        class Response(WebSdkResponse):
                             certificate_dn: str = ResponseField(alias='CertificateDN')
                             certificate_guid: str = ResponseField(alias='CertificateGuid')
                             guid: str = ResponseField(alias='Guid')
 
                         return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
-        class _Role(API):
+        class _Role(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='HashiCorp/Role')
                 self._api_obj = api_obj
@@ -143,7 +143,7 @@ class _PKI:
                     'WhitelistedDomains' : whitelisted_domains
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     guid: str = ResponseField(alias='Guid')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -151,18 +151,18 @@ class _PKI:
             def Guid(self, guid: str):
                 return self._Guid(guid=guid, api_obj=self._api_obj)
 
-            class _Guid(API):
+            class _Guid(WebSdkEndpoint):
                 def __init__(self, guid: str, api_obj):
                     super().__init__(api_obj=api_obj, url=f'HashiCorp/Role/{guid}')
 
                 def delete(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         guid: str = ResponseField(alias='Guid')
 
                     return ResponseFactory(response_cls=Response, response=self._delete())
 
                 def get(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         city: str = ResponseField(alias='City')
                         country: str = ResponseField(alias='Country')
                         enhanced_key_usage: str = ResponseField(alias='EnhancedKeyUsage')
@@ -194,7 +194,7 @@ class _PKI:
                         'WhitelistedDomains' : whitelisted_domains
                     }
 
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         guid: str = ResponseField(alias='Guid')
 
                     return ResponseFactory(response_cls=Response, response=self._put(data=body))

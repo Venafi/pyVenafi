@@ -1,6 +1,6 @@
 from typing import List
 from properties.response_objects.dataclasses import config_schema
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _ConfigSchema:
@@ -8,12 +8,12 @@ class _ConfigSchema:
         self.Attributes = self._Attributes(api_obj=api_obj)
         self.Class = self._Class(api_obj=api_obj)
 
-    class _Attributes(API):
+    class _Attributes(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/ConfigSchema/Attributes')
 
         def post(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 attribute_definitions: List[config_schema.AttributeDefinition] = ResponseField(
                     default_factory=list, alias='AttributeDefinitions'
                 )
@@ -21,7 +21,7 @@ class _ConfigSchema:
 
             return ResponseFactory(response=self._post(data={}), response_cls=Response)
 
-    class _Class(API):
+    class _Class(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/ConfigSchema/Class')
 
@@ -30,7 +30,7 @@ class _ConfigSchema:
                 "Class": class_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 class_definition: config_schema.ClassDefinition = ResponseField(alias='ClassDefinition')
                 result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 

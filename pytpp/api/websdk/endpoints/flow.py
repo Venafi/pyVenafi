@@ -1,5 +1,5 @@
 from properties.response_objects.dataclasses import codesign, flow
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 from typing import List
 
 
@@ -20,7 +20,7 @@ class _Flow:
                 def __init__(self, api_obj):
                     self.Create = self._Create(api_obj=api_obj)
 
-                class _Create(API):
+                class _Create(WebSdkEndpoint):
                     def __init__(self, api_obj):
                         super().__init__(api_obj=api_obj, url='Flow/Actions/CodeSign/PreQualify/Create')
 
@@ -35,7 +35,7 @@ class _Flow:
                             'User'     : user
                         }
 
-                        class Response(APIResponse):
+                        class Response(WebSdkResponse):
                             result: codesign.ResultCode = ResponseField(
                                 alias='Result', converter=lambda x: codesign.ResultCode(code=x)
                             )
@@ -54,7 +54,7 @@ class _Flow:
             self.Reject = self._Reject(api_obj=api_obj)
             self.Update = self._Update(api_obj=api_obj)
 
-        class _Approve(API):
+        class _Approve(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Approve')
 
@@ -69,37 +69,37 @@ class _Flow:
                     'useCount' : use_count
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ResponseField(alias='Message')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Count(API):
+        class _Count(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Count')
 
             def post(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     count: int = ResponseField(alias='Count')
                     message: str = ResponseField(alias='Message')
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
-        class _CountApproved(API):
+        class _CountApproved(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/CountApproved')
 
             def post(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     count: int = ResponseField(alias='Count')
                     message: str = ResponseField(alias='Message')
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
-        class _Enumerate(API):
+        class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Enumerate')
 
@@ -110,14 +110,14 @@ class _Flow:
                     'TicketPageNumber': ticket_page_number
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ResponseField(alias='Message')
                     tickets: List[flow.Ticket] = ResponseField(alias='Tickets', default_factory=list)
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _EnumerateApproved(API):
+        class _EnumerateApproved(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/EnumerateApproved')
 
@@ -128,14 +128,14 @@ class _Flow:
                     'TicketPageNumber': ticket_page_number
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ResponseField(alias='Message')
                     tickets: List[flow.Ticket] = ResponseField(alias='Tickets', default_factory=list)
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Load(API):
+        class _Load(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Load')
 
@@ -145,14 +145,14 @@ class _Flow:
                     'TicketIds': ticket_ids
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ResponseField(alias='Message')
                     tickets: List[flow.Ticket] = ResponseField(alias='Tickets', default_factory=list)
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Reject(API):
+        class _Reject(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Reject')
 
@@ -165,14 +165,14 @@ class _Flow:
                     'TicketIds'     : ticket_ids
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     invalid_ticket_ids: List[int] = ResponseField(default_factory=list, alias='InvalidTicketIds')
                     message: str = ResponseField(alias='Message')
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Update(API):
+        class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Update')
 
@@ -187,7 +187,7 @@ class _Flow:
                     'useCount' : use_count
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: flow.Result = ResponseField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ResponseField(alias='Message')
 

@@ -1,6 +1,6 @@
 from typing import List
 from properties.response_objects.dataclasses import secret_store
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _X509CertificateStore:
@@ -11,7 +11,7 @@ class _X509CertificateStore:
         self.Remove = self._Remove(api_obj=api_obj)
         self.Retrieve = self._Retrieve(api_obj=api_obj)
 
-    class _Add(API):
+    class _Add(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/X509CertificateStore/Add')
 
@@ -25,14 +25,14 @@ class _X509CertificateStore:
                 'TypedNameValues': typed_name_values
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 leaf_existed: bool = ResponseField(alias='LeafExisted')
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_id: int = ResponseField(alias='VaultId')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Lookup(API):
+    class _Lookup(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/X509CertificateStore/Lookup')
 
@@ -44,7 +44,7 @@ class _X509CertificateStore:
                 'Value': value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_id: int = ResponseField(alias='VaultId')
                 vault_ids: List[int] = ResponseField(alias='VaultIds')
@@ -52,7 +52,7 @@ class _X509CertificateStore:
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _LookupExpiring(API):
+    class _LookupExpiring(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/X509CertificateStore/LookupExpiring')
 
@@ -62,13 +62,13 @@ class _X509CertificateStore:
                 'OwnerDN': owner_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 vault_ids: List[int] = ResponseField(alias='VaultIds')
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Remove(API):
+    class _Remove(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/X509CertificateStore/Remove')
 
@@ -79,12 +79,12 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Retrieve(API):
+    class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/X509CertificateStore/Retrieve')
 
@@ -93,7 +93,7 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 certificate_string: str = ResponseField(alias='CertificateString')
                 typed_name_values: List[secret_store.TypedNameValues] = ResponseField(alias='TypedNameValues')
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))

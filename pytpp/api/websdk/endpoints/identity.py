@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 from pytpp.properties.response_objects.dataclasses import identity as ident
 
 
@@ -19,7 +19,7 @@ class _Identity:
         self.SetPassword = self._SetPassword(api_obj=api_obj)
         self.Validate = self._Validate(api_obj=api_obj)
 
-    class _AddGroup(API):
+    class _AddGroup(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/AddGroup')
 
@@ -30,7 +30,7 @@ class _Identity:
                 'Products': products
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identity: ident.Identity = ResponseField(alias='ID')
                 invalid_members: List[ident.InvalidIdentity] = ResponseField('InvalidMembers', default_factory=list)
                 invalid_owners: List[ident.InvalidIdentity] = ResponseField('InvalidOwners', default_factory=list)
@@ -38,7 +38,7 @@ class _Identity:
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddGroupMembers(API):
+    class _AddGroupMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/AddGroupMembers')
 
@@ -49,14 +49,14 @@ class _Identity:
                 'ShowMembers': show_members
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 invalid_members: List[ident.InvalidIdentity] = ResponseField(alias='InvalidMembers', default_factory=list)
                 members: List[ident.Identity] = ResponseField(alias='Members', default_factory=list)
                 message: str = ResponseField(alias='Message')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _Browse(API):
+    class _Browse(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/Browse')
 
@@ -68,12 +68,12 @@ class _Identity:
                 "IdentityType": identity_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identities: List[ident.Identity] = ResponseField('Identities', default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetAssociatedEntries(API):
+    class _GetAssociatedEntries(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/GetAssociatedEntries')
 
@@ -82,12 +82,12 @@ class _Identity:
                 'ID': identity
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identities: List[ident.Identity] = ResponseField('Identities', default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetMembers(API):
+    class _GetMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/GetMembers')
 
@@ -97,12 +97,12 @@ class _Identity:
                 'ResolveNested': int(resolve_nested)
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identities: List[ident.Identity] = ResponseField(alias='Identities', default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetMemberships(API):
+    class _GetMemberships(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/GetMemberships')
 
@@ -111,7 +111,7 @@ class _Identity:
                 'ID': identity
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identities: List[ident.Identity] = ResponseField(alias='Identities', default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
@@ -131,17 +131,17 @@ class _Identity:
             def Principal(self, principal: str):
                 return self._Principal(prefix=self._prefix, principal=principal, api_obj=self._api_obj)
 
-            class _Principal(API):
+            class _Principal(WebSdkEndpoint):
                 def __init__(self, prefix: str, principal: str, api_obj):
                     super().__init__(api_obj=api_obj, url=f'/Identity/Group/{prefix}/{principal}')
 
                 def delete(self):
-                    class Response(APIResponse):
+                    class Response(WebSdkResponse):
                         message: str = ResponseField(alias='Message')
 
                     return ResponseFactory(response_cls=Response, response=self._delete())
 
-    class _ReadAttribute(API):
+    class _ReadAttribute(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/ReadAttribute')
 
@@ -151,12 +151,12 @@ class _Identity:
                 'AttributeName': attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 attributes: List[str] = ResponseField(alias='Attributes')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _RemoveGroupMembers(API):
+    class _RemoveGroupMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/RemoveGroupMembers')
 
@@ -167,14 +167,14 @@ class _Identity:
                 'ShowMembers': show_members
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 invalid_members: List[ident.InvalidIdentity] = ResponseField(alias='InvalidMembers', default_factory=list)
                 members: List[ident.Identity] = ResponseField(alias='Members', default_factory=list)
                 message: str = ResponseField(alias='Message')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _RenameGroup(API):
+    class _RenameGroup(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/RenameGroup')
 
@@ -184,22 +184,22 @@ class _Identity:
                 'NewGroupName': new_group_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identity: ident.Identity = ResponseField(alias='ID')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _Self(API):
+    class _Self(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/Self')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identities: List[ident.Identity] = ResponseField(alias='Identities')
 
             return ResponseFactory(response_cls=Response, response=self._get())
 
-    class _SetPassword(API):
+    class _SetPassword(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/SetPassword')
 
@@ -210,12 +210,12 @@ class _Identity:
                 'Password'   : password
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identity: ident.Identity = ResponseField(alias='ID')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Validate(API):
+    class _Validate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/Validate')
 
@@ -224,7 +224,7 @@ class _Identity:
                 'ID': identity
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identity: ident.Identity = ResponseField(alias='ID')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))

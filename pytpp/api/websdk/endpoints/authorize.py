@@ -2,10 +2,10 @@ import logging
 import warnings
 from datetime import datetime
 from pytpp.tools.logger import api_logger
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
-class _Authorize(API):
+class _Authorize(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Authorize')
 
@@ -27,7 +27,7 @@ class _Authorize(API):
             "Password": password
         }
 
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             token: str = ResponseField(alias='APIKey')
             valid_until: datetime = ResponseField(alias='ValidUntil')
 
@@ -37,7 +37,7 @@ class _Authorize(API):
         api_logger.debug(f'Authenticated as "{username}"!')
         return ResponseFactory(response=response, response_cls=Response)
 
-    class _Certificate(API):
+    class _Certificate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Authorize/Certificate')
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -48,7 +48,7 @@ class _Authorize(API):
                 'scope': scope
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 access_token: str = ResponseField(alias='access_token')
                 expires: datetime = ResponseField(alias='expires')
                 expires_in: int = ResponseField(alias='expires_in')
@@ -65,7 +65,7 @@ class _Authorize(API):
             api_logger.debug(f'Authenticated!')
             return ResponseFactory(response=response, response_cls=Response)
 
-    class _Device(API):
+    class _Device(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Authorize/Device')
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -76,7 +76,7 @@ class _Authorize(API):
                 'scope'    : scope
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 device_code: str = ResponseField(alias='device_code')
                 interval: int = ResponseField(alias='interval')
                 user_code: str = ResponseField(alias='user_code')
@@ -92,7 +92,7 @@ class _Authorize(API):
             api_logger.debug(f'Authenticated!')
             return ResponseFactory(response=response, response_cls=Response)
 
-    class _Integrated(API):
+    class _Integrated(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Authorize/Integrated')
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -104,7 +104,7 @@ class _Authorize(API):
                 'state'    : state
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 access_token: str = ResponseField(alias='access_token', default=None)
                 expires: datetime = ResponseField(alias='expires')
                 expires_in: int = ResponseField(alias='expires_in')
@@ -116,7 +116,7 @@ class _Authorize(API):
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _OAuth(API):
+    class _OAuth(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Authorize/OAuth')
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -130,7 +130,7 @@ class _Authorize(API):
                 'state': state
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 access_token: str = ResponseField(alias='access_token', default=None)
                 expires: datetime = ResponseField(alias='expires')
                 expires_in: int = ResponseField(alias='expires_in')
@@ -147,7 +147,7 @@ class _Authorize(API):
             api_logger.debug(f'Authenticated as {username}!')
             return ResponseFactory(response=response, response_cls=Response)
 
-    class _Token(API):
+    class _Token(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Authorize/Token')
             self._url = self._url.replace('vedsdk', 'vedauth')
@@ -160,7 +160,7 @@ class _Authorize(API):
                 'device_code': device_code
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 access_token: str = ResponseField(alias='access_token')
                 expires: datetime = ResponseField(alias='expires')
                 expires_in: int = ResponseField(alias='expires_in')
@@ -175,13 +175,13 @@ class _Authorize(API):
             api_logger.debug(f'Authenticated!')
             return ResponseFactory(response=response, response_cls=Response)
 
-    class _Verify(API):
+    class _Verify(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Authorize/Verify')
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 access_issued_on_unix_time: datetime = ResponseField(alias='access_issued_on_unix_time')
                 application: str = ResponseField(alias='application')
                 expires_unix_time: datetime = ResponseField(alias='expires_unix_time')

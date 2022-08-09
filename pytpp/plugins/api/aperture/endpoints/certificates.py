@@ -1,7 +1,8 @@
-from typing import List, Dict
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
+from pytpp.api.api_base import ResponseFactory, ResponseField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
 from pytpp.plugins.properties.certificate_inventory import Field, Filter
-from pytpp.plugins.properties.response_objects.certificate_inventory import CertificateDetails
+from pytpp.plugins.properties.response_objects.dataclasses import certificate_inventory
+from typing import List, Dict
 
 
 class _Certificates:
@@ -12,7 +13,7 @@ class _Certificates:
         def __init__(self, api_obj):
             self.Apply = self._Apply(api_obj=api_obj)
 
-        class _Apply(API):
+        class _Apply(ApertureEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='certificates/filters/apply')
 
@@ -46,13 +47,7 @@ class _Certificates:
                     'sortField': sort_field
                 }
 
-                class Response(APIResponse):
-                    def __init__(self, response, api_source):
-                        super().__init__(response=response, api_source=api_source)
-                        
-                    @property
-                    @api_response_property()
-                    def certificates(self):
-                        return [CertificateDetails(cert) for cert in self._from_json()]
+                class Response(ApertureResponse):
+                    certificates: List[certificate_inventory.CertificateDetails] = ResponseField(default_factory=list)
 
-                return Response(response_cls=Response, response=self._post(data=body), api_source=self._api_source)
+                return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='certificates+')

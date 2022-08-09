@@ -1,9 +1,9 @@
 from typing import List
 from properties.response_objects.dataclasses import processing_engines
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
-class _ProcessingEngines(API):
+class _ProcessingEngines(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/ProcessingEngines')
 
@@ -11,7 +11,7 @@ class _ProcessingEngines(API):
         self.Folder = self._Folder(api_obj=api_obj)
 
     def get(self):
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             engines: List[processing_engines.Engine] = ResponseField(alias='Engines', default_factory=list)
 
         return ResponseFactory(response_cls=Response, response=self._get())
@@ -23,12 +23,12 @@ class _ProcessingEngines(API):
         def Guid(self, guid: str):
             return self._Guid(guid=guid, api_obj=self._api_obj)
 
-        class _Guid(API):
+        class _Guid(WebSdkEndpoint):
             def __init__(self, guid: str, api_obj):
                 super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Engine/{guid}')
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     links: processing_engines.Link = ResponseField(alias='_links')
                     folders: List[processing_engines.Folder] = ResponseField(alias='Folders', default_factory=list)
 
@@ -39,7 +39,7 @@ class _ProcessingEngines(API):
                     'FolderGuids': folder_guids
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     added_count: int = ResponseField(alias='AddedCount')
                     errors: List[str] = ResponseField(alias='Errors', default_factory=list)
 
@@ -52,16 +52,16 @@ class _ProcessingEngines(API):
         def Guid(self, guid: str):
             return self._Guid(guid=guid, api_obj=self._api_obj)
 
-        class _Guid(API):
+        class _Guid(WebSdkEndpoint):
             def __init__(self, guid: str, api_obj):
                 super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Folder/{guid}')
                 self._folder_guid = guid
 
             def delete(self):
-                return ResponseFactory(response_cls=APIResponse, response=self._delete())
+                return ResponseFactory(response_cls=WebSdkResponse, response=self._delete())
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     links: processing_engines.Link = ResponseField(alias='_links')
                     engines: List[processing_engines.Engine] = ResponseField(alias='Engines', default_factory=list)
 
@@ -72,14 +72,14 @@ class _ProcessingEngines(API):
                     'EngineGuids': engine_guids
                 }
 
-                return ResponseFactory(response_cls=APIResponse, response=self._put(data=body))
+                return ResponseFactory(response_cls=WebSdkResponse, response=self._put(data=body))
 
             def EngineGuid(self, guid):
                 return self._EngineGuid(guid=self._folder_guid, engine_guid=guid, api_obj=self._api_obj)
 
-            class _EngineGuid(API):
+            class _EngineGuid(WebSdkEndpoint):
                 def __init__(self, guid: str, engine_guid: str, api_obj):
                     super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Folder/{guid}/{engine_guid}')
 
                 def delete(self):
-                    return ResponseFactory(response_cls=APIResponse, response=self._delete())
+                    return ResponseFactory(response_cls=WebSdkResponse, response=self._delete())

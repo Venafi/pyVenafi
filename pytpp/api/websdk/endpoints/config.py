@@ -1,5 +1,5 @@
 from typing import Dict, List
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 from pytpp.properties.response_objects.dataclasses import config
 
 
@@ -41,7 +41,7 @@ class _Config:
         self.WriteDn = self._WriteDn(api_obj=api_obj)
         self.WritePolicy = self._WritePolicy(api_obj=api_obj)
 
-    class _AddDnValue(API):
+    class _AddDnValue(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/AddDnValue')
 
@@ -52,12 +52,12 @@ class _Config:
                 'Value'        : value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _AddPolicyValue(API):
+    class _AddPolicyValue(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/AddPolicyValue')
 
@@ -70,12 +70,12 @@ class _Config:
                 'Locked'       : locked
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _AddValue(API):
+    class _AddValue(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/AddValue')
 
@@ -86,12 +86,12 @@ class _Config:
                 'Value'        : value,
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ClearAttribute(API):
+    class _ClearAttribute(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ClearAttribute')
 
@@ -101,12 +101,12 @@ class _Config:
                 'AttributeName': attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ClearPolicyAttribute(API):
+    class _ClearPolicyAttribute(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ClearPolicyAttribute')
 
@@ -117,12 +117,12 @@ class _Config:
                 'AttributeName': attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ContainableClasses(API):
+    class _ContainableClasses(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ContainableClasses')
 
@@ -131,13 +131,13 @@ class _Config:
                 'ObjectDN': object_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 class_names: List[str] = ResponseField(alias='ClassNames', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CountObjects(API):
+    class _CountObjects(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/CountObjects')
 
@@ -149,13 +149,13 @@ class _Config:
                 'Recursive': recursive
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 count: int = ResponseField(alias='Count')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _Create(API):
+    class _Create(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Create')
 
@@ -166,24 +166,24 @@ class _Config:
                 "NameAttributeList": name_attribute_list
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: config.Object = ResponseField(alias='Object')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DefaultDN(API):
+    class _DefaultDN(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/DefaultDN')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 default_dn: str = ResponseField(alias='DefaultDN')
                 result: int = ResponseField(alias='Result')
 
             return ResponseFactory(response=self._get(), response_cls=Response)
 
-    class _Delete(API):
+    class _Delete(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Delete')
 
@@ -193,12 +193,12 @@ class _Config:
                 "Recursive": recursive
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DnToGuid(API):
+    class _DnToGuid(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/DnToGuid')
 
@@ -207,7 +207,7 @@ class _Config:
                 "ObjectDN": object_dn,
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 class_name: str = ResponseField(alias='ClassName')
                 guid: str = ResponseField(alias='GUID')
                 revision: str = ResponseField(alias='Revision')
@@ -216,7 +216,7 @@ class _Config:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _Enumerate(API):
+    class _Enumerate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Enumerate')
 
@@ -227,13 +227,13 @@ class _Config:
                 "Pattern"  : pattern
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateAll(API):
+    class _EnumerateAll(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/EnumerateAll')
 
@@ -242,13 +242,13 @@ class _Config:
                 "Pattern": pattern
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateObjectsDerivedFrom(API):
+    class _EnumerateObjectsDerivedFrom(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/EnumerateObjectsDerivedFrom')
 
@@ -258,13 +258,13 @@ class _Config:
                 "Pattern"    : pattern
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumeratePolicies(API):
+    class _EnumeratePolicies(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/EnumeratePolicies')
 
@@ -273,13 +273,13 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 policies: List[config.Policy] = ResponseField(alias='Policies', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _Find(API):
+    class _Find(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Find')
 
@@ -289,13 +289,13 @@ class _Config:
                 "AttributeNames": attribute_names
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _FindContainers(API):
+    class _FindContainers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/FindContainers')
 
@@ -305,13 +305,13 @@ class _Config:
                 "Recursive": recursive
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _FindObjectsOfClass(API):
+    class _FindObjectsOfClass(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/FindObjectsOfClass')
 
@@ -327,13 +327,13 @@ class _Config:
                 'Recursive': recursive
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: List[config.Object] = ResponseField(alias='Object', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _FindPolicy(API):
+    class _FindPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/FindPolicy')
 
@@ -344,7 +344,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 policy_dn: str = ResponseField(alias='PolicyDN')
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
@@ -352,7 +352,7 @@ class _Config:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetHighestRevision(API):
+    class _GetHighestRevision(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/GetHighestRevision')
 
@@ -362,13 +362,13 @@ class _Config:
                 'Classes' : classes
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 revision: int = ResponseField(alias='Revision')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetRevision(API):
+    class _GetRevision(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/GetRevision')
 
@@ -377,13 +377,13 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 revision: int = ResponseField(alias='Revision')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GuidToDn(API):
+    class _GuidToDn(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/GuidToDn')
 
@@ -392,7 +392,7 @@ class _Config:
                 "ObjectGUID": object_guid
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object_dn: str = ResponseField(alias='ObjectDN')
                 class_name: str = ResponseField(alias='ClassName')
                 revision: str = ResponseField(alias='Revision')
@@ -401,7 +401,7 @@ class _Config:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _IdInfo(API):
+    class _IdInfo(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/IdInfo')
 
@@ -410,7 +410,7 @@ class _Config:
                 "ObjectID": object_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 guid: str = ResponseField(alias='GUID')
                 class_name: str = ResponseField(alias='ClassName')
                 revision: str = ResponseField(alias='Revision')
@@ -419,7 +419,7 @@ class _Config:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _IsValid(API):
+    class _IsValid(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/IsValid')
 
@@ -429,13 +429,13 @@ class _Config:
                 "ObjectDN"  : object_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 object: config.Object = ResponseField(alias='Object')
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _MutateObject(API):
+    class _MutateObject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/MutateObject')
 
@@ -445,12 +445,12 @@ class _Config:
                 "Class"   : class_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _Read(API):
+    class _Read(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Read')
 
@@ -460,13 +460,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ReadAll(API):
+    class _ReadAll(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ReadAll')
 
@@ -475,13 +475,13 @@ class _Config:
                 "ObjectDN": object_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 name_values: List[config.NameValues[str]] = ResponseField(alias='NameValues', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ReadDn(API):
+    class _ReadDn(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ReadDn')
 
@@ -491,13 +491,13 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ReadDnReferences(API):
+    class _ReadDnReferences(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ReadDnReferences')
 
@@ -508,13 +508,13 @@ class _Config:
                 "AttributeName"         : attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ReadEffectivePolicy(API):
+    class _ReadEffectivePolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ReadEffectivePolicy')
 
@@ -524,7 +524,7 @@ class _Config:
                 "AttributeName": attribute_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
                 locked: bool = ResponseField(alias='Locked')
                 overridden: bool = ResponseField(alias='Overridden')
@@ -533,7 +533,7 @@ class _Config:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _ReadPolicy(API):
+    class _ReadPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/ReadPolicy')
 
@@ -544,14 +544,14 @@ class _Config:
                 "Class"        : class_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 values: List[str] = ResponseField(alias='Values', default_factory=list)
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RemoveDnValue(API):
+    class _RemoveDnValue(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/RemoveDnValue')
 
@@ -562,12 +562,12 @@ class _Config:
                 "Value"        : value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RemovePolicyValue(API):
+    class _RemovePolicyValue(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/RemovePolicyValue')
 
@@ -579,12 +579,12 @@ class _Config:
                 "Value"        : value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RenameObject(API):
+    class _RenameObject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/RenameObject')
 
@@ -594,12 +594,12 @@ class _Config:
                 "NewObjectDN": new_object_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _Write(API):
+    class _Write(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/Write')
 
@@ -609,12 +609,12 @@ class _Config:
                 "AttributeData": attribute_data
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _WriteDn(API):
+    class _WriteDn(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/WriteDn')
 
@@ -625,12 +625,12 @@ class _Config:
                 "Values"       : values
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _WritePolicy(API):
+    class _WritePolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Config/WritePolicy')
 
@@ -643,7 +643,7 @@ class _Config:
                 "Values"       : values
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: config.Result = ResponseField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)

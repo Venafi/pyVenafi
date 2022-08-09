@@ -1,6 +1,9 @@
-from pytpp.api.api_base import api_response_property
-from pytpp.plugins.api.api_base import API, APIResponse
-from pytpp.plugins.properties.response_objects.ssh_dashboard import SshDashboard
+from datetime import datetime
+
+from pytpp.api.api_base import ResponseFactory, ResponseField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from pytpp.plugins.properties.response_objects.dataclasses import ssh_dashboard
+from typing import List
 
 
 class _SshDashboard:
@@ -24,313 +27,189 @@ class _SshDashboard:
         self.Trends = self._Trends(api_obj=api_obj)
         self.TrustsPerUserKeyset = self._TrustsPerUserKeyset(api_obj=api_obj)
 
-    class _CountAccessOrphan(API):
+    class _CountAccessOrphan(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountAccessOrphan')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountKeysetsInError(API):
+    class _CountKeysetsInError(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountKeysetsInError')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountNeedsActionFromMe(API):
+    class _CountNeedsActionFromMe(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountNeedsActionFromMe')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountNistNonComplaint(API):
+    class _CountNistNonComplaint(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountNistNonComplaint')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                total: int = ResponseField(alias='total')
+                all_codes: List[int] = ResponseField(alias='allCodes', default_factory=list)
 
-                @property
-                @api_response_property()
-                def total(self):
-                    return self._from_json(key='total')
+            return ResponseFactory(response_cls=Response, response=self._get())
 
-                @property
-                @api_response_property()
-                def all_codes(self):
-                    return self._from_json(key='allCodes')
-
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountPendingMyApprovalKeys(API):
+    class _CountPendingMyApprovalKeys(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountPendingMyApprovalKeys')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountPrivateKeyOrphans(API):
+    class _CountPrivateKeyOrphans(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountPrivateKeyOrphans')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountRootAuthorization(API):
+    class _CountRootAuthorization(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountRootAuthorization')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountSmallKeyLength(API):
+    class _CountSmallKeyLength(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountSmallKeyLength')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountTotal(API):
+    class _CountTotal(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountTotal')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountUnknownClientAccess(API):
+    class _CountUnknownClientAccess(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUnknownClientAccess')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountUntrackedKeys(API):
+    class _CountUntrackedKeys(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUntrackedKeys')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _CountUnusedAuthorizedKeys(API):
+    class _CountUnusedAuthorizedKeys(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUnusedAuthorizedKeys')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _GetCriticalAlertsPrefs(API):
+    class _GetCriticalAlertsPrefs(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/GetCriticalAlertsPrefs')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                hide_zeros: bool = ResponseField(alias='hideZeros')
+                key_length: int = ResponseField(alias='keyLength')
+                last_used: datetime = ResponseField(alias='lastUsed')
+                has_permissions_to_lock: bool = ResponseField(alias='hasPermissionsToLock')
 
-                @property
-                @api_response_property()
-                def hide_zeros(self):
-                    return self._from_json(key='hideZeros')
+            return ResponseFactory(response_cls=Response, response=self._get())
 
-                @property
-                @api_response_property()
-                def key_length(self):
-                    return self._from_json(key='keyLength')
-
-                @property
-                @api_response_property()
-                def last_used(self):
-                    return self._from_json(key='lastUsed')
-
-                @property
-                @api_response_property()
-                def has_permissions_to_lock(self):
-                    return self._from_json(key='hasPermissionsToLock')
-
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _KeyAlgorithms(API):
+    class _KeyAlgorithms(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/KeyAlgorithms')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[ssh_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [SshDashboard.Record(record) for record in self._from_json()]
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _KeyLengths(API):
+    class _KeyLengths(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/keylengths')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[ssh_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [SshDashboard.Record(record) for record in self._from_json()]
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _PolicyViolations(API):
+    class _PolicyViolations(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/PolicyViolations')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                policy_violations : List[ssh_dashboard.PolicyViolation] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def policy_violations(self):
-                    return [SshDashboard.PolicyViolation(violation) for violation in self._from_json()]
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='policy_violations')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _Trends(API):
+    class _Trends(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/Trends')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                trends: List[ssh_dashboard.Trend] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def trends(self):
-                    return [SshDashboard.Trend(trend) for trend in self._from_json()]
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='trends')
 
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
-
-    class _TrustsPerUserKeyset(API):
+    class _TrustsPerUserKeyset(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/TrustsPerUserKeyset')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[ssh_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [SshDashboard.Record(record) for record in self._from_json()]
-
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
 
 

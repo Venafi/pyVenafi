@@ -1,9 +1,9 @@
 from typing import List
 from pytpp.properties.response_objects.dataclasses import preferences as prefs
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
-class _Preferences(API):
+class _Preferences(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Preferences')
 
@@ -14,7 +14,7 @@ class _Preferences(API):
             'Product': product
         }
 
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             preferences: List[prefs.Preference] = ResponseField(alias='Preferences', default_factory=list)
 
         return ResponseFactory(response_cls=Response, response=self._get(params=params))
@@ -24,7 +24,7 @@ class _Preferences(API):
             'Preferences': preferences
         }
 
-        return ResponseFactory(response_cls=APIResponse, response=self._post(data=body))
+        return ResponseFactory(response_cls=WebSdkResponse, response=self._post(data=body))
 
     def delete(self, category: str = None, name: str = None, product: prefs.ProductType = None):
         params = {
@@ -33,4 +33,4 @@ class _Preferences(API):
             'Product': product
         }
 
-        return ResponseFactory(response_cls=APIResponse, response=self._delete(params=params))
+        return ResponseFactory(response_cls=WebSdkResponse, response=self._delete(params=params))

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class PlacementRules:
+class Condition:
     field: str
     comparison: str
     value: str

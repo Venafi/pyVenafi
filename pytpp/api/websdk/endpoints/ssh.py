@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 from properties.response_objects.dataclasses import ssh
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _SSH:
@@ -40,7 +40,7 @@ class _SSH:
         self.TestDeviceConnection = self._TestDeviceConnection(api_obj=api_obj)
         self.Widget = self._Widget(api_obj=api_obj)
 
-    class _AddAuthorizedKey(API):
+    class _AddAuthorizedKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddAuthorizedKey')
 
@@ -59,13 +59,13 @@ class _SSH:
                 'Username': username
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddHostPrivateKey(API):
+    class _AddHostPrivateKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddHostPrivateKey')
 
@@ -79,14 +79,14 @@ class _SSH:
                 'PolicyDN': policy_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddKnownHostKey(API):
+    class _AddKnownHostKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddKnownHostKey')
 
@@ -100,13 +100,13 @@ class _SSH:
                 'Username': username
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddSelfServiceAuthorizedKey(API):
+    class _AddSelfServiceAuthorizedKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddSelfServiceAuthorizedKey')
 
@@ -125,7 +125,7 @@ class _SSH:
                 'Owner': owner
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 notes: str = ResponseField(alias='Notes')
@@ -133,7 +133,7 @@ class _SSH:
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddSelfServicePrivateKey(API):
+    class _AddSelfServicePrivateKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddSelfServicePrivateKey')
 
@@ -147,7 +147,7 @@ class _SSH:
                 'Owner': owner
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 notes: str = ResponseField(alias='Notes')
@@ -155,7 +155,7 @@ class _SSH:
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddUserPrivateKey(API):
+    class _AddUserPrivateKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/AddUserPrivateKey')
 
@@ -172,14 +172,14 @@ class _SSH:
                 'PolicyDN': policy_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 keyset_id: str = ResponseField(alias='KeysetId')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ApproveKeyOperation(API):
+    class _ApproveKeyOperation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ApproveKeyOperation')
 
@@ -189,12 +189,12 @@ class _SSH:
                 'Comment': comment
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _CancelKeyOperation(API):
+    class _CancelKeyOperation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/CancelKeyOperation')
 
@@ -203,12 +203,12 @@ class _SSH:
                 'KeyId': key_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _CancelRotation(API):
+    class _CancelRotation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/CancelRotation')
 
@@ -217,12 +217,12 @@ class _SSH:
                 'KeysetId': keyset_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ChangePrivateKeyPassphrase(API):
+    class _ChangePrivateKeyPassphrase(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ChangePrivateKeyPassphrase')
 
@@ -232,12 +232,12 @@ class _SSH:
                 'Passphrase': passphrase
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ConfirmSelfServiceKeyInstallation(API):
+    class _ConfirmSelfServiceKeyInstallation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ConfirmSelfServiceKeyInstallation')
 
@@ -246,12 +246,12 @@ class _SSH:
                 'KeysetId': keyset_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _DeleteUnmatchedKeyset(API):
+    class _DeleteUnmatchedKeyset(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/DeleteUnmatchedKeyset')
 
@@ -260,12 +260,12 @@ class _SSH:
                 'UnmatchedTrustId': unmatched_trust_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Devices(API):
+    class _Devices(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/Devices')
 
@@ -276,12 +276,12 @@ class _SSH:
                 'SshDeviceFilter': ssh_device_filter
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 data: List[ssh.DeviceData] = ResponseField(default_factory=list, alias='Data')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _EditKeyOptions(API):
+    class _EditKeyOptions(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/EditKeyOptions')
 
@@ -295,12 +295,12 @@ class _SSH:
                 'Options'                 : options
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _EditSelfServiceAuthorizedKey(API):
+    class _EditSelfServiceAuthorizedKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/EditSelfServiceAuthorizedKey')
 
@@ -317,12 +317,12 @@ class _SSH:
                 'Options'                 : options
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ExportSelfServiceAuthorizedKey(API):
+    class _ExportSelfServiceAuthorizedKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServiceAuthorizedKey')
 
@@ -333,13 +333,13 @@ class _SSH:
                 'Format': format
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_material: str = ResponseField(alias='KeyMaterial')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ExportSelfServicePrivateKey(API):
+    class _ExportSelfServicePrivateKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServicePrivateKey')
 
@@ -351,13 +351,13 @@ class _SSH:
                 'Passphrase': passphrase
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_material: str = ResponseField(alias='KeyMaterial')
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ImportAuthorizedKey(API):
+    class _ImportAuthorizedKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ImportAuthorizedKey')
 
@@ -371,13 +371,13 @@ class _SSH:
                 'Username': username
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='SshWebResponse')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ImportKeyUsageData(API):
+    class _ImportKeyUsageData(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ImportKeyUsageData')
 
@@ -386,12 +386,12 @@ class _SSH:
                 'LogData': log_data
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='SshWebResponse')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ImportPrivateKey(API):
+    class _ImportPrivateKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/ImportPrivateKey')
 
@@ -407,13 +407,13 @@ class _SSH:
                 'Username': username
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_id: int = ResponseField(alias='KeyId')
                 response: ssh.Response = ResponseField(alias='SshWebResponse')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _KeyDetails(API):
+    class _KeyDetails(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/KeyDetails')
 
@@ -422,12 +422,12 @@ class _SSH:
                 'KeyId': key_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 key_data: List[ssh.KeyData] = ResponseField(default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='key_data')
 
-    class _KeysetDetails(API):
+    class _KeysetDetails(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/KeysetDetails')
 
@@ -437,7 +437,7 @@ class _SSH:
                 'LoadKeyData': load_key_data
             }
 
-            class Response(APIResponse, ssh.KeySetData):
+            class Response(WebSdkResponse, ssh.KeySetData):
                 pass
 
             return ResponseFactory(response_cls=Response, response=self._get(params=params))
@@ -450,12 +450,12 @@ class _SSH:
                 'PageSize': page_size
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 data: List[ssh.KeySetData] = ResponseField(default_factory=list, alias='Data')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _KeyUsage(API):
+    class _KeyUsage(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/KeyUsage')
 
@@ -466,12 +466,12 @@ class _SSH:
                 'Offset': offset
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 data: List[ssh.KeyUsageData] = ResponseField(default_factory=list, alias='Data')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _MoveKeysetsToPolicy(API):
+    class _MoveKeysetsToPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/MoveKeysetsToPolicy')
 
@@ -482,12 +482,12 @@ class _SSH:
                 'PolicyPath': policy_path
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _RejectKeyOperation(API):
+    class _RejectKeyOperation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RejectKeyOperation')
 
@@ -497,12 +497,12 @@ class _SSH:
                 'Comment': comment
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _RemoveKey(API):
+    class _RemoveKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RemoveKey')
 
@@ -511,12 +511,12 @@ class _SSH:
                 'KeyId': key_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _RetryKeyOperation(API):
+    class _RetryKeyOperation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RetryKeyOperation')
 
@@ -525,12 +525,12 @@ class _SSH:
                 'KeyId': key_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _RetryRotation(API):
+    class _RetryRotation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/RetryRotation')
 
@@ -539,12 +539,12 @@ class _SSH:
                 'KeysetId': keyset_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Rotate(API):
+    class _Rotate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/Rotate')
 
@@ -555,12 +555,12 @@ class _SSH:
                 'Options': options
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _SetUnmatchedKeysetPassPhrase(API):
+    class _SetUnmatchedKeysetPassPhrase(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/SetUnmatchedKeysetPassPhrase')
 
@@ -570,12 +570,12 @@ class _SSH:
                 'UnmatchedTrustId': unmatched_trust_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _SkipKeyRotation(API):
+    class _SkipKeyRotation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SSH/SkipKeyRotation')
 
@@ -584,12 +584,12 @@ class _SSH:
                 'KeyId': key_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 response: ssh.Response = ResponseField(alias='Response')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _TestDeviceConnection(API):
+    class _TestDeviceConnection(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='SSH/TestDeviceConnection')
 
@@ -598,7 +598,7 @@ class _SSH:
                 'deviceGuids': device_guids
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 connection_results: List[ssh.ConnectionResult] = ResponseField(default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='connection_results')
@@ -609,7 +609,7 @@ class _SSH:
             self.PolicyViolations = self._PolicyViolations(api_obj=api_obj)
             self.Stats = self._Stats(api_obj=api_obj)
 
-        class _CriticalAlerts(API):
+        class _CriticalAlerts(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SSH/Widget/CriticalAlerts')
 
@@ -618,7 +618,7 @@ class _SSH:
                     'minAllowedKeyLength': min_allowed_key_length
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     accessible_root_accounts: int = ResponseField(alias='AccessibleRootAccounts')
                     non_compliant_duplicate_private_keys: int = ResponseField(alias='NonCompliantDuplicatePrivateKeys')
                     non_root_orphans: int = ResponseField(alias='NonRootOrphans')
@@ -628,12 +628,12 @@ class _SSH:
 
                 return ResponseFactory(response_cls=Response, response=self._get(params=params))
 
-        class _PolicyViolations(API):
+        class _PolicyViolations(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SSH/Widget/PolicyViolations')
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     duplicate_private_keys: List[str] = ResponseField(alias='DuplicatePrivateKeys')
                     key_older_than_policy: str = ResponseField(alias='KeyOlderThanPolicy')
                     key_smaller_than_policy: str = ResponseField(alias='KeySmallerThanPolicy')
@@ -648,7 +648,7 @@ class _SSH:
 
                 return ResponseFactory(response_cls=Response, response=self._get())
 
-        class _Stats(API):
+        class _Stats(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SSH/Widget/Stats')
 
@@ -657,7 +657,7 @@ class _SSH:
                     'GroupBy': group_by
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     stats: dict = ResponseField()
 
                 return ResponseFactory(response_cls=Response, response=self._get(params=params),

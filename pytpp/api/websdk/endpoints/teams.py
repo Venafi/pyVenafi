@@ -1,9 +1,9 @@
 from typing import List
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 from pytpp.properties.response_objects.dataclasses import identity as ident
 
 
-class _Teams(API):
+class _Teams(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Teams')
         self.AddTeamMembers = self._AddTeamMembers(api_obj=api_obj)
@@ -23,7 +23,7 @@ class _Teams(API):
             'Products': products
         }
 
-        class Response(APIResponse):
+        class Response(WebSdkResponse):
             identity: ident.Identity = ResponseField(default_factory=list, alias='ID')
             invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers')
             invalid_owners: List[ident.InvalidIdentity] = ResponseField(alias='InvalidOwners')
@@ -31,7 +31,7 @@ class _Teams(API):
 
         return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _AddTeamMembers(API):
+    class _AddTeamMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Teams/AddTeamMembers')
 
@@ -42,14 +42,14 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
                 members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members') 
                 message: str = ResponseField(alias='Message')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _AddTeamOwners(API):
+    class _AddTeamOwners(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Teams/AddTeamOwners')
 
@@ -60,14 +60,14 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
                 message: str = ResponseField(alias='Message')
                 owners: List[ident.Identity] = ResponseField(default_factory=list, alias='Owners')
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _DemoteTeamOwners(API):
+    class _DemoteTeamOwners(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Teams/DemoteTeamOwners')
 
@@ -78,7 +78,7 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers')
                 members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
                 message: str = ResponseField(alias='Message')
@@ -101,18 +101,18 @@ class _Teams(API):
                 api_obj=self._api_obj
             )
 
-        class _Universal(API):
+        class _Universal(WebSdkEndpoint):
             def __init__(self, prefix: str, universal: str, api_obj):
                 super().__init__(api_obj=api_obj, url=f'/Teams/{prefix}/{universal}')
 
             def delete(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     message: str = ResponseField(alias='Message')
 
                 return ResponseFactory(response_cls=Response, response=self._delete())
 
             def get(self):
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     assets: List[str] = ResponseField(default_factory=list, alias='Assets')
                     description: str = ResponseField(alias='Description')
                     identity: ident.Identity = ResponseField(alias='ID')
@@ -133,7 +133,7 @@ class _Teams(API):
                     'Products': products
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     identity: ident.Identity = ResponseField(alias='ID')
                     invalid_owners: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidOwners') 
                     invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers') 
@@ -141,7 +141,7 @@ class _Teams(API):
 
                 return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _RemoveTeamMembers(API):
+    class _RemoveTeamMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Teams/RemoveTeamMembers')
 
@@ -152,7 +152,7 @@ class _Teams(API):
                 'ShowMembers': show_members
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 invalid_members: List[ident.InvalidIdentity] = ResponseField(default_factory=list, alias='InvalidMembers')
                 members: List[ident.Identity] = ResponseField(default_factory=list, alias='Members')
                 message: str = ResponseField(alias='Message')
@@ -160,7 +160,7 @@ class _Teams(API):
 
             return ResponseFactory(response_cls=Response, response=self._put(data=body))
 
-    class _RenameTeam(API):
+    class _RenameTeam(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Teams/RenameTeam')
 
@@ -170,7 +170,7 @@ class _Teams(API):
                 'NewTeamName': new_team_name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 identity: ident.Identity = ResponseField(alias='ID')
                 message: str = ResponseField(alias='Message')
 

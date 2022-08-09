@@ -1,6 +1,6 @@
 from typing import List
 from pytpp.properties.response_objects.dataclasses import hsm_api
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _HSMAPI:
@@ -9,7 +9,7 @@ class _HSMAPI:
         self.SignJWT = self._SignJWT(api_obj=api_obj)
         self.GetGPGPublicKey = self._GetGPGPublicKey(api_obj=api_obj)
 
-    class _Sign(API):
+    class _Sign(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='API/Sign')
             self._url = self._url.replace('vedsdk', 'vedhsm')
@@ -37,14 +37,14 @@ class _HSMAPI:
                 'WrappingKeyId'   : wrapping_key_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result_data: str = ResponseField(alias='ResultData')
                 success: bool = ResponseField(alias='Success')
                 try_later: bool = ResponseField(alias='TryLater')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _SignJWT(API):
+    class _SignJWT(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='API/SignJWT')
             self._url = self._url.replace('vedsdk', 'vedhsm')
@@ -59,13 +59,13 @@ class _HSMAPI:
                 'Payload'    : payload
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result_data: str = ResponseField(alias='ResultData')
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetGPGPublicKey(API):
+    class _GetGPGPublicKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='API/GetGPGPublicKey')
             self._url = self._url.replace('vedsdk', 'vedhsm')
@@ -76,7 +76,7 @@ class _HSMAPI:
                 'KeyContext': key_context
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 fingerprint: str = ResponseField(alias='Fingerprint')
                 location: str = ResponseField(alias='Location')
                 public_key: str = ResponseField(alias='PublicKey')
@@ -84,7 +84,7 @@ class _HSMAPI:
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetObjects(API):
+    class _GetObjects(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='API/GetObjects')
 
@@ -99,7 +99,7 @@ class _HSMAPI:
                 'ObjectTypeFilter' : object_type_filter,
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 certificates: List[hsm_api.Certificate] = ResponseField(alias='Certificates', default_factory=list)
                 pending: bool = ResponseField(alias='PendingDeprecationWarningbool')
                 private_keys: List[hsm_api.PrivateKey] = ResponseField(alias='PrivateKeys')

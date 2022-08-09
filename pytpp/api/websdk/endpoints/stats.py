@@ -1,6 +1,6 @@
 from typing import List
 from properties.response_objects.dataclasses import stats
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _Stats:
@@ -8,17 +8,17 @@ class _Stats:
         self.GetCounters = self._GetCounters(api_obj=api_obj)
         self.Query = self._Query(api_obj=api_obj)
     
-    class _GetCounters(API):
+    class _GetCounters(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Stats/GetCounters')
 
         def post(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 counters: List[stats.Counter] = ResponseField(alias='Counters', default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data={}))
 
-    class _Query(API):
+    class _Query(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Stats/Query')
 
@@ -36,7 +36,7 @@ class _Stats:
                 'FilterC': filter_c
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 results: List[stats.Result] = ResponseField(alias='Results', default_factory=list)
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))

@@ -1,6 +1,6 @@
 from typing import List
 from properties.response_objects.dataclasses import secret_store
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _SecretStore:
@@ -22,7 +22,7 @@ class _SecretStore:
         self.OwnerLookup = self._OwnerLookup(api_obj=api_obj)
         self.Retrieve = self._Retrieve(api_obj=api_obj)
 
-    class _Add(API):
+    class _Add(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Add')
 
@@ -35,13 +35,13 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_id: int = ResponseField(alias='VaultID')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Associate(API):
+    class _Associate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Associate')
 
@@ -54,12 +54,12 @@ class _SecretStore:
                 'StringValue': string_value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Dissociate(API):
+    class _Dissociate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Dissociate')
 
@@ -72,34 +72,34 @@ class _SecretStore:
                 'DateValue': date_value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _EncryptionKeysInUse(API):
+    class _EncryptionKeysInUse(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/EncryptionKeysInUse')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 encryption_keys: List[str] = ResponseField(default_factory=list, alias='EncryptionKeys')
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._get())
 
-    class _Lookup(API):
+    class _Lookup(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Lookup')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
             return ResponseFactory(response_cls=Response, response=self._get())
 
-    class _LookupAllAssociationsbyVaultid(API):
+    class _LookupAllAssociationsbyVaultid(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/LookupAllAssociationsbyVaultid')
 
@@ -108,13 +108,13 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 typed_name_values: List[secret_store.TypedNameValues] = ResponseField(default_factory=list, alias='TypedNameValues')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _LookupByAssociation(API):
+    class _LookupByAssociation(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/LookupByAssociation')
 
@@ -126,13 +126,13 @@ class _SecretStore:
                 'DateValue': date_value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _LookupAssociationbyVaultID(API):
+    class _LookupAssociationbyVaultID(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/LookupAssociationbyVaultID')
 
@@ -142,13 +142,13 @@ class _SecretStore:
                 'Name': name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 value: str = ResponseField(alias='Value')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _LookupByOwner(API):
+    class _LookupByOwner(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/LookupByOwner')
 
@@ -159,13 +159,13 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _LookupByVaultType(API):
+    class _LookupByVaultType(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/LookupByVaultType')
 
@@ -174,13 +174,13 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Mutate(API):
+    class _Mutate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Mutate')
 
@@ -190,12 +190,12 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _OrphanLookup(API):
+    class _OrphanLookup(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/OrphanLookup')
 
@@ -204,13 +204,13 @@ class _SecretStore:
                 'VaultType': vault_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_ids: List[int] = ResponseField(default_factory=list, alias='VaultIDs')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _OwnerAdd(API):
+    class _OwnerAdd(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/OwnerAdd')
 
@@ -221,12 +221,12 @@ class _SecretStore:
                 'VaultId': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _OwnerDelete(API):
+    class _OwnerDelete(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/OwnerDelete')
 
@@ -237,12 +237,12 @@ class _SecretStore:
                 'VaultId': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _OwnerLookup(API):
+    class _OwnerLookup(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/OwnerLookup')
 
@@ -252,13 +252,13 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 owners: List[str] = ResponseField(default_factory=list, alias='Owners')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Retrieve(API):
+    class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SecretStore/Retrieve')
 
@@ -267,7 +267,7 @@ class _SecretStore:
                 'VaultID': vault_id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 base_64_data: str = ResponseField(alias='Base64Data')
                 result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_type: str = ResponseField(alias='VaultType')

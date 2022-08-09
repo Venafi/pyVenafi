@@ -1,5 +1,7 @@
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
-from pytpp.plugins.properties.response_objects.certificate_dashboard import CertificateDashboard
+from pytpp.api.api_base import ResponseFactory, ResponseField
+from pytpp.plugins.properties.response_objects.dataclasses import certificate_dashboard
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from typing import List
 
 
 class _CertificateDashboard:
@@ -19,167 +21,107 @@ class _CertificateDashboard:
         self.GetTotalDisabledCount = self._GetTotalDisabledCount(api_obj=api_obj)
         self.GetTotalManagedCount = self._GetTotalManagedCount(api_obj=api_obj)
 
-    class _GetCertificateKeyLength(API):
+    class _GetCertificateKeyLength(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateKeyLength')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetCertificateIssuers(API):
+    class _GetCertificateIssuers(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateIssuers')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetCertificateSigningAlgorithms(API):
+    class _GetCertificateSigningAlgorithms(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateSigningAlgorithms')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetCertificateValidityPeriods(API):
+    class _GetCertificateValidityPeriods(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateValidityPeriods')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetValidationEndEntity(API):
+    class _GetValidationEndEntity(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationEndEntity')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetValidationChain(API):
+    class _GetValidationChain(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationChain')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetCertificateExpireDates(API):
+    class _GetCertificateExpireDates(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateExpireDates')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetValidationProtocols(API):
+    class _GetValidationProtocols(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationProtocols')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _GetProtectionStatus(API):
+    class _GetProtectionStatus(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetProtectionStatus')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                records: List[certificate_dashboard.Record] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def records(self):
-                    return [CertificateDashboard.Record(record) for record in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='records')
 
-    class _Trends(API):
+    class _Trends(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/Trends')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                trends: List[certificate_dashboard.Trend] = ResponseField(default_factory=list)
 
-                @property
-                @api_response_property()
-                def trends(self):
-                    return [CertificateDashboard.Trend(trend) for trend in self._from_json()]
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='trends')
 
-    class _CountCertsWithStatus(API):
+    class _CountCertsWithStatus(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/CountCertsWithStatus')
 
@@ -187,63 +129,38 @@ class _CertificateDashboard:
             params = {
                 'status': status
             }
-            
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
-            
-            return Response(response_cls=Response, response=self._get(params=params), api_source=self._api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-    class _GetTotalCount(API):
+            return ResponseFactory(response_cls=Response, response=self._get(params=params), root_field='value')
+
+    class _GetTotalCount(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalCount')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-    class _GetTotalDisabledCount(API):
+    class _GetTotalDisabledCount(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalDisabledCount')
 
         def get(self):
-            
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')
 
-    class _GetTotalManagedCount(API):
+    class _GetTotalManagedCount(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalManagedCount')
 
         def get(self):
-            class Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Response(ApertureResponse):
+                value: int = ResponseField()
 
-                @property
-                @api_response_property()
-                def value(self):
-                    return self._from_json()
-            
-            return Response(response_cls=Response, response=self._get(), api_source=self._api_source)
+            return ResponseFactory(response_cls=Response, response=self._get(), root_field='value')

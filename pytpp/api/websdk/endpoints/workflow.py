@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 from pytpp.properties.response_objects.dataclasses import workflow
 
 
@@ -18,7 +18,7 @@ class _Workflow:
             self.Status = self._Status(api_obj=api_obj)
             self.UpdateStatus = self._UpdateStatus(api_obj=api_obj)
 
-        class _Create(API):
+        class _Create(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Create')
 
@@ -31,13 +31,13 @@ class _Workflow:
                     'WorkflowDN': workflow_dn
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     guid: str = ResponseField(alias='GUID')
                     result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Delete(API):
+        class _Delete(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Delete')
 
@@ -46,12 +46,12 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Details(API):
+        class _Details(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Details')
 
@@ -60,7 +60,7 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     approval_explanation: str = ResponseField(alias='ApprovalExplanation')
                     approval_from: str = ResponseField(alias='ApprovalFrom')
                     approval_reason: str = ResponseField(alias='ApprovalReason')
@@ -74,7 +74,7 @@ class _Workflow:
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Enumerate(API):
+        class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Enumerate')
 
@@ -84,13 +84,13 @@ class _Workflow:
                     'UserData': user_data
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     guids: List[str] = ResponseField(default_factory=list, alias='GUIDS')
                     result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Exists(API):
+        class _Exists(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Exists')
 
@@ -99,12 +99,12 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _Status(API):
+        class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Status')
 
@@ -113,13 +113,13 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     status: str = ResponseField(alias='Status')
                     result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-        class _UpdateStatus(API):
+        class _UpdateStatus(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Workflow/Ticket/UpdateStatus')
 
@@ -138,7 +138,7 @@ class _Workflow:
                     'UserData'      : user_data
                 }
 
-                class Response(APIResponse):
+                class Response(WebSdkResponse):
                     result: workflow.Result = ResponseField(alias='Result')
 
                 return ResponseFactory(response_cls=Response, response=self._post(data=body))

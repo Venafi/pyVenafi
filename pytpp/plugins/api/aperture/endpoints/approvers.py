@@ -1,8 +1,10 @@
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
-from pytpp.plugins.properties.response_objects.identity import Identity
+from api.api_base import ResponseFactory, ResponseField
+from plugins.properties.response_objects.dataclasses import identity
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from typing import List
 
 
-class _Approvers(API):
+class _Approvers(ApertureEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/approvers')
 
@@ -11,19 +13,7 @@ class _Approvers(API):
             'filter': name_filter
         }
         
-        class Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(
-                    response=response, 
-                    api_source=api_source
-                )
+        class Response(ApertureResponse):
+            identities: List[identity.Identity] = ResponseField()
             
-            @property
-            @api_response_property()
-            def identities(self):
-                return [Identity.Identity(i, api_type=self.__api_app__) for i in self._from_json()]
-            
-        return Response(response_cls=Response, 
-            response=self._get(params=params),
-            api_source=self._api_source
-        )
+        return ResponseFactory(response_cls=Response, response=self._get(params=params), root_field='identities')

@@ -1,9 +1,9 @@
 from typing import List
 from properties.response_objects.dataclasses import config, metadata
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
-class _Metadata(API):
+class _Metadata(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Log')
         self.DefineItem = self._DefineItem(api_obj=api_obj)
@@ -24,7 +24,7 @@ class _Metadata(API):
         self.UndefineItem = self._UndefineItem(api_obj=api_obj)
         self.UpdateItem = self._UpdateItem(api_obj=api_obj)
 
-    class _DefineItem(API):
+    class _DefineItem(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/DefineItem')
 
@@ -33,7 +33,7 @@ class _Metadata(API):
                 'Item': item
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 dn: str = ResponseField(alias='DN')
                 item: metadata.Item = ResponseField(alias='Item')
                 locked: bool = ResponseField(alias='Locked')
@@ -41,7 +41,7 @@ class _Metadata(API):
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Find(API):
+    class _Find(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/Find')
 
@@ -52,14 +52,14 @@ class _Metadata(API):
                 'Value': value
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 objects: List[config.Object] = ResponseField(default_factory=list, alias='Objects')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _FindItem(API):
+    class _FindItem(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/FindItem')
 
@@ -68,14 +68,14 @@ class _Metadata(API):
                 'Name': name
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 item_guid: str = ResponseField(alias='ItemGuid')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Get(API):
+    class _Get(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/Get')
 
@@ -85,14 +85,14 @@ class _Metadata(API):
                 'All': all_included
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 data: metadata.Data = ResponseField(alias='Data')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetItemGuids(API):
+    class _GetItemGuids(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/GetItemGuids')
 
@@ -101,14 +101,14 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 item_guids: List[str] = ResponseField(default_factory=list, alias='ItemGuids')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetItems(API):
+    class _GetItems(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/GetItems')
 
@@ -117,14 +117,14 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 items: List[metadata.Item] = ResponseField(default_factory=list, alias='Items')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetItemsForClass(API):
+    class _GetItemsForClass(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/GetItemsForClass')
 
@@ -133,14 +133,14 @@ class _Metadata(API):
                 'ConfigClass': config_class
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 items: List[metadata.Item] = ResponseField(default_factory=list, alias='Items')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _GetPolicyItems(API):
+    class _GetPolicyItems(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/GetPolicyItems')
 
@@ -149,26 +149,26 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 policy_items: List[metadata.PolicyItem] = ResponseField(default_factory=list, alias='PolicyItems')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Items(API):
+    class _Items(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/Items')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 items: List[metadata.Item] = ResponseField(default_factory=list, alias='Items')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._get())
 
-    class _LoadItem(API):
+    class _LoadItem(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/LoadItem')
 
@@ -177,14 +177,14 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 item: metadata.Item = ResponseField(alias='Item')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _LoadItemGuid(API):
+    class _LoadItemGuid(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/LoadItemGuid')
 
@@ -193,14 +193,14 @@ class _Metadata(API):
                 'DN': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 item_guid: str = ResponseField(alias='ItemGuid')
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ReadEffectiveValues(API):
+    class _ReadEffectiveValues(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/ReadEffectiveValues')
 
@@ -210,7 +210,7 @@ class _Metadata(API):
                 'ItemGuid': item_guid
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 policy_dn: str = ResponseField(alias='PolicyDn')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
@@ -218,7 +218,7 @@ class _Metadata(API):
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _ReadPolicy(API):
+    class _ReadPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/ReadPolicy')
 
@@ -229,14 +229,14 @@ class _Metadata(API):
                 'Type': obj_type
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
                 values: List[str] = ResponseField(default_factory=list, alias='Values')
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _Set(API):
+    class _Set(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/Set')
 
@@ -247,13 +247,13 @@ class _Metadata(API):
                 'KeepExisting': keep_existing
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _SetPolicy(API):
+    class _SetPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/SetPolicy')
 
@@ -265,13 +265,13 @@ class _Metadata(API):
                 'Locked': locked
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _UndefineItem(API):
+    class _UndefineItem(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/UndefineItem')
 
@@ -281,13 +281,13 @@ class _Metadata(API):
                 'RemoveData': remove_data
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return ResponseFactory(response_cls=Response, response=self._post(data=body))
 
-    class _UpdateItem(API):
+    class _UpdateItem(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url=f'/Metadata/UpdateItem')
 
@@ -297,7 +297,7 @@ class _Metadata(API):
                 'Update': update
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 locked: bool = ResponseField(alias='Locked')
                 result: metadata.Result = ResponseField(alias='Result', converter=lambda x: metadata.Result(code=x))
 

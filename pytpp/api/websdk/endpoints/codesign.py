@@ -1,7 +1,7 @@
 from typing import List, Dict, Union
 from properties.response_objects.dataclasses import codesign
 from properties.response_objects.dataclasses.codesign import TemplateType
-from pytpp.api.api_base import API, APIResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
 
 
 class _Codesign:
@@ -52,7 +52,7 @@ class _Codesign:
         self.UpdateProjectStatus = self._UpdateProjectStatus(api_obj=api_obj)
         self.UpdateTemplate = self._UpdateTemplate(api_obj=api_obj)
 
-    class _AddAdministrator(API):
+    class _AddAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/AddAdministrator')
 
@@ -61,13 +61,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _AddApplicationAdministrator(API):
+    class _AddApplicationAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/AddApplicationAdministrator')
 
@@ -76,13 +76,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _AddProjectAdministrator(API):
+    class _AddProjectAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/AddProjectAdministrator')
 
@@ -91,13 +91,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _AddProjectApprover(API):
+    class _AddProjectApprover(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/AddProjectApprover')
 
@@ -106,13 +106,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _AddPreApproval(API):
+    class _AddPreApproval(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/AddPreApproval')
 
@@ -129,13 +129,13 @@ class _Codesign:
                 'NotBefore'        : not_before
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CountReferences(API):
+    class _CountReferences(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CountReferences')
 
@@ -145,14 +145,14 @@ class _Codesign:
                 'ApplicationCollection': application_collection
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 count: int = ResponseField(alias='Count')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CreateApplication(API):
+    class _CreateApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CreateApplication')
 
@@ -161,14 +161,14 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application: codesign.Application = ResponseField(alias='Application')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CreateApplicationCollection(API):
+    class _CreateApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CreateApplicationCollection')
 
@@ -177,14 +177,14 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CreateEnvironment(API):
+    class _CreateEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CreateEnvironment')
 
@@ -198,7 +198,7 @@ class _Codesign:
                 'TemplateDn'     : template_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
                 certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
                 csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
@@ -216,7 +216,7 @@ class _Codesign:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CreateProject(API):
+    class _CreateProject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CreateProject')
 
@@ -225,14 +225,14 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 project: codesign.Project = ResponseField(alias='Project')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _CreateTemplate(API):
+    class _CreateTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/CreateTemplate')
 
@@ -243,14 +243,14 @@ class _Codesign:
                 'PerUser'     : per_user
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DeleteApplication(API):
+    class _DeleteApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/DeleteApplication')
 
@@ -261,13 +261,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DeleteApplicationCollection(API):
+    class _DeleteApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/DeleteApplicationCollection')
 
@@ -278,13 +278,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DeleteEnvironment(API):
+    class _DeleteEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/DeleteEnvironment')
 
@@ -295,13 +295,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DeleteProject(API):
+    class _DeleteProject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/DeleteProject')
 
@@ -312,13 +312,13 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _DeleteTemplate(API):
+    class _DeleteTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/DeleteTemplate')
 
@@ -330,13 +330,13 @@ class _Codesign:
                 'Id'   : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateApplications(API):
+    class _EnumerateApplications(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateApplications')
 
@@ -346,14 +346,14 @@ class _Codesign:
                 'Filter': filter
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 applications: List[codesign.Application] = ResponseField(alias='Applications')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateApplicationCollections(API):
+    class _EnumerateApplicationCollections(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateApplicationCollections')
 
@@ -363,14 +363,14 @@ class _Codesign:
                 'Filter': filter
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application_collections: List[codesign.ApplicationCollection] = ResponseField(alias='ApplicationCollections')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateProjects(API):
+    class _EnumerateProjects(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateProjects')
 
@@ -381,14 +381,14 @@ class _Codesign:
                 'Rights': rights
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 projects: List[codesign.Project] = ResponseField(alias='Projects')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateReferences(API):
+    class _EnumerateReferences(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateReferences')
 
@@ -404,14 +404,14 @@ class _Codesign:
                 'CollectionGuid'       : collection_guid
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 reference_dns: List[str] = ResponseField(alias='ReferenceDNs')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _EnumerateTemplates(API):
+    class _EnumerateTemplates(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/EnumerateTemplates')
 
@@ -421,7 +421,7 @@ class _Codesign:
                 'Filter': filter
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 apple_templates: List[codesign.AppleTemplate] = ResponseField(alias='AppleTemplates')
                 certificate_templates: List[codesign.CertificateTemplate] = ResponseField(alias='CertificateTemplates')
                 csp_templates: List[codesign.CSPTemplate] = ResponseField(alias='CSPTemplates')
@@ -433,7 +433,7 @@ class _Codesign:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetApplication(API):
+    class _GetApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetApplication')
 
@@ -444,14 +444,14 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application: codesign.Application = ResponseField(alias='Application')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetApplicationCollection(API):
+    class _GetApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollection')
 
@@ -462,14 +462,14 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetApplicationCollectionMembers(API):
+    class _GetApplicationCollectionMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollectionMembers')
 
@@ -480,14 +480,14 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetApplicationCollectionMemberDNs(API):
+    class _GetApplicationCollectionMemberDNs(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollectionMemberDNs')
 
@@ -499,7 +499,7 @@ class _Codesign:
                 'Id'         : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 application_collection: codesign.ApplicationCollection = ResponseField(alias='ApplicationCollection')
                 application_collection_dns: List[str] = ResponseField(alias='ApplicationCollectionDNs')
                 application_dns: List[str] = ResponseField(alias='ApplicationDNs')
@@ -508,7 +508,7 @@ class _Codesign:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetEnvironment(API):
+    class _GetEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetEnvironment')
 
@@ -519,7 +519,7 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
                 certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
                 csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
@@ -531,19 +531,19 @@ class _Codesign:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetGlobalConfiguration(API):
+    class _GetGlobalConfiguration(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetGlobalConfiguration')
 
         def get(self):
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 global_configuration: codesign.GlobalConfiguration = ResponseField(alias='GlobalConfiguration')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._get(), response_cls=Response)
 
-    class _GetObjectRights(API):
+    class _GetObjectRights(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetObjectRights')
 
@@ -552,14 +552,14 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 rights_list: List[codesign.RightsKeyValue] = ResponseField(alias='RightsList')
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetProject(API):
+    class _GetProject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetProject')
 
@@ -570,14 +570,14 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 project: codesign.Project = ResponseField(alias='Project')
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetRight(API):
+    class _GetRight(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetRight')
 
@@ -586,14 +586,14 @@ class _Codesign:
                 'Dn': dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 rights: codesign.Rights = ResponseField(alias='Rights', converter=lambda x: codesign.Rights(value=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetTemplate(API):
+    class _GetTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetTemplate')
 
@@ -604,7 +604,7 @@ class _Codesign:
                 'Id'  : id
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 apple_template: codesign.AppleTemplate = ResponseField(alias='AppleTemplate')
                 certificate_template: codesign.CertificateTemplate = ResponseField(alias='CertificateTemplate')
                 csp_template: codesign.CSPTemplate = ResponseField(alias='CSPTemplate')
@@ -616,7 +616,7 @@ class _Codesign:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _GetTrusteeRights(API):
+    class _GetTrusteeRights(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/GetTrusteeRights')
 
@@ -625,14 +625,14 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 rights_list : List[codesign.RightsKeyValue] = ResponseField(alias='RightsList')
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RemoveAdministrator(API):
+    class _RemoveAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RemoveAdministrator')
 
@@ -641,13 +641,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RemoveApplicationAdministrator(API):
+    class _RemoveApplicationAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RemoveApplicationAdministrator')
 
@@ -656,13 +656,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RemoveProjectAdministrator(API):
+    class _RemoveProjectAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RemoveProjectAdministrator')
 
@@ -671,13 +671,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RemoveProjectApprover(API):
+    class _RemoveProjectApprover(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RemoveProjectApprover')
 
@@ -686,13 +686,13 @@ class _Codesign:
                 'Trustee': trustee
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RenameApplication(API):
+    class _RenameApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RenameApplication')
 
@@ -702,13 +702,13 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RenameApplicationCollection(API):
+    class _RenameApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RenameApplicationCollection')
 
@@ -718,13 +718,13 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RenameProject(API):
+    class _RenameProject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RenameProject')
 
@@ -736,13 +736,13 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _RenameTemplate(API):
+    class _RenameTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/RenameTemplate')
 
@@ -754,13 +754,13 @@ class _Codesign:
                 'NewDn': new_dn
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _SetGlobalConfiguration(API):
+    class _SetGlobalConfiguration(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/SetGlobalConfiguration')
 
@@ -769,13 +769,13 @@ class _Codesign:
                 'GlobalConfiguration': global_configuration
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _UpdateApplication(API):
+    class _UpdateApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateApplication')
 
@@ -784,13 +784,13 @@ class _Codesign:
                 'Application': application
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _UpdateApplicationCollection(API):
+    class _UpdateApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateApplicationCollection')
 
@@ -799,13 +799,13 @@ class _Codesign:
                 'ApplicationCollection': application_collection
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _UpdateEnvironment(API):
+    class _UpdateEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateEnvironment')
 
@@ -820,7 +820,7 @@ class _Codesign:
                 'KeyPairEnvironment'    : key_pair_environment
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 apple_environment: codesign.AppleEnvironment = ResponseField(alias='AppleEnvironment')
                 certificate_environment: codesign.CertificateEnvironment = ResponseField(alias='CertificateEnvironment')
                 csp_environment: codesign.CSPEnvironment = ResponseField(alias='CSPEnvironment')
@@ -832,7 +832,7 @@ class _Codesign:
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _UpdateProject(API):
+    class _UpdateProject(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateProject')
 
@@ -841,13 +841,13 @@ class _Codesign:
                 'Project': project
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _UpdateProjectStatus(API):
+    class _UpdateProjectStatus(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateProjectStatus')
 
@@ -859,13 +859,13 @@ class _Codesign:
                 'ProjectStatus': project_status,
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
             return ResponseFactory(response=self._post(data=body), response_cls=Response)
 
-    class _UpdateTemplate(API):
+    class _UpdateTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Codesign/UpdateTemplate')
 
@@ -876,7 +876,7 @@ class _Codesign:
                 'ObjectNamingPattern': object_naming_pattern
             }
 
-            class Response(APIResponse):
+            class Response(WebSdkResponse):
                 result: codesign.ResultCode = ResponseField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ResponseField(alias='Success')
 
