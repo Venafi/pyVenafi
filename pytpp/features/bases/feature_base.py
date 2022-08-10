@@ -4,7 +4,7 @@ import os
 import re
 from typing import TYPE_CHECKING
 from pytpp.features.definitions.exceptions import InvalidResultCode, ObjectDoesNotExist
-from pytpp.api.websdk.enums import config, identity as ident
+from pytpp.api.websdk.outputs import config, identity as ident
 from pytpp.tools.logger import logger, features_logger
 from pytpp.api.websdk.enums.secret_store import Namespaces
 from typing import List, Dict, Union

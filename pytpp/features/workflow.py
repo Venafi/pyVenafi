@@ -1,15 +1,16 @@
 import base64
 import hashlib
 from dataclasses import dataclass
-from typing import List, Union
 from datetime import datetime
-from pytpp.tools.vtypes import Identity
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.attributes.workflow import WorkflowAttributes
 from pytpp.attributes.adaptable_workflow import AdaptableWorkflowAttributes
 from pytpp.attributes.workflow_ticket import WorkflowTicketAttributes
+from typing import List, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.api.websdk.outputs import config, identity as ident
 
 
 class _WorkflowBase(FeatureBase):
@@ -94,7 +95,7 @@ class AdaptableWorkflow(_WorkflowBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, powershell_script_name: str,
-               powershell_script_content: bytes, approvers: 'List[Union[Identity.Identity, str]]' = None, reason_code: int = None,
+               powershell_script_content: bytes, approvers: 'List[Union[ident.Identity, str]]' = None, reason_code: int = None,
                use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
         """
         .. note::
@@ -240,7 +241,7 @@ class StandardWorkflow(_WorkflowBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, injection_command: str = None,
-               application_class_name: str = None, approvers: 'List[Union[Identity.Identity, str]]' = None, macro: str = None,
+               application_class_name: str = None, approvers: 'List[Union[ident.Identity, str]]' = None, macro: str = None,
                reason_code: int = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         One of ``injection_command`` or ``approvers`` must be given.
@@ -300,7 +301,7 @@ class Ticket(FeatureBase):
             raise InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
     def create(self, obj: 'Union[config.Object, str]', workflow: 'Union[config.Object, str]',
-               approvers: Union['List[Identity.Identity]', List[str]], reason: Union[RC, int, str],
+               approvers: Union['List[ident.Identity]', List[str]], reason: Union[RC, int, str],
                user_data: str = None):
         """
         Creates a workflow ticket on ``obj`` only if the object is in a state to received a workflow ticket.

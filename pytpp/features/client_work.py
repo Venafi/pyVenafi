@@ -20,7 +20,7 @@ from pytpp.attributes.client_agent_ssh_provisioning_work import ClientAgentSSHPr
 from pytpp.attributes.client_user_certificate_work import ClientUserCertificateWorkAttributes
 
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Identity
+    from pytpp.api.websdk.outputs import identity as ident, config
 
 
 class _ClientWorkBase(FeatureBase):
@@ -522,7 +522,7 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, certificate_container: 'Union[config.Object, str]', naming_pattern: str, ca_template: 'Union[config.Object, str]',
-               contacts: 'List[Identity.Identity, str]', certificate_origin: str = None, certificate_description: str = None,
+               contacts: 'List[ident.Identity, str]', certificate_origin: str = None, certificate_description: str = None,
                validation_type: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.ValidationType.basic,
                revocation_status_check: int = ClientWorkAttributeValues.CertificateEnrollmentViaESTProtocol.RevocationStatusCheck.accept_when_unknown,
                authentication_credentials: 'Union[config.Object, str]' = None, authenticate_only_by_password: bool = False,
@@ -741,7 +741,7 @@ class DeviceCertificateCreation(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, certificate_container: 'Union[config.Object, str]', ca_template: 'Union[config.Object, str]',
-               contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$",
+               contacts: 'List[ident.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$",
                common_name: str = "$Client.DNSName$", organization: str = None,
                organizational_unit: List[str] = None, city_locality: str = None, state_province: str = None,
                country: str = None, subject_alternative_names: bool = False, automatic_renewal: bool = True,
@@ -816,7 +816,7 @@ class DynamicProvisioning(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, certificate_container: 'Union[config.Object, str]', ca_template: 'Union[config.Object, str]',
-               contacts: 'List[Identity.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
+               contacts: 'List[ident.Identity, str]', description: str = None, naming_pattern: str = "$Client.DNSName$", common_name: str = "$Client.DNSName$",
                organization: str = None, organizational_unit: List[str] = None, city_locality: str = None,
                state_province: str = None, country: str = None, subject_alternative_names: str = "$Client.DNSname$",
                capi_keystore: bool = False, capi_friendly_name: str = "", capi_trustee: str = "",
@@ -1380,7 +1380,7 @@ class UserCertificateCreation(_ClientWorkBase):
         super().__init__(api=api)
 
     def create(self, name: str, certificate_container: 'Union[config.Object, str]', ca_template: 'Union[config.Object, str]',
-               contacts: 'List[Identity.Identity, str]', description: str = None,
+               contacts: 'List[ident.Identity, str]', description: str = None,
                naming_pattern: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.naming_pattern,
                common_name: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.common_name,
                organization: str = ClientWorkAttributeValues.UserCertificateCreation.DefaultValues.organization,

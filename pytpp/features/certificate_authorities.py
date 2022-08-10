@@ -3,7 +3,7 @@ from pytpp.attributes.self_signed_ca import SelfSignedCAAttributes
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from typing import Union, List, TYPE_CHECKING
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config, Identity
+    from pytpp.api.websdk.outputs import config, identity as ident
 
 
 class _CertificateAuthorityBase(FeatureBase):
@@ -45,7 +45,7 @@ class MSCA(_CertificateAuthorityBase):
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', hostname: str, service_name: str,
                credential: 'Union[config.Object, str]', template: str, description: 'str' = None,
-               contacts: 'List[Identity.Identity, str]' = None, manual_approvals: 'bool' = None,
+               contacts: 'List[ident.Identity, str]' = None, manual_approvals: 'bool' = None,
                subject_alt_name_enabled: 'bool' = None, automatically_include_cn_as_dns_san: 'bool' = None,
                allow_users_to_specify_end_date: 'bool' = None, enrollment_agent: 'Union[config.Object, str]' = None,
                attributes: dict = None, get_if_already_exists: bool = True):
@@ -102,7 +102,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Identity.Identity, str]' = None, key_usage: 'List[str]' = None, server_authentication: 'bool' = None,
+               contacts: 'List[ident.Identity, str]' = None, key_usage: 'List[str]' = None, server_authentication: 'bool' = None,
                client_authentication: 'bool' = None, code_signing: 'bool' = None, signature_algorithm: 'str' = None,
                valid_years: 'int' = None, valid_days: 'int' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """

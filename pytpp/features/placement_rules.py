@@ -1,7 +1,9 @@
-from typing import List, Union
 from pytpp.api.websdk.enums.config import PlacementRulesAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
+from typing import List, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.api.websdk.outputs import config
 
 
 @feature('Placement Rule Condition')

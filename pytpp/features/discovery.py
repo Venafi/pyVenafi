@@ -1,8 +1,9 @@
-from typing import List, Dict, Union
-from pytpp.tools.vtypes import Config, Identity
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.attributes.discovery import DiscoveryAttributes
+from typing import List, Dict, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.api.websdk.outputs import config, identity as ident
 
 
 @feature('Network Discovery')
@@ -13,7 +14,7 @@ class NetworkDiscovery(FeatureBase):
 
     def create(self, name: str, hosts: List[str], default_certificate_location: 'Union[config.Object, str]',
                attributes: dict = None, automatically_import: bool = False, blackout: Dict[str, List] = None,
-               contacts: 'List[Union[Identity, str]]' = None, days_of_week: List[str] = None, days_of_month: List[str] = None,
+               contacts: 'List[Union[ident.Identity, str]]' = None, days_of_week: List[str] = None, days_of_month: List[str] = None,
                days_of_year: List[str] = None, description: str = None,
                exclusion_locations: 'Union[config.Object, str]' = None, hour: int = None,
                placement_rules: 'List[Union[config.Object, str]]' = None,

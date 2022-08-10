@@ -60,7 +60,7 @@ class _SSH:
 
             class Response(WebSdkOutputModel):
                 key_id: int = ApiField(alias='KeyId')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -81,7 +81,7 @@ class _SSH:
             class Response(WebSdkOutputModel):
                 key_id: int = ApiField(alias='KeyId')
                 keyset_id: str = ApiField(alias='KeysetId')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -101,7 +101,7 @@ class _SSH:
 
             class Response(WebSdkOutputModel):
                 key_id: int = ApiField(alias='KeyId')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -128,7 +128,7 @@ class _SSH:
                 key_id: int = ApiField(alias='KeyId')
                 keyset_id: str = ApiField(alias='KeysetId')
                 notes: str = ApiField(alias='Notes')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -150,7 +150,7 @@ class _SSH:
                 key_id: int = ApiField(alias='KeyId')
                 keyset_id: str = ApiField(alias='KeysetId')
                 notes: str = ApiField(alias='Notes')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -174,7 +174,7 @@ class _SSH:
             class Response(WebSdkOutputModel):
                 key_id: int = ApiField(alias='KeyId')
                 keyset_id: str = ApiField(alias='KeysetId')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -189,7 +189,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -203,7 +203,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -217,7 +217,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -232,7 +232,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -246,7 +246,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -260,7 +260,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -295,7 +295,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -317,7 +317,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -334,7 +334,7 @@ class _SSH:
 
             class Response(WebSdkOutputModel):
                 key_material: str = ApiField(alias='KeyMaterial')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -352,7 +352,7 @@ class _SSH:
 
             class Response(WebSdkOutputModel):
                 key_material: str = ApiField(alias='KeyMaterial')
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -372,7 +372,7 @@ class _SSH:
 
             class Response(WebSdkOutputModel):
                 key_id: int = ApiField(alias='KeyId')
-                response: ssh.Output = ApiField(alias='SshWebResponse')
+                response: ssh.SshWebResponse = ApiField(alias='SshWebResponse')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -386,7 +386,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='SshWebResponse')
+                response: ssh.SshWebResponse = ApiField(alias='SshWebResponse')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -408,7 +408,7 @@ class _SSH:
 
             class Response(WebSdkOutputModel):
                 key_id: int = ApiField(alias='KeyId')
-                response: ssh.Output = ApiField(alias='SshWebResponse')
+                response: ssh.SshWebResponse = ApiField(alias='SshWebResponse')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -482,7 +482,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -497,7 +497,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -511,7 +511,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -525,7 +525,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -539,7 +539,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -555,7 +555,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -570,7 +570,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 
@@ -584,7 +584,7 @@ class _SSH:
             }
 
             class Response(WebSdkOutputModel):
-                response: ssh.Output = ApiField(alias='Response')
+                response: ssh.SshWebResponse = ApiField(alias='Response')
 
             return generate_output(response_cls=Response, response=self._post(data=body))
 

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from typing import List, Union
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat
-from pytpp.tools.vtypes import Config
+from typing import List, Union, TYPE_CHECKING
+if TYPE_CHECKING:
+    from pytpp.api.websdk.outputs import config
 
 
 @dataclass

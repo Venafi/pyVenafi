@@ -4,7 +4,7 @@ from pytpp.attributes.policy import PolicyAttributes
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List, Union, TYPE_CHECKING
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config, Identity
+    from pytpp.api.websdk.outputs import config, identity as ident
 
 
 @feature('Folder')
@@ -97,7 +97,7 @@ class Folder(FeatureBase):
             raise TypeError(f'Expected attributes to be of type List[str] or Dict, but got {type(attributes)} instead.')
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[Identity.Identity, str]]' = None, log_server: 'Union[config.Object, str]' = None,
+               contacts: 'List[Union[ident.Identity, str]]' = None, log_server: 'Union[config.Object, str]' = None,
                engines: 'List[Union[config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True):
         """
         Args:

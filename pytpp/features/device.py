@@ -5,7 +5,7 @@ from pytpp.attributes.device import DeviceAttributes
 from pytpp.attributes.jump_server import JumpServerAttributes
 from typing import Union, List, TYPE_CHECKING
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config, Identity
+    from pytpp.api.websdk.outputs import config, identity as ident
 
 
 class _DeviceBase(FeatureBase):
@@ -29,7 +29,7 @@ class Device(_DeviceBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[Identity.Identity, str]]' = None, address: 'str' = None, agent_provisioning_mode: 'bool' = None,
+               contacts: 'List[Union[ident.Identity, str]]' = None, address: 'str' = None, agent_provisioning_mode: 'bool' = None,
                concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
                temp_directory: 'str' = None, os_type: 'str' = None, jump_server: 'Union[config.Object, str]' = None,
                use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None, enforce_host_key: 'bool' = None,
@@ -119,7 +119,7 @@ class JumpServer(_DeviceBase):
         super().__init__(api=api)
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[Identity.Identity, str]]' = None, address: 'str' = None, port: 'int' = None,
+               contacts: 'List[Union[ident.Identity, str]]' = None, address: 'str' = None, port: 'int' = None,
                concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
                temp_directory: 'str' = None, os_type: 'str' = None, ssh_version: 'str' = None, ssh_syntax: 'str' = None,
                use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None,

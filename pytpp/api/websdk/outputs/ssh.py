@@ -3,7 +3,7 @@ from datetime import datetime
 from pytpp.api.api_base import OutputModel, ApiField
 
 
-class Output(OutputModel):
+class SshWebResponse(OutputModel):
     success: bool = ApiField(alias='Success')
     error_code: int = ApiField(alias='ErrorCode')
     error_message: str = ApiField(alias='ErrorMessage')

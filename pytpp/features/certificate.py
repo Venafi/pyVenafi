@@ -1,14 +1,14 @@
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Union, TYPE_CHECKING, Tuple, Dict
-if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config, Identity
 from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import FeatureException, UnexpectedValue
 from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import features_logger
+from typing import List, Union, TYPE_CHECKING, Tuple, Dict
+if TYPE_CHECKING:
+    from pytpp.api.websdk.outputs import config, identity as ident
 
 
 StringParam = Union[str, List[str], List[Tuple[str, ...]]]
@@ -64,7 +64,7 @@ class Certificate(FeatureBase):
             raise FeatureException(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[Identity.Identity, str]]' = None, approvers: 'List[Union[Identity.Identity, str]]' = None,
+               contacts: 'List[Union[ident.Identity, str]]' = None, approvers: 'List[Union[ident.Identity, str]]' = None,
                management_type: 'str' = None, service_generated_csr: 'bool' = None, generate_key_on_application: 'bool' = None,
                hash_algorithm: 'str' = None, common_name: 'str' = None, organization: 'str' = None, organization_unit: 'List[str]' = None,
                city: 'str' = None, state: 'str' = None, country: 'str' = None, san_dns: 'List[str]' = None, san_email: 'List[str]' = None,
