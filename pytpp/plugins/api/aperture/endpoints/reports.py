@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import List, Dict, Any
 from urllib.parse import quote_plus
-from pytpp.api.api_base import ResponseFactory, ResponseField
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
-from pytpp.plugins.properties.response_objects.dataclasses import reports
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.outputs import reports
 
 
 class _Reports(ApertureEndpoint):
@@ -31,10 +31,10 @@ class _Reports(ApertureEndpoint):
             "skipEmpty"  : skip_empty
         }
 
-        class Response(ApertureResponse):
-            guid: str = ResponseField()
+        class Response(ApertureOutputModel):
+            guid: str = ApiField()
 
-        return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='guid')
+        return generate_output(response_cls=Response, response=self._post(data=body), root_field='guid')
 
     def Guid(self, guid: str):
         return self._Guid(api_obj=self._api_obj, guid=guid)
@@ -44,23 +44,23 @@ class _Reports(ApertureEndpoint):
             super().__init__(api_obj=api_obj, url=f'/reports/{guid}')
 
         def get(self):
-            class Response(ApertureResponse):
-                name: str = ResponseField(alias='name')
-                title: str = ResponseField(alias='title')
-                inventory: str = ResponseField(alias='inventory')
-                summary: str = ResponseField(alias='summary')
-                status: str = ResponseField(alias='status')
-                filter: str = ResponseField(alias='filter')
-                columns: List[reports.Column] = ResponseField(alias='columns')
-                personalized: str = ResponseField(alias='personalized')
-                location: str = ResponseField(alias='location')
-                dn: str = ResponseField(alias='dn')
-                guid: str = ResponseField(alias='id')
-                disabled: bool = ResponseField(alias='disabled')
-                description: str = ResponseField(alias='description')
-                last_run: datetime = ResponseField(alias='lastRun')
+            class Response(ApertureOutputModel):
+                name: str = ApiField(alias='name')
+                title: str = ApiField(alias='title')
+                inventory: str = ApiField(alias='inventory')
+                summary: str = ApiField(alias='summary')
+                status: str = ApiField(alias='status')
+                filter: str = ApiField(alias='filter')
+                columns: List[reports.Column] = ApiField(alias='columns')
+                personalized: str = ApiField(alias='personalized')
+                location: str = ApiField(alias='location')
+                dn: str = ApiField(alias='dn')
+                guid: str = ApiField(alias='id')
+                disabled: bool = ApiField(alias='disabled')
+                description: str = ApiField(alias='description')
+                last_run: datetime = ApiField(alias='lastRun')
 
-            return ResponseFactory(response_cls=Response, response=self._get())
+            return generate_output(response_cls=Response, response=self._get())
 
     class _RunNow:
         def __init__(self, api_obj):
@@ -77,4 +77,4 @@ class _Reports(ApertureEndpoint):
                 )
 
             def post(self):
-                return ResponseFactory(response_cls=ApertureResponse, response=self._post(data={}))
+                return generate_output(response_cls=ApertureOutputModel, response=self._post(data={}))

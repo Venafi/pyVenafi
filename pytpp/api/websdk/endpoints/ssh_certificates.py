@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
-from properties.response_objects.dataclasses import ssh_certificates
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import ssh_certificates
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _SSHCertificates:
@@ -31,19 +31,19 @@ class _SSHCertificates:
                     'PrivateKeyPassphrase': private_key_passphrase
                 }
 
-                class Response(WebSdkResponse):
-                    created_on: datetime = ResponseField(alias='CreatedOn')
-                    dn: str = ResponseField(alias='DN')
-                    fingerprint_sha_256: str = ResponseField(alias='FingerprintSHA256')
-                    guid: str = ResponseField(alias='Guid')
-                    key_algorithm: str = ResponseField(alias='KeyAlgorithm')
-                    key_storage: str = ResponseField(alias='KeyStorage')
-                    name: str = ResponseField(alias='Name')
-                    processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
-                    public_key_data: str = ResponseField(alias='PublicKeyData')
-                    response: ssh_certificates.Response = ResponseField(alias='Response')
+                class Response(WebSdkOutputModel):
+                    created_on: datetime = ApiField(alias='CreatedOn')
+                    dn: str = ApiField(alias='DN')
+                    fingerprint_sha_256: str = ApiField(alias='FingerprintSHA256')
+                    guid: str = ApiField(alias='Guid')
+                    key_algorithm: str = ApiField(alias='KeyAlgorithm')
+                    key_storage: str = ApiField(alias='KeyStorage')
+                    name: str = ApiField(alias='Name')
+                    processing_details: ssh_certificates.ProcessingDetails = ApiField(alias='ProcessingDetails')
+                    public_key_data: str = ApiField(alias='PublicKeyData')
+                    response: ssh_certificates.Output = ApiField(alias='Response')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Request(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -73,13 +73,13 @@ class _SSHCertificates:
                 'ProcessingTimeout'        : processing_timeout
             }
 
-            class Response(WebSdkResponse):
-                dn: str = ResponseField(alias='Dn')
-                guid: str = ResponseField(alias='Guid')
-                processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
-                response: ssh_certificates.Response = ResponseField(alias='Response')
+            class Response(WebSdkOutputModel):
+                dn: str = ApiField(alias='Dn')
+                guid: str = ApiField(alias='Guid')
+                processing_details: ssh_certificates.ProcessingDetails = ApiField(alias='ProcessingDetails')
+                response: ssh_certificates.Output = ApiField(alias='Response')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -95,21 +95,21 @@ class _SSHCertificates:
                 'PrivateKeyPassphrase'     : private_key_passphrase
             }
 
-            class Response(WebSdkResponse):
-                ca_dn: str = ResponseField(alias='CADN')
-                ca_guid: str = ResponseField(alias='CAGuid')
-                certificate_data: str = ResponseField(alias='CertificateData')
-                certificate_details: ssh_certificates.CertificateDetails = ResponseField(alias='CertificateDetails')
-                dn: str = ResponseField(alias='DN')
-                guid: str = ResponseField(alias='Guid')
-                key_id: str = ResponseField(alias='KeyID')
-                private_key_data: str = ResponseField(alias='PrivateKeyData')
-                processing_details: ssh_certificates.ProcessingDetails = ResponseField(alias='ProcessingDetails')
-                public_key_data: str = ResponseField(alias='PublicKeyData')
-                request_details: ssh_certificates.RequestDetails = ResponseField(alias='RequestDetails')
-                response: ssh_certificates.Response = ResponseField(alias='Response')
+            class Response(WebSdkOutputModel):
+                ca_dn: str = ApiField(alias='CADN')
+                ca_guid: str = ApiField(alias='CAGuid')
+                certificate_data: str = ApiField(alias='CertificateData')
+                certificate_details: ssh_certificates.CertificateDetails = ApiField(alias='CertificateDetails')
+                dn: str = ApiField(alias='DN')
+                guid: str = ApiField(alias='Guid')
+                key_id: str = ApiField(alias='KeyID')
+                private_key_data: str = ApiField(alias='PrivateKeyData')
+                processing_details: ssh_certificates.ProcessingDetails = ApiField(alias='ProcessingDetails')
+                public_key_data: str = ApiField(alias='PublicKeyData')
+                request_details: ssh_certificates.RequestDetails = ApiField(alias='RequestDetails')
+                response: ssh_certificates.Output = ApiField(alias='Response')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Template(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -128,21 +128,21 @@ class _SSHCertificates:
                     'IncludeCAKeyPairDetails': include_ca_keypair_details
                 }
 
-                class Response(WebSdkResponse):
-                    access_control: ssh_certificates.AccessControl = ResponseField(alias='AccessControl')
-                    api_client: ssh_certificates.APIClient = ResponseField(alias='APIClient')
-                    ca_keypair_guid: str = ResponseField(alias='CAKeyPairGuid')
-                    ca_keypair_dn: str = ResponseField(alias='CAKeyPairDN')
-                    ca_keypair: ssh_certificates.CAKeyPair = ResponseField(alias='CAKeyPair')
-                    certificate: ssh_certificates.Certificate = ResponseField(alias='Certificate')
-                    contacts: List[str] = ResponseField(default_factory=list, alias='Contacts')
-                    created_on: datetime = ResponseField(alias='CreatedOn')
-                    dn: str = ResponseField(alias='DN')
-                    guid: str = ResponseField(alias='Guid')
-                    name: str = ResponseField(alias='Name')
-                    response: ssh_certificates.Response = ResponseField(alias='Response')
+                class Response(WebSdkOutputModel):
+                    access_control: ssh_certificates.AccessControl = ApiField(alias='AccessControl')
+                    api_client: ssh_certificates.APIClient = ApiField(alias='APIClient')
+                    ca_keypair_guid: str = ApiField(alias='CAKeyPairGuid')
+                    ca_keypair_dn: str = ApiField(alias='CAKeyPairDN')
+                    ca_keypair: ssh_certificates.CAKeyPair = ApiField(alias='CAKeyPair')
+                    certificate: ssh_certificates.Certificate = ApiField(alias='Certificate')
+                    contacts: List[str] = ApiField(default_factory=list, alias='Contacts')
+                    created_on: datetime = ApiField(alias='CreatedOn')
+                    dn: str = ApiField(alias='DN')
+                    guid: str = ApiField(alias='Guid')
+                    name: str = ApiField(alias='Name')
+                    response: ssh_certificates.Output = ApiField(alias='Response')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
             class _PublicKeyData(WebSdkEndpoint):
                 def __init__(self, api_obj):
@@ -154,7 +154,7 @@ class _SSHCertificates:
                         'Guid': template_guid,
                     }
 
-                    class Response(WebSdkResponse):
-                        response: ssh_certificates.Response = ResponseField(alias='Response')
+                    class Response(WebSdkOutputModel):
+                        response: ssh_certificates.Output = ApiField(alias='Response')
 
-                    return ResponseFactory(response_cls=Response, response=self._get(params=params))
+                    return generate_output(response_cls=Response, response=self._get(params=params))

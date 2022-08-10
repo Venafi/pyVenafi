@@ -1,5 +1,5 @@
 from typing import List 
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Discovery:
@@ -15,10 +15,10 @@ class _Discovery:
             super().__init__(api_obj=api_obj, url=f'/Discovery/{guid}')
 
         def delete(self):
-            class Response(WebSdkResponse):
-                success: bool = ResponseField(alias='Success')
+            class Response(WebSdkOutputModel):
+                success: bool = ApiField(alias='Success')
 
-            return ResponseFactory(response=self._delete(), response_cls=Response)
+            return generate_output(response=self._delete(), response_cls=Response)
 
     class _Import(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -30,13 +30,13 @@ class _Discovery:
                 'endpoints': endpoints
             }
 
-            class Response(WebSdkResponse):
-                created_certificates: int = ResponseField(alias='createdCertificates')
-                created_instances: int = ResponseField(alias='createdInstances')
-                updated_certificates: int = ResponseField(alias='updatedCertificates')
-                updated_instances: int = ResponseField(alias='updatedInstances')
-                warnings: List[str] = ResponseField(alias='warnings')
-                zone_name: str = ResponseField(alias='zoneName')
+            class Response(WebSdkOutputModel):
+                created_certificates: int = ApiField(alias='createdCertificates')
+                created_instances: int = ApiField(alias='createdInstances')
+                updated_certificates: int = ApiField(alias='updatedCertificates')
+                updated_instances: int = ApiField(alias='updatedInstances')
+                warnings: List[str] = ApiField(alias='warnings')
+                zone_name: str = ApiField(alias='zoneName')
 
-            return ResponseFactory(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), response_cls=Response)
 

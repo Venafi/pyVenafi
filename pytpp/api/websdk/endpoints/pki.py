@@ -1,6 +1,6 @@
 from typing import List
-from properties.response_objects.dataclasses import pki
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import pki
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _PKI:
@@ -21,10 +21,10 @@ class _PKI:
                 return self._Guid(guid=guid, api_obj=self._api_obj)
 
             def get(self):
-                class Response(WebSdkResponse):
-                    pkis : List[pki.PKI] = ResponseField(default_factory=list, alias='pkis')
+                class Response(WebSdkOutputModel):
+                    pkis : List[pki.PKI] = ApiField(default_factory=list, alias='pkis')
 
-                return ResponseFactory(response_cls=Response, response=self._get())
+                return generate_output(response_cls=Response, response=self._get())
 
             def post(self, certificate: dict, folder_dn: str, pki_path: str, roles: List[str],
                      create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
@@ -43,12 +43,12 @@ class _PKI:
                     'Roles'                     : roles
                 }
 
-                class Response(WebSdkResponse):
-                    certificate_dn: str = ResponseField(alias='CertificateDN')
-                    certificate_guid: str = ResponseField(alias='CertificateGuid')
-                    guid: str = ResponseField(alias='Guid')
+                class Response(WebSdkOutputModel):
+                    certificate_dn: str = ApiField(alias='CertificateDN')
+                    certificate_guid: str = ApiField(alias='CertificateGuid')
+                    guid: str = ApiField(alias='Guid')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
             class _Guid(WebSdkEndpoint):
                 def __init__(self, guid: str, api_obj):
@@ -57,32 +57,32 @@ class _PKI:
                     self.Renew = self._Renew(guid=guid, api_obj=api_obj)
 
                 def delete(self):
-                    class Response(WebSdkResponse):
-                        certificate_dn: str = ResponseField(alias='CertificateDN')
-                        certificate_guid: str = ResponseField(alias='CertificateGuid')
-                        guid: str = ResponseField(alias='Guid')
+                    class Response(WebSdkOutputModel):
+                        certificate_dn: str = ApiField(alias='CertificateDN')
+                        certificate_guid: str = ApiField(alias='CertificateGuid')
+                        guid: str = ApiField(alias='Guid')
 
-                    return ResponseFactory(response_cls=Response, response=self._delete())
+                    return generate_output(response_cls=Response, response=self._delete())
 
                 def get(self):
-                    class Response(WebSdkResponse):
-                        certificate : pki.Certificate = ResponseField(alias='Certificate')
-                        create_certificate_authority: bool = ResponseField(alias='CreateCertificateAuthority')
-                        create_pki_role: bool = ResponseField(alias='CreatePKIRole')
-                        folder_dn: str = ResponseField(alias='FolderDn')
-                        installation: pki.Installation = ResponseField(alias='Installation')
-                        pki_path: str = ResponseField(alias='PkiPath')
-                        roles: List[str] = ResponseField(alias='Roles')
+                    class Response(WebSdkOutputModel):
+                        certificate : pki.Certificate = ApiField(alias='Certificate')
+                        create_certificate_authority: bool = ApiField(alias='CreateCertificateAuthority')
+                        create_pki_role: bool = ApiField(alias='CreatePKIRole')
+                        folder_dn: str = ApiField(alias='FolderDn')
+                        installation: pki.Installation = ApiField(alias='Installation')
+                        pki_path: str = ApiField(alias='PkiPath')
+                        roles: List[str] = ApiField(alias='Roles')
 
-                    return ResponseFactory(response_cls=Response, response=self._get())
+                    return generate_output(response_cls=Response, response=self._get())
 
                 def post(self):
-                    class Response(WebSdkResponse):
-                        certificate_dn: str = ResponseField(alias='CertificateDN')
-                        certificate_guid: str = ResponseField(alias='CertificateGuid')
-                        guid: str = ResponseField(alias='Guid')
+                    class Response(WebSdkOutputModel):
+                        certificate_dn: str = ApiField(alias='CertificateDN')
+                        certificate_guid: str = ApiField(alias='CertificateGuid')
+                        guid: str = ApiField(alias='Guid')
 
-                    return ResponseFactory(response_cls=Response, response=self._post(data={}))
+                    return generate_output(response_cls=Response, response=self._post(data={}))
 
                 def put(self, folder_dn: str, pki_path: str, roles: List[str], certificate: dict = None,
                         create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
@@ -101,24 +101,24 @@ class _PKI:
                         'Roles'                     : roles
                     }
 
-                    class Response(WebSdkResponse):
-                        certificate_dn: str = ResponseField(alias='CertificateDN')
-                        certificate_guid: str = ResponseField(alias='CertificateGuid')
-                        guid: str = ResponseField(alias='Guid')
+                    class Response(WebSdkOutputModel):
+                        certificate_dn: str = ApiField(alias='CertificateDN')
+                        certificate_guid: str = ApiField(alias='CertificateGuid')
+                        guid: str = ApiField(alias='Guid')
 
-                    return ResponseFactory(response_cls=Response, response=self._put(data=body))
+                    return generate_output(response_cls=Response, response=self._put(data=body))
 
                 class _Renew(WebSdkEndpoint):
                     def __init__(self, guid: str, api_obj):
                         super().__init__(api_obj=api_obj, url=f'HashiCorp/{guid}/Renew')
 
                     def post(self):
-                        class Response(WebSdkResponse):
-                            certificate_dn: str = ResponseField(alias='CertificateDN')
-                            certificate_guid: str = ResponseField(alias='CertificateGuid')
-                            guid: str = ResponseField(alias='Guid')
+                        class Response(WebSdkOutputModel):
+                            certificate_dn: str = ApiField(alias='CertificateDN')
+                            certificate_guid: str = ApiField(alias='CertificateGuid')
+                            guid: str = ApiField(alias='Guid')
 
-                        return ResponseFactory(response_cls=Response, response=self._post(data={}))
+                        return generate_output(response_cls=Response, response=self._post(data={}))
 
         class _Role(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -143,10 +143,10 @@ class _PKI:
                     'WhitelistedDomains' : whitelisted_domains
                 }
 
-                class Response(WebSdkResponse):
-                    guid: str = ResponseField(alias='Guid')
+                class Response(WebSdkOutputModel):
+                    guid: str = ApiField(alias='Guid')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
             def Guid(self, guid: str):
                 return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -156,27 +156,27 @@ class _PKI:
                     super().__init__(api_obj=api_obj, url=f'HashiCorp/Role/{guid}')
 
                 def delete(self):
-                    class Response(WebSdkResponse):
-                        guid: str = ResponseField(alias='Guid')
+                    class Response(WebSdkOutputModel):
+                        guid: str = ApiField(alias='Guid')
 
-                    return ResponseFactory(response_cls=Response, response=self._delete())
+                    return generate_output(response_cls=Response, response=self._delete())
 
                 def get(self):
-                    class Response(WebSdkResponse):
-                        city: str = ResponseField(alias='City')
-                        country: str = ResponseField(alias='Country')
-                        enhanced_key_usage: str = ResponseField(alias='EnhancedKeyUsage')
-                        folder_dn: str = ResponseField(alias='FolderDn')
-                        guid: str = ResponseField(alias='Guid')
-                        key_algorithm: str = ResponseField(alias='KeyAlgorithm')
-                        key_bit_size: str = ResponseField(alias='KeyBitSize')
-                        organization: str = ResponseField(alias='Organization')
-                        organizational_units: List[str] = ResponseField(default_factory=list, alias='OrganizationalUnits')
-                        role_name: str = ResponseField(alias='RoleName')
-                        state: str = ResponseField(alias='State')
-                        whitelisted_domains: List[str] = ResponseField(default_factory=list, alias='WhitelistedDomains')
+                    class Response(WebSdkOutputModel):
+                        city: str = ApiField(alias='City')
+                        country: str = ApiField(alias='Country')
+                        enhanced_key_usage: str = ApiField(alias='EnhancedKeyUsage')
+                        folder_dn: str = ApiField(alias='FolderDn')
+                        guid: str = ApiField(alias='Guid')
+                        key_algorithm: str = ApiField(alias='KeyAlgorithm')
+                        key_bit_size: str = ApiField(alias='KeyBitSize')
+                        organization: str = ApiField(alias='Organization')
+                        organizational_units: List[str] = ApiField(default_factory=list, alias='OrganizationalUnits')
+                        role_name: str = ApiField(alias='RoleName')
+                        state: str = ApiField(alias='State')
+                        whitelisted_domains: List[str] = ApiField(default_factory=list, alias='WhitelistedDomains')
 
-                    return ResponseFactory(response_cls=Response, response=self._get())
+                    return generate_output(response_cls=Response, response=self._get())
 
                 def put(self, city: str = None, country: str = None,
                         enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
@@ -194,7 +194,7 @@ class _PKI:
                         'WhitelistedDomains' : whitelisted_domains
                     }
 
-                    class Response(WebSdkResponse):
-                        guid: str = ResponseField(alias='Guid')
+                    class Response(WebSdkOutputModel):
+                        guid: str = ApiField(alias='Guid')
 
-                    return ResponseFactory(response_cls=Response, response=self._put(data=body))
+                    return generate_output(response_cls=Response, response=self._put(data=body))

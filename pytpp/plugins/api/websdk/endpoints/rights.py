@@ -1,5 +1,5 @@
-from pytpp.api.api_base import ResponseFactory, ResponseField, WebSdkEndpoint, WebSdkResponse
-from pytpp.plugins.properties.response_objects.dataclasses import rights
+from pytpp.api.api_base import generate_output, ApiField, WebSdkEndpoint, WebSdkOutputModel
+from pytpp.plugins.api.websdk.outputs import rights
 from typing import List
 
 
@@ -22,7 +22,7 @@ class _Rights:
                 'RightsValue': rights_value
             }
 
-            return ResponseFactory(response_cls=WebSdkResponse, response=self._post(data=body))
+            return generate_output(response_cls=WebSdkOutputModel, response=self._post(data=body))
 
     class _Get(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -33,17 +33,17 @@ class _Rights:
                 'UniversalID': universal_id
             }
 
-            class Response(WebSdkResponse):
-                rights: List[rights.Rights] = ResponseField(alias='Rights')
+            class Response(WebSdkOutputModel):
+                rights: List[rights.Rights] = ApiField(alias='Rights')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Refresh(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Rights/Refresh')
 
         def get(self):
-            return ResponseFactory(response_cls=WebSdkResponse, response=self._get())
+            return generate_output(response_cls=WebSdkOutputModel, response=self._get())
 
     class _Remove(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -56,4 +56,4 @@ class _Rights:
                 "UniversalID": universal_id
             }
 
-            return ResponseFactory(response_cls=WebSdkResponse, response=self._post(data=body))
+            return generate_output(response_cls=WebSdkOutputModel, response=self._post(data=body))

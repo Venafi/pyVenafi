@@ -4,7 +4,7 @@ from pytpp.features.identity import (
     Group as _OriginalGroup,
 )
 from pytpp.features.bases.feature_base import feature
-from pytpp.properties.rights import SubSystemTypes
+from pytpp.api.websdk.enums.rights import SubSystemTypes
 from typing import Union, List, TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.tools.vtypes import Identity

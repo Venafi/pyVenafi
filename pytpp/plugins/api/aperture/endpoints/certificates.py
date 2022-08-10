@@ -1,7 +1,7 @@
-from pytpp.api.api_base import ResponseFactory, ResponseField
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
-from pytpp.plugins.properties.certificate_inventory import Field, Filter
-from pytpp.plugins.properties.response_objects.dataclasses import certificate_inventory
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.enums.certificate_inventory import Field, Filter
+from pytpp.plugins.api.aperture.outputs import certificate_inventory
 from typing import List, Dict
 
 
@@ -47,7 +47,7 @@ class _Certificates:
                     'sortField': sort_field
                 }
 
-                class Response(ApertureResponse):
-                    certificates: List[certificate_inventory.CertificateDetails] = ResponseField(default_factory=list)
+                class Response(ApertureOutputModel):
+                    certificates: List[certificate_inventory.CertificateDetails] = ApiField(default_factory=list)
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='certificates+')
+                return generate_output(response_cls=Response, response=self._post(data=body), root_field='certificates+')

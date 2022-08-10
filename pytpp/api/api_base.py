@@ -7,7 +7,7 @@ from pydantic.fields import Undefined
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from pytpp.tools.logger import api_logger, json_pickler
-from typing import Any, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
+from typing import Any, Callable, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
 
 if TYPE_CHECKING:
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
@@ -17,7 +17,20 @@ if TYPE_CHECKING:
 T_ = TypeVar('T_')
 
 
-class APISource(Protocol):
+class ApiModelMetaclass(pydantic.main.ModelMetaclass):
+    def __new__(mcs, name, bases, namespaces, **kwargs):
+        annotations = namespaces.get('__annotations__', {})
+        for base in bases:
+            annotations.update(getattr(base, '__annotations__', {}))
+        for field in annotations:
+            if not field.startswith('__') and get_origin(annotations[field]) is not Union:
+                annotations[field] = Union[annotations[field], Any]
+        namespaces['__annotations__'] = annotations
+        return super().__new__(mcs, name, bases, namespaces, **kwargs)
+
+
+# region Endpoint Definitions
+class ApiSource(Protocol):
     _host: str
     _username: str
     _password: str
@@ -28,7 +41,7 @@ class APISource(Protocol):
     def re_authenticate(self): ...
 
 
-class ApiEndpoint:
+class ApiEndpoint(object):
     """
     This is the backbone of all API definitions. It performs all requests,
     validations, logging, re-authentication, and holds the raw response. This
@@ -45,7 +58,7 @@ class ApiEndpoint:
                 to TPP.
             url: This is the URL extension from the base URL.
         """
-        self._api_obj: 'APISource' = api_obj
+        self._api_obj: 'ApiSource' = api_obj
         if not url.startswith('/'):
             url = '/' + url
         self._url = self._api_obj._base_url + url
@@ -246,68 +259,56 @@ class ApiEndpoint:
 
 
 class WebSdkEndpoint(ApiEndpoint):  ...
+# endregion Endpoint Definitions
 
 
-def ResponseField(
-        default: Any = None,
-        *,
-        default_factory: 'Optional[NoArgAnyCallable]' = None,
-        alias: str = None,
-        title: str = None,
-        description: str = None,
-        exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
-        include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
-        const: bool = None,
-        gt: float = None,
-        ge: float = None,
-        lt: float = None,
-        le: float = None,
-        multiple_of: float = None,
-        max_digits: int = None,
-        decimal_places: int = None,
-        min_items: int = None,
-        max_items: int = None,
-        unique_items: bool = None,
-        min_length: int = None,
-        max_length: int = None,
-        allow_mutation: bool = True,
-        regex: str = None,
-        discriminator: str = None,
-        repr: bool = True,
-        **extra: Any,
-) -> Any:
+# region Model And Field Definitions
+def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable]' = None, alias: str = None, title: str = None,
+             description: str = None, exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
+             include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None, const: bool = None, gt: float = None,
+             ge: float = None, lt: float = None, le: float = None, multiple_of: float = None, max_digits: int = None,
+             decimal_places: int = None, min_items: int = None, max_items: int = None, unique_items: bool = None,
+             min_length: int = None, max_length: int = None, allow_mutation: bool = True, regex: str = None,
+             discriminator: str = None, repr: bool = True, converter: Callable[[Any], Any] = None, **extra: Any) -> Any:
     if callable(default_factory):
         default = Undefined
-    return Field(
-        default=default,
-        default_factory=default_factory,
-        alias=alias,
-        title=title,
-        description=description,
-        exclude=exclude,
-        include=include,
-        const=const,
-        gt=gt,
-        ge=ge,
-        lt=lt,
-        le=le,
-        multiple_of=multiple_of,
-        max_digits=max_digits,
-        decimal_places=decimal_places,
-        min_items=min_items,
-        max_items=max_items,
-        unique_items=unique_items,
-        min_length=min_length,
-        max_length=max_length,
-        allow_mutation=allow_mutation,
-        regex=regex,
-        discriminator=discriminator,
-        repr=repr,
-        **extra
-    )
+    if converter is not None and callable(converter):
+        extra['converter'] = converter
+    return Field(default=default, default_factory=default_factory, alias=alias, title=title, description=description,
+                 exclude=exclude, include=include, const=const, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of,
+                 max_digits=max_digits, decimal_places=decimal_places, min_items=min_items, max_items=max_items,
+                 unique_items=unique_items, min_length=min_length, max_length=max_length, allow_mutation=allow_mutation,
+                 regex=regex, discriminator=discriminator, repr=repr, **extra)
 
 
-def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str = None) -> T_:
+# region Input Models
+class InputModel(BaseModel, metaclass=ApiModelMetaclass):
+    class Config:
+        arbitrary_types_allowed = True
+
+    @root_validator(pre=True, allow_reuse=True)
+    def _case_insensitive_validator(cls, values: dict):
+        new_values = {}
+        lowered_values = {k.lower(): v for k, v in values.items()}
+        for fk, fv in cls.__fields__.items():
+            name = fv.name
+            alias = fv.alias
+            try:
+                if name in values:
+                    new_value = values[name]
+                elif alias.lower() in lowered_values:
+                    new_value = lowered_values[alias.lower()]
+                else:
+                    continue
+                new_values[alias] = new_value
+            except KeyError:
+                raise KeyError(f'"{alias}" not found in the response.')
+        return new_values
+# endregion Input Models
+
+
+# region Output Models
+def generate_output(response: Response, response_cls: Type[T_], root_field: str = None) -> T_:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
@@ -346,25 +347,7 @@ def ResponseFactory(response: Response, response_cls: Type[T_], root_field: str 
         raise InvalidResponseError(str(error), response=response)
 
 
-class APIResponseModelMetaclass(pydantic.main.ModelMetaclass):
-    def __new__(mcs, name, bases, namespaces, **kwargs):
-        annotations = namespaces.get('__annotations__', {})
-        for base in bases:
-            annotations.update(getattr(base, '__annotations__', {}))
-        for field in annotations:
-            if not field.startswith('__') and get_origin(annotations[field]) is not Union:
-                annotations[field] = Union[annotations[field], Any]
-        namespaces['__annotations__'] = annotations
-        return super().__new__(mcs, name, bases, namespaces, **kwargs)
-
-
-class EMPTY_VALUE: ...
-
-
-class ApiResponse(BaseModel, metaclass=APIResponseModelMetaclass):
-    api_response: Response
-    error: str = ResponseField(default=None, alias='Error')
-
+class OutputModel(BaseModel, metaclass=ApiModelMetaclass):
     class Config:
         arbitrary_types_allowed = True
 
@@ -377,8 +360,7 @@ class ApiResponse(BaseModel, metaclass=APIResponseModelMetaclass):
             try:
                 if alias.lower() not in lowered_values:
                     continue
-                if (new_value := lowered_values.get(alias.lower(), EMPTY_VALUE)) is EMPTY_VALUE:
-                    continue
+                new_value = lowered_values[alias.lower]
                 if fv.type_ is datetime and '\\Date' in new_value:
                     new_value = re.sub(r'\D', '', new_value)
                 if (converter := fv.field_info.extra.get('converter')) is not None:
@@ -387,6 +369,10 @@ class ApiResponse(BaseModel, metaclass=APIResponseModelMetaclass):
             except KeyError:
                 raise KeyError(f'"{alias}" not found in the response.')
         return new_values
+
+
+class RootOutputModel(OutputModel):
+    api_response: Response
 
     def assert_valid_response(self):
         """
@@ -408,10 +394,13 @@ class ApiResponse(BaseModel, metaclass=APIResponseModelMetaclass):
             return False
 
 
-class WebSdkResponse(ApiResponse): ...
+class WebSdkOutputModel(RootOutputModel):
+    error: str = ApiField(alias='Error')
+# endregion Output Models
 
 
 class InvalidResponseError(Exception):
     def __init__(self, msg: str, response: Response):
         self.response = response
         super().__init__(msg)
+# endregion Response Definitions

@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.properties.response_objects.dataclasses import hsm_api
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import hsm_api
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _HSMAPI:
@@ -37,12 +37,12 @@ class _HSMAPI:
                 'WrappingKeyId'   : wrapping_key_id
             }
 
-            class Response(WebSdkResponse):
-                result_data: str = ResponseField(alias='ResultData')
-                success: bool = ResponseField(alias='Success')
-                try_later: bool = ResponseField(alias='TryLater')
+            class Response(WebSdkOutputModel):
+                result_data: str = ApiField(alias='ResultData')
+                success: bool = ApiField(alias='Success')
+                try_later: bool = ApiField(alias='TryLater')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _SignJWT(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -59,11 +59,11 @@ class _HSMAPI:
                 'Payload'    : payload
             }
 
-            class Response(WebSdkResponse):
-                result_data: str = ResponseField(alias='ResultData')
-                success: bool = ResponseField(alias='Success')
+            class Response(WebSdkOutputModel):
+                result_data: str = ApiField(alias='ResultData')
+                success: bool = ApiField(alias='Success')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _GetGPGPublicKey(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -76,13 +76,13 @@ class _HSMAPI:
                 'KeyContext': key_context
             }
 
-            class Response(WebSdkResponse):
-                fingerprint: str = ResponseField(alias='Fingerprint')
-                location: str = ResponseField(alias='Location')
-                public_key: str = ResponseField(alias='PublicKey')
-                success: bool = ResponseField(alias='Success')
+            class Response(WebSdkOutputModel):
+                fingerprint: str = ApiField(alias='Fingerprint')
+                location: str = ApiField(alias='Location')
+                public_key: str = ApiField(alias='PublicKey')
+                success: bool = ApiField(alias='Success')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _GetObjects(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -99,11 +99,11 @@ class _HSMAPI:
                 'ObjectTypeFilter' : object_type_filter,
             }
 
-            class Response(WebSdkResponse):
-                certificates: List[hsm_api.Certificate] = ResponseField(alias='Certificates', default_factory=list)
-                pending: bool = ResponseField(alias='PendingDeprecationWarningbool')
-                private_keys: List[hsm_api.PrivateKey] = ResponseField(alias='PrivateKeys')
-                public_keys: List[hsm_api.PublicKey] = ResponseField(alias='PublicKeys')
-                success: bool = ResponseField(alias='Success')
+            class Response(WebSdkOutputModel):
+                certificates: List[hsm_api.Certificate] = ApiField(alias='Certificates', default_factory=list)
+                pending: bool = ApiField(alias='PendingDeprecationWarningbool')
+                private_keys: List[hsm_api.PrivateKey] = ApiField(alias='PrivateKeys')
+                public_keys: List[hsm_api.PublicKey] = ApiField(alias='PublicKeys')
+                success: bool = ApiField(alias='Success')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))

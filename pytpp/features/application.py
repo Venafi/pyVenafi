@@ -1,6 +1,6 @@
 from base64 import b64encode
 from hashlib import sha256
-from pytpp.properties.config import ApplicationAttributeValues
+from pytpp.api.websdk.enums.config import ApplicationAttributeValues
 from pytpp.attributes.adaptable_app import AdaptableAppAttributes
 from pytpp.attributes.amazon_app import AmazonAppAttributes
 from pytpp.attributes.apache import ApacheAttributes
@@ -31,11 +31,11 @@ from pytpp.attributes.x509_certificate import X509CertificateAttributes
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, FeatureException
 from pytpp.features.definitions.classes import Classes
-from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
+from pytpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.tools.helpers.date_converter import from_date_string
 from typing import Union, List, TYPE_CHECKING
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config, Identity
+    from pytpp.tools.vtypes import Identity
 
 
 # region Applications

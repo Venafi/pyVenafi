@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
-from pytpp.properties.response_objects.dataclasses import workflow
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from pytpp.api.websdk.outputs import workflow
 
 
 class _Workflow:
@@ -31,11 +31,11 @@ class _Workflow:
                     'WorkflowDN': workflow_dn
                 }
 
-                class Response(WebSdkResponse):
-                    guid: str = ResponseField(alias='GUID')
-                    result: workflow.Result = ResponseField(alias='Result')
+                class Response(WebSdkOutputModel):
+                    guid: str = ApiField(alias='GUID')
+                    result: workflow.Result = ApiField(alias='Result')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
         class _Delete(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -46,10 +46,10 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkResponse):
-                    result: workflow.Result = ResponseField(alias='Result')
+                class Response(WebSdkOutputModel):
+                    result: workflow.Result = ApiField(alias='Result')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
         class _Details(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -60,19 +60,19 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkResponse):
-                    approval_explanation: str = ResponseField(alias='ApprovalExplanation')
-                    approval_from: str = ResponseField(alias='ApprovalFrom')
-                    approval_reason: str = ResponseField(alias='ApprovalReason')
-                    approvers: List[str] = ResponseField(alias='Approvers')
-                    blocking: str = ResponseField(alias='Blocking')
-                    created: datetime = ResponseField(alias='Created')
-                    issued_due_to: str = ResponseField(alias='IssuedDueTo')
-                    result: workflow.Result = ResponseField(alias='Result')
-                    status: str = ResponseField(alias='Status')
-                    updated: datetime = ResponseField(alias='Updated')
+                class Response(WebSdkOutputModel):
+                    approval_explanation: str = ApiField(alias='ApprovalExplanation')
+                    approval_from: str = ApiField(alias='ApprovalFrom')
+                    approval_reason: str = ApiField(alias='ApprovalReason')
+                    approvers: List[str] = ApiField(alias='Approvers')
+                    blocking: str = ApiField(alias='Blocking')
+                    created: datetime = ApiField(alias='Created')
+                    issued_due_to: str = ApiField(alias='IssuedDueTo')
+                    result: workflow.Result = ApiField(alias='Result')
+                    status: str = ApiField(alias='Status')
+                    updated: datetime = ApiField(alias='Updated')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
         class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -84,11 +84,11 @@ class _Workflow:
                     'UserData': user_data
                 }
 
-                class Response(WebSdkResponse):
-                    guids: List[str] = ResponseField(default_factory=list, alias='GUIDS')
-                    result: workflow.Result = ResponseField(alias='Result')
+                class Response(WebSdkOutputModel):
+                    guids: List[str] = ApiField(default_factory=list, alias='GUIDS')
+                    result: workflow.Result = ApiField(alias='Result')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
         class _Exists(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -99,10 +99,10 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkResponse):
-                    result: workflow.Result = ResponseField(alias='Result')
+                class Response(WebSdkOutputModel):
+                    result: workflow.Result = ApiField(alias='Result')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
         class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -113,11 +113,11 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkResponse):
-                    status: str = ResponseField(alias='Status')
-                    result: workflow.Result = ResponseField(alias='Result')
+                class Response(WebSdkOutputModel):
+                    status: str = ApiField(alias='Status')
+                    result: workflow.Result = ApiField(alias='Result')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))
 
         class _UpdateStatus(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -138,7 +138,7 @@ class _Workflow:
                     'UserData'      : user_data
                 }
 
-                class Response(WebSdkResponse):
-                    result: workflow.Result = ResponseField(alias='Result')
+                class Response(WebSdkOutputModel):
+                    result: workflow.Result = ApiField(alias='Result')
 
-                return ResponseFactory(response_cls=Response, response=self._post(data=body))
+                return generate_output(response_cls=Response, response=self._post(data=body))

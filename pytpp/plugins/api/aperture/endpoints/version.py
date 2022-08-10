@@ -1,5 +1,5 @@
-from pytpp.api.api_base import ResponseFactory, ResponseField
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
 from datetime import datetime
 from typing import List
 
@@ -13,11 +13,11 @@ class _Version:
             super().__init__(api_obj=api_obj, url='/version/schema')
 
         def get(self):
-            class Response(ApertureResponse):
-                additional_schema_info: List[str] = ResponseField(alias='additionalSchemaInfo', default_factory=list)
-                currentDbSchemaVersion: str = ResponseField(alias='currentDbSchemaVersion')
-                current_db_schema_version_installation_date: datetime = ResponseField(alias='currentDbSchemaVersionInstallationDate')
-                engine_name: str = ResponseField(alias='EngineName')
-                schema_version: str = ResponseField(alias='schemaVersion')
+            class Response(ApertureOutputModel):
+                additional_schema_info: List[str] = ApiField(alias='additionalSchemaInfo', default_factory=list)
+                currentDbSchemaVersion: str = ApiField(alias='currentDbSchemaVersion')
+                current_db_schema_version_installation_date: datetime = ApiField(alias='currentDbSchemaVersionInstallationDate')
+                engine_name: str = ApiField(alias='EngineName')
+                schema_version: str = ApiField(alias='schemaVersion')
 
-            return ResponseFactory(response_cls=Response, response=self._get())
+            return generate_output(response_cls=Response, response=self._get())

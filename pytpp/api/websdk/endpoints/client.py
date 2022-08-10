@@ -1,6 +1,6 @@
 from typing import List
-from properties.response_objects.dataclasses import client
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import client
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Client(WebSdkEndpoint):
@@ -32,12 +32,12 @@ class _Client(WebSdkEndpoint):
             'VirtualMachineId' : virtual_machine_id
         }
 
-        class Response(WebSdkResponse):
-            clients: List[client.Client] = ResponseField(default_factory=list)
-            error_description: str = ResponseField(alias='error_description')
-            error: str = ResponseField(alias='error')
+        class Response(WebSdkOutputModel):
+            clients: List[client.Client] = ApiField(default_factory=list)
+            error_description: str = ApiField(alias='error_description')
+            error: str = ApiField(alias='error')
 
-        return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='clients')
+        return generate_output(response=self._get(params=params), response_cls=Response, root_field='clients')
 
     class _Delete(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -49,12 +49,12 @@ class _Client(WebSdkEndpoint):
                 'DeleteAssociatedDevices': delete_associated_devices
             }
 
-            class Response(WebSdkResponse):
-                deleted_count: int = ResponseField(alias='DeletedCount')
-                error_description: str = ResponseField(alias='error_description')
-                error: str = ResponseField(alias='error')
+            class Response(WebSdkOutputModel):
+                deleted_count: int = ApiField(alias='DeletedCount')
+                error_description: str = ApiField(alias='error_description')
+                error: str = ApiField(alias='error')
 
-            return ResponseFactory(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), response_cls=Response)
 
     class _Details(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -82,12 +82,12 @@ class _Client(WebSdkEndpoint):
                 'VirtualMachineId' : virtual_machine_id
             }
 
-            class Response(WebSdkResponse):
-                details: List[client.ClientDetails] = ResponseField(default_factory=list)
-                error_description: str = ResponseField(alias='error_description')
-                error: str = ResponseField(alias='error')
+            class Response(WebSdkOutputModel):
+                details: List[client.ClientDetails] = ApiField(default_factory=list)
+                error_description: str = ApiField(alias='error_description')
+                error: str = ApiField(alias='error')
 
-            return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='details')
+            return generate_output(response=self._get(params=params), response_cls=Response, root_field='details')
 
     class _Work(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -98,9 +98,9 @@ class _Client(WebSdkEndpoint):
                 'client.WorkType': work_type
             }
 
-            class Response(WebSdkResponse):
-                works: List[client.Work] = ResponseField(default_factory=list)
-                error_description: str = ResponseField(alias='error_description')
-                error: str = ResponseField(alias='error')
+            class Response(WebSdkOutputModel):
+                works: List[client.Work] = ApiField(default_factory=list)
+                error_description: str = ApiField(alias='error_description')
+                error: str = ApiField(alias='error')
 
-            return ResponseFactory(response=self._get(params=params), response_cls=Response, root_field='works')
+            return generate_output(response=self._get(params=params), response_cls=Response, root_field='works')

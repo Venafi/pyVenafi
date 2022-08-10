@@ -1,6 +1,6 @@
 from typing import List
-from properties.response_objects.dataclasses import log
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import log
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Log(WebSdkEndpoint):
@@ -27,10 +27,10 @@ class _Log(WebSdkEndpoint):
             'Value2'   : value2
         }
 
-        class Response(WebSdkResponse):
-            log_events: List[log.LogEvent] = ResponseField(default_factory=list, alias='LogEvents')
+        class Response(WebSdkOutputModel):
+            log_events: List[log.LogEvent] = ApiField(default_factory=list, alias='LogEvents')
 
-        return ResponseFactory(response_cls=Response, response=self._get(params=params))
+        return generate_output(response_cls=Response, response=self._get(params=params))
 
     def post(self, component: str, id: int, grouping: int = None, severity: int = None, source_ip: str = None,
              text1: str = None, text2: str = None, value1: str = None, value2: str = None):
@@ -46,10 +46,10 @@ class _Log(WebSdkEndpoint):
             'Value2'   : value2
         }
 
-        class Response(WebSdkResponse):
-            log_result: int = ResponseField(alias='LogResult')
+        class Response(WebSdkOutputModel):
+            log_result: int = ApiField(alias='LogResult')
 
-        return ResponseFactory(response_cls=Response, response=self._post(data=body))
+        return generate_output(response_cls=Response, response=self._post(data=body))
 
     def Guid(self, guid: str):
         return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -59,21 +59,21 @@ class _Log(WebSdkEndpoint):
             super().__init__(api_obj=api_obj, url=f'/Log/{guid}')
 
         def get(self):
-            class Response(WebSdkResponse):
-                log_events: List[log.LogEvent] = ResponseField(default_factory=list, alias='LogEvents')
+            class Response(WebSdkOutputModel):
+                log_events: List[log.LogEvent] = ApiField(default_factory=list, alias='LogEvents')
 
-            return ResponseFactory(response_cls=Response, response=self._get())
+            return generate_output(response_cls=Response, response=self._get())
 
     class _LogSchema(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='Log/LogSchema')
 
         def get(self):
-            class Response(WebSdkResponse):
-                log_event_application_definitions: List[log.LogEventApplicationDefinition] = ResponseField(
+            class Response(WebSdkOutputModel):
+                log_event_application_definitions: List[log.LogEventApplicationDefinition] = ApiField(
                     alias='LogEventApplicationDefinitions'
                 )
-                log_event_definitions: List[log.LogEventDefinition] = ResponseField(alias='LogEventDefinitions')
-                log_result: int = ResponseField(alias='LogResult')
+                log_event_definitions: List[log.LogEventDefinition] = ApiField(alias='LogEventDefinitions')
+                log_result: int = ApiField(alias='LogResult')
 
-            return ResponseFactory(response_cls=Response, response=self._get())
+            return generate_output(response_cls=Response, response=self._get())

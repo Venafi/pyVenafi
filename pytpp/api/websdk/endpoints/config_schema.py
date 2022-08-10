@@ -1,6 +1,6 @@
 from typing import List
-from properties.response_objects.dataclasses import config_schema
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import config_schema
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _ConfigSchema:
@@ -13,13 +13,13 @@ class _ConfigSchema:
             super().__init__(api_obj=api_obj, url='/ConfigSchema/Attributes')
 
         def post(self):
-            class Response(WebSdkResponse):
-                attribute_definitions: List[config_schema.AttributeDefinition] = ResponseField(
+            class Response(WebSdkOutputModel):
+                attribute_definitions: List[config_schema.AttributeDefinition] = ApiField(
                     default_factory=list, alias='AttributeDefinitions'
                 )
-                result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
+                result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
-            return ResponseFactory(response=self._post(data={}), response_cls=Response)
+            return generate_output(response=self._post(data={}), response_cls=Response)
 
     class _Class(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -30,8 +30,8 @@ class _ConfigSchema:
                 "Class": class_name
             }
 
-            class Response(WebSdkResponse):
-                class_definition: config_schema.ClassDefinition = ResponseField(alias='ClassDefinition')
-                result: config_schema.Result = ResponseField(alias='Result', converter=lambda x: config_schema.Result(code=x))
+            class Response(WebSdkOutputModel):
+                class_definition: config_schema.ClassDefinition = ApiField(alias='ClassDefinition')
+                result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
-            return ResponseFactory(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), response_cls=Response)

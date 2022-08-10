@@ -1,6 +1,6 @@
-from pytpp.api.api_base import ResponseField, ResponseFactory
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
-from pytpp.plugins.properties.response_objects.dataclasses import reports
+from pytpp.api.api_base import ApiField, generate_output
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.outputs import reports
 from typing import List
 
 
@@ -12,19 +12,19 @@ class _ReportDefaults(ApertureEndpoint):
         )
 
     def get(self):
-        class Response(ApertureResponse):
-            name: str = ResponseField(alias='name')
-            title: str = ResponseField(alias='title')
-            inventory: str = ResponseField(alias='inventory')
-            summary: str = ResponseField(alias='summary')
-            status: str = ResponseField(alias='status')
-            filter: str = ResponseField(alias='filter')
-            columns: List[reports.Column] = ResponseField(alias='columns')
-            personalized: str = ResponseField(alias='personalized')
-            location: str = ResponseField(alias='location')
-            dn: str = ResponseField(alias='dn')
-            guid: str = ResponseField(alias='id')
-            disabled: bool = ResponseField(alias='disabled')
-            description: str = ResponseField(alias='description')
+        class Response(ApertureOutputModel):
+            name: str = ApiField(alias='name')
+            title: str = ApiField(alias='title')
+            inventory: str = ApiField(alias='inventory')
+            summary: str = ApiField(alias='summary')
+            status: str = ApiField(alias='status')
+            filter: str = ApiField(alias='filter')
+            columns: List[reports.Column] = ApiField(alias='columns')
+            personalized: str = ApiField(alias='personalized')
+            location: str = ApiField(alias='location')
+            dn: str = ApiField(alias='dn')
+            guid: str = ApiField(alias='id')
+            disabled: bool = ApiField(alias='disabled')
+            description: str = ApiField(alias='description')
 
-        return ResponseFactory(response_cls=Response, response=self._get())
+        return generate_output(response_cls=Response, response=self._get())

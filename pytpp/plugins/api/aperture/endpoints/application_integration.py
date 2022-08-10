@@ -1,8 +1,7 @@
 from typing import List
-from pytpp.api.api_base import ResponseFactory, ResponseField
-from pytpp.properties.response_objects.dataclasses import identity
-from pytpp.plugins.properties.response_objects.dataclasses import oauth
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.outputs import identity, oauth
 
 
 class _ApplicationIntegration(ApertureEndpoint):
@@ -27,10 +26,10 @@ class _ApplicationIntegration(ApertureEndpoint):
             'vendor'                   : vendor
         }
 
-        class Response(ApertureResponse):
-            application_id: str = ResponseField()
+        class Response(ApertureOutputModel):
+            application_id: str = ApiField()
 
-        return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='application_id')
+        return generate_output(response_cls=Response, response=self._post(data=body), root_field='application_id')
 
     def put(self, application_id: str, application_name: str, application_scope: dict,
             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -49,10 +48,10 @@ class _ApplicationIntegration(ApertureEndpoint):
             'vendor'                   : vendor
         }
 
-        class Response(ApertureResponse):
-            application_id: str = ResponseField()
+        class Response(ApertureOutputModel):
+            application_id: str = ApiField()
 
-        return ResponseFactory(response_cls=Response, response=self._put(data=body), root_field='application_id')
+        return generate_output(response_cls=Response, response=self._put(data=body), root_field='application_id')
 
     def ApplicationId(self, id: str):
         return self._ApplicationId(id=id, api_obj=self._api_obj)
@@ -70,7 +69,7 @@ class _ApplicationIntegration(ApertureEndpoint):
 
             def put(self, identities: list):
                 body = identities
-                return ResponseFactory(response_cls=ApertureResponse, response=self._put(data=body))
+                return generate_output(response_cls=ApertureOutputModel, response=self._put(data=body))
 
     class _ApplicationId(ApertureEndpoint):
         def __init__(self, id: str, api_obj):
@@ -80,20 +79,20 @@ class _ApplicationIntegration(ApertureEndpoint):
             )
 
         def delete(self):
-            return ResponseFactory(response_cls=ApertureResponse, response=self._delete())
+            return generate_output(response_cls=ApertureOutputModel, response=self._delete())
 
         def get(self):
-            class Response(ApertureResponse):
-                access_granted: int = ResponseField(alias='accessGranted')
-                access_validity_days: int = ResponseField(alias='accessValidityDays')
-                allowed_identities : List[identity.Identity] = ResponseField(default_factory=list, alias='allowedIdentities')
-                application_id: str = ResponseField(alias='applicationId')
-                application_name: str = ResponseField(alias='applicationName')
-                application_scope: oauth.ApplicationScope = ResponseField(alias='applicationScope')
-                default_access_settings_used: bool = ResponseField(alias='defaultAccessSettingsUsed')
-                description: str = ResponseField(alias='description')
-                grant_validity_days: int = ResponseField(alias='grantValidityDays')
-                renewable: bool = ResponseField(alias='renewable')
-                vendor: str = ResponseField(alias='vendor')
+            class Response(ApertureOutputModel):
+                access_granted: int = ApiField(alias='accessGranted')
+                access_validity_days: int = ApiField(alias='accessValidityDays')
+                allowed_identities : List[identity.Identity] = ApiField(default_factory=list, alias='allowedIdentities')
+                application_id: str = ApiField(alias='applicationId')
+                application_name: str = ApiField(alias='applicationName')
+                application_scope: oauth.ApplicationScope = ApiField(alias='applicationScope')
+                default_access_settings_used: bool = ApiField(alias='defaultAccessSettingsUsed')
+                description: str = ApiField(alias='description')
+                grant_validity_days: int = ApiField(alias='grantValidityDays')
+                renewable: bool = ApiField(alias='renewable')
+                vendor: str = ApiField(alias='vendor')
 
-            return ResponseFactory(response_cls=Response, response=self._get())
+            return generate_output(response_cls=Response, response=self._get())

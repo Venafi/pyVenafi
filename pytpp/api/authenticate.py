@@ -1,5 +1,5 @@
 from typing import Union
-from pytpp.properties.oauth import Scope
+from pytpp.api.websdk.enums.oauth import Scope
 from pytpp.api.websdk.websdk import WebSDK
 
 

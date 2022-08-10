@@ -1,11 +1,11 @@
 from typing import Union, TYPE_CHECKING
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
-from pytpp.tools.vtypes import Config
+from pytpp.api.websdk.outputs import config
 from pytpp.features.bases.feature_base import feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.features.discovery import NetworkDiscovery as _NetworkDiscovery
-from pytpp.plugins.properties.network_discovery import NetworkDiscovery as _NetworkDiscoveryProperties
+from pytpp.plugins.api.aperture.enums.network_discovery import NetworkDiscovery as _NetworkDiscoveryProperties
 
 
 @feature(_NetworkDiscovery.__feature__)
@@ -19,7 +19,7 @@ class NetworkDiscovery(_NetworkDiscovery):
         if TYPE_CHECKING:
             self._api = api
 
-    def run_now(self, job: 'Union[Config.Object, str]', timeout: int = 60):
+    def run_now(self, job: 'Union[config.Object, str]', timeout: int = 60):
         """
         Runs a job despite any scheduling. This does not return until the job is processing, or has a `Processing` Attribute.
 
@@ -44,7 +44,7 @@ class NetworkDiscovery(_NetworkDiscovery):
             f'Expected the job "{job_obj.dn}" to start progress, but it did not.'
         )
 
-    def cancel(self, job: 'Union[Config.Object, str]'):
+    def cancel(self, job: 'Union[config.Object, str]'):
         """
         Cancels a currently running job.
 
@@ -58,7 +58,7 @@ class NetworkDiscovery(_NetworkDiscovery):
         )
         response.assert_valid_response()
 
-    def pause(self, job: 'Union[Config.Object, str]'):
+    def pause(self, job: 'Union[config.Object, str]'):
         """
         Pauses a currently running job.
 
@@ -72,7 +72,7 @@ class NetworkDiscovery(_NetworkDiscovery):
         )
         response.assert_valid_response()
 
-    def resume(self, job: 'Union[Config.Object, str]'):
+    def resume(self, job: 'Union[config.Object, str]'):
         """
         Resumes a currently paused job.
 
@@ -86,7 +86,7 @@ class NetworkDiscovery(_NetworkDiscovery):
         )
         response.assert_valid_response()
 
-    def place_results(self, job: 'Union[Config.Object, str]'):
+    def place_results(self, job: 'Union[config.Object, str]'):
         """
         Places the results of the discovery job according to the placement rules.
 

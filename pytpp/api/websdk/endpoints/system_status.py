@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
-from properties.response_objects.dataclasses import system_status
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import system_status
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _SystemStatus(WebSdkEndpoint):
@@ -11,10 +11,10 @@ class _SystemStatus(WebSdkEndpoint):
         self.Version = self._Version(api_obj=api_obj)
 
     def get(self):
-        class Response(WebSdkResponse):
-            engines: List[system_status.SystemStatus] = ResponseField(default_factory=list)
+        class Response(WebSdkOutputModel):
+            engines: List[system_status.SystemStatus] = ApiField(default_factory=list)
 
-        return ResponseFactory(response_cls=Response, response=self._get(), root_field='engines')
+        return generate_output(response_cls=Response, response=self._get(), root_field='engines')
 
     class _Upgrade:
         def __init__(self, api_obj):
@@ -35,16 +35,16 @@ class _SystemStatus(WebSdkEndpoint):
                     'UpgradeId': upgrade_id
                 }
 
-                class Response(WebSdkResponse):
-                    engine: system_status.Engine = ResponseField(alias='Engine')
-                    status: str = ResponseField(alias='Status')
-                    upgrade_start_time: datetime = ResponseField(alias='UpgradeStartTime')
-                    upgrade_stop_time: datetime = ResponseField(alias='UpgradeStopTime')
-                    tasks_completed: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksCompleted')
-                    tasks_pending: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksPending') 
-                    tasks_running: List[system_status.Task] = ResponseField(default_factory=list, alias='TasksRunning') 
+                class Response(WebSdkOutputModel):
+                    engine: system_status.Engine = ApiField(alias='Engine')
+                    status: str = ApiField(alias='Status')
+                    upgrade_start_time: datetime = ApiField(alias='UpgradeStartTime')
+                    upgrade_stop_time: datetime = ApiField(alias='UpgradeStopTime')
+                    tasks_completed: List[system_status.Task] = ApiField(default_factory=list, alias='TasksCompleted')
+                    tasks_pending: List[system_status.Task] = ApiField(default_factory=list, alias='TasksPending')
+                    tasks_running: List[system_status.Task] = ApiField(default_factory=list, alias='TasksRunning')
 
-                return ResponseFactory(response_cls=Response, response=self._get(params=params))
+                return generate_output(response_cls=Response, response=self._get(params=params))
 
         class _Engines(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -55,47 +55,47 @@ class _SystemStatus(WebSdkEndpoint):
                     'UpgradeId': upgrade_id
                 }
 
-                class Response(WebSdkResponse):
-                    engines: List[system_status.UpgradeStatus] = ResponseField(default_factory=list, alias='Engines') 
+                class Response(WebSdkOutputModel):
+                    engines: List[system_status.UpgradeStatus] = ApiField(default_factory=list, alias='Engines')
 
-                return ResponseFactory(response_cls=Response, response=self._get(params=params))
+                return generate_output(response_cls=Response, response=self._get(params=params))
 
         class _History(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/History')
 
             def get(self):
-                class Response(WebSdkResponse):
-                    upgrade_history: List[system_status.UpgradeInfo] = ResponseField(default_factory=list, alias='UpgradeHistory') 
+                class Response(WebSdkOutputModel):
+                    upgrade_history: List[system_status.UpgradeInfo] = ApiField(default_factory=list, alias='UpgradeHistory')
 
-                return ResponseFactory(response_cls=Response, response=self._get())
+                return generate_output(response_cls=Response, response=self._get())
 
         class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Status')
 
             def get(self):
-                class Response(WebSdkResponse):
-                    upgrade_in_progress: bool = ResponseField(alias='UpgradeInProgress')
+                class Response(WebSdkOutputModel):
+                    upgrade_in_progress: bool = ApiField(alias='UpgradeInProgress')
 
-                return ResponseFactory(response_cls=Response, response=self._get())
+                return generate_output(response_cls=Response, response=self._get())
 
         class _Summary(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Summary')
 
             def get(self):
-                class Response(WebSdkResponse):
-                    upgrade_summary: system_status.UpgradeSummary = ResponseField(alias='UpgradeSummary')
+                class Response(WebSdkOutputModel):
+                    upgrade_summary: system_status.UpgradeSummary = ApiField(alias='UpgradeSummary')
 
-                return ResponseFactory(response_cls=Response, response=self._get())
+                return generate_output(response_cls=Response, response=self._get())
 
     class _Version(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SystemStatus/Version')
 
         def get(self):
-            class Response(WebSdkResponse):
-                version: str = ResponseField(alias='Version')
+            class Response(WebSdkOutputModel):
+                version: str = ApiField(alias='Version')
 
-            return ResponseFactory(response=self._get(), response_cls=Response)
+            return generate_output(response=self._get(), response_cls=Response)

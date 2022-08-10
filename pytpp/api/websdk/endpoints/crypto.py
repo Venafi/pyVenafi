@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Crypto:
@@ -12,17 +12,17 @@ class _Crypto:
             super().__init__(api_obj=api_obj, url='/Crypto/AvailableKeys')
 
         def get(self):
-            class Response(WebSdkResponse):
-                keynames: List[str] = ResponseField(alias='Keynames', default_factory=list)
+            class Response(WebSdkOutputModel):
+                keynames: List[str] = ApiField(alias='Keynames', default_factory=list)
 
-            return ResponseFactory(response=self._get(), response_cls=Response)
+            return generate_output(response=self._get(), response_cls=Response)
 
     class _DefaultKey(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Crypto/DefaultKey')
 
         def get(self):
-            class Response(WebSdkResponse):
-                default_key: str = ResponseField(alias='DefaultKey')
+            class Response(WebSdkOutputModel):
+                default_key: str = ApiField(alias='DefaultKey')
 
-            return ResponseFactory(response=self._get(), response_cls=Response)
+            return generate_output(response=self._get(), response_cls=Response)

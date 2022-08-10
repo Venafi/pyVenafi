@@ -1,7 +1,7 @@
 from typing import Optional, Union
 from packaging.version import Version, parse as parse_version
 from pytpp.api.session import Session
-from pytpp.properties.oauth import Scope
+from pytpp.api.websdk.enums.oauth import Scope
 from pytpp.api.websdk.endpoints.authorize import _Authorize
 from pytpp.api.websdk.endpoints.certificates import _Certificates
 from pytpp.api.websdk.endpoints.client import _Client

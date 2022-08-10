@@ -3,10 +3,10 @@ import hashlib
 from dataclasses import dataclass
 from typing import List, Union
 from datetime import datetime
-from pytpp.tools.vtypes import Config, Identity
+from pytpp.tools.vtypes import Identity
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
-from pytpp.properties.secret_store import KeyNames, Namespaces, VaultTypes
+from pytpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
 from pytpp.attributes.workflow import WorkflowAttributes
 from pytpp.attributes.adaptable_workflow import AdaptableWorkflowAttributes
 from pytpp.attributes.workflow_ticket import WorkflowTicketAttributes

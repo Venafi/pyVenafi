@@ -1,6 +1,6 @@
 from typing import List
-from properties.response_objects.dataclasses import secret_store
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import secret_store
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _X509CertificateStore:
@@ -25,12 +25,12 @@ class _X509CertificateStore:
                 'TypedNameValues': typed_name_values
             }
 
-            class Response(WebSdkResponse):
-                leaf_existed: bool = ResponseField(alias='LeafExisted')
-                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_id: int = ResponseField(alias='VaultId')
+            class Response(WebSdkOutputModel):
+                leaf_existed: bool = ApiField(alias='LeafExisted')
+                result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_id: int = ApiField(alias='VaultId')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Lookup(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -44,13 +44,13 @@ class _X509CertificateStore:
                 'Value': value
             }
 
-            class Response(WebSdkResponse):
-                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_id: int = ResponseField(alias='VaultId')
-                vault_ids: List[int] = ResponseField(alias='VaultIds')
-                certificate_collection_strings: List[str] = ResponseField(alias='CertificateCollectionStrings')
+            class Response(WebSdkOutputModel):
+                result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+                vault_id: int = ApiField(alias='VaultId')
+                vault_ids: List[int] = ApiField(alias='VaultIds')
+                certificate_collection_strings: List[str] = ApiField(alias='CertificateCollectionStrings')
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _LookupExpiring(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -62,11 +62,11 @@ class _X509CertificateStore:
                 'OwnerDN': owner_dn
             }
 
-            class Response(WebSdkResponse):
-                vault_ids: List[int] = ResponseField(alias='VaultIds')
-                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+            class Response(WebSdkOutputModel):
+                vault_ids: List[int] = ApiField(alias='VaultIds')
+                result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Remove(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -79,10 +79,10 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            class Response(WebSdkResponse):
-                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+            class Response(WebSdkOutputModel):
+                result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -93,9 +93,9 @@ class _X509CertificateStore:
                 'VaultId': vault_id
             }
 
-            class Response(WebSdkResponse):
-                certificate_string: str = ResponseField(alias='CertificateString')
-                typed_name_values: List[secret_store.TypedNameValues] = ResponseField(alias='TypedNameValues')
-                result: secret_store.Result = ResponseField(alias='Result', converter=lambda x: secret_store.Result(code=x))
+            class Response(WebSdkOutputModel):
+                certificate_string: str = ApiField(alias='CertificateString')
+                typed_name_values: List[secret_store.TypedNameValues] = ApiField(alias='TypedNameValues')
+                result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body))
+            return generate_output(response_cls=Response, response=self._post(data=body))

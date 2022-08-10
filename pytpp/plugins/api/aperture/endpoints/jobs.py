@@ -1,5 +1,5 @@
-from pytpp.api.api_base import ResponseFactory
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
+from pytpp.api.api_base import generate_output
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
 
 
 class _Jobs:
@@ -30,4 +30,4 @@ class _Jobs:
                         'jobAction': job_action
                     }
 
-                    return ResponseFactory(response_cls=ApertureResponse, response=self._post(data=body))
+                    return generate_output(response_cls=ApertureOutputModel, response=self._post(data=body))

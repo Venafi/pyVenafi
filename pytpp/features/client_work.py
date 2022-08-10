@@ -3,7 +3,7 @@ import time
 from typing import List, Union, TYPE_CHECKING
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, InvalidFormat
-from pytpp.properties.config import ClientWorkAttributeValues
+from pytpp.api.websdk.enums.config import ClientWorkAttributeValues
 from pytpp.attributes.client_work_base import ClientWorkBaseAttributes
 from pytpp.attributes.client_agent_configuration_work import ClientAgentConfigurationWorkAttributes
 from pytpp.attributes.client_agent_automatic_upgrade_work import ClientAgentAutomaticUpgradeWorkAttributes
@@ -20,7 +20,7 @@ from pytpp.attributes.client_agent_ssh_provisioning_work import ClientAgentSSHPr
 from pytpp.attributes.client_user_certificate_work import ClientUserCertificateWorkAttributes
 
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config, Identity
+    from pytpp.tools.vtypes import Identity
 
 
 class _ClientWorkBase(FeatureBase):

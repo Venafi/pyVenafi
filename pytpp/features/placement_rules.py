@@ -1,6 +1,5 @@
 from typing import List, Union
-from pytpp.tools.vtypes import Config
-from pytpp.properties.config import PlacementRulesAttributeValues
+from pytpp.api.websdk.enums.config import PlacementRulesAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
 

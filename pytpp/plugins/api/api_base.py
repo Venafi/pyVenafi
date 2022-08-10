@@ -1,7 +1,7 @@
-from pytpp.api.api_base import ApiEndpoint, ApiResponse
+from pytpp.api.api_base import ApiEndpoint, RootOutputModel
 
 
 class ApertureEndpoint(ApiEndpoint): ...
 
 
-class ApertureResponse(ApiResponse): ...
+class ApertureOutputModel(RootOutputModel): ...

@@ -1,10 +1,10 @@
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
-from pytpp.properties.config import ClientGroupsAttributeValues
+from pytpp.api.websdk.enums.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
 from typing import Union, TYPE_CHECKING
 if TYPE_CHECKING:
-    from pytpp.tools.vtypes import Config
+    pass
 
 
 class _ClientGroupBase(FeatureBase):

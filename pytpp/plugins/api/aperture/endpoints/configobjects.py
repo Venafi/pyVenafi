@@ -1,6 +1,6 @@
-from pytpp.api.api_base import ResponseFactory, ResponseField
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureResponse
-from pytpp.plugins.properties.response_objects.dataclasses import config
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.outputs import config
 
 
 class _ConfigObjects:
@@ -16,7 +16,7 @@ class _ConfigObjects:
                 "DN": container + "\\" + name
             }
 
-            class Response(ApertureResponse):
-                object: config.Object = ResponseField()
+            class Response(ApertureOutputModel):
+                object: config.Object = ApiField()
 
-            return ResponseFactory(response_cls=Response, response=self._post(data=body), root_field='object')
+            return generate_output(response_cls=Response, response=self._post(data=body), root_field='object')

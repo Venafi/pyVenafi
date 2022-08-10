@@ -1,7 +1,7 @@
 from typing import Union
-from pytpp.tools.vtypes import Config, Identity
+from pytpp.tools.vtypes import Identity
 from pytpp.features.bases.feature_base import FeatureBase, feature
-from pytpp.properties.response_objects.permissions import Permissions as PermResponseObj
+from pytpp.api.websdk.enums import Permissions as PermResponseObj
 
 
 @feature('Permissions')

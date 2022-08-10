@@ -2,7 +2,7 @@ import logging
 import warnings
 from datetime import datetime
 from pytpp.tools.logger import api_logger
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Authorize(WebSdkEndpoint):
@@ -27,15 +27,15 @@ class _Authorize(WebSdkEndpoint):
             "Password": password
         }
 
-        class Response(WebSdkResponse):
-            token: str = ResponseField(alias='APIKey')
-            valid_until: datetime = ResponseField(alias='ValidUntil')
+        class Response(WebSdkOutputModel):
+            token: str = ApiField(alias='APIKey')
+            valid_until: datetime = ApiField(alias='ValidUntil')
 
         api_logger.debug(f'Authenticating to TPP as "{username}"...')
         with api_logger.suppressed(logging.WARNING):
             response = self._post(data=body)
         api_logger.debug(f'Authenticated as "{username}"!')
-        return ResponseFactory(response=response, response_cls=Response)
+        return generate_output(response=response, response_cls=Response)
 
     class _Certificate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -48,22 +48,22 @@ class _Authorize(WebSdkEndpoint):
                 'scope': scope
             }
 
-            class Response(WebSdkResponse):
-                access_token: str = ResponseField(alias='access_token')
-                expires: datetime = ResponseField(alias='expires')
-                expires_in: int = ResponseField(alias='expires_in')
-                identity: str = ResponseField(alias='identity')
-                refresh_token: str = ResponseField(alias='refresh_token')
-                refresh_until: datetime = ResponseField(alias='refresh_until')
-                scope: str = ResponseField(alias='scope')
-                token_type: str = ResponseField(alias='token_type')
+            class Response(WebSdkOutputModel):
+                access_token: str = ApiField(alias='access_token')
+                expires: datetime = ApiField(alias='expires')
+                expires_in: int = ApiField(alias='expires_in')
+                identity: str = ApiField(alias='identity')
+                refresh_token: str = ApiField(alias='refresh_token')
+                refresh_until: datetime = ApiField(alias='refresh_until')
+                scope: str = ApiField(alias='scope')
+                token_type: str = ApiField(alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return ResponseFactory(response=response, response_cls=Response)
+            return generate_output(response=response, response_cls=Response)
 
     class _Device(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -76,21 +76,21 @@ class _Authorize(WebSdkEndpoint):
                 'scope'    : scope
             }
 
-            class Response(WebSdkResponse):
-                device_code: str = ResponseField(alias='device_code')
-                interval: int = ResponseField(alias='interval')
-                user_code: str = ResponseField(alias='user_code')
-                verification_uri: str = ResponseField(alias='verification_uri')
-                verification_url_complete: str = ResponseField(alias='verification_uri_complete')
-                expires_in: int = ResponseField(alias='expires_in')
-                expires: datetime = ResponseField(alias='expires')
+            class Response(WebSdkOutputModel):
+                device_code: str = ApiField(alias='device_code')
+                interval: int = ApiField(alias='interval')
+                user_code: str = ApiField(alias='user_code')
+                verification_uri: str = ApiField(alias='verification_uri')
+                verification_url_complete: str = ApiField(alias='verification_uri_complete')
+                expires_in: int = ApiField(alias='expires_in')
+                expires: datetime = ApiField(alias='expires')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" using a certificate file...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return ResponseFactory(response=response, response_cls=Response)
+            return generate_output(response=response, response_cls=Response)
 
     class _Integrated(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -104,17 +104,17 @@ class _Authorize(WebSdkEndpoint):
                 'state'    : state
             }
 
-            class Response(WebSdkResponse):
-                access_token: str = ResponseField(alias='access_token', default=None)
-                expires: datetime = ResponseField(alias='expires')
-                expires_in: int = ResponseField(alias='expires_in')
-                identity: str = ResponseField(alias='identity')
-                refresh_token: str = ResponseField(alias='refresh_token')
-                refresh_until: datetime = ResponseField(alias='refresh_until')
-                scope: str = ResponseField(alias='scope')
-                token_type: str = ResponseField(alias='token_type')
+            class Response(WebSdkOutputModel):
+                access_token: str = ApiField(alias='access_token', default=None)
+                expires: datetime = ApiField(alias='expires')
+                expires_in: int = ApiField(alias='expires_in')
+                identity: str = ApiField(alias='identity')
+                refresh_token: str = ApiField(alias='refresh_token')
+                refresh_until: datetime = ApiField(alias='refresh_until')
+                scope: str = ApiField(alias='scope')
+                token_type: str = ApiField(alias='token_type')
 
-            return ResponseFactory(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), response_cls=Response)
 
     class _OAuth(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -130,22 +130,22 @@ class _Authorize(WebSdkEndpoint):
                 'state': state
             }
 
-            class Response(WebSdkResponse):
-                access_token: str = ResponseField(alias='access_token', default=None)
-                expires: datetime = ResponseField(alias='expires')
-                expires_in: int = ResponseField(alias='expires_in')
-                identity: str = ResponseField(alias='identity')
-                refresh_token: str = ResponseField(alias='refresh_token')
-                refresh_until: datetime = ResponseField(alias='refresh_until')
-                scope: str = ResponseField(alias='scope')
-                token_type: str = ResponseField(alias='token_type')
+            class Response(WebSdkOutputModel):
+                access_token: str = ApiField(alias='access_token', default=None)
+                expires: datetime = ApiField(alias='expires')
+                expires_in: int = ApiField(alias='expires_in')
+                identity: str = ApiField(alias='identity')
+                refresh_token: str = ApiField(alias='refresh_token')
+                refresh_until: datetime = ApiField(alias='refresh_until')
+                scope: str = ApiField(alias='scope')
+                token_type: str = ApiField(alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
                              f'with scope "{scope}" as "{username}"...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated as {username}!')
-            return ResponseFactory(response=response, response_cls=Response)
+            return generate_output(response=response, response_cls=Response)
 
     class _Token(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -160,20 +160,20 @@ class _Authorize(WebSdkEndpoint):
                 'device_code': device_code
             }
 
-            class Response(WebSdkResponse):
-                access_token: str = ResponseField(alias='access_token')
-                expires: datetime = ResponseField(alias='expires')
-                expires_in: int = ResponseField(alias='expires_in')
-                refresh_token: str = ResponseField(alias='refresh_token')
-                refresh_until: datetime = ResponseField(alias='refresh_until')
-                scope: str = ResponseField(alias='scope')
-                token_type: str = ResponseField(alias='token_type')
+            class Response(WebSdkOutputModel):
+                access_token: str = ApiField(alias='access_token')
+                expires: datetime = ApiField(alias='expires')
+                expires_in: int = ApiField(alias='expires_in')
+                refresh_token: str = ApiField(alias='refresh_token')
+                refresh_until: datetime = ApiField(alias='refresh_until')
+                scope: str = ApiField(alias='scope')
+                token_type: str = ApiField(alias='token_type')
 
             api_logger.debug(f'Authenticating to TPP OAuth application with a refresh token...')
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return ResponseFactory(response=response, response_cls=Response)
+            return generate_output(response=response, response_cls=Response)
 
     class _Verify(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -181,14 +181,14 @@ class _Authorize(WebSdkEndpoint):
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            class Response(WebSdkResponse):
-                access_issued_on_unix_time: datetime = ResponseField(alias='access_issued_on_unix_time')
-                application: str = ResponseField(alias='application')
-                expires_unix_time: datetime = ResponseField(alias='expires_unix_time')
-                grant_issued_on_unix_time: datetime = ResponseField(alias='grant_issued_on_unix_time')
-                identity: str = ResponseField(alias='identity')
-                scope: str = ResponseField(alias='scope')
-                valid_for: int = ResponseField(alias='valid_for')
+            class Response(WebSdkOutputModel):
+                access_issued_on_unix_time: datetime = ApiField(alias='access_issued_on_unix_time')
+                application: str = ApiField(alias='application')
+                expires_unix_time: datetime = ApiField(alias='expires_unix_time')
+                grant_issued_on_unix_time: datetime = ApiField(alias='grant_issued_on_unix_time')
+                identity: str = ApiField(alias='identity')
+                scope: str = ApiField(alias='scope')
+                valid_for: int = ApiField(alias='valid_for')
         
                 @property
                 def access_issued_on(self):
@@ -214,4 +214,4 @@ class _Authorize(WebSdkEndpoint):
                 def grant_issued_on_ISO8601(self):
                     return self.grant_issued_on_unix_time
 
-            return ResponseFactory(response=self._get(), response_cls=Response)
+            return generate_output(response=self._get(), response_cls=Response)

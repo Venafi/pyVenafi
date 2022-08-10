@@ -1,4 +1,4 @@
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Platform:
@@ -14,7 +14,7 @@ class _Platform:
                 'Platform': platform
             }
 
-            class Response(WebSdkResponse):
-                success: bool = ResponseField(alias='Success')
+            class Response(WebSdkOutputModel):
+                success: bool = ApiField(alias='Success')
 
-            return ResponseFactory(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), response_cls=Response)

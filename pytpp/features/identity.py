@@ -1,5 +1,5 @@
 from pytpp.attributes.user import UserAttributes
-from pytpp.properties.config import IdentityAttributeValues
+from pytpp.api.websdk.enums.config import IdentityAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.features.definitions.classes import Classes

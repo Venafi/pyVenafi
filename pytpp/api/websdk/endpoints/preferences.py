@@ -1,6 +1,6 @@
 from typing import List
-from pytpp.properties.response_objects.dataclasses import preferences as prefs
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkResponse, ResponseFactory, ResponseField
+from pytpp.api.websdk.outputs import preferences as prefs
+from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Preferences(WebSdkEndpoint):
@@ -14,17 +14,17 @@ class _Preferences(WebSdkEndpoint):
             'Product': product
         }
 
-        class Response(WebSdkResponse):
-            preferences: List[prefs.Preference] = ResponseField(alias='Preferences', default_factory=list)
+        class Response(WebSdkOutputModel):
+            preferences: List[prefs.Preference] = ApiField(alias='Preferences', default_factory=list)
 
-        return ResponseFactory(response_cls=Response, response=self._get(params=params))
+        return generate_output(response_cls=Response, response=self._get(params=params))
 
     def post(self, preferences: list):
         body = {
             'Preferences': preferences
         }
 
-        return ResponseFactory(response_cls=WebSdkResponse, response=self._post(data=body))
+        return generate_output(response_cls=WebSdkOutputModel, response=self._post(data=body))
 
     def delete(self, category: str = None, name: str = None, product: prefs.ProductType = None):
         params = {
@@ -33,4 +33,4 @@ class _Preferences(WebSdkEndpoint):
             'Product': product
         }
 
-        return ResponseFactory(response_cls=WebSdkResponse, response=self._delete(params=params))
+        return generate_output(response_cls=WebSdkOutputModel, response=self._delete(params=params))
