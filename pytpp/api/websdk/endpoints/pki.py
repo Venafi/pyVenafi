@@ -24,7 +24,7 @@ class _PKI:
                 class Output(WebSdkOutputModel):
                     pkis : List[pki.PKI] = ApiField(default_factory=list, alias='pkis')
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
             def post(self, certificate: dict, folder_dn: str, pki_path: str, roles: List[str],
                      create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
@@ -48,7 +48,7 @@ class _PKI:
                     certificate_guid: str = ApiField(alias='CertificateGuid')
                     guid: str = ApiField(alias='Guid')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
             class _Guid(WebSdkEndpoint):
                 def __init__(self, guid: str, api_obj):
@@ -62,7 +62,7 @@ class _PKI:
                         certificate_guid: str = ApiField(alias='CertificateGuid')
                         guid: str = ApiField(alias='Guid')
 
-                    return generate_output(output=Output, response=self._delete())
+                    return generate_output(output_cls=Output, response=self._delete())
 
                 def get(self):
                     class Output(WebSdkOutputModel):
@@ -74,7 +74,7 @@ class _PKI:
                         pki_path: str = ApiField(alias='PkiPath')
                         roles: List[str] = ApiField(alias='Roles')
 
-                    return generate_output(output=Output, response=self._get())
+                    return generate_output(output_cls=Output, response=self._get())
 
                 def post(self):
                     class Output(WebSdkOutputModel):
@@ -82,7 +82,7 @@ class _PKI:
                         certificate_guid: str = ApiField(alias='CertificateGuid')
                         guid: str = ApiField(alias='Guid')
 
-                    return generate_output(output=Output, response=self._post(data={}))
+                    return generate_output(output_cls=Output, response=self._post(data={}))
 
                 def put(self, folder_dn: str, pki_path: str, roles: List[str], certificate: dict = None,
                         create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
@@ -106,7 +106,7 @@ class _PKI:
                         certificate_guid: str = ApiField(alias='CertificateGuid')
                         guid: str = ApiField(alias='Guid')
 
-                    return generate_output(output=Output, response=self._put(data=body))
+                    return generate_output(output_cls=Output, response=self._put(data=body))
 
                 class _Renew(WebSdkEndpoint):
                     def __init__(self, guid: str, api_obj):
@@ -118,7 +118,7 @@ class _PKI:
                             certificate_guid: str = ApiField(alias='CertificateGuid')
                             guid: str = ApiField(alias='Guid')
 
-                        return generate_output(output=Output, response=self._post(data={}))
+                        return generate_output(output_cls=Output, response=self._post(data={}))
 
         class _Role(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -146,7 +146,7 @@ class _PKI:
                 class Output(WebSdkOutputModel):
                     guid: str = ApiField(alias='Guid')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
             def Guid(self, guid: str):
                 return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -159,7 +159,7 @@ class _PKI:
                     class Output(WebSdkOutputModel):
                         guid: str = ApiField(alias='Guid')
 
-                    return generate_output(output=Output, response=self._delete())
+                    return generate_output(output_cls=Output, response=self._delete())
 
                 def get(self):
                     class Output(WebSdkOutputModel):
@@ -176,7 +176,7 @@ class _PKI:
                         state: str = ApiField(alias='State')
                         whitelisted_domains: List[str] = ApiField(default_factory=list, alias='WhitelistedDomains')
 
-                    return generate_output(output=Output, response=self._get())
+                    return generate_output(output_cls=Output, response=self._get())
 
                 def put(self, city: str = None, country: str = None,
                         enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
@@ -197,4 +197,4 @@ class _PKI:
                     class Output(WebSdkOutputModel):
                         guid: str = ApiField(alias='Guid')
 
-                    return generate_output(output=Output, response=self._put(data=body))
+                    return generate_output(output_cls=Output, response=self._put(data=body))

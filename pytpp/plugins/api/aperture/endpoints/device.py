@@ -33,11 +33,11 @@ class _Device(ApertureEndpoint):
             "Limit"            : limit
         }
 
-        class Response(ApertureOutputModel):
+        class Output(ApertureOutputModel):
             total_count: int = ApiField(key='totalCount')
             devices_list_items: List[device.Device] = ApiField(alias='devicesListItems', default_factory=list)
 
-        return generate_output(output_cls=Response, response=self._post(data=body))
+        return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetStatus(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -51,12 +51,12 @@ class _Device(ApertureEndpoint):
                 'deviceGuid': device_guid
             }
 
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 is_out_of_compliance: bool = ApiField(alias='isOutOfCompliance')
                 discovery_stage: int = ApiField(alias='discoveryStage')
                 discovery_status: str = ApiField(alias='discoveryStatus')
 
-            return generate_output(output_cls=Response, response=self._get(params=params))
+            return generate_output(output_cls=Output, response=self._get(params=params))
 
     class _BulkOperations:
         def __init__(self, api_obj):

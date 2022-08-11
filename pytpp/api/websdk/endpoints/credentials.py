@@ -38,7 +38,7 @@ class _Credentials:
                 class Output(WebSdkOutputModel):
                     result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -56,7 +56,7 @@ class _Credentials:
                 class Output(WebSdkOutputModel):
                     result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Connector:
         def __init__(self, api_obj):
@@ -81,7 +81,7 @@ class _Credentials:
                 class Output(WebSdkOutputModel):
                     succcess: bool = ApiField(alias='Succcess')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
             def Guid(self, guid: str):
                 return self._Guid(api_obj=self._api_obj, guid=guid)
@@ -94,7 +94,7 @@ class _Credentials:
                     class Output(WebSdkOutputModel):
                         success: bool = ApiField(alias='Success')
 
-                    return generate_output(output=Output, response=self._delete())
+                    return generate_output(output_cls=Output, response=self._delete())
 
                 def get(self):
                     class Output(WebSdkOutputModel):
@@ -104,7 +104,7 @@ class _Credentials:
                         service_credential: str = ApiField(alias='ServiceCredential')
                         success: bool = ApiField(alias='Success')
 
-                    return generate_output(output=Output, response=self._get())
+                    return generate_output(output_cls=Output, response=self._get())
 
                 def put(self, connector_name: str = None, powershell_script: str = None,
                         service_address: str = None, service_credential: str = None,
@@ -121,7 +121,7 @@ class _Credentials:
                     class Output(WebSdkOutputModel):
                         succcess: bool = ApiField(alias='Succcess')
 
-                    return generate_output(output=Output, response=self._put(data=body))
+                    return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Create(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -144,7 +144,7 @@ class _Credentials:
             class Output(WebSdkOutputModel):
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Delete(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -158,7 +158,7 @@ class _Credentials:
             class Output(WebSdkOutputModel):
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Enumerate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -175,7 +175,7 @@ class _Credentials:
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
                 credential_infos: List[credential.CredentialInfo] = ApiField(default_factory=list, alias='CredentialInfos')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Rename(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -190,7 +190,7 @@ class _Credentials:
             class Output(WebSdkOutputModel):
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -210,7 +210,7 @@ class _Credentials:
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
                 values: List[credential.NameTypeValue] = ApiField(default_factory=list, alias='Values')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Update(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -241,7 +241,7 @@ class _Credentials:
             class Output(WebSdkOutputModel):
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _CyberArk:
         def __init__(self, api_obj):
@@ -268,7 +268,7 @@ class _Credentials:
                 class Output(WebSdkOutputModel):
                     result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -290,4 +290,4 @@ class _Credentials:
                 class Output(WebSdkOutputModel):
                     result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))

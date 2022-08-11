@@ -64,7 +64,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddApplicationAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -79,7 +79,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddProjectAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -94,7 +94,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddProjectApprover(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -109,7 +109,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddPreApproval(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -132,7 +132,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CountReferences(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -149,7 +149,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -165,7 +165,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -181,7 +181,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -213,7 +213,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateProject(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -229,7 +229,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -247,7 +247,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -264,7 +264,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -281,7 +281,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -298,7 +298,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteProject(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -315,7 +315,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -333,7 +333,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateApplications(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -350,7 +350,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateApplicationCollections(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -367,7 +367,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateProjects(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -385,7 +385,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateReferences(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -408,7 +408,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateTemplates(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -430,7 +430,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -448,7 +448,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -466,7 +466,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollectionMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -484,7 +484,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollectionMemberDNs(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -505,7 +505,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -528,7 +528,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetGlobalConfiguration(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -540,7 +540,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._get(), output=Output)
+            return generate_output(response=self._get(), output_cls=Output)
 
     class _GetObjectRights(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -556,7 +556,7 @@ class _Codesign:
                 rights_list: List[codesign.RightsKeyValue] = ApiField(alias='RightsList')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetProject(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -574,7 +574,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetRight(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -590,7 +590,7 @@ class _Codesign:
                 rights: codesign.Rights = ApiField(alias='Rights', converter=lambda x: codesign.Rights(value=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -613,7 +613,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetTrusteeRights(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -629,7 +629,7 @@ class _Codesign:
                 rights_list : List[codesign.RightsKeyValue] = ApiField(alias='RightsList')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -644,7 +644,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveApplicationAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -659,7 +659,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveProjectAdministrator(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -674,7 +674,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveProjectApprover(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -689,7 +689,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -705,7 +705,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -721,7 +721,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameProject(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -739,7 +739,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -757,7 +757,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _SetGlobalConfiguration(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -772,7 +772,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateApplication(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -787,7 +787,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateApplicationCollection(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -802,7 +802,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateEnvironment(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -829,7 +829,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateProject(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -844,7 +844,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateProjectStatus(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -862,7 +862,7 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateTemplate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -879,4 +879,4 @@ class _Codesign:
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)

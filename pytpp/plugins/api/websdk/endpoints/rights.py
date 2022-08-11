@@ -33,10 +33,10 @@ class _Rights:
                 'UniversalID': universal_id
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 rights: List[rights.Rights] = ApiField(alias='Rights')
 
-            return generate_output(output_cls=Response, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Refresh(WebSdkEndpoint):
         def __init__(self, api_obj):

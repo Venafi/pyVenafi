@@ -13,11 +13,11 @@ class _Version:
             super().__init__(api_obj=api_obj, url='/version/schema')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 additional_schema_info: List[str] = ApiField(alias='additionalSchemaInfo', default_factory=list)
                 currentDbSchemaVersion: str = ApiField(alias='currentDbSchemaVersion')
                 current_db_schema_version_installation_date: datetime = ApiField(alias='currentDbSchemaVersionInstallationDate')
                 engine_name: str = ApiField(alias='EngineName')
                 schema_version: str = ApiField(alias='schemaVersion')
 
-            return generate_output(output_cls=Response, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())

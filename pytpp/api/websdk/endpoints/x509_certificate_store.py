@@ -30,7 +30,7 @@ class _X509CertificateStore:
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_id: int = ApiField(alias='VaultId')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Lookup(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -50,7 +50,7 @@ class _X509CertificateStore:
                 vault_ids: List[int] = ApiField(alias='VaultIds')
                 certificate_collection_strings: List[str] = ApiField(alias='CertificateCollectionStrings')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _LookupExpiring(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -66,7 +66,7 @@ class _X509CertificateStore:
                 vault_ids: List[int] = ApiField(alias='VaultIds')
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Remove(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -82,7 +82,7 @@ class _X509CertificateStore:
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -98,4 +98,4 @@ class _X509CertificateStore:
                 typed_name_values: List[secret_store.TypedNameValues] = ApiField(alias='TypedNameValues')
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))

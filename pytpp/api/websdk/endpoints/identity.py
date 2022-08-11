@@ -36,7 +36,7 @@ class _Identity:
                 invalid_owners: List[ident.InvalidIdentity] = ApiField('InvalidOwners', default_factory=list)
                 message: str = ApiField(alias='Message')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddGroupMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -54,7 +54,7 @@ class _Identity:
                 members: List[ident.Identity] = ApiField(alias='Members', default_factory=list)
                 message: str = ApiField(alias='Message')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Browse(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -71,7 +71,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField('Identities', default_factory=list)
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetAssociatedEntries(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -85,7 +85,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField('Identities', default_factory=list)
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -100,7 +100,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetMemberships(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -114,7 +114,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Group:
         def __init__(self, api_obj):
@@ -139,7 +139,7 @@ class _Identity:
                     class Output(WebSdkOutputModel):
                         message: str = ApiField(alias='Message')
 
-                    return generate_output(output=Output, response=self._delete())
+                    return generate_output(output_cls=Output, response=self._delete())
 
     class _ReadAttribute(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -154,7 +154,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 attributes: List[str] = ApiField(alias='Attributes')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RemoveGroupMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -172,7 +172,7 @@ class _Identity:
                 members: List[ident.Identity] = ApiField(alias='Members', default_factory=list)
                 message: str = ApiField(alias='Message')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RenameGroup(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -187,7 +187,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Self(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -197,7 +197,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities')
 
-            return generate_output(output=Output, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())
 
     class _SetPassword(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -213,7 +213,7 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Validate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -227,4 +227,4 @@ class _Identity:
             class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))

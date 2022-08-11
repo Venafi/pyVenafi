@@ -26,10 +26,10 @@ class _ApplicationIntegration(ApertureEndpoint):
             'vendor'                   : vendor
         }
 
-        class Response(ApertureOutputModel):
+        class Output(ApertureOutputModel):
             application_id: str = ApiField()
 
-        return generate_output(output_cls=Response, response=self._post(data=body), root_field='application_id')
+        return generate_output(output_cls=Output, response=self._post(data=body), root_field='application_id')
 
     def put(self, application_id: str, application_name: str, application_scope: dict,
             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -48,10 +48,10 @@ class _ApplicationIntegration(ApertureEndpoint):
             'vendor'                   : vendor
         }
 
-        class Response(ApertureOutputModel):
+        class Output(ApertureOutputModel):
             application_id: str = ApiField()
 
-        return generate_output(output_cls=Response, response=self._put(data=body), root_field='application_id')
+        return generate_output(output_cls=Output, response=self._put(data=body), root_field='application_id')
 
     def ApplicationId(self, id: str):
         return self._ApplicationId(id=id, api_obj=self._api_obj)
@@ -82,7 +82,7 @@ class _ApplicationIntegration(ApertureEndpoint):
             return generate_output(output_cls=ApertureOutputModel, response=self._delete())
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 access_granted: int = ApiField(alias='accessGranted')
                 access_validity_days: int = ApiField(alias='accessValidityDays')
                 allowed_identities : List[identity.Identity] = ApiField(default_factory=list, alias='allowedIdentities')
@@ -95,4 +95,4 @@ class _ApplicationIntegration(ApertureEndpoint):
                 renewable: bool = ApiField(alias='renewable')
                 vendor: str = ApiField(alias='vendor')
 
-            return generate_output(output_cls=Response, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())

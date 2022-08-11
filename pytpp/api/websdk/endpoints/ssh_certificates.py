@@ -43,7 +43,7 @@ class _SSHCertificates:
                     public_key_data: str = ApiField(alias='PublicKeyData')
                     response: ssh_certificates.Output = ApiField(alias='Response')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Request(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -79,7 +79,7 @@ class _SSHCertificates:
                 processing_details: ssh_certificates.ProcessingDetails = ApiField(alias='ProcessingDetails')
                 response: ssh_certificates.Output = ApiField(alias='Response')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -109,7 +109,7 @@ class _SSHCertificates:
                 request_details: ssh_certificates.RequestDetails = ApiField(alias='RequestDetails')
                 response: ssh_certificates.Output = ApiField(alias='Response')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Template(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -142,7 +142,7 @@ class _SSHCertificates:
                     name: str = ApiField(alias='Name')
                     response: ssh_certificates.Output = ApiField(alias='Response')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
             class _PublicKeyData(WebSdkEndpoint):
                 def __init__(self, api_obj):
@@ -157,4 +157,4 @@ class _SSHCertificates:
                     class Output(WebSdkOutputModel):
                         response: ssh_certificates.Output = ApiField(alias='Response')
 
-                    return generate_output(output=Output, response=self._get(params=params))
+                    return generate_output(output_cls=Output, response=self._get(params=params))

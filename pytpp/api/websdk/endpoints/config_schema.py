@@ -19,7 +19,7 @@ class _ConfigSchema:
                 )
                 result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
-            return generate_output(response=self._post(data={}), output=Output)
+            return generate_output(response=self._post(data={}), output_cls=Output)
 
     class _Class(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -34,4 +34,4 @@ class _ConfigSchema:
                 class_definition: config_schema.ClassDefinition = ApiField(alias='ClassDefinition')
                 result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)

@@ -42,7 +42,7 @@ class _HSMAPI:
                 success: bool = ApiField(alias='Success')
                 try_later: bool = ApiField(alias='TryLater')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SignJWT(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -63,7 +63,7 @@ class _HSMAPI:
                 result_data: str = ApiField(alias='ResultData')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetGPGPublicKey(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -82,7 +82,7 @@ class _HSMAPI:
                 public_key: str = ApiField(alias='PublicKey')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetObjects(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -106,4 +106,4 @@ class _HSMAPI:
                 public_keys: List[hsm_api.PublicKey] = ApiField(alias='PublicKeys')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))

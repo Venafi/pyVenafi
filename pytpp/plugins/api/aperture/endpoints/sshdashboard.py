@@ -32,184 +32,184 @@ class _SshDashboard:
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountAccessOrphan')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountKeysetsInError(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountKeysetsInError')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountNeedsActionFromMe(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountNeedsActionFromMe')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountNistNonComplaint(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountNistNonComplaint')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 total: int = ApiField(alias='total')
                 all_codes: List[int] = ApiField(alias='allCodes', default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())
 
     class _CountPendingMyApprovalKeys(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountPendingMyApprovalKeys')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountPrivateKeyOrphans(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountPrivateKeyOrphans')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountRootAuthorization(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountRootAuthorization')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountSmallKeyLength(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountSmallKeyLength')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountTotal(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountTotal')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountUnknownClientAccess(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUnknownClientAccess')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountUntrackedKeys(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUntrackedKeys')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _CountUnusedAuthorizedKeys(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/CountUnusedAuthorizedKeys')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _GetCriticalAlertsPrefs(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/GetCriticalAlertsPrefs')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 hide_zeros: bool = ApiField(alias='hideZeros')
                 key_length: int = ApiField(alias='keyLength')
                 last_used: datetime = ApiField(alias='lastUsed')
                 has_permissions_to_lock: bool = ApiField(alias='hasPermissionsToLock')
 
-            return generate_output(output_cls=Response, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())
 
     class _KeyAlgorithms(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/KeyAlgorithms')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[ssh_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _KeyLengths(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/keylengths')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[ssh_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _PolicyViolations(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/PolicyViolations')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 policy_violations : List[ssh_dashboard.PolicyViolation] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='policy_violations')
+            return generate_output(output_cls=Output, response=self._get(), root_field='policy_violations')
 
     class _Trends(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/Trends')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 trends: List[ssh_dashboard.Trend] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='trends')
+            return generate_output(output_cls=Output, response=self._get(), root_field='trends')
 
     class _TrustsPerUserKeyset(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/SshDashboard/TrustsPerUserKeyset')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[ssh_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
 
 

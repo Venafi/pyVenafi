@@ -29,7 +29,7 @@ class _Discovery:
                 'type'          : 'Certificate' if cert_location_dn else 'Ssh'
             }
 
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 cert_location: config.Object = ApiField(alias='certLocation')
                 conditions: List[placement_rules.Condition] = ApiField(alias='conditions', default_factory=list)
                 device_location: config.Object = ApiField(alias='deviceLocation')
@@ -39,7 +39,7 @@ class _Discovery:
                 rule_container: config.Object = ApiField(alias='ruleContainer')
                 type: str = ApiField(alias='type')
 
-            return generate_output(output_cls=Response, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
         def put(self, guid: str, name: str, conditions: List[dict], device_location_dn: dict, cert_location_dn: dict = None):
             body = {
@@ -58,7 +58,7 @@ class _Discovery:
                 'type'          : 'Certificate' if cert_location_dn else 'Ssh'
             }
 
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 cert_location: config.Object = ApiField(alias='certLocation')
                 conditions: List[placement_rules.Condition] = ApiField(alias='conditions', default_factory=list)
                 device_location: config.Object = ApiField(alias='deviceLocation')
@@ -68,7 +68,7 @@ class _Discovery:
                 rule_container: config.Object = ApiField(alias='ruleContainer')
                 type: str = ApiField(alias='type')
 
-            return generate_output(output_cls=Response, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
         def Guid(self, guid: str):
             return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -78,7 +78,7 @@ class _Discovery:
                 super().__init__(api_obj=api_obj, url=f'discovery/placementrules/{guid}')
 
             def get(self):
-                class Response(ApertureOutputModel):
+                class Output(ApertureOutputModel):
                     cert_location: config.Object = ApiField(alias='certLocation')
                     conditions: List[placement_rules.Condition] = ApiField(alias='conditions', default_factory=list)
                     device_location: config.Object = ApiField(alias='deviceLocation')
@@ -89,11 +89,11 @@ class _Discovery:
                     rule_container: config.Object = ApiField(alias='ruleContainer')
                     type: str = ApiField(alias='type')
 
-                return generate_output(output_cls=Response, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
             def delete(self):
-                class Response(ApertureOutputModel):
+                class Output(ApertureOutputModel):
                     def __init__(self, response, api_source):
                         super().__init__(response=response, api_source=api_source)
 
-                return generate_output(output_cls=Response, response=self._delete())
+                return generate_output(output_cls=Output, response=self._delete())

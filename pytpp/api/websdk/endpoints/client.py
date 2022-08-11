@@ -37,7 +37,7 @@ class _Client(WebSdkEndpoint):
             error_description: str = ApiField(alias='error_description')
             error: str = ApiField(alias='error')
 
-        return generate_output(response=self._get(params=params), output=Output, root_field='clients')
+        return generate_output(response=self._get(params=params), output_cls=Output, root_field='clients')
 
     class _Delete(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -54,7 +54,7 @@ class _Client(WebSdkEndpoint):
                 error_description: str = ApiField(alias='error_description')
                 error: str = ApiField(alias='error')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Details(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -87,7 +87,7 @@ class _Client(WebSdkEndpoint):
                 error_description: str = ApiField(alias='error_description')
                 error: str = ApiField(alias='error')
 
-            return generate_output(response=self._get(params=params), output=Output, root_field='details')
+            return generate_output(response=self._get(params=params), output_cls=Output, root_field='details')
 
     class _Work(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -103,4 +103,4 @@ class _Client(WebSdkEndpoint):
                 error_description: str = ApiField(alias='error_description')
                 error: str = ApiField(alias='error')
 
-            return generate_output(response=self._get(params=params), output=Output, root_field='works')
+            return generate_output(response=self._get(params=params), output_cls=Output, root_field='works')

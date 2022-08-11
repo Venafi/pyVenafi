@@ -31,10 +31,10 @@ class _Reports(ApertureEndpoint):
             "skipEmpty"  : skip_empty
         }
 
-        class Response(ApertureOutputModel):
+        class Output(ApertureOutputModel):
             guid: str = ApiField()
 
-        return generate_output(output_cls=Response, response=self._post(data=body), root_field='guid')
+        return generate_output(output_cls=Output, response=self._post(data=body), root_field='guid')
 
     def Guid(self, guid: str):
         return self._Guid(api_obj=self._api_obj, guid=guid)
@@ -44,7 +44,7 @@ class _Reports(ApertureEndpoint):
             super().__init__(api_obj=api_obj, url=f'/reports/{guid}')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 name: str = ApiField(alias='name')
                 title: str = ApiField(alias='title')
                 inventory: str = ApiField(alias='inventory')
@@ -60,7 +60,7 @@ class _Reports(ApertureEndpoint):
                 description: str = ApiField(alias='description')
                 last_run: datetime = ApiField(alias='lastRun')
 
-            return generate_output(output_cls=Response, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())
 
     class _RunNow:
         def __init__(self, api_obj):

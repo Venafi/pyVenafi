@@ -12,7 +12,7 @@ class _ReportDefaults(ApertureEndpoint):
         )
 
     def get(self):
-        class Response(ApertureOutputModel):
+        class Output(ApertureOutputModel):
             name: str = ApiField(alias='name')
             title: str = ApiField(alias='title')
             inventory: str = ApiField(alias='inventory')
@@ -27,4 +27,4 @@ class _ReportDefaults(ApertureEndpoint):
             disabled: bool = ApiField(alias='disabled')
             description: str = ApiField(alias='description')
 
-        return generate_output(output_cls=Response, response=self._get())
+        return generate_output(output_cls=Output, response=self._get())

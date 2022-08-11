@@ -122,7 +122,8 @@ class Folder(FeatureBase):
         if attributes:
             folder_attrs.update(attributes)
 
-        folder = self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=PolicyAttributes.__config_class__, attributes=folder_attrs,
+        folder = self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder),
+                                     config_class=PolicyAttributes.__config_class__, attributes=folder_attrs,
                                      get_if_already_exists=get_if_already_exists)
         if log_server:
             self._api.websdk.Config.WritePolicy.post(

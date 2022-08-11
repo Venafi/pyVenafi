@@ -41,7 +41,7 @@ class _Flow:
                             )
                             success: bool = ApiField(alias='Success')
 
-                        return generate_output(output=Output, response=self._post(data=body))
+                        return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Tickets:
         def __init__(self, api_obj):
@@ -73,7 +73,7 @@ class _Flow:
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Count(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -85,7 +85,7 @@ class _Flow:
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data={}))
+                return generate_output(output_cls=Output, response=self._post(data={}))
 
         class _CountApproved(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -97,7 +97,7 @@ class _Flow:
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data={}))
+                return generate_output(output_cls=Output, response=self._post(data={}))
 
         class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -115,7 +115,7 @@ class _Flow:
                     message: str = ApiField(alias='Message')
                     tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _EnumerateApproved(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -133,7 +133,7 @@ class _Flow:
                     message: str = ApiField(alias='Message')
                     tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Load(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -150,7 +150,7 @@ class _Flow:
                     message: str = ApiField(alias='Message')
                     tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Reject(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -170,7 +170,7 @@ class _Flow:
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -191,4 +191,4 @@ class _Flow:
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))

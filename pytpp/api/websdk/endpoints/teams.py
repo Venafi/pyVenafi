@@ -29,7 +29,7 @@ class _Teams(WebSdkEndpoint):
             invalid_owners: List[ident.InvalidIdentity] = ApiField(alias='InvalidOwners')
             message: str = ApiField(alias='Message')
 
-        return generate_output(output=Output, response=self._post(data=body))
+        return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddTeamMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -47,7 +47,7 @@ class _Teams(WebSdkEndpoint):
                 members: List[ident.Identity] = ApiField(default_factory=list, alias='Members')
                 message: str = ApiField(alias='Message')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _AddTeamOwners(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -65,7 +65,7 @@ class _Teams(WebSdkEndpoint):
                 message: str = ApiField(alias='Message')
                 owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _DemoteTeamOwners(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -84,7 +84,7 @@ class _Teams(WebSdkEndpoint):
                 message: str = ApiField(alias='Message')
                 owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     def Prefix(self, prefix='local'):
         return self._Prefix(prefix=prefix, api_obj=self._api_obj)
@@ -109,7 +109,7 @@ class _Teams(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     message: str = ApiField(alias='Message')
 
-                return generate_output(output=Output, response=self._delete())
+                return generate_output(output_cls=Output, response=self._delete())
 
             def get(self):
                 class Output(WebSdkOutputModel):
@@ -121,7 +121,7 @@ class _Teams(WebSdkEndpoint):
                     owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
                     products: List[str] = ApiField(default_factory=list, alias='Products')
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
             def put(self, assets: list, description: str, name: str, owners: list, members: list, products: list):
                 body = {
@@ -139,7 +139,7 @@ class _Teams(WebSdkEndpoint):
                     invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
                     message: str = ApiField(alias='Message')
 
-                return generate_output(output=Output, response=self._put(data=body))
+                return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RemoveTeamMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -158,7 +158,7 @@ class _Teams(WebSdkEndpoint):
                 message: str = ApiField(alias='Message')
                 owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RenameTeam(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -174,4 +174,4 @@ class _Teams(WebSdkEndpoint):
                 identity: ident.Identity = ApiField(alias='ID')
                 message: str = ApiField(alias='Message')
 
-            return generate_output(output=Output, response=self._put(data=body))
+            return generate_output(output_cls=Output, response=self._put(data=body))

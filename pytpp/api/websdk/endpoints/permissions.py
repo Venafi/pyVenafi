@@ -24,7 +24,7 @@ class _Permissions:
                 class Output(WebSdkOutputModel):
                     principals: List[str] = ApiField(default_factory=list)
 
-                return generate_output(output=Output, response=self._get(), root_field='principals')
+                return generate_output(output_cls=Output, response=self._get(), root_field='principals')
 
             def Ptype(self, ptype='Local'):
                 return self._Ptype(guid=self._guid, ptype=ptype, api_obj=self._api_obj)
@@ -68,7 +68,7 @@ class _Permissions:
                                 explicit_permissions: permissions.Permissions = ApiField(alias='ExplicitPermissions')
                                 implicit_permissions: permissions.Permissions = ApiField(alias='ImplicitPermissions')
 
-                            return generate_output(output=Output, response=self._get())
+                            return generate_output(output_cls=Output, response=self._get())
 
                         def post(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
                                  is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
@@ -125,7 +125,7 @@ class _Permissions:
                                 class Output(WebSdkOutputModel):
                                     effective_permissions: permissions.Permissions = ApiField(alias='EffectivePermissions')
 
-                                return generate_output(output=Output, response=self._get())
+                                return generate_output(output_cls=Output, response=self._get())
 
                 class _Principal(WebSdkEndpoint):
                     def __init__(self, guid: str, ptype: str, uuid: str, api_obj):
@@ -143,7 +143,7 @@ class _Permissions:
                             explicit_permissions: permissions.Permissions = ApiField(alias='ExplicitPermissions')
                             implicit_permissions: permissions.Permissions = ApiField(alias='ImplicitPermissions')
 
-                        return generate_output(output=Output, response=self._get())
+                        return generate_output(output_cls=Output, response=self._get())
 
                     def post(self, is_associate_allowed: bool = None, is_create_allowed: bool = None, is_delete_allowed: bool = None,
                              is_manage_permissions_allowed: bool = None, is_policy_write_allowed: bool = None,
@@ -200,7 +200,7 @@ class _Permissions:
                             class Output(WebSdkOutputModel):
                                 effective_permissions: permissions.Permissions = ApiField(alias='EffectivePermissions')
 
-                            return generate_output(output=Output, response=self._get())
+                            return generate_output(output_cls=Output, response=self._get())
 
     class _Refresh(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -210,4 +210,4 @@ class _Permissions:
             class Output(WebSdkOutputModel):
                 result: int = ApiField(alias='Result')
 
-            return generate_output(output=Output, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())

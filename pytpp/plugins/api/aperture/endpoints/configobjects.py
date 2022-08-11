@@ -16,7 +16,7 @@ class _ConfigObjects:
                 "DN": container + "\\" + name
             }
 
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 object: config.Object = ApiField()
 
-            return generate_output(output_cls=Response, response=self._post(data=body), root_field='object')
+            return generate_output(output_cls=Output, response=self._post(data=body), root_field='object')

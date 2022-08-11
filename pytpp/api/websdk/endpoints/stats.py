@@ -16,7 +16,7 @@ class _Stats:
             class Output(WebSdkOutputModel):
                 counters: List[stats.Counter] = ApiField(alias='Counters', default_factory=list)
 
-            return generate_output(output=Output, response=self._post(data={}))
+            return generate_output(output_cls=Output, response=self._post(data={}))
 
     class _Query(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -39,4 +39,4 @@ class _Stats:
             class Output(WebSdkOutputModel):
                 results: List[stats.Result] = ApiField(alias='Results', default_factory=list)
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))

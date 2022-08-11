@@ -13,7 +13,7 @@ class _Approvers(ApertureEndpoint):
             'filter': name_filter
         }
         
-        class Response(ApertureOutputModel):
+        class Output(ApertureOutputModel):
             identities: List[identity.Identity] = ApiField()
             
-        return generate_output(output_cls=Response, response=self._get(params=params), root_field='identities')
+        return generate_output(output_cls=Output, response=self._get(params=params), root_field='identities')

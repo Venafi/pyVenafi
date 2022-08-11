@@ -35,7 +35,7 @@ class _Workflow:
                     guid: str = ApiField(alias='GUID')
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Delete(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -49,7 +49,7 @@ class _Workflow:
                 class Output(WebSdkOutputModel):
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Details(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -72,7 +72,7 @@ class _Workflow:
                     status: str = ApiField(alias='Status')
                     updated: datetime = ApiField(alias='Updated')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -88,7 +88,7 @@ class _Workflow:
                     guids: List[str] = ApiField(default_factory=list, alias='GUIDS')
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Exists(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -102,7 +102,7 @@ class _Workflow:
                 class Output(WebSdkOutputModel):
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -117,7 +117,7 @@ class _Workflow:
                     status: str = ApiField(alias='Status')
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _UpdateStatus(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -141,4 +141,4 @@ class _Workflow:
                 class Output(WebSdkOutputModel):
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))

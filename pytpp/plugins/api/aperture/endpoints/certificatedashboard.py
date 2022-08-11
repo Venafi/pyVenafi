@@ -26,100 +26,100 @@ class _CertificateDashboard:
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateKeyLength')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetCertificateIssuers(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateIssuers')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetCertificateSigningAlgorithms(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateSigningAlgorithms')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetCertificateValidityPeriods(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateValidityPeriods')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetValidationEndEntity(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationEndEntity')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetValidationChain(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationChain')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetCertificateExpireDates(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetCertificateExpireDates')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetValidationProtocols(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetValidationProtocols')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _GetProtectionStatus(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetProtectionStatus')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Output, response=self._get(), root_field='records')
 
     class _Trends(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/Trends')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 trends: List[certificate_dashboard.Trend] = ApiField(default_factory=list)
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='trends')
+            return generate_output(output_cls=Output, response=self._get(), root_field='trends')
 
     class _CountCertsWithStatus(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -130,37 +130,37 @@ class _CertificateDashboard:
                 'status': status
             }
 
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(params=params), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(params=params), root_field='value')
 
     class _GetTotalCount(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalCount')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _GetTotalDisabledCount(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalDisabledCount')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')
 
     class _GetTotalManagedCount(ApertureEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/CertificateDashboard/GetTotalManagedCount')
 
         def get(self):
-            class Response(ApertureOutputModel):
+            class Output(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(output_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Output, response=self._get(), root_field='value')

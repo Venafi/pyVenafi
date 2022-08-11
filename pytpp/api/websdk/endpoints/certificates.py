@@ -38,7 +38,7 @@ class _Certificates(WebSdkEndpoint):
             data_range: str = ApiField(alias='DataRange')
             total_count: int = ApiField(alias='TotalCount')
 
-        return generate_output(response=self._get(params=params), output=Output)
+        return generate_output(response=self._get(params=params), output_cls=Output)
 
     def head(self, filters: dict = None):
         params = filters
@@ -49,7 +49,7 @@ class _Certificates(WebSdkEndpoint):
                 xrc = int(self.api_response.headers.get('X-Record-Count'))
                 return xrc
 
-        return generate_output(response=self._get(params=params), output=Output)
+        return generate_output(response=self._get(params=params), output_cls=Output)
 
     class _Associate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -65,7 +65,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CheckPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -81,7 +81,7 @@ class _Certificates(WebSdkEndpoint):
                 csr: certificate.CSR = ApiField(alias='CSR')
                 policy: certificate.Policy = ApiField(alias='Policy')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Dissociate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -97,7 +97,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Guid(WebSdkEndpoint):
         def __init__(self, guid: str, api_obj):
@@ -110,7 +110,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._delete(), output=Output)
+            return generate_output(response=self._delete(), output_cls=Output)
 
         def get(self):
             class Output(WebSdkOutputModel):
@@ -134,7 +134,7 @@ class _Certificates(WebSdkEndpoint):
                 success: str = ApiField(alias='Success')
                 validation_details: certificate.ValidationDetails = ApiField(alias='ValidationDetails')
 
-            return generate_output(response=self._get(), output=Output)
+            return generate_output(response=self._get(), output_cls=Output)
 
         def put(self, attribute_data: List[dict]):
             body = {
@@ -144,7 +144,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 success: str = ApiField(alias='Success')
 
-            return generate_output(response=self._put(data=body), output=Output)
+            return generate_output(response=self._put(data=body), output_cls=Output)
 
         class _PreviousVersions(WebSdkEndpoint):
             def __init__(self, guid: str, api_obj):
@@ -166,7 +166,7 @@ class _Certificates(WebSdkEndpoint):
                         default_factory=list, alias='PreviousVersions'
                     )
 
-                return generate_output(response=self._get(params=params), output=Output)
+                return generate_output(response=self._get(params=params), output_cls=Output)
 
         class _ValidationResults(WebSdkEndpoint):
             def __init__(self, guid: str, api_obj):
@@ -181,7 +181,7 @@ class _Certificates(WebSdkEndpoint):
                     file: List[certificate.File] = ApiField(default_factory=list, alias='File')
                     ssl_tls: List[certificate.SslTls] = ApiField(default_factory=list, alias='SslTls')
 
-                return generate_output(response=self._get(), output=Output)
+                return generate_output(response=self._get(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -205,7 +205,7 @@ class _Certificates(WebSdkEndpoint):
                 guid: str = ApiField(alias='Guid')
                 private_key_vault_id: int = ApiField(alias='PrivateKeyVaultID')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Push(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -221,7 +221,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Renew(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -253,7 +253,7 @@ class _Certificates(WebSdkEndpoint):
                 format: certificate.CertificateFormat = ApiField(alias='Format')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Request(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -313,7 +313,7 @@ class _Certificates(WebSdkEndpoint):
                 certificate_dn: str = ApiField(alias='CertificateDN')
                 guid: str = ApiField(alias='Guid')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Reset(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -332,7 +332,7 @@ class _Certificates(WebSdkEndpoint):
                 restart_completed: bool = ApiField(alias='RestartCompleted')
                 revocation_reset_completed: bool = ApiField(alias='RevocationResetCompleted')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Retrieve(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -376,7 +376,7 @@ class _Certificates(WebSdkEndpoint):
                 filename: str = ApiField(alias='Filename')
                 format: certificate.CertificateFormat = ApiField(alias='Format')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
         def VaultId(self, vault_id: int):
             return self._VaultId(vault_id=vault_id, api_obj=self._api_obj)
@@ -421,7 +421,7 @@ class _Certificates(WebSdkEndpoint):
                     filename: str = ApiField(alias='Filename')
                     format: certificate.CertificateFormat = ApiField(alias='Format')
 
-                return generate_output(response=self._post(data=body), output=Output)
+                return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Retry(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -436,7 +436,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Revoke(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -457,7 +457,7 @@ class _Certificates(WebSdkEndpoint):
                 requested: bool = ApiField(alias='Requested')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Validate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -475,4 +475,4 @@ class _Certificates(WebSdkEndpoint):
                 validated_certificate_guids: List[str] = ApiField(default_factory=list, alias='ValidatedCertificateGUIDs')
                 warnings: List[str] = ApiField(default_factory=list, alias='Warnings')
 
-            return generate_output(response=self._post(data=body), output=Output)
+            return generate_output(response=self._post(data=body), output_cls=Output)

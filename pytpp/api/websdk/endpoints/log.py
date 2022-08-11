@@ -30,7 +30,7 @@ class _Log(WebSdkEndpoint):
         class Output(WebSdkOutputModel):
             log_events: List[log.LogEvent] = ApiField(default_factory=list, alias='LogEvents')
 
-        return generate_output(output=Output, response=self._get(params=params))
+        return generate_output(output_cls=Output, response=self._get(params=params))
 
     def post(self, component: str, id: int, grouping: int = None, severity: int = None, source_ip: str = None,
              text1: str = None, text2: str = None, value1: str = None, value2: str = None):
@@ -49,7 +49,7 @@ class _Log(WebSdkEndpoint):
         class Output(WebSdkOutputModel):
             log_result: int = ApiField(alias='LogResult')
 
-        return generate_output(output=Output, response=self._post(data=body))
+        return generate_output(output_cls=Output, response=self._post(data=body))
 
     def Guid(self, guid: str):
         return self._Guid(guid=guid, api_obj=self._api_obj)
@@ -62,7 +62,7 @@ class _Log(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 log_events: List[log.LogEvent] = ApiField(default_factory=list, alias='LogEvents')
 
-            return generate_output(output=Output, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())
 
     class _LogSchema(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -76,4 +76,4 @@ class _Log(WebSdkEndpoint):
                 log_event_definitions: List[log.LogEventDefinition] = ApiField(alias='LogEventDefinitions')
                 log_result: int = ApiField(alias='LogResult')
 
-            return generate_output(output=Output, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())

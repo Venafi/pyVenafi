@@ -14,7 +14,7 @@ class _ProcessingEngines(WebSdkEndpoint):
         class Output(WebSdkOutputModel):
             engines: List[processing_engines.Engine] = ApiField(alias='Engines', default_factory=list)
 
-        return generate_output(output=Output, response=self._get())
+        return generate_output(output_cls=Output, response=self._get())
 
     class _Engine:
         def __init__(self, api_obj):
@@ -32,7 +32,7 @@ class _ProcessingEngines(WebSdkEndpoint):
                     links: processing_engines.Link = ApiField(alias='_links')
                     folders: List[processing_engines.Folder] = ApiField(alias='Folders', default_factory=list)
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
             def post(self, folder_guids: List[str]):
                 body = {
@@ -43,7 +43,7 @@ class _ProcessingEngines(WebSdkEndpoint):
                     added_count: int = ApiField(alias='AddedCount')
                     errors: List[str] = ApiField(alias='Errors', default_factory=list)
 
-                return generate_output(output=Output, response=self._post(data=body))
+                return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Folder:
         def __init__(self, api_obj):
@@ -65,7 +65,7 @@ class _ProcessingEngines(WebSdkEndpoint):
                     links: processing_engines.Link = ApiField(alias='_links')
                     engines: List[processing_engines.Engine] = ApiField(alias='Engines', default_factory=list)
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
             def put(self, engine_guids: List[str]):
                 body = {

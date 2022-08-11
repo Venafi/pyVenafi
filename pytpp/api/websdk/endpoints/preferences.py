@@ -17,7 +17,7 @@ class _Preferences(WebSdkEndpoint):
         class Output(WebSdkOutputModel):
             preferences: List[prefs.Preference] = ApiField(alias='Preferences', default_factory=list)
 
-        return generate_output(output=Output, response=self._get(params=params))
+        return generate_output(output_cls=Output, response=self._get(params=params))
 
     def post(self, preferences: list):
         body = {

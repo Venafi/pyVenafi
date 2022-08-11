@@ -15,7 +15,7 @@ class _Crypto:
             class Output(WebSdkOutputModel):
                 keynames: List[str] = ApiField(alias='Keynames', default_factory=list)
 
-            return generate_output(response=self._get(), output=Output)
+            return generate_output(response=self._get(), output_cls=Output)
 
     class _DefaultKey(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -25,4 +25,4 @@ class _Crypto:
             class Output(WebSdkOutputModel):
                 default_key: str = ApiField(alias='DefaultKey')
 
-            return generate_output(response=self._get(), output=Output)
+            return generate_output(response=self._get(), output_cls=Output)

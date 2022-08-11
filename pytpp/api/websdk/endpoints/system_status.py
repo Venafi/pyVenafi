@@ -14,7 +14,7 @@ class _SystemStatus(WebSdkEndpoint):
         class Output(WebSdkOutputModel):
             engines: List[system_status.SystemStatus] = ApiField(default_factory=list)
 
-        return generate_output(output=Output, response=self._get(), root_field='engines')
+        return generate_output(output_cls=Output, response=self._get(), root_field='engines')
 
     class _Upgrade:
         def __init__(self, api_obj):
@@ -44,7 +44,7 @@ class _SystemStatus(WebSdkEndpoint):
                     tasks_pending: List[system_status.Task] = ApiField(default_factory=list, alias='TasksPending')
                     tasks_running: List[system_status.Task] = ApiField(default_factory=list, alias='TasksRunning')
 
-                return generate_output(output=Output, response=self._get(params=params))
+                return generate_output(output_cls=Output, response=self._get(params=params))
 
         class _Engines(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -58,7 +58,7 @@ class _SystemStatus(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     engines: List[system_status.UpgradeStatus] = ApiField(default_factory=list, alias='Engines')
 
-                return generate_output(output=Output, response=self._get(params=params))
+                return generate_output(output_cls=Output, response=self._get(params=params))
 
         class _History(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -68,7 +68,7 @@ class _SystemStatus(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     upgrade_history: List[system_status.UpgradeInfo] = ApiField(default_factory=list, alias='UpgradeHistory')
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
         class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -78,7 +78,7 @@ class _SystemStatus(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     upgrade_in_progress: bool = ApiField(alias='UpgradeInProgress')
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
         class _Summary(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -88,7 +88,7 @@ class _SystemStatus(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     upgrade_summary: system_status.UpgradeSummary = ApiField(alias='UpgradeSummary')
 
-                return generate_output(output=Output, response=self._get())
+                return generate_output(output_cls=Output, response=self._get())
 
     class _Version(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -98,4 +98,4 @@ class _SystemStatus(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 version: str = ApiField(alias='Version')
 
-            return generate_output(response=self._get(), output=Output)
+            return generate_output(response=self._get(), output_cls=Output)

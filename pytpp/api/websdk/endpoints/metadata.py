@@ -39,7 +39,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Find(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -57,7 +57,7 @@ class _Metadata(WebSdkEndpoint):
                 objects: List[config.Object] = ApiField(default_factory=list, alias='Objects')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _FindItem(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -73,7 +73,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Get(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -90,7 +90,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetItemGuids(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -106,7 +106,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetItems(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -122,7 +122,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetItemsForClass(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -138,7 +138,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetPolicyItems(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -154,7 +154,7 @@ class _Metadata(WebSdkEndpoint):
                 policy_items: List[metadata.PolicyItem] = ApiField(default_factory=list, alias='PolicyItems')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Items(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -166,7 +166,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._get())
+            return generate_output(output_cls=Output, response=self._get())
 
     class _LoadItem(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -182,7 +182,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _LoadItemGuid(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -198,7 +198,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ReadEffectiveValues(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -216,7 +216,7 @@ class _Metadata(WebSdkEndpoint):
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
                 values: List[str] = ApiField(default_factory=list, alias='Values')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ReadPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -234,7 +234,7 @@ class _Metadata(WebSdkEndpoint):
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
                 values: List[str] = ApiField(default_factory=list, alias='Values')
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Set(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -251,7 +251,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SetPolicy(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -269,7 +269,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _UndefineItem(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -285,7 +285,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _UpdateItem(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -301,4 +301,4 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
-            return generate_output(output=Output, response=self._post(data=body))
+            return generate_output(output_cls=Output, response=self._post(data=body))
