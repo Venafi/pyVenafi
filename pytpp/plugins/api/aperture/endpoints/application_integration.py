@@ -29,7 +29,7 @@ class _ApplicationIntegration(ApertureEndpoint):
         class Response(ApertureOutputModel):
             application_id: str = ApiField()
 
-        return generate_output(response_cls=Response, response=self._post(data=body), root_field='application_id')
+        return generate_output(output_cls=Response, response=self._post(data=body), root_field='application_id')
 
     def put(self, application_id: str, application_name: str, application_scope: dict,
             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -51,7 +51,7 @@ class _ApplicationIntegration(ApertureEndpoint):
         class Response(ApertureOutputModel):
             application_id: str = ApiField()
 
-        return generate_output(response_cls=Response, response=self._put(data=body), root_field='application_id')
+        return generate_output(output_cls=Response, response=self._put(data=body), root_field='application_id')
 
     def ApplicationId(self, id: str):
         return self._ApplicationId(id=id, api_obj=self._api_obj)
@@ -69,7 +69,7 @@ class _ApplicationIntegration(ApertureEndpoint):
 
             def put(self, identities: list):
                 body = identities
-                return generate_output(response_cls=ApertureOutputModel, response=self._put(data=body))
+                return generate_output(output_cls=ApertureOutputModel, response=self._put(data=body))
 
     class _ApplicationId(ApertureEndpoint):
         def __init__(self, id: str, api_obj):
@@ -79,7 +79,7 @@ class _ApplicationIntegration(ApertureEndpoint):
             )
 
         def delete(self):
-            return generate_output(response_cls=ApertureOutputModel, response=self._delete())
+            return generate_output(output_cls=ApertureOutputModel, response=self._delete())
 
         def get(self):
             class Response(ApertureOutputModel):
@@ -95,4 +95,4 @@ class _ApplicationIntegration(ApertureEndpoint):
                 renewable: bool = ApiField(alias='renewable')
                 vendor: str = ApiField(alias='vendor')
 
-            return generate_output(response_cls=Response, response=self._get())
+            return generate_output(output_cls=Response, response=self._get())

@@ -29,7 +29,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetCertificateIssuers(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -39,7 +39,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetCertificateSigningAlgorithms(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -49,7 +49,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetCertificateValidityPeriods(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -59,7 +59,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetValidationEndEntity(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -69,7 +69,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetValidationChain(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -79,7 +79,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetCertificateExpireDates(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -89,7 +89,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetValidationProtocols(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -99,7 +99,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _GetProtectionStatus(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -109,7 +109,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 records: List[certificate_dashboard.Record] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='records')
+            return generate_output(output_cls=Response, response=self._get(), root_field='records')
 
     class _Trends(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -119,7 +119,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 trends: List[certificate_dashboard.Trend] = ApiField(default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='trends')
+            return generate_output(output_cls=Response, response=self._get(), root_field='trends')
 
     class _CountCertsWithStatus(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -133,7 +133,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(response_cls=Response, response=self._get(params=params), root_field='value')
+            return generate_output(output_cls=Response, response=self._get(params=params), root_field='value')
 
     class _GetTotalCount(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -143,7 +143,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Response, response=self._get(), root_field='value')
 
     class _GetTotalDisabledCount(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -153,7 +153,7 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Response, response=self._get(), root_field='value')
 
     class _GetTotalManagedCount(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -163,4 +163,4 @@ class _CertificateDashboard:
             class Response(ApertureOutputModel):
                 value: int = ApiField()
 
-            return generate_output(response_cls=Response, response=self._get(), root_field='value')
+            return generate_output(output_cls=Response, response=self._get(), root_field='value')

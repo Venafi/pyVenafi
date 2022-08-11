@@ -15,10 +15,10 @@ class _Discovery:
             super().__init__(api_obj=api_obj, url=f'/Discovery/{guid}')
 
         def delete(self):
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._delete(), response_cls=Response)
+            return generate_output(response=self._delete(), output=Output)
 
     class _Import(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -30,7 +30,7 @@ class _Discovery:
                 'endpoints': endpoints
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 created_certificates: int = ApiField(alias='createdCertificates')
                 created_instances: int = ApiField(alias='createdInstances')
                 updated_certificates: int = ApiField(alias='updatedCertificates')
@@ -38,5 +38,5 @@ class _Discovery:
                 warnings: List[str] = ApiField(alias='warnings')
                 zone_name: str = ApiField(alias='zoneName')
 
-            return generate_output(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), output=Output)
 

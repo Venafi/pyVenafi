@@ -27,7 +27,7 @@ class _Users:
 
             api_logger.debug(f'Authenticating to Aperture as "{username}"...')
             with api_logger.suppressed(logging.WARNING):
-                response = generate_output(response_cls=Response, response=self._post(data=body))
+                response = generate_output(output_cls=Response, response=self._post(data=body))
             api_logger.debug(f'Authenticated as "{username}"!')
             return response
 
@@ -42,7 +42,7 @@ class _Users:
             def post(self):
                 body = {}
 
-                response = generate_output(response_cls=ApertureOutputModel, response=self._post(data=body))
+                response = generate_output(output_cls=ApertureOutputModel, response=self._post(data=body))
                 # Set this to None to avoid erroneous re-authentication.
                 self._api_obj._token = None
                 return response

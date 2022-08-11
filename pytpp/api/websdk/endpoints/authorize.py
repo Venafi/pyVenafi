@@ -27,7 +27,7 @@ class _Authorize(WebSdkEndpoint):
             "Password": password
         }
 
-        class Response(WebSdkOutputModel):
+        class Output(WebSdkOutputModel):
             token: str = ApiField(alias='APIKey')
             valid_until: datetime = ApiField(alias='ValidUntil')
 
@@ -35,7 +35,7 @@ class _Authorize(WebSdkEndpoint):
         with api_logger.suppressed(logging.WARNING):
             response = self._post(data=body)
         api_logger.debug(f'Authenticated as "{username}"!')
-        return generate_output(response=response, response_cls=Response)
+        return generate_output(response=response, output=Output)
 
     class _Certificate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -48,7 +48,7 @@ class _Authorize(WebSdkEndpoint):
                 'scope': scope
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 access_token: str = ApiField(alias='access_token')
                 expires: datetime = ApiField(alias='expires')
                 expires_in: int = ApiField(alias='expires_in')
@@ -63,7 +63,7 @@ class _Authorize(WebSdkEndpoint):
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return generate_output(response=response, response_cls=Response)
+            return generate_output(response=response, output=Output)
 
     class _Device(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -76,7 +76,7 @@ class _Authorize(WebSdkEndpoint):
                 'scope'    : scope
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 device_code: str = ApiField(alias='device_code')
                 interval: int = ApiField(alias='interval')
                 user_code: str = ApiField(alias='user_code')
@@ -90,7 +90,7 @@ class _Authorize(WebSdkEndpoint):
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return generate_output(response=response, response_cls=Response)
+            return generate_output(response=response, output=Output)
 
     class _Integrated(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -104,7 +104,7 @@ class _Authorize(WebSdkEndpoint):
                 'state'    : state
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 access_token: str = ApiField(alias='access_token', default=None)
                 expires: datetime = ApiField(alias='expires')
                 expires_in: int = ApiField(alias='expires_in')
@@ -114,7 +114,7 @@ class _Authorize(WebSdkEndpoint):
                 scope: str = ApiField(alias='scope')
                 token_type: str = ApiField(alias='token_type')
 
-            return generate_output(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), output=Output)
 
     class _OAuth(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -130,7 +130,7 @@ class _Authorize(WebSdkEndpoint):
                 'state': state
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 access_token: str = ApiField(alias='access_token', default=None)
                 expires: datetime = ApiField(alias='expires')
                 expires_in: int = ApiField(alias='expires_in')
@@ -145,7 +145,7 @@ class _Authorize(WebSdkEndpoint):
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated as {username}!')
-            return generate_output(response=response, response_cls=Response)
+            return generate_output(response=response, output=Output)
 
     class _Token(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -160,7 +160,7 @@ class _Authorize(WebSdkEndpoint):
                 'device_code': device_code
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 access_token: str = ApiField(alias='access_token')
                 expires: datetime = ApiField(alias='expires')
                 expires_in: int = ApiField(alias='expires_in')
@@ -173,7 +173,7 @@ class _Authorize(WebSdkEndpoint):
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
-            return generate_output(response=response, response_cls=Response)
+            return generate_output(response=response, output=Output)
 
     class _Verify(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -181,7 +181,7 @@ class _Authorize(WebSdkEndpoint):
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 access_issued_on_unix_time: datetime = ApiField(alias='access_issued_on_unix_time')
                 application: str = ApiField(alias='application')
                 expires_unix_time: datetime = ApiField(alias='expires_unix_time')
@@ -214,4 +214,4 @@ class _Authorize(WebSdkEndpoint):
                 def grant_issued_on_ISO8601(self):
                     return self.grant_issued_on_unix_time
 
-            return generate_output(response=self._get(), response_cls=Response)
+            return generate_output(response=self._get(), output=Output)

@@ -30,13 +30,13 @@ class _Identity:
                 'Products': products
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
                 invalid_members: List[ident.InvalidIdentity] = ApiField('InvalidMembers', default_factory=list)
                 invalid_owners: List[ident.InvalidIdentity] = ApiField('InvalidOwners', default_factory=list)
                 message: str = ApiField(alias='Message')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _AddGroupMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -49,12 +49,12 @@ class _Identity:
                 'ShowMembers': show_members
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 invalid_members: List[ident.InvalidIdentity] = ApiField(alias='InvalidMembers', default_factory=list)
                 members: List[ident.Identity] = ApiField(alias='Members', default_factory=list)
                 message: str = ApiField(alias='Message')
 
-            return generate_output(response_cls=Response, response=self._put(data=body))
+            return generate_output(output=Output, response=self._put(data=body))
 
     class _Browse(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -68,10 +68,10 @@ class _Identity:
                 "IdentityType": identity_type
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField('Identities', default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _GetAssociatedEntries(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -82,10 +82,10 @@ class _Identity:
                 'ID': identity
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField('Identities', default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _GetMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -97,10 +97,10 @@ class _Identity:
                 'ResolveNested': int(resolve_nested)
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _GetMemberships(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -111,10 +111,10 @@ class _Identity:
                 'ID': identity
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _Group:
         def __init__(self, api_obj):
@@ -136,10 +136,10 @@ class _Identity:
                     super().__init__(api_obj=api_obj, url=f'/Identity/Group/{prefix}/{principal}')
 
                 def delete(self):
-                    class Response(WebSdkOutputModel):
+                    class Output(WebSdkOutputModel):
                         message: str = ApiField(alias='Message')
 
-                    return generate_output(response_cls=Response, response=self._delete())
+                    return generate_output(output=Output, response=self._delete())
 
     class _ReadAttribute(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -151,10 +151,10 @@ class _Identity:
                 'AttributeName': attribute_name
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 attributes: List[str] = ApiField(alias='Attributes')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _RemoveGroupMembers(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -167,12 +167,12 @@ class _Identity:
                 'ShowMembers': show_members
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 invalid_members: List[ident.InvalidIdentity] = ApiField(alias='InvalidMembers', default_factory=list)
                 members: List[ident.Identity] = ApiField(alias='Members', default_factory=list)
                 message: str = ApiField(alias='Message')
 
-            return generate_output(response_cls=Response, response=self._put(data=body))
+            return generate_output(output=Output, response=self._put(data=body))
 
     class _RenameGroup(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -184,20 +184,20 @@ class _Identity:
                 'NewGroupName': new_group_name
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
 
-            return generate_output(response_cls=Response, response=self._put(data=body))
+            return generate_output(output=Output, response=self._put(data=body))
 
     class _Self(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Identity/Self')
 
         def get(self):
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities')
 
-            return generate_output(response_cls=Response, response=self._get())
+            return generate_output(output=Output, response=self._get())
 
     class _SetPassword(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -210,10 +210,10 @@ class _Identity:
                 'Password'   : password
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _Validate(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -224,7 +224,7 @@ class _Identity:
                 'ID': identity
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))

@@ -19,4 +19,4 @@ class _ConfigObjects:
             class Response(ApertureOutputModel):
                 object: config.Object = ApiField()
 
-            return generate_output(response_cls=Response, response=self._post(data=body), root_field='object')
+            return generate_output(output_cls=Response, response=self._post(data=body), root_field='object')

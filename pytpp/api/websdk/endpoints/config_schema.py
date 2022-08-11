@@ -13,13 +13,13 @@ class _ConfigSchema:
             super().__init__(api_obj=api_obj, url='/ConfigSchema/Attributes')
 
         def post(self):
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 attribute_definitions: List[config_schema.AttributeDefinition] = ApiField(
                     default_factory=list, alias='AttributeDefinitions'
                 )
                 result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
-            return generate_output(response=self._post(data={}), response_cls=Response)
+            return generate_output(response=self._post(data={}), output=Output)
 
     class _Class(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -30,8 +30,8 @@ class _ConfigSchema:
                 "Class": class_name
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 class_definition: config_schema.ClassDefinition = ApiField(alias='ClassDefinition')
                 result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
 
-            return generate_output(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), output=Output)

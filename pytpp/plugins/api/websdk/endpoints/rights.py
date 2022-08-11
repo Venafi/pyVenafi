@@ -22,7 +22,7 @@ class _Rights:
                 'RightsValue': rights_value
             }
 
-            return generate_output(response_cls=WebSdkOutputModel, response=self._post(data=body))
+            return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))
 
     class _Get(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -36,14 +36,14 @@ class _Rights:
             class Response(WebSdkOutputModel):
                 rights: List[rights.Rights] = ApiField(alias='Rights')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output_cls=Response, response=self._post(data=body))
 
     class _Refresh(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='/Rights/Refresh')
 
         def get(self):
-            return generate_output(response_cls=WebSdkOutputModel, response=self._get())
+            return generate_output(output_cls=WebSdkOutputModel, response=self._get())
 
     class _Remove(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -56,4 +56,4 @@ class _Rights:
                 "UniversalID": universal_id
             }
 
-            return generate_output(response_cls=WebSdkOutputModel, response=self._post(data=body))
+            return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))

@@ -30,4 +30,4 @@ class _Jobs:
                         'jobAction': job_action
                     }
 
-                    return generate_output(response_cls=ApertureOutputModel, response=self._post(data=body))
+                    return generate_output(output_cls=ApertureOutputModel, response=self._post(data=body))

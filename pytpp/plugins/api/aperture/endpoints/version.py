@@ -20,4 +20,4 @@ class _Version:
                 engine_name: str = ApiField(alias='EngineName')
                 schema_version: str = ApiField(alias='schemaVersion')
 
-            return generate_output(response_cls=Response, response=self._get())
+            return generate_output(output_cls=Response, response=self._get())

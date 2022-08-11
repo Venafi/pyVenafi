@@ -27,4 +27,4 @@ class _ReportDefaults(ApertureEndpoint):
             disabled: bool = ApiField(alias='disabled')
             description: str = ApiField(alias='description')
 
-        return generate_output(response_cls=Response, response=self._get())
+        return generate_output(output_cls=Response, response=self._get())

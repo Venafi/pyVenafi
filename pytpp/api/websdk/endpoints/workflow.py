@@ -31,11 +31,11 @@ class _Workflow:
                     'WorkflowDN': workflow_dn
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     guid: str = ApiField(alias='GUID')
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Delete(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -46,10 +46,10 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Details(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -60,7 +60,7 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     approval_explanation: str = ApiField(alias='ApprovalExplanation')
                     approval_from: str = ApiField(alias='ApprovalFrom')
                     approval_reason: str = ApiField(alias='ApprovalReason')
@@ -72,7 +72,7 @@ class _Workflow:
                     status: str = ApiField(alias='Status')
                     updated: datetime = ApiField(alias='Updated')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -84,11 +84,11 @@ class _Workflow:
                     'UserData': user_data
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     guids: List[str] = ApiField(default_factory=list, alias='GUIDS')
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Exists(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -99,10 +99,10 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Status(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -113,11 +113,11 @@ class _Workflow:
                     'GUID': guid
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     status: str = ApiField(alias='Status')
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _UpdateStatus(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -138,7 +138,7 @@ class _Workflow:
                     'UserData'      : user_data
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: workflow.Result = ApiField(alias='Result')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))

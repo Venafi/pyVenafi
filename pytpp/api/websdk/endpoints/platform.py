@@ -14,7 +14,7 @@ class _Platform:
                 'Platform': platform
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response=self._post(data=body), response_cls=Response)
+            return generate_output(response=self._post(data=body), output=Output)

@@ -16,4 +16,4 @@ class _Approvers(ApertureEndpoint):
         class Response(ApertureOutputModel):
             identities: List[identity.Identity] = ApiField()
             
-        return generate_output(response_cls=Response, response=self._get(params=params), root_field='identities')
+        return generate_output(output_cls=Response, response=self._get(params=params), root_field='identities')

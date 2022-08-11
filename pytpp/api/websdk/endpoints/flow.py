@@ -35,13 +35,13 @@ class _Flow:
                             'User'     : user
                         }
 
-                        class Response(WebSdkOutputModel):
+                        class Output(WebSdkOutputModel):
                             result: codesign.ResultCode = ApiField(
                                 alias='Result', converter=lambda x: codesign.ResultCode(code=x)
                             )
                             success: bool = ApiField(alias='Success')
 
-                        return generate_output(response_cls=Response, response=self._post(data=body))
+                        return generate_output(output=Output, response=self._post(data=body))
 
     class _Tickets:
         def __init__(self, api_obj):
@@ -69,35 +69,35 @@ class _Flow:
                     'useCount' : use_count
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Count(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/Count')
 
             def post(self):
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     count: int = ApiField(alias='Count')
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                return generate_output(response_cls=Response, response=self._post(data={}))
+                return generate_output(output=Output, response=self._post(data={}))
 
         class _CountApproved(WebSdkEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url='/Flow/Tickets/CountApproved')
 
             def post(self):
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     count: int = ApiField(alias='Count')
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                return generate_output(response_cls=Response, response=self._post(data={}))
+                return generate_output(output=Output, response=self._post(data={}))
 
         class _Enumerate(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -110,12 +110,12 @@ class _Flow:
                     'TicketPageNumber': ticket_page_number
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
                     tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _EnumerateApproved(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -128,12 +128,12 @@ class _Flow:
                     'TicketPageNumber': ticket_page_number
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
                     tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Load(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -145,12 +145,12 @@ class _Flow:
                     'TicketIds': ticket_ids
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
                     tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Reject(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -165,12 +165,12 @@ class _Flow:
                     'TicketIds'     : ticket_ids
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     invalid_ticket_ids: List[int] = ApiField(default_factory=list, alias='InvalidTicketIds')
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
             def __init__(self, api_obj):
@@ -187,8 +187,8 @@ class _Flow:
                     'useCount' : use_count
                 }
 
-                class Response(WebSdkOutputModel):
+                class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
 
-                return generate_output(response_cls=Response, response=self._post(data=body))
+                return generate_output(output=Output, response=self._post(data=body))

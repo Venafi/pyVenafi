@@ -21,6 +21,7 @@ from pytpp.api.websdk.endpoints.pki import _PKI
 from pytpp.api.websdk.endpoints.platform import _Platform
 from pytpp.api.websdk.endpoints.preferences import _Preferences
 from pytpp.api.websdk.endpoints.processing_engines import _ProcessingEngines
+from pytpp.api.websdk.endpoints.recycle_bin import _RecycleBin
 from pytpp.api.websdk.endpoints.revoke import _Revoke
 from pytpp.api.websdk.endpoints.secret_store import _SecretStore
 from pytpp.api.websdk.endpoints.ssh import _SSH
@@ -168,6 +169,7 @@ class WebSDK:
         self.Platorm = _Platform(self)
         self.Preferences = _Preferences(self)
         self.ProcessingEngines = _ProcessingEngines(self)
+        self.RecycleBin = _RecycleBin(self)
         self.Revoke = _Revoke(self)
         self.SecretStore = _SecretStore(self)
         self.SSH = _SSH(self)

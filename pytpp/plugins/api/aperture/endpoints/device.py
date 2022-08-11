@@ -37,7 +37,7 @@ class _Device(ApertureEndpoint):
             total_count: int = ApiField(key='totalCount')
             devices_list_items: List[device.Device] = ApiField(alias='devicesListItems', default_factory=list)
 
-        return generate_output(response_cls=Response, response=self._post(data=body))
+        return generate_output(output_cls=Response, response=self._post(data=body))
 
     class _GetStatus(ApertureEndpoint):
         def __init__(self, api_obj):
@@ -56,7 +56,7 @@ class _Device(ApertureEndpoint):
                 discovery_stage: int = ApiField(alias='discoveryStage')
                 discovery_status: str = ApiField(alias='discoveryStatus')
 
-            return generate_output(response_cls=Response, response=self._get(params=params))
+            return generate_output(output_cls=Response, response=self._get(params=params))
 
     class _BulkOperations:
         def __init__(self, api_obj):
@@ -69,11 +69,11 @@ class _Device(ApertureEndpoint):
                 super().__init__(api_obj=api_obj, url=f'/device/bulkOperations/SetAgentlessDiscoveryToDo')
 
             def post(self, device_guids: List[str]):
-                return generate_output(response_cls=ApertureOutputModel, response=self._post(data=device_guids))
+                return generate_output(output_cls=ApertureOutputModel, response=self._post(data=device_guids))
 
         class _ResetFailedAuthAttempts(ApertureEndpoint):
             def __init__(self, api_obj):
                 super().__init__(api_obj=api_obj, url=f'/device/bulkOperations/resetFailedAuthAttempts')
 
             def post(self, device_guids: List[str]):
-                return generate_output(response_cls=ApertureOutputModel, response=self._post(data=device_guids))
+                return generate_output(output_cls=ApertureOutputModel, response=self._post(data=device_guids))

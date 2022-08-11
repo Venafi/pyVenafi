@@ -14,17 +14,17 @@ class _Preferences(WebSdkEndpoint):
             'Product': product
         }
 
-        class Response(WebSdkOutputModel):
+        class Output(WebSdkOutputModel):
             preferences: List[prefs.Preference] = ApiField(alias='Preferences', default_factory=list)
 
-        return generate_output(response_cls=Response, response=self._get(params=params))
+        return generate_output(output=Output, response=self._get(params=params))
 
     def post(self, preferences: list):
         body = {
             'Preferences': preferences
         }
 
-        return generate_output(response_cls=WebSdkOutputModel, response=self._post(data=body))
+        return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))
 
     def delete(self, category: str = None, name: str = None, product: prefs.ProductType = None):
         params = {
@@ -33,4 +33,4 @@ class _Preferences(WebSdkEndpoint):
             'Product': product
         }
 
-        return generate_output(response_cls=WebSdkOutputModel, response=self._delete(params=params))
+        return generate_output(output_cls=WebSdkOutputModel, response=self._delete(params=params))

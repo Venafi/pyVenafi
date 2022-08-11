@@ -11,7 +11,7 @@ class _Revoke:
             self._url = self._url.replace('vedsdk', 'vedauth')
 
         def get(self):
-            response = generate_output(response_cls=WebSdkOutputModel, response=self._get())
+            response = generate_output(output_cls=WebSdkOutputModel, response=self._get())
             # Set this to None to avoid erroneous re-authentication.
             self._api_obj._token = None
             return response

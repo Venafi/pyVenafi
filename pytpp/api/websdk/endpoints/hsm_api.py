@@ -37,12 +37,12 @@ class _HSMAPI:
                 'WrappingKeyId'   : wrapping_key_id
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 result_data: str = ApiField(alias='ResultData')
                 success: bool = ApiField(alias='Success')
                 try_later: bool = ApiField(alias='TryLater')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _SignJWT(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -59,11 +59,11 @@ class _HSMAPI:
                 'Payload'    : payload
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 result_data: str = ApiField(alias='ResultData')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _GetGPGPublicKey(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -76,13 +76,13 @@ class _HSMAPI:
                 'KeyContext': key_context
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 fingerprint: str = ApiField(alias='Fingerprint')
                 location: str = ApiField(alias='Location')
                 public_key: str = ApiField(alias='PublicKey')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))
 
     class _GetObjects(WebSdkEndpoint):
         def __init__(self, api_obj):
@@ -99,11 +99,11 @@ class _HSMAPI:
                 'ObjectTypeFilter' : object_type_filter,
             }
 
-            class Response(WebSdkOutputModel):
+            class Output(WebSdkOutputModel):
                 certificates: List[hsm_api.Certificate] = ApiField(alias='Certificates', default_factory=list)
                 pending: bool = ApiField(alias='PendingDeprecationWarningbool')
                 private_keys: List[hsm_api.PrivateKey] = ApiField(alias='PrivateKeys')
                 public_keys: List[hsm_api.PublicKey] = ApiField(alias='PublicKeys')
                 success: bool = ApiField(alias='Success')
 
-            return generate_output(response_cls=Response, response=self._post(data=body))
+            return generate_output(output=Output, response=self._post(data=body))

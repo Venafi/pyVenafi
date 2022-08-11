@@ -309,11 +309,11 @@ class InputModel(BaseModel, metaclass=ApiModelMetaclass):
 
 
 # region Output Models
-def generate_output(response: Response, response_cls: Type[T_], root_field: str = None) -> T_:
+def generate_output(response: Response, output_cls: Type[T_], root_field: str = None) -> T_:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
-        response_cls: Custom APIResponse class.
+        output_cls: Custom APIResponse class.
         root_field: In the case that the returned JSON is an array of objects, then the ``root_field``
             is used to assign that value.
 
@@ -335,7 +335,7 @@ def generate_output(response: Response, response_cls: Type[T_], root_field: str 
             str(root_field): result,
             **result
         }
-    response_inst = response_cls(api_response=response, **result)
+    response_inst = output_cls(api_response=response, **result)
     try:
         response.raise_for_status()
         if isinstance(result, dict) and (error_key := getattr(response_inst, 'error', 'Unknown')) in result.keys():

@@ -34,7 +34,7 @@ class _Reports(ApertureEndpoint):
         class Response(ApertureOutputModel):
             guid: str = ApiField()
 
-        return generate_output(response_cls=Response, response=self._post(data=body), root_field='guid')
+        return generate_output(output_cls=Response, response=self._post(data=body), root_field='guid')
 
     def Guid(self, guid: str):
         return self._Guid(api_obj=self._api_obj, guid=guid)
@@ -60,7 +60,7 @@ class _Reports(ApertureEndpoint):
                 description: str = ApiField(alias='description')
                 last_run: datetime = ApiField(alias='lastRun')
 
-            return generate_output(response_cls=Response, response=self._get())
+            return generate_output(output_cls=Response, response=self._get())
 
     class _RunNow:
         def __init__(self, api_obj):
@@ -77,4 +77,4 @@ class _Reports(ApertureEndpoint):
                 )
 
             def post(self):
-                return generate_output(response_cls=ApertureOutputModel, response=self._post(data={}))
+                return generate_output(output_cls=ApertureOutputModel, response=self._post(data={}))
