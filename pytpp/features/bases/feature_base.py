@@ -30,9 +30,9 @@ class FeatureBase:
         self._api = api
 
     def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None,
-                       get_if_already_exists: bool = True, keep_list_values: bool = False):
+                       get_if_already_exists: bool = True):
         if attributes:
-            attributes = self._name_value_list(attributes=attributes, keep_list_values=keep_list_values)
+            attributes = self._name_value_list(attributes=attributes)
 
         dn = f'{parent_folder_dn}\\{name}'
         response = self._api.websdk.Config.Create.post(
@@ -189,19 +189,17 @@ class FeatureBase:
         return {'Name': str(name), 'Type': str(type), 'Value': str(value)}
 
     @staticmethod
-    def _name_value_list(attributes: Dict[str, List[str]], keep_list_values: bool = False):
+    def _name_value_list(attributes: Dict[str, List[str]]):
         nvl = []
-        for name, value in attributes.items():
-            if value is None:
+        for n, v in attributes.items():
+            if v is None:
                 continue
-            elif isinstance(value, list):
-                if keep_list_values is True:
-                    nvl.append({'Name': str(name), 'Value': value})
+            if not isinstance(v, list):
+                if isinstance(v, (tuple, set)):
+                    v = list(v)
                 else:
-                    for v in value:
-                        nvl.append({'Name': str(name), 'Value': str(v)})
-            elif not isinstance(value, dict):
-                nvl.append({'Name': str(name), 'Value': str(value)})
+                    v = [v]
+            nvl.append(config.NameValues(name=n, values=v))
         return nvl
 
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):

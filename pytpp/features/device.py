@@ -73,13 +73,7 @@ class Device(_DeviceBase):
         if attributes:
             dev_attrs.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(parent_folder),
-            config_class=Classes.device,
-            attributes=dev_attrs,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=Classes.device, attributes=dev_attrs, get_if_already_exists=get_if_already_exists)
 
     def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
         """
@@ -165,13 +159,7 @@ class JumpServer(_DeviceBase):
         if attributes:
             dev_attrs.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(parent_folder),
-            config_class=Classes.jump_server,
-            attributes=dev_attrs,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=Classes.jump_server, attributes=dev_attrs, get_if_already_exists=get_if_already_exists)
 
     def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
         """

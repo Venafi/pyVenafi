@@ -56,7 +56,7 @@ class _ClientWorkBase(FeatureBase):
             object_dn=work_dn,
             attribute_data=self._name_value_list({
                 ClientWorkBaseAttributes.disabled: ["1"]
-            }, keep_list_values=True)
+            })
         ).result
 
         if result.code != 1:
@@ -170,7 +170,7 @@ class AgentConnectivity(_ClientWorkBase):
 
         response = self._api.websdk.Config.Write.post(
             object_dn=work_dn,
-            attribute_data=self._name_value_list(attributes, True)
+            attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
 
@@ -206,13 +206,8 @@ class AgentConnectivity(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientAgentConfigurationWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientAgentConfigurationWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def unschedule(self, work: 'Union[config.Object, str]'):
         """
@@ -257,13 +252,8 @@ class AgentUpgrade(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientAgentAutomaticUpgradeWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientAgentAutomaticUpgradeWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('Certificate Device Placement')
@@ -315,13 +305,8 @@ class CertificateDevicePlacement(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ServerAgentCertDevicePlacementWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ServerAgentCertDevicePlacementWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('Certificate Discovery')
@@ -335,9 +320,8 @@ class CertificateDiscovery(_ClientWorkBase):
                  full_scan: bool = False):
         """
         .. note::
-			Only one of daily, hourly, on_receipt, days_of_week or days_of_month can be set.
-
-        Schedules the Certificate Discovery work to run.
+            Only one of daily, hourly, on_receipt, days_of_week or days_of_month can be set.
+            Schedules the Certificate Discovery work to run.
 
         Args:
             work: :ref:`config_object` or name of the client work.
@@ -398,7 +382,7 @@ class CertificateDiscovery(_ClientWorkBase):
 
         response = self._api.websdk.Config.Write.post(
             object_dn=work_dn,
-            attribute_data=self._name_value_list(attributes, True)
+            attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
 
@@ -486,14 +470,8 @@ class CertificateDiscovery(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientCertificateDiscoveryWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            keep_list_values=True,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientCertificateDiscoveryWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def unschedule(self, work: 'Union[config.Object, str]'):
         """
@@ -585,14 +563,8 @@ class CertificateEnrollmentViaESTProtocol(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=NetworkDeviceCertificateWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            keep_list_values=True,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=NetworkDeviceCertificateWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('Certificate Installation')
@@ -606,7 +578,7 @@ class CertificateInstallation(_ClientWorkBase):
                  days_of_month: List[str] = None, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         .. note::
-			Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
+            Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
 
         Schedules the Certificate Installation work to run.
 
@@ -706,13 +678,8 @@ class CertificateInstallation(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=CertificateProvisioningWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=CertificateProvisioningWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def unschedule(self, work: 'Union[config.Object, str]'):
         """
@@ -800,14 +767,8 @@ class DeviceCertificateCreation(_ClientWorkBase):
         if subject_alternative_names: work_attributes[ClientCertificateWorkAttributes.x509_subjectaltname_dns] = common_name
         if automatic_renewal: work_attributes[ClientCertificateWorkAttributes.renewal_window] = renewal_days_before
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientCertificateWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            keep_list_values=True,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientCertificateWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('Dynamic Provisioning')
@@ -880,14 +841,8 @@ class DynamicProvisioning(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ServerCertificateWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            keep_list_values=True,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ServerCertificateWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('SSH Device Placement')
@@ -923,13 +878,8 @@ class SSHDevicePlacement(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ServerAgentSSHDevicePlacementWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ServerAgentSSHDevicePlacementWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('SSH Discovery')
@@ -943,7 +893,7 @@ class SSHDiscovery(_ClientWorkBase):
                  days_of_month: List[str] = None, randomize_minutes: int = 0, full_scan: bool = False):
         """
         .. note::
-			Only one of daily, hourly, on_receipt, every_30_minutes, days_of_week or days_of_month can be set.
+            Only one of daily, hourly, on_receipt, every_30_minutes, days_of_week or days_of_month can be set.
 
         Schedules the SSH Discovery work to run.
 
@@ -1012,7 +962,7 @@ class SSHDiscovery(_ClientWorkBase):
 
         response = self._api.websdk.Config.Write.post(
             object_dn=work_dn,
-            attribute_data=self._name_value_list(attributes, True)
+            attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
 
@@ -1072,14 +1022,8 @@ class SSHDiscovery(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientAgentSSHDiscoveryWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            keep_list_values=True,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientAgentSSHDiscoveryWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def unschedule(self, work: 'Union[config.Object, str]'):
         """
@@ -1111,7 +1055,7 @@ class SSHKeyUsage(_ClientWorkBase):
                  on_receipt: bool = False, every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         .. note::
-			Only one of daily, hourly, on_receipt, or every_x_minutes can be set.
+            Only one of daily, hourly, on_receipt, or every_x_minutes can be set.
 
         Schedules the SSH KeyUsage work to run.
 
@@ -1202,13 +1146,8 @@ class SSHKeyUsage(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientAgentSSHKeyUsageWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientAgentSSHKeyUsageWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def unschedule(self, work: 'Union[config.Object, str]'):
         """
@@ -1241,7 +1180,7 @@ class SSHRemediation(_ClientWorkBase):
                  every_x_minutes: int = None, randomize_minutes: int = 0):
         """
         .. note::
-			Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
+            Only one of daily, hourly, on_receipt, days_of_week, days_of_month or every_x_minutes can be set.
 
         Schedules the SSH Remediation work to run.
 
@@ -1320,7 +1259,7 @@ class SSHRemediation(_ClientWorkBase):
 
         response = self._api.websdk.Config.Write.post(
             object_dn=work_dn,
-            attribute_data=self._name_value_list(attributes, True)
+            attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
 
@@ -1345,13 +1284,8 @@ class SSHRemediation(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientAgentSSHProvisioningWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientAgentSSHProvisioningWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def unschedule(self, work: 'Union[config.Object, str]'):
         """
@@ -1509,11 +1443,5 @@ class UserCertificateCreation(_ClientWorkBase):
         if attributes:
             work_attributes.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._work_base_dn,
-            config_class=ClientUserCertificateWorkAttributes.__config_class__,
-            attributes=work_attributes,
-            keep_list_values=True,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._work_base_dn, config_class=ClientUserCertificateWorkAttributes.__config_class__, attributes=work_attributes,
+                                   get_if_already_exists=get_if_already_exists)

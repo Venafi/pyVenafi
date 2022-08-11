@@ -228,7 +228,7 @@ class _Config:
             }
 
             class Response(WebSdkOutputModel):
-                object: List[config.Object] = ApiField(alias='Object', default_factory=list)
+                objects: List[config.Object] = ApiField(alias='Objects', default_factory=list)
                 result: config.Result = ApiField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return generate_output(response=self._post(data=body), response_cls=Response)
@@ -243,7 +243,7 @@ class _Config:
             }
 
             class Response(WebSdkOutputModel):
-                object: List[config.Object] = ApiField(alias='Object', default_factory=list)
+                objects: List[config.Object] = ApiField(alias='Objects', default_factory=list)
                 result: config.Result = ApiField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return generate_output(response=self._post(data=body), response_cls=Response)
@@ -259,7 +259,7 @@ class _Config:
             }
 
             class Response(WebSdkOutputModel):
-                object: List[config.Object] = ApiField(alias='Object', default_factory=list)
+                objects: List[config.Object] = ApiField(alias='Objects', default_factory=list)
                 result: config.Result = ApiField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return generate_output(response=self._post(data=body), response_cls=Response)
@@ -290,7 +290,7 @@ class _Config:
             }
 
             class Response(WebSdkOutputModel):
-                object: List[config.Object] = ApiField(alias='Object', default_factory=list)
+                objects: List[config.Object] = ApiField(alias='Objects', default_factory=list)
                 result: config.Result = ApiField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return generate_output(response=self._post(data=body), response_cls=Response)
@@ -306,7 +306,7 @@ class _Config:
             }
 
             class Response(WebSdkOutputModel):
-                object: List[config.Object] = ApiField(alias='Object', default_factory=list)
+                objects: List[config.Object] = ApiField(alias='Objects', default_factory=list)
                 result: config.Result = ApiField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return generate_output(response=self._post(data=body), response_cls=Response)
@@ -328,7 +328,7 @@ class _Config:
             }
 
             class Response(WebSdkOutputModel):
-                object: List[config.Object] = ApiField(alias='Object', default_factory=list)
+                objects: List[config.Object] = ApiField(alias='Objects', default_factory=list)
                 result: config.Result = ApiField(alias='Result', converter=lambda x: config.Result(code=x))
 
             return generate_output(response=self._post(data=body), response_cls=Response)

@@ -307,7 +307,7 @@ class CustomField(FeatureBase):
         response = self._api.websdk.Metadata.UpdateItem.post(
             update={
                 "DN": custom_field_dn,
-                "Data": self._name_value_list(attributes=item, keep_list_values=True)
+                "Data": self._name_value_list(attributes=item)
             }
         )
         self._validate_result_code(response.result)

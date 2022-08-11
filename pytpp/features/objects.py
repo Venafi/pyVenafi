@@ -267,7 +267,7 @@ class Objects(FeatureBase):
 
         result = self._api.websdk.Config.Write.post(
             object_dn=obj_dn,
-            attribute_data=self._name_value_list(attributes, keep_list_values=True)
+            attribute_data=self._name_value_list(attributes)
         ).result
 
         if result.code != 1:

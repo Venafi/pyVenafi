@@ -1,7 +1,8 @@
-import requests
 import json
+import requests
+from datetime import datetime
+from pydantic import BaseModel
 from typing import TYPE_CHECKING
-from pytpp.attributes._helper import Attribute
 if TYPE_CHECKING:
     from packaging.version import Version
 
@@ -34,19 +35,18 @@ class Session:
     def update_headers(self, new_headers):
         self.request_kwargs['headers'].update(new_headers)
 
-    def post(self, url: str, data: dict):
+    def delete(self, url: str, params: dict = None):
         """
-        Sends a POST request to the given URL with the given data.
+        Sends a DELETE request to the given URL.
 
         Args:
             url: URL endpoint
-            data: Dictionary of data
+            params: Dictionary of parameters to append to the URL
 
         Returns:
             Returns the raw response returned by the server.
         """
-        data = self._remove_null_values_from_dictionary(d=data)
-        return self.requests.post(url=url, data=json.dumps(data), **self.request_kwargs)
+        return self.requests.delete(url, params=self._sanitize(obj=params), **self.request_kwargs)
 
     def get(self, url: str, params: dict = None):
         """
@@ -59,22 +59,20 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        params = self._remove_null_values_from_dictionary(d=params)
-        return self.requests.get(url=url, params=params, **self.request_kwargs)
+        return self.requests.get(url=url, params=self._sanitize(obj=params), **self.request_kwargs)
 
-    def delete(self, url: str, params: dict = None):
+    def post(self, url: str, data: dict):
         """
-        Sends a DELETE request to the given URL.
+        Sends a POST request to the given URL with the given data.
 
         Args:
             url: URL endpoint
-            params: Dictionary of parameters to append to the URL
+            data: Dictionary of data
 
         Returns:
             Returns the raw response returned by the server.
         """
-        params = self._remove_null_values_from_dictionary(d=params)
-        return self.requests.delete(url, params=params, **self.request_kwargs)
+        return self.requests.post(url=url, data=self._to_json(obj=data), **self.request_kwargs)
 
     def put(self, url: str, data: dict):
         """
@@ -87,26 +85,35 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        data = self._remove_null_values_from_dictionary(d=data)
-        return self.requests.put(url=url, data=json.dumps(data), **self.request_kwargs)
+        return self.requests.put(url=url, data=self._to_json(obj=data), **self.request_kwargs)
 
-    def _remove_null_values_from_dictionary(self, d: dict):
-        """
-        Removes all values that are of NoneType recursively within a dictionary.
-        """
-        if not isinstance(d, dict):
-            return d
+    def _to_json(self, obj):
+        sanitized_obj = self._sanitize(obj)
+        return json.dumps(sanitized_obj, default=self._json_default)
 
-        for key, value in list(d.items()):
-            if self.tpp_version:
-                if isinstance(key, Attribute) and key.min_version and self.tpp_version < value.min_version:
-                    raise AttributeError(f'The attribute "{key}" is not available until TPP version {key.min_version}.')
-                if isinstance(value, Attribute) and value.min_version and self.tpp_version < value.min_version:
-                    raise AttributeError(f'The attribute "{value}" is not available until TPP version {value.min_version}.')
-                if hasattr(value, '__config_class__'):
-                    d[key] = value.__config_class__
-            if value is None:
-                del d[key]
-            elif isinstance(value, dict):
-                self._remove_null_values_from_dictionary(value)
-        return d
+    @staticmethod
+    def _json_default(obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return str(obj)
+
+    @staticmethod
+    def _validate_value(obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return obj
+
+    def _sanitize(self, obj):
+        if isinstance(obj, BaseModel):
+            obj = obj.dict(by_alias=True)
+        if isinstance(obj, dict):
+            new_values = {}
+            for k, v in obj.items():
+                new_k = self._validate_value(k)
+                new_v = self._sanitize(v)
+                new_values[new_k] = new_v
+            return new_values
+        elif isinstance(obj, (list, tuple, set)):
+            return [self._sanitize(item) for item in obj]
+        else:
+            return self._validate_value(obj)

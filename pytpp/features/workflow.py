@@ -47,13 +47,9 @@ class _WorkflowBase(FeatureBase):
     def _create(self, name: str, parent_folder: 'Union[config.Object, str]', is_adaptable: bool, stage: int, injection_command: str = None,
                 application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,
                 get_if_already_exists: bool = True):
-        workflow = self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(parent_folder),
-            config_class=WorkflowAttributes.__config_class__ if not is_adaptable else AdaptableWorkflowAttributes.__config_class__,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        workflow = self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder),
+                                       config_class=WorkflowAttributes.__config_class__ if not is_adaptable else AdaptableWorkflowAttributes.__config_class__, attributes=attributes,
+                                       get_if_already_exists=get_if_already_exists)
 
         if is_adaptable:
             driver_str = '037Venafi.Drivers.AdaptableWFApplication'

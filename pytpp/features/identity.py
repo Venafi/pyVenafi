@@ -125,13 +125,7 @@ class User(_IdentityBase):
             UserAttributes.given_name: first_name,
             UserAttributes.surname: last_name
         }
-        user = self._config_create(
-            name=name,
-            parent_folder_dn=self._identity_dn,
-            config_class=Classes.user,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        user = self._config_create(name=name, parent_folder_dn=self._identity_dn, config_class=Classes.user, attributes=attributes, get_if_already_exists=get_if_already_exists)
         user = self.set_password(user=f'local:{user.name}', new_password=password)
 
         if add_to_everyone_group:

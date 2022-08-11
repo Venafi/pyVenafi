@@ -218,15 +218,9 @@ class PlacementRules(FeatureBase):
             certificate_location=certificate_location,
             rule_type=rule_type
         )
-        rule = self._config_create(
-            name=name,
-            parent_folder_dn=self._layout_rules_dn,
-            attributes={
-                LayoutRuleBaseAttributes.rule: rule_attr
-            },
-            config_class=LayoutRuleBaseAttributes.__config_class__,
-            get_if_already_exists=get_if_already_exists
-        )
+        rule = self._config_create(name=name, parent_folder_dn=self._layout_rules_dn, config_class=LayoutRuleBaseAttributes.__config_class__, attributes={
+            LayoutRuleBaseAttributes.rule: rule_attr
+        }, get_if_already_exists=get_if_already_exists)
         return rule
 
     def delete(self, rule: 'Union[config.Object, str]'):

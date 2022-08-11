@@ -95,13 +95,8 @@ class NetworkDiscovery(FeatureBase):
             elif days_of_year:
                 attributes[DiscoveryAttributes.days_of_year] = days_of_year
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._discovery_dn,
-            config_class=DiscoveryAttributes.__config_class__,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._discovery_dn, config_class=DiscoveryAttributes.__config_class__, attributes=attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
     def delete(self, job: 'Union[config.Object, str]'):
         """
@@ -178,7 +173,7 @@ class NetworkDiscovery(FeatureBase):
 
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
-            attribute_data=self._name_value_list(attributes, keep_list_values=True)
+            attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
 
@@ -230,7 +225,7 @@ class NetworkDiscovery(FeatureBase):
         }
         response = self._api.websdk.Config.Write.post(
             object_dn=job_dn,
-            attribute_data=self._name_value_list(attributes, keep_list_values=True)
+            attribute_data=self._name_value_list(attributes)
         )
         response.assert_valid_response()
 

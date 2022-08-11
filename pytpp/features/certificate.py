@@ -138,13 +138,7 @@ class Certificate(FeatureBase):
         }
         if attributes:
             cert_attrs.update(attributes)
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(parent_folder),
-            config_class=Classes.x509_certificate,
-            attributes=cert_attrs,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=Classes.x509_certificate, attributes=cert_attrs, get_if_already_exists=get_if_already_exists)
 
     def delete(self, certificate: 'Union[config.Object, str]'):
         """

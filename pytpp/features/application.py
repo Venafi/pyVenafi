@@ -32,10 +32,11 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, FeatureException
 from pytpp.features.definitions.classes import Classes
 from pytpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
+from pytpp.api.websdk.outputs import config
 from pydantic.datetime_parse import parse_datetime
 from typing import Union, List, TYPE_CHECKING
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import identity as ident, config
+    from pytpp.api.websdk.outputs import identity as ident
 
 
 # region Applications
@@ -67,7 +68,7 @@ class _ApplicationBase(FeatureBase):
             object_dn=application_dn,
             attribute_data=self._name_value_list({
                 ApplicationBaseAttributes.disabled: ["1"]
-            }, keep_list_values=True)
+            })
         ).result
 
         if result.code != 1:
@@ -141,13 +142,7 @@ class _ApplicationBase(FeatureBase):
                 ApplicationBaseAttributes.description: description
             })
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=device_dn,
-            config_class=self._class_name,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=device_dn, config_class=self._class_name, attributes=attributes, get_if_already_exists=get_if_already_exists)
 
     def _get_stage(self, application: 'Union[config.Object, str]'):
         application_dn = self._get_dn(application)
@@ -646,7 +641,7 @@ class Basic(_ApplicationBase):
             attributes = {k: ([str(v)] if not isinstance(v, list) else v) for k, v in attributes.items()}
             result = self._api.websdk.Config.Write.post(
                 object_dn=basic_application_dn,
-                attribute_data=self._name_value_list(attributes, keep_list_values=True)
+                attribute_data=self._name_value_list(attributes)
             )
             result.assert_valid_response()
 
@@ -946,13 +941,7 @@ class F5AuthenticationBundle(_ApplicationBase):
         if attributes:
             app_attrs.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(device),
-            config_class=Classes.f5_authentication_bundle,
-            attributes=app_attrs,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._get_dn(device), config_class=Classes.f5_authentication_bundle, attributes=app_attrs, get_if_already_exists=get_if_already_exists)
 
 
 @feature('F5 LTM Advanced')
@@ -2082,12 +2071,7 @@ class _ApplicationGroupBase(FeatureBase):
 
     def _create(self, application_dns: List[str], certificate: 'config.Object', attributes: dict = None):
         # Create the Application Group.
-        app_group = self._config_create(
-            name=f'{certificate.name} - {self.certificate_suffix}',
-            parent_folder_dn=certificate.parent,
-            config_class=self.class_name,
-            attributes=attributes
-        )
+        app_group = self._config_create(name=f'{certificate.name} - {self.certificate_suffix}', parent_folder_dn=certificate.parent, config_class=self.class_name, attributes=attributes)
         # Associate the Application Group :ref:`dn`.
         result = self._api.websdk.Config.WriteDn.post(
             object_dn=certificate.dn,

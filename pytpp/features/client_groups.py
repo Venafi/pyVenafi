@@ -116,13 +116,8 @@ class Agentless(_ClientGroupBase):
             ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agentless
         }
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._group_base_dn,
-            config_class=ClientGroupAttributes.__config_class__,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._group_base_dn, config_class=ClientGroupAttributes.__config_class__, attributes=attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('EST Certificate Enrollment Group')
@@ -142,13 +137,8 @@ class EstCertificateEnrollment(_ClientGroupBase):
             ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.est
         }
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._group_base_dn,
-            config_class=ClientGroupAttributes.__config_class__,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._group_base_dn, config_class=ClientGroupAttributes.__config_class__, attributes=attributes,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('Venafi Agent Group')
@@ -168,10 +158,5 @@ class VenafiAgent(_ClientGroupBase):
             ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.venafi_agent
         }
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._group_base_dn,
-            config_class=ClientGroupAttributes.__config_class__,
-            attributes=attributes,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._group_base_dn, config_class=ClientGroupAttributes.__config_class__, attributes=attributes,
+                                   get_if_already_exists=get_if_already_exists)

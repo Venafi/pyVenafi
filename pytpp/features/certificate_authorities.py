@@ -87,13 +87,8 @@ class MSCA(_CertificateAuthorityBase):
         if attributes:
             ca_attrs.update(attributes)
 
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(parent_folder),
-            config_class=MicrosoftCAAttributes.__config_class__,
-            attributes=ca_attrs,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=MicrosoftCAAttributes.__config_class__, attributes=ca_attrs,
+                                   get_if_already_exists=get_if_already_exists)
 
 
 @feature('Self-Signed CA')
@@ -149,10 +144,5 @@ class SelfSignedCA(_CertificateAuthorityBase):
             })
         if attributes:
             ca_attrs.update(attributes)
-        return self._config_create(
-            name=name,
-            parent_folder_dn=self._get_dn(parent_folder),
-            config_class=SelfSignedCAAttributes.__config_class__,
-            attributes=ca_attrs,
-            get_if_already_exists=get_if_already_exists
-        )
+        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=SelfSignedCAAttributes.__config_class__, attributes=ca_attrs,
+                                   get_if_already_exists=get_if_already_exists)

@@ -285,6 +285,7 @@ def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable
 class InputModel(BaseModel, metaclass=ApiModelMetaclass):
     class Config:
         arbitrary_types_allowed = True
+        allow_population_by_field_name = True
 
     @root_validator(pre=True, allow_reuse=True)
     def _case_insensitive_validator(cls, values: dict):
@@ -350,6 +351,7 @@ def generate_output(response: Response, response_cls: Type[T_], root_field: str 
 class OutputModel(BaseModel, metaclass=ApiModelMetaclass):
     class Config:
         arbitrary_types_allowed = True
+        allow_population_by_field_name = True
 
     @root_validator(pre=True, allow_reuse=True)
     def _case_insensitive_validator(cls, values: dict):
@@ -360,7 +362,7 @@ class OutputModel(BaseModel, metaclass=ApiModelMetaclass):
             try:
                 if alias.lower() not in lowered_values:
                     continue
-                new_value = lowered_values[alias.lower]
+                new_value = lowered_values[alias.lower()]
                 if fv.type_ is datetime and '\\Date' in new_value:
                     new_value = re.sub(r'\D', '', new_value)
                 if (converter := fv.field_info.extra.get('converter')) is not None:
