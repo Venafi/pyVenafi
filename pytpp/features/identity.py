@@ -4,8 +4,9 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.features.definitions.classes import Classes
 from typing import List, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import identity as ident
+    from pytpp.api.websdk.models import identity as ident
 
 
 class _IdentityBase(FeatureBase):
@@ -122,8 +123,8 @@ class User(_IdentityBase):
         """
         attributes = {
             UserAttributes.internet_email_address: email_address,
-            UserAttributes.given_name: first_name,
-            UserAttributes.surname: last_name
+            UserAttributes.given_name            : first_name,
+            UserAttributes.surname               : last_name
         }
         user = self._config_create(name=name, parent_folder_dn=self._identity_dn, config_class=Classes.user, attributes=attributes, get_if_already_exists=get_if_already_exists)
         user = self.set_password(user=f'local:{user.name}', new_password=password)

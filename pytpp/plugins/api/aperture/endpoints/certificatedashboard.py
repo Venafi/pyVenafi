@@ -1,5 +1,5 @@
 from pytpp.api.api_base import generate_output, ApiField
-from pytpp.plugins.api.aperture.outputs import certificate_dashboard
+from pytpp.plugins.api.aperture.models import certificate_dashboard
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
 from typing import List
 

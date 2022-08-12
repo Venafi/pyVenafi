@@ -2,8 +2,9 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.attributes.discovery import DiscoveryAttributes
 from typing import List, Dict, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config, identity as ident
+    from pytpp.api.websdk.models import config, identity as ident
 
 
 @feature('Network Discovery')
@@ -74,11 +75,11 @@ class NetworkDiscovery(FeatureBase):
             DiscoveryAttributes.automatically_import   : "1" if automatically_import else "0",
             DiscoveryAttributes.blackout               : blackout,
             DiscoveryAttributes.certificate_location_dn: self._get_dn(default_certificate_location)
-                                                         if default_certificate_location else None,
+            if default_certificate_location else None,
             DiscoveryAttributes.contact                : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
             DiscoveryAttributes.description            : description,
             DiscoveryAttributes.discovery_exclusion_dn : [self._get_dn(el) for el in exclusion_locations]
-                                                         if exclusion_locations else None,
+            if exclusion_locations else None,
             DiscoveryAttributes.placement_rule         : placement_rule_guids,
             DiscoveryAttributes.priority               : priority,
             DiscoveryAttributes.reschedule             : "1" if hour and reschedule else "0",

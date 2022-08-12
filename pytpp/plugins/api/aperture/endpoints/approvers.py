@@ -1,5 +1,5 @@
 from pytpp.api.api_base import generate_output, ApiField
-from pytpp.plugins.api.aperture.outputs import identity
+from pytpp.plugins.api.aperture.models import identity
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
 from typing import List
 
@@ -12,8 +12,8 @@ class _Approvers(ApertureEndpoint):
         params = {
             'filter': name_filter
         }
-        
+
         class Output(ApertureOutputModel):
             identities: List[identity.Identity] = ApiField()
-            
+
         return generate_output(output_cls=Output, response=self._get(params=params), root_field='identities')

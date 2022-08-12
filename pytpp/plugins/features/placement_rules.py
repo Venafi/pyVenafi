@@ -3,9 +3,10 @@ from pytpp.features.bases.feature_base import feature
 from pytpp.features.placement_rules import PlacementRules as _OriginalPlacementRules, \
     PlacementRuleCondition as _OriginalPlacementRuleCondition
 from typing import TYPE_CHECKING, List, Union
+
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
-    from pytpp.api.websdk.outputs import config
+    from pytpp.api.websdk.models import config
 
 
 @feature(_OriginalPlacementRuleCondition.__feature__)
@@ -93,9 +94,9 @@ class PlacementRuleCondition(_OriginalPlacementRuleCondition):
         @staticmethod
         def _condition(field: str, comparison: str, value: str):
             return json.dumps({
-                'field': field,
+                'field'     : field,
                 'comparison': comparison,
-                'value': value
+                'value'     : value
             })
 
         def matches(self, value: str):

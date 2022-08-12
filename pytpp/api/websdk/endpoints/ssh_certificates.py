@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from pytpp.api.websdk.outputs import ssh_certificates
+from pytpp.api.websdk.models import ssh_certificates
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 

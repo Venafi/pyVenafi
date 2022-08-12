@@ -1,6 +1,6 @@
 from typing import List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pytpp.api.websdk.outputs import identity as ident
+from pytpp.api.websdk.models import identity as ident
 
 
 class _Teams(WebSdkEndpoint):
@@ -15,12 +15,12 @@ class _Teams(WebSdkEndpoint):
     def post(self, name: str, owners: list, assets: list = None, description: str = None, members: list = None,
              products: list = None):
         body = {
-            'Assets': assets,
+            'Assets'     : assets,
             'Description': description,
-            'Name': name,
-            'Owners': owners,
-            'Members': members,
-            'Products': products
+            'Name'       : name,
+            'Owners'     : owners,
+            'Members'    : members,
+            'Products'   : products
         }
 
         class Output(WebSdkOutputModel):
@@ -37,8 +37,8 @@ class _Teams(WebSdkEndpoint):
 
         def put(self, members: list, team: dict = None, show_members: bool = None):
             body = {
-                'Members': members,
-                'Team': team,
+                'Members'    : members,
+                'Team'       : team,
                 'ShowMembers': show_members
             }
 
@@ -55,8 +55,8 @@ class _Teams(WebSdkEndpoint):
 
         def put(self, owners: list = None, team: dict = None, show_members: bool = None):
             body = {
-                'Owners': owners,
-                'Team': team,
+                'Owners'     : owners,
+                'Team'       : team,
                 'ShowMembers': show_members
             }
 
@@ -73,8 +73,8 @@ class _Teams(WebSdkEndpoint):
 
         def put(self, owners: list = None, team: dict = None, show_members: bool = None):
             body = {
-                'Owners': owners,
-                'Team': team,
+                'Owners'     : owners,
+                'Team'       : team,
                 'ShowMembers': show_members
             }
 
@@ -125,12 +125,12 @@ class _Teams(WebSdkEndpoint):
 
             def put(self, assets: list, description: str, name: str, owners: list, members: list, products: list):
                 body = {
-                    'Assets': assets,
+                    'Assets'     : assets,
                     'Description': description,
-                    'Name': name,
-                    'Owners': owners,
-                    'Members': members,
-                    'Products': products
+                    'Name'       : name,
+                    'Owners'     : owners,
+                    'Members'    : members,
+                    'Products'   : products
                 }
 
                 class Output(WebSdkOutputModel):
@@ -147,8 +147,8 @@ class _Teams(WebSdkEndpoint):
 
         def put(self, team: dict, members: list = None, show_members: bool = None):
             body = {
-                'Team': team,
-                'Members': members,
+                'Team'       : team,
+                'Members'    : members,
                 'ShowMembers': show_members
             }
 

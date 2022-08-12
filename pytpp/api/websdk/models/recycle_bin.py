@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from pytpp.api.websdk.outputs.resultcodes import ResultCodes
-from pytpp.api.websdk.outputs.identity import Identity
+from pytpp.api.websdk.models.resultcodes import ResultCodes
+from pytpp.api.websdk.models.identity import Identity
 from pytpp.api.api_base import OutputModel, ApiField
 from typing import List
 

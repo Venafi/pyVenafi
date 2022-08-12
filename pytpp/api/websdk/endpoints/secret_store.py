@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import secret_store
+from pytpp.api.websdk.models import secret_store
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -29,10 +29,10 @@ class _SecretStore:
         def post(self, base_64_data: str, keyname: str, namespace: str, owner: str, vault_type: int):
             body = {
                 'Base64Data': base_64_data,
-                'Keyname': keyname,
-                'Namespace': namespace,
-                'Owner': owner,
-                'VaultType': vault_type
+                'Keyname'   : keyname,
+                'Namespace' : namespace,
+                'Owner'     : owner,
+                'VaultType' : vault_type
             }
 
             class Output(WebSdkOutputModel):
@@ -47,10 +47,10 @@ class _SecretStore:
 
         def post(self, name: str, vault_id: int, date_value: str = None, int_value: int = None, string_value: str = None):
             body = {
-                'Name': name,
-                'VaultID': vault_id,
-                'DateValue': date_value,
-                'IntValue': int_value,
+                'Name'       : name,
+                'VaultID'    : vault_id,
+                'DateValue'  : date_value,
+                'IntValue'   : int_value,
                 'StringValue': string_value
             }
 
@@ -65,11 +65,11 @@ class _SecretStore:
 
         def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
             body = {
-                'VaultID': vault_id,
-                'IntValue': int_value,
-                'Name': name,
+                'VaultID'    : vault_id,
+                'IntValue'   : int_value,
+                'Name'       : name,
                 'StringValue': string_value,
-                'DateValue': date_value
+                'DateValue'  : date_value
             }
 
             class Output(WebSdkOutputModel):
@@ -120,10 +120,10 @@ class _SecretStore:
 
         def post(self, name: str, int_value: int = None, string_value: str = None, date_value: int = None):
             body = {
-                'Name': name,
-                'IntValue': int_value,
+                'Name'       : name,
+                'IntValue'   : int_value,
                 'StringValue': string_value,
-                'DateValue': date_value
+                'DateValue'  : date_value
             }
 
             class Output(WebSdkOutputModel):
@@ -139,7 +139,7 @@ class _SecretStore:
         def post(self, vault_id: int, name: str = None):
             body = {
                 'VaultID': vault_id,
-                'Name': name
+                'Name'   : name
             }
 
             class Output(WebSdkOutputModel):
@@ -155,7 +155,7 @@ class _SecretStore:
         def post(self, namespace: str, owner: str, vault_type: str = None):
             body = {
                 'Namespace': namespace,
-                'Owner': owner,
+                'Owner'    : owner,
                 'VaultType': vault_type
             }
 
@@ -186,7 +186,7 @@ class _SecretStore:
 
         def post(self, vault_id: int, vault_type: int):
             body = {
-                'VaultID': vault_id,
+                'VaultID'  : vault_id,
                 'VaultType': vault_type
             }
 
@@ -217,8 +217,8 @@ class _SecretStore:
         def post(self, namespace: str, owner: str, vault_id: int):
             body = {
                 'Namespace': namespace,
-                'Owner': owner,
-                'VaultId': vault_id
+                'Owner'    : owner,
+                'VaultId'  : vault_id
             }
 
             class Output(WebSdkOutputModel):
@@ -233,8 +233,8 @@ class _SecretStore:
         def post(self, namespace: str, owner: str, vault_id: int = None):
             body = {
                 'Namespace': namespace,
-                'Owner': owner,
-                'VaultId': vault_id
+                'Owner'    : owner,
+                'VaultId'  : vault_id
             }
 
             class Output(WebSdkOutputModel):
@@ -249,7 +249,7 @@ class _SecretStore:
         def post(self, namespace: str, vault_id: int):
             body = {
                 'Namespace': namespace,
-                'VaultID': vault_id
+                'VaultID'  : vault_id
             }
 
             class Output(WebSdkOutputModel):

@@ -1,6 +1,6 @@
 from pytpp.api.api_base import ApiField, generate_output
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.outputs import reports
+from pytpp.plugins.api.aperture.models import reports
 from typing import List
 
 

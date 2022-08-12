@@ -127,8 +127,8 @@ class Scope:
 
 
 def main():
-    scope = Scope().\
-        certificate(approve=True).\
+    scope = Scope(). \
+        certificate(approve=True). \
         statistics(read=True)
     print(scope.to_string())
 

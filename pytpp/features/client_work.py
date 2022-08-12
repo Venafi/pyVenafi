@@ -20,7 +20,7 @@ from pytpp.attributes.client_agent_ssh_provisioning_work import ClientAgentSSHPr
 from pytpp.attributes.client_user_certificate_work import ClientUserCertificateWorkAttributes
 
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import identity as ident, config
+    from pytpp.api.websdk.models import identity as ident, config
 
 
 class _ClientWorkBase(FeatureBase):

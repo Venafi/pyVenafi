@@ -7,9 +7,9 @@ from pytpp.features.definitions.exceptions import FeatureException, UnexpectedVa
 from pytpp.features.definitions.classes import Classes
 from pytpp.tools.logger import features_logger
 from typing import List, Union, TYPE_CHECKING, Tuple, Dict
-if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config, identity as ident
 
+if TYPE_CHECKING:
+    from pytpp.api.websdk.models import config, identity as ident
 
 StringParam = Union[str, List[str], List[Tuple[str, ...]]]
 
@@ -110,31 +110,40 @@ class Certificate(FeatureBase):
             :ref:`config_object`
         """
         cert_attrs = {
-            X509CertificateAttributes.description: description,
-            X509CertificateAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
-            X509CertificateAttributes.approver: [self._get_prefixed_universal(a) for a in approvers] if approvers else None,
-            X509CertificateAttributes.management_type: management_type,
-            X509CertificateAttributes.manual_csr: {True: "0", False: "1"}.get(service_generated_csr),
-            X509CertificateAttributes.generate_keypair_on_application: {True: "1", False: "0"}.get(generate_key_on_application),
-            X509CertificateAttributes.pkcs10_hash_algorithm: hash_algorithm,
-            X509CertificateAttributes.x509_subject: common_name,
-            X509CertificateAttributes.organization: organization,
-            X509CertificateAttributes.organizational_unit: organization_unit,
-            X509CertificateAttributes.city: city,
-            X509CertificateAttributes.state: state,
-            X509CertificateAttributes.country: country,
-            X509CertificateAttributes.driver_name: 'appx509certificate',
-            X509CertificateAttributes.x509_subjectaltname_dns: san_dns,
-            X509CertificateAttributes.x509_subjectaltname_ipaddress: san_ip,
-            X509CertificateAttributes.x509_subjectaltname_uri: san_uri,
+            X509CertificateAttributes.description                      : description,
+            X509CertificateAttributes.contact                          : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            X509CertificateAttributes.approver                         : [self._get_prefixed_universal(a) for a in approvers] if approvers else None,
+            X509CertificateAttributes.management_type                  : management_type,
+            X509CertificateAttributes.manual_csr                       : {
+                True : "0",
+                False: "1"
+            }.get(service_generated_csr),
+            X509CertificateAttributes.generate_keypair_on_application  : {
+                True : "1",
+                False: "0"
+            }.get(generate_key_on_application),
+            X509CertificateAttributes.pkcs10_hash_algorithm            : hash_algorithm,
+            X509CertificateAttributes.x509_subject                     : common_name,
+            X509CertificateAttributes.organization                     : organization,
+            X509CertificateAttributes.organizational_unit              : organization_unit,
+            X509CertificateAttributes.city                             : city,
+            X509CertificateAttributes.state                            : state,
+            X509CertificateAttributes.country                          : country,
+            X509CertificateAttributes.driver_name                      : 'appx509certificate',
+            X509CertificateAttributes.x509_subjectaltname_dns          : san_dns,
+            X509CertificateAttributes.x509_subjectaltname_ipaddress    : san_ip,
+            X509CertificateAttributes.x509_subjectaltname_uri          : san_uri,
             X509CertificateAttributes.x509_subjectaltname_othername_upn: san_upn,
-            X509CertificateAttributes.x509_subjectaltname_rfc822: san_email,
-            X509CertificateAttributes.key_algorithm: key_algorithm,
-            X509CertificateAttributes.key_bit_strength: key_strength,
-            X509CertificateAttributes.elliptic_curve: elliptic_curve,
-            X509CertificateAttributes.certificate_authority: self._get_dn(ca_template) if ca_template else None,
-            X509CertificateAttributes.disable_automatic_renewal: {True: "1", False: "0"}.get(disable_automatic_renewal),
-            X509CertificateAttributes.renewal_window: renewal_window
+            X509CertificateAttributes.x509_subjectaltname_rfc822       : san_email,
+            X509CertificateAttributes.key_algorithm                    : key_algorithm,
+            X509CertificateAttributes.key_bit_strength                 : key_strength,
+            X509CertificateAttributes.elliptic_curve                   : elliptic_curve,
+            X509CertificateAttributes.certificate_authority            : self._get_dn(ca_template) if ca_template else None,
+            X509CertificateAttributes.disable_automatic_renewal        : {
+                True : "1",
+                False: "0"
+            }.get(disable_automatic_renewal),
+            X509CertificateAttributes.renewal_window                   : renewal_window
         }
         if attributes:
             cert_attrs.update(attributes)
@@ -406,53 +415,53 @@ class Certificate(FeatureBase):
         """
         # region Filters
         filters = {
-            "C": country,
-            "CertificateType": certificate_type,
-            "CN": common_name,
-            "Issuer": issuer,
-            "IsSelfSigned": is_self_signed,
-            "IsWildcard": is_wild_card,
-            "KeyAlgorithm": key_algorithm,
-            "KeySize": key_size,
-            "KeySizeGreater": key_size_greater,
-            "KeySizeLess": key_size_less,
-            "L": city,
-            "O": organization,
-            "OU": organization_unit,
-            "S": state,
-            "SAN-DNS": san_dns,
-            "SAN-Email": san_email,
-            "SAN-IP": san_ip,
-            "SAN-UPN": san_upn,
-            "SAN-URI": san_uri,
-            "Serial": serial,
-            "SignatureAlgorithm": signature_algorithm,
-            "Thumbprint": thumbprint,
-            "ValidFrom": valid_from,
-            "ValidFromGreater": valid_from_greater,
-            "ValidFromLess": valid_from_less,
-            "ValidTo": valid_to,
-            "ValidToGreater": valid_to_greater,
-            "ValidToLess": valid_to_less,
-            "ChainValidationFailure": chain_validation_error,
-            "CreatedOn": created_on,
-            "CreatedOnGreater": created_on_greater,
-            "CreatedOnLess": created_on_less,
-            "Disabled": disabled,
-            "InError": in_error,
-            "ManagementType": management_type,
-            "Name": name,
+            "C"                        : country,
+            "CertificateType"          : certificate_type,
+            "CN"                       : common_name,
+            "Issuer"                   : issuer,
+            "IsSelfSigned"             : is_self_signed,
+            "IsWildcard"               : is_wild_card,
+            "KeyAlgorithm"             : key_algorithm,
+            "KeySize"                  : key_size,
+            "KeySizeGreater"           : key_size_greater,
+            "KeySizeLess"              : key_size_less,
+            "L"                        : city,
+            "O"                        : organization,
+            "OU"                       : organization_unit,
+            "S"                        : state,
+            "SAN-DNS"                  : san_dns,
+            "SAN-Email"                : san_email,
+            "SAN-IP"                   : san_ip,
+            "SAN-UPN"                  : san_upn,
+            "SAN-URI"                  : san_uri,
+            "Serial"                   : serial,
+            "SignatureAlgorithm"       : signature_algorithm,
+            "Thumbprint"               : thumbprint,
+            "ValidFrom"                : valid_from,
+            "ValidFromGreater"         : valid_from_greater,
+            "ValidFromLess"            : valid_from_less,
+            "ValidTo"                  : valid_to,
+            "ValidToGreater"           : valid_to_greater,
+            "ValidToLess"              : valid_to_less,
+            "ChainValidationFailure"   : chain_validation_error,
+            "CreatedOn"                : created_on,
+            "CreatedOnGreater"         : created_on_greater,
+            "CreatedOnLess"            : created_on_less,
+            "Disabled"                 : disabled,
+            "InError"                  : in_error,
+            "ManagementType"           : management_type,
+            "Name"                     : name,
             "NetworkValidationDisabled": network_validation_disabled,
-            "ParentDn": self._get_dn(parent_folder) if parent_folder and not recursive else None,
-            "ParentDnRecursive": self._get_dn(parent_folder) if parent_folder and recursive else None,
-            "PendingWorkflow": pending_workflow,
-            "SslTlsProtocol": ssl_tls_protocol,
-            "Stage": stage,
-            "StageGreater": stage_greater,
-            "StageLess": stage_less,
-            "TlsValidationFailure": tls_validation_failure,
-            "ValidationDisabled": validation_disabled,
-            "ValidationState": validation_state,
+            "ParentDn"                 : self._get_dn(parent_folder) if parent_folder and not recursive else None,
+            "ParentDnRecursive"        : self._get_dn(parent_folder) if parent_folder and recursive else None,
+            "PendingWorkflow"          : pending_workflow,
+            "SslTlsProtocol"           : ssl_tls_protocol,
+            "Stage"                    : stage,
+            "StageGreater"             : stage_greater,
+            "StageLess"                : stage_less,
+            "TlsValidationFailure"     : tls_validation_failure,
+            "ValidationDisabled"       : validation_disabled,
+            "ValidationState"          : validation_state,
         }
 
         def format_value(v):
@@ -582,9 +591,9 @@ class Certificate(FeatureBase):
             str: The current thumbprint of the active certificate. This should be used when checking the renewal status \
                  to ensure that TPP has registered a new certificate to its vault with a new thumbprint.
         """
-        certificate = self._get(certificate)
-        current_thumbprint = certificate.certificate_details.thumbprint
-        result = self._api.websdk.Certificates.Renew.post(certificate_dn=certificate.dn, pkcs10=csr, reenable=re_enable)
+        result = self._get(certificate)
+        current_thumbprint = result.certificate_details.thumbprint
+        result = self._api.websdk.Certificates.Renew.post(certificate_dn=result.dn, pkcs10=csr, reenable=re_enable)
         result.assert_valid_response()
         return current_thumbprint
 

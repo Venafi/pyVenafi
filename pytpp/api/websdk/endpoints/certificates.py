@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from pytpp.api.websdk.outputs import certificate
+from pytpp.api.websdk.models import certificate
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -116,7 +116,7 @@ class _Certificates(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 approver: List[str] = ApiField(default_factory=list, alias='Approver')
                 certificate_authority_dn: datetime = ApiField(alias='CertificateAuthorityDN')
-                certificate_details: certificate.CertificateDetails = ApiField(default_factory=None, alias='CertificateDetails')
+                certificate_details: certificate.CertificateDetails = ApiField(alias='CertificateDetails')
                 consumers: List[str] = ApiField(alias='Consumers', default_factory=list)
                 contact: List[str] = ApiField(default_factory=list, alias='Contact')
                 created_by: str = ApiField(alias='CreatedBy')

@@ -45,7 +45,7 @@ class _Authorize(WebSdkEndpoint):
         def post(self, client_id: str, scope: str):
             body = {
                 'client_id': client_id,
-                'scope': scope
+                'scope'    : scope
             }
 
             class Output(WebSdkOutputModel):
@@ -124,10 +124,10 @@ class _Authorize(WebSdkEndpoint):
         def post(self, client_id: str, password: str, scope: str, username: str, state: str = None):
             body = {
                 'client_id': client_id,
-                'password': password,
-                'scope': scope,
-                'username': username,
-                'state': state
+                'password' : password,
+                'scope'    : scope,
+                'username' : username,
+                'state'    : state
             }
 
             class Output(WebSdkOutputModel):
@@ -154,10 +154,10 @@ class _Authorize(WebSdkEndpoint):
 
         def post(self, client_id: str, refresh_token: str, grant_type: str = None, device_code: str = None):
             body = {
-                'client_id': client_id,
+                'client_id'    : client_id,
                 'refresh_token': refresh_token,
-                'grant_type': grant_type,
-                'device_code': device_code
+                'grant_type'   : grant_type,
+                'device_code'  : device_code
             }
 
             class Output(WebSdkOutputModel):
@@ -189,27 +189,27 @@ class _Authorize(WebSdkEndpoint):
                 identity: str = ApiField(alias='identity')
                 scope: str = ApiField(alias='scope')
                 valid_for: int = ApiField(alias='valid_for')
-        
+
                 @property
                 def access_issued_on(self):
                     return self.access_issued_on_unix_time
-                
+
                 @property
                 def access_issued_on_ISO8601(self):
                     return self.access_issued_on_unix_time
-            
+
                 @property
-                def expires(self): 
+                def expires(self):
                     return self.expires_unix_time
-        
+
                 @property
                 def expires_ISO8601(self):
                     return self.expires_unix_time
-        
+
                 @property
                 def grant_issued_on(self):
                     return self.grant_issued_on_unix_time
-                
+
                 @property
                 def grant_issued_on_ISO8601(self):
                     return self.grant_issued_on_unix_time

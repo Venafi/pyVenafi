@@ -1,5 +1,5 @@
 from pytpp.api.api_base import generate_output, ApiField, WebSdkEndpoint, WebSdkOutputModel
-from pytpp.plugins.api.websdk.outputs import rights
+from pytpp.plugins.api.websdk.models import rights
 from typing import List
 
 
@@ -16,10 +16,10 @@ class _Rights:
 
         def post(self, subsystem: str, rights_object: str, universal_id: str, rights_value: str):
             body = {
-                'Subsystem': subsystem,
+                'Subsystem'   : subsystem,
                 'RightsObject': rights_object,
-                'UniversalID': universal_id,
-                'RightsValue': rights_value
+                'UniversalID' : universal_id,
+                'RightsValue' : rights_value
             }
 
             return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))
@@ -51,9 +51,9 @@ class _Rights:
 
         def post(self, universal_id: str, subsystem: str = None, rights_object: str = None):
             body = {
-                "Subsystem": subsystem,
+                "Subsystem"   : subsystem,
                 "RightsObject": rights_object,
-                "UniversalID": universal_id
+                "UniversalID" : universal_id
             }
 
             return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))

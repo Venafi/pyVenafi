@@ -1,6 +1,6 @@
 from typing import Dict, List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pytpp.api.websdk.outputs import config
+from pytpp.api.websdk.models import config
 
 
 class _Config:

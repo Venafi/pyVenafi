@@ -4,11 +4,12 @@ import os
 import re
 from typing import TYPE_CHECKING
 from pytpp.features.definitions.exceptions import InvalidResultCode, ObjectDoesNotExist
-from pytpp.api.websdk.outputs import config, identity as ident
+from pytpp.api.websdk.models import config, identity as ident
 from pytpp.tools.logger import logger, features_logger
 from pytpp.api.websdk.enums.secret_store import Namespaces
 from typing import List, Dict, Union
 from packaging.version import Version
+
 if TYPE_CHECKING:
     from pytpp.api.authenticate import Authenticate
 
@@ -22,6 +23,7 @@ def feature(name: str):
             level=logging.DEBUG,
             exclude='_.*'
         )(cls)
+
     return decorate
 
 
@@ -118,9 +120,13 @@ class FeatureBase:
         """
         d = {}
         if prefixed_name:
-            d.update({'PrefixedName': prefixed_name})
+            d.update({
+                         'PrefixedName': prefixed_name
+                     })
         if prefixed_universal:
-            d.update({'PrefixedUniversal': prefixed_universal})
+            d.update({
+                         'PrefixedUniversal': prefixed_universal
+                     })
         return d
 
     @staticmethod
@@ -186,7 +192,11 @@ class FeatureBase:
     # noinspection ALL
     @staticmethod
     def _name_type_value(name: str, type: str, value):
-        return {'Name': str(name), 'Type': str(type), 'Value': str(value)}
+        return {
+            'Name': str(name),
+            'Type': str(type),
+            'Value': str(value)
+        }
 
     @staticmethod
     def _name_value_list(attributes: Dict[str, List[str]]):
@@ -199,7 +209,7 @@ class FeatureBase:
                     v = list(v)
                 else:
                     v = [v]
-            nvl.append(config.NameValues(name=n, values=v))
+            nvl.append(config.NameAttribute(name=n, value=v))
         return nvl
 
     def _secret_store_delete(self, object_dn: str, namespace: str = Namespaces.config):

@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from pytpp.api.websdk.outputs import codesign
+from pytpp.api.websdk.models import codesign
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -626,7 +626,7 @@ class _Codesign:
 
             class Output(WebSdkOutputModel):
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
-                rights_list : List[codesign.RightsKeyValue] = ApiField(alias='RightsList')
+                rights_list: List[codesign.RightsKeyValue] = ApiField(alias='RightsList')
                 success: bool = ApiField(alias='Success')
 
             return generate_output(response=self._post(data=body), output_cls=Output)
@@ -747,9 +747,9 @@ class _Codesign:
 
         def post(self, new_dn: str, dn: str = None, guid: str = None):
             body = {
-                'Dn'  : dn,
-                'Guid': guid,
-                'Id'  : id,
+                'Dn'   : dn,
+                'Guid' : guid,
+                'Id'   : id,
                 'NewDn': new_dn
             }
 

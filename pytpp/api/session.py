@@ -3,6 +3,7 @@ import requests
 from datetime import datetime
 from pydantic import BaseModel
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from packaging.version import Version
 
@@ -12,6 +13,7 @@ class Session:
     This class is responsible for holding the appropriate headers to authenticate each
     request. It also removes all null values from all data sent to TPP.
     """
+
     def __init__(self, headers: dict, proxies: dict = None, certificate_path: str = None,
                  key_file_path: str = None, verify_ssl: bool = False, tpp_version: 'Version' = None,
                  connection_timeout: float = None, read_timeout: float = None):
@@ -20,7 +22,7 @@ class Session:
         self.requests.packages.urllib3.disable_warnings()
         self.request_kwargs = {
             'headers': headers,
-            'verify': verify_ssl,
+            'verify' : verify_ssl,
             'timeout': (connection_timeout, read_timeout)
         }
         if proxies:
@@ -105,15 +107,17 @@ class Session:
 
     def _sanitize(self, obj):
         if isinstance(obj, BaseModel):
-            obj = obj.dict(by_alias=True)
+            obj = obj.dict(by_alias=True, exclude_none=True)
         if isinstance(obj, dict):
             new_values = {}
             for k, v in obj.items():
+                if v is None:
+                    continue
                 new_k = self._validate_value(k)
                 new_v = self._sanitize(v)
                 new_values[new_k] = new_v
             return new_values
         elif isinstance(obj, (list, tuple, set)):
-            return [self._sanitize(item) for item in obj]
+            return [self._sanitize(item) for item in obj if item is not None]
         else:
             return self._validate_value(obj)

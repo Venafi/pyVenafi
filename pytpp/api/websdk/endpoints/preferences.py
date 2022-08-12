@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import preferences as prefs
+from pytpp.api.websdk.models import preferences as prefs
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -10,8 +10,8 @@ class _Preferences(WebSdkEndpoint):
     def get(self, category: str = None, name: str = None, product: prefs.ProductType = None):
         params = {
             'Category': category,
-            'Name': name,
-            'Product': product
+            'Name'    : name,
+            'Product' : product
         }
 
         class Output(WebSdkOutputModel):
@@ -29,8 +29,8 @@ class _Preferences(WebSdkEndpoint):
     def delete(self, category: str = None, name: str = None, product: prefs.ProductType = None):
         params = {
             'Category': category,
-            'Name': name,
-            'Product': product
+            'Name'    : name,
+            'Product' : product
         }
 
         return generate_output(output_cls=WebSdkOutputModel, response=self._delete(params=params))

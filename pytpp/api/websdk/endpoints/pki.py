@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import pki
+from pytpp.api.websdk.models import pki
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -22,7 +22,7 @@ class _PKI:
 
             def get(self):
                 class Output(WebSdkOutputModel):
-                    pkis : List[pki.PKI] = ApiField(default_factory=list, alias='pkis')
+                    pkis: List[pki.PKI] = ApiField(default_factory=list, alias='pkis')
 
                 return generate_output(output_cls=Output, response=self._get())
 
@@ -66,7 +66,7 @@ class _PKI:
 
                 def get(self):
                     class Output(WebSdkOutputModel):
-                        certificate : pki.Certificate = ApiField(alias='Certificate')
+                        certificate: pki.Certificate = ApiField(alias='Certificate')
                         create_certificate_authority: bool = ApiField(alias='CreateCertificateAuthority')
                         create_pki_role: bool = ApiField(alias='CreatePKIRole')
                         folder_dn: str = ApiField(alias='FolderDn')

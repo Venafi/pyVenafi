@@ -2,8 +2,9 @@ from pytpp.api.websdk.enums.config import PlacementRulesAttributeValues
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
 from typing import List, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config
+    from pytpp.api.websdk.models import config
 
 
 @feature('Placement Rule Condition')
@@ -264,7 +265,7 @@ class PlacementRules(FeatureBase):
                 get_locations = False
             elif line.strip() == 'THEN':
                 get_conditions = False
-                if not(new_certificate_dn and new_device_dn):
+                if not (new_certificate_dn and new_device_dn):
                     get_locations = True
             elif line.strip() == 'END':
                 break

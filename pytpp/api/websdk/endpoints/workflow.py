@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pytpp.api.websdk.outputs import workflow
+from pytpp.api.websdk.models import workflow
 
 
 class _Workflow:

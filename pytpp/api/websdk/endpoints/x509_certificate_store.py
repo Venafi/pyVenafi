@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import secret_store
+from pytpp.api.websdk.models import secret_store
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -19,10 +19,10 @@ class _X509CertificateStore:
                  protection_key: str = None, typed_name_values: list = None):
             body = {
                 'CertificateCollectionStrings': certificate_collection_strings,
-                'CertificateString': certificate_string,
-                'OwnerDN': owner_dn,
-                'ProtectionKey': protection_key,
-                'TypedNameValues': typed_name_values
+                'CertificateString'           : certificate_string,
+                'OwnerDN'                     : owner_dn,
+                'ProtectionKey'               : protection_key,
+                'TypedNameValues'             : typed_name_values
             }
 
             class Output(WebSdkOutputModel):
@@ -39,9 +39,9 @@ class _X509CertificateStore:
         def post(self, certificate_string: str = None, name: str = None, owner_dn: str = None, value: str = None):
             body = {
                 'CertificateString': certificate_string,
-                'Name': name,
-                'OwnerDN': owner_dn,
-                'Value': value
+                'Name'             : name,
+                'OwnerDN'          : owner_dn,
+                'Value'            : value
             }
 
             class Output(WebSdkOutputModel):
@@ -59,7 +59,7 @@ class _X509CertificateStore:
         def post(self, days_to_expiration: int, owner_dn: str):
             body = {
                 'DaysToExpiration': days_to_expiration,
-                'OwnerDN': owner_dn
+                'OwnerDN'         : owner_dn
             }
 
             class Output(WebSdkOutputModel):
@@ -75,8 +75,8 @@ class _X509CertificateStore:
         def post(self, owner_dn: str, certificate: str = None, vault_id: int = None):
             body = {
                 'Certificate': certificate,
-                'OwnerDN': owner_dn,
-                'VaultId': vault_id
+                'OwnerDN'    : owner_dn,
+                'VaultId'    : vault_id
             }
 
             class Output(WebSdkOutputModel):

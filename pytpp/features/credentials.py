@@ -2,8 +2,9 @@ from datetime import datetime, timedelta
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
 from typing import List, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config, identity as ident
+    from pytpp.api.websdk.models import config, identity as ident
 
 
 class _CredentialBase(FeatureBase):

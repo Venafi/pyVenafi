@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import config, metadata
+from pytpp.api.websdk.models import config, metadata
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -47,9 +47,9 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, item: str = None, item_guid: str = None, value: str = None):
             body = {
-                'Item': item,
+                'Item'    : item,
                 'ItemGuid': item_guid,
-                'Value': value
+                'Value'   : value
             }
 
             class Output(WebSdkOutputModel):
@@ -81,7 +81,7 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, dn: str, all_included: bool = None):
             body = {
-                'DN': dn,
+                'DN' : dn,
                 'All': all_included
             }
 
@@ -206,7 +206,7 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, dn: str, item_guid: str):
             body = {
-                'DN': dn,
+                'DN'      : dn,
                 'ItemGuid': item_guid
             }
 
@@ -224,9 +224,9 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, dn: str, item_guid: str, obj_type: str):
             body = {
-                'DN': dn,
+                'DN'      : dn,
                 'ItemGuid': item_guid,
-                'Type': obj_type
+                'Type'    : obj_type
             }
 
             class Output(WebSdkOutputModel):
@@ -242,8 +242,8 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, dn: str, guid_data: list, keep_existing: bool = False):
             body = {
-                'DN': dn,
-                'GuidData': guid_data,
+                'DN'          : dn,
+                'GuidData'    : guid_data,
                 'KeepExisting': keep_existing
             }
 
@@ -259,10 +259,10 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, dn: str, config_class: str, guid_data: list, locked: bool = False):
             body = {
-                'DN': dn,
+                'DN'         : dn,
                 'ConfigClass': config_class,
-                'GuidData': guid_data,
-                'Locked': locked
+                'GuidData'   : guid_data,
+                'Locked'     : locked
             }
 
             class Output(WebSdkOutputModel):
@@ -277,7 +277,7 @@ class _Metadata(WebSdkEndpoint):
 
         def post(self, item_guid: str, remove_data: bool = True):
             body = {
-                'ItemGuid': item_guid,
+                'ItemGuid'  : item_guid,
                 'RemoveData': remove_data
             }
 
@@ -294,7 +294,7 @@ class _Metadata(WebSdkEndpoint):
         def post(self, item: dict = None, update: dict = None):
             body = {
                 'ItemGuid': item,
-                'Update': update
+                'Update'  : update
             }
 
             class Output(WebSdkOutputModel):

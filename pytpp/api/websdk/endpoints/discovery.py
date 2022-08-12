@@ -1,4 +1,4 @@
-from typing import List 
+from typing import List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -26,7 +26,7 @@ class _Discovery:
 
         def post(self, endpoints: list, zone_name: str):
             body = {
-                'zoneName': zone_name,
+                'zoneName' : zone_name,
                 'endpoints': endpoints
             }
 
@@ -39,4 +39,3 @@ class _Discovery:
                 zone_name: str = ApiField(alias='zoneName')
 
             return generate_output(response=self._post(data=body), output_cls=Output)
-

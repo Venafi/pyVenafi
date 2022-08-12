@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import ssh
+from pytpp.api.websdk.models import ssh
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -48,14 +48,14 @@ class _SSH:
                  denied_source_restriction: list = None, forced_command: str = None, format: str = None, options: list = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
-                'DeniedSourceRestriction': denied_source_restriction,
-                'DeviceGuid': device_guid,
-                'Filepath': filepath,
-                'ForcedCommand': forced_command,
-                'Format': format,
-                'KeysetId': keyset_id,
-                'Options': options,
-                'Username': username
+                'DeniedSourceRestriction' : denied_source_restriction,
+                'DeviceGuid'              : device_guid,
+                'Filepath'                : filepath,
+                'ForcedCommand'           : forced_command,
+                'Format'                  : format,
+                'KeysetId'                : keyset_id,
+                'Options'                 : options,
+                'Username'                : username
             }
 
             class Output(WebSdkOutputModel):
@@ -72,10 +72,10 @@ class _SSH:
         def post(self, device_guid: str, filepath: str, username: str, format: str = None, policy_dn: str = None):
             body = {
                 'DeviceGuid': device_guid,
-                'Filepath': filepath,
-                'Format': format,
-                'Username': username,
-                'PolicyDN': policy_dn
+                'Filepath'  : filepath,
+                'Format'    : format,
+                'Username'  : username,
+                'PolicyDN'  : policy_dn
             }
 
             class Output(WebSdkOutputModel):
@@ -93,10 +93,10 @@ class _SSH:
         def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, format: str = None):
             body = {
                 'DeviceGuid': device_guid,
-                'Filepath': filepath,
-                'Format': format,
-                'KeysetId': keyset_id,
-                'Username': username
+                'Filepath'  : filepath,
+                'Format'    : format,
+                'KeysetId'  : keyset_id,
+                'Username'  : username
             }
 
             class Output(WebSdkOutputModel):
@@ -113,15 +113,15 @@ class _SSH:
                  options: list, owner: str, contact_email: str = None, forced_command: str = None, keyset_id: str = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
-                'ContactEmail': contact_email,
-                'DeniedSourceRestriction': denied_source_restriction,
-                'FolderId': folder_id,
-                'ForcedCommand': forced_command,
-                'KeysetId': keyset_id,
-                'Location': location,
-                'Notes': notes,
-                'Options': options,
-                'Owner': owner
+                'ContactEmail'            : contact_email,
+                'DeniedSourceRestriction' : denied_source_restriction,
+                'FolderId'                : folder_id,
+                'ForcedCommand'           : forced_command,
+                'KeysetId'                : keyset_id,
+                'Location'                : location,
+                'Notes'                   : notes,
+                'Options'                 : options,
+                'Owner'                   : owner
             }
 
             class Output(WebSdkOutputModel):
@@ -139,11 +139,11 @@ class _SSH:
         def post(self, folder_id: str, location: str, notes: str, owner: str, contact_email: str = None, keyset_id: str = None):
             body = {
                 'ContactEmail': contact_email,
-                'FolderId': folder_id,
-                'KeysetId': keyset_id,
-                'Location': location,
-                'Notes': notes,
-                'Owner': owner
+                'FolderId'    : folder_id,
+                'KeysetId'    : keyset_id,
+                'Location'    : location,
+                'Notes'       : notes,
+                'Owner'       : owner
             }
 
             class Output(WebSdkOutputModel):
@@ -163,12 +163,12 @@ class _SSH:
                  passphrase: str = None, policy_dn: str = None):
             body = {
                 'DeviceGuid': device_guid,
-                'Filepath': filepath,
-                'Format': format,
-                'KeysetId': keyset_id,
+                'Filepath'  : filepath,
+                'Format'    : format,
+                'KeysetId'  : keyset_id,
                 'Passphrase': passphrase,
-                'Username': username,
-                'PolicyDN': policy_dn
+                'Username'  : username,
+                'PolicyDN'  : policy_dn
             }
 
             class Output(WebSdkOutputModel):
@@ -184,7 +184,7 @@ class _SSH:
 
         def post(self, key_id: int, comment: str):
             body = {
-                'KeyId': key_id,
+                'KeyId'  : key_id,
                 'Comment': comment
             }
 
@@ -227,7 +227,7 @@ class _SSH:
 
         def post(self, key_id: int, passphrase: str):
             body = {
-                'KeysetId': key_id,
+                'KeysetId'  : key_id,
                 'Passphrase': passphrase
             }
 
@@ -270,8 +270,8 @@ class _SSH:
 
         def post(self, page_size: int, offset: int = None, ssh_device_filter: dict = None):
             body = {
-                'PageSize': page_size,
-                'Offset': offset,
+                'PageSize'       : page_size,
+                'Offset'         : offset,
                 'SshDeviceFilter': ssh_device_filter
             }
 
@@ -328,7 +328,7 @@ class _SSH:
         # noinspection ALL
         def post(self, key_id: int, format: str = None):
             body = {
-                'KeyId': key_id,
+                'KeyId' : key_id,
                 'Format': format
             }
 
@@ -345,8 +345,8 @@ class _SSH:
         # noinspection ALL
         def post(self, key_id: int, format: str = None, passphrase: str = None):
             body = {
-                'KeyId': key_id,
-                'Format': format,
+                'KeyId'     : key_id,
+                'Format'    : format,
                 'Passphrase': passphrase
             }
 
@@ -363,11 +363,11 @@ class _SSH:
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str):
             body = {
-                'DeviceGuid': device_guid,
-                'Filepath': filepath,
-                'Format': format,
+                'DeviceGuid'      : device_guid,
+                'Filepath'        : filepath,
+                'Format'          : format,
                 'KeyContentBase64': key_content_base_64,
-                'Username': username
+                'Username'        : username
             }
 
             class Output(WebSdkOutputModel):
@@ -398,12 +398,12 @@ class _SSH:
         def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str,
                  passphrase: str = None):
             body = {
-                'DeviceGuid': device_guid,
-                'Filepath': filepath,
-                'Format': format,
+                'DeviceGuid'      : device_guid,
+                'Filepath'        : filepath,
+                'Format'          : format,
                 'KeyContentBase64': key_content_base_64,
-                'Passphrase': passphrase,
-                'Username': username
+                'Passphrase'      : passphrase,
+                'Username'        : username
             }
 
             class Output(WebSdkOutputModel):
@@ -432,7 +432,7 @@ class _SSH:
 
         def get(self, keyset_id: str, load_key_data: bool = None):
             params = {
-                'KeysetId': keyset_id,
+                'KeysetId'   : keyset_id,
                 'LoadKeyData': load_key_data
             }
 
@@ -444,9 +444,9 @@ class _SSH:
         def post(self, page_size: int, keyset_filter: list = None, load_key_data: bool = None, offset: int = None):
             body = {
                 'KeysetFilter': keyset_filter,
-                'LoadKeyData': load_key_data,
-                'Offset': offset,
-                'PageSize': page_size
+                'LoadKeyData' : load_key_data,
+                'Offset'      : offset,
+                'PageSize'    : page_size
             }
 
             class Output(WebSdkOutputModel):
@@ -461,8 +461,8 @@ class _SSH:
         def post(self, ssh_key_usage_filter: list, page_size: int = None, offset: int = None):
             body = {
                 'SshKeyUsageFilter': ssh_key_usage_filter,
-                'PageSize': page_size,
-                'Offset': offset
+                'PageSize'         : page_size,
+                'Offset'           : offset
             }
 
             class Output(WebSdkOutputModel):
@@ -476,8 +476,8 @@ class _SSH:
 
         def post(self, keyset_ids: list, policy_dn: str = None, policy_path: str = None):
             body = {
-                'KeysetIds': keyset_ids,
-                'PolicyDN': policy_dn,
+                'KeysetIds' : keyset_ids,
+                'PolicyDN'  : policy_dn,
                 'PolicyPath': policy_path
             }
 
@@ -492,7 +492,7 @@ class _SSH:
 
         def post(self, key_id: int, comment: str):
             body = {
-                'KeyId': key_id,
+                'KeyId'  : key_id,
                 'Comment': comment
             }
 
@@ -549,9 +549,9 @@ class _SSH:
 
         def post(self, keyset_id: str, options: int = None, allow_skip_on_rotation: bool = None):
             body = {
-                'KeysetId': keyset_id,
+                'KeysetId'           : keyset_id,
                 'AllowSkipOnRotation': allow_skip_on_rotation,
-                'Options': options
+                'Options'            : options
             }
 
             class Output(WebSdkOutputModel):
@@ -565,7 +565,7 @@ class _SSH:
 
         def post(self, passphrase: str, unmatched_trust_id: str):
             body = {
-                'Passphrase': passphrase,
+                'Passphrase'      : passphrase,
                 'UnmatchedTrustId': unmatched_trust_id
             }
 

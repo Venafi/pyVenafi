@@ -1,7 +1,7 @@
 import time
 from datetime import datetime
 from typing import List, Dict
-from pytpp.api.websdk.outputs import credential, identity
+from pytpp.api.websdk.models import credential, identity
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -183,7 +183,7 @@ class _Credentials:
 
         def post(self, credential_path: str, new_credential_path: str):
             body = {
-                'CredentialPath': credential_path,
+                'CredentialPath'   : credential_path,
                 'NewCredentialPath': new_credential_path
             }
 
@@ -262,7 +262,7 @@ class _Credentials:
                     'SafeName'        : safe_name,
                     'FolderName'      : folder_name,
                     'AccountName'     : account_name,
-                    'CredentialPath' : credential_path
+                    'CredentialPath'  : credential_path
                 }
 
                 class Output(WebSdkOutputModel):
@@ -284,7 +284,7 @@ class _Credentials:
                     'SafeName'        : safe_name,
                     'FolderName'      : folder_name,
                     'AccountName'     : account_name,
-                    'CredentialPath' : credential_path
+                    'CredentialPath'  : credential_path
                 }
 
                 class Output(WebSdkOutputModel):

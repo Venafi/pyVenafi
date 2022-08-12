@@ -1,8 +1,9 @@
 from pytpp.features.bases.feature_base import FeatureBase, feature
-from pytpp.api.websdk.outputs import permissions
+from pytpp.api.websdk.models import permissions
 from typing import Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import identity as ident, config
+    from pytpp.api.websdk.models import identity as ident, config
 
 
 @feature('Permissions')
@@ -127,7 +128,9 @@ class Permissions(FeatureBase):
         principals = self._api.websdk.Permissions.Object.Guid(obj.guid).get().principals
 
         principals = [
-            self._api.websdk.Identity.Validate.post(identity={'PrefixedUniversal': principal}).identity
+            self._api.websdk.Identity.Validate.post(identity={
+                'PrefixedUniversal': principal
+            }).identity
             for principal in principals
         ]
 

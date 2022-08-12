@@ -32,11 +32,12 @@ from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, FeatureException
 from pytpp.features.definitions.classes import Classes
 from pytpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
-from pytpp.api.websdk.outputs import config
+from pytpp.api.websdk.models import config
 from pydantic.datetime_parse import parse_datetime
 from typing import Union, List, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import identity as ident
+    from pytpp.api.websdk.models import identity as ident
 
 
 # region Applications
@@ -394,15 +395,24 @@ class AmazonAWS(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name         : 'appamazon',
             AmazonAppAttributes.aws_credential_dn         : self._get_dn(aws_credential),
-            AmazonAppAttributes.issued_by_aws             : {True: "1", False: "0"}.get(issued_by_aws),
+            AmazonAppAttributes.issued_by_aws             : {
+                True : "1",
+                False: "0"
+            }.get(issued_by_aws),
             AmazonAppAttributes.provisioning_to           : provision_to,
             AmazonAppAttributes.load_balancer_region_code : region,
             AmazonAppAttributes.install_path              : iam_install_path,
-            AmazonAppAttributes.replace_store             : {True: "1", False: "0"}.get(replace_existing),
+            AmazonAppAttributes.replace_store             : {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
             AmazonAppAttributes.binding_target            : binding_taget,
             AmazonAppAttributes.load_balancer_name        : load_balancer_name,
             AmazonAppAttributes.load_balancer_port        : load_balancer_port,
-            AmazonAppAttributes.create_binding            : {True: "1", False: "0"}.get(create_listener),
+            AmazonAppAttributes.create_binding            : {
+                True : "1",
+                False: "0"
+            }.get(create_listener),
             AmazonAppAttributes.target_group              : target_group,
             AmazonAppAttributes.cloudfront_distribution_id: cloudfront_distribution_id
         }
@@ -483,7 +493,10 @@ class Apache(_ApplicationBase):
                 private_key_credential) if private_key_credential else None,
             ApacheAttributes.certificate_file               : certificate_file,
             ApacheAttributes.certificate_chain_file         : certificate_chain_file,
-            ApacheAttributes.overwrite_existing_chain       : {True: "1", False: "0"}.get(overwrite_existing_chain),
+            ApacheAttributes.overwrite_existing_chain       : {
+                True : "1",
+                False: "0"
+            }.get(overwrite_existing_chain),
         }
         if owner or group:
             app_attrs.update({
@@ -549,14 +562,23 @@ class AzureKeyVault(_ApplicationBase):
             AzureKeyVaultAttributes.certificate_credential: self._get_dn(certificate_credential),
             AzureKeyVaultAttributes.vault_name            : azure_key_vault_name,
             AzureKeyVaultAttributes.certificate_name      : certificate_name,
-            AzureKeyVaultAttributes.non_exportable        : {True: "0", False: "1"}.get(private_key_exportable)
+            AzureKeyVaultAttributes.non_exportable        : {
+                True : "0",
+                False: "1"
+            }.get(private_key_exportable)
         }
         if web_application_name:
             app_attrs.update({
                 AzureKeyVaultAttributes.update_web_app         : "0",
                 AzureKeyVaultAttributes.web_app_name           : web_application_name,
-                AzureKeyVaultAttributes.create_binding         : {True: "0", False: "1"}.get(create_new_binding),
-                AzureKeyVaultAttributes.create_san_dns_bindings: {True: "0", False: "1"}.get(create_san_dns_bindings),
+                AzureKeyVaultAttributes.create_binding         : {
+                    True : "0",
+                    False: "1"
+                }.get(create_new_binding),
+                AzureKeyVaultAttributes.create_san_dns_bindings: {
+                    True : "0",
+                    False: "1"
+                }.get(create_san_dns_bindings),
                 AzureKeyVaultAttributes.binding_ssl_type       : ssl_type,
                 AzureKeyVaultAttributes.binding_hostnames      : binding_hostnames
             })
@@ -692,10 +714,22 @@ class BlueCoatSSLVA(_ApplicationBase):
             ApplicationBaseAttributes.driver_name     : 'appBlueCoat',
             BlueCoatSSLVAAttributes.credential        : self._get_dn(application_credential) if application_credential else None,
             BlueCoatSSLVAAttributes.port              : port,
-            BlueCoatSSLVAAttributes.device_certificate: {True: "1", False: "0"}.get(device_certificate),
-            BlueCoatSSLVAAttributes.replace_store     : {True: "1", False: "0"}.get(replace_existing),
-            BlueCoatSSLVAAttributes.certificate_only  : {True: "1", False: "0"}.get(install_chain),
-            BlueCoatSSLVAAttributes.create_lists      : {True: "1", False: "0"}.get(create_lists),
+            BlueCoatSSLVAAttributes.device_certificate: {
+                True : "1",
+                False: "0"
+            }.get(device_certificate),
+            BlueCoatSSLVAAttributes.replace_store     : {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
+            BlueCoatSSLVAAttributes.certificate_only  : {
+                True : "1",
+                False: "0"
+            }.get(install_chain),
+            BlueCoatSSLVAAttributes.create_lists      : {
+                True : "1",
+                False: "0"
+            }.get(create_lists),
             BlueCoatSSLVAAttributes.certificate_label : known_certificates_with_keys_lists
         }
         if attributes:
@@ -759,7 +793,10 @@ class CAPI(_ApplicationBase):
             CAPIAttributes.private_key_location  : private_key_location,
             CAPIAttributes.private_key_label     : key_label,
             CAPIAttributes.friendly_name         : friendly_name,
-            CAPIAttributes.non_exportable        : {True: "0", False: "1"}.get(exportable),
+            CAPIAttributes.non_exportable        : {
+                True : "0",
+                False: "1"
+            }.get(exportable),
             CAPIAttributes.private_key_trustee   : private_key_trustee,
         }
         if web_site_name:
@@ -769,7 +806,10 @@ class CAPI(_ApplicationBase):
                 CAPIAttributes.binding_ip_address: binding_ip_address,
                 CAPIAttributes.binding_port      : binding_port,
                 CAPIAttributes.hostname          : binding_hostname,
-                CAPIAttributes.create_binding    : {True: "1", False: "0"}.get(create_binding),
+                CAPIAttributes.create_binding    : {
+                    True : "1",
+                    False: "0"
+                }.get(create_binding),
             })
         else:
             app_attrs.update({
@@ -832,14 +872,26 @@ class CitrixNetScaler(_ApplicationBase):
             ApplicationBaseAttributes.driver_name              : 'appnetscaler',
             NetScalerAttributes.credential                     : self._get_dn(application_credential) if application_credential else None,
             NetScalerAttributes.port                           : port,
-            NetScalerAttributes.chain_cert                     : {True: "1", False: "0"}.get(install_certificate_chain),
-            NetScalerAttributes.fips_key                       : {True: "1", False: "0"}.get(use_fips),
+            NetScalerAttributes.chain_cert                     : {
+                True : "1",
+                False: "0"
+            }.get(install_certificate_chain),
+            NetScalerAttributes.fips_key                       : {
+                True : "1",
+                False: "0"
+            }.get(use_fips),
             NetScalerAttributes.private_key_password_credential: self._get_dn(private_key_credential) if private_key_credential else None,
-            NetScalerAttributes.import_only                    : {True: "1", False: "0"}.get(import_only),
+            NetScalerAttributes.import_only                    : {
+                True : "1",
+                False: "0"
+            }.get(import_only),
             NetScalerAttributes.install_path                   : subfolder_relative_path,
             NetScalerAttributes.ssl_object_type                : certificate_binding,
             NetScalerAttributes.virtual_server_name            : virtual_server_name,
-            NetScalerAttributes.sni_certificate                : {True: "1", False: "0"}.get(sni_certificate),
+            NetScalerAttributes.sni_certificate                : {
+                True : "1",
+                False: "0"
+            }.get(sni_certificate),
         }
 
         if attributes:
@@ -892,7 +944,10 @@ class ConnectDirect(_ApplicationBase):
             ConnectDirectAttributes.protocol         : api_protocol,
             ConnectDirectAttributes.port             : port,
             ConnectDirectAttributes.node_name        : node_name,
-            ConnectDirectAttributes.certificate_only : {True: "1", False: "0"}.get(install_chain),
+            ConnectDirectAttributes.certificate_only : {
+                True : "1",
+                False: "0"
+            }.get(install_chain),
             ConnectDirectAttributes.certificate_label: key_certificate_alias
         }
 
@@ -1022,29 +1077,62 @@ class F5LTMAdvanced(_ApplicationBase):
             F5LTMAdvancedAttributes.credential                       : self._get_dn(application_credential) if application_credential else None,
             F5LTMAdvancedAttributes.port                             : https_port,
             F5LTMAdvancedAttributes.ssh_port                         : ssh_port,
-            F5LTMAdvancedAttributes.device_certificate               : {True: "1", False: "0"}.get(device_certificate),
+            F5LTMAdvancedAttributes.device_certificate               : {
+                True : "1",
+                False: "0"
+            }.get(device_certificate),
             F5LTMAdvancedAttributes.use_basic_provisioning           : provisioning_mode,
             F5LTMAdvancedAttributes.certificate_name                 : certificate_and_key_file,
             F5LTMAdvancedAttributes.private_key_password_credential  : self._get_dn(private_key_credential) if private_key_credential else None,
-            F5LTMAdvancedAttributes.force_profile_update             : {True: "1", False: "0"}.get(force_profile_update),
-            F5LTMAdvancedAttributes.install_chain_file               : {True: "1", False: "0"}.get(install_chain),
-            F5LTMAdvancedAttributes.bundle_certificate               : {True: "1", False: "0"}.get(bundle_certificate),
-            F5LTMAdvancedAttributes.overwrite_existing_chain         : {True: "1", False: "0"}.get(overwrite_chain_file),
+            F5LTMAdvancedAttributes.force_profile_update             : {
+                True : "1",
+                False: "0"
+            }.get(force_profile_update),
+            F5LTMAdvancedAttributes.install_chain_file               : {
+                True : "1",
+                False: "0"
+            }.get(install_chain),
+            F5LTMAdvancedAttributes.bundle_certificate               : {
+                True : "1",
+                False: "0"
+            }.get(bundle_certificate),
+            F5LTMAdvancedAttributes.overwrite_existing_chain         : {
+                True : "1",
+                False: "0"
+            }.get(overwrite_chain_file),
             F5LTMAdvancedAttributes.certificate_chain_name           : ca_chain_file,
-            F5LTMAdvancedAttributes.fips_key                         : {True: "1", False: "0"}.get(use_fips),
-            F5LTMAdvancedAttributes.overwrite_certificate            : {True: "1", False: "0"}.get(overwrite_certificate_and_key),
-            F5LTMAdvancedAttributes.delete_previous_cert_and_key     : {True: "1", False: "0"}.get(delete_previous_cert_and_key),
+            F5LTMAdvancedAttributes.fips_key                         : {
+                True : "1",
+                False: "0"
+            }.get(use_fips),
+            F5LTMAdvancedAttributes.overwrite_certificate            : {
+                True : "1",
+                False: "0"
+            }.get(overwrite_certificate_and_key),
+            F5LTMAdvancedAttributes.delete_previous_cert_and_key     : {
+                True : "1",
+                False: "0"
+            }.get(delete_previous_cert_and_key),
             F5LTMAdvancedAttributes.provisioning_to                  : provisioning_target,
-            F5LTMAdvancedAttributes.config_sync                      : {True: "1", False: "0"}.get(config_sync),
+            F5LTMAdvancedAttributes.config_sync                      : {
+                True : "1",
+                False: "0"
+            }.get(config_sync),
             F5LTMAdvancedAttributes.ssl_profile_name                 : ssl_profile,
             F5LTMAdvancedAttributes.ssl_profile_type                 : ssl_profile_type,
             F5LTMAdvancedAttributes.parent_ssl_profile_name          : parent_ssl_profile,
             F5LTMAdvancedAttributes.partition                        : ssl_partition,
             F5LTMAdvancedAttributes.sni_server_name                  : sni_server_name,
-            F5LTMAdvancedAttributes.sni_default                      : {True: "1", False: "0"}.get(sni_default),
+            F5LTMAdvancedAttributes.sni_default                      : {
+                True : "1",
+                False: "0"
+            }.get(sni_default),
             F5LTMAdvancedAttributes.virtual_server_name              : virtual_server,
             F5LTMAdvancedAttributes.virtual_server_partition         : virtual_server_partition,
-            F5LTMAdvancedAttributes.use_advanced_settings            : {True: "1", False: "0"}.get(use_advanced_settings),
+            F5LTMAdvancedAttributes.use_advanced_settings            : {
+                True : "1",
+                False: "0"
+            }.get(use_advanced_settings),
             F5LTMAdvancedAttributes.client_authentication_certificate: client_certificate_requirement,
             F5LTMAdvancedAttributes.server_authentication_certificate: server_certificate_requirement,
             F5LTMAdvancedAttributes.authentication_frequency         : frequency,
@@ -1166,17 +1254,26 @@ class IBMDataPower(_ApplicationBase):
                 application_credential) if application_credential else None,
             DataPowerAttributes.port                           : port,
             DataPowerAttributes.xml_port                       : xml_port,
-            DataPowerAttributes.use_basic_provisioning         : {True: "2", False: "1"}.get(basic_provisioning_mode),
+            DataPowerAttributes.use_basic_provisioning         : {
+                True : "2",
+                False: "1"
+            }.get(basic_provisioning_mode),
             DataPowerAttributes.certificate_name               : crypto_certificate,
             DataPowerAttributes.private_key_name               : crypto_key,
             DataPowerAttributes.application_domain             : application_domain,
-            DataPowerAttributes.associate_to_cp                : {True: "1", False: "2"}.get(associate_to_profile),
+            DataPowerAttributes.associate_to_cp                : {
+                True : "1",
+                False: "2"
+            }.get(associate_to_profile),
             DataPowerAttributes.credential_type                : credential_type,
             DataPowerAttributes.ssl_profile_type               : profile_type,
             DataPowerAttributes.crypto_profile                 : crypto_profile_name,
             DataPowerAttributes.ssl_proxy_profile              : ssl_profile_name,
             DataPowerAttributes.folder                         : certificate_folder,
-            DataPowerAttributes.chain_cert                     : {True: "1", False: "0"}.get(install_certificate_chain),
+            DataPowerAttributes.chain_cert                     : {
+                True : "1",
+                False: "0"
+            }.get(install_certificate_chain),
             DataPowerAttributes.private_key_password_credential: self._get_dn(
                 private_key_password_credential) if private_key_password_credential else None,
         }
@@ -1254,14 +1351,32 @@ class IBMGSK(_ApplicationBase):
             GSKAttributes.java_home_path         : java_home_path,
             GSKAttributes.key_store              : key_store_path,
             GSKAttributes.key_store_credential   : self._get_dn(key_store_credential) if key_store_credential else None,
-            GSKAttributes.create_store           : {True: "1", False: "0"}.get(create),
-            GSKAttributes.replace_store          : {True: "1", False: "0"}.get(replace_existing),
+            GSKAttributes.create_store           : {
+                True : "1",
+                False: "0"
+            }.get(create),
+            GSKAttributes.replace_store          : {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
             GSKAttributes.certificate_label      : certificate_label,
-            GSKAttributes.recycle_alias          : {True: "1", False: "0"}.get(reuse_label),
-            GSKAttributes.fips_key               : {True: "1", False: "0"}.get(use_fips),
+            GSKAttributes.recycle_alias          : {
+                True : "1",
+                False: "0"
+            }.get(reuse_label),
+            GSKAttributes.fips_key               : {
+                True : "1",
+                False: "0"
+            }.get(use_fips),
             GSKAttributes.password_expire_days   : password_validity,
-            GSKAttributes.stash_password         : {True: "1", False: "0"}.get(stash_password),
-            GSKAttributes.default_cert           : {True: "1", False: "0"}.get(default_certificate),
+            GSKAttributes.stash_password         : {
+                True : "1",
+                False: "0"
+            }.get(stash_password),
+            GSKAttributes.default_cert           : {
+                True : "1",
+                False: "0"
+            }.get(default_certificate),
         }
         if owner or group:
             app_attrs.update({
@@ -1420,10 +1535,19 @@ class JKS(_ApplicationBase):
                 keystore_credential) if keystore_credential else None,
             JKSAttributes.private_key_password_credential: self._get_dn(
                 private_key_credential) if private_key_credential else None,
-            JKSAttributes.create_store                   : {True: "1", False: "0"}.get(create),
-            JKSAttributes.replace_store                  : {True: "1", False: "0"}.get(replace_existing),
+            JKSAttributes.create_store                   : {
+                True : "1",
+                False: "0"
+            }.get(create),
+            JKSAttributes.replace_store                  : {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
             JKSAttributes.certificate_label              : certificate_alias,
-            JKSAttributes.recycle_alias                  : {True: "1", False: "0"}.get(reuse_alias)
+            JKSAttributes.recycle_alias                  : {
+                True : "1",
+                False: "0"
+            }.get(reuse_alias)
         }
         if owner or group:
             app_attrs.update({
@@ -1507,8 +1631,14 @@ class OracleIPlanet(_ApplicationBase):
             iPlanetAttributes.key_store_credential: self._get_dn(
                 certificate_database_credential) if certificate_database_credential else None,
             iPlanetAttributes.database_prefix     : certificate_database_prefix,
-            iPlanetAttributes.create_store        : {True: "1", False: "0"}.get(create),
-            iPlanetAttributes.replace_store       : {True: "1", False: "0"}.get(replace_existing),
+            iPlanetAttributes.create_store        : {
+                True : "1",
+                False: "0"
+            }.get(create),
+            iPlanetAttributes.replace_store       : {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
             iPlanetAttributes.certutil_path       : certutil_path,
             iPlanetAttributes.pk12util_path       : pk12util_path,
             iPlanetAttributes.alias               : certificate_alias,
@@ -1584,19 +1714,34 @@ class PaloAltoNetworkFW(_ApplicationBase):
             PaloAltoNetworkFWAttributes.credential                     : self._get_dn(
                 application_credential) if application_credential else None,
             PaloAltoNetworkFWAttributes.port                           : port,
-            PaloAltoNetworkFWAttributes.certificate_only               : {True: "1", False: "2"}.get(
+            PaloAltoNetworkFWAttributes.certificate_only               : {
+                True : "1",
+                False: "2"
+            }.get(
                 provision_certificate_only),
             PaloAltoNetworkFWAttributes.private_key_password_credential: self._get_dn(
                 private_key_password) if private_key_password else None,
-            PaloAltoNetworkFWAttributes.chain_cert                     : {True: "1", False: "0"}.get(install_chain),
-            PaloAltoNetworkFWAttributes.replace_store                  : {True: "1", False: "0"}.get(
+            PaloAltoNetworkFWAttributes.chain_cert                     : {
+                True : "1",
+                False: "0"
+            }.get(install_chain),
+            PaloAltoNetworkFWAttributes.replace_store                  : {
+                True : "1",
+                False: "0"
+            }.get(
                 replace_certificate),
             PaloAltoNetworkFWAttributes.decryption_policy              : decryption_policy_rule_name,
-            PaloAltoNetworkFWAttributes.create_decryption_policy       : {True: "1", False: "0"}.get(
+            PaloAltoNetworkFWAttributes.create_decryption_policy       : {
+                True : "1",
+                False: "0"
+            }.get(
                 create_decryption_policy_rule),
             PaloAltoNetworkFWAttributes.decryption_profile             : decryption_profile_name,
             PaloAltoNetworkFWAttributes.decryption_destinations        : destination_addresses,
-            PaloAltoNetworkFWAttributes.lock_config                    : {True: "1", False: "0"}.get(lock_config)
+            PaloAltoNetworkFWAttributes.lock_config                    : {
+                True : "1",
+                False: "0"
+            }.get(lock_config)
         }
 
         if attributes:
@@ -1660,7 +1805,10 @@ class PEM(_ApplicationBase):
                 private_key_credential) if private_key_credential else None,
             ApacheAttributes.certificate_file               : certificate_file,
             ApacheAttributes.certificate_chain_file         : certificate_chain_file,
-            ApacheAttributes.overwrite_existing_chain       : {True: "1", False: "0"}.get(overwrite_existing_chain),
+            ApacheAttributes.overwrite_existing_chain       : {
+                True : "1",
+                False: "0"
+            }.get(overwrite_existing_chain),
         }
         if owner or group:
             app_attrs.update({
@@ -1691,6 +1839,7 @@ class PKCS11(_ApplicationBase):
     .. note::
         The PKCS #11 VSE must be installed in order to use this driver.
     """
+
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11)
 
@@ -1752,8 +1901,14 @@ class PKCS11(_ApplicationBase):
             PKCS11Attributes.hsm_cryptoki_file        : cryptoki_file,
             PKCS11Attributes.hsm_client_tool_path     : client_tools_directory,
             PKCS11Attributes.hsm_openssl_config_file  : openssl_config_file,
-            PKCS11Attributes.hsm_reverse_subject_dn   : {True: "Yes", False: "No"}.get(reverse_subject_dn),
-            PKCS11Attributes.hsm_embed_sans_in_csr    : {True: "Yes", False: "No"}.get(embed_sans_in_csr),
+            PKCS11Attributes.hsm_reverse_subject_dn   : {
+                True : "Yes",
+                False: "No"
+            }.get(reverse_subject_dn),
+            PKCS11Attributes.hsm_embed_sans_in_csr    : {
+                True : "Yes",
+                False: "No"
+            }.get(embed_sans_in_csr),
         }
         if openssl_directory:
             app_attrs.update({
@@ -1824,9 +1979,18 @@ class PKCS12(_ApplicationBase):
             PKCS12Attributes.private_key_password_credential: self._get_dn(
                 private_key_credential) if private_key_credential else None,
             PKCS12Attributes.friendly_name                  : friendly_name,
-            PKCS12Attributes.create_store                   : {True: "1", False: "0"}.get(create),
-            PKCS12Attributes.replace_store                  : {True: "1", False: "0"}.get(replace_existing),
-            PKCS12Attributes.recycle_alias                  : {True: "1", False: "0"}.get(reuse_friendly_name)
+            PKCS12Attributes.create_store                   : {
+                True : "1",
+                False: "0"
+            }.get(create),
+            PKCS12Attributes.replace_store                  : {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
+            PKCS12Attributes.recycle_alias                  : {
+                True : "1",
+                False: "0"
+            }.get(reuse_friendly_name)
         }
 
         if certificate_chain_file:
@@ -1892,8 +2056,14 @@ class RiverbedSteelHead(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name       : 'appriverbedsteelhead',
             RiverbedSteelHeadAttributes.certificate_type: certificate_type,
-            RiverbedSteelHeadAttributes.replace_existing: {True: "1", False: "0"}.get(replace_existing),
-            RiverbedSteelHeadAttributes.install_chain   : {True: "1", False: "0"}.get(install_chain_certificates)
+            RiverbedSteelHeadAttributes.replace_existing: {
+                True : "1",
+                False: "0"
+            }.get(replace_existing),
+            RiverbedSteelHeadAttributes.install_chain   : {
+                True : "1",
+                False: "0"
+            }.get(install_chain_certificates)
         }
 
         if attributes:
@@ -2010,6 +2180,8 @@ class VAMnShield(_ApplicationBase):
             attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
+
+
 # endregion Applications
 
 
@@ -2164,6 +2336,7 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
     .. note::
         The PKCS #11 VSE must be installed in order to use this driver.
     """
+
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11_application_group)
 

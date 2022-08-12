@@ -6,8 +6,9 @@ from pytpp.features.identity import (
 from pytpp.features.bases.feature_base import feature
 from pytpp.api.websdk.enums.rights import SubSystemTypes
 from typing import Union, List, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import identity as ident
+    from pytpp.api.websdk.models import identity as ident
 
 
 class _IdentityBase(_OriginalIdentityBase):

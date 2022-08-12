@@ -13,7 +13,6 @@ if TYPE_CHECKING:
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
     from pytpp.api.session import Session
 
-
 T_ = TypeVar('T_')
 
 
@@ -259,6 +258,8 @@ class ApiEndpoint(object):
 
 
 class WebSdkEndpoint(ApiEndpoint):  ...
+
+
 # endregion Endpoint Definitions
 
 
@@ -305,6 +306,8 @@ class InputModel(BaseModel, metaclass=ApiModelMetaclass):
             except KeyError:
                 raise KeyError(f'"{alias}" not found in the response.')
         return new_values
+
+
 # endregion Input Models
 
 
@@ -398,6 +401,8 @@ class RootOutputModel(OutputModel):
 
 class WebSdkOutputModel(RootOutputModel):
     error: str = ApiField(alias='Error')
+
+
 # endregion Output Models
 
 

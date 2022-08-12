@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pytpp.api.api_base import generate_output, ApiField
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.outputs import ssh_dashboard
+from pytpp.plugins.api.aperture.models import ssh_dashboard
 from typing import List
 
 
@@ -187,7 +187,7 @@ class _SshDashboard:
 
         def get(self):
             class Output(ApertureOutputModel):
-                policy_violations : List[ssh_dashboard.PolicyViolation] = ApiField(default_factory=list)
+                policy_violations: List[ssh_dashboard.PolicyViolation] = ApiField(default_factory=list)
 
             return generate_output(output_cls=Output, response=self._get(), root_field='policy_violations')
 
@@ -210,16 +210,3 @@ class _SshDashboard:
                 records: List[ssh_dashboard.Record] = ApiField(default_factory=list)
 
             return generate_output(output_cls=Output, response=self._get(), root_field='records')
-
-
-
-
-
-
-
-
-
-
-
-
-

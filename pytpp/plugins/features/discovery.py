@@ -1,7 +1,8 @@
 from typing import Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
     from pytpp.plugins import Authenticate
-from pytpp.api.websdk.outputs import config
+from pytpp.api.websdk.models import config
 from pytpp.features.bases.feature_base import feature
 from pytpp.features.definitions.exceptions import UnexpectedValue
 from pytpp.features.discovery import NetworkDiscovery as _NetworkDiscovery

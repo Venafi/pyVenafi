@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import hsm_api
+from pytpp.api.websdk.models import hsm_api
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 

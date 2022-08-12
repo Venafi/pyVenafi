@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.outputs import client
+from pytpp.api.websdk.models import client
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -16,7 +16,7 @@ class _Client(WebSdkEndpoint):
             user_name: str = None, virtual_machine_id: int = None):
         params = {
             'ClientVersion'    : client_version,
-            'client.ClientType'       : client_type,
+            'client.ClientType': client_type,
             'HostName'         : host_name,
             'IpAddress'        : ip_address,
             'LastSeenOn'       : last_seen_on,
@@ -66,7 +66,7 @@ class _Client(WebSdkEndpoint):
                 sid: str = None, user_name: str = None, virtual_machine_id: int = None):
             params = {
                 'ClientVersion'    : client_version,
-                'client.ClientType'       : client_type,
+                'client.ClientType': client_type,
                 'HostName'         : host_name,
                 'IpAddress'        : ip_address,
                 'LastSeenOn'       : last_seen_on,

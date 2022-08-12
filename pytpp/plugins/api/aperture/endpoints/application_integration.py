@@ -1,7 +1,7 @@
 from typing import List
 from pytpp.api.api_base import generate_output, ApiField
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.outputs import identity, oauth
+from pytpp.plugins.api.aperture.models import identity, oauth
 
 
 class _ApplicationIntegration(ApertureEndpoint):
@@ -85,7 +85,7 @@ class _ApplicationIntegration(ApertureEndpoint):
             class Output(ApertureOutputModel):
                 access_granted: int = ApiField(alias='accessGranted')
                 access_validity_days: int = ApiField(alias='accessValidityDays')
-                allowed_identities : List[identity.Identity] = ApiField(default_factory=list, alias='allowedIdentities')
+                allowed_identities: List[identity.Identity] = ApiField(default_factory=list, alias='allowedIdentities')
                 application_id: str = ApiField(alias='applicationId')
                 application_name: str = ApiField(alias='applicationName')
                 application_scope: oauth.ApplicationScope = ApiField(alias='applicationScope')

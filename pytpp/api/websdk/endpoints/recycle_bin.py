@@ -1,4 +1,4 @@
-from pytpp.api.websdk.outputs import recycle_bin
+from pytpp.api.websdk.models import recycle_bin
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 from typing import List
 
@@ -18,11 +18,11 @@ class _RecycleBin:
     class _DeletionTask(WebSdkEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='RecycleBin/DeletionTask')
-        
+
         def post(self, start: bool = None, stop: bool = None):
             body = {
                 'Start': start,
-                'Stop': stop
+                'Stop' : stop
             }
 
             class Output(WebSdkOutputModel):
@@ -104,8 +104,8 @@ class _RecycleBin:
         def post(self, purge_all: bool, start: bool = None, stop: bool = None):
             body = {
                 'PurgeAll': purge_all,
-                'Start': start,
-                'Stop': stop
+                'Start'   : start,
+                'Stop'    : stop
             }
 
             class Output(WebSdkOutputModel):
@@ -134,7 +134,7 @@ class _RecycleBin:
         def post(self, deletion: dict, purge: dict = None):
             body = {
                 'Deletion': deletion,
-                'Purge': purge
+                'Purge'   : purge
             }
 
             class Output(WebSdkOutputModel):

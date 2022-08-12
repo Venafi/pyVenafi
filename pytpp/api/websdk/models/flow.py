@@ -1,4 +1,4 @@
-from pytpp.api.websdk.outputs.resultcodes import ResultCodes
+from pytpp.api.websdk.models.resultcodes import ResultCodes
 from pytpp.api.api_base import OutputModel, ApiField
 from datetime import datetime
 from typing import List

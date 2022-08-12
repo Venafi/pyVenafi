@@ -1,6 +1,6 @@
 from pytpp.api.api_base import ApiField, generate_output
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.outputs import device
+from pytpp.plugins.api.aperture.models import device
 from typing import List
 
 

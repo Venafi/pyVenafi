@@ -1,4 +1,4 @@
-from pytpp.api.websdk.outputs import codesign, flow
+from pytpp.api.websdk.models import codesign, flow
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 from typing import List
 

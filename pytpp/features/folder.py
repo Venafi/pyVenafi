@@ -3,8 +3,9 @@ from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.attributes.policy import PolicyAttributes
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config, identity as ident
+    from pytpp.api.websdk.models import config, identity as ident
 
 
 @feature('Folder')
@@ -117,7 +118,7 @@ class Folder(FeatureBase):
         """
         folder_attrs = {
             PolicyAttributes.description: description,
-            PolicyAttributes.contact: [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            PolicyAttributes.contact    : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
         }
         if attributes:
             folder_attrs.update(attributes)

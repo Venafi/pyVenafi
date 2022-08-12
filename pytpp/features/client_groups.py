@@ -3,8 +3,9 @@ from pytpp.features.definitions.exceptions import InvalidResultCode
 from pytpp.api.websdk.enums.config import ClientGroupsAttributeValues
 from pytpp.attributes.client_group import ClientGroupAttributes
 from typing import Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config
+    from pytpp.api.websdk.models import config
 
 
 class _ClientGroupBase(FeatureBase):

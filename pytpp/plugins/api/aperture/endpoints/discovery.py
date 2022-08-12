@@ -1,7 +1,7 @@
 from pytpp.api.api_base import generate_output, ApiField
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.outputs import config
-from pytpp.plugins.api.aperture.outputs import placement_rules
+from pytpp.plugins.api.aperture.models import config
+from pytpp.plugins.api.aperture.models import placement_rules
 from typing import List
 
 

@@ -9,8 +9,9 @@ from pytpp.attributes.workflow import WorkflowAttributes
 from pytpp.attributes.adaptable_workflow import AdaptableWorkflowAttributes
 from pytpp.attributes.workflow_ticket import WorkflowTicketAttributes
 from typing import List, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config, identity as ident
+    from pytpp.api.websdk.models import config, identity as ident
 
 
 class _WorkflowBase(FeatureBase):

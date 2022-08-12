@@ -21,4 +21,3 @@ class SSHKeydataObject:
     type = 'Type'
     username = 'Username'
     violation_status = 'ViolationStatus'
-

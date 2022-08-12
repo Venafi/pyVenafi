@@ -2,8 +2,9 @@ from dataclasses import dataclass
 from pytpp.features.bases.feature_base import FeatureBase, feature
 from pytpp.features.definitions.exceptions import InvalidResultCode
 from typing import List, Dict, Union, TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from pytpp.api.websdk.outputs import config, metadata
+    from pytpp.api.websdk.models import config, metadata
 
 
 @dataclass
@@ -306,7 +307,7 @@ class CustomField(FeatureBase):
         }
         response = self._api.websdk.Metadata.UpdateItem.post(
             update={
-                "DN": custom_field_dn,
+                "DN"  : custom_field_dn,
                 "Data": self._name_value_list(attributes=item)
             }
         )
@@ -330,8 +331,8 @@ class CustomField(FeatureBase):
         response = self._api.websdk.Metadata.Set.post(
             dn=obj_dn,
             guid_data=self._guid_data_list({
-                                               custom_field_guid: values
-                                           }),
+                custom_field_guid: values
+            }),
             keep_existing=keep_existing
         )
         self._validate_result_code(result=response.result)
@@ -356,8 +357,8 @@ class CustomField(FeatureBase):
             dn=folder_dn,
             config_class=str(class_name),
             guid_data=self._guid_data_list({
-                                               custom_field_guid: values
-                                           }),
+                custom_field_guid: values
+            }),
             locked=locked
         )
         self._validate_result_code(result=response.result)

@@ -120,7 +120,7 @@ def get_feature_docs():
 
 
 def get_property_docs():
-    from pytpp.api.websdk import outputs
+    from pytpp.api.websdk import models
     import inspect
 
     # Recreate the dataclasses doc folder.
@@ -128,7 +128,7 @@ def get_property_docs():
     DATACLASSES_DOC_PATH.mkdir(exist_ok=True, parents=True)
 
     toc_items = []
-    for item in vars(outputs).values():
+    for item in vars(models).values():
         if not inspect.ismodule(item):
             continue
         mod_file = Path(item.__file__)

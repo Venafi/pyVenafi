@@ -32,7 +32,6 @@ from pytpp.api.websdk.endpoints.teams import _Teams
 from pytpp.api.websdk.endpoints.workflow import _Workflow
 from pytpp.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
 
-
 _TPP_VERSION: Optional[Version] = None
 
 
@@ -42,6 +41,7 @@ class WebSDK:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
+
     def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
                  scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
                  certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
@@ -92,7 +92,9 @@ class WebSDK:
         # region Authentication
         # This is used by the endpoints to authorize the API writes.
         self._session = Session(
-            headers={'Content-Type': 'application/json'}, proxies=self._proxies,
+            headers={
+                'Content-Type': 'application/json'
+            }, proxies=self._proxies,
             certificate_path=certificate_path, key_file_path=key_file_path,
             verify_ssl=verify_ssl,
             connection_timeout=connection_timeout,

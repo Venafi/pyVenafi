@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 from urllib.parse import quote_plus
 from pytpp.api.api_base import generate_output, ApiField
 from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.outputs import reports
+from pytpp.plugins.api.aperture.models import reports
 
 
 class _Reports(ApertureEndpoint):
