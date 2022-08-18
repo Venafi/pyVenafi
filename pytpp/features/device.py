@@ -46,7 +46,7 @@ class Device(_DeviceBase):
             concurrent_connection_limit: Concurrent connection limit to this device.
             device_credential: :ref:`config_object` or :ref:`dn` of the device credential.
             temp_directory: Temp directory.
-            os_type: Operating Sytem type.
+            os_type: Operating System type.
             jump_server: :ref:`config_object` or :ref:`dn` of the jump server.
             use_sudo: Use sudo.
             sudo_credential: :ref:`config_object` or :ref:`dn` of the sudo user credential.
@@ -140,7 +140,7 @@ class JumpServer(_DeviceBase):
             concurrent_connection_limit: Concurrent connection limit to this device.
             device_credential: :ref:`config_object` or :ref:`dn` of the device credential.
             temp_directory: Temp directory.
-            os_type: Operating Sytem type.
+            os_type: Operating System type.
             ssh_version: SSH version.
             ssh_syntax: SSH syntax.
             use_sudo: Use sudo.

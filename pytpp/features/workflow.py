@@ -86,7 +86,7 @@ class _WorkflowBase(FeatureBase):
         return workflow
 
 
-@feature('Adapatable Workflow')
+@feature('Adaptable Workflow')
 class AdaptableWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)

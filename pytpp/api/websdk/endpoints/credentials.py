@@ -79,7 +79,7 @@ class _Credentials:
                 }
 
                 class Output(WebSdkOutputModel):
-                    succcess: bool = ApiField(alias='Succcess')
+                    success: bool = ApiField(alias='Success')
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -119,7 +119,7 @@ class _Credentials:
                     }
 
                     class Output(WebSdkOutputModel):
-                        succcess: bool = ApiField(alias='Succcess')
+                        success: bool = ApiField(alias='Success')
 
                     return generate_output(output_cls=Output, response=self._put(data=body))
 

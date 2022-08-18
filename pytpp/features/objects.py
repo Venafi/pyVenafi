@@ -111,7 +111,7 @@ class Objects(FeatureBase):
         Args:
             object_dn: :ref:`dn` of the object.
             object_guid: GUID of the object.
-            raise_error_if_not_exists: If ``True`` raise an exception if the obejct doesn't exist.
+            raise_error_if_not_exists: If ``True`` raise an exception if the object doesn't exist.
 
         Returns:
             :ref:`config_object` of the object.

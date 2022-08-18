@@ -268,7 +268,7 @@ class Adaptable(_ApplicationBase):
 
     def create(self, name: 'str', device: 'Union[config.Object, str]', policy_folder: 'Union[config.Object, str]',
                powershell_script_name: 'str', powershell_script_content: 'bytes', locked: 'bool' = False,
-               retry_after_scipt_hash_mismatch: 'bool' = None, description: 'str' = None,
+               retry_after_script_hash_mismatch: 'bool' = None, description: 'str' = None,
                contacts: 'List[Union[ident.Identity, str]]' = None,
                approvers: 'List[Union[ident.Identity, str]]' = None,
                application_credential: 'Union[config.Object, str]' = None,
@@ -279,11 +279,11 @@ class Adaptable(_ApplicationBase):
         Args:
             name: Name of the application object.
             device: :ref:`config_object` or :ref:`dn` of the device object.
-            policy_folder: :ref:`config_object` or :ref:`dn` of the folder to write the Adapatble PowerShell script policy.
+            policy_folder: :ref:`config_object` or :ref:`dn` of the folder to write the Adaptable PowerShell script policy.
             powershell_script_name: Name of the PowerShell script.
             powershell_script_content: Content of the PowerShell script in bytes. Use ``open(ps_script, 'rb')``.
             locked: Lock this script on the ``policy_folder``.
-            retry_after_scipt_hash_mismatch: When the script is updated fix the related provisioning and discovery errors.
+            retry_after_script_hash_mismatch: When the script is updated fix the related provisioning and discovery errors.
             description: Description for the application object.
             contacts: List of :ref:`identity_object` or :ref:`prefixed_name` as contacts for the application object.
             approvers: List of :ref:`identity_object` or :ref:`prefixed_name` as approvers for the application object.
@@ -301,12 +301,12 @@ class Adaptable(_ApplicationBase):
 
         # region Create The Policy Attributes
         policy_folder_dn = self._get_dn(obj=policy_folder)
-        if retry_after_scipt_hash_mismatch is True:
+        if retry_after_script_hash_mismatch is True:
             self._api.websdk.Config.WritePolicy.post(
                 object_dn=policy_folder_dn,
                 class_name=Classes.adaptable_app,
                 attribute_name=AdaptableAppAttributes.script_hash_mismatch_error,
-                values=[retry_after_scipt_hash_mismatch],
+                values=[retry_after_script_hash_mismatch],
                 locked=locked
             ).assert_valid_response()
         self._api.websdk.Config.WritePolicy.post(
@@ -363,7 +363,7 @@ class AmazonAWS(_ApplicationBase):
                contacts: 'List[Union[ident.Identity, str]]' = None,
                approvers: 'List[Union[ident.Identity, str]]' = None,
                issued_by_aws: 'bool' = None, provision_to: 'int' = None, region: 'str' = None,
-               iam_install_path: 'str' = None, replace_existing: 'bool' = None, binding_taget: 'Union[str, int]' = None,
+               iam_install_path: 'str' = None, replace_existing: 'bool' = None, binding_target: 'Union[str, int]' = None,
                load_balancer_name: 'str' = None, load_balancer_port: 'int' = None, target_group: 'str' = None,
                create_listener: 'bool' = None, cloudfront_distribution_id: 'str' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
@@ -380,7 +380,7 @@ class AmazonAWS(_ApplicationBase):
             region: AWS region.
             iam_install_path: IAM path for certificate upload.
             replace_existing: Replace the existing store.
-            binding_taget: Binding target.
+            binding_target: Binding target.
             load_balancer_name: Name of the load balancer.
             load_balancer_port: Port of the load balancer.
             target_group: Default target group.
@@ -406,7 +406,7 @@ class AmazonAWS(_ApplicationBase):
                 True : "1",
                 False: "0"
             }.get(replace_existing),
-            AmazonAppAttributes.binding_target            : binding_taget,
+            AmazonAppAttributes.binding_target            : binding_target,
             AmazonAppAttributes.load_balancer_name        : load_balancer_name,
             AmazonAppAttributes.load_balancer_port        : load_balancer_port,
             AmazonAppAttributes.create_binding            : {
@@ -465,7 +465,7 @@ class Apache(_ApplicationBase):
             partition_password_credential: :ref:`config_object` or :ref:`dn` of OCS pin or softcard passphrase credential.
             private_key_credential: :ref:`config_object` or :ref:`dn` of private key credential.
             certificate_chain_file: File location to place the certificate chain file.
-            overwrite_existing_chain: Overwirte the existing chain.
+            overwrite_existing_chain: Overwrite the existing chain.
             owner: File user owner.
             owner_permissions: File permissions assigned to the user owner.
             group: File group owner.
@@ -971,7 +971,7 @@ class F5AuthenticationBundle(_ApplicationBase):
         super().__init__(api=api, class_name=Classes.f5_authentication_bundle)
 
     def create(self, name: str, device: 'Union[config.Object, str]', bundle_file_name: str, description: 'str' = None,
-               certifictes_to_use: 'List[Union[config.Object, str]]' = None, attributes: dict = None,
+               certificates_to_use: 'List[Union[config.Object, str]]' = None, attributes: dict = None,
                get_if_already_exists: bool = True):
         """
         Args:
@@ -979,7 +979,7 @@ class F5AuthenticationBundle(_ApplicationBase):
             device: :ref:`config_object` or :ref:`dn` of the device object.
             bundle_file_name: Filename of the certificate bundle.
             description: Description for the application object.
-            certifictes_to_use: List of  :ref:`config_object` or :ref:`dn` of the certificates to use.
+            certificates_to_use: List of  :ref:`config_object` or :ref:`dn` of the certificates to use.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
@@ -990,7 +990,7 @@ class F5AuthenticationBundle(_ApplicationBase):
             F5AuthenticationBundleAttributes.advanced_settings_bundle_name: bundle_file_name,
             F5AuthenticationBundleAttributes.description                  : description,
             F5AuthenticationBundleAttributes.certificates                 : [self._get_dn(c) for c in
-                                                                             certifictes_to_use] if certifictes_to_use else None,
+                                                                             certificates_to_use] if certificates_to_use else None,
         }
 
         if attributes:
@@ -1240,7 +1240,7 @@ class IBMDataPower(_ApplicationBase):
             crypto_profile_name: Crypto profile name.
             ssl_profile_name: SSL profile name.
             certificate_folder: Certificate folder.
-            install_certificate_chain: Install the certficate chain.
+            install_certificate_chain: Install the certificate chain.
             private_key_password_credential: :ref:`config_object` or :ref:`dn` of the private key password credential.
             attributes: Additional attributes pertaining to the application object.
             get_if_already_exists: If the objects already exists, just return it as is.
@@ -1506,7 +1506,7 @@ class JKS(_ApplicationBase):
             create: Create store.
             replace_existing: Replace existing store.
             certificate_alias: Certificate alias.
-            reuse_alias: Resuse certificate alias.
+            reuse_alias: Reuse certificate alias.
             owner: File user owner.
             owner_permissions: File permissions assigned to the user owner.
             group: File group owner.
@@ -1604,7 +1604,7 @@ class OracleIPlanet(_ApplicationBase):
             port: Connection port.
             certificate_database_type: Certificate database type.
             certificate_database_path: Certificate database path.
-            certificate_database_credential: :ref:`config_object` or :ref:`dn` of the ccertificate database credentiaL.
+            certificate_database_credential: :ref:`config_object` or :ref:`dn` of the certificate database credential.
             certificate_database_prefix: Certificate database prefix.
             create: Create store.
             replace_existing: Replace existing store.
@@ -1696,7 +1696,7 @@ class PaloAltoNetworkFW(_ApplicationBase):
             port: Connection port.
             provision_certificate_only: If ``False``, also provision the private key.
             private_key_password: :ref:`config_object` or :ref:`dn` of the private key password.
-            install_chain: Insatll the certifcate chain.
+            install_chain: Install the certificate chain.
             replace_certificate: Replace certificate.
             decryption_policy_rule_name: Decryption policy rule name.
             create_decryption_policy_rule: Create decryption policy rule.
@@ -1784,7 +1784,7 @@ class PEM(_ApplicationBase):
             port: Connection port.
             private_key_credential: :ref:`config_object` or :ref:`dn` of private key credential.
             certificate_chain_file: File location to place the certificate chain file.
-            overwrite_existing_chain: Overwirte the existing chain.
+            overwrite_existing_chain: Overwrite the existing chain.
             owner: File user owner.
             owner_permissions: File permissions assigned to the user owner.
             group: File group owner.

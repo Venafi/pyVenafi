@@ -374,7 +374,7 @@ class Certificate(FeatureBase):
             valid_to_greater: Minimum expiration date of the certificate.
             valid_to_less: Maximum expiration date of the certificate.
             chain_validation_error: Chain Validation Error code.
-            created_on: Creation date of the certifcate.
+            created_on: Creation date of the certificate.
             created_on_greater: Minimum creation date of the certificate.
             created_on_less: Maximum creation date of the certificate.
             disabled: Include only enabled (``False``) or disabled (``True``) certificates.
@@ -384,7 +384,7 @@ class Certificate(FeatureBase):
             network_validation_disabled: Include only certificates with Network Validation enabled (``False``) or disabled (``True``).
             parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
             recursive: Requires ``parent`` to be given. If ``True``, search for certificates recursively.
-            pending_workflow: Include only certificates pendind workflow resolution.
+            pending_workflow: Include only certificates pending workflow resolution.
             ssl_tls_protocol: SSL/TLS Protocols (Ssl2, Ssl3, Tls, Tls11, Tls12) that failed to communicate with the target host.
             stage: Processing stage of the certificate.
             stage_greater: Minimum processing stage of the certificate.
@@ -406,7 +406,7 @@ class Certificate(FeatureBase):
                 This is done by first submitting a HEAD Certificates request to get the count of certificates that apply
                 to the filters and then by creating a thread pool for as many offsets are required to retrieve the total amount
                 of certificates.
-            cap: When the desired amount of certifcates exceeds the desired limit, the cap defines how many certificates from the
+            cap: When the desired amount of certificates exceeds the desired limit, the cap defines how many certificates from the
                 offset and beyond the limit to retrieve. For example, with ``offset=10``, ``limit=200``, and ``cap=400``, then
                 certificates 10 thru 410 will be returned at a rate of 200 retrievals.
 

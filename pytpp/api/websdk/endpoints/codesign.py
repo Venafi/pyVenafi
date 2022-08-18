@@ -206,7 +206,7 @@ class _Codesign:
                 key_pair_environment: codesign.KeyPairEnvironment = ApiField(alias='KeyPairEnvironment')
                 apple_template: codesign.AppleTemplate = ApiField(alias='AppleTemplate')
                 certificate_template: codesign.CertificateTemplate = ApiField(alias='CertificateTemplate')
-                csp_template: codesign.CSPTemplate = ApiField(alias='EnviCSPTemplateronment')
+                csp_template: codesign.CSPTemplate = ApiField(alias='CSPTemplate')
                 dot_net_template: codesign.DotNetTemplate = ApiField(alias='DotNetTemplate')
                 gpg_template: codesign.GPGTemplate = ApiField(alias='GPGTemplate')
                 key_pair_template: codesign.KeyPairTemplate = ApiField(alias='KeyPairTemplate')

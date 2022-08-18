@@ -101,7 +101,7 @@ class _HSMAPI:
 
             class Output(WebSdkOutputModel):
                 certificates: List[hsm_api.Certificate] = ApiField(alias='Certificates', default_factory=list)
-                pending: bool = ApiField(alias='PendingDeprecationWarningbool')
+                pending: bool = ApiField(alias='Pending')
                 private_keys: List[hsm_api.PrivateKey] = ApiField(alias='PrivateKeys')
                 public_keys: List[hsm_api.PublicKey] = ApiField(alias='PublicKeys')
                 success: bool = ApiField(alias='Success')

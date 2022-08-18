@@ -168,7 +168,7 @@ class WebSDK:
         self.Metadata = _Metadata(self)
         self.Permissions = _Permissions(self)
         self.PKI = _PKI(self)
-        self.Platorm = _Platform(self)
+        self.Platform = _Platform(self)
         self.Preferences = _Preferences(self)
         self.ProcessingEngines = _ProcessingEngines(self)
         self.RecycleBin = _RecycleBin(self)

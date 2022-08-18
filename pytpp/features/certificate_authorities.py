@@ -56,12 +56,12 @@ class MSCA(_CertificateAuthorityBase):
             parent_folder: `:ref:`config_object` or :ref:`dn` of the parent folder of this certificate authority object.
             hostname: Hostname or IP Address of the CA.
             service_name: Service, or Given, Name of the certificate authority.
-            credential: `:ref:`config_object` or :ref:`dn` of the CA creential.
+            credential: `:ref:`config_object` or :ref:`dn` of the CA credential.
             template: Name of the CA template.
             description: Description of the CA object.
             contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts.
             manual_approvals: Require manual approvals.
-            subject_alt_name_enabled: Enable Subject Alterntaive Names.
+            subject_alt_name_enabled: Enable Subject Alternative Names.
             automatically_include_cn_as_dns_san: Automatically include the common name (CN) as a DNS SAN.
             allow_users_to_specify_end_date: Allow users to specify the end date.
             enrollment_agent: `:ref:`config_object` or :ref:`dn` of the certificate credential, or enrollment agent.
@@ -125,7 +125,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
             code_signing: Allow code signing.
             signature_algorithm: Signing algorithm.
             valid_years: Validity period in years.
-            valid_days: Validitiy period in days. Added to years.
+            valid_days: Validity period in days. Added to years.
             attributes: Additional attributes associated to the CA object.
             get_if_already_exists: If the objects already exists, just return it as is.
 
