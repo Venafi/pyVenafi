@@ -49,4 +49,4 @@ class _Certificates(ApertureEndpoint):
                 class Output(ApertureOutputModel):
                     certificates: List[certificate_inventory.CertificateDetails] = ApiField(default_factory=list)
 
-                return generate_output(output_cls=Output, response=self._post(data=body), root_field='certificates+')
+                return generate_output(output_cls=Output, response=self._post(data=body), root_field='certificates')

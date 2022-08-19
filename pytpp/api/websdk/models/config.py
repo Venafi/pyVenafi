@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pytpp.api.api_base import OutputModel, ApiField
 from pytpp.api.websdk.models.resultcodes import ResultCodes
 from typing import List, Optional, TypeVar, Generic
@@ -5,6 +6,7 @@ from typing import List, Optional, TypeVar, Generic
 T = TypeVar('T')
 
 
+# region Models
 # region Outputs
 class Result(OutputModel):
     code: int = ApiField()
@@ -46,3 +48,4 @@ class NameAttribute(OutputModel, Generic[T]):
     name: str = ApiField(alias='Name')
     value: T = ApiField(alias='Value')
 # endregion Inputs
+# endregion Models

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 from pytpp.api.api_base import OutputModel, ApiField
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List
 from datetime import datetime
 from pytpp.api.api_base import OutputModel, ApiField
@@ -61,10 +62,10 @@ class KeySetData(OutputModel):
     last_rotation_date: datetime = ApiField(alias='LastRotationDate')
     last_used: datetime = ApiField(alias='LastUsed')
     length: int = ApiField(alias='Length')
-    private_keys: 'List[KeyData]' = ApiField(alias='PrivateKeys')
+    private_keys: List[KeyData] = ApiField(alias='PrivateKeys')
     process_error: str = ApiField(alias='ProcessError')
     process_status: str = ApiField(alias='ProcessStatus')
-    public_keys: 'List[KeyData]' = ApiField(alias='PublicKeys')
+    public_keys: List[KeyData] = ApiField(alias='PublicKeys')
     rotation_stage: int = ApiField(alias='RotationStage')
     type: str = ApiField(alias='Type')
     violation_status: list = ApiField(alias='ViolationStatus')

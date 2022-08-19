@@ -1,3 +1,4 @@
+from __future__ import annotations
 class ResultCodes:
     Client = {
         0 : 'Success, the operation succeeded, however, the client entry is untrusted',

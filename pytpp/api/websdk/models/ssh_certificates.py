@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List
 from pytpp.api.api_base import OutputModel, ApiField
 

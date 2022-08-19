@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pytpp.api.websdk.models.resultcodes import ResultCodes
 from pytpp.api.api_base import OutputModel, ApiField
 from datetime import datetime
@@ -13,6 +14,7 @@ WorkType = Literal['Client Agent Configuration Work', 'Client Agent Automatic Up
                    'Client Certificate Work']
 
 
+# region Models
 class Result(OutputModel):
     code: int = ApiField()
 

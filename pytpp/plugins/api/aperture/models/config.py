@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pytpp.api.api_base import ApiField, OutputModel
 from typing import Optional
 
@@ -10,4 +11,4 @@ class Object(OutputModel):
     name: str = ApiField(alias='name')
     parent: str = ApiField(alias='parentDn')
     revision: Optional[int] = ApiField()
-    type_name: str = ApiField(alias='typeNam')
+    type_name: str = ApiField(alias='typeName')

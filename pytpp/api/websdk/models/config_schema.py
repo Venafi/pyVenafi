@@ -1,9 +1,11 @@
+from __future__ import annotations
 from typing import List
 
 from pytpp.api.websdk.models.resultcodes import ResultCodes
 from pytpp.api.api_base import OutputModel, ApiField
 
 
+# region Models
 class Result(OutputModel):
     code: int = ApiField()
 

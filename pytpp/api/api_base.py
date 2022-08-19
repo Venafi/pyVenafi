@@ -381,7 +381,7 @@ class OutputModel(BaseModel, metaclass=ApiModelMetaclass):
 
 
 class RootOutputModel(OutputModel):
-    api_response: Response
+    api_response: Response = Field(exclude=True)
 
     def assert_valid_response(self):
         """
