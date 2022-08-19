@@ -6,11 +6,11 @@ from pytpp.api.websdk.models import identity as ident
 class _Teams(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Teams')
-        self.AddTeamMembers = self._AddTeamMembers(api_obj=api_obj)
-        self.AddTeamOwners = self._AddTeamOwners(api_obj=api_obj)
-        self.DemoteTeamOwners = self._DemoteTeamOwners(api_obj=api_obj)
-        self.RemoveTeamMembers = self._RemoveTeamMembers(api_obj=api_obj)
-        self.RenameTeam = self._RenameTeam(api_obj=api_obj)
+        self.AddTeamMembers = self._AddTeamMembers(api_obj=self._api_obj, url=f'{self._url}/AddTeamMembers')
+        self.AddTeamOwners = self._AddTeamOwners(api_obj=self._api_obj, url=f'{self._url}/AddTeamOwners')
+        self.DemoteTeamOwners = self._DemoteTeamOwners(api_obj=self._api_obj, url=f'{self._url}/DemoteTeamOwners')
+        self.RemoveTeamMembers = self._RemoveTeamMembers(api_obj=self._api_obj, url=f'{self._url}/RemoveTeamMembers')
+        self.RenameTeam = self._RenameTeam(api_obj=self._api_obj, url=f'{self._url}/RenameTeam')
 
     def post(self, name: str, owners: list, assets: list = None, description: str = None, members: list = None,
              products: list = None):
@@ -32,9 +32,6 @@ class _Teams(WebSdkEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddTeamMembers(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Teams/AddTeamMembers')
-
         def put(self, members: list, team: dict = None, show_members: bool = None):
             body = {
                 'Members'    : members,
@@ -50,9 +47,6 @@ class _Teams(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _AddTeamOwners(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Teams/AddTeamOwners')
-
         def put(self, owners: list = None, team: dict = None, show_members: bool = None):
             body = {
                 'Owners'     : owners,
@@ -68,9 +62,6 @@ class _Teams(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _DemoteTeamOwners(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Teams/DemoteTeamOwners')
-
         def put(self, owners: list = None, team: dict = None, show_members: bool = None):
             body = {
                 'Owners'     : owners,
@@ -87,24 +78,13 @@ class _Teams(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     def Prefix(self, prefix='local'):
-        return self._Prefix(prefix=prefix, api_obj=self._api_obj)
+        return self._Prefix(api_obj=self._api_obj, url=f'{self._url}/{prefix}')
 
-    class _Prefix:
-        def __init__(self, prefix: str, api_obj):
-            self._prefix = prefix
-            self._api_obj = api_obj
-
+    class _Prefix(WebSdkEndpoint):
         def Universal(self, universal):
-            return self._Universal(
-                prefix=self._prefix,
-                universal=universal,
-                api_obj=self._api_obj
-            )
+            return self._Universal(api_obj=self._api_obj, url=f'{self._url}/{universal}')
 
         class _Universal(WebSdkEndpoint):
-            def __init__(self, prefix: str, universal: str, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/Teams/{prefix}/{universal}')
-
             def delete(self):
                 class Output(WebSdkOutputModel):
                     message: str = ApiField(alias='Message')
@@ -142,9 +122,6 @@ class _Teams(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RemoveTeamMembers(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Teams/RemoveTeamMembers')
-
         def put(self, team: dict, members: list = None, show_members: bool = None):
             body = {
                 'Team'       : team,
@@ -161,9 +138,6 @@ class _Teams(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RenameTeam(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Teams/RenameTeam')
-
         def put(self, team: str, new_team_name: str):
             body = {
                 'Team'       : team,

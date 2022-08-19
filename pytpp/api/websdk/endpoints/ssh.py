@@ -3,46 +3,44 @@ from pytpp.api.websdk.models import ssh
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _SSH:
+class _SSH(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.AddAuthorizedKey = self._AddAuthorizedKey(api_obj=api_obj)
-        self.AddHostPrivateKey = self._AddHostPrivateKey(api_obj=api_obj)
-        self.AddKnownHostKey = self._AddKnownHostKey(api_obj=api_obj)
-        self.AddSelfServiceAuthorizedKey = self._AddSelfServiceAuthorizedKey(api_obj=api_obj)
-        self.AddSelfServicePrivateKey = self._AddSelfServicePrivateKey(api_obj=api_obj)
-        self.AddUserPrivateKey = self._AddUserPrivateKey(api_obj=api_obj)
-        self.ApproveKeyOperation = self._ApproveKeyOperation(api_obj=api_obj)
-        self.CancelKeyOperation = self._CancelKeyOperation(api_obj=api_obj)
-        self.CancelRotation = self._CancelRotation(api_obj=api_obj)
-        self.ChangePrivateKeyPassphrase = self._ChangePrivateKeyPassphrase(api_obj=api_obj)
-        self.ConfirmSelfServiceKeyInstallation = self._ConfirmSelfServiceKeyInstallation(api_obj=api_obj)
-        self.DeleteUnmatchedKeyset = self._DeleteUnmatchedKeyset(api_obj=api_obj)
-        self.Devices = self._Devices(api_obj=api_obj)
-        self.EditKeyOptions = self._EditKeyOptions(api_obj=api_obj)
-        self.EditSelfServiceAuthorizedKey = self._EditSelfServiceAuthorizedKey(api_obj=api_obj)
-        self.ExportSelfServiceAuthorizedKey = self._ExportSelfServiceAuthorizedKey(api_obj=api_obj)
-        self.ExportSelfServicePrivateKey = self._ExportSelfServicePrivateKey(api_obj=api_obj)
-        self.ImportAuthorizedKey = self._ImportAuthorizedKey(api_obj=api_obj)
-        self.ImportKeyUsageData = self._ImportKeyUsageData(api_obj=api_obj)
-        self.ImportPrivateKey = self._ImportPrivateKey(api_obj=api_obj)
-        self.KeyDetails = self._KeyDetails(api_obj=api_obj)
-        self.KeysetDetails = self._KeysetDetails(api_obj=api_obj)
-        self.KeyUsage = self._KeyUsage(api_obj=api_obj)
-        self.MoveKeysetsToPolicy = self._MoveKeysetsToPolicy(api_obj=api_obj)
-        self.RejectKeyOperation = self._RejectKeyOperation(api_obj=api_obj)
-        self.RemoveKey = self._RemoveKey(api_obj=api_obj)
-        self.RetryKeyOperation = self._RetryKeyOperation(api_obj=api_obj)
-        self.RetryRotation = self._RetryRotation(api_obj=api_obj)
-        self.Rotate = self._Rotate(api_obj=api_obj)
-        self.SetUnmatchedKeysetPassPhrase = self._SetUnmatchedKeysetPassPhrase(api_obj=api_obj)
-        self.SkipKeyRotation = self._SkipKeyRotation(api_obj=api_obj)
-        self.TestDeviceConnection = self._TestDeviceConnection(api_obj=api_obj)
-        self.Widget = self._Widget(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/SSH')
+        self.AddAuthorizedKey = self._AddAuthorizedKey(api_obj=self._api_obj, url=f'{self._url}/AddAuthorizedKey')
+        self.AddHostPrivateKey = self._AddHostPrivateKey(api_obj=self._api_obj, url=f'{self._url}/AddHostPrivateKey')
+        self.AddKnownHostKey = self._AddKnownHostKey(api_obj=self._api_obj, url=f'{self._url}/AddKnownHostKey')
+        self.AddSelfServiceAuthorizedKey = self._AddSelfServiceAuthorizedKey(api_obj=self._api_obj, url=f'{self._url}/AddSelfServiceAuthorizedKey')
+        self.AddSelfServicePrivateKey = self._AddSelfServicePrivateKey(api_obj=self._api_obj, url=f'{self._url}/AddSelfServicePrivateKey')
+        self.AddUserPrivateKey = self._AddUserPrivateKey(api_obj=self._api_obj, url=f'{self._url}/AddUserPrivateKey')
+        self.ApproveKeyOperation = self._ApproveKeyOperation(api_obj=self._api_obj, url=f'{self._url}/ApproveKeyOperation')
+        self.CancelKeyOperation = self._CancelKeyOperation(api_obj=self._api_obj, url=f'{self._url}/CancelKeyOperation')
+        self.CancelRotation = self._CancelRotation(api_obj=self._api_obj, url=f'{self._url}/CancelRotation')
+        self.ChangePrivateKeyPassphrase = self._ChangePrivateKeyPassphrase(api_obj=self._api_obj, url=f'{self._url}/ChangePrivateKeyPassphrase')
+        self.ConfirmSelfServiceKeyInstallation = self._ConfirmSelfServiceKeyInstallation(api_obj=self._api_obj, url=f'{self._url}/ConfirmSelfServiceKeyInstallation')
+        self.DeleteUnmatchedKeyset = self._DeleteUnmatchedKeyset(api_obj=self._api_obj, url=f'{self._url}/DeleteUnmatchedKeyset')
+        self.Devices = self._Devices(api_obj=self._api_obj, url=f'{self._url}/Devices')
+        self.EditKeyOptions = self._EditKeyOptions(api_obj=self._api_obj, url=f'{self._url}/EditKeyOptions')
+        self.EditSelfServiceAuthorizedKey = self._EditSelfServiceAuthorizedKey(api_obj=self._api_obj, url=f'{self._url}/EditSelfServiceAuthorizedKey')
+        self.ExportSelfServiceAuthorizedKey = self._ExportSelfServiceAuthorizedKey(api_obj=self._api_obj, url=f'{self._url}/ExportSelfServiceAuthorizedKey')
+        self.ExportSelfServicePrivateKey = self._ExportSelfServicePrivateKey(api_obj=self._api_obj, url=f'{self._url}/ExportSelfServicePrivateKey')
+        self.ImportAuthorizedKey = self._ImportAuthorizedKey(api_obj=self._api_obj, url=f'{self._url}/ImportAuthorizedKey')
+        self.ImportKeyUsageData = self._ImportKeyUsageData(api_obj=self._api_obj, url=f'{self._url}/ImportKeyUsageData')
+        self.ImportPrivateKey = self._ImportPrivateKey(api_obj=self._api_obj, url=f'{self._url}/ImportPrivateKey')
+        self.KeyDetails = self._KeyDetails(api_obj=self._api_obj, url=f'{self._url}/KeyDetails')
+        self.KeysetDetails = self._KeysetDetails(api_obj=self._api_obj, url=f'{self._url}/KeysetDetails')
+        self.KeyUsage = self._KeyUsage(api_obj=self._api_obj, url=f'{self._url}/KeyUsage')
+        self.MoveKeysetsToPolicy = self._MoveKeysetsToPolicy(api_obj=self._api_obj, url=f'{self._url}/MoveKeysetsToPolicy')
+        self.RejectKeyOperation = self._RejectKeyOperation(api_obj=self._api_obj, url=f'{self._url}/RejectKeyOperation')
+        self.RemoveKey = self._RemoveKey(api_obj=self._api_obj, url=f'{self._url}/RemoveKey')
+        self.RetryKeyOperation = self._RetryKeyOperation(api_obj=self._api_obj, url=f'{self._url}/RetryKeyOperation')
+        self.RetryRotation = self._RetryRotation(api_obj=self._api_obj, url=f'{self._url}/RetryRotation')
+        self.Rotate = self._Rotate(api_obj=self._api_obj, url=f'{self._url}/Rotate')
+        self.SetUnmatchedKeysetPassPhrase = self._SetUnmatchedKeysetPassPhrase(api_obj=self._api_obj, url=f'{self._url}/SetUnmatchedKeysetPassPhrase')
+        self.SkipKeyRotation = self._SkipKeyRotation(api_obj=self._api_obj, url=f'{self._url}/SkipKeyRotation')
+        self.TestDeviceConnection = self._TestDeviceConnection(api_obj=self._api_obj, url=f'{self._url}/TestDeviceConnection')
+        self.Widget = self._Widget(api_obj=self._api_obj, url=f'{self._url}/Widget')
 
     class _AddAuthorizedKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/AddAuthorizedKey')
-
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, allowed_source_restriction: list = None,
                  denied_source_restriction: list = None, forced_command: str = None, format: str = None, options: list = None):
@@ -65,9 +63,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddHostPrivateKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/AddHostPrivateKey')
-
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, username: str, format: str = None, policy_dn: str = None):
             body = {
@@ -86,9 +81,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddKnownHostKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/AddKnownHostKey')
-
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, format: str = None):
             body = {
@@ -106,9 +98,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddSelfServiceAuthorizedKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/AddSelfServiceAuthorizedKey')
-
         def post(self, allowed_source_restriction: list, denied_source_restriction: list, folder_id: str, location: str, notes: str,
                  options: list, owner: str, contact_email: str = None, forced_command: str = None, keyset_id: str = None):
             body = {
@@ -133,9 +122,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddSelfServicePrivateKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/AddSelfServicePrivateKey')
-
         def post(self, folder_id: str, location: str, notes: str, owner: str, contact_email: str = None, keyset_id: str = None):
             body = {
                 'ContactEmail': contact_email,
@@ -155,9 +141,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddUserPrivateKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/AddUserPrivateKey')
-
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, username: str, format: str = None, keyset_id: str = None,
                  passphrase: str = None, policy_dn: str = None):
@@ -179,9 +162,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ApproveKeyOperation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ApproveKeyOperation')
-
         def post(self, key_id: int, comment: str):
             body = {
                 'KeyId'  : key_id,
@@ -194,9 +174,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _CancelKeyOperation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/CancelKeyOperation')
-
         def post(self, key_id: int):
             body = {
                 'KeyId': key_id
@@ -208,9 +185,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _CancelRotation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/CancelRotation')
-
         def post(self, keyset_id: str):
             body = {
                 'KeysetId': keyset_id
@@ -222,9 +196,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ChangePrivateKeyPassphrase(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ChangePrivateKeyPassphrase')
-
         def post(self, key_id: int, passphrase: str):
             body = {
                 'KeysetId'  : key_id,
@@ -237,9 +208,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ConfirmSelfServiceKeyInstallation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ConfirmSelfServiceKeyInstallation')
-
         def post(self, keyset_id: str):
             body = {
                 'KeysetId': keyset_id
@@ -251,9 +219,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _DeleteUnmatchedKeyset(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/DeleteUnmatchedKeyset')
-
         def post(self, unmatched_trust_id: str):
             body = {
                 'UnmatchedTrustId': unmatched_trust_id
@@ -265,9 +230,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Devices(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/Devices')
-
         def post(self, page_size: int, offset: int = None, ssh_device_filter: dict = None):
             body = {
                 'PageSize'       : page_size,
@@ -281,9 +243,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _EditKeyOptions(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/EditKeyOptions')
-
         def post(self, key_id: int, allowed_source_restriction: list = None, denied_source_restriction: list = None,
                  forced_command: str = None, options: list = None):
             body = {
@@ -300,9 +259,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _EditSelfServiceAuthorizedKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/EditSelfServiceAuthorizedKey')
-
         def post(self, key_id: int, allowed_source_restriction: list = None,
                  denied_source_restriction: list = None, forced_command: str = None,
                  location: str = None, notes: str = None, options: list = None):
@@ -322,9 +278,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ExportSelfServiceAuthorizedKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServiceAuthorizedKey')
-
         # noinspection ALL
         def post(self, key_id: int, format: str = None):
             body = {
@@ -339,9 +292,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ExportSelfServicePrivateKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ExportSelfServicePrivateKey')
-
         # noinspection ALL
         def post(self, key_id: int, format: str = None, passphrase: str = None):
             body = {
@@ -357,9 +307,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ImportAuthorizedKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ImportAuthorizedKey')
-
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str):
             body = {
@@ -377,9 +324,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ImportKeyUsageData(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ImportKeyUsageData')
-
         def post(self, log_data: list):
             body = {
                 'LogData': log_data
@@ -391,9 +335,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ImportPrivateKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/ImportPrivateKey')
-
         # noinspection ALL
         def post(self, device_guid: str, filepath: str, format: str, key_content_base_64: str, username: str,
                  passphrase: str = None):
@@ -413,9 +354,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _KeyDetails(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/KeyDetails')
-
         def post(self, key_id: int):
             body = {
                 'KeyId': key_id
@@ -427,9 +365,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body), root_field='key_data')
 
     class _KeysetDetails(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/KeysetDetails')
-
         def get(self, keyset_id: str, load_key_data: bool = None):
             params = {
                 'KeysetId'   : keyset_id,
@@ -455,9 +390,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _KeyUsage(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/KeyUsage')
-
         def post(self, ssh_key_usage_filter: list, page_size: int = None, offset: int = None):
             body = {
                 'SshKeyUsageFilter': ssh_key_usage_filter,
@@ -471,9 +403,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _MoveKeysetsToPolicy(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/MoveKeysetsToPolicy')
-
         def post(self, keyset_ids: list, policy_dn: str = None, policy_path: str = None):
             body = {
                 'KeysetIds' : keyset_ids,
@@ -487,9 +416,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RejectKeyOperation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/RejectKeyOperation')
-
         def post(self, key_id: int, comment: str):
             body = {
                 'KeyId'  : key_id,
@@ -502,9 +428,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RemoveKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/RemoveKey')
-
         def post(self, key_id: int):
             body = {
                 'KeyId': key_id
@@ -516,9 +439,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RetryKeyOperation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/RetryKeyOperation')
-
         def post(self, key_id: int):
             body = {
                 'KeyId': key_id
@@ -530,9 +450,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RetryRotation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/RetryRotation')
-
         def post(self, keyset_id: str):
             body = {
                 'KeysetId': keyset_id
@@ -544,9 +461,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Rotate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/Rotate')
-
         def post(self, keyset_id: str, options: int = None, allow_skip_on_rotation: bool = None):
             body = {
                 'KeysetId'           : keyset_id,
@@ -560,9 +474,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SetUnmatchedKeysetPassPhrase(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/SetUnmatchedKeysetPassPhrase')
-
         def post(self, passphrase: str, unmatched_trust_id: str):
             body = {
                 'Passphrase'      : passphrase,
@@ -575,9 +486,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SkipKeyRotation(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSH/SkipKeyRotation')
-
         def post(self, key_id: int):
             body = {
                 'KeyId': key_id
@@ -589,9 +497,6 @@ class _SSH:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _TestDeviceConnection(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='SSH/TestDeviceConnection')
-
         def post(self, device_guids: List[str]):
             body = {
                 'deviceGuids': device_guids
@@ -602,16 +507,14 @@ class _SSH:
 
             return generate_output(output_cls=Output, response=self._post(data=body), root_field='connection_results')
 
-    class _Widget:
-        def __init__(self, api_obj):
-            self.CriticalAlerts = self._CriticalAlerts(api_obj=api_obj)
-            self.PolicyViolations = self._PolicyViolations(api_obj=api_obj)
-            self.Stats = self._Stats(api_obj=api_obj)
+    class _Widget(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.CriticalAlerts = self._CriticalAlerts(api_obj=self._api_obj, url=f'{self._url}/CriticalAlerts')
+            self.PolicyViolations = self._PolicyViolations(api_obj=self._api_obj, url=f'{self._url}/PolicyViolations')
+            self.Stats = self._Stats(api_obj=self._api_obj, url=f'{self._url}/Stats')
 
         class _CriticalAlerts(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SSH/Widget/CriticalAlerts')
-
             def get(self, min_allowed_key_length: int):
                 params = {
                     'minAllowedKeyLength': min_allowed_key_length
@@ -628,9 +531,6 @@ class _SSH:
                 return generate_output(output_cls=Output, response=self._get(params=params))
 
         class _PolicyViolations(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SSH/Widget/PolicyViolations')
-
             def get(self):
                 class Output(WebSdkOutputModel):
                     duplicate_private_keys: List[str] = ApiField(alias='DuplicatePrivateKeys')
@@ -648,9 +548,6 @@ class _SSH:
                 return generate_output(output_cls=Output, response=self._get())
 
         class _Stats(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SSH/Widget/Stats')
-
             def get(self, group_by: str):
                 params = {
                     'GroupBy': group_by

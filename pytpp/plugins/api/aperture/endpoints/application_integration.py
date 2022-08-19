@@ -7,7 +7,7 @@ from pytpp.plugins.api.aperture.models import identity, oauth
 class _ApplicationIntegration(ApertureEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/application-integration')
-        self.Access = self._Access(api_obj=api_obj)
+        self.Access = self._Access(api_obj=api_obj, url=f'{self._url}/access')
 
     def post(self, application_id: str, application_name: str, application_scope: dict,
              description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -54,30 +54,18 @@ class _ApplicationIntegration(ApertureEndpoint):
         return generate_output(output_cls=Output, response=self._put(data=body), root_field='application_id')
 
     def ApplicationId(self, id: str):
-        return self._ApplicationId(id=id, api_obj=self._api_obj)
+        return self._ApplicationId(api_obj=self._api_obj, url=f'{self._url}/?id={id}')
 
-    class _Access:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-
+    class _Access(ApertureEndpoint):
         def ApplicationId(self, id: str):
-            return self._ApplicationId(id=id, api_obj=self._api_obj)
+            return self._ApplicationId(api_obj=self._api_obj, url=f'{self._url}/?id={id}')
 
         class _ApplicationId(ApertureEndpoint):
-            def __init__(self, id: str, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/application-integration/access/?id={id}')
-
             def put(self, identities: list):
                 body = identities
                 return generate_output(output_cls=ApertureOutputModel, response=self._put(data=body))
 
     class _ApplicationId(ApertureEndpoint):
-        def __init__(self, id: str, api_obj):
-            super().__init__(
-                api_obj=api_obj,
-                url=f'/application-integration/?id={id}'
-            )
-
         def delete(self):
             return generate_output(output_cls=ApertureOutputModel, response=self._delete())
 

@@ -7,8 +7,8 @@ from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_outpu
 class _SystemStatus(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/SystemStatus')
-        self.Upgrade = self._Upgrade(api_obj=api_obj)
-        self.Version = self._Version(api_obj=api_obj)
+        self.Upgrade = self._Upgrade(api_obj=api_obj, url=f'{self._url}/Upgrade')
+        self.Version = self._Version(api_obj=api_obj, url=f'{self._url}/Version')
 
     def get(self):
         class Output(WebSdkOutputModel):
@@ -16,18 +16,16 @@ class _SystemStatus(WebSdkEndpoint):
 
         return generate_output(output_cls=Output, response=self._get(), root_field='engines')
 
-    class _Upgrade:
-        def __init__(self, api_obj):
-            self.Engine = self._Engine(api_obj=api_obj)
-            self.Engines = self._Engines(api_obj=api_obj)
-            self.History = self._History(api_obj=api_obj)
-            self.Status = self._Status(api_obj=api_obj)
-            self.Summary = self._Summary(api_obj=api_obj)
+    class _Upgrade(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Engine = self._Engine(api_obj=self._api_obj, url=f'{self._url}/Engine')
+            self.Engines = self._Engines(api_obj=self._api_obj, url=f'{self._url}/Engines')
+            self.History = self._History(api_obj=self._api_obj, url=f'{self._url}/History')
+            self.Status = self._Status(api_obj=self._api_obj, url=f'{self._url}/Status')
+            self.Summary = self._Summary(api_obj=self._api_obj, url=f'{self._url}/Summary')
 
         class _Engine(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Engine')
-
             def get(self, guid: str, engine_id: str, upgrade_id: str = None):
                 params = {
                     'guid'     : guid,
@@ -47,9 +45,6 @@ class _SystemStatus(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._get(params=params))
 
         class _Engines(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Engines')
-
             def get(self, upgrade_id: int = None):
                 params = {
                     'UpgradeId': upgrade_id
@@ -61,9 +56,6 @@ class _SystemStatus(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._get(params=params))
 
         class _History(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/History')
-
             def get(self):
                 class Output(WebSdkOutputModel):
                     upgrade_history: List[system_status.UpgradeInfo] = ApiField(default_factory=list, alias='UpgradeHistory')
@@ -71,9 +63,6 @@ class _SystemStatus(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._get())
 
         class _Status(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Status')
-
             def get(self):
                 class Output(WebSdkOutputModel):
                     upgrade_in_progress: bool = ApiField(alias='UpgradeInProgress')
@@ -81,9 +70,6 @@ class _SystemStatus(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._get())
 
         class _Summary(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SystemStatus/Upgrade/Summary')
-
             def get(self):
                 class Output(WebSdkOutputModel):
                     upgrade_summary: system_status.UpgradeSummary = ApiField(alias='UpgradeSummary')
@@ -91,9 +77,6 @@ class _SystemStatus(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._get())
 
     class _Version(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SystemStatus/Version')
-
         def get(self):
             class Output(WebSdkOutputModel):
                 version: str = ApiField(alias='Version')

@@ -3,26 +3,24 @@ from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_outpu
 from pytpp.api.websdk.models import identity as ident
 
 
-class _Identity:
+class _Identity(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.AddGroup = self._AddGroup(api_obj=api_obj)
-        self.AddGroupMembers = self._AddGroupMembers(api_obj=api_obj)
-        self.Browse = self._Browse(api_obj=api_obj)
-        self.GetAssociatedEntries = self._GetAssociatedEntries(api_obj=api_obj)
-        self.GetMembers = self._GetMembers(api_obj=api_obj)
-        self.GetMemberships = self._GetMemberships(api_obj=api_obj)
-        self.Group = self._Group(api_obj=api_obj)
-        self.ReadAttribute = self._ReadAttribute(api_obj=api_obj)
-        self.RemoveGroupMembers = self._RemoveGroupMembers(api_obj=api_obj)
-        self.RenameGroup = self._RenameGroup(api_obj=api_obj)
-        self.Self = self._Self(api_obj=api_obj)
-        self.SetPassword = self._SetPassword(api_obj=api_obj)
-        self.Validate = self._Validate(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/Identity')
+        self.AddGroup = self._AddGroup(api_obj=self._api_obj, url=f'{self._url}/AddGroup')
+        self.AddGroupMembers = self._AddGroupMembers(api_obj=self._api_obj, url=f'{self._url}/AddGroupMembers')
+        self.Browse = self._Browse(api_obj=self._api_obj, url=f'{self._url}/Browse')
+        self.GetAssociatedEntries = self._GetAssociatedEntries(api_obj=self._api_obj, url=f'{self._url}/GetAssociatedEntries')
+        self.GetMembers = self._GetMembers(api_obj=self._api_obj, url=f'{self._url}/GetMembers')
+        self.GetMemberships = self._GetMemberships(api_obj=self._api_obj, url=f'{self._url}/GetMemberships')
+        self.Group = self._Group(api_obj=self._api_obj, url=f'{self._url}/Group')
+        self.ReadAttribute = self._ReadAttribute(api_obj=self._api_obj, url=f'{self._url}/ReadAttribute')
+        self.RemoveGroupMembers = self._RemoveGroupMembers(api_obj=self._api_obj, url=f'{self._url}/RemoveGroupMembers')
+        self.RenameGroup = self._RenameGroup(api_obj=self._api_obj, url=f'{self._url}/RenameGroup')
+        self.Self = self._Self(api_obj=self._api_obj, url=f'{self._url}/Self')
+        self.SetPassword = self._SetPassword(api_obj=self._api_obj, url=f'{self._url}/SetPassword')
+        self.Validate = self._Validate(api_obj=self._api_obj, url=f'{self._url}/Validate')
 
     class _AddGroup(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/AddGroup')
-
         def post(self, name: str, members: list = None, products: list = None):
             body = {
                 'Name'    : name,
@@ -39,9 +37,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddGroupMembers(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/AddGroupMembers')
-
         def put(self, group: dict, members: list, show_members: bool = False):
             body = {
                 'Group'      : group,
@@ -57,9 +52,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Browse(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/Browse')
-
         # noinspection ALL
         def post(self, filter: str, limit: int, identity_type: int):
             body = {
@@ -74,9 +66,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetAssociatedEntries(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/GetAssociatedEntries')
-
         def post(self, identity: dict):
             body = {
                 'ID': identity
@@ -88,9 +77,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetMembers(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/GetMembers')
-
         def post(self, identity: dict, resolve_nested: bool = False):
             body = {
                 'ID'           : identity,
@@ -103,9 +89,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetMemberships(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/GetMemberships')
-
         def post(self, identity: dict):
             body = {
                 'ID': identity
@@ -116,25 +99,15 @@ class _Identity:
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
-    class _Group:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-
+    class _Group(WebSdkEndpoint):
         def Prefix(self, prefix: str):
-            return self._Prefix(prefix=prefix, api_obj=self._api_obj)
+            return self._Prefix(api_obj=self._api_obj, url=f'{self._url}/{prefix}')
 
-        class _Prefix:
-            def __init__(self, prefix: str, api_obj):
-                self._prefix = prefix
-                self._api_obj = api_obj
-
+        class _Prefix(WebSdkEndpoint):
             def Principal(self, principal: str):
-                return self._Principal(prefix=self._prefix, principal=principal, api_obj=self._api_obj)
+                return self._Principal(api_obj=self._api_obj, url=f'{self._url}/{principal}')
 
             class _Principal(WebSdkEndpoint):
-                def __init__(self, prefix: str, principal: str, api_obj):
-                    super().__init__(api_obj=api_obj, url=f'/Identity/Group/{prefix}/{principal}')
-
                 def delete(self):
                     class Output(WebSdkOutputModel):
                         message: str = ApiField(alias='Message')
@@ -142,9 +115,6 @@ class _Identity:
                     return generate_output(output_cls=Output, response=self._delete())
 
     class _ReadAttribute(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/ReadAttribute')
-
         def post(self, attribute_name: str, identity: dict):
             body = {
                 'ID'           : identity,
@@ -157,9 +127,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RemoveGroupMembers(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/RemoveGroupMembers')
-
         def put(self, group: dict, members: list, show_members: bool = False):
             body = {
                 'Group'      : group,
@@ -175,9 +142,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RenameGroup(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/RenameGroup')
-
         def put(self, group: dict, new_group_name: str):
             body = {
                 'Group'       : group,
@@ -190,9 +154,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Self(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/Self')
-
         def get(self):
             class Output(WebSdkOutputModel):
                 identities: List[ident.Identity] = ApiField(alias='Identities')
@@ -200,9 +161,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._get())
 
     class _SetPassword(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/SetPassword')
-
         def post(self, identity: dict, password: str, old_password: str = None):
             body = {
                 'ID'         : identity,
@@ -216,9 +174,6 @@ class _Identity:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Validate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Identity/Validate')
-
         def post(self, identity: dict):
             body = {
                 'ID': identity

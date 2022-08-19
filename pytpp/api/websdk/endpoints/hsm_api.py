@@ -3,17 +3,16 @@ from pytpp.api.websdk.models import hsm_api
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _HSMAPI:
+class _HSMAPI(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.Sign = self._Sign(api_obj=api_obj)
-        self.SignJWT = self._SignJWT(api_obj=api_obj)
-        self.GetGPGPublicKey = self._GetGPGPublicKey(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/API')
+        self._url = self._url.replace('vedsdk', 'vedhsm')
+        self.Sign = self._Sign(api_obj=self._api_obj, url=f'{self._url}/Sign')
+        self.SignJWT = self._SignJWT(api_obj=self._api_obj, url=f'{self._url}/SignJWT')
+        self.GetGPGPublicKey = self._GetGPGPublicKey(api_obj=self._api_obj, url=f'{self._url}/GetGPGPublicKey')
+        self.GetObjects = self._GetObjects(api_obj=self._api_obj, url=f'{self._url}/GetObjects')
 
     class _Sign(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='API/Sign')
-            self._url = self._url.replace('vedsdk', 'vedhsm')
-
         def post(self, client_info: dict, data: str, key_context: str, key_id: int, mechanism: int,
                  process_info: dict, client_mechanism: str = None, justification: str = None,
                  key_context_to_wrap: int = None, key_id_to_wrap: int = None, parameter: dict = None,
@@ -45,10 +44,6 @@ class _HSMAPI:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SignJWT(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='API/SignJWT')
-            self._url = self._url.replace('vedsdk', 'vedhsm')
-
         def post(self, client_info: dict, process_info: dict, key_id: str,
                  header: str, payload: str):
             body = {
@@ -66,10 +61,6 @@ class _HSMAPI:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetGPGPublicKey(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='API/GetGPGPublicKey')
-            self._url = self._url.replace('vedsdk', 'vedhsm')
-
         def post(self, key_id: str, key_context: str = None):
             body = {
                 'KeyId'     : key_id,
@@ -85,9 +76,6 @@ class _HSMAPI:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetObjects(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='API/GetObjects')
-
         def post(self, environment_filter: List[int] = None, include_chains: bool = None, include_archived: bool = None,
                  key_id: str = None, key_context: str = None, object_type_filter: List[int] = None):
             body = {

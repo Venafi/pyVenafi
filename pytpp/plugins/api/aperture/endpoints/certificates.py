@@ -5,18 +5,17 @@ from pytpp.plugins.api.aperture.models import certificate_inventory
 from typing import List, Dict
 
 
-class _Certificates:
+class _Certificates(ApertureEndpoint):
     def __init__(self, api_obj):
-        self.Filters = self._Filters(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/certificates')
+        self.Filters = self._Filters(api_obj=self._api_obj, url=f'{self._url}/filters')
 
-    class _Filters:
-        def __init__(self, api_obj):
-            self.Apply = self._Apply(api_obj=api_obj)
+    class _Filters(ApertureEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Apply = self._Apply(api_obj=self._api_obj, url=f'{self._url}/apply')
 
         class _Apply(ApertureEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='certificates/filters/apply')
-
             def post(self, fields: List[str] = None, filters: Dict[str, List] = None, is_sort_ascending: bool = True,
                      limit: int = 100, offset: int = 0, sort_field: str = 'Name'):
                 fields = fields or [

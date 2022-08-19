@@ -5,27 +5,26 @@ from pytpp.api.websdk.models import credential, identity
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _Credentials:
+class _Credentials(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.Adaptable = self._Adaptable(api_obj=api_obj)
-        self.Connector = self._Connector(api_obj=api_obj)
-        self.Create = self._Create(api_obj=api_obj)
-        self.Delete = self._Delete(api_obj=api_obj)
-        self.Enumerate = self._Enumerate(api_obj=api_obj)
-        self.Rename = self._Rename(api_obj=api_obj)
-        self.Retrieve = self._Retrieve(api_obj=api_obj)
-        self.Update = self._Update(api_obj=api_obj)
-        self.CyberArk = self._CyberArk(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/Credentials')
+        self.Adaptable = self._Adaptable(api_obj=api_obj, url=f'{self._url}/Adaptable')
+        self.Connector = self._Connector(api_obj=api_obj, url=f'{self._url}/Connector')
+        self.Create = self._Create(api_obj=api_obj, url=f'{self._url}/Create')
+        self.Delete = self._Delete(api_obj=api_obj, url=f'{self._url}/Delete')
+        self.Enumerate = self._Enumerate(api_obj=api_obj, url=f'{self._url}/Enumerate')
+        self.Rename = self._Rename(api_obj=api_obj, url=f'{self._url}/Rename')
+        self.Retrieve = self._Retrieve(api_obj=api_obj, url=f'{self._url}/Retrieve')
+        self.Update = self._Update(api_obj=api_obj, url=f'{self._url}/Update')
+        self.CyberArk = self._CyberArk(api_obj=api_obj, url=f'{self._url}/CyberArk')
 
-    class _Adaptable:
-        def __init__(self, api_obj):
-            self.Create = self._Create(api_obj=api_obj)
-            self.Update = self._Update(api_obj=api_obj)
+    class _Adaptable(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Create = self._Create(api_obj=self._api_obj, url=f'{self._url}/Create')
+            self.Update = self._Update(api_obj=self._api_obj, url=f'{self._url}/Update')
 
         class _Create(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Create')
-
             def post(self, credential_path: str, credential_type: credential.CredentialType, connector_name: str,
                      custom_fields: List[Dict[str, str]]):
                 body = {
@@ -41,9 +40,6 @@ class _Credentials:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Credentials/Adaptable/Update')
-
             def post(self, credential_path: str, credential_type: str, connector_name: str,
                      custom_fields: List[Dict[str, str]]):
                 body = {
@@ -58,14 +54,12 @@ class _Credentials:
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
-    class _Connector:
-        def __init__(self, api_obj):
-            self.Adaptable = self._Adaptable(api_obj=api_obj)
+    class _Connector(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Adaptable = self._Adaptable(api_obj=self._api_obj, url=f'{self._url}/Adaptable')
 
         class _Adaptable(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Credentials/Connector/Adaptable')
-
             def post(self, connector_name: str, powershell_script: str, service_address: str,
                      service_credential: str, allowed_identities: List[str] = None,
                      description: str = None):
@@ -84,12 +78,9 @@ class _Credentials:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
             def Guid(self, guid: str):
-                return self._Guid(api_obj=self._api_obj, guid=guid)
+                return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
             class _Guid(WebSdkEndpoint):
-                def __init__(self, api_obj, guid: str):
-                    super().__init__(api_obj=api_obj, url=f'/Credentials/Connector/Adaptable/{guid}')
-
                 def delete(self):
                     class Output(WebSdkOutputModel):
                         success: bool = ApiField(alias='Success')
@@ -124,9 +115,6 @@ class _Credentials:
                     return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Create(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Credentials/Create')
-
         def post(self, credential_path: str, friendly_name: str, values: list, password: str = None, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
             body = {
@@ -147,9 +135,6 @@ class _Credentials:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Delete(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Credentials/Delete')
-
         def post(self, credential_path: str):
             body = {
                 'CredentialPath': credential_path
@@ -161,9 +146,6 @@ class _Credentials:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Enumerate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Credentials/Enumerate')
-
         def post(self, credential_path: str, pattern: str = None, recursive: bool = False):
             body = {
                 'CredentialPath': credential_path,
@@ -178,9 +160,6 @@ class _Credentials:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Rename(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Credentials/Rename')
-
         def post(self, credential_path: str, new_credential_path: str):
             body = {
                 'CredentialPath'   : credential_path,
@@ -193,9 +172,6 @@ class _Credentials:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Credentials/Retrieve')
-
         def post(self, credential_path: str):
             body = {
                 'CredentialPath': credential_path
@@ -213,9 +189,6 @@ class _Credentials:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Update(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Credentials/Update')
-
         def post(self, credential_path: str, friendly_name: str, values: list, description: str = None,
                  encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
             body = {
@@ -243,15 +216,13 @@ class _Credentials:
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
-    class _CyberArk:
-        def __init__(self, api_obj):
-            self.Create = self._Create(api_obj=api_obj)
-            self.Update = self._Update(api_obj=api_obj)
+    class _CyberArk(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Create = self._Create(api_obj=self._api_obj, url=f'{self._url}/Create')
+            self.Update = self._Update(api_obj=self._api_obj, url=f'{self._url}/Update')
 
         class _Create(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Credentials/CyberArk/Create')
-
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credential_path: str):
                 body = {
@@ -271,9 +242,6 @@ class _Credentials:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Credentials/CyberArk/Update')
-
             def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
                      folder_name: str, account_name: str, credential_path: str):
                 body = {

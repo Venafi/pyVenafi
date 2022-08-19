@@ -2,18 +2,15 @@ from typing import List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _Discovery:
+class _Discovery(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self._api_obj = api_obj
-        self.Import = self._Import(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/Discovery')
+        self.Import = self._Import(api_obj=api_obj, url=f'{self._url}/Import')
 
     def Guid(self, guid: str):
-        return self._Guid(guid=guid, api_obj=self._api_obj)
+        return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
     class _Guid(WebSdkEndpoint):
-        def __init__(self, guid: str, api_obj):
-            super().__init__(api_obj=api_obj, url=f'/Discovery/{guid}')
-
         def delete(self):
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
@@ -21,9 +18,6 @@ class _Discovery:
             return generate_output(response=self._delete(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Discovery/Import')
-
         def post(self, endpoints: list, zone_name: str):
             body = {
                 'zoneName' : zone_name,

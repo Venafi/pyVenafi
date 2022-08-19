@@ -5,14 +5,12 @@ from pytpp.plugins.api.aperture.models import placement_rules
 from typing import List
 
 
-class _Discovery:
+class _Discovery(ApertureEndpoint):
     def __init__(self, api_obj):
-        self.PlacementRules = self._PlacementRules(api_obj)
+        super().__init__(api_obj=api_obj, url='/discovery')
+        self.PlacementRules = self._PlacementRules(api_obj=self._api_obj, url=f'{self._url}/placementrules')
 
     class _PlacementRules(ApertureEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='discovery/placementrules')
-
         def post(self, name: str, conditions: List[dict], device_location_dn: dict, cert_location_dn: dict = None):
             body = {
                 'name'          : name,
@@ -71,12 +69,9 @@ class _Discovery:
             return generate_output(output_cls=Output, response=self._put(data=body))
 
         def Guid(self, guid: str):
-            return self._Guid(guid=guid, api_obj=self._api_obj)
+            return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
         class _Guid(ApertureEndpoint):
-            def __init__(self, guid: str, api_obj):
-                super().__init__(api_obj=api_obj, url=f'discovery/placementrules/{guid}')
-
             def get(self):
                 class Output(ApertureOutputModel):
                     cert_location: config.Object = ApiField(alias='certLocation')

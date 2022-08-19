@@ -6,9 +6,8 @@ from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_outpu
 class _ProcessingEngines(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/ProcessingEngines')
-
-        self.Engine = self._Engine(api_obj=api_obj)
-        self.Folder = self._Folder(api_obj=api_obj)
+        self.Engine = self._Engine(api_obj=api_obj, url=f'{self._url}/Engine')
+        self.Folder = self._Folder(api_obj=api_obj, url=f'{self._url}/Folder')
 
     def get(self):
         class Output(WebSdkOutputModel):
@@ -16,17 +15,11 @@ class _ProcessingEngines(WebSdkEndpoint):
 
         return generate_output(output_cls=Output, response=self._get())
 
-    class _Engine:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-
+    class _Engine(WebSdkEndpoint):
         def Guid(self, guid: str):
-            return self._Guid(guid=guid, api_obj=self._api_obj)
+            return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
         class _Guid(WebSdkEndpoint):
-            def __init__(self, guid: str, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Engine/{guid}')
-
             def get(self):
                 class Output(WebSdkOutputModel):
                     links: processing_engines.Link = ApiField(alias='_links')
@@ -45,18 +38,11 @@ class _ProcessingEngines(WebSdkEndpoint):
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
-    class _Folder:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-
+    class _Folder(WebSdkEndpoint):
         def Guid(self, guid: str):
-            return self._Guid(guid=guid, api_obj=self._api_obj)
+            return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
         class _Guid(WebSdkEndpoint):
-            def __init__(self, guid: str, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Folder/{guid}')
-                self._folder_guid = guid
-
             def delete(self):
                 return generate_output(output_cls=WebSdkOutputModel, response=self._delete())
 
@@ -75,11 +61,8 @@ class _ProcessingEngines(WebSdkEndpoint):
                 return generate_output(output_cls=WebSdkOutputModel, response=self._put(data=body))
 
             def EngineGuid(self, guid):
-                return self._EngineGuid(guid=self._folder_guid, engine_guid=guid, api_obj=self._api_obj)
+                return self._EngineGuid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
             class _EngineGuid(WebSdkEndpoint):
-                def __init__(self, guid: str, engine_guid: str, api_obj):
-                    super().__init__(api_obj=api_obj, url=f'/ProcessingEngines/Folder/{guid}/{engine_guid}')
-
                 def delete(self):
                     return generate_output(output_cls=WebSdkOutputModel, response=self._delete())

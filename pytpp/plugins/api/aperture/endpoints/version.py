@@ -4,14 +4,12 @@ from datetime import datetime
 from typing import List
 
 
-class _Version:
+class _Version(ApertureEndpoint):
     def __init__(self, api_obj):
-        self.Schema = self._Schema(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/version')
+        self.Schema = self._Schema(api_obj=self._api_obj, url=f'{self._url}/schema')
 
     class _Schema(ApertureEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/version/schema')
-
         def get(self):
             class Output(ApertureOutputModel):
                 additional_schema_info: List[str] = ApiField(alias='additionalSchemaInfo', default_factory=list)

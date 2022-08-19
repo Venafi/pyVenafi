@@ -7,21 +7,21 @@ from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_outpu
 class _Certificates(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Certificates')
-        self.Associate = self._Associate(api_obj=api_obj)
-        self.CheckPolicy = self._CheckPolicy(api_obj=api_obj)
-        self.Dissociate = self._Dissociate(api_obj=api_obj)
-        self.Import = self._Import(api_obj=api_obj)
-        self.Push = self._Push(api_obj=api_obj)
-        self.Renew = self._Renew(api_obj=api_obj)
-        self.Request = self._Request(api_obj=api_obj)
-        self.Reset = self._Reset(api_obj=api_obj)
-        self.Retrieve = self._Retrieve(api_obj=api_obj)
-        self.Retry = self._Retry(api_obj=api_obj)
-        self.Revoke = self._Revoke(api_obj=api_obj)
-        self.Validate = self._Validate(api_obj=api_obj)
+        self.Associate = self._Associate(api_obj=api_obj, url=f'{self._url}/Associate')
+        self.CheckPolicy = self._CheckPolicy(api_obj=api_obj, url=f'{self._url}/CheckPolicy')
+        self.Dissociate = self._Dissociate(api_obj=api_obj, url=f'{self._url}/Dissociate')
+        self.Import = self._Import(api_obj=api_obj, url=f'{self._url}/Import')
+        self.Push = self._Push(api_obj=api_obj, url=f'{self._url}/Push')
+        self.Renew = self._Renew(api_obj=api_obj, url=f'{self._url}/Renew')
+        self.Request = self._Request(api_obj=api_obj, url=f'{self._url}/Request')
+        self.Reset = self._Reset(api_obj=api_obj, url=f'{self._url}/Reset')
+        self.Retrieve = self._Retrieve(api_obj=api_obj, url=f'{self._url}/Retrieve')
+        self.Retry = self._Retry(api_obj=api_obj, url=f'{self._url}/Retry')
+        self.Revoke = self._Revoke(api_obj=api_obj, url=f'{self._url}/Revoke')
+        self.Validate = self._Validate(api_obj=api_obj, url=f'{self._url}/Validate')
 
     def Guid(self, guid):
-        return self._Guid(guid=guid, api_obj=self._api_obj)
+        return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
     def get(self, limit: int = None, offset: int = None, optional_fields: list = None, filters: dict = None):
         params = {
@@ -52,9 +52,6 @@ class _Certificates(WebSdkEndpoint):
         return generate_output(response=self._get(params=params), output_cls=Output)
 
     class _Associate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Associate')
-
         def post(self, application_dn: str, certificate_dn: str, push_to_new: bool = False):
             body = {
                 'CertificateDN': certificate_dn,
@@ -68,9 +65,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CheckPolicy(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/CheckPolicy')
-
         def post(self, policy_dn: str, pkcs10: str = None):
             body = {
                 'PolicyDN': policy_dn,
@@ -84,9 +78,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Dissociate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Dissociate')
-
         def post(self, certificate_dn: str, application_dn: List[str], delete_orphans: bool = False):
             body = {
                 'CertificateDN': certificate_dn,
@@ -100,11 +91,10 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Guid(WebSdkEndpoint):
-        def __init__(self, guid: str, api_obj):
-            self._cert_guid = guid
-            super().__init__(api_obj=api_obj, url='/Certificates/{guid}'.format(guid=self._cert_guid))
-            self.PreviousVersions = self._PreviousVersions(guid=self._cert_guid, api_obj=api_obj)
-            self.ValidationResults = self._ValidationResults(guid=self._cert_guid, api_obj=api_obj)
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.PreviousVersions = self._PreviousVersions(api_obj=self._api_obj, url=f'{self._url}/PreviousVersions')
+            self.ValidationResults = self._ValidationResults(api_obj=self._api_obj, url=f'{self._url}/ValidationResults')
 
         def delete(self):
             class Output(WebSdkOutputModel):
@@ -147,13 +137,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._put(data=body), output_cls=Output)
 
         class _PreviousVersions(WebSdkEndpoint):
-            def __init__(self, guid: str, api_obj):
-                self._cert_guid = guid
-                super().__init__(
-                    api_obj=api_obj,
-                    url='/Certificates/{guid}/PreviousVersions'.format(guid=self._cert_guid)
-                )
-
             def get(self, exclude_expired: bool = False, exclude_revoked: bool = False):
                 params = {
                     'ExcludeExpired': exclude_expired,
@@ -169,13 +152,6 @@ class _Certificates(WebSdkEndpoint):
                 return generate_output(response=self._get(params=params), output_cls=Output)
 
         class _ValidationResults(WebSdkEndpoint):
-            def __init__(self, guid: str, api_obj):
-                self._cert_guid = guid
-                super().__init__(
-                    api_obj=api_obj,
-                    url='/Certificates/{guid}/ValidationResults'.format(guid=self._cert_guid)
-                )
-
             def get(self):
                 class Output(WebSdkOutputModel):
                     file: List[certificate.File] = ApiField(default_factory=list, alias='File')
@@ -184,9 +160,6 @@ class _Certificates(WebSdkEndpoint):
                 return generate_output(response=self._get(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Import')
-
         def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
                  password: str = None, private_key_data: str = None, reconcile: bool = False):
             body = {
@@ -208,9 +181,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Push(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Certificates/Push')
-
         def post(self, certificate_dn: str, application_dn: List[str] = None, push_to_all: bool = False):
             body = {
                 'ApplicationDN': application_dn,
@@ -224,9 +194,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Renew(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Renew')
-
         # noinspection ALL
         def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False, format: certificate.CertificateFormat = None,
                  password: str = None, include_private_key: bool = None, include_chain: bool = None,
@@ -256,9 +223,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Request(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Request')
-
         def post(self, policy_dn: str, approvers: List[dict] = None, cadn: str = None,
                  ca_specific_attributes: List[dict] = None, certificate_type: str = None, city: str = None,
                  contacts: List[dict] = None, country: str = None, custom_fields: List[dict] = None, created_by: str = None,
@@ -316,9 +280,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Reset(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Reset')
-
         def post(self, certificate_dn: str, restart: bool = False, work_to_do_timeout: int = None):
             body = {
                 'CertificateDN'  : certificate_dn,
@@ -335,9 +296,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Retrieve(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Retrieve')
-
         # noinspection ALL
         def get(self, certificate_dn: str, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -379,13 +337,9 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
         def VaultId(self, vault_id: int):
-            return self._VaultId(vault_id=vault_id, api_obj=self._api_obj)
+            return self._VaultId(api_obj=self._api_obj, url=f'{self._url}/{vault_id}')
 
         class _VaultId(WebSdkEndpoint):
-            def __init__(self, vault_id: int, api_obj):
-                super().__init__(api_obj=api_obj, url='/Certificates/Retrieve/{vault_id}'.format(vault_id=vault_id))
-                self._vault_id = vault_id
-
             # noinspection ALL
             def get(self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
                     include_private_key: bool = False, keystore_password: str = None, password: str = None,
@@ -424,9 +378,6 @@ class _Certificates(WebSdkEndpoint):
                 return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Retry(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Retry')
-
         def post(self, certificate_dn: str, work_to_do_timeout: int = None):
             body = {
                 'CertificateDN'  : certificate_dn,
@@ -439,9 +390,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Revoke(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Revoke')
-
         def post(self, certificate_dn: str = None, thumbprint: str = None, reason: int = None, comments: str = None,
                  disable: bool = None, work_to_do_timeout: int = None):
             body = {
@@ -460,9 +408,6 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Validate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Certificates/Validate')
-
         def post(self, certificate_dns: List[str] = None, certificate_guids: List[str] = None):
             body = {
                 'CertificateDNs'  : certificate_dns,

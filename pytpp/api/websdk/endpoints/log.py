@@ -6,7 +6,7 @@ from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_outpu
 class _Log(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Log')
-        self.LogSchema = self._LogSchema(api_obj=api_obj)
+        self.LogSchema = self._LogSchema(api_obj=api_obj, url=f'{self._url}/LogSchema')
 
     def get(self, component: str = None, from_time: str = None, grouping: int = None, id: int = None,
             limit: int = None, offset: int = None, order: str = None, severity: str = None, text1: str = None,
@@ -52,12 +52,9 @@ class _Log(WebSdkEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=body))
 
     def Guid(self, guid: str):
-        return self._Guid(guid=guid, api_obj=self._api_obj)
+        return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
     class _Guid(WebSdkEndpoint):
-        def __init__(self, guid: str, api_obj):
-            super().__init__(api_obj=api_obj, url=f'/Log/{guid}')
-
         def get(self):
             class Output(WebSdkOutputModel):
                 log_events: List[log.LogEvent] = ApiField(default_factory=list, alias='LogEvents')
@@ -65,9 +62,6 @@ class _Log(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._get())
 
     class _LogSchema(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Log/LogSchema')
-
         def get(self):
             class Output(WebSdkOutputModel):
                 log_event_application_definitions: List[log.LogEventApplicationDefinition] = ApiField(

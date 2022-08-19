@@ -35,6 +35,8 @@ class ApiSource(Protocol):
     _password: str
     _token: str
     _base_url: str
+    _app_url: str
+    _scheme: str
     _session: 'Session'
 
     def re_authenticate(self): ...
@@ -58,9 +60,11 @@ class ApiEndpoint(object):
             url: This is the URL extension from the base URL.
         """
         self._api_obj: 'ApiSource' = api_obj
-        if not url.startswith('/'):
-            url = '/' + url
-        self._url = self._api_obj._base_url + url
+        url = url.strip('/')
+        if url.startswith(self._api_obj._base_url):
+            self._url = url
+        else:
+            self._url = f'{self._api_obj._app_url}/{url}'
         self._retries = 3
         self.retry_interval = 0.5
 

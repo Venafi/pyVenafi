@@ -8,11 +8,8 @@ from pytpp.plugins.api.aperture.models import reports
 
 class _Reports(ApertureEndpoint):
     def __init__(self, api_obj):
-        super().__init__(
-            api_obj=api_obj,
-            url=f'/reports'
-        )
-        self.RunNow = self._RunNow(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/reports')
+        self.RunNow = self._RunNow(api_obj=self._api_obj, url=f'{self._url}/RunNow')
 
     # noinspection ALL
     def post(self, name: str, title: str, inventory: str, summary: str = None, description: str = None,
@@ -37,12 +34,9 @@ class _Reports(ApertureEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=body), root_field='guid')
 
     def Guid(self, guid: str):
-        return self._Guid(api_obj=self._api_obj, guid=guid)
+        return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
     class _Guid(ApertureEndpoint):
-        def __init__(self, api_obj, guid: str):
-            super().__init__(api_obj=api_obj, url=f'/reports/{guid}')
-
         def get(self):
             class Output(ApertureOutputModel):
                 name: str = ApiField(alias='name')
@@ -62,19 +56,10 @@ class _Reports(ApertureEndpoint):
 
             return generate_output(output_cls=Output, response=self._get())
 
-    class _RunNow:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-
+    class _RunNow(ApertureEndpoint):
         def Guid(self, guid: str):
-            return self._Guid(self._api_obj, guid=guid)
+            return self._Guid(self._api_obj, url=f'{self._url}/{guid}')
 
         class _Guid(ApertureEndpoint):
-            def __init__(self, api_obj, guid: str):
-                super().__init__(
-                    api_obj=api_obj,
-                    url=f'/reports/RunNow/{guid}'
-                )
-
             def post(self):
                 return generate_output(output_cls=ApertureOutputModel, response=self._post(data={}))

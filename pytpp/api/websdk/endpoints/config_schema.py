@@ -3,15 +3,13 @@ from pytpp.api.websdk.models import config_schema
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _ConfigSchema:
+class _ConfigSchema(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.Attributes = self._Attributes(api_obj=api_obj)
-        self.Class = self._Class(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/ConfigSchema')
+        self.Attributes = self._Attributes(api_obj=api_obj, url=f'{self._url}/Attributes')
+        self.Class = self._Class(api_obj=api_obj, url=f'{self._url}/Class')
 
     class _Attributes(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/ConfigSchema/Attributes')
-
         def post(self):
             class Output(WebSdkOutputModel):
                 attribute_definitions: List[config_schema.AttributeDefinition] = ApiField(
@@ -22,9 +20,6 @@ class _ConfigSchema:
             return generate_output(response=self._post(data={}), output_cls=Output)
 
     class _Class(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/ConfigSchema/Class')
-
         def post(self, class_name: str):
             body = {
                 "Class": class_name

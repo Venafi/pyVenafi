@@ -86,7 +86,9 @@ class WebSDK:
         self._read_timeout = read_timeout
 
         # This is used by the endpoints to avoid redundancy.
-        self._base_url = f'https://{host}/vedsdk'
+        self._scheme = 'https'
+        self._base_url = f'{self._scheme}://{host}'
+        self._app_url = f'{self._base_url}/vedsdk'
         # endregion Instance Variables
 
         # region Authentication

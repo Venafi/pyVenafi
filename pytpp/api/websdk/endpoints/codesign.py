@@ -3,58 +3,56 @@ from pytpp.api.websdk.models import codesign
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _Codesign:
+class _Codesign(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.AddAdministrator = self._AddAdministrator(api_obj=api_obj)
-        self.AddApplicationAdministrator = self._AddApplicationAdministrator(api_obj=api_obj)
-        self.AddProjectAdministrator = self._AddProjectAdministrator(api_obj=api_obj)
-        self.AddProjectApprover = self._AddProjectApprover(api_obj=api_obj)
-        self.CountReferences = self._CountReferences(api_obj=api_obj)
-        self.CreateApplication = self._CreateApplication(api_obj=api_obj)
-        self.CreateApplicationCollection = self._CreateApplicationCollection(api_obj=api_obj)
-        self.CreateEnvironment = self._CreateEnvironment(api_obj=api_obj)
-        self.CreateProject = self._CreateProject(api_obj=api_obj)
-        self.CreateTemplate = self._CreateTemplate(api_obj=api_obj)
-        self.DeleteApplication = self._DeleteApplication(api_obj=api_obj)
-        self.DeleteApplicationCollection = self._DeleteApplicationCollection(api_obj=api_obj)
-        self.DeleteEnvironment = self._DeleteEnvironment(api_obj=api_obj)
-        self.DeleteProject = self._DeleteProject(api_obj=api_obj)
-        self.DeleteTemplate = self._DeleteTemplate(api_obj=api_obj)
-        self.EnumerateApplications = self._EnumerateApplications(api_obj=api_obj)
-        self.EnumerateApplicationCollections = self._EnumerateApplicationCollections(api_obj=api_obj)
-        self.EnumerateProjects = self._EnumerateProjects(api_obj=api_obj)
-        self.EnumerateReferences = self._EnumerateReferences(api_obj=api_obj)
-        self.EnumerateTemplates = self._EnumerateTemplates(api_obj=api_obj)
-        self.GetApplication = self._GetApplication(api_obj=api_obj)
-        self.GetApplicationCollection = self._GetApplicationCollection(api_obj=api_obj)
-        self.GetApplicationCollectionMembers = self._GetApplicationCollectionMembers(api_obj=api_obj)
-        self.GetApplicationCollectionMemberDNs = self._GetApplicationCollectionMemberDNs(api_obj=api_obj)
-        self.GetEnvironment = self._GetEnvironment(api_obj=api_obj)
-        self.GetGlobalConfiguration = self._GetGlobalConfiguration(api_obj=api_obj)
-        self.GetObjectRights = self._GetObjectRights(api_obj=api_obj)
-        self.GetProject = self._GetProject(api_obj=api_obj)
-        self.GetRight = self._GetRight(api_obj=api_obj)
-        self.GetTemplate = self._GetTemplate(api_obj=api_obj)
-        self.GetTrusteeRights = self._GetTrusteeRights(api_obj=api_obj)
-        self.RemoveAdministrator = self._RemoveAdministrator(api_obj=api_obj)
-        self.RemoveApplicationAdministrator = self._RemoveApplicationAdministrator(api_obj=api_obj)
-        self.RemoveProjectAdministrator = self._RemoveProjectAdministrator(api_obj=api_obj)
-        self.RenameApplication = self._RenameApplication(api_obj=api_obj)
-        self.RenameApplicationCollection = self._RenameApplicationCollection(api_obj=api_obj)
-        self.RenameProject = self._RenameProject(api_obj=api_obj)
-        self.RenameTemplate = self._RenameTemplate(api_obj=api_obj)
-        self.SetGlobalConfiguration = self._SetGlobalConfiguration(api_obj=api_obj)
-        self.UpdateApplication = self._UpdateApplication(api_obj=api_obj)
-        self.UpdateApplicationCollection = self._UpdateApplicationCollection(api_obj=api_obj)
-        self.UpdateEnvironment = self._UpdateEnvironment(api_obj=api_obj)
-        self.UpdateProject = self._UpdateProject(api_obj=api_obj)
-        self.UpdateProjectStatus = self._UpdateProjectStatus(api_obj=api_obj)
-        self.UpdateTemplate = self._UpdateTemplate(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/Codesign')
+        self.AddAdministrator = self._AddAdministrator(api_obj=api_obj, url=f'{self._url}/AddAdministrator')
+        self.AddApplicationAdministrator = self._AddApplicationAdministrator(api_obj=api_obj, url=f'{self._url}/AddApplicationAdministrator')
+        self.AddProjectAdministrator = self._AddProjectAdministrator(api_obj=api_obj, url=f'{self._url}/AddProjectAdministrator')
+        self.AddProjectApprover = self._AddProjectApprover(api_obj=api_obj, url=f'{self._url}/AddProjectApprover')
+        self.CountReferences = self._CountReferences(api_obj=api_obj, url=f'{self._url}/CountReferences')
+        self.CreateApplication = self._CreateApplication(api_obj=api_obj, url=f'{self._url}/CreateApplication')
+        self.CreateApplicationCollection = self._CreateApplicationCollection(api_obj=api_obj, url=f'{self._url}/CreateApplicationCollection')
+        self.CreateEnvironment = self._CreateEnvironment(api_obj=api_obj, url=f'{self._url}/CreateEnvironment')
+        self.CreateProject = self._CreateProject(api_obj=api_obj, url=f'{self._url}/CreateProject')
+        self.CreateTemplate = self._CreateTemplate(api_obj=api_obj, url=f'{self._url}/CreateTemplate')
+        self.DeleteApplication = self._DeleteApplication(api_obj=api_obj, url=f'{self._url}/DeleteApplication')
+        self.DeleteApplicationCollection = self._DeleteApplicationCollection(api_obj=api_obj, url=f'{self._url}/DeleteApplicationCollection')
+        self.DeleteEnvironment = self._DeleteEnvironment(api_obj=api_obj, url=f'{self._url}/DeleteEnvironment')
+        self.DeleteProject = self._DeleteProject(api_obj=api_obj, url=f'{self._url}/DeleteProject')
+        self.DeleteTemplate = self._DeleteTemplate(api_obj=api_obj, url=f'{self._url}/DeleteTemplate')
+        self.EnumerateApplications = self._EnumerateApplications(api_obj=api_obj, url=f'{self._url}/EnumerateApplications')
+        self.EnumerateApplicationCollections = self._EnumerateApplicationCollections(api_obj=api_obj, url=f'{self._url}/EnumerateApplicationCollections')
+        self.EnumerateProjects = self._EnumerateProjects(api_obj=api_obj, url=f'{self._url}/EnumerateProjects')
+        self.EnumerateReferences = self._EnumerateReferences(api_obj=api_obj, url=f'{self._url}/EnumerateReferences')
+        self.EnumerateTemplates = self._EnumerateTemplates(api_obj=api_obj, url=f'{self._url}/EnumerateTemplates')
+        self.GetApplication = self._GetApplication(api_obj=api_obj, url=f'{self._url}/GetApplication')
+        self.GetApplicationCollection = self._GetApplicationCollection(api_obj=api_obj, url=f'{self._url}/GetApplicationCollection')
+        self.GetApplicationCollectionMembers = self._GetApplicationCollectionMembers(api_obj=api_obj, url=f'{self._url}/GetApplicationCollectionMembers')
+        self.GetApplicationCollectionMemberDNs = self._GetApplicationCollectionMemberDNs(api_obj=api_obj, url=f'{self._url}/GetApplicationCollectionMemberDNs')
+        self.GetEnvironment = self._GetEnvironment(api_obj=api_obj, url=f'{self._url}/GetEnvironment')
+        self.GetGlobalConfiguration = self._GetGlobalConfiguration(api_obj=api_obj, url=f'{self._url}/GetGlobalConfiguration')
+        self.GetObjectRights = self._GetObjectRights(api_obj=api_obj, url=f'{self._url}/GetObjectRights')
+        self.GetProject = self._GetProject(api_obj=api_obj, url=f'{self._url}/GetProject')
+        self.GetRight = self._GetRight(api_obj=api_obj, url=f'{self._url}/GetRight')
+        self.GetTemplate = self._GetTemplate(api_obj=api_obj, url=f'{self._url}/GetTemplate')
+        self.GetTrusteeRights = self._GetTrusteeRights(api_obj=api_obj, url=f'{self._url}/GetTrusteeRights')
+        self.RemoveAdministrator = self._RemoveAdministrator(api_obj=api_obj, url=f'{self._url}/RemoveAdministrator')
+        self.RemoveApplicationAdministrator = self._RemoveApplicationAdministrator(api_obj=api_obj, url=f'{self._url}/RemoveApplicationAdministrator')
+        self.RemoveProjectAdministrator = self._RemoveProjectAdministrator(api_obj=api_obj, url=f'{self._url}/RemoveProjectAdministrator')
+        self.RenameApplication = self._RenameApplication(api_obj=api_obj, url=f'{self._url}/RenameApplication')
+        self.RenameApplicationCollection = self._RenameApplicationCollection(api_obj=api_obj, url=f'{self._url}/RenameApplicationCollection')
+        self.RenameProject = self._RenameProject(api_obj=api_obj, url=f'{self._url}/RenameProject')
+        self.RenameTemplate = self._RenameTemplate(api_obj=api_obj, url=f'{self._url}/RenameTemplate')
+        self.SetGlobalConfiguration = self._SetGlobalConfiguration(api_obj=api_obj, url=f'{self._url}/SetGlobalConfiguration')
+        self.UpdateApplication = self._UpdateApplication(api_obj=api_obj, url=f'{self._url}/UpdateApplication')
+        self.UpdateApplicationCollection = self._UpdateApplicationCollection(api_obj=api_obj, url=f'{self._url}/UpdateApplicationCollection')
+        self.UpdateEnvironment = self._UpdateEnvironment(api_obj=api_obj, url=f'{self._url}/UpdateEnvironment')
+        self.UpdateProject = self._UpdateProject(api_obj=api_obj, url=f'{self._url}/UpdateProject')
+        self.UpdateProjectStatus = self._UpdateProjectStatus(api_obj=api_obj, url=f'{self._url}/UpdateProjectStatus')
+        self.UpdateTemplate = self._UpdateTemplate(api_obj=api_obj, url=f'{self._url}/UpdateTemplate')
 
     class _AddAdministrator(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/AddAdministrator')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -67,9 +65,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddApplicationAdministrator(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/AddApplicationAdministrator')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -82,9 +77,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddProjectAdministrator(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/AddProjectAdministrator')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -97,9 +89,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddProjectApprover(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/AddProjectApprover')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -112,9 +101,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddPreApproval(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/AddPreApproval')
-
         def post(self, dn: str, comment: str, user: str, hours: int = None, ip_address: str = None,
                  signing_executable: str = None, single_use: bool = None, not_before: str = None, ):
             body = {
@@ -135,9 +121,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CountReferences(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/CountReferences')
-
         def post(self, application: dict = None, application_collection: dict = None):
             body = {
                 'Application'          : application,
@@ -152,9 +135,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateApplication(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/CreateApplication')
-
         def post(self, dn: str):
             body = {
                 'Dn': dn
@@ -168,9 +148,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateApplicationCollection(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/CreateApplicationCollection')
-
         def post(self, dn: str):
             body = {
                 'Dn': dn
@@ -184,9 +161,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateEnvironment(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/CreateEnvironment')
-
         def post(self, dn: str, environment_name: str, project: Dict[str, Union[str, int]],
                  template: List[Dict[str, str]], template_dn: str = None):
             body = {
@@ -216,9 +190,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateProject(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/CreateProject')
-
         def post(self, dn: str):
             body = {
                 'Dn': dn
@@ -232,9 +203,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateTemplate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/CreateTemplate')
-
         def post(self, dn: str, template_type: codesign.TemplateType = None, per_user: bool = None):
             body = {
                 'Dn'          : dn,
@@ -250,9 +218,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteApplication(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/DeleteApplication')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -267,9 +232,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteApplicationCollection(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/DeleteApplicationCollection')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -284,9 +246,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteEnvironment(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/DeleteEnvironment')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -301,9 +260,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteProject(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/DeleteProject')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -318,9 +274,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _DeleteTemplate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/DeleteTemplate')
-
         def post(self, dn: str = None, force: bool = None, guid: str = None, id: int = None):
             body = {
                 'Dn'   : dn,
@@ -336,9 +289,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateApplications(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/EnumerateApplications')
-
         # noinspection ALL
         def post(self, filter: str = None):
             body = {
@@ -353,9 +303,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateApplicationCollections(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/EnumerateApplicationCollections')
-
         # noinspection ALL
         def post(self, filter: str = None):
             body = {
@@ -370,9 +317,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateProjects(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/EnumerateProjects')
-
         # noinspection ALL
         def post(self, filter: str = None, rights: int = None):
             body = {
@@ -388,9 +332,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateReferences(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/EnumerateReferences')
-
         def post(self, application: dict = None, application_collection: dict = None,
                  application_dn: str = None, application_guid: str = None,
                  collection_dn: str = None, collection_guid: str = None):
@@ -411,9 +352,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateTemplates(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/EnumerateTemplates')
-
         # noinspection ALL
         def post(self, filter: str = None):
             body = {
@@ -433,9 +371,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplication(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetApplication')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -451,9 +386,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollection(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollection')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -469,9 +401,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollectionMembers(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollectionMembers')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -487,9 +416,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollectionMemberDNs(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetApplicationCollectionMemberDNs')
-
         def post(self, dn: str = None, guid: str = None, id: int = None, application: dict = None):
             body = {
                 'Application': application,
@@ -508,9 +434,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetEnvironment(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetEnvironment')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -531,9 +454,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetGlobalConfiguration(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetGlobalConfiguration')
-
         def get(self):
             class Output(WebSdkOutputModel):
                 global_configuration: codesign.GlobalConfiguration = ApiField(alias='GlobalConfiguration')
@@ -543,9 +463,6 @@ class _Codesign:
             return generate_output(response=self._get(), output_cls=Output)
 
     class _GetObjectRights(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetObjectRights')
-
         def post(self, dn: str):
             body = {
                 'Dn': dn
@@ -559,9 +476,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetProject(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetProject')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -577,9 +491,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetRight(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetRight')
-
         def post(self, dn: str):
             body = {
                 'Dn': dn
@@ -593,9 +504,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetTemplate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetTemplate')
-
         def post(self, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'  : dn,
@@ -616,9 +524,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetTrusteeRights(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/GetTrusteeRights')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -632,9 +537,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveAdministrator(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RemoveAdministrator')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -647,9 +549,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveApplicationAdministrator(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RemoveApplicationAdministrator')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -662,9 +561,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveProjectAdministrator(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RemoveProjectAdministrator')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -677,9 +573,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RemoveProjectApprover(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RemoveProjectApprover')
-
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -692,9 +585,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameApplication(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RenameApplication')
-
         def post(self, dn: str, new_dn: str):
             body = {
                 'Dn'   : dn,
@@ -708,9 +598,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameApplicationCollection(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RenameApplicationCollection')
-
         def post(self, dn: str, new_dn: str):
             body = {
                 'Dn'   : dn,
@@ -724,9 +611,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameProject(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RenameProject')
-
         def post(self, new_dn: str, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'   : dn,
@@ -742,9 +626,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _RenameTemplate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/RenameTemplate')
-
         def post(self, new_dn: str, dn: str = None, guid: str = None):
             body = {
                 'Dn'   : dn,
@@ -760,9 +641,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _SetGlobalConfiguration(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/SetGlobalConfiguration')
-
         def post(self, global_configuration: dict):
             body = {
                 'GlobalConfiguration': global_configuration
@@ -775,9 +653,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateApplication(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/UpdateApplication')
-
         def post(self, application: dict):
             body = {
                 'Application': application
@@ -790,9 +665,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateApplicationCollection(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/UpdateApplicationCollection')
-
         def post(self, application_collection: dict):
             body = {
                 'ApplicationCollection': application_collection
@@ -805,9 +677,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateEnvironment(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/UpdateEnvironment')
-
         def post(self, certificate_environment: dict = None, apple_environment: dict = None, csp_environment: dict = None,
                  dot_net_environment: dict = None, gpg_environment: dict = None, key_pair_environment: dict = None):
             body = {
@@ -832,9 +701,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateProject(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/UpdateProject')
-
         def post(self, project: dict):
             body = {
                 'Project': project
@@ -847,9 +713,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateProjectStatus(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/UpdateProjectStatus')
-
         def post(self, project_status: int, dn: str = None, guid: str = None, id: int = None):
             body = {
                 'Dn'           : dn,
@@ -865,9 +728,6 @@ class _Codesign:
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateTemplate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Codesign/UpdateTemplate')
-
         def post(self, dn: str, certificate_template: dict, object_naming_pattern: str = None):
             body = {
                 'Dn'                 : dn,

@@ -9,12 +9,13 @@ class _Authorize(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/Authorize')
 
-        self.Certificate = self._Certificate(api_obj=api_obj)
-        self.Device = self._Device(api_obj=api_obj)
-        self.Integrated = self._Integrated(api_obj=api_obj)
-        self.OAuth = self._OAuth(api_obj=api_obj)
-        self.Token = self._Token(api_obj=api_obj)
-        self.Verify = self._Verify(api_obj=api_obj)
+        vedauth_url = self._url.replace('vedsdk', 'vedauth')
+        self.Certificate = self._Certificate(api_obj=api_obj, url=f'{vedauth_url}/Certificate')
+        self.Device = self._Device(api_obj=api_obj, url=f'{vedauth_url}/Device')
+        self.Integrated = self._Integrated(api_obj=api_obj, url=f'{vedauth_url}/Integrated')
+        self.OAuth = self._OAuth(api_obj=api_obj, url=f'{vedauth_url}/OAuth')
+        self.Token = self._Token(api_obj=api_obj, url=f'{vedauth_url}/Token')
+        self.Verify = self._Verify(api_obj=api_obj, url=f'{vedauth_url}/Verify')
 
     def post(self, username, password):
         """
@@ -38,10 +39,6 @@ class _Authorize(WebSdkEndpoint):
         return generate_output(response=response, output_cls=Output)
 
     class _Certificate(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Authorize/Certificate')
-            self._url = self._url.replace('vedsdk', 'vedauth')
-
         def post(self, client_id: str, scope: str):
             body = {
                 'client_id': client_id,
@@ -66,10 +63,6 @@ class _Authorize(WebSdkEndpoint):
             return generate_output(response=response, output_cls=Output)
 
     class _Device(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Authorize/Device')
-            self._url = self._url.replace('vedsdk', 'vedauth')
-
         def post(self, client_id: str, scope: str):
             body = {
                 'client_id': client_id,
@@ -93,10 +86,6 @@ class _Authorize(WebSdkEndpoint):
             return generate_output(response=response, output_cls=Output)
 
     class _Integrated(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Authorize/Integrated')
-            self._url = self._url.replace('vedsdk', 'vedauth')
-
         def post(self, client_id: str, scope: str, state: str = None):
             body = {
                 'client_id': client_id,
@@ -117,10 +106,6 @@ class _Authorize(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _OAuth(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Authorize/OAuth')
-            self._url = self._url.replace('vedsdk', 'vedauth')
-
         def post(self, client_id: str, password: str, scope: str, username: str, state: str = None):
             body = {
                 'client_id': client_id,
@@ -148,10 +133,6 @@ class _Authorize(WebSdkEndpoint):
             return generate_output(response=response, output_cls=Output)
 
     class _Token(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Authorize/Token')
-            self._url = self._url.replace('vedsdk', 'vedauth')
-
         def post(self, client_id: str, refresh_token: str, grant_type: str = None, device_code: str = None):
             body = {
                 'client_id'    : client_id,
@@ -176,10 +157,6 @@ class _Authorize(WebSdkEndpoint):
             return generate_output(response=response, output_cls=Output)
 
     class _Verify(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='Authorize/Verify')
-            self._url = self._url.replace('vedsdk', 'vedauth')
-
         def get(self):
             class Output(WebSdkOutputModel):
                 access_issued_on_unix_time: datetime = ApiField(alias='access_issued_on_unix_time')

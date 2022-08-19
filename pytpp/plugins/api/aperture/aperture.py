@@ -44,7 +44,9 @@ class Aperture:
         self._token = token
 
         # This is used by the endpoints to avoid redundancy.
-        self._base_url = f'https://{host}/aperture/api'
+        self._scheme = 'https'
+        self._base_url = f'{self._scheme}://{self._host}'
+        self._app_url = f'{self._base_url}/aperture/api'
         # endregion Instance Variables
 
         # region Authentication

@@ -4,24 +4,23 @@ from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_outpu
 from pytpp.api.websdk.models import workflow
 
 
-class _Workflow:
+class _Workflow(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.Ticket = self._Ticket(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/Workflow')
+        self.Ticket = self._Ticket(api_obj=api_obj, url=f'{self._url}/Ticket')
 
-    class _Ticket:
-        def __init__(self, api_obj):
-            self.Create = self._Create(api_obj=api_obj)
-            self.Delete = self._Delete(api_obj=api_obj)
-            self.Details = self._Details(api_obj=api_obj)
-            self.Enumerate = self._Enumerate(api_obj=api_obj)
-            self.Exists = self._Exists(api_obj=api_obj)
-            self.Status = self._Status(api_obj=api_obj)
-            self.UpdateStatus = self._UpdateStatus(api_obj=api_obj)
+    class _Ticket(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Create = self._Create(api_obj=self._api_obj, url=f'{self._url}/Create')
+            self.Delete = self._Delete(api_obj=self._api_obj, url=f'{self._url}/Delete')
+            self.Details = self._Details(api_obj=self._api_obj, url=f'{self._url}/Details')
+            self.Enumerate = self._Enumerate(api_obj=self._api_obj, url=f'{self._url}/Enumerate')
+            self.Exists = self._Exists(api_obj=self._api_obj, url=f'{self._url}/Exists')
+            self.Status = self._Status(api_obj=self._api_obj, url=f'{self._url}/Status')
+            self.UpdateStatus = self._UpdateStatus(api_obj=self._api_obj, url=f'{self._url}/UpdateStatus')
 
         class _Create(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Create')
-
             def post(self, object_dn: str, approvers: list, reason: str, workflow_dn: str, user_data: str = None):
                 body = {
                     'ObjectDN'  : object_dn,
@@ -38,9 +37,6 @@ class _Workflow:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Delete(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Delete')
-
             def post(self, guid: str):
                 body = {
                     'GUID': guid
@@ -52,9 +48,6 @@ class _Workflow:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Details(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Details')
-
             def post(self, guid: str):
                 body = {
                     'GUID': guid
@@ -75,9 +68,6 @@ class _Workflow:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Enumerate(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Enumerate')
-
             def post(self, object_dn: str = None, user_data: str = None):
                 body = {
                     'ObjectDN': object_dn,
@@ -91,9 +81,6 @@ class _Workflow:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Exists(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Exists')
-
             def post(self, guid: str):
                 body = {
                     'GUID': guid
@@ -105,9 +92,6 @@ class _Workflow:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Status(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/Status')
-
             def post(self, guid: str):
                 body = {
                     'GUID': guid
@@ -120,9 +104,6 @@ class _Workflow:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _UpdateStatus(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/Workflow/Ticket/UpdateStatus')
-
             def post(self, guid: str, status: str, explanation: str = None, scheduled_start: str = None,
                      scheduled_stop: str = None, approvers: List[str] = None, object_dn: str = None,
                      reason: str = None, user_data=None):

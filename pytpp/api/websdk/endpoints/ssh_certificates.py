@@ -4,21 +4,20 @@ from pytpp.api.websdk.models import ssh_certificates
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _SSHCertificates:
+class _SSHCertificates(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.CAKeyPair = self._CAKeyPair(api_obj=api_obj)
-        self.Request = self._Request(api_obj=api_obj)
-        self.Retrieve = self._Retrieve(api_obj=api_obj)
-        self.Template = self._Template(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/SSHCertificates')
+        self.CAKeyPair = self._CAKeyPair(api_obj=self._api_obj, url=f'{self._url}/CAKeyPair')
+        self.Request = self._Request(api_obj=self._api_obj, url=f'{self._url}/Request')
+        self.Retrieve = self._Retrieve(api_obj=self._api_obj, url=f'{self._url}/Retrieve')
+        self.Template = self._Template(api_obj=self._api_obj, url=f'{self._url}/Template')
 
-    class _CAKeyPair:
-        def __init__(self, api_obj):
-            self.Create = self._Create(api_obj=api_obj)
+    class _CAKeyPair(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Create = self._Create(api_obj=self._api_obj, url=f'{self._url}/Create')
 
         class _Create(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='SSHCertificates/CAKeyPair/Create')
-
             def post(self, name: str, parent_dn: str = None, key_algorithm: str = None,
                      key_storage: str = None, private_key_data: str = None,
                      private_key_passphrase: str = None):
@@ -46,9 +45,6 @@ class _SSHCertificates:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Request(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSHCertificates/Request')
-
         def post(self, ca_dn: str, key_id: str, destination_address: str = None, extensions: str = None, force_command: str = None,
                  object_name: str = None, origin: str = None, policy_dn: str = None, principals: List[str] = None,
                  public_key_data: str = None, source_addresses: List[str] = None, validity_period: str = None,
@@ -82,9 +78,6 @@ class _SSHCertificates:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSHCertificates/Retrieve')
-
         def post(self, dn: str = None, guid: str = None, include_certificate_details: bool = None,
                  include_private_key_data: bool = None, private_key_passphrase: str = None):
             body = {
@@ -112,14 +105,14 @@ class _SSHCertificates:
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Template(WebSdkEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/SSHCertificates/Template')
-            self.Retrieve = self._Retrieve(api_obj=api_obj)
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.Retrieve = self._Retrieve(api_obj=self._api_obj, url=f'{self._url}/Retrieve')
 
         class _Retrieve(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/SSHCertificates/Template/Retrieve')
-                self.PublicKeyData = self._PublicKeyData(api_obj=api_obj)
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.PublicKeyData = self._PublicKeyData(api_obj=self._api_obj, url=f'{self._url}/PublicKeyData')
 
             def post(self, template_dn: str = None, template_guid: str = None, include_ca_keypair_details: bool = None):
                 body = {
@@ -145,9 +138,6 @@ class _SSHCertificates:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
             class _PublicKeyData(WebSdkEndpoint):
-                def __init__(self, api_obj):
-                    super().__init__(api_obj=api_obj, url='SSHCertificates/Template/Retrieve/PublicKeyData')
-
                 def get(self, template_dn: str = None, template_guid: str = None):
                     params = {
                         'DN'  : template_dn,

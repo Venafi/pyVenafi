@@ -3,22 +3,20 @@ from pytpp.api.websdk.models import pki
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
-class _PKI:
+class _PKI(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.HashiCorp = self._HashiCorp(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/PKI')
+        self.HashiCorp = self._HashiCorp(api_obj=api_obj, url=f'{self._url}/HashiCorp')
 
-    class _HashiCorp:
-        def __init__(self, api_obj):
-            self.CA = self._CA(api_obj=api_obj)
-            self.Role = self._Role(api_obj=api_obj)
+    class _HashiCorp(WebSdkEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.CA = self._CA(api_obj=self._api_obj, url=f'{self._url}/CA')
+            self.Role = self._Role(api_obj=self._api_obj, url=f'{self._url}/Role')
 
         class _CA(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='/HashiCorp/CA')
-                self._api_obj = api_obj
-
             def Guid(self, guid: str):
-                return self._Guid(guid=guid, api_obj=self._api_obj)
+                return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
             def get(self):
                 class Output(WebSdkOutputModel):
@@ -51,10 +49,9 @@ class _PKI:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
             class _Guid(WebSdkEndpoint):
-                def __init__(self, guid: str, api_obj):
-                    super().__init__(api_obj=api_obj, url=f'/HashiCorp/CA/{guid}')
-                    self._guid = guid
-                    self.Renew = self._Renew(guid=guid, api_obj=api_obj)
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.Renew = self._Renew(api_obj=self._api_obj, url=f'{self._url}/Renew')
 
                 def delete(self):
                     class Output(WebSdkOutputModel):
@@ -109,9 +106,6 @@ class _PKI:
                     return generate_output(output_cls=Output, response=self._put(data=body))
 
                 class _Renew(WebSdkEndpoint):
-                    def __init__(self, guid: str, api_obj):
-                        super().__init__(api_obj=api_obj, url=f'HashiCorp/{guid}/Renew')
-
                     def post(self):
                         class Output(WebSdkOutputModel):
                             certificate_dn: str = ApiField(alias='CertificateDN')
@@ -121,10 +115,6 @@ class _PKI:
                         return generate_output(output_cls=Output, response=self._post(data={}))
 
         class _Role(WebSdkEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url='HashiCorp/Role')
-                self._api_obj = api_obj
-
             def post(self, folder_dn: str, role_name: str, city: str = None, country: str = None,
                      enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
                      organization: str = None, organizational_units: List[str] = None, state: str = None,
@@ -149,12 +139,9 @@ class _PKI:
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
             def Guid(self, guid: str):
-                return self._Guid(guid=guid, api_obj=self._api_obj)
+                return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
             class _Guid(WebSdkEndpoint):
-                def __init__(self, guid: str, api_obj):
-                    super().__init__(api_obj=api_obj, url=f'HashiCorp/Role/{guid}')
-
                 def delete(self):
                     class Output(WebSdkOutputModel):
                         guid: str = ApiField(alias='Guid')

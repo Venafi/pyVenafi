@@ -6,13 +6,10 @@ from typing import List
 
 class _Device(ApertureEndpoint):
     def __init__(self, api_obj):
-        super().__init__(
-            api_obj=api_obj,
-            url=f'/device'
-        )
+        super().__init__(api_obj=api_obj, url=f'/device')
 
-        self.BulkOperations = self._BulkOperations(api_obj)
-        self.GetStatus = self._GetStatus(api_obj)
+        self.BulkOperations = self._BulkOperations(api_obj=self._api_obj, url=f'{self._url}/bulkOperations')
+        self.GetStatus = self._GetStatus(api_obj=self._api_obj, url=f'{self._url}/GetStatus')
 
     def post(self, ssh_type: str = "", job: str = "", custom_field_name: str = "",
              custom_field_value: List[str] = None, common_name: List[str] = None, properties: List[str] = None,
@@ -40,12 +37,6 @@ class _Device(ApertureEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetStatus(ApertureEndpoint):
-        def __init__(self, api_obj):
-            super().__init__(
-                api_obj=api_obj,
-                url=f'/device/GetStatus'
-            )
-
         def get(self, device_guid: str):
             params = {
                 'deviceGuid': device_guid
@@ -58,22 +49,16 @@ class _Device(ApertureEndpoint):
 
             return generate_output(output_cls=Output, response=self._get(params=params))
 
-    class _BulkOperations:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-            self.SetAgentlessDiscoveryToDo = self._SetAgentlessDiscoveryToDo(api_obj=self._api_obj)
-            self.ResetFailedAuthAttempts = self._ResetFailedAuthAttempts(api_obj=self._api_obj)
+    class _BulkOperations(ApertureEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.SetAgentlessDiscoveryToDo = self._SetAgentlessDiscoveryToDo(api_obj=self._api_obj, url=f'{self._url}/SetAgentlessDiscoveryToDo')
+            self.ResetFailedAuthAttempts = self._ResetFailedAuthAttempts(api_obj=self._api_obj, url=f'{self._url}/resetFailedAuthAttempts')
 
         class _SetAgentlessDiscoveryToDo(ApertureEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/device/bulkOperations/SetAgentlessDiscoveryToDo')
-
             def post(self, device_guids: List[str]):
                 return generate_output(output_cls=ApertureOutputModel, response=self._post(data=device_guids))
 
         class _ResetFailedAuthAttempts(ApertureEndpoint):
-            def __init__(self, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/device/bulkOperations/resetFailedAuthAttempts')
-
             def post(self, device_guids: List[str]):
                 return generate_output(output_cls=ApertureOutputModel, response=self._post(data=device_guids))
