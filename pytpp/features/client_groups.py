@@ -25,7 +25,7 @@ class _ClientGroupBase(FeatureBase):
         """
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
-        response = self._api.websdk.config.Write.post(
+        response = self._api.websdk.Config.Write.post(
             object_dn=group_dn,
             attribute_data=self._name_value_list({
                 ClientGroupAttributes.assigned_work: [work_dn]
@@ -69,7 +69,7 @@ class _ClientGroupBase(FeatureBase):
         Returns:
             List of :ref:`config_object` of the client groups.
         """
-        response = self._api.websdk.config.Enumerate.post(object_dn=self._group_base_dn)
+        response = self._api.websdk.Config.Enumerate.post(object_dn=self._group_base_dn)
 
         if response.result.code != 1:
             raise InvalidResultCode(
@@ -88,7 +88,7 @@ class _ClientGroupBase(FeatureBase):
         """
         group_dn = self._get_dn(group, parent_dn=self._group_base_dn)
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
-        response = self._api.websdk.config.RemoveDnValue.post(
+        response = self._api.websdk.Config.RemoveDnValue.post(
             object_dn=group_dn,
             attribute_name=ClientGroupAttributes.assigned_work,
             value=work_dn

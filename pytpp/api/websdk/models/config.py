@@ -18,7 +18,7 @@ class Result(OutputModel):
 
 class NameValues(OutputModel, Generic[T]):
     name: str = ApiField(alias='Name')
-    values: List[T] = ApiField(alias='Values')
+    values: List[T] = ApiField(alias='Values', default_factory=list)
 
 
 class Object(OutputModel):
@@ -37,7 +37,7 @@ class Policy(OutputModel):
     guid: str = ApiField(alias='GUID')
     property: str = ApiField(alias='Property')
     type_name: str = ApiField(alias='TypeName')
-    value_list: List[str] = ApiField(alias='ValueList')
+    value_list: List[str] = ApiField(alias='ValueList', default_factory=list)
 
 
 # endregion Outputs

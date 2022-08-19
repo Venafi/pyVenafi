@@ -122,7 +122,7 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                attributes: List[str] = ApiField(alias='Attributes')
+                attributes: List[str] = ApiField(alias='Attributes', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -156,7 +156,7 @@ class _Identity(WebSdkEndpoint):
     class _Self(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
-                identities: List[ident.Identity] = ApiField(alias='Identities')
+                identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._get())
 

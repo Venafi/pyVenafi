@@ -29,7 +29,7 @@ class _Discovery(WebSdkEndpoint):
                 created_instances: int = ApiField(alias='createdInstances')
                 updated_certificates: int = ApiField(alias='updatedCertificates')
                 updated_instances: int = ApiField(alias='updatedInstances')
-                warnings: List[str] = ApiField(alias='warnings')
+                warnings: List[str] = ApiField(alias='warnings', default_factory=list)
                 zone_name: str = ApiField(alias='zoneName')
 
             return generate_output(response=self._post(data=body), output_cls=Output)

@@ -32,4 +32,4 @@ class Value(OutputModel):
 
 class Result(OutputModel):
     key: Key = ApiField(alias='Key')
-    value: List[Value] = ApiField(alias='Value')
+    value: List[Value] = ApiField(alias='Value', default_factory=list)

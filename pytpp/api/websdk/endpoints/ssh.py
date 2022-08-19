@@ -533,10 +533,10 @@ class _SSH(WebSdkEndpoint):
         class _PolicyViolations(WebSdkEndpoint):
             def get(self):
                 class Output(WebSdkOutputModel):
-                    duplicate_private_keys: List[str] = ApiField(alias='DuplicatePrivateKeys')
+                    duplicate_private_keys: List[str] = ApiField(alias='DuplicatePrivateKeys', default_factory=list)
                     key_older_than_policy: str = ApiField(alias='KeyOlderThanPolicy')
                     key_smaller_than_policy: str = ApiField(alias='KeySmallerThanPolicy')
-                    missing_options: List[str] = ApiField(alias='MissingOptions')
+                    missing_options: List[str] = ApiField(alias='MissingOptions', default_factory=list)
                     non_compliant_algorithm: str = ApiField(alias='NonCompliantAlgorithm')
                     non_compliant_force_command: str = ApiField(alias='NonCompliantForceCommand')
                     non_compliant_source_restriction: str = ApiField(alias='NonCompliantSourceRestriction')

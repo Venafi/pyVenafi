@@ -22,8 +22,8 @@ class Certificate(OutputModel):
     key_algorithm: str = ApiField(alias='KeyAlgorithm')
     key_bit_size: str = ApiField(alias='KeyBitSize')
     organization: str = ApiField(alias='Organization')
-    organizational_units: List[str] = ApiField(alias='OrganizationalUnits')
-    sans: List[SANS] = ApiField(alias='Sans')
+    organizational_units: List[str] = ApiField(alias='OrganizationalUnits', default_factory=list)
+    sans: List[SANS] = ApiField(alias='Sans', default_factory=list)
     state: str = ApiField(alias='State')
 
 

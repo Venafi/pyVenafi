@@ -24,7 +24,7 @@ class Result(OutputModel):
 
 
 class Work(OutputModel):
-    associated_groups: List[str] = ApiField(alias='AssociatedGroups')
+    associated_groups: List[str] = ApiField(alias='AssociatedGroups', default_factory=list)
     work_dn: str = ApiField(alias='WorkDn')
     work_name: str = ApiField(alias='WorkName')
     work_type: WorkType = ApiField(alias='WorkType')
@@ -50,13 +50,13 @@ class ClientDetails(OutputModel):
     client_version: str = ApiField(alias='ClientVersion')
     created_on: datetime = ApiField(alias='CreatedOn')
     dns_name: str = ApiField(alias='DnsName')
-    effective_work: List[str] = ApiField(alias='EffectiveWork')
+    effective_work: List[str] = ApiField(alias='EffectiveWork', default_factory=list)
     fqdn: str = ApiField(alias='Fqdn')
-    groups: List[str] = ApiField(alias='Groups')
+    groups: List[str] = ApiField(alias='Groups', default_factory=list)
     host_domain: str = ApiField(alias='HostDomain')
     hostname: str = ApiField(alias='Hostname')
     last_seen_on: datetime = ApiField(alias='LastSeenOn')
-    networks: List[Network] = ApiField(alias='Networks')
+    networks: List[Network] = ApiField(alias='Networks', default_factory=list)
     os_build: str = ApiField(alias='OsBuild')
     os_name: OSNameType = ApiField(alias='OsName')
     os_service_pack: str = ApiField(alias='OsServicePack')

@@ -296,7 +296,7 @@ class _Codesign(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                applications: List[codesign.Application] = ApiField(alias='Applications')
+                applications: List[codesign.Application] = ApiField(alias='Applications', default_factory=list)
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
@@ -310,7 +310,7 @@ class _Codesign(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                application_collections: List[codesign.ApplicationCollection] = ApiField(alias='ApplicationCollections')
+                application_collections: List[codesign.ApplicationCollection] = ApiField(alias='ApplicationCollections', default_factory=list)
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
@@ -325,7 +325,7 @@ class _Codesign(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                projects: List[codesign.Project] = ApiField(alias='Projects')
+                projects: List[codesign.Project] = ApiField(alias='Projects', default_factory=list)
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
@@ -345,7 +345,7 @@ class _Codesign(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                reference_dns: List[str] = ApiField(alias='ReferenceDNs')
+                reference_dns: List[str] = ApiField(alias='ReferenceDNs', default_factory=list)
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
@@ -359,12 +359,12 @@ class _Codesign(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                apple_templates: List[codesign.AppleTemplate] = ApiField(alias='AppleTemplates')
-                certificate_templates: List[codesign.CertificateTemplate] = ApiField(alias='CertificateTemplates')
-                csp_templates: List[codesign.CSPTemplate] = ApiField(alias='CSPTemplates')
-                dot_net_templates: List[codesign.DotNetTemplate] = ApiField(alias='DotNetTemplates')
-                gpg_templates: List[codesign.GPGTemplate] = ApiField(alias='GPGTemplates')
-                key_pair_templates: List[codesign.KeyPairTemplate] = ApiField(alias='KeyPairTemplates')
+                apple_templates: List[codesign.AppleTemplate] = ApiField(alias='AppleTemplates', default_factory=list)
+                certificate_templates: List[codesign.CertificateTemplate] = ApiField(alias='CertificateTemplates', default_factory=list)
+                csp_templates: List[codesign.CSPTemplate] = ApiField(alias='CSPTemplates', default_factory=list)
+                dot_net_templates: List[codesign.DotNetTemplate] = ApiField(alias='DotNetTemplates', default_factory=list)
+                gpg_templates: List[codesign.GPGTemplate] = ApiField(alias='GPGTemplates', default_factory=list)
+                key_pair_templates: List[codesign.KeyPairTemplate] = ApiField(alias='KeyPairTemplates', default_factory=list)
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
@@ -426,8 +426,8 @@ class _Codesign(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 application_collection: codesign.ApplicationCollection = ApiField(alias='ApplicationCollection')
-                application_collection_dns: List[str] = ApiField(alias='ApplicationCollectionDNs')
-                application_dns: List[str] = ApiField(alias='ApplicationDNs')
+                application_collection_dns: List[str] = ApiField(alias='ApplicationCollectionDNs', default_factory=list)
+                application_dns: List[str] = ApiField(alias='ApplicationDNs', default_factory=list)
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
                 success: bool = ApiField(alias='Success')
 
@@ -470,7 +470,7 @@ class _Codesign(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
-                rights_list: List[codesign.RightsKeyValue] = ApiField(alias='RightsList')
+                rights_list: List[codesign.RightsKeyValue] = ApiField(alias='RightsList', default_factory=list)
                 success: bool = ApiField(alias='Success')
 
             return generate_output(response=self._post(data=body), output_cls=Output)
@@ -531,7 +531,7 @@ class _Codesign(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
-                rights_list: List[codesign.RightsKeyValue] = ApiField(alias='RightsList')
+                rights_list: List[codesign.RightsKeyValue] = ApiField(alias='RightsList', default_factory=list)
                 success: bool = ApiField(alias='Success')
 
             return generate_output(response=self._post(data=body), output_cls=Output)

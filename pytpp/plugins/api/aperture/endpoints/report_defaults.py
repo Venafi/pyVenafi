@@ -18,7 +18,7 @@ class _ReportDefaults(ApertureEndpoint):
                 summary: str = ApiField(alias='summary')
                 status: str = ApiField(alias='status')
                 filter: str = ApiField(alias='filter')
-                columns: List[reports.Column] = ApiField(alias='columns')
+                columns: List[reports.Column] = ApiField(alias='columns', default_factory=list)
                 personalized: str = ApiField(alias='personalized')
                 location: str = ApiField(alias='location')
                 dn: str = ApiField(alias='dn')

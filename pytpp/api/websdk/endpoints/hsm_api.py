@@ -90,8 +90,8 @@ class _HSMAPI(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 certificates: List[hsm_api.Certificate] = ApiField(alias='Certificates', default_factory=list)
                 pending: bool = ApiField(alias='Pending')
-                private_keys: List[hsm_api.PrivateKey] = ApiField(alias='PrivateKeys')
-                public_keys: List[hsm_api.PublicKey] = ApiField(alias='PublicKeys')
+                private_keys: List[hsm_api.PrivateKey] = ApiField(alias='PrivateKeys', default_factory=list)
+                public_keys: List[hsm_api.PublicKey] = ApiField(alias='PublicKeys', default_factory=list)
                 success: bool = ApiField(alias='Success')
 
             return generate_output(output_cls=Output, response=self._post(data=body))

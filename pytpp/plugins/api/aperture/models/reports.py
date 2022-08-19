@@ -5,7 +5,7 @@ from typing import List
 
 class Column(OutputModel):
     stored_name: str = ApiField(alias='storedName')
-    nested_table: List[NestedTable] = ApiField(alias='nestedTable')
+    nested_table: List[NestedTable] = ApiField(alias='nestedTable', default_factory=list)
     show_time: bool = ApiField(alias='showTime')
     show_date: bool = ApiField(alias='showDate')
     name: str = ApiField(alias='name')
@@ -22,7 +22,7 @@ class Column(OutputModel):
 class NestedTable(OutputModel):
     type: str = ApiField(alias='type')
     name: str = ApiField(alias='name')
-    columns: List[Column] = ApiField(alias='columns')
+    columns: List[Column] = ApiField(alias='columns', default_factory=list)
 
 
 Column.update_forward_refs()

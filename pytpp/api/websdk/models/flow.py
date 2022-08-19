@@ -24,10 +24,10 @@ class KeyValue(OutputModel):
 
 
 class Ticket(OutputModel):
-    approvals: List[Approval] = ApiField(alias='Approvals')
-    approvers: List[str] = ApiField(alias='Approvers')
+    approvals: List[Approval] = ApiField(alias='Approvals', default_factory=list)
+    approvers: List[str] = ApiField(alias='Approvers', default_factory=list)
     creation_time: datetime = ApiField(alias='CreationTime')
-    environment: List[KeyValue] = ApiField(alias='Environment')
+    environment: List[KeyValue] = ApiField(alias='Environment', default_factory=list)
     flow_process_id: int = ApiField(alias='FlowProcessId')
     id: int = ApiField(alias='Id')
     identifier: str = ApiField(alias='Identifier')

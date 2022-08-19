@@ -26,7 +26,7 @@ class _Teams(WebSdkEndpoint):
         class Output(WebSdkOutputModel):
             identity: ident.Identity = ApiField(default_factory=list, alias='ID')
             invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
-            invalid_owners: List[ident.InvalidIdentity] = ApiField(alias='InvalidOwners')
+            invalid_owners: List[ident.InvalidIdentity] = ApiField(alias='InvalidOwners', default_factory=list)
             message: str = ApiField(alias='Message')
 
         return generate_output(output_cls=Output, response=self._post(data=body))

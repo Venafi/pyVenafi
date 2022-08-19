@@ -57,7 +57,7 @@ class _Workflow(WebSdkEndpoint):
                     approval_explanation: str = ApiField(alias='ApprovalExplanation')
                     approval_from: str = ApiField(alias='ApprovalFrom')
                     approval_reason: str = ApiField(alias='ApprovalReason')
-                    approvers: List[str] = ApiField(alias='Approvers')
+                    approvers: List[str] = ApiField(alias='Approvers', default_factory=list)
                     blocking: str = ApiField(alias='Blocking')
                     created: datetime = ApiField(alias='Created')
                     issued_due_to: str = ApiField(alias='IssuedDueTo')

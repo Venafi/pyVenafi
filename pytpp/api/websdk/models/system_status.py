@@ -13,7 +13,7 @@ class Engine(OutputModel):
 
 
 class IisService(OutputModel):
-    modules: List[str] = ApiField(alias='modules')
+    modules: List[str] = ApiField(alias='modules', default_factory=list)
     time_since_first_seen: datetime = ApiField(alias='timeSinceFirstSeen')
     time_since_last_seen: datetime = ApiField(alias='timeSinceLastSeen')
     status: str = ApiField(alias='status')
@@ -29,7 +29,7 @@ class vPlatformService(OutputModel):
     current_latency: int = ApiField(alias='currentLatency')
     current_mode: str = ApiField(alias='currentMode')
     current_work: int = ApiField(alias='currentWork')
-    modules: List[str] = ApiField(alias='modules')
+    modules: List[str] = ApiField(alias='modules', default_factory=list)
     status: str = ApiField(alias='status')
     time_since_first_seen: datetime = ApiField(alias='timeSinceFirstSeen')
     time_since_last_seen: datetime = ApiField(alias='timeSinceLastSeen')
@@ -59,7 +59,7 @@ class Task(OutputModel):
 class UpgradeInfo(OutputModel):
     id: str = ApiField(alias='Id')
     start_time: datetime = ApiField(alias='StartTime')
-    versions: List[str] = ApiField(alias='Versions')
+    versions: List[str] = ApiField(alias='Versions', default_factory=list)
 
 
 class UpgradeStatus(OutputModel):
@@ -67,9 +67,9 @@ class UpgradeStatus(OutputModel):
     status: str = ApiField(alias='Status')
     upgrade_start_time: datetime = ApiField(alias='UpgradeStartTime')
     upgrade_stop_time: datetime = ApiField(alias='UpgradeStopTime')
-    tasks_completed: List[Task] = ApiField(alias='TasksCompleted')
-    tasks_pending: List[Task] = ApiField(alias='TasksPending')
-    tasks_running: List[Task] = ApiField(alias='TasksRunning')
+    tasks_completed: List[Task] = ApiField(alias='TasksCompleted', default_factory=list)
+    tasks_pending: List[Task] = ApiField(alias='TasksPending', default_factory=list)
+    tasks_running: List[Task] = ApiField(alias='TasksRunning', default_factory=list)
 
 
 class UpgradeSummary(OutputModel):

@@ -69,7 +69,7 @@ class _PKI(WebSdkEndpoint):
                         folder_dn: str = ApiField(alias='FolderDn')
                         installation: pki.Installation = ApiField(alias='Installation')
                         pki_path: str = ApiField(alias='PkiPath')
-                        roles: List[str] = ApiField(alias='Roles')
+                        roles: List[str] = ApiField(alias='Roles', default_factory=list)
 
                     return generate_output(output_cls=Output, response=self._get())
 

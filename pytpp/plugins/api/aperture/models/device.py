@@ -21,6 +21,6 @@ class Device(OutputModel):
     custom_fields: dict = ApiField(alias='customFields')
     scan_status: str = ApiField(alias='scanStatus')
     last_discovery: datetime = ApiField(alias='lastDiscovery')
-    connection_errors: List[str] = ApiField(alias='connectionErrors')
+    connection_errors: List[str] = ApiField(alias='connectionErrors', default_factory=list)
     is_write_allowed: bool = ApiField(alias='isWriteAllowed')
     has_failed_authorization_attempts: bool = ApiField(alias='hasFailedAuthorizationAttempts')

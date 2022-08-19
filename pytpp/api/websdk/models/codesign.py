@@ -36,7 +36,7 @@ class ResultCode(OutputModel):
 
 class Items(OutputModel, Generic[T]):
     dirty: bool = ApiField(alias='Dirty')
-    items: List[T] = ApiField(alias='Items')
+    items: List[T] = ApiField(alias='Items', default_factory=list)
 
 
 class InfoValue(OutputModel, Generic[T]):
@@ -46,7 +46,7 @@ class InfoValue(OutputModel, Generic[T]):
 
 class CustomFieldAttributes(OutputModel):
     field_name: str = ApiField(alias='FieldName')
-    values: List[str] = ApiField(alias='Values')
+    values: List[str] = ApiField(alias='Values', default_factory=list)
 
 
 class EnvironmentTemplateDetails(InfoValue[str]):
@@ -279,7 +279,7 @@ class GPGEnvironment(OutputModel):
     custom_field_attributes: Items[CustomFieldAttributes] = ApiField(alias='CustomFieldsAttributes')
     dirty: bool = ApiField(alias='Dirty')
     dn: str = ApiField(alias='Dn')
-    email: List[str] = ApiField(alias='Email')
+    email: List[str] = ApiField(alias='Email', default_factory=list)
     encryption_key_algorithm: EnvironmentTemplateDetails = ApiField(alias='EncryptionKeyAlgorithm')
     expiration: int = ApiField(alias='Expiration')
     guid: str = ApiField(alias='Guid')
@@ -371,17 +371,17 @@ class GlobalConfiguration(OutputModel):
 
 class Project(OutputModel):
     application_dns: Items[str] = ApiField(alias='ApplicationDns')
-    applications: List[Application] = ApiField(alias='Applications')
+    applications: List[Application] = ApiField(alias='Applications', default_factory=list)
     auditors: Items[str] = ApiField(alias='Auditors')
-    certificate_environments: List[CertificateEnvironment] = ApiField(alias='CertificateEnvironments')
-    collections: List[SignApplicationCollection] = ApiField(alias='Collections')
+    certificate_environments: List[CertificateEnvironment] = ApiField(alias='CertificateEnvironments', default_factory=list)
+    collections: List[SignApplicationCollection] = ApiField(alias='Collections', default_factory=list)
     created_on: datetime = ApiField(alias='CreatedOn')
-    csp_environments: List[CSPEnvironment] = ApiField(alias='CSPEnvironments')
-    custom_field_attributes: Items[CustomFieldAttributes] = ApiField(alias='CustomFieldAttributes')
+    csp_environments: List[CSPEnvironment] = ApiField(alias='CSPEnvironments', default_factory=list)
+    custom_field_attributes: Items[CustomFieldAttributes] = ApiField(alias='CustomFieldAttributes', default_factory=list)
     description: str = ApiField(alias='Description')
     dn: str = ApiField(alias='Dn')
-    dot_net_environments: List[DotNetEnvironment] = ApiField(alias='DotNetEnvironments')
-    gpg_environments: List[GPGEnvironment] = ApiField(alias='GPGEnvironments')
+    dot_net_environments: List[DotNetEnvironment] = ApiField(alias='DotNetEnvironments', default_factory=list)
+    gpg_environments: List[GPGEnvironment] = ApiField(alias='GPGEnvironments', default_factory=list)
     guid: str = ApiField(alias='Guid')
     id: int = ApiField(alias='Id')
     key_use_approvers: Items[str] = ApiField(alias='KeyUseApprovers')

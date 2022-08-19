@@ -46,9 +46,9 @@ class Item(OutputModel):
 
 class Data(OutputModel):
     key: Item = ApiField(alias='Key')
-    value: List[str] = ApiField(alias='Value')
+    value: List[str] = ApiField(alias='Value', default_factory=list)
 
 
 class PolicyItem(OutputModel):
     key: str = ApiField(alias='Key')
-    value: List[Item] = ApiField(alias='Value')
+    value: List[Item] = ApiField(alias='Value', default_factory=list)

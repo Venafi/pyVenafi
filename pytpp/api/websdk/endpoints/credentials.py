@@ -179,7 +179,7 @@ class _Credentials(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 classname: str = ApiField(alias='Classname')
-                contact: List[identity.Identity] = ApiField(alias='Contact')
+                contact: List[identity.Identity] = ApiField(alias='Contact', default_factory=list)
                 description: str = ApiField(alias='Description')
                 expiration: datetime = ApiField(alias='Expiration')
                 friendly_name: str = ApiField(alias='FriendlyName')

@@ -29,7 +29,7 @@ class _Rights(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                rights: List[rights.Rights] = ApiField(alias='Rights')
+                rights: List[rights.Rights] = ApiField(alias='Rights', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 

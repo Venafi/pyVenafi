@@ -6,7 +6,7 @@ from typing import List
 
 class PolicyViolation(OutputModel):
     name: str = ApiField(alias='name')
-    items: List[str] = ApiField(alias='items')
+    items: List[str] = ApiField(alias='items', default_factory=list)
     total_items: int = ApiField(alias='totalItems')
 
 

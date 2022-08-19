@@ -21,10 +21,10 @@ class CertificateDetails(OutputModel):
     extensions: dict = ApiField(alias='Extensions')
     key_id: str = ApiField(alias='KeyId')
     key_type: str = ApiField(alias='KeyType')
-    principals: List[str] = ApiField(alias='Principals')
+    principals: List[str] = ApiField(alias='Principals', default_factory=list)
     public_key_fingerprint_sha256: str = ApiField(alias='PublicKeyFingerprintSha256')
     serial_number: str = ApiField(alias='SerialNumber')
-    source_addresses: List[str] = ApiField(alias='SourceAddresses')
+    source_addresses: List[str] = ApiField(alias='SourceAddresses', default_factory=list)
     valid_from: int = ApiField(alias='ValidFrom')
     valid_to: int = ApiField(alias='ValidTo')
 
@@ -35,16 +35,16 @@ class RequestDetails(OutputModel):
 
 
 class AccessControl(OutputModel):
-    allowed_certificate_identifier_patterns: List[str] = ApiField(alias='AllowedCertificateIdentifierPatterns')
-    allowed_extensions: List[str] = ApiField(alias='AllowedExtensions')
-    allowed_force_command_patterns: List[str] = ApiField(alias='AllowedForceCommandPatterns')
-    allowed_principals_patterns: List[str] = ApiField(alias='AllowedPrincipalsPatterns')
-    allowed_source_addresses: List[str] = ApiField(alias='AllowedSourceAddresses')
+    allowed_certificate_identifier_patterns: List[str] = ApiField(alias='AllowedCertificateIdentifierPatterns', default_factory=list)
+    allowed_extensions: List[str] = ApiField(alias='AllowedExtensions', default_factory=list)
+    allowed_force_command_patterns: List[str] = ApiField(alias='AllowedForceCommandPatterns', default_factory=list)
+    allowed_principals_patterns: List[str] = ApiField(alias='AllowedPrincipalsPatterns', default_factory=list)
+    allowed_source_addresses: List[str] = ApiField(alias='AllowedSourceAddresses', default_factory=list)
     default_certificate_identifier: str = ApiField(alias='DefaultCertificateIdentifier')
-    default_extensions: List[str] = ApiField(alias='DefaultExtensions')
+    default_extensions: List[str] = ApiField(alias='DefaultExtensions', default_factory=list)
     default_force_command: str = ApiField(alias='DefaultForceCommand')
-    default_principals: List[str] = ApiField(alias='DefaultPrincipals')
-    default_source_addresses: List[str] = ApiField(alias='DefaultSourceAddresses')
+    default_principals: List[str] = ApiField(alias='DefaultPrincipals', default_factory=list)
+    default_source_addresses: List[str] = ApiField(alias='DefaultSourceAddresses', default_factory=list)
 
 
 class APIClient(OutputModel):
@@ -56,7 +56,7 @@ class APIClient(OutputModel):
 
 
 class Certificate(OutputModel):
-    allowed_private_key_algorithms: List[str] = ApiField(alias='AllowedPrivateKeyAlgorithms')
+    allowed_private_key_algorithms: List[str] = ApiField(alias='AllowedPrivateKeyAlgorithms', default_factory=list)
     allowed_private_key_reuse: bool = ApiField(alias='AllowedPrivateKeyReuse')
     certificate_destination_dn: str = ApiField(alias='CertificateDestinationDn')
     default_private_key_algorithm: str = ApiField(alias='DefaultPrivateKeyAlgorithm')

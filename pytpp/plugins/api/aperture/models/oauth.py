@@ -10,5 +10,5 @@ class Subsystem(OutputModel):
 
 
 class ApplicationScope(OutputModel):
-    hidden_subsystems: List[Subsystem] = ApiField(alias='hiddenSubsystems')
-    subsystems: List[Subsystem] = ApiField(alias='subsystems')
+    hidden_subsystems: List[Subsystem] = ApiField(alias='hiddenSubsystems', default_factory=list)
+    subsystems: List[Subsystem] = ApiField(alias='subsystems', default_factory=list)

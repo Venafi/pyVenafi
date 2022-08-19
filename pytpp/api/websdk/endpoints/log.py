@@ -67,7 +67,7 @@ class _Log(WebSdkEndpoint):
                 log_event_application_definitions: List[log.LogEventApplicationDefinition] = ApiField(
                     alias='LogEventApplicationDefinitions'
                 )
-                log_event_definitions: List[log.LogEventDefinition] = ApiField(alias='LogEventDefinitions')
+                log_event_definitions: List[log.LogEventDefinition] = ApiField(alias='LogEventDefinitions', default_factory=list)
                 log_result: int = ApiField(alias='LogResult')
 
             return generate_output(output_cls=Output, response=self._get())
