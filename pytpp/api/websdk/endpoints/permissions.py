@@ -11,7 +11,7 @@ class _Permissions(WebSdkEndpoint):
 
     class _Object(WebSdkEndpoint):
         def Guid(self, guid):
-            return self._Guid(api_obj=self._api_obj, url=f'/Permissions/Object/{guid}')
+            return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
         class _Guid(WebSdkEndpoint):
             def get(self):
