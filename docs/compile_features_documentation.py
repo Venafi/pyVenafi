@@ -5,7 +5,6 @@ from runpy import run_path
 from typing import List
 import shutil
 
-
 PROJECT_ROOT = Path(__file__).parent.parent
 FEATURES_PATH = Path(PROJECT_ROOT, 'pytpp', 'features')
 FEATURES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'features')
@@ -19,7 +18,7 @@ def dataclass_module_rst_template(module: type, title: str):
     return dedent(f"""
     {title}
     {h1}
-      
+
     .. automodule:: {module.__name__}
        :members:
        :inherited-members:
@@ -33,7 +32,7 @@ def toc_rst_template(title: str, toc_items: List[str], tag: str = 'feature_list'
     toc_items_rst = '\n\t\t'.join(toc_items)
     return dedent(f"""
     .. _{title.replace(" ", "_").lower()}_{tag}:
-    
+
     {title}
     {h1}
 
@@ -51,10 +50,10 @@ def feature_class_rst_template(module_path: str, class_: str):
     h1 = '=' * len(title)
     return dedent(f"""
     .. _{title.replace(" ", "_").lower()}_feature:
-    
+
     {title}
     {h1}
-    
+
     .. autoclass:: {module_path}.{class_.__name__}
        :members:
        :undoc-members:
@@ -68,7 +67,7 @@ def get_feature_docs():
     shutil.rmtree(path=str(FEATURES_DOC_PATH), ignore_errors=True)
     FEATURES_DOC_PATH.mkdir(exist_ok=True, parents=True)
 
-    features_rst_files = [] # rst/feature/<feature> files to be added to the main features TOC.
+    features_rst_files = []  # rst/feature/<feature> files to be added to the main features TOC.
     for feature in FEATURES_PATH.glob('*.py'):
         if not feature.is_file() or feature.name.startswith('_'):
             continue
@@ -90,7 +89,7 @@ def get_feature_docs():
             # Create the .. autoclass:: rst file.
             rst = feature_class_rst_template(module_path=module_path, class_=f_cls)
             rst_file_name = Path(re.sub("[^a-zA-Z\d]+", "_", f_cls.__feature__).lower() + '.rst')
-            rst_file_path = Path(feature_file_path, rst_file_name) # rst/features/<feature>/<feature_class>.rst
+            rst_file_path = Path(feature_file_path, rst_file_name)  # rst/features/<feature>/<feature_class>.rst
             with rst_file_path.open('w') as ff:
                 ff.write(rst)
             return rst_file_path  # <feature_class>
@@ -121,7 +120,7 @@ def get_feature_docs():
 
 
 def get_property_docs():
-    from pytpp.properties.response_objects import dataclasses as dc
+    from pytpp.api.websdk import models
     import inspect
 
     # Recreate the dataclasses doc folder.
@@ -129,7 +128,7 @@ def get_property_docs():
     DATACLASSES_DOC_PATH.mkdir(exist_ok=True, parents=True)
 
     toc_items = []
-    for item in vars(dc).values():
+    for item in vars(models).values():
         if not inspect.ismodule(item):
             continue
         mod_file = Path(item.__file__)

@@ -2,6 +2,7 @@ from pytpp.plugins.api.aperture.aperture import Aperture
 from pytpp.plugins.api.websdk.endpoints.rights import _Rights
 from pytpp.api.authenticate import Authenticate as _OriginalAuthenticate
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from pytpp.plugins.api.websdk.websdk import WebSDK
 

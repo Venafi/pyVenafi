@@ -6,7 +6,7 @@ from pytpp._about import (
 # noinspection PyUnresolvedReferences
 from pytpp.api.authenticate import Authenticate
 # noinspection PyUnresolvedReferences
-from pytpp.properties.oauth import Scope
+from pytpp.api.websdk.enums.oauth import Scope
 # noinspection PyUnresolvedReferences
 from pytpp.features.definitions.features import Features
 # noinspection PyUnresolvedReferences

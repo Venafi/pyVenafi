@@ -1,27 +1,20 @@
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
-from pytpp.plugins.properties.response_objects.config import Config
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.models import config
 
 
-class _ConfigObjects:
+class _ConfigObjects(ApertureEndpoint):
     def __init__(self, api_obj):
-        self.Policies = self._Policies(api_obj)
+        super().__init__(api_obj=api_obj, url='/configobjects')
+        self.Policies = self._Policies(api_obj=self._api_obj, url=f'{self._url}/policies')
 
-    class _Policies(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/configobjects/policies')
-
+    class _Policies(ApertureEndpoint):
         def post(self, name, container):
             body = {
                 "DN": container + "\\" + name
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Output(ApertureOutputModel):
+                object: config.Object = ApiField()
 
-                @property
-                @api_response_property()
-                def object(self):
-                    return Config.Object(self._from_json(), self._api_source)
-
-            return _Response(response=self._post(data=body), api_source=self._api_source)
+            return generate_output(output_cls=Output, response=self._post(data=body), root_field='object')

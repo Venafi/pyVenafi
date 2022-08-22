@@ -1,64 +1,48 @@
-from pytpp.api.api_base import API, APIResponse, api_response_property
-from pytpp.properties.response_objects.rights import Rights
+from pytpp.api.api_base import generate_output, ApiField, WebSdkEndpoint, WebSdkOutputModel
+from pytpp.plugins.api.websdk.models import rights
+from typing import List
 
 
-class _Rights:
+class _Rights(WebSdkEndpoint):
     def __init__(self, api_obj):
-        self.Add = self._Add(api_obj=api_obj)
-        self.Get = self._Get(api_obj=api_obj)
-        self.Refresh = self._Refresh(api_obj=api_obj)
-        self.Remove = self._Remove(api_obj=api_obj)
+        super().__init__(api_obj=api_obj, url='/Rights')
+        self.Add = self._Add(api_obj=self._api_obj, url=f'{self._url}/Add')
+        self.Get = self._Get(api_obj=self._api_obj, url=f'{self._url}/Get')
+        self.Refresh = self._Refresh(api_obj=self._api_obj, url=f'{self._url}/Refresh')
+        self.Remove = self._Remove(api_obj=self._api_obj, url=f'{self._url}/Remove')
 
-    class _Add(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Rights/Add')
-
+    class _Add(WebSdkEndpoint):
         def post(self, subsystem: str, rights_object: str, universal_id: str, rights_value: str):
             body = {
-                'Subsystem': subsystem,
+                'Subsystem'   : subsystem,
                 'RightsObject': rights_object,
-                'UniversalID': universal_id,
-                'RightsValue': rights_value
+                'UniversalID' : universal_id,
+                'RightsValue' : rights_value
             }
 
-            return APIResponse(response=self._post(data=body))
+            return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))
 
-    class _Get(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Rights/Get')
-
+    class _Get(WebSdkEndpoint):
         def post(self, universal_id: str):
             body = {
                 'UniversalID': universal_id
             }
 
-            class _Response(APIResponse):
-                def __init__(self, response):
-                    super().__init__(response=response)
+            class Output(WebSdkOutputModel):
+                rights: List[rights.Rights] = ApiField(alias='Rights', default_factory=list)
 
-                @property
-                @api_response_property()
-                def rights(self):
-                    return [Rights.Rights(rights) for rights in self._from_json('Rights')]
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
-            return _Response(response=self._post(data=body))
-
-    class _Refresh(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Rights/Refresh')
-
+    class _Refresh(WebSdkEndpoint):
         def get(self):
-            return APIResponse(response=self._get())
+            return generate_output(output_cls=WebSdkOutputModel, response=self._get())
 
-    class _Remove(API):
-        def __init__(self, api_obj):
-            super().__init__(api_obj=api_obj, url='/Rights/Remove')
-
+    class _Remove(WebSdkEndpoint):
         def post(self, universal_id: str, subsystem: str = None, rights_object: str = None):
             body = {
-                "Subsystem": subsystem,
+                "Subsystem"   : subsystem,
                 "RightsObject": rights_object,
-                "UniversalID": universal_id
+                "UniversalID" : universal_id
             }
 
-            return APIResponse(response=self._post(data=body))
+            return generate_output(output_cls=WebSdkOutputModel, response=self._post(data=body))

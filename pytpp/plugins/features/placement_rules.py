@@ -1,11 +1,12 @@
-from typing import TYPE_CHECKING, List, Union
-if TYPE_CHECKING:
-    from pytpp.plugins import Authenticate
 import json
-from pytpp.tools.vtypes import Config
 from pytpp.features.bases.feature_base import feature
 from pytpp.features.placement_rules import PlacementRules as _OriginalPlacementRules, \
     PlacementRuleCondition as _OriginalPlacementRuleCondition
+from typing import TYPE_CHECKING, List, Union
+
+if TYPE_CHECKING:
+    from pytpp.plugins import Authenticate
+    from pytpp.api.websdk.models import config
 
 
 @feature(_OriginalPlacementRuleCondition.__feature__)
@@ -93,9 +94,9 @@ class PlacementRuleCondition(_OriginalPlacementRuleCondition):
         @staticmethod
         def _condition(field: str, comparison: str, value: str):
             return json.dumps({
-                'field': field,
+                'field'     : field,
                 'comparison': comparison,
-                'value': value
+                'value'     : value
             })
 
         def matches(self, value: str):
@@ -208,8 +209,8 @@ class PlacementRules(_OriginalPlacementRules):
         if TYPE_CHECKING:
             self._api = api
 
-    def create(self, name: str, conditions: List[str], device_location: 'Union[Config.Object, str]',
-               certificate_location: 'Union[Config.Object, str]' = None, rule_type: str = 'X509 Certificate',
+    def create(self, name: str, conditions: List[str], device_location: 'Union[config.Object, str]',
+               certificate_location: 'Union[config.Object, str]' = None, rule_type: str = 'X509 Certificate',
                get_if_already_exists: bool = True):
         r"""
         Creates a placement rule.
@@ -252,7 +253,7 @@ class PlacementRules(_OriginalPlacementRules):
         rule = self._api.websdk.Config.IsValid.post(object_guid=response.guid)
         return rule.object
 
-    def delete(self, rule: 'Union[Config.Object, str]'):
+    def delete(self, rule: 'Union[config.Object, str]'):
         """
         Deletes a placement rule.
 
@@ -264,7 +265,7 @@ class PlacementRules(_OriginalPlacementRules):
         ).delete()
         response.assert_valid_response()
 
-    def update(self, rule: 'Union[Config.Object, str]', conditions: List[str] = None, device_location: str = None,
+    def update(self, rule: 'Union[config.Object, str]', conditions: List[str] = None, device_location: str = None,
                certificate_location: str = None, rule_type: str = 'X509 Certificate'):
         r"""
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten

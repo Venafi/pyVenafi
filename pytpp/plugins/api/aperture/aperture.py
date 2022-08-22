@@ -20,6 +20,7 @@ class Aperture:
     currently supported. Re-authentication occurs automatically when the API Key
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
+
     def __init__(self, host: str, username: str, password: str, token: str = None, cookie: str = None,
                  proxies: dict = None, connection_timeout: float = None, read_timeout: float = None):
         """
@@ -43,7 +44,9 @@ class Aperture:
         self._token = token
 
         # This is used by the endpoints to avoid redundancy.
-        self._base_url = f'https://{host}/aperture/api'
+        self._scheme = 'https'
+        self._base_url = f'{self._scheme}://{self._host}'
+        self._app_url = f'{self._base_url}/aperture/api'
         # endregion Instance Variables
 
         # region Authentication
@@ -51,7 +54,7 @@ class Aperture:
         self._session = Session(
             headers={
                 'Content-Type': 'application/json',
-                'Referer': self._base_url.rstrip('/api')
+                'Referer'     : self._base_url.rstrip('/api')
             },
             proxies=proxies,
             connection_timeout=connection_timeout,
@@ -72,7 +75,7 @@ class Aperture:
         self._cookie = cookie
         self._session.update_headers({
             'Authorization': token,
-            'Cookie': cookie
+            'Cookie'       : cookie
         })
         # endregion Authentication
 

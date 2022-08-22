@@ -20,7 +20,7 @@ version = __version__
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinxcontrib.napoleon',
+    'sphinx.ext.napoleon',
     'sphinx.ext.inheritance_diagram',
     'sphinx_rtd_dark_mode'
 ]

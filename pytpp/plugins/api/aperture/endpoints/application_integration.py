@@ -1,12 +1,13 @@
-from pytpp.plugins.api.api_base import API, APIResponse, api_response_property
-from pytpp.plugins.properties.response_objects.identity import Identity
-from pytpp.plugins.properties.response_objects.oauth import OAuth
+from typing import List
+from pytpp.api.api_base import generate_output, ApiField
+from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from pytpp.plugins.api.aperture.models import identity, oauth
 
 
-class _ApplicationIntegration(API):
+class _ApplicationIntegration(ApertureEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/application-integration')
-        self.Access = self._Access(api_obj=api_obj)
+        self.Access = self._Access(api_obj=api_obj, url=f'{self._url}/access')
 
     def post(self, application_id: str, application_name: str, application_scope: dict,
              description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -25,16 +26,10 @@ class _ApplicationIntegration(API):
             'vendor'                   : vendor
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+        class Output(ApertureOutputModel):
+            application_id: str = ApiField()
 
-            @property
-            @api_response_property()
-            def application_id(self) -> str:
-                return self._from_json()
-
-        return _Response(response=self._post(data=body), api_source=self._api_source)
+        return generate_output(output_cls=Output, response=self._post(data=body), root_field='application_id')
 
     def put(self, application_id: str, application_name: str, application_scope: dict,
             description: str, vendor: str, access_validity_days: int = None, grant_validity_days: int = None):
@@ -53,108 +48,39 @@ class _ApplicationIntegration(API):
             'vendor'                   : vendor
         }
 
-        class _Response(APIResponse):
-            def __init__(self, response, api_source):
-                super().__init__(response=response, api_source=api_source)
+        class Output(ApertureOutputModel):
+            application_id: str = ApiField()
 
-            @property
-            @api_response_property()
-            def application_id(self) -> str:
-                return self._from_json()
-
-        return _Response(response=self._put(data=body), api_source=self._api_source)
+        return generate_output(output_cls=Output, response=self._put(data=body), root_field='application_id')
 
     def ApplicationId(self, id: str):
-        return self._ApplicationId(id=id, api_obj=self._api_obj)
+        return self._ApplicationId(api_obj=self._api_obj, url=f'{self._url}/?id={id}')
 
-    class _Access:
-        def __init__(self, api_obj):
-            self._api_obj = api_obj
-
+    class _Access(ApertureEndpoint):
         def ApplicationId(self, id: str):
-            return self._ApplicationId(id=id, api_obj=self._api_obj)
+            return self._ApplicationId(api_obj=self._api_obj, url=f'{self._url}/?id={id}')
 
-        class _ApplicationId(API):
-            def __init__(self, id: str, api_obj):
-                super().__init__(api_obj=api_obj, url=f'/application-integration/access/?id={id}')
-
+        class _ApplicationId(ApertureEndpoint):
             def put(self, identities: list):
                 body = identities
+                return generate_output(output_cls=ApertureOutputModel, response=self._put(data=body))
 
-                return APIResponse(response=self._put(data=body), api_source=self._api_source)
-
-    class _ApplicationId(API):
-        def __init__(self, id: str, api_obj):
-            super().__init__(
-                api_obj=api_obj,
-                url=f'/application-integration/?id={id}'
-            )
-
+    class _ApplicationId(ApertureEndpoint):
         def delete(self):
-            class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
-
-            return _Response(response=self._delete(), api_source=self._api_source)
+            return generate_output(output_cls=ApertureOutputModel, response=self._delete())
 
         def get(self):
-            class _Response(APIResponse):
-                def __init__(self, response, api_source):
-                    super().__init__(response=response, api_source=api_source)
+            class Output(ApertureOutputModel):
+                access_granted: int = ApiField(alias='accessGranted')
+                access_validity_days: int = ApiField(alias='accessValidityDays')
+                allowed_identities: List[identity.Identity] = ApiField(default_factory=list, alias='allowedIdentities')
+                application_id: str = ApiField(alias='applicationId')
+                application_name: str = ApiField(alias='applicationName')
+                application_scope: oauth.ApplicationScope = ApiField(alias='applicationScope')
+                default_access_settings_used: bool = ApiField(alias='defaultAccessSettingsUsed')
+                description: str = ApiField(alias='description')
+                grant_validity_days: int = ApiField(alias='grantValidityDays')
+                renewable: bool = ApiField(alias='renewable')
+                vendor: str = ApiField(alias='vendor')
 
-                @property
-                @api_response_property()
-                def access_granted(self) -> int:
-                    return self._from_json(key='accessGranted')
-
-                @property
-                @api_response_property()
-                def access_validity_days(self) -> int:
-                    return self._from_json(key='accessValidityDays')
-
-                @property
-                @api_response_property()
-                def allowed_identities(self):
-                    return [Identity.Identity(id, self._api_source) for id in self._from_json(key='allowedIdentities')]
-
-                @property
-                @api_response_property()
-                def application_id(self) -> str:
-                    return self._from_json(key='applicationId')
-
-                @property
-                @api_response_property()
-                def application_name(self) -> str:
-                    return self._from_json(key='applicationName')
-
-                @property
-                @api_response_property()
-                def application_scope(self):
-                    return OAuth.ApplicationScope(self._from_json(key='applicationScope'))
-
-                @property
-                @api_response_property()
-                def default_access_settings_used(self) -> bool:
-                    return self._from_json(key='defaultAccessSettingsUsed')
-
-                @property
-                @api_response_property()
-                def description(self) -> str:
-                    return self._from_json(key='description')
-
-                @property
-                @api_response_property()
-                def grant_validity_days(self) -> int:
-                    return self._from_json(key='grantValidityDays')
-
-                @property
-                @api_response_property()
-                def renewable(self) -> bool:
-                    return self._from_json(key='renewable')
-
-                @property
-                @api_response_property()
-                def vendor(self) -> str:
-                    return self._from_json(key='vendor')
-
-            return _Response(response=self._get(), api_source=self._api_source)
+            return generate_output(output_cls=Output, response=self._get())
