@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pytpp.api.websdk.models.resultcodes import ResultCodes
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List, Literal
 
@@ -15,7 +15,7 @@ WorkType = Literal['Client Agent Configuration Work', 'Client Agent Automatic Up
 
 
 # region Models
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -23,19 +23,19 @@ class Result(OutputModel):
         return ResultCodes.Client.get(self.code, 'Unknown')
 
 
-class Work(OutputModel):
+class Work(ObjectModel):
     associated_groups: List[str] = ApiField(alias='AssociatedGroups', default_factory=list)
     work_dn: str = ApiField(alias='WorkDn')
     work_name: str = ApiField(alias='WorkName')
     work_type: WorkType = ApiField(alias='WorkType')
 
 
-class Network(OutputModel):
+class Network(ObjectModel):
     ip_address: str = ApiField(alias='IpAddress')
     mac_address: str = ApiField(alias='MacAddress')
 
 
-class Client(OutputModel):
+class Client(ObjectModel):
     client_id: int = ApiField(alias='ClientId')
     client_type: ClientType = ApiField(alias='ClientType')
     fqdn: str = ApiField(alias='Fqdn')
@@ -43,7 +43,7 @@ class Client(OutputModel):
     username: str = ApiField(alias='Username')
 
 
-class ClientDetails(OutputModel):
+class ClientDetails(ObjectModel):
     certificate_device: str = ApiField(alias='CertificateDevice')
     client_id: int = ApiField(alias='ClientId')
     client_type: ClientType = ApiField(alias='ClientType')

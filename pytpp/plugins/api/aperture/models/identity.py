@@ -1,8 +1,8 @@
 from __future__ import annotations
-from pytpp.api.api_base import ApiField, OutputModel
+from pytpp.api.api_base import ApiField, ObjectModel
 
 
-class Identity(OutputModel):
+class Identity(ObjectModel):
     full_name: str = ApiField(alias='fullName')
     is_container: bool = ApiField(alias='isContainer')
     is_group: bool = ApiField(alias='isGroup')

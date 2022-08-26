@@ -121,7 +121,8 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CountReferences(WebSdkEndpoint):
-        def post(self, application: dict = None, application_collection: dict = None):
+        def post(self, application: Union[dict, codesign.Application] = None, 
+                 application_collection: Union[dict, codesign.ApplicationCollection] = None):
             body = {
                 'Application'          : application,
                 'ApplicationCollection': application_collection
@@ -332,7 +333,8 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateReferences(WebSdkEndpoint):
-        def post(self, application: dict = None, application_collection: dict = None,
+        def post(self, application: Union[dict, codesign.Application] = None, 
+                 application_collection: Union[dict] = None,
                  application_dn: str = None, application_guid: str = None,
                  collection_dn: str = None, collection_guid: str = None):
             body = {
@@ -416,7 +418,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _GetApplicationCollectionMemberDNs(WebSdkEndpoint):
-        def post(self, dn: str = None, guid: str = None, id: int = None, application: dict = None):
+        def post(self, dn: str = None, guid: str = None, id: int = None, application: Union[dict, codesign.Application] = None):
             body = {
                 'Application': application,
                 'Dn'         : dn,
@@ -641,7 +643,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _SetGlobalConfiguration(WebSdkEndpoint):
-        def post(self, global_configuration: dict):
+        def post(self, global_configuration: Union[dict, codesign.GlobalConfiguration]):
             body = {
                 'GlobalConfiguration': global_configuration
             }
@@ -653,7 +655,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateApplication(WebSdkEndpoint):
-        def post(self, application: dict):
+        def post(self, application: Union[dict, codesign.Application]):
             body = {
                 'Application': application
             }
@@ -665,7 +667,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateApplicationCollection(WebSdkEndpoint):
-        def post(self, application_collection: dict):
+        def post(self, application_collection: Union[dict, codesign.ApplicationCollection]):
             body = {
                 'ApplicationCollection': application_collection
             }
@@ -677,8 +679,12 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateEnvironment(WebSdkEndpoint):
-        def post(self, certificate_environment: dict = None, apple_environment: dict = None, csp_environment: dict = None,
-                 dot_net_environment: dict = None, gpg_environment: dict = None, key_pair_environment: dict = None):
+        def post(self, certificate_environment: Union[dict, codesign.CertificateEnvironment] = None,
+                 apple_environment: Union[dict, codesign.AppleEnvironment] = None,
+                 csp_environment: Union[dict, codesign.CSPEnvironment] = None,
+                 dot_net_environment: Union[dict, codesign.DotNetEnvironment] = None,
+                 gpg_environment: Union[dict, codesign.GPGEnvironment] = None,
+                 key_pair_environment: Union[dict, codesign.KeyPairEnvironment] = None):
             body = {
                 'AppleEnvironment'      : apple_environment,
                 'CertificateEnvironment': certificate_environment,
@@ -701,7 +707,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateProject(WebSdkEndpoint):
-        def post(self, project: dict):
+        def post(self, project: Union[dict, codesign.Project]):
             body = {
                 'Project': project
             }
@@ -728,7 +734,8 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateTemplate(WebSdkEndpoint):
-        def post(self, dn: str, certificate_template: dict, object_naming_pattern: str = None):
+        def post(self, dn: str, certificate_template: Union[dict, codesign.CertificateTemplate],
+                 object_naming_pattern: str = None):
             body = {
                 'Dn'                 : dn,
                 'CertificateTemplate': certificate_template,

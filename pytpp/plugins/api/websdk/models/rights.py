@@ -1,8 +1,8 @@
 from __future__ import annotations
-from pytpp.api.api_base import ApiField, OutputModel
+from pytpp.api.api_base import ApiField, ObjectModel
 
 
-class Rights(OutputModel):
+class Rights(ObjectModel):
     checksum: str = ApiField(alias='Checksum')
     is_container: bool = ApiField(alias='IsContainer')
     is_group: bool = ApiField(alias='IsGroup')

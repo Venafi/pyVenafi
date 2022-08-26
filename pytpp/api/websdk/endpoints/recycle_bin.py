@@ -1,6 +1,6 @@
 from pytpp.api.websdk.models import recycle_bin
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from typing import List
+from typing import List, Union
 
 
 class _RecycleBin(WebSdkEndpoint):
@@ -105,7 +105,7 @@ class _RecycleBin(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SetConfiguration(WebSdkEndpoint):
-        def post(self, deletion: dict, purge: dict = None):
+        def post(self, deletion: Union[dict, recycle_bin.Deletion], purge: Union[dict, recycle_bin.Purge] = None):
             body = {
                 'Deletion': deletion,
                 'Purge'   : purge

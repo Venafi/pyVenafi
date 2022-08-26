@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pytpp.api.websdk.models import pki
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
@@ -24,9 +24,10 @@ class _PKI(WebSdkEndpoint):
 
                 return generate_output(output_cls=Output, response=self._get())
 
-            def post(self, certificate: dict, folder_dn: str, pki_path: str, roles: List[str],
+            def post(self, certificate: Union[dict, pki.Certificate], folder_dn: str, pki_path: str, roles: List[str],
                      create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
-                     installation: dict = None, key_algorithm: str = None, key_bit_size: str = None, ocsp_address: str = None):
+                     installation: Union[dict, pki.Installation] = None, key_algorithm: str = None, key_bit_size: str = None,
+                     ocsp_address: str = None):
                 body = {
                     'Certificate'               : certificate,
                     'CreateCertificateAuthority': create_certificate_authority,
@@ -81,9 +82,10 @@ class _PKI(WebSdkEndpoint):
 
                     return generate_output(output_cls=Output, response=self._post(data={}))
 
-                def put(self, folder_dn: str, pki_path: str, roles: List[str], certificate: dict = None,
+                def put(self, folder_dn: str, pki_path: str, roles: List[str], certificate: Union[dict, pki.Certificate] = None,
                         create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
-                        installation: dict = None, key_algorithm: str = None, key_bit_size: str = None, ocsp_address: str = None):
+                        installation: Union[dict, pki.Installation] = None, key_algorithm: str = None,
+                        key_bit_size: str = None, ocsp_address: str = None):
                     body = {
                         'Certificate'               : certificate,
                         'CreateCertificateAuthority': create_certificate_authority,

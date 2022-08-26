@@ -136,7 +136,7 @@ class _Config(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Create(WebSdkEndpoint):
-        def post(self, object_dn: str, class_name: str, name_attribute_list: list):
+        def post(self, object_dn: str, class_name: str, name_attribute_list: List[config.NameAttribute]):
             body = {
                 "ObjectDN"         : object_dn,
                 "Class"            : class_name,

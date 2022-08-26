@@ -1,23 +1,23 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List
 
 
-class PolicyViolation(OutputModel):
+class PolicyViolation(ObjectModel):
     name: str = ApiField(alias='name')
     items: List[str] = ApiField(alias='items', default_factory=list)
     total_items: int = ApiField(alias='totalItems')
 
 
-class Record(OutputModel):
+class Record(ObjectModel):
     record: str = ApiField(alias='record')
     record_value: int = ApiField(alias='recordValue')
     is_risk: bool = ApiField(alias='isRisk')
     is_legend: bool = ApiField(alias='isLegend')
 
 
-class Trend(OutputModel):
+class Trend(ObjectModel):
     date: datetime = ApiField(alias='date')
     orphans: dict = ApiField(alias='orphans')
     non_compliant_hosts: dict = ApiField(alias='nonCompliantHosts')

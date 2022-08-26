@@ -19,7 +19,7 @@ class _Preferences(WebSdkEndpoint):
 
         return generate_output(output_cls=Output, response=self._get(params=params))
 
-    def post(self, preferences: list):
+    def post(self, preferences: List[prefs.Preference]):
         body = {
             'Preferences': preferences
         }

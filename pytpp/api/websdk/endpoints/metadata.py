@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pytpp.api.websdk.models import config, metadata
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
@@ -25,7 +25,7 @@ class _Metadata(WebSdkEndpoint):
         self.UpdateItem = self._UpdateItem(api_obj=self._api_obj, url=f'{self._url}/UpdateItem')
 
     class _DefineItem(WebSdkEndpoint):
-        def post(self, item: dict):
+        def post(self, item: Union[dict, metadata.Item]):
             body = {
                 'Item': item
             }
@@ -198,7 +198,7 @@ class _Metadata(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Set(WebSdkEndpoint):
-        def post(self, dn: str, guid_data: list, keep_existing: bool = False):
+        def post(self, dn: str, guid_data: List[metadata.GuidData], keep_existing: bool = False):
             body = {
                 'DN'          : dn,
                 'GuidData'    : guid_data,
@@ -212,7 +212,7 @@ class _Metadata(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SetPolicy(WebSdkEndpoint):
-        def post(self, dn: str, config_class: str, guid_data: list, locked: bool = False):
+        def post(self, dn: str, config_class: str, guid_data: List[metadata.GuidData], locked: bool = False):
             body = {
                 'DN'         : dn,
                 'ConfigClass': config_class,
@@ -240,7 +240,7 @@ class _Metadata(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _UpdateItem(WebSdkEndpoint):
-        def post(self, item: dict = None, update: dict = None):
+        def post(self, item: Union[dict, metadata.Item] = None, update: Union[dict, metadata.Update] = None):
             body = {
                 'ItemGuid': item,
                 'Update'  : update

@@ -1,5 +1,5 @@
 from typing import List
-from pytpp.api.websdk.models import secret_store
+from pytpp.api.websdk.models import secret_store, certificate
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
@@ -13,8 +13,8 @@ class _X509CertificateStore(WebSdkEndpoint):
         self.Retrieve = self._Retrieve(api_obj=self._api_obj, url=f'{self._url}/Retrieve')
 
     class _Add(WebSdkEndpoint):
-        def post(self, owner_dn: str, certificate_collection_strings: list = None, certificate_string: str = None,
-                 protection_key: str = None, typed_name_values: list = None):
+        def post(self, owner_dn: str, certificate_collection_strings: List[str] = None, certificate_string: str = None,
+                 protection_key: str = None, typed_name_values: List[certificate.NameTypeValue] = None):
             body = {
                 'CertificateCollectionStrings': certificate_collection_strings,
                 'CertificateString'           : certificate_string,

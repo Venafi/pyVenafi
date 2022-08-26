@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from pytpp.api.websdk.models.resultcodes import ResultCodes
 from typing import List, Optional, TypeVar, Generic
 
@@ -8,7 +8,7 @@ T = TypeVar('T')
 
 # region Models
 # region Outputs
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -16,12 +16,12 @@ class Result(OutputModel):
         return ResultCodes.Config.get(self.code, 'Unknown')
 
 
-class NameValues(OutputModel, Generic[T]):
+class NameValues(ObjectModel, Generic[T]):
     name: str = ApiField(alias='Name')
     values: List[T] = ApiField(alias='Values', default_factory=list)
 
 
-class Object(OutputModel):
+class Object(ObjectModel):
     absolute_guid: str = ApiField(alias='AbsoluteGUID')
     dn: str = ApiField(alias='DN')
     guid: str = ApiField(alias='GUID')
@@ -32,7 +32,7 @@ class Object(OutputModel):
     type_name: str = ApiField(alias='TypeName')
 
 
-class Policy(OutputModel):
+class Policy(ObjectModel):
     attribute_name: str = ApiField(alias='AttributeName')
     guid: str = ApiField(alias='GUID')
     property: str = ApiField(alias='Property')
@@ -44,7 +44,7 @@ class Policy(OutputModel):
 
 
 # region Inputs
-class NameAttribute(OutputModel, Generic[T]):
+class NameAttribute(ObjectModel, Generic[T]):
     name: str = ApiField(alias='Name')
     value: T = ApiField(alias='Value')
 # endregion Inputs

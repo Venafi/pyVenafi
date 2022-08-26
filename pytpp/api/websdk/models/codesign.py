@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pytpp.api.websdk.models.resultcodes import ResultCodes
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List, Literal, TypeVar, Generic
 
@@ -26,7 +26,7 @@ TemplateType = Literal[
 
 
 # region Models
-class ResultCode(OutputModel):
+class ResultCode(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -34,17 +34,17 @@ class ResultCode(OutputModel):
         return ResultCodes.CodeSign.get(self.code, 'Unknown')
 
 
-class Items(OutputModel, Generic[T]):
+class Items(ObjectModel, Generic[T]):
     dirty: bool = ApiField(alias='Dirty')
     items: List[T] = ApiField(alias='Items', default_factory=list)
 
 
-class InfoValue(OutputModel, Generic[T]):
+class InfoValue(ObjectModel, Generic[T]):
     info: int = ApiField(alias='Info')
     value: Items[T] = ApiField(alias='Value')
 
 
-class CustomFieldAttributes(OutputModel):
+class CustomFieldAttributes(ObjectModel):
     field_name: str = ApiField(alias='FieldName')
     values: List[str] = ApiField(alias='Values', default_factory=list)
 
@@ -53,12 +53,12 @@ class EnvironmentTemplateDetails(InfoValue[str]):
     template_values: InfoValue[str] = ApiField(alias='TemplateValues')
 
 
-class RightsKeyValue(OutputModel):
+class RightsKeyValue(ObjectModel):
     key: str = ApiField(alias='Key')
     value: int = ApiField(alias='Value')
 
 
-class SignApplicationCollection(OutputModel):
+class SignApplicationCollection(ObjectModel):
     description: str = ApiField(alias='Description')
     dn: str = ApiField(alias='Dn')
     guid: str = ApiField(alias='Guid')
@@ -72,7 +72,7 @@ class SignApplicationCollection(OutputModel):
     version: str = ApiField(alias='Version')
 
 
-class AppleTemplate(OutputModel):
+class AppleTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     certificate_authority_dn: InfoValue[str] = ApiField(alias='CertificateAuthorityDN')
     certificate_subject: InfoValue[str] = ApiField(alias='CertificateSubject')
@@ -98,7 +98,7 @@ class AppleTemplate(OutputModel):
     visible_to: Items[str] = ApiField(alias='VisibleTo')
 
 
-class AppleEnvironment(OutputModel):
+class AppleEnvironment(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     apple_template: AppleTemplate = ApiField(alias='AppleTemplate')
     custom_field_attributes: Items[CustomFieldAttributes] = ApiField(alias='CustomFieldAttributes')
@@ -115,7 +115,7 @@ class AppleEnvironment(OutputModel):
     type: EnvironmentType = ApiField(alias='Type')
 
 
-class CertificateTemplate(OutputModel):
+class CertificateTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     certificate_authority_dn: InfoValue[str] = ApiField(alias='CertificateAuthorityDn')
     certificate_subject: str = ApiField(alias='CertificateSubject')
@@ -143,7 +143,7 @@ class CertificateTemplate(OutputModel):
     visible_to: Items[str] = ApiField(alias='VisibleTo')
 
 
-class CertificateEnvironment(OutputModel):
+class CertificateEnvironment(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     ca_specific_attributes: Items[str] = ApiField(alias='CaSpecificAttributes')
     certificate_authority_dn: InfoValue[str] = ApiField(alias='CertificateAuthorityDn')
@@ -171,7 +171,7 @@ class CertificateEnvironment(OutputModel):
     type: EnvironmentType = ApiField(alias='Type')
 
 
-class CSPTemplate(OutputModel):
+class CSPTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     description: str = ApiField(alias='Description')
     dirty: bool = ApiField(alias='Dirty')
@@ -190,7 +190,7 @@ class CSPTemplate(OutputModel):
     visible_to: Items[str] = ApiField(alias='VisibleTo')
 
 
-class CSPEnvironment(OutputModel):
+class CSPEnvironment(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     csp_template: CSPTemplate = ApiField(alias='CspTemplate')
     disabled: bool = ApiField(alias='Disabled')
@@ -211,7 +211,7 @@ class CSPEnvironment(OutputModel):
     template_dn: str = ApiField(alias='TemplateDn')
 
 
-class DotNetTemplate(OutputModel):
+class DotNetTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     description: str = ApiField(alias='Description')
     disabled: bool = ApiField(alias='Disabled')
@@ -230,7 +230,7 @@ class DotNetTemplate(OutputModel):
     visible_to: Items[str] = ApiField(alias='VisibleTo')
 
 
-class DotNetEnvironment(OutputModel):
+class DotNetEnvironment(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     dot_net_template: DotNetTemplate = ApiField(alias='DotNetTemplate')
     disabled: bool = ApiField(alias='Disabled')
@@ -250,7 +250,7 @@ class DotNetEnvironment(OutputModel):
     type: TemplateType = ApiField(alias='Type')
 
 
-class GPGTemplate(OutputModel):
+class GPGTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     authentication_key_algorithm: InfoValue[str] = ApiField(alias='AuthenticationKeyAlgorithm')
     description: str = ApiField(alias='Description')
@@ -273,7 +273,7 @@ class GPGTemplate(OutputModel):
     visible_to: Items[str] = ApiField(alias='VisibleTo')
 
 
-class GPGEnvironment(OutputModel):
+class GPGEnvironment(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     authentication_key_algorithm: EnvironmentTemplateDetails = ApiField(alias='AuthenticationKeyAlgorithm')
     custom_field_attributes: Items[CustomFieldAttributes] = ApiField(alias='CustomFieldsAttributes')
@@ -299,7 +299,7 @@ class GPGEnvironment(OutputModel):
     type: EnvironmentType = ApiField(alias='Type')
 
 
-class KeyPairTemplate(OutputModel):
+class KeyPairTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     description: str = ApiField(alias='Description')
     dirty: bool = ApiField(alias='Dirty')
@@ -318,7 +318,7 @@ class KeyPairTemplate(OutputModel):
     visible_to: Items[str] = ApiField(alias='VisibleTo')
 
 
-class KeyPairEnvironment(OutputModel):
+class KeyPairEnvironment(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     custom_field_attributes: Items[CustomFieldAttributes] = ApiField(alias='CustomFieldsAttributes')
     dn: str = ApiField(alias='Dn')
@@ -337,7 +337,7 @@ class KeyPairEnvironment(OutputModel):
     type: EnvironmentType = ApiField(alias='Type')
 
 
-class Application(OutputModel):
+class Application(ObjectModel):
     description: str = ApiField(alias='Description')
     dn: str = ApiField(alias='Dn')
     guid: str = ApiField(alias='Guid')
@@ -351,14 +351,14 @@ class Application(OutputModel):
     version: str = ApiField(alias='Version')
 
 
-class ApplicationCollection(OutputModel):
+class ApplicationCollection(ObjectModel):
     application_dns: Items[str] = ApiField(alias='ApplicationDns')
     dn: str = ApiField(alias='Dn')
     guid: str = ApiField(alias='Guid')
     id: int = ApiField(alias='Id')
 
 
-class GlobalConfiguration(OutputModel):
+class GlobalConfiguration(ObjectModel):
     approved_key_storage_locations: Items[str] = ApiField(alias='ApprovedKeyStorageLocations')
     available_key_storage_locations: Items[str] = ApiField(alias='AvailableKeyStorageLocations')
     default_ca_container: str = ApiField(alias='DefaultCaContainer')
@@ -369,7 +369,7 @@ class GlobalConfiguration(OutputModel):
     request_in_progress_message: str = ApiField(alias='RequestInProgressMessage')
 
 
-class Project(OutputModel):
+class Project(ObjectModel):
     application_dns: Items[str] = ApiField(alias='ApplicationDns')
     applications: List[Application] = ApiField(alias='Applications', default_factory=list)
     auditors: Items[str] = ApiField(alias='Auditors')
@@ -390,7 +390,7 @@ class Project(OutputModel):
     status: int = ApiField(alias='Status')
 
 
-class Rights(OutputModel):
+class Rights(ObjectModel):
     value: int = ApiField()
 
     @property

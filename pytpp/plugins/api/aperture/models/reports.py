@@ -1,9 +1,9 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from typing import List
 
 
-class Column(OutputModel):
+class Column(ObjectModel):
     stored_name: str = ApiField(alias='storedName')
     nested_table: List[NestedTable] = ApiField(alias='nestedTable', default_factory=list)
     show_time: bool = ApiField(alias='showTime')
@@ -19,7 +19,7 @@ class Column(OutputModel):
     type_id: str = ApiField(alias='typeId')
 
 
-class NestedTable(OutputModel):
+class NestedTable(ObjectModel):
     type: str = ApiField(alias='type')
     name: str = ApiField(alias='name')
     columns: List[Column] = ApiField(alias='columns', default_factory=list)

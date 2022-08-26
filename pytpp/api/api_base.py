@@ -355,7 +355,7 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
         raise InvalidResponseError(str(error), response=response)
 
 
-class OutputModel(BaseModel, metaclass=ApiModelMetaclass):
+class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
     class Config:
         arbitrary_types_allowed = True
         allow_population_by_field_name = True
@@ -365,22 +365,21 @@ class OutputModel(BaseModel, metaclass=ApiModelMetaclass):
         new_values = {}
         lowered_values = {k.lower(): v for k, v in values.items()}
         for fk, fv in cls.__fields__.items():
-            alias = fv.alias
-            try:
-                if alias.lower() not in lowered_values:
-                    continue
-                new_value = lowered_values[alias.lower()]
-                if fv.type_ is datetime and '\\Date' in new_value:
-                    new_value = re.sub(r'\D', '', new_value)
-                if (converter := fv.field_info.extra.get('converter')) is not None:
-                    new_value = converter(new_value)
-                new_values[alias] = new_value
-            except KeyError:
-                raise KeyError(f'"{alias}" not found in the response.')
+            if fv.name in values:
+                new_value = values[fv.name]
+            elif fv.alias.lower() in lowered_values:
+                new_value = lowered_values[fv.alias.lower()]
+            else:
+                continue
+            if fv.type_ is datetime and '\\Date' in new_value:
+                new_value = re.sub(r'\D', '', new_value)
+            if (converter := fv.field_info.extra.get('converter')) is not None:
+                new_value = converter(new_value)
+            new_values[fv.alias] = new_value
         return new_values
 
 
-class RootOutputModel(OutputModel):
+class RootOutputModel(ObjectModel):
     api_response: Response = Field(exclude=True)
 
     def assert_valid_response(self):

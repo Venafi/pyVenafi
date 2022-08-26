@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Union
 from pytpp.api.websdk.models import certificate
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
@@ -23,7 +23,8 @@ class _Certificates(WebSdkEndpoint):
     def Guid(self, guid):
         return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
-    def get(self, limit: int = None, offset: int = None, optional_fields: list = None, filters: dict = None):
+    def get(self, limit: int = None, offset: int = None, optional_fields: List[str] = None,
+            filters: Union[dict, certificate.CertificateFilter] = None):
         params = {
             'Limit'         : limit,
             'Offset'        : offset,
@@ -40,7 +41,7 @@ class _Certificates(WebSdkEndpoint):
 
         return generate_output(response=self._get(params=params), output_cls=Output)
 
-    def head(self, filters: dict = None):
+    def head(self, filters: Union[dict, certificate.CertificateFilter] = None):
         params = filters
 
         class Output(WebSdkOutputModel):
@@ -160,7 +161,8 @@ class _Certificates(WebSdkEndpoint):
                 return generate_output(response=self._get(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
-        def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: list = None, object_name: str = None,
+        def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: List[certificate.NameValue] = None,
+                 object_name: str = None,
                  password: str = None, private_key_data: str = None, reconcile: bool = False):
             body = {
                 'CertificateData'     : certificate_data,

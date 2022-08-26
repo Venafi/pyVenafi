@@ -40,7 +40,7 @@ class _Client(WebSdkEndpoint):
         return generate_output(response=self._get(params=params), output_cls=Output, root_field='clients')
 
     class _Delete(WebSdkEndpoint):
-        def post(self, clients: list, delete_associated_devices: bool = False):
+        def post(self, clients: List[client.Client], delete_associated_devices: bool = False):
             body = {
                 'Clients'                : clients,
                 'DeleteAssociatedDevices': delete_associated_devices

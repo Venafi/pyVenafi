@@ -1,22 +1,22 @@
 from __future__ import annotations
 from typing import List
 from datetime import datetime
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
-class SshWebResponse(OutputModel):
+class SshWebResponse(ObjectModel):
     success: bool = ApiField(alias='Success')
     error_code: int = ApiField(alias='ErrorCode')
     error_message: str = ApiField(alias='ErrorMessage')
 
 
-class ConnectionResult(OutputModel):
+class ConnectionResult(ObjectModel):
     device_guid: str = ApiField(alias='DeviceGuid')
     error: str = ApiField(alias='Error')
     success: bool = ApiField(alias='Success')
 
 
-class DeviceData(OutputModel):
+class DeviceData(ObjectModel):
     dn: str = ApiField(alias='Dn')
     device_guid: str = ApiField(alias='DeviceGuid')
     host_name: str = ApiField(alias='HostName')
@@ -24,7 +24,7 @@ class DeviceData(OutputModel):
     type: str = ApiField(alias='Type')
 
 
-class KeyData(OutputModel):
+class KeyData(ObjectModel):
     active_from: datetime = ApiField(alias='ActiveFrom')
     algorithm: str = ApiField(alias='Algorithm')
     allowed_source_restriction: List[str] = ApiField(alias='AllowedSourceRestriction', default_factory=list)
@@ -53,7 +53,7 @@ class KeyData(OutputModel):
     violation_status: List[int] = ApiField(alias='ViolationStatus', default_factory=list)
 
 
-class KeySetData(OutputModel):
+class KeySetData(ObjectModel):
     access: str = ApiField(alias='Access')
     algorithm: str = ApiField(alias='Algorithm')
     fingerprint_md5: str = ApiField(alias='FingerprintMD5')
@@ -71,7 +71,7 @@ class KeySetData(OutputModel):
     violation_status: list = ApiField(alias='ViolationStatus')
 
 
-class KeyUsageData(OutputModel):
+class KeyUsageData(ObjectModel):
     alert: int = ApiField(alias='Alert')
     authorized_key_id: int = ApiField(alias='AuthorizedKeyId')
     client_name: str = ApiField(alias='ClientName')
@@ -82,3 +82,37 @@ class KeyUsageData(OutputModel):
     private_key_id: int = ApiField(alias='PrivateKeyId')
     server_account: str = ApiField(alias='ServerAccount')
     server_name: str = ApiField(alias='ServerName')
+
+
+class SshDeviceFilter(ObjectModel):
+    device_names: List[str] = ApiField(alias='DeviceNames', default_factory=list)
+    is_compliant: bool = ApiField(alias='IsCompliant')
+    type: str = ApiField(alias='Type')
+
+
+class LogData(ObjectModel):
+    log_record: str = ApiField(alias='LogRecord')
+    log_utc_epoch_date: int = ApiField(alias='LogUtcEpochDate')
+
+
+class KeySetFilter(ObjectModel):
+    algorithm: List[str] = ApiField(alias='Algorithm')
+    authorized_key_comment: List[str] = ApiField(alias='AuthorizedKeyComment')
+    device_guids: List[str] = ApiField(alias='DeviceGuids')
+    fingerprints_md5: List[str] = ApiField(alias='FingerprintsMD5')
+    fingerprints_sha256: List[str] = ApiField(alias='FingerprintsSHA256')
+    last_used: datetime = ApiField(alias='LastUsed')
+    length: List[int] = ApiField(alias='Length')
+    max_key_length: int = ApiField(alias='MaxKeyLength')
+    process_statuses: List[int] = ApiField(alias='ProcessStatuses')
+    type: str = ApiField(alias='Type')
+    usage_filter_type: str = ApiField(alias='UsageFilterType')
+    usernames: List[str] = ApiField(alias='Usernames')
+    violation_statuses: List[int] = ApiField(alias='ViolationStatuses')
+
+
+class KeyUsageFilter(ObjectModel):
+    client_name: List[str] = ApiField(alias='ClientName')
+    server_account: List[str] = ApiField(alias='ServerAccount')
+    server_name: List[str] = ApiField(alias='ServerName')
+    alert: List[int] = ApiField(alias='Alert')

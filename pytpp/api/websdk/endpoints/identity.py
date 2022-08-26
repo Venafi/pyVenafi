@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 from pytpp.api.websdk.models import identity as ident
 
@@ -21,7 +21,7 @@ class _Identity(WebSdkEndpoint):
         self.Validate = self._Validate(api_obj=self._api_obj, url=f'{self._url}/Validate')
 
     class _AddGroup(WebSdkEndpoint):
-        def post(self, name: str, members: list = None, products: list = None):
+        def post(self, name: str, members: List[Union[dict, ident.Identity]] = None, products: List[str] = None):
             body = {
                 'Name'    : name,
                 'Members' : members,
@@ -37,7 +37,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddGroupMembers(WebSdkEndpoint):
-        def put(self, group: dict, members: list, show_members: bool = False):
+        def put(self, group: Union[dict, ident.Identity], members: List[Union[dict, ident.Identity]], show_members: bool = False):
             body = {
                 'Group'      : group,
                 'Members'    : members,
@@ -66,7 +66,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetAssociatedEntries(WebSdkEndpoint):
-        def post(self, identity: dict):
+        def post(self, identity: Union[dict, ident.Identity]):
             body = {
                 'ID': identity
             }
@@ -77,7 +77,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetMembers(WebSdkEndpoint):
-        def post(self, identity: dict, resolve_nested: bool = False):
+        def post(self, identity: Union[dict, ident.Identity], resolve_nested: bool = False):
             body = {
                 'ID'           : identity,
                 'ResolveNested': int(resolve_nested)
@@ -89,7 +89,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _GetMemberships(WebSdkEndpoint):
-        def post(self, identity: dict):
+        def post(self, identity: Union[dict, ident.Identity]):
             body = {
                 'ID': identity
             }
@@ -115,7 +115,7 @@ class _Identity(WebSdkEndpoint):
                     return generate_output(output_cls=Output, response=self._delete())
 
     class _ReadAttribute(WebSdkEndpoint):
-        def post(self, attribute_name: str, identity: dict):
+        def post(self, attribute_name: str, identity: Union[dict, ident.Identity]):
             body = {
                 'ID'           : identity,
                 'AttributeName': attribute_name
@@ -127,7 +127,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RemoveGroupMembers(WebSdkEndpoint):
-        def put(self, group: dict, members: list, show_members: bool = False):
+        def put(self, group: Union[dict, ident.Identity], members: List[Union[dict, ident.Identity]], show_members: bool = False):
             body = {
                 'Group'      : group,
                 'Members'    : members,
@@ -142,7 +142,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RenameGroup(WebSdkEndpoint):
-        def put(self, group: dict, new_group_name: str):
+        def put(self, group: Union[dict, ident.Identity], new_group_name: str):
             body = {
                 'Group'       : group,
                 'NewGroupName': new_group_name
@@ -161,7 +161,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._get())
 
     class _SetPassword(WebSdkEndpoint):
-        def post(self, identity: dict, password: str, old_password: str = None):
+        def post(self, identity: Union[dict, ident.Identity], password: str, old_password: str = None):
             body = {
                 'ID'         : identity,
                 'OldPassword': old_password,
@@ -174,7 +174,7 @@ class _Identity(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Validate(WebSdkEndpoint):
-        def post(self, identity: dict):
+        def post(self, identity: Union[dict, ident.Identity]):
             body = {
                 'ID': identity
             }

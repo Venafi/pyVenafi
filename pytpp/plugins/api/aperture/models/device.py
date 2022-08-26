@@ -1,10 +1,10 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List
 
 
-class Device(OutputModel):
+class Device(ObjectModel):
     guid: str = ApiField(alias='guid')
     name: str = ApiField(alias='name')
     dn: str = ApiField(alias='dn')

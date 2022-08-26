@@ -1,8 +1,8 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
-class Permissions(OutputModel):
+class Permissions(ObjectModel):
     is_associate_allowed: bool = ApiField(alias='IsAssociateAllowed')
     is_create_allowed: bool = ApiField(alias='IsCreateAllowed')
     is_delete_allowed: bool = ApiField(alias='IsDeleteAllowed')

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from pytpp.api.websdk.models import hsm_api
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
@@ -13,9 +13,9 @@ class _HSMAPI(WebSdkEndpoint):
         self.GetObjects = self._GetObjects(api_obj=self._api_obj, url=f'{self._url}/GetObjects')
 
     class _Sign(WebSdkEndpoint):
-        def post(self, client_info: dict, data: str, key_context: str, key_id: int, mechanism: int,
-                 process_info: dict, client_mechanism: str = None, justification: str = None,
-                 key_context_to_wrap: int = None, key_id_to_wrap: int = None, parameter: dict = None,
+        def post(self, client_info: Union[dict, hsm_api.ClientInfo], data: str, key_context: str, key_id: int, mechanism: int,
+                 process_info: Union[dict, hsm_api.ProcessInfo], client_mechanism: str = None, justification: str = None,
+                 key_context_to_wrap: int = None, key_id_to_wrap: int = None, parameter: Union[dict, hsm_api.Parameter] = None,
                  password: str = None, username: str = None, verify_data: bool = None,
                  wrapping_key_id: int = None):
             body = {
@@ -44,7 +44,7 @@ class _HSMAPI(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SignJWT(WebSdkEndpoint):
-        def post(self, client_info: dict, process_info: dict, key_id: str,
+        def post(self, client_info: Union[dict, hsm_api.ClientInfo], process_info: Union[dict, hsm_api.ProcessInfo], key_id: str,
                  header: str, payload: str):
             body = {
                 'ClientInfo' : client_info,

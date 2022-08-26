@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from typing import Literal
 
 ProductType = Literal[
@@ -11,7 +11,7 @@ ProductType = Literal[
 ]
 
 
-class Preference(OutputModel):
+class Preference(ObjectModel):
     id: int = ApiField(alias='Id')
     universal: str = ApiField(alias='Universal')
     product: str = ApiField(alias='Product')

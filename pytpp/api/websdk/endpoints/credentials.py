@@ -115,8 +115,9 @@ class _Credentials(WebSdkEndpoint):
                     return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Create(WebSdkEndpoint):
-        def post(self, credential_path: str, friendly_name: str, values: list, password: str = None, description: str = None,
-                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
+        def post(self, credential_path: str, friendly_name: str, values: List[credential.NameTypeValue], password: str = None,
+                 description: str = None, encryption_key: str = None, shared: bool = False, expiration: int = None,
+                 contact: List[str] = None):
             body = {
                 'CredentialPath': credential_path,
                 'Password'      : password,
@@ -189,8 +190,8 @@ class _Credentials(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Update(WebSdkEndpoint):
-        def post(self, credential_path: str, friendly_name: str, values: list, description: str = None,
-                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: list = None):
+        def post(self, credential_path: str, friendly_name: str, values: List[credential.NameTypeValue], description: str = None,
+                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
             body = {
                 'CredentialPath': credential_path,
                 'FriendlyName'  : friendly_name,

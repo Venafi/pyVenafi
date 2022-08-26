@@ -1,10 +1,10 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List
 
 
-class Engine(OutputModel):
+class Engine(ObjectModel):
     dn: str = ApiField(alias='Dn')
     display_name: str = ApiField(alias='DisplayName')
     guid: str = ApiField(alias='Guid')
@@ -12,7 +12,7 @@ class Engine(OutputModel):
     name: str = ApiField(alias='Name')
 
 
-class IisService(OutputModel):
+class IisService(ObjectModel):
     modules: List[str] = ApiField(alias='modules', default_factory=list)
     time_since_first_seen: datetime = ApiField(alias='timeSinceFirstSeen')
     time_since_last_seen: datetime = ApiField(alias='timeSinceLastSeen')
@@ -22,7 +22,7 @@ class IisService(OutputModel):
 class LogServerService(IisService): ...  # This is currently the same.
 
 
-class vPlatformService(OutputModel):
+class vPlatformService(ObjectModel):
     configured_latency: int = ApiField(alias='configuredLatency')
     configured_mode: str = ApiField(alias='configuredMode')
     configured_work: int = ApiField(alias='configuredWork')
@@ -35,20 +35,20 @@ class vPlatformService(OutputModel):
     time_since_last_seen: datetime = ApiField(alias='timeSinceLastSeen')
 
 
-class Services(OutputModel):
+class Services(ObjectModel):
     vplatform: vPlatformService = ApiField(alias='Vplatform')
     log_server: LogServerService = ApiField(alias='LogServer')
     iis: IisService = ApiField(alias='Iis')
 
 
-class SystemStatus(OutputModel):
+class SystemStatus(ObjectModel):
     engine_dn: str = ApiField(alias='engineDn')
     engine_name: str = ApiField(alias='engineName')
     services: Services = ApiField(alias='services')
     version: str = ApiField(alias='version')
 
 
-class Task(OutputModel):
+class Task(ObjectModel):
     display_name: str = ApiField(alias='DisplayName')
     name: str = ApiField(alias='Name')
     start_time: datetime = ApiField(alias='StartTime')
@@ -56,13 +56,13 @@ class Task(OutputModel):
     warning_count: int = ApiField(alias='WarningCount')
 
 
-class UpgradeInfo(OutputModel):
+class UpgradeInfo(ObjectModel):
     id: str = ApiField(alias='Id')
     start_time: datetime = ApiField(alias='StartTime')
     versions: List[str] = ApiField(alias='Versions', default_factory=list)
 
 
-class UpgradeStatus(OutputModel):
+class UpgradeStatus(ObjectModel):
     engine: 'Engine' = ApiField(alias='Engine')
     status: str = ApiField(alias='Status')
     upgrade_start_time: datetime = ApiField(alias='UpgradeStartTime')
@@ -72,7 +72,7 @@ class UpgradeStatus(OutputModel):
     tasks_running: List[Task] = ApiField(alias='TasksRunning', default_factory=list)
 
 
-class UpgradeSummary(OutputModel):
+class UpgradeSummary(ObjectModel):
     status: str = ApiField(alias='Status')
     upgrade_start_time: datetime = ApiField(alias='UpgradeStartTime')
     upgrade_stop_time: datetime = ApiField(alias='UpgradeStopTime')

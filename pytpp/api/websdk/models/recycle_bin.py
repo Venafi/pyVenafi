@@ -3,11 +3,11 @@ from datetime import datetime
 
 from pytpp.api.websdk.models.resultcodes import ResultCodes
 from pytpp.api.websdk.models.identity import Identity
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from typing import List
 
 
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -15,14 +15,14 @@ class Result(OutputModel):
         return ResultCodes.RecycleBin.get(self.code, 'Unknown')
 
 
-class Deletion(OutputModel):
+class Deletion(ObjectModel):
     allotted_time: int = ApiField(alias='AllottedTime')
     query_size: int = ApiField(alias='QuerySize')
     sql_timeout: int = ApiField(alias='SqlTimeout')
     tasks: List[str] = ApiField(alias='Tasks', default_factory=list)
 
 
-class Item(OutputModel):
+class Item(ObjectModel):
     child_count: int = ApiField(alias='ChildCount')
     dn: str = ApiField(alias='DN')
     deleted_by: Identity = ApiField(alias='DeletedBy')
@@ -36,7 +36,7 @@ class Item(OutputModel):
     type_detail: str = ApiField(alias='TypeDetail')
 
 
-class Purge(OutputModel):
+class Purge(ObjectModel):
     after: int = ApiField(alias='After')
     allotted_time: int = ApiField(alias='AllottedTime')
     engine_dn: str = ApiField(alias='EngineDN')

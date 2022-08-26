@@ -1,9 +1,9 @@
 from __future__ import annotations
 from pytpp.api.websdk.models.resultcodes import ResultCodes
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -11,7 +11,7 @@ class Result(OutputModel):
         return ResultCodes.SecretStore.get(self.code, 'Unknown')
 
 
-class TypedNameValues(OutputModel):
+class TypedNameValues(ObjectModel):
     name: str = ApiField(alias='Name')
     type: str = ApiField(alias='Type')
     value: str = ApiField(alias='Value')

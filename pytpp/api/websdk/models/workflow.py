@@ -1,11 +1,11 @@
 from __future__ import annotations
 from pytpp.api.websdk.models.resultcodes import ResultCodes
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List
 
 
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -13,7 +13,7 @@ class Result(OutputModel):
         return ResultCodes.Client.get(self.code, 'Unknown')
 
 
-class Details(OutputModel):
+class Details(ObjectModel):
     approval_explanation: str = ApiField(alias='ApprovalExplanation')
     approval_from: str = ApiField(alias='ApprovalFrom')
     approvers: List[str] = ApiField(alias='Approvers', default_factory=list)

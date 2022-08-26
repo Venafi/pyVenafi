@@ -1,9 +1,9 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 
 
-class Record(OutputModel):
+class Record(ObjectModel):
     filter_key: str = ApiField(alias='filterKey')
     record: str = ApiField(alias='record')
     record_value: int = ApiField(alias='recordValue')
@@ -11,7 +11,7 @@ class Record(OutputModel):
     is_legend: bool = ApiField(alias='isLegend')
 
 
-class Trend(OutputModel):
+class Trend(ObjectModel):
     date: datetime = ApiField(alias='date')
     key_length: dict = ApiField(alias='keyLength')
     signing_algorithm: dict = ApiField(alias='signingAlgorithm')

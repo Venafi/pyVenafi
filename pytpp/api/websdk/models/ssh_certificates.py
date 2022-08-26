@@ -1,20 +1,20 @@
 from __future__ import annotations
 from typing import List
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
-class Output(OutputModel):
+class Output(ObjectModel):
     success: bool = ApiField(alias='Success')
     error_code: int = ApiField(alias='ErrorCode')
     error_message: str = ApiField(alias='ErrorMessage')
 
 
-class ProcessingDetails(OutputModel):
+class ProcessingDetails(ObjectModel):
     status: str = ApiField(alias='Status')
     status_description: str = ApiField(alias='StatusDescription')
 
 
-class CertificateDetails(OutputModel):
+class CertificateDetails(ObjectModel):
     ca_fingerprint_sha256: str = ApiField(alias='CaFingerprintSha256')
     certificate_fingerprint_sha256: str = ApiField(alias='CertificateFingerprintSha256')
     certificate_type: str = ApiField(alias='CertificateType')
@@ -29,12 +29,12 @@ class CertificateDetails(OutputModel):
     valid_to: int = ApiField(alias='ValidTo')
 
 
-class RequestDetails(OutputModel):
+class RequestDetails(ObjectModel):
     originating_ip: str = ApiField(alias='OriginatingIp')
     requested_by: str = ApiField(alias='RequestedBy')
 
 
-class AccessControl(OutputModel):
+class AccessControl(ObjectModel):
     allowed_certificate_identifier_patterns: List[str] = ApiField(alias='AllowedCertificateIdentifierPatterns', default_factory=list)
     allowed_extensions: List[str] = ApiField(alias='AllowedExtensions', default_factory=list)
     allowed_force_command_patterns: List[str] = ApiField(alias='AllowedForceCommandPatterns', default_factory=list)
@@ -47,7 +47,7 @@ class AccessControl(OutputModel):
     default_source_addresses: List[str] = ApiField(alias='DefaultSourceAddresses', default_factory=list)
 
 
-class APIClient(OutputModel):
+class APIClient(ObjectModel):
     allowed_to_request_certificate_identifier: bool = ApiField(alias='AllowedToRequestCertificateIdentifier')
     allowed_to_request_extensions: bool = ApiField(alias='AllowedToRequestExtensions')
     allowed_to_request_force_command: bool = ApiField(alias='AllowedToRequestForceCommand')
@@ -55,7 +55,7 @@ class APIClient(OutputModel):
     allowed_to_request_source_addresses: bool = ApiField(alias='AllowedToRequestSourceAddresses')
 
 
-class Certificate(OutputModel):
+class Certificate(ObjectModel):
     allowed_private_key_algorithms: List[str] = ApiField(alias='AllowedPrivateKeyAlgorithms', default_factory=list)
     allowed_private_key_reuse: bool = ApiField(alias='AllowedPrivateKeyReuse')
     certificate_destination_dn: str = ApiField(alias='CertificateDestinationDn')
@@ -65,7 +65,7 @@ class Certificate(OutputModel):
     validity_period: str = ApiField(alias='ValidityPeriod')
 
 
-class CAKeyPair(OutputModel):
+class CAKeyPair(ObjectModel):
     created_on: str = ApiField(alias='CreatedOn')
     dn: str = ApiField(alias='Dn')
     fingerprint_sha256: str = ApiField(alias='FingerprintSha256')

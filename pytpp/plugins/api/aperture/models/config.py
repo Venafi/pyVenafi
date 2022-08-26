@@ -1,9 +1,9 @@
 from __future__ import annotations
-from pytpp.api.api_base import ApiField, OutputModel
+from pytpp.api.api_base import ApiField, ObjectModel
 from typing import Optional
 
 
-class Object(OutputModel):
+class Object(ObjectModel):
     absolute_guid: str = ApiField(alias='parentPolicyGuid')
     dn: str = ApiField(alias='dn')
     guid: str = ApiField(alias='id')

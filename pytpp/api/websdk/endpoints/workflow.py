@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pytpp.api.websdk.models import workflow
+from pytpp.api.websdk.models import workflow, identity as ident
+from typing import List
 
 
 class _Workflow(WebSdkEndpoint):
@@ -21,7 +21,7 @@ class _Workflow(WebSdkEndpoint):
             self.UpdateStatus = self._UpdateStatus(api_obj=self._api_obj, url=f'{self._url}/UpdateStatus')
 
         class _Create(WebSdkEndpoint):
-            def post(self, object_dn: str, approvers: list, reason: str, workflow_dn: str, user_data: str = None):
+            def post(self, object_dn: str, approvers: List[ident.Identity], reason: str, workflow_dn: str, user_data: str = None):
                 body = {
                     'ObjectDN'  : object_dn,
                     'Approvers' : approvers,

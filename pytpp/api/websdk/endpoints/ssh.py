@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, Dict, List, Union
 from pytpp.api.websdk.models import ssh
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
@@ -42,8 +42,9 @@ class _SSH(WebSdkEndpoint):
 
     class _AddAuthorizedKey(WebSdkEndpoint):
         # noinspection ALL
-        def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, allowed_source_restriction: list = None,
-                 denied_source_restriction: list = None, forced_command: str = None, format: str = None, options: list = None):
+        def post(self, device_guid: str, filepath: str, keyset_id: str, username: str, allowed_source_restriction: List[str] = None,
+                 denied_source_restriction: List[str] = None, forced_command: str = None, format: str = None, 
+                 options: List[str] = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
                 'DeniedSourceRestriction' : denied_source_restriction,
@@ -98,8 +99,9 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddSelfServiceAuthorizedKey(WebSdkEndpoint):
-        def post(self, allowed_source_restriction: list, denied_source_restriction: list, folder_id: str, location: str, notes: str,
-                 options: list, owner: str, contact_email: str = None, forced_command: str = None, keyset_id: str = None):
+        def post(self, allowed_source_restriction: List[str], denied_source_restriction: List[str], folder_id: str, location: str, 
+                 notes: str, options: List[str], owner: str, contact_email: str = None, forced_command: str = None, 
+                 keyset_id: str = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
                 'ContactEmail'            : contact_email,
@@ -230,7 +232,7 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Devices(WebSdkEndpoint):
-        def post(self, page_size: int, offset: int = None, ssh_device_filter: dict = None):
+        def post(self, page_size: int, offset: int = None, ssh_device_filter: Union[dict, ssh.SshDeviceFilter] = None):
             body = {
                 'PageSize'       : page_size,
                 'Offset'         : offset,
@@ -243,8 +245,8 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _EditKeyOptions(WebSdkEndpoint):
-        def post(self, key_id: int, allowed_source_restriction: list = None, denied_source_restriction: list = None,
-                 forced_command: str = None, options: list = None):
+        def post(self, key_id: int, allowed_source_restriction: List[str] = None, denied_source_restriction: List[str] = None,
+                 forced_command: str = None, options: List[str] = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
                 'DeniedSourceRestriction' : denied_source_restriction,
@@ -259,9 +261,9 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _EditSelfServiceAuthorizedKey(WebSdkEndpoint):
-        def post(self, key_id: int, allowed_source_restriction: list = None,
-                 denied_source_restriction: list = None, forced_command: str = None,
-                 location: str = None, notes: str = None, options: list = None):
+        def post(self, key_id: int, allowed_source_restriction: List[str] = None,
+                 denied_source_restriction: List[str] = None, forced_command: str = None,
+                 location: str = None, notes: str = None, options: List[str] = None):
             body = {
                 'AllowedSourceRestriction': allowed_source_restriction,
                 'DeniedSourceRestriction' : denied_source_restriction,
@@ -324,7 +326,7 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _ImportKeyUsageData(WebSdkEndpoint):
-        def post(self, log_data: list):
+        def post(self, log_data: List[ssh.LogData]):
             body = {
                 'LogData': log_data
             }
@@ -379,7 +381,8 @@ class _SSH(WebSdkEndpoint):
 
             return generate_output(output_cls=Output, response=self._get(params=params))
 
-        def post(self, page_size: int, keyset_filter: list = None, load_key_data: bool = None, offset: int = None):
+        def post(self, page_size: int, keyset_filter: List[ssh.KeySetFilter] = None, load_key_data: bool = None,
+                 offset: int = None):
             body = {
                 'KeysetFilter': keyset_filter,
                 'LoadKeyData' : load_key_data,
@@ -393,7 +396,7 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _KeyUsage(WebSdkEndpoint):
-        def post(self, ssh_key_usage_filter: list, page_size: int = None, offset: int = None):
+        def post(self, ssh_key_usage_filter: List[ssh.KeyUsageFilter], page_size: int = None, offset: int = None):
             body = {
                 'SshKeyUsageFilter': ssh_key_usage_filter,
                 'PageSize'         : page_size,
@@ -406,7 +409,7 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _MoveKeysetsToPolicy(WebSdkEndpoint):
-        def post(self, keyset_ids: list, policy_dn: str = None, policy_path: str = None):
+        def post(self, keyset_ids: List[str], policy_dn: str = None, policy_path: str = None):
             body = {
                 'KeysetIds' : keyset_ids,
                 'PolicyDN'  : policy_dn,
@@ -557,7 +560,7 @@ class _SSH(WebSdkEndpoint):
                 }
 
                 class Output(WebSdkOutputModel):
-                    stats: dict = ApiField()
+                    stats: Dict[str, Any] = ApiField()
 
                 return generate_output(output_cls=Output, response=self._get(params=params),
                                        root_field='stats')

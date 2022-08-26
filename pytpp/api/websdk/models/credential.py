@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pytpp.api.websdk.models.resultcodes import ResultCodes
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from typing import Literal
 
 CredentialType = Literal[
@@ -9,7 +9,7 @@ CredentialType = Literal[
 ]
 
 
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -17,12 +17,12 @@ class Result(OutputModel):
         return ResultCodes.Credential.get(self.code, 'Unknown')
 
 
-class CredentialInfo(OutputModel):
+class CredentialInfo(ObjectModel):
     class_name: str = ApiField(alias='ClassName')
     full_name: str = ApiField(alias='FullName')
 
 
-class NameTypeValue(OutputModel):
+class NameTypeValue(ObjectModel):
     name: str = ApiField(alias='Name')
     type: str = ApiField(alias='Type')
     value: str = ApiField(alias='Value')

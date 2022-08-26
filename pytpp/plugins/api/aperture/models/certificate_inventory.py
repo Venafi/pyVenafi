@@ -1,10 +1,10 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from typing import List, Dict
 from datetime import datetime
 
 
-class CertificateDetails(OutputModel):
+class CertificateDetails(ObjectModel):
     allowed_app_type: str = ApiField(alias='allowedAppType')
     aperture_status: List[str] = ApiField(alias='apertureStatus', default_factory=list)
     approver: List[str] = ApiField(alias='approver', default_factory=list)

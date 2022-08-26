@@ -1,9 +1,9 @@
 from __future__ import annotations
 from datetime import datetime
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
-class LogEvent(OutputModel):
+class LogEvent(ObjectModel):
     client_timestamp: datetime = ApiField(alias='ClientTimestamp')
     component: str = ApiField(alias='Component')
     component_id: int = ApiField(alias='ComponentId')
@@ -21,12 +21,12 @@ class LogEvent(OutputModel):
     value2: int = ApiField(alias='Value2')
 
 
-class LogEventApplicationDefinition(OutputModel):
+class LogEventApplicationDefinition(ObjectModel):
     application_name: str = ApiField(alias='ApplicationName')
     id: int = ApiField(alias='Id')
 
 
-class LogEventDefinition(OutputModel):
+class LogEventDefinition(ObjectModel):
     data_format: str = ApiField(alias='DataFormat')
     data_title: str = ApiField(alias='DataTitle')
     data_type: str = ApiField(alias='DataType')

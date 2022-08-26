@@ -1,5 +1,6 @@
-from typing import List
 from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from pytpp.api.websdk.models import discovery
+from typing import List
 
 
 class _Discovery(WebSdkEndpoint):
@@ -18,7 +19,7 @@ class _Discovery(WebSdkEndpoint):
             return generate_output(response=self._delete(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
-        def post(self, endpoints: list, zone_name: str):
+        def post(self, endpoints: List[discovery.Endpoint], zone_name: str):
             body = {
                 'zoneName' : zone_name,
                 'endpoints': endpoints

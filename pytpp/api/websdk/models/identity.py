@@ -1,8 +1,8 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
-class Identity(OutputModel):
+class Identity(ObjectModel):
     full_name: str = ApiField(alias='FullName')
     is_container: bool = ApiField(alias='IsContainer')
     is_group: bool = ApiField(alias='IsGroup')
@@ -26,7 +26,7 @@ class Identity(OutputModel):
         return self.type & 8 == 8
 
 
-class InvalidIdentity(OutputModel):
+class InvalidIdentity(ObjectModel):
     prefix: str = ApiField(alias='Prefix')
     prefixed_name: str = ApiField(alias='PrefixedName')
     prefixed_universal: str = ApiField(alias='PrefixedUniversal')

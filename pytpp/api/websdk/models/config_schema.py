@@ -2,11 +2,11 @@ from __future__ import annotations
 from typing import List
 
 from pytpp.api.websdk.models.resultcodes import ResultCodes
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 
 
 # region Models
-class Result(OutputModel):
+class Result(ObjectModel):
     code: int = ApiField()
 
     @property
@@ -14,13 +14,13 @@ class Result(OutputModel):
         return ResultCodes.Config.get(self.code, 'Unknown')
 
 
-class AttributeDefinition(OutputModel):
+class AttributeDefinition(ObjectModel):
     name: str = ApiField(alias='Name')
     property: int = ApiField(alias='Property')
     syntax: str = ApiField(alias='Syntax')
 
 
-class ClassDefinition(OutputModel):
+class ClassDefinition(ObjectModel):
     containment_names: List[str] = ApiField(alias='ContainmentNames', default_factory=list)
     containment_sub_names: List[str] = ApiField(alias='ContainmentSubNames', default_factory=list)
     mandatory_names: List[str] = ApiField(alias='MandatoryNames', default_factory=list)

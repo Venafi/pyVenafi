@@ -1,18 +1,18 @@
 from __future__ import annotations
-from pytpp.api.api_base import OutputModel, ApiField
+from pytpp.api.api_base import ObjectModel, ApiField
 from datetime import datetime
 from typing import List, Literal
 
 CertificateFormat = Literal['Base64', 'Base64 (PKCS #8)', 'DER', 'JKS', 'PKCS #7', 'PKCS #12']
 
 
-class Link(OutputModel):
+class Link(ObjectModel):
     details: str = ApiField(alias='Details')
     next: str = ApiField(alias='Next')
     previous: str = ApiField(alias='Previous')
 
 
-class CertificateDetails(OutputModel):
+class CertificateDetails(ObjectModel):
     aia_ca_issuer_url: List[str] = ApiField(alias='AIACAIssuerURL', default_factory=list)
     aia_key_identifier: str = ApiField(alias='AIAKeyIdentifier')
     c: str = ApiField(alias='C')
@@ -51,18 +51,18 @@ class CertificateDetails(OutputModel):
     valid_to: datetime = ApiField(alias='ValidTo')
 
 
-class PreviousVersions(OutputModel):
+class PreviousVersions(ObjectModel):
     certificate_details: CertificateDetails = ApiField(alias='CertificateDetails')
     vault_id: int = ApiField(alias='VaultId')
 
 
-class ProcessingDetails(OutputModel):
+class ProcessingDetails(ObjectModel):
     in_error: bool = ApiField(alias='InError')
     stage: int = ApiField(alias='Stage')
     status: str = ApiField(alias='Status')
 
 
-class RenewalDetails(OutputModel):
+class RenewalDetails(ObjectModel):
     city: str = ApiField(alias='City')
     country: str = ApiField(alias='Country')
     organization: str = ApiField(alias='Organization')
@@ -78,28 +78,28 @@ class RenewalDetails(OutputModel):
     valid_to: datetime = ApiField(alias='ValidTo')
 
 
-class ValidationDetails(OutputModel):
+class ValidationDetails(ObjectModel):
     last_validation_state_update: str = ApiField(alias='LastValidationStateUpdate')
     validation_state: str = ApiField(alias='ValidationState')
 
 
-class File(OutputModel):
+class File(ObjectModel):
     installation: str = ApiField(alias='Installation')
     performed_on: datetime = ApiField(alias='PerformedOn')
     result: List[str] = ApiField(alias='Result', default_factory=list)
 
 
-class BitMaskValues(OutputModel):
+class BitMaskValues(ObjectModel):
     bitmask: int = ApiField(alias='Bitmask')
     values: List[str] = ApiField(alias='Values', default_factory=list)
 
 
-class SANS(OutputModel):
+class SANS(ObjectModel):
     dns: List[str] = ApiField(alias='Dns', default_factory=list)
     ip: List[str] = ApiField(alias='Ip', default_factory=list)
 
 
-class Compliant(OutputModel):
+class Compliant(ObjectModel):
     compliant: bool = ApiField(alias='Compliant')
 
 
@@ -111,7 +111,7 @@ class CompliantMultiValue(Compliant):
     values: List[str] = ApiField(alias='Values', default_factory=list)
 
 
-class Locked(OutputModel):
+class Locked(ObjectModel):
     locked: bool = ApiField(alias='Locked')
 
 
@@ -123,12 +123,12 @@ class LockedMultiValue(Locked):
     values: list = ApiField(alias='Values')
 
 
-class LockedKeyPair(OutputModel):
+class LockedKeyPair(ObjectModel):
     key_algorithm: LockedSingleValue = ApiField(alias='KeyAlgorithm')
     key_size: LockedSingleValue = ApiField(alias='KeySize')
 
 
-class LockedSubject(OutputModel):
+class LockedSubject(ObjectModel):
     city: LockedSingleValue = ApiField(alias='City')
     country: LockedSingleValue = ApiField(alias='Country')
     organization: LockedSingleValue = ApiField(alias='Organization')
@@ -136,7 +136,7 @@ class LockedSubject(OutputModel):
     state: LockedSingleValue = ApiField(alias='State')
 
 
-class CSRDetails(OutputModel):
+class CSRDetails(ObjectModel):
     city: CompliantSingleValue = ApiField(alias='City')
     common_name: CompliantSingleValue = ApiField(alias='CommonName')
     country: CompliantSingleValue = ApiField(alias='Country')
@@ -153,20 +153,25 @@ class CSRDetails(OutputModel):
     subj_alt_name_uri: CompliantMultiValue = ApiField(alias='SubjAltNameUri')
 
 
-class NameTypeValue(OutputModel):
+class NameValue(ObjectModel):
     name: str = ApiField(alias='Name')
-    type: str = ApiField(alias='Type')
     value: str = ApiField(alias='Value')
 
 
-class SslTlsResult(OutputModel):
+class NameTypeValue(ObjectModel):
+    type: str = ApiField(alias='Type')
+    name: str = ApiField(alias='Name')
+    value: str = ApiField(alias='Value')
+
+
+class SslTlsResult(ObjectModel):
     chain: BitMaskValues = ApiField(alias='Chain')
     end_entity: BitMaskValues = ApiField(alias='EndEntity')
     id: int = ApiField(alias='Id')
     protocols: BitMaskValues = ApiField(alias='Protocols')
 
 
-class SslTls(OutputModel):
+class SslTls(ObjectModel):
     host: str = ApiField(alias='Host')
     ip_address: str = ApiField(alias='IpAddress')
     port: int = ApiField(alias='Port')
@@ -174,7 +179,7 @@ class SslTls(OutputModel):
     sources: List[str] = ApiField(alias='Sources', default_factory=list)
 
 
-class Policy(OutputModel):
+class Policy(ObjectModel):
     certificate_authority: LockedSingleValue = ApiField(alias='CertificateAuthority')
     csr_generation: LockedSingleValue = ApiField(alias='CsrGeneration')
     management_type: LockedSingleValue = ApiField(alias='ManagementType')
@@ -192,12 +197,12 @@ class Policy(OutputModel):
     wildcards_allowed: bool = ApiField(alias='WildcardsAllowed')
 
 
-class CSR(OutputModel):
+class CSR(ObjectModel):
     details: CSRDetails = ApiField('Details')
     enrollable: bool = ApiField('Enrollable')
 
 
-class X509(OutputModel):
+class X509(ObjectModel):
     cn: str = ApiField(alias='Cn')
     issuer: str = ApiField(alias='Issuer')
     key_algorithm: str = ApiField(alias='KeyAlgorithm')
@@ -210,7 +215,7 @@ class X509(OutputModel):
     valid_to: datetime = ApiField(alias='ValidTo')
 
 
-class Certificate(OutputModel):
+class Certificate(ObjectModel):
     created_on: datetime = ApiField(alias='CreatedOn')
     dn: str = ApiField(alias='DN')
     guid: str = ApiField(alias='Guid')
@@ -219,3 +224,53 @@ class Certificate(OutputModel):
     schema_class: str = ApiField(alias='SchemaClass')
     x509: X509 = ApiField(alias='X509')
     links: List[Link] = ApiField(alias='_links', default_factory=list)
+
+
+class CertificateFilter(ObjectModel):
+    certificate_type: str = ApiField(alias='CertificateType')
+    chain_validation_failure: str = ApiField(alias='ChainValidationFailure')
+    cn: str = ApiField(alias='CN')
+    country: str = ApiField(alias='C')
+    created_on: datetime = ApiField(alias='CreatedOn')
+    created_on_greater: datetime = ApiField(alias='CreatedOnGreater')
+    created_on_less: datetime = ApiField(alias='CreatedOnLess')
+    disabled: bool = ApiField(alias='Disabled')
+    in_error: bool = ApiField(alias='InError')
+    is_self_signed: bool = ApiField(alias='IsSelfSigned')
+    is_wildcard: bool = ApiField(alias='IsWildcard')
+    issuer: str = ApiField(alias='Issuer')
+    key_algorithm: str = ApiField(alias='KeyAlgorithm')
+    key_size: str = ApiField(alias='KeySize')
+    key_size_greater: str = ApiField(alias='KeySizeGreater')
+    key_size_less: str = ApiField(alias='KeySizeLess')
+    l: str = ApiField(alias='L')
+    management_type: str = ApiField(alias='ManagementType')
+    name: str = ApiField(alias='Name')
+    network_validation_disabled: str = ApiField(alias='NetworkValidationDisabled')
+    o: str = ApiField(alias='O')
+    ou: str = ApiField(alias='OU')
+    parent_dn: str = ApiField(alias='ParentDn')
+    parent_dn_recursive: str = ApiField(alias='ParentDnRecursive')
+    pending_workflow: bool = ApiField(alias='PendingWorkflow')
+    s: str = ApiField(alias='S')
+    san_dns: str = ApiField(alias='SAN-DNS')
+    san_email: str = ApiField(alias='SAN-Email')
+    san_ip: str = ApiField(alias='SAN-IP')
+    san_upn: str = ApiField(alias='SAN-UPN')
+    san_uri: str = ApiField(alias='SAN-URI')
+    serial: str = ApiField(alias='Serial')
+    signature_algorithm: str = ApiField(alias='SignatureAlgorithm')
+    ssl_tls_protocol: str = ApiField(alias='SslTlsProtocol')
+    stage: str = ApiField(alias='Stage')
+    stage_greater: str = ApiField(alias='StageGreater')
+    stage_less: str = ApiField(alias='StageLess')
+    thumbprint: str = ApiField(alias='Thumbprint')
+    tls_validation_failure: str = ApiField(alias='TlsValidationFailure')
+    valid_from: datetime = ApiField(alias='ValidFrom')
+    valid_from_greater: datetime = ApiField(alias='ValidFromGreater')
+    valid_from_less: datetime = ApiField(alias='ValidFromLess')
+    valid_to: datetime = ApiField(alias='ValidTo')
+    valid_to_greater: datetime = ApiField(alias='ValidToGreater')
+    valid_to_less: datetime = ApiField(alias='ValidToLess')
+    validation_disabled: bool = ApiField(alias='ValidationDisabled')
+    validation_state: str = ApiField(alias='ValidationState')
