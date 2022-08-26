@@ -19,7 +19,7 @@ from pytpp.features.definitions.classes import Classes as ClassNames
 from pytpp.tools.logger import logger, features_logger, api_logger
 # noinspection PyUnresolvedReferences
 from pytpp.tools import vtypes as Types
-from pytpp.api.websdk import models
+from pytpp.api.websdk import models, enums
 
 
 def __getattr__(name):

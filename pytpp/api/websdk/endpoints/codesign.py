@@ -734,7 +734,8 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _UpdateTemplate(WebSdkEndpoint):
-        def post(self, dn: str, certificate_template: Union[dict, codesign.CertificateTemplate],
+        def post(self, dn: str, certificate_template: Union[dict, codesign.CertificateTemplate, codesign.CSPTemplate,
+                 codesign.DotNetTemplate, codesign.AppleTemplate, codesign.GPGTemplate, codesign.KeyPairTemplate],
                  object_naming_pattern: str = None):
             body = {
                 'Dn'                 : dn,
