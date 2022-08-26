@@ -1,3 +1,10 @@
+class KeyContext:
+    authentication = 'authentication'
+    encryption = 'encryption'
+    null = 'null'
+    signing = 'signing'
+
+
 class Mechanism:
     ec_dsa = 4161  # EcDsa
     ec_dsa_sha_1 = 4162  # EcDsaSha1
