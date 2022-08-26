@@ -19,14 +19,12 @@ from pytpp.features.definitions.classes import Classes as ClassNames
 from pytpp.tools.logger import logger, features_logger, api_logger
 # noinspection PyUnresolvedReferences
 from pytpp.tools import vtypes as Types
-# Legacy imports
-from pytpp.features.definitions.legacy_attribute_names import AttributeNames as __AN
-from pytpp.features.definitions.legacy_classes import Classes as __C
+from pytpp.api.websdk import models
 
 
 def __getattr__(name):
     if name == 'AttributeNames':
-        return __AN
+        raise ImportError('Importing AttributeNames has been deprecated since PyTPP 2.0. Use "Attributes" instead.')
     elif name == 'Classes':
-        return __C
+        raise ImportError('Importing Classes has been deprecated since PyTPP 2.0. Use "ClassNames" instead.')
     raise ImportError(f'{name} cannot be imported because it does not exist.')

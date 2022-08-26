@@ -380,7 +380,10 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
 
 
 class RootOutputModel(ObjectModel):
-    api_response: Response = Field(exclude=True)
+    api_response: Response = ApiField(alias='api_response', exclude=True)
+
+    class Config(ObjectModel.Config):
+        fields = {'api_response': {'exclude': True}}
 
     def assert_valid_response(self):
         """

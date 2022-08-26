@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Union
 from pytpp.api.websdk.models import certificate
-from pytpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from pytpp.api.api_base import ObjectModel, WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
 
 class _Certificates(WebSdkEndpoint):
@@ -30,7 +30,10 @@ class _Certificates(WebSdkEndpoint):
             'Offset'        : offset,
             'OptionalFields': optional_fields
         }
-        params.update(filters or {})
+        if isinstance(filters, dict):
+            params.update(filters)
+        elif isinstance(filters, ObjectModel):
+            params.update(filters.dict(by_alias=True, exclude_none=True))
 
         class Output(WebSdkOutputModel):
             links: List[certificate.Link] = ApiField(default_factory=list, alias='_links')
