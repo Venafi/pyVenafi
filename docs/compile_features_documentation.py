@@ -4,6 +4,7 @@ from pathlib import Path
 from runpy import run_path
 from typing import List
 import shutil
+from pytpp.api.api_base import ObjectModel
 
 PROJECT_ROOT = Path(__file__).parent.parent
 FEATURES_PATH = Path(PROJECT_ROOT, 'pytpp', 'features')
@@ -12,28 +13,28 @@ MODELS_PATH = Path(PROJECT_ROOT, 'pytpp', 'api', 'websdk', 'models')
 MODELS_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'models')
 
 
-def model_rst_template(module: type, title: str):
-    h1 = '=' * len(title)
+def make_title(title: str, underline: str = '='):
+    return title, (underline * len(title))
 
+
+def model_rst_template(module: type, model_name: str):
+    title, h1 = make_title(model_name, '-')
     return dedent(f"""
     {title}
     {h1}
 
-    .. automodule:: {module.__name__}
-       :members:
-       :inherited-members:
-       :private-members:
+    .. _{module.__name__}.{title.replace(" ", "_").lower()}_model:
+    .. autopydantic_model:: {module.__name__}.{model_name}
     """).lstrip()
 
 
 def toc_rst_template(title: str, toc_items: List[str], tag: str = 'feature_list'):
-    title = title.replace('_', ' ').title()
-    h1 = '=' * len(title)
+    made_title, h1 = make_title(title.replace('_', ' ').title())
     toc_items_rst = '\n\t\t'.join(toc_items)
     return dedent(f"""
-    .. _{title.replace(" ", "_").lower()}_{tag}:
+    .. _{title.lower()}_{tag}:
 
-    {title}
+    {made_title}
     {h1}
 
     .. toctree::
@@ -47,11 +48,12 @@ def feature_class_rst_template(module_path: str, class_: str):
     title: str = getattr(class_, '__feature__')
     if not title:
         raise AttributeError(f'{class_.__name__} does not have a __feature__ attribute.')
-    h1 = '=' * len(title)
+    made_title, h1 = make_title(title)
+
     return dedent(f"""
     .. _{title.replace(" ", "_").lower()}_feature:
 
-    {title}
+    {made_title}
     {h1}
 
     .. autoclass:: {module_path}.{class_.__name__}
@@ -132,12 +134,16 @@ def get_property_docs():
         if not inspect.ismodule(item):
             continue
         mod_file = Path(item.__file__)
-        title = mod_file.stem.replace('_', ' ').title()
-        rst_content = model_rst_template(item, title)
+        title, h1 = make_title(mod_file.stem.replace('_', ' ').title())
         rst_path = Path(MODELS_DOC_PATH, f'{mod_file.stem}.rst')
-        toc_items.append(rst_path.stem)
+        objects = run_path(mod_file)
+        rst_content = [f'{title}\n{h1}\n']
+        for name, obj in sorted(objects.items(), key=lambda x: x[0]):
+            if isinstance(obj, type) and issubclass(obj, ObjectModel) and obj is not ObjectModel:
+                rst_content.append(model_rst_template(item, obj.__name__))
         with rst_path.open('w') as dm:
-            dm.write(rst_content)
+            dm.write('\n'.join(rst_content))
+        toc_items.append(rst_path.stem)
     models_toc_rst_content = toc_rst_template('Models', toc_items, tag='models')
     with Path(MODELS_DOC_PATH, 'models_toc.rst').open('w') as pd:
         pd.write(models_toc_rst_content)

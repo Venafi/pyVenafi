@@ -50,6 +50,12 @@ html {
 
 /* endregion Side Bar */
 
+/* region Scrolling */
+* {
+    scroll-margin-top: 75px;
+}
+/* endregion Scrolling */
+
 /* Footer */
 footer {
     font-size: 0;

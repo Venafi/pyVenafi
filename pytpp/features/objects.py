@@ -160,7 +160,7 @@ class Objects(FeatureBase):
             obj: :ref:`config_object` or :ref:`dn` of the object.
 
         Returns:
-            List of :class:`~.dataclasses.config.NameValues` where the
+            List of :class:`~.models.config.NameValues` where the
 
             * name is the attribute name.
             * values is the list of attribute values.

@@ -1,7 +1,8 @@
 Permissions
 ===========
 
-.. automodule:: pytpp.api.websdk.models.permissions
-   :members:
-   :inherited-members:
-   :private-members:
+Permissions
+-----------
+
+.. _pytpp.api.websdk.models.permissions.permissions_model:
+.. autopydantic_model:: pytpp.api.websdk.models.permissions.Permissions

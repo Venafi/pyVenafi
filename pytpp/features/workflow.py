@@ -350,7 +350,7 @@ class Ticket(FeatureBase):
             ticket_name: Name of the workflow ticket.
 
         Returns:
-            :class:`~.dataclasses.workflow.Details` of the workflow ticket.
+            :class:`~.models.workflow.Details` of the workflow ticket.
         """
         response = self._api.websdk.Workflow.Ticket.Details.post(guid=ticket_name)
         self._validate_result_code(result=response.result)

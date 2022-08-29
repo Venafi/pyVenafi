@@ -19,10 +19,12 @@ version = __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
+    # 'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.inheritance_diagram',
-    'sphinx_rtd_dark_mode'
+    'sphinx_rtd_dark_mode',
+    'sphinx-pydantic',
+    'sphinxcontrib.autodoc_pydantic'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -71,6 +73,14 @@ autodoc_typehints = 'description'
 napoleon_use_ivar = True
 napoleon_attr_annotations = True
 autodoc_unqualified_typehints = True
+autodoc_pydantic_model_show_json = False
+autodoc_pydantic_settings_show_json = False
+autodoc_pydantic_validator_list_fields = False
+autodoc_pydantic_field_list_validators = False
+
+autodoc_pydantic_model_show_field_summary = False
+autodoc_pydantic_model_show_validator_members = False
+autodoc_pydantic_model_show_config_summary = False
 
 # region Documentation Variables
 string = lambda name, value: f'.. |{name}| replace:: {value}'
@@ -156,17 +166,26 @@ code_block_variables = {
 }
 
 
+# noinspection ALL
 def replace_variables_in_code_block(app, docname, source):
     result = source[0]
     for name, value in app.config.code_block_variables.items():
+        # noinspection ALL
         result = re.sub('\|(?!\|)' + name + '\|(?!\|)', value.replace('\\', '\\\\'), result)
     source[0] = result
+
+
+# noinspection ALL
+def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == "pydantic_model":
+        del lines[:]
 # endregion Code Block Variables
 
 
 def setup(app):
     app.add_config_value('code_block_variables', {}, True)
     app.connect('source-read', replace_variables_in_code_block)
+    app.connect("autodoc-process-docstring", remove_module_docstring)
 
 
 def main():

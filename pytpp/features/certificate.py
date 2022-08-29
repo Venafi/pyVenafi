@@ -168,7 +168,7 @@ class Certificate(FeatureBase):
             certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
 
         Returns:
-            :class:`~.dataclasses.certificate.CertificateDetails`
+            :class:`~.models.certificate.CertificateDetails`
         """
         return self._get(certificate=certificate).certificate_details
 
@@ -293,7 +293,7 @@ class Certificate(FeatureBase):
             exclude_revoked: If ``True``, do not include revoked certificates.
 
         Returns:
-            List[:class:`~.dataclasses.certificate.PreviousVersions`]
+            List[:class:`~.models.certificate.PreviousVersions`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
@@ -308,7 +308,7 @@ class Certificate(FeatureBase):
             certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
 
         Returns:
-            Tuple[:class:`~.dataclasses.certificate.File`, :class:`~.dataclasses.certificate.SslTls`]
+            Tuple[:class:`~.models.certificate.File`, :class:`~.models.certificate.SslTls`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
@@ -411,7 +411,7 @@ class Certificate(FeatureBase):
                 certificates 10 thru 410 will be returned at a rate of 200 retrievals.
 
         Returns:
-            List[:class:`~.dataclasses.certificate.Certificate`]
+            List[:class:`~.models.certificate.Certificate`]
         """
         # region Filters
         filters = {
@@ -734,7 +734,7 @@ class Certificate(FeatureBase):
             poll_interval: Interval to poll TPP for the renewal status.
 
         Returns:
-            :class:`~.dataclasses.certificate.CertificateDetails`
+            :class:`~.models.certificate.CertificateDetails`
         """
         cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:
@@ -769,7 +769,7 @@ class Certificate(FeatureBase):
             The values returned by the |Websdk|, namely
 
             * **approver** *(List[str])* - List of approvers on the certificate object.
-            * **certificate_details** (:class:`~.dataclasses.certificate.CertificateDetails`) - Certificate details.
+            * **certificate_details** (:class:`~.models.certificate.CertificateDetails`) - Certificate details.
             * **contact** *(List[str])* - List of contacts on the certificate object.
             * **created_on** *(datetime)* - Date on which the certificate object was created.
             * **custom_fields** *(List[dict])* - Custom fields on the certificate object.
@@ -777,10 +777,10 @@ class Certificate(FeatureBase):
             * **guid** *(str)* - :ref:`guid` of the certificate object.
             * **name** *(str)* - Name of the certificate object.
             * **parent_dn** *(str)* - Parent :ref:`dn` of the certificate object.
-            * **processing_details** (:class:`~.dataclasses.certificate.ProcessingDetails`) - Certificate processing details.
-            * **renewal_details** (:class:`~.dataclasses.certificate.RenewalDetails`) - Certificate renewal settings details.
+            * **processing_details** (:class:`~.models.certificate.ProcessingDetails`) - Certificate processing details.
+            * **renewal_details** (:class:`~.models.certificate.RenewalDetails`) - Certificate renewal settings details.
             * **schema_class** *(str)* - Schema class.
-            * **validation_details** (:class:`~.dataclasses.certificate.ValidationDetails`) - Certificate validation details.
+            * **validation_details** (:class:`~.models.certificate.ValidationDetails`) - Certificate validation details.
         """
         cert = self._get(certificate=certificate)
         with self._Timeout(timeout=timeout) as to:

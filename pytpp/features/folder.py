@@ -191,7 +191,7 @@ class Folder(FeatureBase):
             folder: :ref:`config_object` or :ref:`dn` of the folder.
 
         Returns:
-            List of all :class:`~.dataclasses.processing_engines.Engine` on the folder.
+            List of all :class:`~.models.processing_engines.Engine` on the folder.
         """
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines

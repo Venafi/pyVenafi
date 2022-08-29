@@ -286,35 +286,6 @@ def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable
                  regex=regex, discriminator=discriminator, repr=repr, **extra)
 
 
-# region Input Models
-class InputModel(BaseModel, metaclass=ApiModelMetaclass):
-    class Config:
-        arbitrary_types_allowed = True
-        allow_population_by_field_name = True
-
-    @root_validator(pre=True, allow_reuse=True)
-    def _case_insensitive_validator(cls, values: dict):
-        new_values = {}
-        lowered_values = {k.lower(): v for k, v in values.items()}
-        for fk, fv in cls.__fields__.items():
-            name = fv.name
-            alias = fv.alias
-            try:
-                if name in values:
-                    new_value = values[name]
-                elif alias.lower() in lowered_values:
-                    new_value = lowered_values[alias.lower()]
-                else:
-                    continue
-                new_values[alias] = new_value
-            except KeyError:
-                raise KeyError(f'"{alias}" not found in the response.')
-        return new_values
-
-
-# endregion Input Models
-
-
 # region Output Models
 def generate_output(response: Response, output_cls: Type[T_], root_field: str = None) -> T_:
     """

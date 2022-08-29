@@ -88,7 +88,7 @@ class CustomField(FeatureBase):
             get_if_already_exists: If the objects already exists, just return it as is.
 
         Returns:
-            The custom field :class:`~.dataclasses.metadata.Item` data.
+            The custom field :class:`~.models.metadata.Item` data.
         """
         item = {
             'AllowedCharacters': allowed_characters,
@@ -162,7 +162,7 @@ class CustomField(FeatureBase):
             custom_field: :ref:`config_object` or name of the custom field object.
 
         Returns:
-            The custom field :class:`~.dataclasses.metadata.Item` data.
+            The custom field :class:`~.models.metadata.Item` data.
         """
         custom_field_dn = self._get_dn(custom_field, parent_dn=self._metadata_root_dn)
         response = self._api.websdk.Metadata.LoadItem.post(dn=custom_field_dn)
@@ -174,7 +174,7 @@ class CustomField(FeatureBase):
         Lists all custom fields registered in TPP.
 
         Returns:
-            List of each custom field :class:`~.dataclasses.metadata.Item` data.
+            List of each custom field :class:`~.models.metadata.Item` data.
         """
         response = self._api.websdk.Metadata.Items.get()
         self._validate_result_code(response.result)
@@ -272,7 +272,7 @@ class CustomField(FeatureBase):
             time_only: If ``True``, time of day is required.
 
         Returns:
-            The custom field :class:`~.dataclasses.metadata.Item` data.
+            The custom field :class:`~.models.metadata.Item` data.
         """
         custom_field_dn = self._get_dn(custom_field, parent_dn=self._metadata_root_dn)
         listify = lambda x: [x] if x and not isinstance(x, list) else x

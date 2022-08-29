@@ -52,7 +52,7 @@ class Permissions(FeatureBase):
             identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
 
         Returns:
-            :py:class:`~.dataclasses.permissions.Permissions`: Effective permissions granted to the ``identity``.
+            :py:class:`~.models.permissions.Permissions`: Effective permissions granted to the ``identity``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
@@ -77,7 +77,7 @@ class Permissions(FeatureBase):
             identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
 
         Returns:
-            :py:class:`~.dataclasses.permissions.Permissions`: Explicit permissions granted to the ``identity``.
+            :py:class:`~.models.permissions.Permissions`: Explicit permissions granted to the ``identity``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
@@ -99,7 +99,7 @@ class Permissions(FeatureBase):
             identity: :ref:`identity_object` or :ref:`prefixed_name` of the user or group.
 
         Returns:
-            :py:class:`~.dataclasses.permissions.Permissions`: Implicit permissions granted to the ``identity``.
+            :py:class:`~.models.permissions.Permissions`: Implicit permissions granted to the ``identity``.
         """
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:

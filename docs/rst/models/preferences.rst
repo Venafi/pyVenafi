@@ -1,7 +1,8 @@
 Preferences
 ===========
 
-.. automodule:: pytpp.api.websdk.models.preferences
-   :members:
-   :inherited-members:
-   :private-members:
+Preference
+----------
+
+.. _pytpp.api.websdk.models.preferences.preference_model:
+.. autopydantic_model:: pytpp.api.websdk.models.preferences.Preference
