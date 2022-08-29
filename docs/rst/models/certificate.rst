@@ -1,7 +1,7 @@
 Certificate
 ===========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.certificate
+.. automodule:: pytpp.api.websdk.models.certificate
    :members:
    :inherited-members:
    :private-members:

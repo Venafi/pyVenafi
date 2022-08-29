@@ -1,7 +1,7 @@
 Client
 ======
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.client
+.. automodule:: pytpp.api.websdk.models.client
    :members:
    :inherited-members:
    :private-members:

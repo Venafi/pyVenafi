@@ -206,6 +206,10 @@ html[data-theme='dark'] .highlight .nf {
     color: #8694fd !important;
 }
 
+html[data-theme='dark'] .highlight .nc {
+    color: #BB21FF !important;
+}
+
 /* endregion Code Examples */
 
 /* region Code Documentation */

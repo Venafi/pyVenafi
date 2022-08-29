@@ -1,7 +1,7 @@
 Permissions
 ===========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.permissions
+.. automodule:: pytpp.api.websdk.models.permissions
    :members:
    :inherited-members:
    :private-members:

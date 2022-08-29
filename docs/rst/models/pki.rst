@@ -1,7 +1,7 @@
 Pki
 ===
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.pki
+.. automodule:: pytpp.api.websdk.models.pki
    :members:
    :inherited-members:
    :private-members:

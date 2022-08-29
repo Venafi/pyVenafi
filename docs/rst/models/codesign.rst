@@ -1,7 +1,7 @@
 Codesign
 ========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.codesign
+.. automodule:: pytpp.api.websdk.models.codesign
    :members:
    :inherited-members:
    :private-members:

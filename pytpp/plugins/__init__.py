@@ -15,16 +15,18 @@ from pytpp.features.definitions.attributes import Attributes
 from pytpp.features.definitions.attribute_values import AttributeValues
 # noinspection PyUnresolvedReferences
 from pytpp.features.definitions.classes import Classes as ClassNames
-# noinspection PyUnresolvedReferences
+# noinspection ALL
 from pytpp.features.definitions.legacy_classes import Classes as __C
-# noinspection PyUnresolvedReferences
+# noinspection ALL
 from pytpp.features.definitions.legacy_attribute_names import AttributeNames as __AN
 # noinspection PyUnresolvedReferences
 from pytpp.tools.logger import logger, features_logger, api_logger
-# noinspection PyUnresolvedReferences
+# noinspection ALL
 from pytpp.tools import vtypes as Types
 # Legacy imports
+# noinspection ALL
 from pytpp.features.definitions.legacy_attribute_names import AttributeNames as __AN
+# noinspection ALL
 from pytpp.features.definitions.legacy_classes import Classes as __C
 
 

@@ -1,7 +1,7 @@
 Stats
 =====
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.stats
+.. automodule:: pytpp.api.websdk.models.stats
    :members:
    :inherited-members:
    :private-members:

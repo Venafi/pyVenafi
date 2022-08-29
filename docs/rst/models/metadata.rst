@@ -1,7 +1,7 @@
 Metadata
 ========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.metadata
+.. automodule:: pytpp.api.websdk.models.metadata
    :members:
    :inherited-members:
    :private-members:

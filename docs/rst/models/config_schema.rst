@@ -1,7 +1,7 @@
 Config Schema
 =============
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.config_schema
+.. automodule:: pytpp.api.websdk.models.config_schema
    :members:
    :inherited-members:
    :private-members:

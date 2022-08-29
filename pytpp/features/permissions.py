@@ -34,11 +34,11 @@ class Permissions(FeatureBase):
 
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
-        result = api.delete()
+        result = endpoint.delete()
         result.assert_valid_response()
 
     def get_effective(self, obj: 'Union[config.Object, str]', identity: 'Union[ident.Identity, str]'):
@@ -57,11 +57,11 @@ class Permissions(FeatureBase):
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
-        result = api.Effective.get()
+        result = endpoint.Effective.get()
         return result.effective_permissions if result.is_valid_response() else permissions.Permissions()
 
     def get_explicit(self, obj: 'Union[config.Object, str]', identity: 'Union[ident.Identity, str]'):
@@ -82,11 +82,11 @@ class Permissions(FeatureBase):
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
-        result = api.get()
+        result = endpoint.get()
         return result.explicit_permissions if result.is_valid_response() else permissions.Permissions()
 
     def get_implicit(self, obj: 'Union[config.Object, str]', identity: 'Union[ident.Identity, str]'):
@@ -104,11 +104,11 @@ class Permissions(FeatureBase):
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
-        result = api.get()
+        result = endpoint.get()
         return result.implicit_permissions if result.is_valid_response() else permissions.Permissions()
 
     def list_identities(self, obj: 'Union[config.Object, str]'):
@@ -169,16 +169,16 @@ class Permissions(FeatureBase):
         obj, identity = self._get_obj_and_identity(obj=obj, identity=identity)
         if '+' in identity.prefix:
             ptype, pname = identity.prefix.split('+', 1)
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype(ptype).Pname(pname).Principal(identity.universal)
         else:
-            api = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
+            endpoint = self._api.websdk.Permissions.Object.Guid(obj.guid).Ptype().Principal(identity.universal)
 
         current_permissions = self.get_explicit(obj=obj, identity=identity)
 
         if bool([y for x, y in current_permissions.__dict__.items() if not x.startswith('_') and y is not None]):
-            method = api.put
+            method = endpoint.put
         else:
-            method = api.post
+            method = endpoint.post
 
         new_permissions = {
             k: v if v is not None else getattr(current_permissions, k) for k, v in dict(

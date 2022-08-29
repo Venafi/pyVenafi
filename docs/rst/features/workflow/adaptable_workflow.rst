@@ -1,7 +1,7 @@
-.. _adapatable_workflow_feature:
+.. _adaptable_workflow_feature:
 
-Adapatable Workflow
-===================
+Adaptable Workflow
+==================
 
 .. autoclass:: pytpp.features.workflow.AdaptableWorkflow
    :members:

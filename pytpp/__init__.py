@@ -17,7 +17,7 @@ from pytpp.features.definitions.attribute_values import AttributeValues
 from pytpp.features.definitions.classes import Classes as ClassNames
 # noinspection PyUnresolvedReferences
 from pytpp.tools.logger import logger, features_logger, api_logger
-# noinspection PyUnresolvedReferences
+# noinspection ALL
 from pytpp.tools import vtypes as Types
 from pytpp.api.websdk import models, enums
 

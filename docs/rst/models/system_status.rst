@@ -1,7 +1,7 @@
 System Status
 =============
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.system_status
+.. automodule:: pytpp.api.websdk.models.system_status
    :members:
    :inherited-members:
    :private-members:

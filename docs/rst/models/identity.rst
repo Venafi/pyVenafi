@@ -1,7 +1,7 @@
 Identity
 ========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.identity
+.. automodule:: pytpp.api.websdk.models.identity
    :members:
    :inherited-members:
    :private-members:

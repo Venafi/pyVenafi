@@ -1,7 +1,7 @@
 Secret Store
 ============
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.secret_store
+.. automodule:: pytpp.api.websdk.models.secret_store
    :members:
    :inherited-members:
    :private-members:

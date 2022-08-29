@@ -1,7 +1,7 @@
 Log
 ===
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.log
+.. automodule:: pytpp.api.websdk.models.log
    :members:
    :inherited-members:
    :private-members:

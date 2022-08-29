@@ -84,7 +84,9 @@ doc_variables = [
     string(name='Websdk', value='TPP WebSDK API'),
     string(name='Product', value='PyTPP'),
     link(name='Doc Home Page', label='Venafi TPP WebSDK Documentation', href='https://docs.venafi.com/index.php'),
-    link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/')
+    link(name='Pydantic Docs', label='Pydantic Documentation', href='https://pydantic-docs.helpmanual.io'),
+    link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/'),
+    link(name='Venafi Github page', label='Venafi Github page', href='https://github.com/Venafi/pytpp/issues')
 ]
 
 rst_prolog = '\n'.join(doc_variables) + '\n'
@@ -165,6 +167,7 @@ def replace_variables_in_code_block(app, docname, source):
 def setup(app):
     app.add_config_value('code_block_variables', {}, True)
     app.connect('source-read', replace_variables_in_code_block)
+
 
 def main():
     from pathlib import Path

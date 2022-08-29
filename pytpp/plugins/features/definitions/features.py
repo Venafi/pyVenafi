@@ -12,7 +12,6 @@ from pytpp.plugins.features.identity import (User as _User, Group as _Group)
 class _Discovery(_OriginalDiscovery):
     def __init__(self, api):
         self._api = api
-
         self._network = None
 
     @property
@@ -24,7 +23,6 @@ class _Discovery(_OriginalDiscovery):
 class _Identity(_OriginalIdentity):
     def __init__(self, api):
         self._api = api
-
         self._group = None
         self._user = None
 
@@ -42,12 +40,12 @@ class _Identity(_OriginalIdentity):
 class Features(_OriginalFeatures):
     @property
     def discovery(self) -> _Discovery:
-        self._discovery = self._discovery or _Discovery(self._api)
+        self._discovery = self._discovery or _Discovery(api=self._api)
         return self._discovery
 
     @property
     def identity(self) -> _Identity:
-        self._identity = self._identity or _Identity(self._api)
+        self._identity = self._identity or _Identity(api=self._api)
         return self._identity
 
     @property
@@ -57,5 +55,5 @@ class Features(_OriginalFeatures):
 
     @property
     def placement_rules(self) -> _PluginPlacementRules:
-        self._placement_rules = self._placement_rules or _PluginPlacementRules(self._api)
+        self._placement_rules = self._placement_rules or _PluginPlacementRules(api=self._api)
         return self._placement_rules

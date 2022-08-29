@@ -1,7 +1,7 @@
 Credential
 ==========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.credential
+.. automodule:: pytpp.api.websdk.models.credential
    :members:
    :inherited-members:
    :private-members:

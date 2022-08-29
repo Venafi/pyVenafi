@@ -1,7 +1,7 @@
 Flow
 ====
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.flow
+.. automodule:: pytpp.api.websdk.models.flow
    :members:
    :inherited-members:
    :private-members:

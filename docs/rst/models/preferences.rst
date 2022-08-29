@@ -1,7 +1,7 @@
 Preferences
 ===========
 
-.. automodule:: pytpp.properties.response_objects.dataclasses.preferences
+.. automodule:: pytpp.api.websdk.models.preferences
    :members:
    :inherited-members:
    :private-members:

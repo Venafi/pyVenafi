@@ -8,11 +8,11 @@ import shutil
 PROJECT_ROOT = Path(__file__).parent.parent
 FEATURES_PATH = Path(PROJECT_ROOT, 'pytpp', 'features')
 FEATURES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'features')
-DATACLASSES_PATH = Path(PROJECT_ROOT, 'pytpp', 'properties', 'response_objects', 'dataclasses')
-DATACLASSES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'dataclasses')
+MODELS_PATH = Path(PROJECT_ROOT, 'pytpp', 'api', 'websdk', 'models')
+MODELS_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'models')
 
 
-def dataclass_module_rst_template(module: type, title: str):
+def model_rst_template(module: type, title: str):
     h1 = '=' * len(title)
 
     return dedent(f"""
@@ -124,8 +124,8 @@ def get_property_docs():
     import inspect
 
     # Recreate the dataclasses doc folder.
-    shutil.rmtree(path=str(DATACLASSES_DOC_PATH), ignore_errors=True)
-    DATACLASSES_DOC_PATH.mkdir(exist_ok=True, parents=True)
+    shutil.rmtree(path=str(MODELS_DOC_PATH), ignore_errors=True)
+    MODELS_DOC_PATH.mkdir(exist_ok=True, parents=True)
 
     toc_items = []
     for item in vars(models).values():
@@ -133,14 +133,14 @@ def get_property_docs():
             continue
         mod_file = Path(item.__file__)
         title = mod_file.stem.replace('_', ' ').title()
-        rst_content = dataclass_module_rst_template(item, title)
-        rst_path = Path(DATACLASSES_DOC_PATH, f'{mod_file.stem}.rst')
+        rst_content = model_rst_template(item, title)
+        rst_path = Path(MODELS_DOC_PATH, f'{mod_file.stem}.rst')
         toc_items.append(rst_path.stem)
         with rst_path.open('w') as dm:
             dm.write(rst_content)
-    dataclasses_toc_rst_content = toc_rst_template('Dataclasses', toc_items, tag='dataclasses')
-    with Path(DATACLASSES_DOC_PATH, 'dataclasses_toc.rst').open('w') as pd:
-        pd.write(dataclasses_toc_rst_content)
+    models_toc_rst_content = toc_rst_template('Models', toc_items, tag='models')
+    with Path(MODELS_DOC_PATH, 'models_toc.rst').open('w') as pd:
+        pd.write(models_toc_rst_content)
 
 
 def main():
