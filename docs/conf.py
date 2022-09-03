@@ -19,11 +19,9 @@ version = __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # 'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.inheritance_diagram',
     'sphinx_rtd_dark_mode',
-    'sphinx-pydantic',
     'sphinxcontrib.autodoc_pydantic'
 ]
 
