@@ -1,6 +1,7 @@
 @ECHO OFF
 
 set PYTPP_DOC_IN_PROGRESS=1
+set PYVAAS_DOC_IN_PROGRESS=1
 
 pushd %~dp0
 

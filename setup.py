@@ -4,7 +4,7 @@ __version__ = None
 __author__ = None
 __author_email__ = None
 __project_url__ = None
-exec(open('pytpp/_about.py', 'r').read())
+exec(open('venafi/_about.py', 'r').read())
 
 from setuptools import setup, find_packages
 import os
@@ -43,19 +43,19 @@ if __name__ == '__main__':
         version=__version__,
         author=__author__,
         author_email=__author_email__,
-        packages=find_packages(include=('pytpp*',)),
+        packages=find_packages(include=('venafi*',)),
         package_dir={
             '': '.'
         },
-        description='Venafi TPP Features and WebSDK API In Python',
+        description='Venafi TPP & Cloud API In Python',
         long_description=long_description,
         long_description_content_type='text/markdown',
-        keywords=['pytpp', 'venafi', 'tpp', 'trust protection platform'],
+        keywords=['tpp', 'venafi', 'tpp', 'trust protection platform', 'vaas', 'venafi as a service', 'venafi cloud'],
         install_requires=PROD_REQUIREMENTS,
         extras_require={
             'dev': DEV_REQUIREMENTS,
             'doc': DOC_REQUIREMENTS,
-            'all': DOC_REQUIREMENTS + DEV_REQUIREMENTS
+            'all': DOC_REQUIREMENTS + DEV_REQUIREMENTS,
         },
         classifiers=[
             'Development Status :: 4 - Beta',

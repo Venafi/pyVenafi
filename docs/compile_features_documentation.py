@@ -4,12 +4,12 @@ from pathlib import Path
 from runpy import run_path
 from typing import List
 import shutil
-from pytpp.api.api_base import ObjectModel
+from venafi.tpp.api.api_base import ObjectModel
 
 PROJECT_ROOT = Path(__file__).parent.parent
-FEATURES_PATH = Path(PROJECT_ROOT, 'pytpp', 'features')
+FEATURES_PATH = Path(PROJECT_ROOT, 'venafi', 'tpp', 'features')
 FEATURES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'features')
-MODELS_PATH = Path(PROJECT_ROOT, 'pytpp', 'api', 'websdk', 'models')
+MODELS_PATH = Path(PROJECT_ROOT, 'venafi', 'tpp', 'api', 'websdk', 'models')
 MODELS_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'models')
 
 

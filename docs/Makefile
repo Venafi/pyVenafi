@@ -9,6 +9,7 @@ SOURCEDIR     = .
 BUILDDIR      = _build
 
 export PYTPP_DOC_IN_PROGRESS=1
+export PYVAAS_DOC_IN_PROGRESS=1
 
 # Put it first so that "make" without argument is like "make help".
 help:
