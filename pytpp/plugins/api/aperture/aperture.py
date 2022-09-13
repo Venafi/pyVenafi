@@ -10,6 +10,7 @@ from pytpp.plugins.api.aperture.endpoints.jobs import _Jobs
 from pytpp.plugins.api.aperture.endpoints.reports import _Reports
 from pytpp.plugins.api.aperture.endpoints.report_defaults import _ReportDefaults
 from pytpp.plugins.api.aperture.endpoints.sshdashboard import _SshDashboard
+from pytpp.plugins.api.aperture.endpoints.sshkeyset import _SshKeysets
 from pytpp.plugins.api.aperture.endpoints.users import _Users
 from pytpp.plugins.api.aperture.endpoints.version import _Version
 
@@ -93,6 +94,7 @@ class Aperture:
         self.Reports = _Reports(self)
         self.ReportDefaults = _ReportDefaults(self)
         self.SshDashboard = _SshDashboard(self)
+        self.SshKeysets = _SshKeysets(self)
         self.Version = _Version(self)
         # endregion Initialize All Aperture Endpoints
 
