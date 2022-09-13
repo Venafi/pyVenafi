@@ -55,6 +55,7 @@ class _Reports(ApertureEndpoint):
                 disabled: bool = ApiField(alias='disabled')
                 description: str = ApiField(alias='description')
                 last_run: datetime = ApiField(alias='lastRun')
+                downloadable_formats: List[str] = ApiField(alias='downloadableFormats', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._get())
 
