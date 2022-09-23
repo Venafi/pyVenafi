@@ -303,11 +303,7 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
     except:
         result = {}
     if not isinstance(result, dict):
-        if not root_field:
-            raise AttributeError('Expected a root_field, but no root_field is defined.')
-        result = {
-            str(root_field): result
-        }
+        result = {str(root_field): result} if root_field else {}
     elif root_field:
         result = {
             str(root_field): result,
