@@ -304,7 +304,7 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
         result = {}
     if not isinstance(result, dict):
         if not root_field:
-            raise AttributeError('Unable to assign ')
+            raise AttributeError('Expected a root_field, but no root_field is defined.')
         result = {
             str(root_field): result
         }
@@ -386,5 +386,5 @@ class WebSdkOutputModel(RootOutputModel):
 class InvalidResponseError(Exception):
     def __init__(self, msg: str, response: Response):
         self.response = response
-        super().__init__(msg)
+        super().__init__(msg, response)
 # endregion Response Definitions
