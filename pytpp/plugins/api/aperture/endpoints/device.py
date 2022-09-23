@@ -31,7 +31,7 @@ class _Device(ApertureEndpoint):
         }
 
         class Output(ApertureOutputModel):
-            total_count: int = ApiField(key='totalCount')
+            total_count: int = ApiField(alias='totalCount')
             devices_list_items: List[device.Device] = ApiField(alias='devicesListItems', default_factory=list)
 
         return generate_output(output_cls=Output, response=self._post(data=body))
