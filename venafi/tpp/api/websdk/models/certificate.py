@@ -198,8 +198,8 @@ class Policy(ObjectModel):
 
 
 class CSR(ObjectModel):
-    details: CSRDetails = ApiField('Details')
-    enrollable: bool = ApiField('Enrollable')
+    details: CSRDetails = ApiField(alias='Details')
+    enrollable: bool = ApiField(alias='Enrollable')
 
 
 class X509(ObjectModel):

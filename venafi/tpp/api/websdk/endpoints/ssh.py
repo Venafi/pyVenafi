@@ -373,11 +373,8 @@ class _SSH(WebSdkEndpoint):
                 'LoadKeyData': load_key_data
             }
 
-            class Output(WebSdkOutputModel):
+            class Output(WebSdkOutputModel, ssh.KeySetData):
                 pass
-
-            # This cannot be inherited as that method is broken. Instead, manually update the fields.
-            Output.__fields__.update(ssh.KeySetData.__fields__)
 
             return generate_output(output_cls=Output, response=self._get(params=params))
 

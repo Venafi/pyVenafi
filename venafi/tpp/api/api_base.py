@@ -19,8 +19,9 @@ T_ = TypeVar('T_')
 class ApiModelMetaclass(pydantic.main.ModelMetaclass):
     def __new__(mcs, name, bases, namespaces, **kwargs):
         annotations = namespaces.get('__annotations__', {})
-        for base in bases:
-            annotations.update(getattr(base, '__annotations__', {}))
+        # This seemed to have caused some issues, but commenting out seems to fix the problem...
+        # for base in bases:
+        #     annotations.update(getattr(base, '__annotations__', {}))
         for field in annotations:
             if not field.startswith('__') and get_origin(annotations[field]) is not Union:
                 annotations[field] = Union[annotations[field], Any]
