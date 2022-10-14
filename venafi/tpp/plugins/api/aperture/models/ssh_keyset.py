@@ -1,6 +1,6 @@
 from __future__ import annotations
-from pytpp.api.api_base import ObjectModel, ApiField
-from typing import List, Dict
+from venafi.tpp.api.api_base import ObjectModel, ApiField
+from typing import List
 from datetime import datetime
 
 

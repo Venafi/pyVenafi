@@ -1,7 +1,7 @@
-from pytpp.api.api_base import generate_output, ApiField
-from pytpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
-from pytpp.plugins.api.aperture.enums.ssh_keyset import Field
-from pytpp.plugins.api.aperture.models import ssh_keyset
+from venafi.tpp.api.api_base import generate_output, ApiField
+from venafi.tpp.plugins.api.api_base import ApertureEndpoint, ApertureOutputModel
+from venafi.tpp.plugins.api.aperture.enums.ssh_keyset import Field
+from venafi.tpp.plugins.api.aperture.models import ssh_keyset
 from typing import List, Dict
 
 
