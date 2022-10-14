@@ -260,10 +260,9 @@ class PlacementRules(_OriginalPlacementRules):
         Args:
             rule: Config object of the placement rule.
         """
-        response = self._api.aperture.Discovery.PlacementRules.Guid(
+        self._api.aperture.Discovery.PlacementRules.Guid(
             guid=self._get_guid(rule, parent_dn=self._layout_rules_dn)
         ).delete()
-        response.assert_valid_response()
 
     def update(self, rule: 'Union[config.Object, str]', conditions: List[str] = None, device_location: str = None,
                certificate_location: str = None, rule_type: str = 'X509 Certificate'):

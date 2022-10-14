@@ -31,10 +31,9 @@ class NetworkDiscovery(_NetworkDiscovery):
         job_obj = self._get_config_object(
             self._get_dn(job, parent_dn=self._discovery_dn)
         )
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(job_obj.guid).Actions.post(
+        self._api.aperture.Jobs.NetworkDiscovery.Guid(job_obj.guid).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.run_now
         )
-        response.assert_valid_response()
 
         with self._Timeout(timeout=timeout) as to:
             while not to.is_expired(poll=0.5):
@@ -52,12 +51,11 @@ class NetworkDiscovery(_NetworkDiscovery):
         Args:
             job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+        self._api.aperture.Jobs.NetworkDiscovery.Guid(
             self._get_guid(job, parent_dn=self._discovery_dn)
         ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.cancel
         )
-        response.assert_valid_response()
 
     def pause(self, job: 'Union[config.Object, str]'):
         """
@@ -66,12 +64,11 @@ class NetworkDiscovery(_NetworkDiscovery):
         Args:
             job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+        self._api.aperture.Jobs.NetworkDiscovery.Guid(
             self._get_guid(job, parent_dn=self._discovery_dn)
         ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.pause
         )
-        response.assert_valid_response()
 
     def resume(self, job: 'Union[config.Object, str]'):
         """
@@ -80,12 +77,11 @@ class NetworkDiscovery(_NetworkDiscovery):
         Args:
             job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+        self._api.aperture.Jobs.NetworkDiscovery.Guid(
             self._get_guid(job, parent_dn=self._discovery_dn)
         ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.resume
         )
-        response.assert_valid_response()
 
     def place_results(self, job: 'Union[config.Object, str]'):
         """
@@ -94,9 +90,8 @@ class NetworkDiscovery(_NetworkDiscovery):
         Args:
             job: Config object or GUID of the discovery job.
         """
-        response = self._api.aperture.Jobs.NetworkDiscovery.Guid(
+        self._api.aperture.Jobs.NetworkDiscovery.Guid(
             self._get_guid(job, parent_dn=self._discovery_dn)
         ).Actions.post(
             job_action=_NetworkDiscoveryProperties.Actions.place_now
         )
-        response.assert_valid_response()

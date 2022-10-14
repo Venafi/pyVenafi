@@ -9,9 +9,12 @@ from typing import Union, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from venafi.tpp.api.websdk.models import identity as ident
+    from venafi.tpp.plugins import Authenticate as PluginsAuthenticate
 
 
 class _IdentityBase(_OriginalIdentityBase):
+    _api: 'PluginsAuthenticate'
+
     def allow_aperture_user_search(self, identity: Union['ident.Identity', str]):
         """
         Grants Aperture User Search permission to a user or group.
@@ -20,13 +23,12 @@ class _IdentityBase(_OriginalIdentityBase):
             identity: ident.Identity or prefixed name of the user or group. The prefix is required.
         """
         prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Add.post(
+        self._api.websdk.Rights.Add.post(
             subsystem=SubSystemTypes.aperture,
             rights_object='local',
             universal_id=prefixed_universal,
             rights_value='Impersonate'
         )
-        result.assert_valid_response()
 
     def add_master_admin(self, identity: Union['ident.Identity', str]):
         """
@@ -46,13 +48,12 @@ class _IdentityBase(_OriginalIdentityBase):
         ]
         for rights in admin_rights:
             subsystem, rights_object, rights_value = rights
-            result = self._api.websdk.Rights.Add.post(
+            self._api.websdk.Rights.Add.post(
                 subsystem=subsystem,
                 rights_object=rights_object,
                 universal_id=prefixed_universal,
                 rights_value=rights_value
             )
-            result.assert_valid_response()
 
     def allow_websdk_access(self, identity: Union['ident.Identity', str]):
         """
@@ -62,13 +63,12 @@ class _IdentityBase(_OriginalIdentityBase):
             identity: ident.Identity or prefixed name of the user or group. The prefix is required.
         """
         prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Add.post(
+        self._api.websdk.Rights.Add.post(
             subsystem=SubSystemTypes.websdk,
             rights_object='Sessions',
             universal_id=prefixed_universal,
             rights_value='Allowed'
         )
-        result.assert_valid_response()
 
     def get_rights(self, identity: Union['ident.Identity', str]):
         """
@@ -91,12 +91,11 @@ class _IdentityBase(_OriginalIdentityBase):
             identity: ident.Identity or prefixed name of the user or group. The prefix is required.
         """
         prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Remove.post(
+        self._api.websdk.Rights.Remove.post(
             subsystem=SubSystemTypes.aperture,
             rights_object='local',
             universal_id=prefixed_universal
         )
-        result.assert_valid_response()
 
     def remove_master_admin(self, identity: Union['ident.Identity', str]):
         """
@@ -116,12 +115,11 @@ class _IdentityBase(_OriginalIdentityBase):
         ]
         for rights in admin_rights:
             subsystem, rights_object, rights_value = rights
-            result = self._api.websdk.Rights.Remove.post(
+            self._api.websdk.Rights.Remove.post(
                 subsystem=subsystem,
                 rights_object=rights_object,
                 universal_id=prefixed_universal
             )
-            result.assert_valid_response()
 
     def remove_websdk_access(self, identity: Union['ident.Identity', str]):
         """
@@ -131,12 +129,11 @@ class _IdentityBase(_OriginalIdentityBase):
             identity: ident.Identity or prefixed name of the user or group. The prefix is required.
         """
         prefixed_universal = self._get_prefixed_universal(identity)
-        result = self._api.websdk.Rights.Remove.post(
+        self._api.websdk.Rights.Remove.post(
             subsystem=SubSystemTypes.websdk,
             rights_object='Sessions',
             universal_id=prefixed_universal
         )
-        result.assert_valid_response()
 
 
 @feature(_OriginalUser.__feature__)
@@ -191,17 +188,13 @@ class User(_OriginalUser, _IdentityBase):
             user = self._get_identity_object(user)
         groups = self.get_memberships(identity=user)
         for group in groups:
-            result = self._api.websdk.Identity.RemoveGroupMembers.put(
+            self._api.websdk.Identity.RemoveGroupMembers.put(
                 group=self._identity_dict(prefixed_name=group.prefixed_name),
                 members=[self._identity_dict(prefixed_name=user.prefixed_name)]
             )
-            result.assert_valid_response()
-
-        result = self._api.websdk.Rights.Remove.post(
+        self._api.websdk.Rights.Remove.post(
             universal_id=user.prefixed_universal
         )
-        result.assert_valid_response()
-
         self._config_delete(object_dn=f'{self._identity_dn}\\{user.name}')
 
 
