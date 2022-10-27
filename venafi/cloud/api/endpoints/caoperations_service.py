@@ -1,10 +1,10 @@
 from __future__ import annotations
-from venafi.cloud.api.api_base import VaasSdkEndpoint, VaasSdkOutputModel, generate_output
+from venafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
 from venafi.cloud.api.models import caoperations_service
 from uuid import UUID
 
 
-class _certificateissuingtemplates(VaasSdkEndpoint):
+class _certificateissuingtemplates(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/certificateissuingtemplates')
 
@@ -16,37 +16,37 @@ class _certificateissuingtemplates(VaasSdkEndpoint):
             'certificateAuthorityAccountId': certificateAuthorityAccountId,
         }
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             CertificateIssuingTemplateResponse: caoperations_service.CertificateIssuingTemplateResponse
         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateIssuingTemplateResponse'})
 
     def post(self, CertificateIssuingTemplateRequest: caoperations_service.CertificateIssuingTemplateRequest):
         data = {**CertificateIssuingTemplateRequest.dict()}
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             CertificateIssuingTemplateResponse: caoperations_service.CertificateIssuingTemplateResponse
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateIssuingTemplateResponse'})
 
-    class _ID(VaasSdkEndpoint):
+    class _ID(CloudApiEndpoint):
         def get(self):
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateInformation'})
 
         def put(self, CertificateIssuingTemplateRequest: caoperations_service.CertificateIssuingTemplateRequest):
             data = {**CertificateIssuingTemplateRequest.dict()}
 
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateIssuingTemplateInformation', 202: 'CertificateIssuingTemplateInformation'})
 
         def delete(self):
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 CertificateIssuingTemplateDeleteResponse: caoperations_service.CertificateIssuingTemplateDeleteResponse
             return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateIssuingTemplateDeleteResponse'})
 
 
-class _certificateauthorities(VaasSdkEndpoint):
+class _certificateauthorities(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/certificateauthorities')
 
@@ -58,16 +58,16 @@ class _certificateauthorities(VaasSdkEndpoint):
             'includeSystemGenerated': includeSystemGenerated,
         }
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             CertificateAuthorityResponse: caoperations_service.CertificateAuthorityResponse
         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateAuthorityResponse'})
 
-    class _CERTIFICATEAUTHORITY(VaasSdkEndpoint):
+    class _CERTIFICATEAUTHORITY(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.accounts = self._accounts(api_obj=self._api_obj, url=f'{self._url}/accounts')
 
-        class _accounts(VaasSdkEndpoint):
+        class _accounts(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
                 self.connection = self._connection(api_obj=self._api_obj, url=f'{self._url}/connection')
@@ -88,18 +88,18 @@ class _certificateauthorities(VaasSdkEndpoint):
                     'edgeInstanceId': edgeInstanceId,
                 }
 
-                class Output(VaasSdkOutputModel):
+                class Output(CloudApiOutputModel):
                     CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                 return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
 
             def post(self, CertificateAuthorityAccountRequest: caoperations_service.CertificateAuthorityAccountRequest):
                 data = {**CertificateAuthorityAccountRequest.dict()}
 
-                class Output(VaasSdkOutputModel):
+                class Output(CloudApiOutputModel):
                     CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                 return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityAccountResponse', 202: 'CertificateAuthorityAccountResponse'})
 
-            class _ID(VaasSdkEndpoint):
+            class _ID(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.certificateimportstatus = self._certificateimportstatus(
@@ -114,76 +114,76 @@ class _certificateauthorities(VaasSdkEndpoint):
                         'reloadAccountDetails': reloadAccountDetails,
                     }
 
-                    class Output(VaasSdkOutputModel):
+                    class Output(CloudApiOutputModel):
                         ExtendedCertificateAuthorityAccountInformation: caoperations_service.ExtendedCertificateAuthorityAccountInformation
                     return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ExtendedCertificateAuthorityAccountInformation'})
 
                 def put(self, CertificateAuthorityAccountUpdateRequest: caoperations_service.CertificateAuthorityAccountUpdateRequest):
                     data = {**CertificateAuthorityAccountUpdateRequest.dict()}
 
-                    class Output(VaasSdkOutputModel):
+                    class Output(CloudApiOutputModel):
                         CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                     return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
 
                 def delete(self):
-                    class Output(VaasSdkOutputModel):
+                    class Output(CloudApiOutputModel):
                         CertificateAuthorityAccountDeleteResponse: caoperations_service.CertificateAuthorityAccountDeleteResponse
                     return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateAuthorityAccountDeleteResponse'})
 
-                class _certificateimportstatus(VaasSdkEndpoint):
+                class _certificateimportstatus(CloudApiEndpoint):
                     def put(self, CertificateImportRequest: caoperations_service.CertificateImportRequest):
                         data = {**CertificateImportRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                         return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={204: 'CertificateAuthorityAccountResponse'})
 
-                class _issuingrules(VaasSdkEndpoint):
+                class _issuingrules(CloudApiEndpoint):
                     def get(self):
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateIssuingTemplateRulesInformation: caoperations_service.CertificateIssuingTemplateRulesInformation
                         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateRulesInformation'})
 
-            class _connection(VaasSdkEndpoint):
+            class _connection(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
 
-                class _validation(VaasSdkEndpoint):
+                class _validation(CloudApiEndpoint):
                     def post(self, CertificateAuthorityTestConnectionRequest: caoperations_service.CertificateAuthorityTestConnectionRequest):
                         data = {**CertificateAuthorityTestConnectionRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
 
-            class _credentials(VaasSdkEndpoint):
+            class _credentials(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
 
-                class _validation(VaasSdkEndpoint):
+                class _validation(CloudApiEndpoint):
                     def post(self, CertificateAuthorityCredentialsRequest: caoperations_service.CertificateAuthorityCredentialsRequest):
                         data = {**CertificateAuthorityCredentialsRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
 
-            class _configuration(VaasSdkEndpoint):
+            class _configuration(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
 
-                class _validation(VaasSdkEndpoint):
+                class _validation(CloudApiEndpoint):
                     def post(self, CertificateAuthorityAccountConfigurationRequest: caoperations_service.CertificateAuthorityAccountConfigurationRequest):
                         data = {**CertificateAuthorityAccountConfigurationRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse', 204: 'CertificateAuthorityAccountResponse'})
 
-            class _ACCOUNTID(VaasSdkEndpoint):
+            class _ACCOUNTID(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.domains = self._domains(api_obj=self._api_obj, url=f'{self._url}/domains')
@@ -191,7 +191,7 @@ class _certificateauthorities(VaasSdkEndpoint):
                     self.importoptions = self._importoptions(api_obj=self._api_obj, url=f'{self._url}/importoptions')
                     self.operations = self._operations(api_obj=self._api_obj, url=f'{self._url}/operations')
 
-                class _domains(VaasSdkEndpoint):
+                class _domains(CloudApiEndpoint):
                     def __init__(self, *args, **kwargs):
                         super().__init__(*args, **kwargs)
 
@@ -199,24 +199,24 @@ class _certificateauthorities(VaasSdkEndpoint):
                         return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
 
                     def get(self):
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountDomainInformation: caoperations_service.CertificateAuthorityAccountDomainInformation
                         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityAccountDomainInformation'})
 
                     def post(self, CertificateAuthorityAccountDomainRequest: caoperations_service.CertificateAuthorityAccountDomainRequest):
                         data = {**CertificateAuthorityAccountDomainRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountDomainInformation: caoperations_service.CertificateAuthorityAccountDomainInformation
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountDomainInformation'})
 
-                    class _ID(VaasSdkEndpoint):
+                    class _ID(CloudApiEndpoint):
                         def get(self):
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 CertificateAuthorityAccountDomainInformation: caoperations_service.CertificateAuthorityAccountDomainInformation
                             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityAccountDomainInformation'})
 
-                class _productoptions(VaasSdkEndpoint):
+                class _productoptions(CloudApiEndpoint):
                     def __init__(self, *args, **kwargs):
                         super().__init__(*args, **kwargs)
                         self.testissuance = self._testissuance(api_obj=self._api_obj, url=f'{self._url}/testissuance')
@@ -225,43 +225,43 @@ class _certificateauthorities(VaasSdkEndpoint):
                         return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
 
                     def get(self):
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityProductOptionResponse: caoperations_service.CertificateAuthorityProductOptionResponse
                         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityProductOptionResponse'})
 
                     def post(self, CertificateAuthorityProductOptionRequest: caoperations_service.CertificateAuthorityProductOptionRequest):
                         data = {**CertificateAuthorityProductOptionRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityProductOptionInformation: caoperations_service.CertificateAuthorityProductOptionInformation
                             CertificateAuthorityProductOptionResponse: caoperations_service.CertificateAuthorityProductOptionResponse
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityProductOptionInformation', 202: 'CertificateAuthorityProductOptionResponse'})
 
-                    class _ID(VaasSdkEndpoint):
+                    class _ID(CloudApiEndpoint):
                         def get(self):
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 CertificateAuthorityProductOptionInformation: caoperations_service.CertificateAuthorityProductOptionInformation
                             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityProductOptionInformation'})
 
                         def delete(self):
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 pass
                             return generate_output(output_cls=Output, response=self._delete(params={}))
 
-                    class _testissuance(VaasSdkEndpoint):
+                    class _testissuance(CloudApiEndpoint):
                         def get(self):
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 CertificateAuthorityProductOptionsTestIssuanceResultsResponse: caoperations_service.CertificateAuthorityProductOptionsTestIssuanceResultsResponse
                             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityProductOptionsTestIssuanceResultsResponse'})
 
                         def post(self, CertificateAuthorityProductOptionsTestIssuanceRequest: caoperations_service.CertificateAuthorityProductOptionsTestIssuanceRequest):
                             data = {**CertificateAuthorityProductOptionsTestIssuanceRequest.dict()}
 
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 pass
                             return generate_output(output_cls=Output, response=self._post(data=data))
 
-                class _importoptions(VaasSdkEndpoint):
+                class _importoptions(CloudApiEndpoint):
                     def __init__(self, *args, **kwargs):
                         super().__init__(*args, **kwargs)
 
@@ -269,79 +269,79 @@ class _certificateauthorities(VaasSdkEndpoint):
                         return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
 
                     def get(self):
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountImportOptionResponse: caoperations_service.CertificateAuthorityAccountImportOptionResponse
                         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityAccountImportOptionResponse'})
 
                     def post(self, CertificateAuthorityAccountImportOptionRequest: caoperations_service.CertificateAuthorityAccountImportOptionRequest):
                         data = {**CertificateAuthorityAccountImportOptionRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityImportOptionInformation'})
 
-                    class _ID(VaasSdkEndpoint):
+                    class _ID(CloudApiEndpoint):
                         def get(self):
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
                             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityImportOptionInformation'})
 
                         def delete(self):
-                            class Output(VaasSdkOutputModel):
+                            class Output(CloudApiOutputModel):
                                 pass
                             return generate_output(output_cls=Output, response=self._delete(params={}))
 
-                class _operations(VaasSdkEndpoint):
+                class _operations(CloudApiEndpoint):
                     def post(self, CaOperationRequest: caoperations_service.CaOperationRequest):
                         data = {**CaOperationRequest.dict()}
 
-                        class Output(VaasSdkOutputModel):
+                        class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountInformation: caoperations_service.CertificateAuthorityAccountInformation
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountInformation'})
 
 
-class _builtinca(VaasSdkEndpoint):
+class _builtinca(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='builtinca')
         self.crl = self._crl(api_obj=self._api_obj, url=f'{self._url}/crl')
         self.ca = self._ca(api_obj=self._api_obj, url=f'{self._url}/ca')
         self.cachain = self._cachain(api_obj=self._api_obj, url=f'{self._url}/cachain')
 
-    class _crl(VaasSdkEndpoint):
+    class _crl(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
         def CANAME(self, caname: str):
             return self._CANAME(api_obj=self._api_obj, url=f'{self._url}/{caname}')
 
-        class _CANAME(VaasSdkEndpoint):
+        class _CANAME(CloudApiEndpoint):
             def get(self):
-                class Output(VaasSdkOutputModel):
+                class Output(CloudApiOutputModel):
                     str: str
                 return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})
 
-    class _ca(VaasSdkEndpoint):
+    class _ca(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
         def CANAME(self, caname: str):
             return self._CANAME(api_obj=self._api_obj, url=f'{self._url}/{caname}')
 
-        class _CANAME(VaasSdkEndpoint):
+        class _CANAME(CloudApiEndpoint):
             def get(self):
-                class Output(VaasSdkOutputModel):
+                class Output(CloudApiOutputModel):
                     str: str
                 return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})
 
-    class _cachain(VaasSdkEndpoint):
+    class _cachain(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
         def CANAME(self, caname: str):
             return self._CANAME(api_obj=self._api_obj, url=f'{self._url}/{caname}')
 
-        class _CANAME(VaasSdkEndpoint):
+        class _CANAME(CloudApiEndpoint):
             def get(self):
-                class Output(VaasSdkOutputModel):
+                class Output(CloudApiOutputModel):
                     str: str
                 return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})

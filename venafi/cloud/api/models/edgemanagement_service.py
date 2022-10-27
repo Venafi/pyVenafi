@@ -1,8 +1,25 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
+from typing import (Any, List, Dict, Literal)
 from uuid import UUID
-from typing import (Any, Literal, Dict, List)
 from datetime import datetime
+
+
+class BillOfMaterialResponse(ObjectModel):
+    billsOfMaterials: List[BillOfMaterialsInformation] = ApiField(alias='billsOfMaterials', default_factory=list)
+
+
+class BillOfMaterialsInformation(ObjectModel):
+    name: str = ApiField(alias='name')
+    version: str = ApiField(alias='version')
+    charts: List[Chart] = ApiField(alias='charts', default_factory=list)
+
+
+class Chart(ObjectModel):
+    name: str = ApiField(alias='name')
+    version: str = ApiField(alias='version')
+    url: str = ApiField(alias='url')
+    signature: str = ApiField(alias='signature')
 
 
 class PairingCodeInformation(ObjectModel):
@@ -199,23 +216,9 @@ class EdgeWorkersResponse(ObjectModel):
     edgeWorkers: List[EdgeWorkerInformation] = ApiField(alias='edgeWorkers', default_factory=list)
 
 
-class BillOfMaterialResponse(ObjectModel):
-    billsOfMaterials: List[BillOfMaterialsInformation] = ApiField(alias='billsOfMaterials', default_factory=list)
-
-
-class BillOfMaterialsInformation(ObjectModel):
-    name: str = ApiField(alias='name')
-    version: str = ApiField(alias='version')
-    charts: List[Chart] = ApiField(alias='charts', default_factory=list)
-
-
-class Chart(ObjectModel):
-    name: str = ApiField(alias='name')
-    version: str = ApiField(alias='version')
-    url: str = ApiField(alias='url')
-    signature: str = ApiField(alias='signature')
-
-
+BillOfMaterialResponse.update_forward_refs()
+BillOfMaterialsInformation.update_forward_refs()
+Chart.update_forward_refs()
 PairingCodeInformation.update_forward_refs()
 ErrorInformation.update_forward_refs()
 ErrorResponse.update_forward_refs()
@@ -244,6 +247,3 @@ EdgeWorkerDeleteResponse.update_forward_refs()
 EdgeWorkerInformation.update_forward_refs()
 EdgeWorkerRequest.update_forward_refs()
 EdgeWorkersResponse.update_forward_refs()
-BillOfMaterialResponse.update_forward_refs()
-BillOfMaterialsInformation.update_forward_refs()
-Chart.update_forward_refs()

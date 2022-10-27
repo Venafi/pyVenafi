@@ -126,7 +126,7 @@ class Method:
         root_field = None
         if isinstance(output_cls, Variable) and output_cls.name == 'pass':
             output_cls_lines = [
-                f'{INDENT}class Output(VaasSdkOutputModel):',
+                f'{INDENT}class Output(CloudApiOutputModel):',
                 f'{INDENT * 2}pass',
             ]
         else:
@@ -135,7 +135,7 @@ class Method:
                     for item in items:
                         data_types[package].add(item)
             output_cls_lines = [
-                f'{INDENT}class Output(VaasSdkOutputModel):',
+                f'{INDENT}class Output(CloudApiOutputModel):',
             ]
             for i in output_cls:
                 if i.data_type.string.startswith('List'):
@@ -336,7 +336,7 @@ class Node:
 
     # region Class Statement
     def _class_statement(self) -> str:
-        return f'class _{self._class_name}(VaasSdkEndpoint):'
+        return f'class _{self._class_name}(CloudApiEndpoint):'
     # endregion Class Statement
 
     # region __init__ Method
@@ -425,7 +425,7 @@ class RootNode:
         object_properties_from_paths = {}
         imports = [
             'from __future__ import annotations',
-            'from venafi.cloud.api.api_base import VaasSdkEndpoint, VaasSdkOutputModel, generate_output',
+            'from venafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output',
             f'from {CLOUD_API_MODEL_MODULE} import {self.model_filename}'
         ]
         data_types = defaultdict(set)

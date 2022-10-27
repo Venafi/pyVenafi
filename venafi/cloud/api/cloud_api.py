@@ -42,6 +42,3 @@ class CloudApi:
             return _CLOUD_API_VERSION
         _CLOUD_API_VERSION = ...  # TODO
         return _CLOUD_API_VERSION
-
-    def re_authenticate(self):
-        pass

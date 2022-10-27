@@ -1,8 +1,36 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
 from uuid import UUID
-from typing import (Any, Literal, Dict, List)
+from typing import (Any, List, Dict, Literal)
 from datetime import datetime
+
+
+class EnvironmentInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    name: str = ApiField(alias='name')
+    productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
+    modificationDate: datetime = ApiField(alias='modificationDate')
+
+
+class EnvironmentResponse(ObjectModel):
+    environments: List[EnvironmentInformation] = ApiField(alias='environments', default_factory=list)
+
+
+class ErrorInformation(ObjectModel):
+    code: int = ApiField(alias='code')
+    message: str = ApiField(alias='message')
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
+
+
+class ErrorResponse(ObjectModel):
+    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
+
+
+class IntegrationsServicesAggregatesResponse(ObjectModel):
+    companyId: UUID = ApiField(alias='companyId')
+    totalServicesCount: int = ApiField(alias='totalServicesCount')
+    integrationsServices: Dict[str, Dict[str, Dict[str, int]]] = ApiField(alias='integrationsServices', default_factory=dict)
 
 
 class BasicDiscoveryTargetsInformation(ObjectModel):
@@ -69,16 +97,6 @@ class WeeklyPatternInformation(ObjectModel):
     pass
 
 
-class ErrorInformation(ObjectModel):
-    code: int = ApiField(alias='code')
-    message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
-
-
-class ErrorResponse(ObjectModel):
-    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
-
-
 class IntegrationServiceUpdateRequest(ObjectModel):
     workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
     name: str = ApiField(alias='name')
@@ -106,24 +124,11 @@ class IntegrationServiceDetailsResponse(ObjectModel):
     totalCount: int = ApiField(alias='totalCount')
 
 
-class EnvironmentInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    name: str = ApiField(alias='name')
-    productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
-    modificationDate: datetime = ApiField(alias='modificationDate')
-
-
-class EnvironmentResponse(ObjectModel):
-    environments: List[EnvironmentInformation] = ApiField(alias='environments', default_factory=list)
-
-
-class IntegrationsServicesAggregatesResponse(ObjectModel):
-    companyId: UUID = ApiField(alias='companyId')
-    totalServicesCount: int = ApiField(alias='totalServicesCount')
-    integrationsServices: Dict[str, Dict[str, Dict[str, int]]] = ApiField(alias='integrationsServices', default_factory=dict)
-
-
+EnvironmentInformation.update_forward_refs()
+EnvironmentResponse.update_forward_refs()
+ErrorInformation.update_forward_refs()
+ErrorResponse.update_forward_refs()
+IntegrationsServicesAggregatesResponse.update_forward_refs()
 BasicDiscoveryTargetsInformation.update_forward_refs()
 CronPatternInformation.update_forward_refs()
 EnhancedDiscoveryTargetsInformation.update_forward_refs()
@@ -136,11 +141,6 @@ SchedulerPatternInformation.update_forward_refs()
 SmartDiscoveryExternalTargetsInformation.update_forward_refs()
 TargetsInformation.update_forward_refs()
 WeeklyPatternInformation.update_forward_refs()
-ErrorInformation.update_forward_refs()
-ErrorResponse.update_forward_refs()
 IntegrationServiceUpdateRequest.update_forward_refs()
 IntegrationServiceCreationRequest.update_forward_refs()
 IntegrationServiceDetailsResponse.update_forward_refs()
-EnvironmentInformation.update_forward_refs()
-EnvironmentResponse.update_forward_refs()
-IntegrationsServicesAggregatesResponse.update_forward_refs()

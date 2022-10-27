@@ -1,60 +1,8 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
 from uuid import UUID
-from typing import (Any, Literal, Dict, List)
+from typing import (Any, Literal, List, Dict)
 from datetime import datetime
-
-
-class MachineIdentityDocumentInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    machineId: UUID = ApiField(alias='machineId')
-    machineName: str = ApiField(alias='machineName')
-    certificateId: UUID = ApiField(alias='certificateId')
-    certificateName: str = ApiField(alias='certificateName')
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
-    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
-    creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    certificateValidityEnd: datetime = ApiField(alias='certificateValidityEnd')
-
-
-class MachineIdentityDocumentResponse(ObjectModel):
-    machineIdentities: List[MachineIdentityDocumentInformation] = ApiField(alias='machineIdentities', default_factory=list)
-
-
-class ErrorInformation(ObjectModel):
-    code: int = ApiField(alias='code')
-    message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
-
-
-class ErrorResponse(ObjectModel):
-    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
-
-
-class Expression(ObjectModel):
-    pass
-
-
-class MachineIdentitySearchRequest(ObjectModel):
-    expression: Expression = ApiField(alias='expression')
-    ordering: Ordering = ApiField(alias='ordering')
-    paging: Paging = ApiField(alias='paging')
-
-
-class OrderObject(ObjectModel):
-    field: str = ApiField(alias='field')
-    direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
-
-
-class Ordering(ObjectModel):
-    orders: List[OrderObject] = ApiField(alias='orders', default_factory=list)
-
-
-class Paging(ObjectModel):
-    pageNumber: int = ApiField(alias='pageNumber')
-    pageSize: int = ApiField(alias='pageSize')
 
 
 class JsonNode(ObjectModel):
@@ -70,6 +18,16 @@ class MachineIdentityInformation(ObjectModel):
     modificationDate: datetime = ApiField(alias='modificationDate')
     keystore: JsonNode = ApiField(alias='keystore')
     binding: JsonNode = ApiField(alias='binding')
+
+
+class ErrorInformation(ObjectModel):
+    code: int = ApiField(alias='code')
+    message: str = ApiField(alias='message')
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
+
+
+class ErrorResponse(ObjectModel):
+    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
 
 
 class MachineIdentityUpdateRequest(ObjectModel):
@@ -194,23 +152,58 @@ class OwnershipInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
 
 
+class Expression(ObjectModel):
+    pass
+
+
 class MachinesSearchRequest(ObjectModel):
     expression: Expression = ApiField(alias='expression')
     ordering: Ordering = ApiField(alias='ordering')
     paging: Paging = ApiField(alias='paging')
 
 
-MachineIdentityDocumentInformation.update_forward_refs()
-MachineIdentityDocumentResponse.update_forward_refs()
-ErrorInformation.update_forward_refs()
-ErrorResponse.update_forward_refs()
-Expression.update_forward_refs()
-MachineIdentitySearchRequest.update_forward_refs()
-OrderObject.update_forward_refs()
-Ordering.update_forward_refs()
-Paging.update_forward_refs()
+class OrderObject(ObjectModel):
+    field: str = ApiField(alias='field')
+    direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
+
+
+class Ordering(ObjectModel):
+    orders: List[OrderObject] = ApiField(alias='orders', default_factory=list)
+
+
+class Paging(ObjectModel):
+    pageNumber: int = ApiField(alias='pageNumber')
+    pageSize: int = ApiField(alias='pageSize')
+
+
+class MachineIdentityDocumentInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    machineId: UUID = ApiField(alias='machineId')
+    machineName: str = ApiField(alias='machineName')
+    certificateId: UUID = ApiField(alias='certificateId')
+    certificateName: str = ApiField(alias='certificateName')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
+    creationDate: datetime = ApiField(alias='creationDate')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    certificateValidityEnd: datetime = ApiField(alias='certificateValidityEnd')
+
+
+class MachineIdentityDocumentResponse(ObjectModel):
+    machineIdentities: List[MachineIdentityDocumentInformation] = ApiField(alias='machineIdentities', default_factory=list)
+
+
+class MachineIdentitySearchRequest(ObjectModel):
+    expression: Expression = ApiField(alias='expression')
+    ordering: Ordering = ApiField(alias='ordering')
+    paging: Paging = ApiField(alias='paging')
+
+
 JsonNode.update_forward_refs()
 MachineIdentityInformation.update_forward_refs()
+ErrorInformation.update_forward_refs()
+ErrorResponse.update_forward_refs()
 MachineIdentityUpdateRequest.update_forward_refs()
 MachineIdentityCreationRequest.update_forward_refs()
 MachineIdentityResponse.update_forward_refs()
@@ -228,4 +221,11 @@ DefaultOwnershipInformation.update_forward_refs()
 MachineDocumentInformation.update_forward_refs()
 MachineDocumentResponse.update_forward_refs()
 OwnershipInformation.update_forward_refs()
+Expression.update_forward_refs()
 MachinesSearchRequest.update_forward_refs()
+OrderObject.update_forward_refs()
+Ordering.update_forward_refs()
+Paging.update_forward_refs()
+MachineIdentityDocumentInformation.update_forward_refs()
+MachineIdentityDocumentResponse.update_forward_refs()
+MachineIdentitySearchRequest.update_forward_refs()

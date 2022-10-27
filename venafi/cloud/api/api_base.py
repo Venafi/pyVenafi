@@ -291,7 +291,7 @@ class ApiEndpoint(object):
         )
 
 
-class VaasSdkEndpoint(ApiEndpoint):  ...
+class CloudApiEndpoint(ApiEndpoint):  ...
 
 
 # endregion Endpoint Definitions
@@ -408,7 +408,7 @@ class RootOutputModel(ObjectModel):
             return False
 
 
-class VaasSdkOutputModel(RootOutputModel):
+class CloudApiOutputModel(RootOutputModel):
     error: str = ApiField(alias='Error')
 
 

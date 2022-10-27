@@ -1,91 +1,8 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
 from uuid import UUID
-from typing import (Any, Literal, Dict, List)
+from typing import (Any, Literal, List, Dict)
 from datetime import datetime
-
-
-class DataEncryptionKeyInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    algorithm: str = ApiField(alias='algorithm')
-    active: bool = ApiField(alias='active')
-
-
-class ErrorInformation(ObjectModel):
-    code: int = ApiField(alias='code')
-    message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
-
-
-class ErrorResponse(ObjectModel):
-    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
-
-
-class SsoConfigurationInformation(ObjectModel):
-    clientId: str = ApiField(alias='clientId')
-    clientSecret: str = ApiField(alias='clientSecret')
-    issuerUrl: str = ApiField(alias='issuerUrl')
-    scopes: List[str] = ApiField(alias='scopes', default_factory=list)
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-
-
-class SsoConfigurationResponse(ObjectModel):
-    ssoConfigurations: List[SsoConfigurationInformation] = ApiField(alias='ssoConfigurations', default_factory=list)
-
-
-class SsoConfigurationRequest(ObjectModel):
-    clientId: str = ApiField(alias='clientId')
-    clientSecret: str = ApiField(alias='clientSecret')
-    issuerUrl: str = ApiField(alias='issuerUrl')
-    scopes: List[str] = ApiField(alias='scopes', default_factory=list)
-
-
-class TeamInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    name: str = ApiField(alias='name')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
-    productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
-                                         'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
-    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
-    members: List[UUID] = ApiField(alias='members', default_factory=list)
-    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
-    companyId: UUID = ApiField(alias='companyId')
-    userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
-    modificationDate: datetime = ApiField(alias='modificationDate')
-
-
-class UserMatchingRule(ObjectModel):
-    claimName: str = ApiField(alias='claimName')
-    operator: Literal['CONTAINS', 'ENDS_WITH', 'EQUALS', 'NOT_CONTAINS', 'NOT_EQUALS', 'STARTS_WITH'] = ApiField(alias='operator')
-    value: str = ApiField(alias='value')
-
-
-class TeamsResponse(ObjectModel):
-    teams: List[TeamInformation] = ApiField(alias='teams', default_factory=list)
-
-
-class CreateTeamRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
-    members: List[UUID] = ApiField(alias='members', default_factory=list)
-    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
-    userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
-
-
-class UpdateTeamRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
-    userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
-
-
-class TeamOwnersRequest(ObjectModel):
-    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
-
-
-class TeamMembersRequest(ObjectModel):
-    members: List[UUID] = ApiField(alias='members', default_factory=list)
 
 
 class ApiKeyInformation(ObjectModel):
@@ -157,6 +74,16 @@ class VisibilityConstraintsInformation(ObjectModel):
     limitedVisibilityCertCount: int = ApiField(alias='limitedVisibilityCertCount')
     limitedVisibilityCertInstallPerCertCount: int = ApiField(alias='limitedVisibilityCertInstallPerCertCount')
     limitedAccessNotificationDays: int = ApiField(alias='limitedAccessNotificationDays')
+
+
+class ErrorInformation(ObjectModel):
+    code: int = ApiField(alias='code')
+    message: str = ApiField(alias='message')
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
+
+
+class ErrorResponse(ObjectModel):
+    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
 
 
 class UserAccountRequest(ObjectModel):
@@ -274,6 +201,79 @@ class UnsubscribeNotificationInformation(ObjectModel):
     message: str = ApiField(alias='message')
 
 
+class DataEncryptionKeyInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    algorithm: str = ApiField(alias='algorithm')
+    active: bool = ApiField(alias='active')
+
+
+class SsoConfigurationInformation(ObjectModel):
+    clientId: str = ApiField(alias='clientId')
+    clientSecret: str = ApiField(alias='clientSecret')
+    issuerUrl: str = ApiField(alias='issuerUrl')
+    scopes: List[str] = ApiField(alias='scopes', default_factory=list)
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+
+
+class SsoConfigurationResponse(ObjectModel):
+    ssoConfigurations: List[SsoConfigurationInformation] = ApiField(alias='ssoConfigurations', default_factory=list)
+
+
+class SsoConfigurationRequest(ObjectModel):
+    clientId: str = ApiField(alias='clientId')
+    clientSecret: str = ApiField(alias='clientSecret')
+    issuerUrl: str = ApiField(alias='issuerUrl')
+    scopes: List[str] = ApiField(alias='scopes', default_factory=list)
+
+
+class TeamInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    name: str = ApiField(alias='name')
+    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
+                                         'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
+    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
+    members: List[UUID] = ApiField(alias='members', default_factory=list)
+    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
+    companyId: UUID = ApiField(alias='companyId')
+    userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
+    modificationDate: datetime = ApiField(alias='modificationDate')
+
+
+class UserMatchingRule(ObjectModel):
+    claimName: str = ApiField(alias='claimName')
+    operator: Literal['CONTAINS', 'ENDS_WITH', 'EQUALS', 'NOT_CONTAINS', 'NOT_EQUALS', 'STARTS_WITH'] = ApiField(alias='operator')
+    value: str = ApiField(alias='value')
+
+
+class TeamsResponse(ObjectModel):
+    teams: List[TeamInformation] = ApiField(alias='teams', default_factory=list)
+
+
+class CreateTeamRequest(ObjectModel):
+    name: str = ApiField(alias='name')
+    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
+    members: List[UUID] = ApiField(alias='members', default_factory=list)
+    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
+    userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
+
+
+class UpdateTeamRequest(ObjectModel):
+    name: str = ApiField(alias='name')
+    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
+    userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
+
+
+class TeamOwnersRequest(ObjectModel):
+    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
+
+
+class TeamMembersRequest(ObjectModel):
+    members: List[UUID] = ApiField(alias='members', default_factory=list)
+
+
 class UserResponse(ObjectModel):
     users: List[UserInformation] = ApiField(alias='users', default_factory=list)
 
@@ -304,12 +304,12 @@ class CUser(ObjectModel):
     marketoAttributes: Dict[str, str] = ApiField(alias='marketoAttributes', default_factory=dict)
     ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
     memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
+    productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
+                                         'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
     emailAddress: str = ApiField(alias='emailAddress')
     userFullName: str = ApiField(alias='userFullName')
     dataEncryptionKeyContainerId: UUID = ApiField(alias='dataEncryptionKeyContainerId')
     encryptorDecryptors: List[EncryptorDecryptor] = ApiField(alias='encryptorDecryptors', default_factory=list)
-    productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
-                                         'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
 
 
 class CUserPk(ObjectModel):
@@ -349,19 +349,6 @@ class ApiKeyNullResponse(ObjectModel):
     username: str = ApiField(alias='username')
 
 
-DataEncryptionKeyInformation.update_forward_refs()
-ErrorInformation.update_forward_refs()
-ErrorResponse.update_forward_refs()
-SsoConfigurationInformation.update_forward_refs()
-SsoConfigurationResponse.update_forward_refs()
-SsoConfigurationRequest.update_forward_refs()
-TeamInformation.update_forward_refs()
-UserMatchingRule.update_forward_refs()
-TeamsResponse.update_forward_refs()
-CreateTeamRequest.update_forward_refs()
-UpdateTeamRequest.update_forward_refs()
-TeamOwnersRequest.update_forward_refs()
-TeamMembersRequest.update_forward_refs()
 ApiKeyInformation.update_forward_refs()
 CapabilityInformation.update_forward_refs()
 CompanyInformation.update_forward_refs()
@@ -369,6 +356,8 @@ ProductEntitlementInformation.update_forward_refs()
 UserAccountResponse.update_forward_refs()
 UserInformation.update_forward_refs()
 VisibilityConstraintsInformation.update_forward_refs()
+ErrorInformation.update_forward_refs()
+ErrorResponse.update_forward_refs()
 UserAccountRequest.update_forward_refs()
 ResendActivationResponse.update_forward_refs()
 ResendActivationRequest.update_forward_refs()
@@ -389,6 +378,17 @@ RecurrencePatternInformation.update_forward_refs()
 NotificationConfigurationRequest.update_forward_refs()
 NotificationConfigurationResponse.update_forward_refs()
 UnsubscribeNotificationInformation.update_forward_refs()
+DataEncryptionKeyInformation.update_forward_refs()
+SsoConfigurationInformation.update_forward_refs()
+SsoConfigurationResponse.update_forward_refs()
+SsoConfigurationRequest.update_forward_refs()
+TeamInformation.update_forward_refs()
+UserMatchingRule.update_forward_refs()
+TeamsResponse.update_forward_refs()
+CreateTeamRequest.update_forward_refs()
+UpdateTeamRequest.update_forward_refs()
+TeamOwnersRequest.update_forward_refs()
+TeamMembersRequest.update_forward_refs()
 UserResponse.update_forward_refs()
 CUser.update_forward_refs()
 CUserPk.update_forward_refs()

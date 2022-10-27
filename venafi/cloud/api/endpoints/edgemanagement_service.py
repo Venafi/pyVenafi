@@ -1,27 +1,37 @@
 from __future__ import annotations
-from venafi.cloud.api.api_base import VaasSdkEndpoint, VaasSdkOutputModel, generate_output
+from venafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
 from venafi.cloud.api.models import edgemanagement_service
 from uuid import UUID
 
 
-class _pairingcodes(VaasSdkEndpoint):
+class _billofmaterials(CloudApiEndpoint):
+    def __init__(self, api_obj):
+        super().__init__(api_obj=api_obj, url='/v1/billofmaterials')
+
+    def get(self):
+        class Output(CloudApiOutputModel):
+            BillOfMaterialResponse: edgemanagement_service.BillOfMaterialResponse
+        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'BillOfMaterialResponse'})
+
+
+class _pairingcodes(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/pairingcodes')
 
     def get(self):
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             PairingCodeResponse: edgemanagement_service.PairingCodeResponse
         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'PairingCodeResponse'})
 
     def post(self, PairingCodeRequest: edgemanagement_service.PairingCodeRequest):
         data = {**PairingCodeRequest.dict()}
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             PairingCodeInformation: edgemanagement_service.PairingCodeInformation
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'PairingCodeInformation'})
 
 
-class _edgeinstances(VaasSdkEndpoint):
+class _edgeinstances(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/edgeinstances')
 
@@ -33,34 +43,34 @@ class _edgeinstances(VaasSdkEndpoint):
             'environmentId': environmentId,
         }
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             EdgeInstanceResponse: edgemanagement_service.EdgeInstanceResponse
         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EdgeInstanceResponse'})
 
-    class _ID(VaasSdkEndpoint):
+    class _ID(CloudApiEndpoint):
         def get(self, statusDetails: bool):
             data = {
                 'statusDetails': statusDetails,
             }
 
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 EdgeInstanceInformation: edgemanagement_service.EdgeInstanceInformation
             return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EdgeInstanceInformation'})
 
         def put(self, EdgeInstanceRequest: edgemanagement_service.EdgeInstanceRequest):
             data = {**EdgeInstanceRequest.dict()}
 
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 EdgeInstanceInformation: edgemanagement_service.EdgeInstanceInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'EdgeInstanceInformation'})
 
         def delete(self):
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 EdgeInstanceDeleteResponse: edgemanagement_service.EdgeInstanceDeleteResponse
             return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'EdgeInstanceDeleteResponse'})
 
 
-class _edgeencryptionkeys(VaasSdkEndpoint):
+class _edgeencryptionkeys(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/edgeencryptionkeys')
 
@@ -72,18 +82,18 @@ class _edgeencryptionkeys(VaasSdkEndpoint):
             'edgeInstanceId': edgeInstanceId,
         }
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             EncryptionKeysResponse: edgemanagement_service.EncryptionKeysResponse
         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EncryptionKeysResponse'})
 
-    class _ID(VaasSdkEndpoint):
+    class _ID(CloudApiEndpoint):
         def get(self):
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 EncryptionKeyInformation: edgemanagement_service.EncryptionKeyInformation
             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EncryptionKeyInformation'})
 
 
-class _edgeworkers(VaasSdkEndpoint):
+class _edgeworkers(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/edgeworkers')
 
@@ -95,46 +105,36 @@ class _edgeworkers(VaasSdkEndpoint):
             'edgeInstanceId': edgeInstanceId,
         }
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             EdgeWorkersResponse: edgemanagement_service.EdgeWorkersResponse
         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EdgeWorkersResponse'})
 
     def post(self, EdgeWorkerRequest: edgemanagement_service.EdgeWorkerRequest):
         data = {**EdgeWorkerRequest.dict()}
 
-        class Output(VaasSdkOutputModel):
+        class Output(CloudApiOutputModel):
             EdgeWorkerInformation: edgemanagement_service.EdgeWorkerInformation
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'EdgeWorkerInformation'})
 
-    class _ID(VaasSdkEndpoint):
+    class _ID(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.pair = self._pair(api_obj=self._api_obj, url=f'{self._url}/pair')
 
         def get(self):
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 EdgeWorkerInformation: edgemanagement_service.EdgeWorkerInformation
             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EdgeWorkerInformation'})
 
         def delete(self):
-            class Output(VaasSdkOutputModel):
+            class Output(CloudApiOutputModel):
                 EdgeWorkerDeleteResponse: edgemanagement_service.EdgeWorkerDeleteResponse
             return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'EdgeWorkerDeleteResponse'})
 
-        class _pair(VaasSdkEndpoint):
+        class _pair(CloudApiEndpoint):
             def post(self, EdgeWorkerRequest: edgemanagement_service.EdgeWorkerRequest):
                 data = {**EdgeWorkerRequest.dict()}
 
-                class Output(VaasSdkOutputModel):
+                class Output(CloudApiOutputModel):
                     EdgeWorkerInformation: edgemanagement_service.EdgeWorkerInformation
                 return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'EdgeWorkerInformation'})
-
-
-class _billofmaterials(VaasSdkEndpoint):
-    def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/billofmaterials')
-
-    def get(self):
-        class Output(VaasSdkOutputModel):
-            BillOfMaterialResponse: edgemanagement_service.BillOfMaterialResponse
-        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'BillOfMaterialResponse'})
