@@ -6,7 +6,7 @@ from venafi.logger import logger, features_logger
 
 
 if TYPE_CHECKING:
-    from venafi.vaas.api.authenticate import Authenticate
+    from venafi.cloud.api.authenticate import Authenticate
 
 
 def feature(name: str):

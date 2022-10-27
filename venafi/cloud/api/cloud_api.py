@@ -1,12 +1,12 @@
 from typing import Optional, Union
 from packaging.version import Version, parse as parse_version
-from venafi.vaas.api.session import Session
-from venafi.vaas.api.sdk.endpoints.edge_management import _PairingCodes
+from venafi.cloud.api.session import Session
+from venafi.cloud.api.endpoints.edgemanagement_service import _pairingcodes
 
-_SDK_VERSION: Optional[Version] = None
+_CLOUD_API_VERSION: Optional[Version] = None
 
 
-class Sdk:
+class CloudApi:
     def __init__(self, server: str, api_key: str, proxies: dict = None, verify_ssl: bool = False,
                  connection_timeout: float = None, read_timeout: float = None):
         self._api_key = api_key
@@ -32,16 +32,16 @@ class Sdk:
         # endregion Authentication
 
         # region Endpoints
-        self.pairingCodes = _PairingCodes(self)
+        self.pairingcodes = _pairingcodes(self)
         # endregion Endpoints
 
     @property
     def version(self):
-        global _SDK_VERSION
-        if _SDK_VERSION:
-            return _SDK_VERSION
-        _SDK_VERSION = ...  # TODO
-        return _SDK_VERSION
+        global _CLOUD_API_VERSION
+        if _CLOUD_API_VERSION:
+            return _CLOUD_API_VERSION
+        _CLOUD_API_VERSION = ...  # TODO
+        return _CLOUD_API_VERSION
 
     def re_authenticate(self):
         pass

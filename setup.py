@@ -23,7 +23,8 @@ DEV_REQUIREMENTS = [
     'pyodbc==4.0.30',
     'lxml==4.4.1',
     'pandas==1.3.3',
-    'paramiko==2.10.4'
+    'paramiko==2.10.4',
+    'autopep8>=1.7.0'
 ]
 
 DOC_REQUIREMENTS = [

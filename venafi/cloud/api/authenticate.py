@@ -1,6 +1,6 @@
 from uuid import UUID
 from typing import Union
-from venafi.vaas.api.sdk.sdk import Sdk
+from venafi.cloud.api.cloud_api import CloudApi
 
 
 class Authenticate:
@@ -9,7 +9,7 @@ class Authenticate:
     """
 
     def __init__(self, server: str, api_key: Union[UUID, str]):
-        self.sdk = Sdk(server=server, api_key=api_key)
+        self.cloud_api = CloudApi(server=server, api_key=api_key)
 
     def re_authenticate(self):
         pass

@@ -62,6 +62,19 @@ class Session:
         """
         return self.requests.get(url=url, params=self._sanitize(obj=params), **self.request_kwargs)
 
+    def patch(self, url: str, data: dict):
+        """
+        Sends a PUT request to the given URL with the given data.
+
+        Args:
+            url: URL endpoint
+            data: Dictionary of data
+
+        Returns:
+            Returns the raw response returned by the server.
+        """
+        return self.requests.patch(url=url, data=self._to_json(obj=data), **self.request_kwargs)
+
     def post(self, url: str, data: dict):
         """
         Sends a POST request to the given URL with the given data.

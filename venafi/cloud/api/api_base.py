@@ -7,11 +7,11 @@ from pydantic.fields import Undefined
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from venafi.logger import api_logger, json_pickler
-from typing import Any, Callable, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
+from typing import Any, Callable, Dict, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
 
 if TYPE_CHECKING:
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
-    from venafi.vaas.api.session import Session
+    from venafi.cloud.api.session import Session
 
 T_ = TypeVar('T_')
 
@@ -137,6 +137,36 @@ class ApiEndpoint(object):
         for _ in range(self.retries):
             try:
                 response = self._session.get(url=self._url, params=params)
+                self._log_response(response=response)
+                if self._should_re_authenticate(response=response):
+                    self._re_authenticate()
+                    # Trigger the retry.
+                    continue
+                elif self._rerun_transaction_required(response=response):
+                    # Trigger the retry.
+                    continue
+                return response
+            except (ConnectionResetError, ConnectionError) as e:
+                exc = e
+            time.sleep(self.retry_interval)
+        raise exc
+
+    def _patch(self, data: Union[list, dict]):
+        """
+        Performs a PUT method request. If the response suggests the API Key is expired, then
+        a single attempt is made to re-authenticate to TPP. Otherwise, the raw response is returned.
+
+        Args:
+            data: A dictionary of data to send with the URL.
+
+        Returns:
+            Returns the raw JSON response.
+        """
+        self._log_rest_call(method='PATCH', data=data)
+        exc = None
+        for _ in range(self.retries):
+            try:
+                response = self._session.patch(url=self._url, data=data)
                 self._log_response(response=response)
                 if self._should_re_authenticate(response=response):
                     self._re_authenticate()
@@ -287,13 +317,14 @@ def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable
 
 
 # region Output Models
-def generate_output(response: Response, output_cls: Type[T_], root_field: str = None) -> T_:
+def generate_output(response: Response, output_cls: Type[T_], root_field: str = None, rc_mapping: Dict[int, str] = None) -> T_:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
         output_cls: Custom APIResponse class.
         root_field: In the case that the returned JSON is an array of objects, then the ``root_field``
             is used to assign that value.
+        rc_mapping: Used to map return codes to root_fields.
 
     Returns:
         An instance of ``response_cls``.
@@ -307,6 +338,11 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
     elif root_field:
         result = {
             str(root_field): result,
+            **result
+        }
+    elif rc_mapping and (field := rc_mapping.get(response.status_code)) is not None:
+        result = {
+            str(field): result,
             **result
         }
     response_inst = output_cls(api_response=response, **result)
