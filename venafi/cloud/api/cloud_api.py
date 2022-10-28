@@ -1,9 +1,29 @@
-from typing import Optional, Union
-from packaging.version import Version, parse as parse_version
 from venafi.cloud.api.session import Session
-from venafi.cloud.api.endpoints.edgemanagement_service import _pairingcodes
-
-_CLOUD_API_VERSION: Optional[Version] = None
+from venafi.cloud.api.endpoints.account_service import (
+    _teams, _users, _preferences, _useraccounts, _notifications, _ssoconfigurations, 
+    _dataencryptionkeys
+)
+from venafi.cloud.api.endpoints.activitylog_service import (
+    _activitytypes, _activitylogsearch
+)
+from venafi.cloud.api.endpoints.caoperations_service import (
+    _builtinca, _certificateissuingtemplates, _certificateauthorities
+)
+from venafi.cloud.api.endpoints.connectors_service import (
+    _connectors
+)
+from venafi.cloud.api.endpoints.edgemanagement_service import (
+    _pairingcodes, _edgeworkers, _edgeinstances, _billofmaterials, _edgeencryptionkeys
+)
+from venafi.cloud.api.endpoints.integrations_service import (
+    _environments, _integrationservices, _integrationservicesaggregates
+)
+from venafi.cloud.api.endpoints.outagedetection_service import (
+    _outagedetection
+)
+from venafi.cloud.api.endpoints.provisioning_service import (
+    _machines, _machinesearch, _machinetypes, _machineidentities, _machineidentitysearch
+)
 
 
 class CloudApi:
@@ -32,13 +52,31 @@ class CloudApi:
         # endregion Authentication
 
         # region Endpoints
+        self.activitylogsearch = _activitylogsearch(self)
+        self.activitytypes = _activitytypes(self)
+        self.billofmaterials = _billofmaterials(self)
+        self.builtinca = _builtinca(self)
+        self.certificateauthorities = _certificateauthorities(self)
+        self.certificateissuingtemplates = _certificateissuingtemplates(self)
+        self.connectors = _connectors(self)
+        self.dataencryptionkeys = _dataencryptionkeys(self)
+        self.edgeencryptionkeys = _edgeencryptionkeys(self)
+        self.edgeinstances = _edgeinstances(self)
+        self.edgeworkers = _edgeworkers(self)
+        self.environments = _environments(self)
+        self.integrationservices = _integrationservices(self)
+        self.integrationservicesaggregates = _integrationservicesaggregates(self)
+        self.machineidentities = _machineidentities(self)
+        self.machineidentitysearch = _machineidentitysearch(self)
+        self.machines = _machines(self)
+        self.machinesearch = _machinesearch(self)
+        self.machinetypes = _machinetypes(self)
+        self.notifications = _notifications(self)
+        self.outagedetection = _outagedetection(self)
         self.pairingcodes = _pairingcodes(self)
+        self.preferences = _preferences(self)
+        self.ssoconfigurations = _ssoconfigurations(self)
+        self.teams = _teams(self)
+        self.useraccounts = _useraccounts(self)
+        self.users = _users(self)
         # endregion Endpoints
-
-    @property
-    def version(self):
-        global _CLOUD_API_VERSION
-        if _CLOUD_API_VERSION:
-            return _CLOUD_API_VERSION
-        _CLOUD_API_VERSION = ...  # TODO
-        return _CLOUD_API_VERSION
