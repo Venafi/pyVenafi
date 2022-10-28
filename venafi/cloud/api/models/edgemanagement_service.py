@@ -1,6 +1,6 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
-from typing import (Any, List, Dict, Literal)
+from typing import (Literal, Dict, Any, List)
 from uuid import UUID
 from datetime import datetime
 
@@ -22,37 +22,6 @@ class Chart(ObjectModel):
     signature: str = ApiField(alias='signature')
 
 
-class PairingCodeInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
-    environmentId: UUID = ApiField(alias='environmentId')
-    pairingCode: str = ApiField(alias='pairingCode')
-    reuseCount: int = ApiField(alias='reuseCount')
-    expirationDate: datetime = ApiField(alias='expirationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-
-
-class ErrorInformation(ObjectModel):
-    code: int = ApiField(alias='code')
-    message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
-
-
-class ErrorResponse(ObjectModel):
-    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
-
-
-class PairingCodeRequest(ObjectModel):
-    environmentId: UUID = ApiField(alias='environmentId')
-    reuseCount: int = ApiField(alias='reuseCount')
-    expirationDate: datetime = ApiField(alias='expirationDate')
-
-
-class PairingCodeResponse(ObjectModel):
-    pairingCodes: List[PairingCodeInformation] = ApiField(alias='pairingCodes', default_factory=list)
-
-
 class ChartDetails(ObjectModel):
     name: str = ApiField(alias='name')
     version: str = ApiField(alias='version')
@@ -66,6 +35,10 @@ class EdgeInstanceConnectionDetails(ObjectModel):
     activeMessageCount: int = ApiField(alias='activeMessageCount')
     expiredMessageCount: int = ApiField(alias='expiredMessageCount')
     failedMessageCount: int = ApiField(alias='failedMessageCount')
+
+
+class EdgeInstanceDeleteResponse(ObjectModel):
+    name: str = ApiField(alias='name')
 
 
 class EdgeInstanceHealthDetails(ObjectModel):
@@ -100,9 +73,22 @@ class EdgeInstanceInformation(ObjectModel):
     integrationServicesCount: int = ApiField(alias='integrationServicesCount')
 
 
+class EdgeInstanceRequest(ObjectModel):
+    name: str = ApiField(alias='name')
+
+
+class EdgeInstanceResponse(ObjectModel):
+    edgeInstances: List[EdgeInstanceInformation] = ApiField(alias='edgeInstances', default_factory=list)
+
+
 class EdgeInstanceStatusDetailsInformation(ObjectModel):
     connectionDetails: List[EdgeInstanceConnectionDetails] = ApiField(alias='connectionDetails', default_factory=list)
     healthDetails: List[EdgeInstanceHealthDetails] = ApiField(alias='healthDetails', default_factory=list)
+
+
+class EdgeWorkerDeleteResponse(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    pairingCode: str = ApiField(alias='pairingCode')
 
 
 class EdgeWorkerHealthDetails(ObjectModel):
@@ -118,9 +104,54 @@ class EdgeWorkerHealthDetails(ObjectModel):
     services: List[WorkerServiceStatusDetails] = ApiField(alias='services', default_factory=list)
 
 
+class EdgeWorkerInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    host: str = ApiField(alias='host')
+    port: int = ApiField(alias='port')
+    pairingCode: str = ApiField(alias='pairingCode')
+    pairingPublicKey: str = ApiField(alias='pairingPublicKey')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    environmentId: UUID = ApiField(alias='environmentId')
+    status: Literal['ACTIVE', 'DRAFT', 'FAILED', 'INACTIVE', 'PAIRED'] = ApiField(alias='status')
+    lastSeenOnDate: datetime = ApiField(alias='lastSeenOnDate')
+
+
+class EdgeWorkerRequest(ObjectModel):
+    host: str = ApiField(alias='host')
+    port: int = ApiField(alias='port')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+
+
 class EdgeWorkerStatusDetailsInformation(ObjectModel):
     edgeWorkerId: UUID = ApiField(alias='edgeWorkerId')
     healthDetails: List[EdgeWorkerHealthDetails] = ApiField(alias='healthDetails', default_factory=list)
+
+
+class EdgeWorkersResponse(ObjectModel):
+    edgeWorkers: List[EdgeWorkerInformation] = ApiField(alias='edgeWorkers', default_factory=list)
+
+
+class EncryptionKeyInformation(ObjectModel):
+    id: str = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    key: str = ApiField(alias='key')
+    keyAlgorithm: Literal['ED25519', 'RSA'] = ApiField(alias='keyAlgorithm')
+    lastBackupDate: datetime = ApiField(alias='lastBackupDate')
+
+
+class EncryptionKeysResponse(ObjectModel):
+    encryptionKeys: List[EncryptionKeyInformation] = ApiField(alias='encryptionKeys', default_factory=list)
+
+
+class ErrorInformation(ObjectModel):
+    code: int = ApiField(alias='code')
+    message: str = ApiField(alias='message')
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
+
+
+class ErrorResponse(ObjectModel):
+    errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
 
 
 class NamespaceChartDetails(ObjectModel):
@@ -150,6 +181,27 @@ class NodeStatusDetails(ObjectModel):
     conditions: List[NodeCondition] = ApiField(alias='conditions', default_factory=list)
 
 
+class PairingCodeInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
+    environmentId: UUID = ApiField(alias='environmentId')
+    pairingCode: str = ApiField(alias='pairingCode')
+    reuseCount: int = ApiField(alias='reuseCount')
+    expirationDate: datetime = ApiField(alias='expirationDate')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+
+
+class PairingCodeRequest(ObjectModel):
+    environmentId: UUID = ApiField(alias='environmentId')
+    reuseCount: int = ApiField(alias='reuseCount')
+    expirationDate: datetime = ApiField(alias='expirationDate')
+
+
+class PairingCodeResponse(ObjectModel):
+    pairingCodes: List[PairingCodeInformation] = ApiField(alias='pairingCodes', default_factory=list)
+
+
 class PodStatusDetails(ObjectModel):
     name: str = ApiField(alias='name')
     age: int = ApiField(alias='age')
@@ -164,86 +216,34 @@ class WorkerServiceStatusDetails(ObjectModel):
     status: str = ApiField(alias='status')
 
 
-class EdgeInstanceRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-
-
-class EdgeInstanceDeleteResponse(ObjectModel):
-    name: str = ApiField(alias='name')
-
-
-class EdgeInstanceResponse(ObjectModel):
-    edgeInstances: List[EdgeInstanceInformation] = ApiField(alias='edgeInstances', default_factory=list)
-
-
-class EncryptionKeyInformation(ObjectModel):
-    id: str = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    key: str = ApiField(alias='key')
-    keyAlgorithm: Literal['ED25519', 'RSA'] = ApiField(alias='keyAlgorithm')
-    lastBackupDate: datetime = ApiField(alias='lastBackupDate')
-
-
-class EncryptionKeysResponse(ObjectModel):
-    encryptionKeys: List[EncryptionKeyInformation] = ApiField(alias='encryptionKeys', default_factory=list)
-
-
-class EdgeWorkerDeleteResponse(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    pairingCode: str = ApiField(alias='pairingCode')
-
-
-class EdgeWorkerInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    host: str = ApiField(alias='host')
-    port: int = ApiField(alias='port')
-    pairingCode: str = ApiField(alias='pairingCode')
-    pairingPublicKey: str = ApiField(alias='pairingPublicKey')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
-    environmentId: UUID = ApiField(alias='environmentId')
-    status: Literal['ACTIVE', 'DRAFT', 'FAILED', 'INACTIVE', 'PAIRED'] = ApiField(alias='status')
-    lastSeenOnDate: datetime = ApiField(alias='lastSeenOnDate')
-
-
-class EdgeWorkerRequest(ObjectModel):
-    host: str = ApiField(alias='host')
-    port: int = ApiField(alias='port')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
-
-
-class EdgeWorkersResponse(ObjectModel):
-    edgeWorkers: List[EdgeWorkerInformation] = ApiField(alias='edgeWorkers', default_factory=list)
-
-
 BillOfMaterialResponse.update_forward_refs()
 BillOfMaterialsInformation.update_forward_refs()
 Chart.update_forward_refs()
-PairingCodeInformation.update_forward_refs()
-ErrorInformation.update_forward_refs()
-ErrorResponse.update_forward_refs()
-PairingCodeRequest.update_forward_refs()
-PairingCodeResponse.update_forward_refs()
 ChartDetails.update_forward_refs()
 EdgeInstanceConnectionDetails.update_forward_refs()
+EdgeInstanceDeleteResponse.update_forward_refs()
 EdgeInstanceHealthDetails.update_forward_refs()
 EdgeInstanceInformation.update_forward_refs()
+EdgeInstanceRequest.update_forward_refs()
+EdgeInstanceResponse.update_forward_refs()
 EdgeInstanceStatusDetailsInformation.update_forward_refs()
+EdgeWorkerDeleteResponse.update_forward_refs()
 EdgeWorkerHealthDetails.update_forward_refs()
+EdgeWorkerInformation.update_forward_refs()
+EdgeWorkerRequest.update_forward_refs()
 EdgeWorkerStatusDetailsInformation.update_forward_refs()
+EdgeWorkersResponse.update_forward_refs()
+EncryptionKeyInformation.update_forward_refs()
+EncryptionKeysResponse.update_forward_refs()
+ErrorInformation.update_forward_refs()
+ErrorResponse.update_forward_refs()
 NamespaceChartDetails.update_forward_refs()
 NamespaceStatusDetails.update_forward_refs()
 NodeCondition.update_forward_refs()
 NodeInfo.update_forward_refs()
 NodeStatusDetails.update_forward_refs()
+PairingCodeInformation.update_forward_refs()
+PairingCodeRequest.update_forward_refs()
+PairingCodeResponse.update_forward_refs()
 PodStatusDetails.update_forward_refs()
 WorkerServiceStatusDetails.update_forward_refs()
-EdgeInstanceRequest.update_forward_refs()
-EdgeInstanceDeleteResponse.update_forward_refs()
-EdgeInstanceResponse.update_forward_refs()
-EncryptionKeyInformation.update_forward_refs()
-EncryptionKeysResponse.update_forward_refs()
-EdgeWorkerDeleteResponse.update_forward_refs()
-EdgeWorkerInformation.update_forward_refs()
-EdgeWorkerRequest.update_forward_refs()
-EdgeWorkersResponse.update_forward_refs()

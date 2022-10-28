@@ -27,16 +27,6 @@ class _environments(CloudApiEndpoint):
             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EnvironmentInformation'})
 
 
-class _integrationservicesaggregates(CloudApiEndpoint):
-    def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/integrationservicesaggregates')
-
-    def get(self):
-        class Output(CloudApiOutputModel):
-            IntegrationsServicesAggregatesResponse: integrations_service.IntegrationsServicesAggregatesResponse
-        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'IntegrationsServicesAggregatesResponse'})
-
-
 class _integrationservices(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/integrationservices')
@@ -82,3 +72,13 @@ class _integrationservices(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 IntegrationServiceInformation: integrations_service.IntegrationServiceInformation
             return generate_output(output_cls=Output, response=self._patch(data=data), rc_mapping={200: 'IntegrationServiceInformation'})
+
+
+class _integrationservicesaggregates(CloudApiEndpoint):
+    def __init__(self, api_obj):
+        super().__init__(api_obj=api_obj, url='/v1/integrationservicesaggregates')
+
+    def get(self):
+        class Output(CloudApiOutputModel):
+            IntegrationsServicesAggregatesResponse: integrations_service.IntegrationsServicesAggregatesResponse
+        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'IntegrationsServicesAggregatesResponse'})

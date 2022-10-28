@@ -53,14 +53,16 @@ class _machineidentities(CloudApiEndpoint):
                 return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'MachineIdentityWorkflowInformation'})
 
 
-class _machinetypes(CloudApiEndpoint):
+class _machineidentitysearch(CloudApiEndpoint):
     def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/machinetypes')
+        super().__init__(api_obj=api_obj, url='/v1/machineidentitysearch')
 
-    def get(self):
+    def post(self, MachineIdentitySearchRequest: provisioning_service.MachineIdentitySearchRequest):
+        data = {**MachineIdentitySearchRequest.dict()}
+
         class Output(CloudApiOutputModel):
-            MachineTypeResponse: provisioning_service.MachineTypeResponse
-        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'MachineTypeResponse'})
+            MachineIdentityDocumentResponse: provisioning_service.MachineIdentityDocumentResponse
+        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'MachineIdentityDocumentResponse'})
 
 
 class _machines(CloudApiEndpoint):
@@ -127,13 +129,11 @@ class _machinesearch(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'MachineDocumentResponse'})
 
 
-class _machineidentitysearch(CloudApiEndpoint):
+class _machinetypes(CloudApiEndpoint):
     def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/machineidentitysearch')
+        super().__init__(api_obj=api_obj, url='/v1/machinetypes')
 
-    def post(self, MachineIdentitySearchRequest: provisioning_service.MachineIdentitySearchRequest):
-        data = {**MachineIdentitySearchRequest.dict()}
-
+    def get(self):
         class Output(CloudApiOutputModel):
-            MachineIdentityDocumentResponse: provisioning_service.MachineIdentityDocumentResponse
-        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'MachineIdentityDocumentResponse'})
+            MachineTypeResponse: provisioning_service.MachineTypeResponse
+        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'MachineTypeResponse'})

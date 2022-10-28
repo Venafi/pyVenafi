@@ -1,23 +1,16 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
 from uuid import UUID
-from typing import (Any, Literal, List, Dict)
+from typing import (Literal, Dict, Any, List)
 from datetime import datetime
 
 
-class JsonNode(ObjectModel):
-    pass
-
-
-class MachineIdentityInformation(ObjectModel):
+class DefaultOwnershipInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    certificateId: UUID = ApiField(alias='certificateId')
-    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
-    creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    keystore: JsonNode = ApiField(alias='keystore')
-    binding: JsonNode = ApiField(alias='binding')
+    type: str = ApiField(alias='type')
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
 
 
 class ErrorInformation(ObjectModel):
@@ -30,68 +23,12 @@ class ErrorResponse(ObjectModel):
     errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
 
 
-class MachineIdentityUpdateRequest(ObjectModel):
-    certificateId: UUID = ApiField(alias='certificateId')
-    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
-    keystore: JsonNode = ApiField(alias='keystore')
-    binding: JsonNode = ApiField(alias='binding')
+class Expression(ObjectModel):
+    pass
 
 
-class MachineIdentityCreationRequest(ObjectModel):
-    certificateId: UUID = ApiField(alias='certificateId')
-    machineId: UUID = ApiField(alias='machineId')
-    keystore: JsonNode = ApiField(alias='keystore')
-    binding: JsonNode = ApiField(alias='binding')
-
-
-class MachineIdentityResponse(ObjectModel):
-    machineIdentities: List[MachineIdentityInformation] = ApiField(alias='machineIdentities', default_factory=list)
-
-
-class MachineIdentityWorkflowInformation(ObjectModel):
-    workflowId: str = ApiField(alias='workflowId')
-    workflowName: str = ApiField(alias='workflowName')
-
-
-class MachineIdentityWorkflowRequest(ObjectModel):
-    workflowName: str = ApiField(alias='workflowName')
-    workflowInput: ProvisionCertificateWorkflowInputInformation = ApiField(alias='workflowInput')
-
-
-class ProvisionCertificateWorkflowInputInformation(ObjectModel):
-    wsClientId: str = ApiField(alias='wsClientId')
-
-
-class MachineTypeInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    machineType: str = ApiField(alias='machineType')
-    pluginId: UUID = ApiField(alias='pluginId')
-
-
-class MachineTypeResponse(ObjectModel):
-    machineTypes: List[MachineTypeInformation] = ApiField(alias='machineTypes', default_factory=list)
-
-
-class MachineInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    name: str = ApiField(alias='name')
-    machineType: str = ApiField(alias='machineType')
-    pluginId: UUID = ApiField(alias='pluginId')
-    integrationId: UUID = ApiField(alias='integrationId')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
-    creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
-    owningTeamId: UUID = ApiField(alias='owningTeamId')
-
-
-class MachineUpdateRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
-    connectionDetails: JsonNode = ApiField(alias='connectionDetails')
-    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
-    owningTeamId: UUID = ApiField(alias='owningTeamId')
+class JsonNode(ObjectModel):
+    pass
 
 
 class MachineCreationRequest(ObjectModel):
@@ -104,23 +41,6 @@ class MachineCreationRequest(ObjectModel):
     connectionDetails: JsonNode = ApiField(alias='connectionDetails')
     status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
     owningTeamId: UUID = ApiField(alias='owningTeamId')
-
-
-class MachinesResponse(ObjectModel):
-    machines: List[MachineInformation] = ApiField(alias='machines', default_factory=list)
-
-
-class MachineWorkflowRequest(ObjectModel):
-    workflowName: str = ApiField(alias='workflowName')
-    workflowInput: JsonNode = ApiField(alias='workflowInput')
-
-
-class DefaultOwnershipInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    type: str = ApiField(alias='type')
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
 
 
 class MachineDocumentInformation(ObjectModel):
@@ -144,36 +64,11 @@ class MachineDocumentResponse(ObjectModel):
     machines: List[MachineDocumentInformation] = ApiField(alias='machines', default_factory=list)
 
 
-class OwnershipInformation(ObjectModel):
-    type: str = ApiField(alias='type')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
-    id: UUID = ApiField(alias='id')
-
-
-class Expression(ObjectModel):
-    pass
-
-
-class MachinesSearchRequest(ObjectModel):
-    expression: Expression = ApiField(alias='expression')
-    ordering: Ordering = ApiField(alias='ordering')
-    paging: Paging = ApiField(alias='paging')
-
-
-class OrderObject(ObjectModel):
-    field: str = ApiField(alias='field')
-    direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
-
-
-class Ordering(ObjectModel):
-    orders: List[OrderObject] = ApiField(alias='orders', default_factory=list)
-
-
-class Paging(ObjectModel):
-    pageNumber: int = ApiField(alias='pageNumber')
-    pageSize: int = ApiField(alias='pageSize')
+class MachineIdentityCreationRequest(ObjectModel):
+    certificateId: UUID = ApiField(alias='certificateId')
+    machineId: UUID = ApiField(alias='machineId')
+    keystore: JsonNode = ApiField(alias='keystore')
+    binding: JsonNode = ApiField(alias='binding')
 
 
 class MachineIdentityDocumentInformation(ObjectModel):
@@ -194,38 +89,143 @@ class MachineIdentityDocumentResponse(ObjectModel):
     machineIdentities: List[MachineIdentityDocumentInformation] = ApiField(alias='machineIdentities', default_factory=list)
 
 
+class MachineIdentityInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    certificateId: UUID = ApiField(alias='certificateId')
+    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
+    creationDate: datetime = ApiField(alias='creationDate')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    keystore: JsonNode = ApiField(alias='keystore')
+    binding: JsonNode = ApiField(alias='binding')
+
+
+class MachineIdentityResponse(ObjectModel):
+    machineIdentities: List[MachineIdentityInformation] = ApiField(alias='machineIdentities', default_factory=list)
+
+
 class MachineIdentitySearchRequest(ObjectModel):
     expression: Expression = ApiField(alias='expression')
     ordering: Ordering = ApiField(alias='ordering')
     paging: Paging = ApiField(alias='paging')
 
 
-JsonNode.update_forward_refs()
-MachineIdentityInformation.update_forward_refs()
+class MachineIdentityUpdateRequest(ObjectModel):
+    certificateId: UUID = ApiField(alias='certificateId')
+    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
+    keystore: JsonNode = ApiField(alias='keystore')
+    binding: JsonNode = ApiField(alias='binding')
+
+
+class MachineIdentityWorkflowInformation(ObjectModel):
+    workflowId: str = ApiField(alias='workflowId')
+    workflowName: str = ApiField(alias='workflowName')
+
+
+class MachineIdentityWorkflowRequest(ObjectModel):
+    workflowName: str = ApiField(alias='workflowName')
+    workflowInput: ProvisionCertificateWorkflowInputInformation = ApiField(alias='workflowInput')
+
+
+class MachineInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    companyId: UUID = ApiField(alias='companyId')
+    name: str = ApiField(alias='name')
+    machineType: str = ApiField(alias='machineType')
+    pluginId: UUID = ApiField(alias='pluginId')
+    integrationId: UUID = ApiField(alias='integrationId')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    creationDate: datetime = ApiField(alias='creationDate')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
+    owningTeamId: UUID = ApiField(alias='owningTeamId')
+
+
+class MachineTypeInformation(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    machineType: str = ApiField(alias='machineType')
+    pluginId: UUID = ApiField(alias='pluginId')
+
+
+class MachineTypeResponse(ObjectModel):
+    machineTypes: List[MachineTypeInformation] = ApiField(alias='machineTypes', default_factory=list)
+
+
+class MachineUpdateRequest(ObjectModel):
+    name: str = ApiField(alias='name')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    connectionDetails: JsonNode = ApiField(alias='connectionDetails')
+    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
+    owningTeamId: UUID = ApiField(alias='owningTeamId')
+
+
+class MachineWorkflowRequest(ObjectModel):
+    workflowName: str = ApiField(alias='workflowName')
+    workflowInput: JsonNode = ApiField(alias='workflowInput')
+
+
+class MachinesResponse(ObjectModel):
+    machines: List[MachineInformation] = ApiField(alias='machines', default_factory=list)
+
+
+class MachinesSearchRequest(ObjectModel):
+    expression: Expression = ApiField(alias='expression')
+    ordering: Ordering = ApiField(alias='ordering')
+    paging: Paging = ApiField(alias='paging')
+
+
+class OrderObject(ObjectModel):
+    field: str = ApiField(alias='field')
+    direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
+
+
+class Ordering(ObjectModel):
+    orders: List[OrderObject] = ApiField(alias='orders', default_factory=list)
+
+
+class OwnershipInformation(ObjectModel):
+    type: str = ApiField(alias='type')
+    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    id: UUID = ApiField(alias='id')
+
+
+class Paging(ObjectModel):
+    pageNumber: int = ApiField(alias='pageNumber')
+    pageSize: int = ApiField(alias='pageSize')
+
+
+class ProvisionCertificateWorkflowInputInformation(ObjectModel):
+    wsClientId: str = ApiField(alias='wsClientId')
+
+
+DefaultOwnershipInformation.update_forward_refs()
 ErrorInformation.update_forward_refs()
 ErrorResponse.update_forward_refs()
-MachineIdentityUpdateRequest.update_forward_refs()
-MachineIdentityCreationRequest.update_forward_refs()
-MachineIdentityResponse.update_forward_refs()
-MachineIdentityWorkflowInformation.update_forward_refs()
-MachineIdentityWorkflowRequest.update_forward_refs()
-ProvisionCertificateWorkflowInputInformation.update_forward_refs()
-MachineTypeInformation.update_forward_refs()
-MachineTypeResponse.update_forward_refs()
-MachineInformation.update_forward_refs()
-MachineUpdateRequest.update_forward_refs()
+Expression.update_forward_refs()
+JsonNode.update_forward_refs()
 MachineCreationRequest.update_forward_refs()
-MachinesResponse.update_forward_refs()
-MachineWorkflowRequest.update_forward_refs()
-DefaultOwnershipInformation.update_forward_refs()
 MachineDocumentInformation.update_forward_refs()
 MachineDocumentResponse.update_forward_refs()
-OwnershipInformation.update_forward_refs()
-Expression.update_forward_refs()
+MachineIdentityCreationRequest.update_forward_refs()
+MachineIdentityDocumentInformation.update_forward_refs()
+MachineIdentityDocumentResponse.update_forward_refs()
+MachineIdentityInformation.update_forward_refs()
+MachineIdentityResponse.update_forward_refs()
+MachineIdentitySearchRequest.update_forward_refs()
+MachineIdentityUpdateRequest.update_forward_refs()
+MachineIdentityWorkflowInformation.update_forward_refs()
+MachineIdentityWorkflowRequest.update_forward_refs()
+MachineInformation.update_forward_refs()
+MachineTypeInformation.update_forward_refs()
+MachineTypeResponse.update_forward_refs()
+MachineUpdateRequest.update_forward_refs()
+MachineWorkflowRequest.update_forward_refs()
+MachinesResponse.update_forward_refs()
 MachinesSearchRequest.update_forward_refs()
 OrderObject.update_forward_refs()
 Ordering.update_forward_refs()
+OwnershipInformation.update_forward_refs()
 Paging.update_forward_refs()
-MachineIdentityDocumentInformation.update_forward_refs()
-MachineIdentityDocumentResponse.update_forward_refs()
-MachineIdentitySearchRequest.update_forward_refs()
+ProvisionCertificateWorkflowInputInformation.update_forward_refs()

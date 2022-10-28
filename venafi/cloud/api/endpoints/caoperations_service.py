@@ -4,48 +4,6 @@ from venafi.cloud.api.models import caoperations_service
 from uuid import UUID
 
 
-class _certificateissuingtemplates(CloudApiEndpoint):
-    def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/certificateissuingtemplates')
-
-    def ID(self, id: str):
-        return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
-
-    def get(self, certificateAuthorityAccountId: UUID):
-        data = {
-            'certificateAuthorityAccountId': certificateAuthorityAccountId,
-        }
-
-        class Output(CloudApiOutputModel):
-            CertificateIssuingTemplateResponse: caoperations_service.CertificateIssuingTemplateResponse
-        return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateIssuingTemplateResponse'})
-
-    def post(self, CertificateIssuingTemplateRequest: caoperations_service.CertificateIssuingTemplateRequest):
-        data = {**CertificateIssuingTemplateRequest.dict()}
-
-        class Output(CloudApiOutputModel):
-            CertificateIssuingTemplateResponse: caoperations_service.CertificateIssuingTemplateResponse
-        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateIssuingTemplateResponse'})
-
-    class _ID(CloudApiEndpoint):
-        def get(self):
-            class Output(CloudApiOutputModel):
-                CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateInformation'})
-
-        def put(self, CertificateIssuingTemplateRequest: caoperations_service.CertificateIssuingTemplateRequest):
-            data = {**CertificateIssuingTemplateRequest.dict()}
-
-            class Output(CloudApiOutputModel):
-                CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
-            return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateIssuingTemplateInformation', 202: 'CertificateIssuingTemplateInformation'})
-
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                CertificateIssuingTemplateDeleteResponse: caoperations_service.CertificateIssuingTemplateDeleteResponse
-            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateIssuingTemplateDeleteResponse'})
-
-
 class _certificateauthorities(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/certificateauthorities')
@@ -298,6 +256,48 @@ class _certificateauthorities(CloudApiEndpoint):
                         class Output(CloudApiOutputModel):
                             CertificateAuthorityAccountInformation: caoperations_service.CertificateAuthorityAccountInformation
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountInformation'})
+
+
+class _certificateissuingtemplates(CloudApiEndpoint):
+    def __init__(self, api_obj):
+        super().__init__(api_obj=api_obj, url='/v1/certificateissuingtemplates')
+
+    def ID(self, id: str):
+        return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+
+    def get(self, certificateAuthorityAccountId: UUID):
+        data = {
+            'certificateAuthorityAccountId': certificateAuthorityAccountId,
+        }
+
+        class Output(CloudApiOutputModel):
+            CertificateIssuingTemplateResponse: caoperations_service.CertificateIssuingTemplateResponse
+        return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateIssuingTemplateResponse'})
+
+    def post(self, CertificateIssuingTemplateRequest: caoperations_service.CertificateIssuingTemplateRequest):
+        data = {**CertificateIssuingTemplateRequest.dict()}
+
+        class Output(CloudApiOutputModel):
+            CertificateIssuingTemplateResponse: caoperations_service.CertificateIssuingTemplateResponse
+        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateIssuingTemplateResponse'})
+
+    class _ID(CloudApiEndpoint):
+        def get(self):
+            class Output(CloudApiOutputModel):
+                CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateInformation'})
+
+        def put(self, CertificateIssuingTemplateRequest: caoperations_service.CertificateIssuingTemplateRequest):
+            data = {**CertificateIssuingTemplateRequest.dict()}
+
+            class Output(CloudApiOutputModel):
+                CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
+            return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateIssuingTemplateInformation', 202: 'CertificateIssuingTemplateInformation'})
+
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                CertificateIssuingTemplateDeleteResponse: caoperations_service.CertificateIssuingTemplateDeleteResponse
+            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateIssuingTemplateDeleteResponse'})
 
 
 class _builtinca(CloudApiEndpoint):

@@ -429,7 +429,7 @@ class RootNode:
             f'from {CLOUD_API_MODEL_MODULE} import {self.model_filename}'
         ]
         data_types = defaultdict(set)
-        for child in self.children:
+        for child in sorted(self.children, key=lambda x: x.path):
             lns, dts, opfp = child.lines()
             lines += lns
             object_properties_from_paths.update(opfp)
@@ -457,7 +457,7 @@ class PathParser:
     def get_code(self):
         lines, object_properties_from_paths = self._tree.lines()
         code = autopep8.fix_code('\n'.join(lines), options={'max_line_length': MAX_LINE_LENGTH})
-        print(code)
+        # print(code)
         return code, object_properties_from_paths
 
 
@@ -471,12 +471,12 @@ class ComponentSchemaParser:
     def get_code(self):
         lines = self._lines()
         code = autopep8.fix_code('\n'.join(lines), options={'max_line_length': MAX_LINE_LENGTH})
-        print(code)
+        # print(code)
         return code
 
     def _lines(self):
         lines = []
-        for name, info in self.schemas.items():
+        for name, info in sorted(self.schemas.items(), key=lambda x: x[0]):
             if info['type'] != 'object':
                 raise Exception(f'Got an unexpected type: {info["type"]}')
             lines += self._get_model(name, info.get('properties', {}))
@@ -489,7 +489,7 @@ class ComponentSchemaParser:
                         lines_ += doit(k_, v_.get('properties', {}))
                 return lines_
 
-            for k, v in self.object_properties_from_paths.items():
+            for k, v in sorted(self.object_properties_from_paths.items(), key=lambda x: x[0]):
                 lines += doit(k, v.get('properties', {}))
 
         imports = self._get_imports()
@@ -541,8 +541,9 @@ def main():
 
     base_url = 'https://api.staging.qa.venafi.io'
     services = requests.get(f'{base_url}/v3/api-docs/swagger-config').json()  # type: dict
-    for item in services.get('urls', []):
+    for item in sorted(services.get('urls', []), key=lambda x: x['name']):
         name = str(item['name']).replace('-', '_')
+        print(f'Processing {name}...')
         url = f'{base_url}/{item["url"].lstrip("/")}'
         data = requests.get(url).json()
         object_properties_from_paths = {}

@@ -14,21 +14,27 @@ class _billofmaterials(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'BillOfMaterialResponse'})
 
 
-class _pairingcodes(CloudApiEndpoint):
+class _edgeencryptionkeys(CloudApiEndpoint):
     def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/pairingcodes')
+        super().__init__(api_obj=api_obj, url='/v1/edgeencryptionkeys')
 
-    def get(self):
+    def ID(self, id: str):
+        return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+
+    def get(self, edgeInstanceId: UUID):
+        data = {
+            'edgeInstanceId': edgeInstanceId,
+        }
+
         class Output(CloudApiOutputModel):
-            PairingCodeResponse: edgemanagement_service.PairingCodeResponse
-        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'PairingCodeResponse'})
+            EncryptionKeysResponse: edgemanagement_service.EncryptionKeysResponse
+        return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EncryptionKeysResponse'})
 
-    def post(self, PairingCodeRequest: edgemanagement_service.PairingCodeRequest):
-        data = {**PairingCodeRequest.dict()}
-
-        class Output(CloudApiOutputModel):
-            PairingCodeInformation: edgemanagement_service.PairingCodeInformation
-        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'PairingCodeInformation'})
+    class _ID(CloudApiEndpoint):
+        def get(self):
+            class Output(CloudApiOutputModel):
+                EncryptionKeyInformation: edgemanagement_service.EncryptionKeyInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EncryptionKeyInformation'})
 
 
 class _edgeinstances(CloudApiEndpoint):
@@ -68,29 +74,6 @@ class _edgeinstances(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 EdgeInstanceDeleteResponse: edgemanagement_service.EdgeInstanceDeleteResponse
             return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'EdgeInstanceDeleteResponse'})
-
-
-class _edgeencryptionkeys(CloudApiEndpoint):
-    def __init__(self, api_obj):
-        super().__init__(api_obj=api_obj, url='/v1/edgeencryptionkeys')
-
-    def ID(self, id: str):
-        return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
-
-    def get(self, edgeInstanceId: UUID):
-        data = {
-            'edgeInstanceId': edgeInstanceId,
-        }
-
-        class Output(CloudApiOutputModel):
-            EncryptionKeysResponse: edgemanagement_service.EncryptionKeysResponse
-        return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EncryptionKeysResponse'})
-
-    class _ID(CloudApiEndpoint):
-        def get(self):
-            class Output(CloudApiOutputModel):
-                EncryptionKeyInformation: edgemanagement_service.EncryptionKeyInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EncryptionKeyInformation'})
 
 
 class _edgeworkers(CloudApiEndpoint):
@@ -138,3 +121,20 @@ class _edgeworkers(CloudApiEndpoint):
                 class Output(CloudApiOutputModel):
                     EdgeWorkerInformation: edgemanagement_service.EdgeWorkerInformation
                 return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'EdgeWorkerInformation'})
+
+
+class _pairingcodes(CloudApiEndpoint):
+    def __init__(self, api_obj):
+        super().__init__(api_obj=api_obj, url='/v1/pairingcodes')
+
+    def get(self):
+        class Output(CloudApiOutputModel):
+            PairingCodeResponse: edgemanagement_service.PairingCodeResponse
+        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'PairingCodeResponse'})
+
+    def post(self, PairingCodeRequest: edgemanagement_service.PairingCodeRequest):
+        data = {**PairingCodeRequest.dict()}
+
+        class Output(CloudApiOutputModel):
+            PairingCodeInformation: edgemanagement_service.PairingCodeInformation
+        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'PairingCodeInformation'})
