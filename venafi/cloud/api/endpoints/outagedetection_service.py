@@ -1,13 +1,14 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
 from venafi.cloud.api.models import outagedetection_service
-from typing import (Dict, Any, List, Literal)
 from datetime import datetime
+from typing import (Any, Dict, List, Literal)
 
 
 class _outagedetection(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='outagedetection')
+        self.certificates = self._certificates(api_obj=self._api_obj, url=f'{self._url}/certificates')
         self.applications = self._applications(api_obj=self._api_obj, url=f'{self._url}/applications')
         self.certificatesearch = self._certificatesearch(api_obj=self._api_obj, url=f'{self._url}/certificatesearch')
         self.certificateinstances = self._certificateinstances(api_obj=self._api_obj, url=f'{self._url}/certificateinstances')
@@ -17,7 +18,133 @@ class _outagedetection(CloudApiEndpoint):
         self.certificaterequests = self._certificaterequests(api_obj=self._api_obj, url=f'{self._url}/certificaterequests')
         self.certificaterequestssearch = self._certificaterequestssearch(api_obj=self._api_obj, url=f'{self._url}/certificaterequestssearch')
         self.applicationservertypes = self._applicationservertypes(api_obj=self._api_obj, url=f'{self._url}/applicationservertypes')
-        self.certificates = self._certificates(api_obj=self._api_obj, url=f'{self._url}/certificates')
+
+    class _certificates(CloudApiEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
+            self.retirement = self._retirement(api_obj=self._api_obj, url=f'{self._url}/retirement')
+            self.recovery = self._recovery(api_obj=self._api_obj, url=f'{self._url}/recovery')
+            self.deletion = self._deletion(api_obj=self._api_obj, url=f'{self._url}/deletion')
+            self.managed = self._managed(api_obj=self._api_obj, url=f'{self._url}/managed')
+
+        def ID(self, id: str):
+            return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+
+        def get(self, subject: str, limit: int):
+            data = {
+                'subject': subject,
+                'limit': limit,
+            }
+
+            class Output(CloudApiOutputModel):
+                pass
+            return generate_output(output_cls=Output, response=self._get(params=data))
+
+        def post(self, CertificateImportRequest: outagedetection_service.CertificateImportRequest):
+            data = {**CertificateImportRequest.dict()}
+
+            class Output(CloudApiOutputModel):
+                CertificateImportResponse: outagedetection_service.CertificateImportResponse
+            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateImportResponse'})
+
+        class _validation(CloudApiEndpoint):
+            def post(self, CertificateValidationRequest: outagedetection_service.CertificateValidationRequest):
+                data = {**CertificateValidationRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    length: int
+                    location: str
+                    language: outagedetection_service.language
+                    lastModified: datetime
+                    date: datetime
+                    mediaType: outagedetection_service.mediaType
+                    metadataDict: Dict[str, List[Dict[str, Any]]]
+                    status: int
+                    statusInfo: outagedetection_service.statusInfo
+                    stringHeadersDict: Dict[str, List[str]]
+                    allowedMethodsList: List[str]
+                    entityTag: outagedetection_service.entityTag
+                    linksList: List[Dict[str, Any]]
+                    cookiesDict: Dict[str, Dict[str, Any]]
+                    headersDict: Dict[str, List[Dict[str, Any]]]
+                    entityDict: Dict[str, Any]
+                return generate_output(output_cls=Output, response=self._post(data=data))
+
+        class _ID(CloudApiEndpoint):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.contents = self._contents(api_obj=self._api_obj, url=f'{self._url}/contents')
+                self.keystore = self._keystore(api_obj=self._api_obj, url=f'{self._url}/keystore')
+
+            def get(self, ownershipTree: bool):
+                data = {
+                    'ownershipTree': ownershipTree,
+                }
+
+                class Output(CloudApiOutputModel):
+                    ExtendedCertificateInformation: outagedetection_service.ExtendedCertificateInformation
+                return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ExtendedCertificateInformation'})
+
+            class _contents(CloudApiEndpoint):
+                def get(self, format: Literal['DER', 'PEM'], chainOrder: Literal['EE_FIRST', 'EE_ONLY', 'ROOT_FIRST']):
+                    data = {
+                        'format': format,
+                        'chainOrder': chainOrder,
+                    }
+
+                    class Output(CloudApiOutputModel):
+                        str: str
+                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'str'})
+
+            class _keystore(CloudApiEndpoint):
+                def post(self, CertificateKeystoreRequest: outagedetection_service.CertificateKeystoreRequest):
+                    data = {**CertificateKeystoreRequest.dict()}
+
+                    class Output(CloudApiOutputModel):
+                        str: str
+                    return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'str'})
+
+        class _retirement(CloudApiEndpoint):
+            def post(self, CertificateRetirementRequest: outagedetection_service.CertificateRetirementRequest):
+                data = {**CertificateRetirementRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    CertificateResponse: outagedetection_service.CertificateResponse
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateResponse'})
+
+        class _recovery(CloudApiEndpoint):
+            def post(self, CertificateRecoveryRequest: outagedetection_service.CertificateRecoveryRequest):
+                data = {**CertificateRecoveryRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    CertificateResponse: outagedetection_service.CertificateResponse
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateResponse'})
+
+        class _deletion(CloudApiEndpoint):
+            def post(self, CertificateDeletionRequest: outagedetection_service.CertificateDeletionRequest):
+                data = {**CertificateDeletionRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    pass
+                return generate_output(output_cls=Output, response=self._post(data=data))
+
+        class _managed(CloudApiEndpoint):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def ID(self, id: str):
+                return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+
+            class _ID(CloudApiEndpoint):
+                def get(self, ownershipTree: bool):
+                    data = {
+                        'ownershipTree': ownershipTree,
+                    }
+
+                    class Output(CloudApiOutputModel):
+                        CertificateResponse: outagedetection_service.CertificateResponse
+                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateResponse'})
 
     class _applications(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
@@ -136,12 +263,14 @@ class _outagedetection(CloudApiEndpoint):
                         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateInformation'})
 
     class _certificatesearch(CloudApiEndpoint):
-        def post(self, CertificateSearchRequest: outagedetection_service.CertificateSearchRequest):
-            data = {**CertificateSearchRequest.dict()}
+        def post(self, ownershipTree: bool):
+            data = {
+                'ownershipTree': ownershipTree,
+            }
 
             class Output(CloudApiOutputModel):
-                pass
-            return generate_output(output_cls=Output, response=self._post(data=data))
+                CertificateResponse: outagedetection_service.CertificateResponse
+            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateResponse'})
 
     class _certificateinstances(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
@@ -175,13 +304,13 @@ class _outagedetection(CloudApiEndpoint):
                     date: datetime
                     mediaType: outagedetection_service.mediaType
                     metadataDict: Dict[str, List[Dict[str, Any]]]
+                    status: int
+                    statusInfo: outagedetection_service.statusInfo
                     stringHeadersDict: Dict[str, List[str]]
                     allowedMethodsList: List[str]
                     entityTag: outagedetection_service.entityTag
-                    status: int
-                    statusInfo: outagedetection_service.statusInfo
-                    cookiesDict: Dict[str, Dict[str, Any]]
                     linksList: List[Dict[str, Any]]
+                    cookiesDict: Dict[str, Dict[str, Any]]
                     headersDict: Dict[str, List[Dict[str, Any]]]
                     entityDict: Dict[str, Any]
                 return generate_output(output_cls=Output, response=self._post(data=data))
@@ -197,8 +326,8 @@ class _outagedetection(CloudApiEndpoint):
             data = {**CertificateInstanceSearchRequest.dict()}
 
             class Output(CloudApiOutputModel):
-                pass
-            return generate_output(output_cls=Output, response=self._post(data=data))
+                ExtendedCertificateInstanceResponse: outagedetection_service.ExtendedCertificateInstanceResponse
+            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'ExtendedCertificateInstanceResponse'})
 
     class _savedsearches(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
@@ -361,130 +490,3 @@ class _outagedetection(CloudApiEndpoint):
                 class Output(CloudApiOutputModel):
                     pass
                 return generate_output(output_cls=Output, response=self._delete(params={}))
-
-    class _certificates(CloudApiEndpoint):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
-            self.retirement = self._retirement(api_obj=self._api_obj, url=f'{self._url}/retirement')
-            self.recovery = self._recovery(api_obj=self._api_obj, url=f'{self._url}/recovery')
-            self.deletion = self._deletion(api_obj=self._api_obj, url=f'{self._url}/deletion')
-            self.managed = self._managed(api_obj=self._api_obj, url=f'{self._url}/managed')
-
-        def ID(self, id: str):
-            return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
-
-        def get(self, subject: str, limit: int):
-            data = {
-                'subject': subject,
-                'limit': limit,
-            }
-
-            class Output(CloudApiOutputModel):
-                pass
-            return generate_output(output_cls=Output, response=self._get(params=data))
-
-        def post(self, CertificateImportRequest: outagedetection_service.CertificateImportRequest):
-            data = {**CertificateImportRequest.dict()}
-
-            class Output(CloudApiOutputModel):
-                CertificateImportResponse: outagedetection_service.CertificateImportResponse
-            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateImportResponse'})
-
-        class _validation(CloudApiEndpoint):
-            def post(self, CertificateValidationRequest: outagedetection_service.CertificateValidationRequest):
-                data = {**CertificateValidationRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    length: int
-                    location: str
-                    language: outagedetection_service.language
-                    lastModified: datetime
-                    date: datetime
-                    mediaType: outagedetection_service.mediaType
-                    metadataDict: Dict[str, List[Dict[str, Any]]]
-                    stringHeadersDict: Dict[str, List[str]]
-                    allowedMethodsList: List[str]
-                    entityTag: outagedetection_service.entityTag
-                    status: int
-                    statusInfo: outagedetection_service.statusInfo
-                    cookiesDict: Dict[str, Dict[str, Any]]
-                    linksList: List[Dict[str, Any]]
-                    headersDict: Dict[str, List[Dict[str, Any]]]
-                    entityDict: Dict[str, Any]
-                return generate_output(output_cls=Output, response=self._post(data=data))
-
-        class _ID(CloudApiEndpoint):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-                self.contents = self._contents(api_obj=self._api_obj, url=f'{self._url}/contents')
-                self.keystore = self._keystore(api_obj=self._api_obj, url=f'{self._url}/keystore')
-
-            def get(self, ownershipTree: bool):
-                data = {
-                    'ownershipTree': ownershipTree,
-                }
-
-                class Output(CloudApiOutputModel):
-                    ExtendedCertificateInformation: outagedetection_service.ExtendedCertificateInformation
-                return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ExtendedCertificateInformation'})
-
-            class _contents(CloudApiEndpoint):
-                def get(self, format: Literal['DER', 'PEM'], chainOrder: Literal['EE_FIRST', 'EE_ONLY', 'ROOT_FIRST']):
-                    data = {
-                        'format': format,
-                        'chainOrder': chainOrder,
-                    }
-
-                    class Output(CloudApiOutputModel):
-                        str: str
-                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'str'})
-
-            class _keystore(CloudApiEndpoint):
-                def post(self, CertificateKeystoreRequest: outagedetection_service.CertificateKeystoreRequest):
-                    data = {**CertificateKeystoreRequest.dict()}
-
-                    class Output(CloudApiOutputModel):
-                        str: str
-                    return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'str'})
-
-        class _retirement(CloudApiEndpoint):
-            def post(self, CertificateRetirementRequest: outagedetection_service.CertificateRetirementRequest):
-                data = {**CertificateRetirementRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    CertificateResponse: outagedetection_service.CertificateResponse
-                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateResponse'})
-
-        class _recovery(CloudApiEndpoint):
-            def post(self, CertificateRecoveryRequest: outagedetection_service.CertificateRecoveryRequest):
-                data = {**CertificateRecoveryRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    CertificateResponse: outagedetection_service.CertificateResponse
-                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateResponse'})
-
-        class _deletion(CloudApiEndpoint):
-            def post(self, CertificateDeletionRequest: outagedetection_service.CertificateDeletionRequest):
-                data = {**CertificateDeletionRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    pass
-                return generate_output(output_cls=Output, response=self._post(data=data))
-
-        class _managed(CloudApiEndpoint):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-
-            def ID(self, id: str):
-                return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
-
-            class _ID(CloudApiEndpoint):
-                def get(self, ownershipTree: bool):
-                    data = {
-                        'ownershipTree': ownershipTree,
-                    }
-
-                    class Output(CloudApiOutputModel):
-                        CertificateResponse: outagedetection_service.CertificateResponse
-                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateResponse'})

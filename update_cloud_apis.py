@@ -439,7 +439,7 @@ class RootNode:
 
         for package, items in data_types.items():
             if len(items) > 1:
-                imports.append(f'''from {package} import ({', '.join(items)})''')
+                imports.append(f'''from {package} import ({', '.join(sorted(items))})''')
             else:
                 imports.append(f'''from {package} import {', '.join(items)}''')
         return imports + lines, object_properties_from_paths
@@ -505,7 +505,7 @@ class ComponentSchemaParser:
         ]
         for package, items in self._imports.items():
             if len(items) > 1:
-                lines.append(f'''from {package} import ({f', '.join(items)})''')
+                lines.append(f'''from {package} import ({f', '.join(sorted(items))})''')
             else:
                 lines.append(f'''from {package} import {f', '.join(items)}''')
         return lines
