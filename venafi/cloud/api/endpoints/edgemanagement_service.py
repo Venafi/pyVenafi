@@ -54,6 +54,11 @@ class _edgeinstances(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'EdgeInstanceResponse'})
 
     class _ID(CloudApiEndpoint):
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                EdgeInstanceDeleteResponse: edgemanagement_service.EdgeInstanceDeleteResponse
+            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'EdgeInstanceDeleteResponse'})
+
         def get(self, statusDetails: bool):
             data = {
                 'statusDetails': statusDetails,
@@ -69,11 +74,6 @@ class _edgeinstances(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 EdgeInstanceInformation: edgemanagement_service.EdgeInstanceInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'EdgeInstanceInformation'})
-
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                EdgeInstanceDeleteResponse: edgemanagement_service.EdgeInstanceDeleteResponse
-            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'EdgeInstanceDeleteResponse'})
 
 
 class _edgeworkers(CloudApiEndpoint):
@@ -104,15 +104,15 @@ class _edgeworkers(CloudApiEndpoint):
             super().__init__(*args, **kwargs)
             self.pair = self._pair(api_obj=self._api_obj, url=f'{self._url}/pair')
 
-        def get(self):
-            class Output(CloudApiOutputModel):
-                EdgeWorkerInformation: edgemanagement_service.EdgeWorkerInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EdgeWorkerInformation'})
-
         def delete(self):
             class Output(CloudApiOutputModel):
                 EdgeWorkerDeleteResponse: edgemanagement_service.EdgeWorkerDeleteResponse
             return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'EdgeWorkerDeleteResponse'})
+
+        def get(self):
+            class Output(CloudApiOutputModel):
+                EdgeWorkerInformation: edgemanagement_service.EdgeWorkerInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'EdgeWorkerInformation'})
 
         class _pair(CloudApiEndpoint):
             def post(self, EdgeWorkerRequest: edgemanagement_service.EdgeWorkerRequest):

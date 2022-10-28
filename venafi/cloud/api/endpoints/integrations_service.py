@@ -34,10 +34,10 @@ class _integrationservices(CloudApiEndpoint):
     def ID(self, id: str):
         return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
 
-    def get(self, totalCount: bool, edgeInstanceId: UUID):
+    def get(self, edgeInstanceId: UUID, totalCount: bool):
         data = {
-            'totalCount': totalCount,
             'edgeInstanceId': edgeInstanceId,
+            'totalCount': totalCount,
         }
 
         class Output(CloudApiOutputModel):
@@ -52,11 +52,6 @@ class _integrationservices(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'IntegrationServiceInformation'})
 
     class _ID(CloudApiEndpoint):
-        def get(self):
-            class Output(CloudApiOutputModel):
-                IntegrationServiceInformation: integrations_service.IntegrationServiceInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'IntegrationServiceInformation'})
-
         def delete(self, retireCertificates: bool):
             data = {
                 'retireCertificates': retireCertificates,
@@ -65,6 +60,11 @@ class _integrationservices(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 pass
             return generate_output(output_cls=Output, response=self._delete(params=data))
+
+        def get(self):
+            class Output(CloudApiOutputModel):
+                IntegrationServiceInformation: integrations_service.IntegrationServiceInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'IntegrationServiceInformation'})
 
         def patch(self, IntegrationServiceUpdateRequest: integrations_service.IntegrationServiceUpdateRequest):
             data = {**IntegrationServiceUpdateRequest.dict()}

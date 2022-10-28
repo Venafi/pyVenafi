@@ -27,15 +27,15 @@ class _machineidentities(CloudApiEndpoint):
             super().__init__(*args, **kwargs)
             self.workflows = self._workflows(api_obj=self._api_obj, url=f'{self._url}/workflows')
 
-        def get(self):
-            class Output(CloudApiOutputModel):
-                MachineIdentityInformation: provisioning_service.MachineIdentityInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'MachineIdentityInformation'})
-
         def delete(self):
             class Output(CloudApiOutputModel):
                 pass
             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+        def get(self):
+            class Output(CloudApiOutputModel):
+                MachineIdentityInformation: provisioning_service.MachineIdentityInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'MachineIdentityInformation'})
 
         def patch(self, MachineIdentityUpdateRequest: provisioning_service.MachineIdentityUpdateRequest):
             data = {**MachineIdentityUpdateRequest.dict()}
@@ -89,15 +89,15 @@ class _machines(CloudApiEndpoint):
             super().__init__(*args, **kwargs)
             self.workflows = self._workflows(api_obj=self._api_obj, url=f'{self._url}/workflows')
 
-        def get(self):
-            class Output(CloudApiOutputModel):
-                MachineInformation: provisioning_service.MachineInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'MachineInformation'})
-
         def delete(self):
             class Output(CloudApiOutputModel):
                 pass
             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+        def get(self):
+            class Output(CloudApiOutputModel):
+                MachineInformation: provisioning_service.MachineInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'MachineInformation'})
 
         def patch(self, MachineUpdateRequest: provisioning_service.MachineUpdateRequest):
             data = {**MachineUpdateRequest.dict()}

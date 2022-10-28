@@ -1,8 +1,8 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import ApiField, ObjectModel
+from datetime import datetime
 from typing import (Any, Dict, List, Literal)
 from uuid import UUID
-from datetime import datetime
 
 
 class BillOfMaterialResponse(ObjectModel):

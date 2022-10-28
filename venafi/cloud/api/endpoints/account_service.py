@@ -1,8 +1,8 @@
 from __future__ import annotations
 from venafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
 from venafi.cloud.api.models import account_service
-from uuid import UUID
 from typing import (List, Literal)
+from uuid import UUID
 
 
 class _notifications(CloudApiEndpoint):
@@ -30,6 +30,11 @@ class _notifications(CloudApiEndpoint):
             super().__init__(*args, **kwargs)
             self.unsubscribe = self._unsubscribe(api_obj=self._api_obj, url=f'{self._url}/unsubscribe')
 
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                pass
+            return generate_output(output_cls=Output, response=self._delete(params={}))
+
         def get(self):
             class Output(CloudApiOutputModel):
                 NotificationConfigurationInformation: account_service.NotificationConfigurationInformation
@@ -41,11 +46,6 @@ class _notifications(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 NotificationConfigurationInformation: account_service.NotificationConfigurationInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'NotificationConfigurationInformation'})
-
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                pass
-            return generate_output(output_cls=Output, response=self._delete(params={}))
 
         class _unsubscribe(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
@@ -95,6 +95,11 @@ class _preferences(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'UserPreferenceInformation'})
 
     class _ID(CloudApiEndpoint):
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                pass
+            return generate_output(output_cls=Output, response=self._delete(params={}))
+
         def get(self):
             class Output(CloudApiOutputModel):
                 UserPreferenceInformation: account_service.UserPreferenceInformation
@@ -106,11 +111,6 @@ class _preferences(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 UserPreferenceInformation: account_service.UserPreferenceInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'UserPreferenceInformation'})
-
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                pass
-            return generate_output(output_cls=Output, response=self._delete(params={}))
 
     class _name(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
@@ -146,17 +146,17 @@ class _ssoconfigurations(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'SsoConfigurationInformation'})
 
     class _ID(CloudApiEndpoint):
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                SsoConfigurationInformation: account_service.SsoConfigurationInformation
+            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'SsoConfigurationInformation'})
+
         def put(self, SsoConfigurationRequest: account_service.SsoConfigurationRequest):
             data = {**SsoConfigurationRequest.dict()}
 
             class Output(CloudApiOutputModel):
                 SsoConfigurationInformation: account_service.SsoConfigurationInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={201: 'SsoConfigurationInformation'})
-
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                SsoConfigurationInformation: account_service.SsoConfigurationInformation
-            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'SsoConfigurationInformation'})
 
 
 class _teams(CloudApiEndpoint):
@@ -181,18 +181,18 @@ class _teams(CloudApiEndpoint):
     class _ID(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.owners = self._owners(api_obj=self._api_obj, url=f'{self._url}/owners')
             self.members = self._members(api_obj=self._api_obj, url=f'{self._url}/members')
-
-        def get(self):
-            class Output(CloudApiOutputModel):
-                TeamInformation: account_service.TeamInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TeamInformation'})
+            self.owners = self._owners(api_obj=self._api_obj, url=f'{self._url}/owners')
 
         def delete(self):
             class Output(CloudApiOutputModel):
                 pass
             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+        def get(self):
+            class Output(CloudApiOutputModel):
+                TeamInformation: account_service.TeamInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TeamInformation'})
 
         def patch(self, UpdateTeamRequest: account_service.UpdateTeamRequest):
             data = {**UpdateTeamRequest.dict()}
@@ -202,13 +202,6 @@ class _teams(CloudApiEndpoint):
             return generate_output(output_cls=Output, response=self._patch(data=data), rc_mapping={200: 'TeamInformation'})
 
         class _owners(CloudApiEndpoint):
-            def post(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
-                data = {**TeamOwnersRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    TeamInformation: account_service.TeamInformation
-                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'TeamInformation'})
-
             def delete(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
                 data = {**TeamOwnersRequest.dict()}
 
@@ -216,14 +209,14 @@ class _teams(CloudApiEndpoint):
                     TeamInformation: account_service.TeamInformation
                 return generate_output(output_cls=Output, response=self._delete(params=data), rc_mapping={200: 'TeamInformation'})
 
-        class _members(CloudApiEndpoint):
-            def post(self, TeamMembersRequest: account_service.TeamMembersRequest):
-                data = {**TeamMembersRequest.dict()}
+            def post(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
+                data = {**TeamOwnersRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     TeamInformation: account_service.TeamInformation
                 return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'TeamInformation'})
 
+        class _members(CloudApiEndpoint):
             def delete(self, TeamMembersRequest: account_service.TeamMembersRequest):
                 data = {**TeamMembersRequest.dict()}
 
@@ -231,17 +224,24 @@ class _teams(CloudApiEndpoint):
                     TeamInformation: account_service.TeamInformation
                 return generate_output(output_cls=Output, response=self._delete(params=data), rc_mapping={200: 'TeamInformation'})
 
+            def post(self, TeamMembersRequest: account_service.TeamMembersRequest):
+                data = {**TeamMembersRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    TeamInformation: account_service.TeamInformation
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'TeamInformation'})
+
 
 class _useraccounts(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/v1/useraccounts')
+        self.activation = self._activation(api_obj=self._api_obj, url=f'{self._url}/activation')
         self.activationresend = self._activationresend(api_obj=self._api_obj, url=f'{self._url}/activationresend')
+        self.apikeyrotation = self._apikeyrotation(api_obj=self._api_obj, url=f'{self._url}/apikeyrotation')
+        self.invitations = self._invitations(api_obj=self._api_obj, url=f'{self._url}/invitations')
+        self.password = self._password(api_obj=self._api_obj, url=f'{self._url}/password')
         self.passwordreset = self._passwordreset(api_obj=self._api_obj, url=f'{self._url}/passwordreset')
         self.updatepassword = self._updatepassword(api_obj=self._api_obj, url=f'{self._url}/updatepassword')
-        self.password = self._password(api_obj=self._api_obj, url=f'{self._url}/password')
-        self.invitations = self._invitations(api_obj=self._api_obj, url=f'{self._url}/invitations')
-        self.activation = self._activation(api_obj=self._api_obj, url=f'{self._url}/activation')
-        self.apikeyrotation = self._apikeyrotation(api_obj=self._api_obj, url=f'{self._url}/apikeyrotation')
 
     def get(self):
         class Output(CloudApiOutputModel):
@@ -306,19 +306,19 @@ class _useraccounts(CloudApiEndpoint):
                 UserInformation: account_service.UserInformation
             return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'UserInformation'})
 
-        def put(self, InvitationConfirmationRequest: account_service.InvitationConfirmationRequest):
-            data = {**InvitationConfirmationRequest.dict()}
-
-            class Output(CloudApiOutputModel):
-                UserInformation: account_service.UserInformation
-            return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={202: 'UserInformation'})
-
         def post(self, InvitationRequest: account_service.InvitationRequest):
             data = {**InvitationRequest.dict()}
 
             class Output(CloudApiOutputModel):
                 InvitationResponse: account_service.InvitationResponse
             return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'InvitationResponse'})
+
+        def put(self, InvitationConfirmationRequest: account_service.InvitationConfirmationRequest):
+            data = {**InvitationConfirmationRequest.dict()}
+
+            class Output(CloudApiOutputModel):
+                UserInformation: account_service.UserInformation
+            return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={202: 'UserInformation'})
 
     class _activation(CloudApiEndpoint):
         def get(self, k: UUID, v: bool):
@@ -367,19 +367,19 @@ class _users(CloudApiEndpoint):
     class _ID(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.roles = self._roles(api_obj=self._api_obj, url=f'{self._url}/roles')
             self.accounttype = self._accounttype(api_obj=self._api_obj, url=f'{self._url}/accounttype')
             self.locallogin = self._locallogin(api_obj=self._api_obj, url=f'{self._url}/locallogin')
-
-        def get(self):
-            class Output(CloudApiOutputModel):
-                UserInformation: account_service.UserInformation
-            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserInformation'})
+            self.roles = self._roles(api_obj=self._api_obj, url=f'{self._url}/roles')
 
         def delete(self):
             class Output(CloudApiOutputModel):
                 pass
             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+        def get(self):
+            class Output(CloudApiOutputModel):
+                UserInformation: account_service.UserInformation
+            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserInformation'})
 
         class _roles(CloudApiEndpoint):
             def put(self, CUser: account_service.CUser):
@@ -460,8 +460,8 @@ class _users(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.replacement = self._replacement(api_obj=self._api_obj, url=f'{self._url}/replacement')
-                    self.rotationrequest = self._rotationrequest(api_obj=self._api_obj, url=f'{self._url}/rotationrequest')
                     self.rotation = self._rotation(api_obj=self._api_obj, url=f'{self._url}/rotation')
+                    self.rotationrequest = self._rotationrequest(api_obj=self._api_obj, url=f'{self._url}/rotationrequest')
 
                 def get(self):
                     class Output(CloudApiOutputModel):

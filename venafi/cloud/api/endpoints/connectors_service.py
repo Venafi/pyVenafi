@@ -23,6 +23,11 @@ class _connectors(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'ConnectorsInformation'})
 
     class _ID(CloudApiEndpoint):
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                pass
+            return generate_output(output_cls=Output, response=self._delete(params={}))
+
         def get(self):
             class Output(CloudApiOutputModel):
                 ConnectorsInformation: connectors_service.ConnectorsInformation
@@ -34,8 +39,3 @@ class _connectors(CloudApiEndpoint):
             class Output(CloudApiOutputModel):
                 ConnectorsInformation: connectors_service.ConnectorsInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'ConnectorsInformation'})
-
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                pass
-            return generate_output(output_cls=Output, response=self._delete(params={}))

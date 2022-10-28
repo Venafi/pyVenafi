@@ -28,22 +28,22 @@ class _certificateauthorities(CloudApiEndpoint):
         class _accounts(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
+                self.configuration = self._configuration(api_obj=self._api_obj, url=f'{self._url}/configuration')
                 self.connection = self._connection(api_obj=self._api_obj, url=f'{self._url}/connection')
                 self.credentials = self._credentials(api_obj=self._api_obj, url=f'{self._url}/credentials')
-                self.configuration = self._configuration(api_obj=self._api_obj, url=f'{self._url}/configuration')
-
-            def ID(self, id: str):
-                return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
 
             def ACCOUNTID(self, accountid: str):
                 return self._ACCOUNTID(api_obj=self._api_obj, url=f'{self._url}/{accountid}')
 
-            def get(self, includeOptionsDetails: bool, reloadOptionsDetails: bool, includeObsoleteOptionsDetails: bool, edgeInstanceId: UUID):
+            def ID(self, id: str):
+                return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+
+            def get(self, edgeInstanceId: UUID, includeObsoleteOptionsDetails: bool, includeOptionsDetails: bool, reloadOptionsDetails: bool):
                 data = {
+                    'edgeInstanceId': edgeInstanceId,
+                    'includeObsoleteOptionsDetails': includeObsoleteOptionsDetails,
                     'includeOptionsDetails': includeOptionsDetails,
                     'reloadOptionsDetails': reloadOptionsDetails,
-                    'includeObsoleteOptionsDetails': includeObsoleteOptionsDetails,
-                    'edgeInstanceId': edgeInstanceId,
                 }
 
                 class Output(CloudApiOutputModel):
@@ -64,12 +64,17 @@ class _certificateauthorities(CloudApiEndpoint):
                         api_obj=self._api_obj, url=f'{self._url}/certificateimportstatus')
                     self.issuingrules = self._issuingrules(api_obj=self._api_obj, url=f'{self._url}/issuingrules')
 
-                def get(self, includeOptionsDetails: bool, reloadOptionsDetails: bool, includeObsoleteOptionsDetails: bool, reloadAccountDetails: bool):
+                def delete(self):
+                    class Output(CloudApiOutputModel):
+                        CertificateAuthorityAccountDeleteResponse: caoperations_service.CertificateAuthorityAccountDeleteResponse
+                    return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateAuthorityAccountDeleteResponse'})
+
+                def get(self, includeObsoleteOptionsDetails: bool, includeOptionsDetails: bool, reloadAccountDetails: bool, reloadOptionsDetails: bool):
                     data = {
-                        'includeOptionsDetails': includeOptionsDetails,
-                        'reloadOptionsDetails': reloadOptionsDetails,
                         'includeObsoleteOptionsDetails': includeObsoleteOptionsDetails,
+                        'includeOptionsDetails': includeOptionsDetails,
                         'reloadAccountDetails': reloadAccountDetails,
+                        'reloadOptionsDetails': reloadOptionsDetails,
                     }
 
                     class Output(CloudApiOutputModel):
@@ -82,11 +87,6 @@ class _certificateauthorities(CloudApiEndpoint):
                     class Output(CloudApiOutputModel):
                         CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                     return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
-
-                def delete(self):
-                    class Output(CloudApiOutputModel):
-                        CertificateAuthorityAccountDeleteResponse: caoperations_service.CertificateAuthorityAccountDeleteResponse
-                    return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateAuthorityAccountDeleteResponse'})
 
                 class _certificateimportstatus(CloudApiEndpoint):
                     def put(self, CertificateImportRequest: caoperations_service.CertificateImportRequest):
@@ -145,9 +145,9 @@ class _certificateauthorities(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.domains = self._domains(api_obj=self._api_obj, url=f'{self._url}/domains')
-                    self.productoptions = self._productoptions(api_obj=self._api_obj, url=f'{self._url}/productoptions')
                     self.importoptions = self._importoptions(api_obj=self._api_obj, url=f'{self._url}/importoptions')
                     self.operations = self._operations(api_obj=self._api_obj, url=f'{self._url}/operations')
+                    self.productoptions = self._productoptions(api_obj=self._api_obj, url=f'{self._url}/productoptions')
 
                 class _domains(CloudApiEndpoint):
                     def __init__(self, *args, **kwargs):
@@ -196,15 +196,15 @@ class _certificateauthorities(CloudApiEndpoint):
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityProductOptionInformation', 202: 'CertificateAuthorityProductOptionResponse'})
 
                     class _ID(CloudApiEndpoint):
-                        def get(self):
-                            class Output(CloudApiOutputModel):
-                                CertificateAuthorityProductOptionInformation: caoperations_service.CertificateAuthorityProductOptionInformation
-                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityProductOptionInformation'})
-
                         def delete(self):
                             class Output(CloudApiOutputModel):
                                 pass
                             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+                        def get(self):
+                            class Output(CloudApiOutputModel):
+                                CertificateAuthorityProductOptionInformation: caoperations_service.CertificateAuthorityProductOptionInformation
+                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityProductOptionInformation'})
 
                     class _testissuance(CloudApiEndpoint):
                         def get(self):
@@ -239,15 +239,15 @@ class _certificateauthorities(CloudApiEndpoint):
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityImportOptionInformation'})
 
                     class _ID(CloudApiEndpoint):
-                        def get(self):
-                            class Output(CloudApiOutputModel):
-                                CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
-                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityImportOptionInformation'})
-
                         def delete(self):
                             class Output(CloudApiOutputModel):
                                 pass
                             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+                        def get(self):
+                            class Output(CloudApiOutputModel):
+                                CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
+                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityImportOptionInformation'})
 
                 class _operations(CloudApiEndpoint):
                     def post(self, CaOperationRequest: caoperations_service.CaOperationRequest):
@@ -282,6 +282,11 @@ class _certificateissuingtemplates(CloudApiEndpoint):
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateIssuingTemplateResponse'})
 
     class _ID(CloudApiEndpoint):
+        def delete(self):
+            class Output(CloudApiOutputModel):
+                CertificateIssuingTemplateDeleteResponse: caoperations_service.CertificateIssuingTemplateDeleteResponse
+            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateIssuingTemplateDeleteResponse'})
+
         def get(self):
             class Output(CloudApiOutputModel):
                 CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
@@ -294,18 +299,13 @@ class _certificateissuingtemplates(CloudApiEndpoint):
                 CertificateIssuingTemplateInformation: caoperations_service.CertificateIssuingTemplateInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateIssuingTemplateInformation', 202: 'CertificateIssuingTemplateInformation'})
 
-        def delete(self):
-            class Output(CloudApiOutputModel):
-                CertificateIssuingTemplateDeleteResponse: caoperations_service.CertificateIssuingTemplateDeleteResponse
-            return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateIssuingTemplateDeleteResponse'})
-
 
 class _builtinca(CloudApiEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='builtinca')
-        self.crl = self._crl(api_obj=self._api_obj, url=f'{self._url}/crl')
         self.ca = self._ca(api_obj=self._api_obj, url=f'{self._url}/ca')
         self.cachain = self._cachain(api_obj=self._api_obj, url=f'{self._url}/cachain')
+        self.crl = self._crl(api_obj=self._api_obj, url=f'{self._url}/crl')
 
     class _crl(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
