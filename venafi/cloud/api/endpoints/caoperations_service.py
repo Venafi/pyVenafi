@@ -57,90 +57,6 @@ class _certificateauthorities(CloudApiEndpoint):
                     CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
                 return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityAccountResponse', 202: 'CertificateAuthorityAccountResponse'})
 
-            class _ID(CloudApiEndpoint):
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-                    self.certificateimportstatus = self._certificateimportstatus(
-                        api_obj=self._api_obj, url=f'{self._url}/certificateimportstatus')
-                    self.issuingrules = self._issuingrules(api_obj=self._api_obj, url=f'{self._url}/issuingrules')
-
-                def delete(self):
-                    class Output(CloudApiOutputModel):
-                        CertificateAuthorityAccountDeleteResponse: caoperations_service.CertificateAuthorityAccountDeleteResponse
-                    return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateAuthorityAccountDeleteResponse'})
-
-                def get(self, includeObsoleteOptionsDetails: bool, includeOptionsDetails: bool, reloadAccountDetails: bool, reloadOptionsDetails: bool):
-                    data = {
-                        'includeObsoleteOptionsDetails': includeObsoleteOptionsDetails,
-                        'includeOptionsDetails': includeOptionsDetails,
-                        'reloadAccountDetails': reloadAccountDetails,
-                        'reloadOptionsDetails': reloadOptionsDetails,
-                    }
-
-                    class Output(CloudApiOutputModel):
-                        ExtendedCertificateAuthorityAccountInformation: caoperations_service.ExtendedCertificateAuthorityAccountInformation
-                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ExtendedCertificateAuthorityAccountInformation'})
-
-                def put(self, CertificateAuthorityAccountUpdateRequest: caoperations_service.CertificateAuthorityAccountUpdateRequest):
-                    data = {**CertificateAuthorityAccountUpdateRequest.dict()}
-
-                    class Output(CloudApiOutputModel):
-                        CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
-                    return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
-
-                class _certificateimportstatus(CloudApiEndpoint):
-                    def put(self, CertificateImportRequest: caoperations_service.CertificateImportRequest):
-                        data = {**CertificateImportRequest.dict()}
-
-                        class Output(CloudApiOutputModel):
-                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
-                        return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={204: 'CertificateAuthorityAccountResponse'})
-
-                class _issuingrules(CloudApiEndpoint):
-                    def get(self):
-                        class Output(CloudApiOutputModel):
-                            CertificateIssuingTemplateRulesInformation: caoperations_service.CertificateIssuingTemplateRulesInformation
-                        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateRulesInformation'})
-
-            class _connection(CloudApiEndpoint):
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-                    self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
-
-                class _validation(CloudApiEndpoint):
-                    def post(self, CertificateAuthorityTestConnectionRequest: caoperations_service.CertificateAuthorityTestConnectionRequest):
-                        data = {**CertificateAuthorityTestConnectionRequest.dict()}
-
-                        class Output(CloudApiOutputModel):
-                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
-                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
-
-            class _credentials(CloudApiEndpoint):
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-                    self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
-
-                class _validation(CloudApiEndpoint):
-                    def post(self, CertificateAuthorityCredentialsRequest: caoperations_service.CertificateAuthorityCredentialsRequest):
-                        data = {**CertificateAuthorityCredentialsRequest.dict()}
-
-                        class Output(CloudApiOutputModel):
-                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
-                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
-
-            class _configuration(CloudApiEndpoint):
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-                    self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
-
-                class _validation(CloudApiEndpoint):
-                    def post(self, CertificateAuthorityAccountConfigurationRequest: caoperations_service.CertificateAuthorityAccountConfigurationRequest):
-                        data = {**CertificateAuthorityAccountConfigurationRequest.dict()}
-
-                        class Output(CloudApiOutputModel):
-                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
-                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse', 204: 'CertificateAuthorityAccountResponse'})
-
             class _ACCOUNTID(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
@@ -173,6 +89,44 @@ class _certificateauthorities(CloudApiEndpoint):
                             class Output(CloudApiOutputModel):
                                 CertificateAuthorityAccountDomainInformation: caoperations_service.CertificateAuthorityAccountDomainInformation
                             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityAccountDomainInformation'})
+
+                class _importoptions(CloudApiEndpoint):
+                    def __init__(self, *args, **kwargs):
+                        super().__init__(*args, **kwargs)
+
+                    def ID(self, id: str):
+                        return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+
+                    def get(self):
+                        class Output(CloudApiOutputModel):
+                            CertificateAuthorityAccountImportOptionResponse: caoperations_service.CertificateAuthorityAccountImportOptionResponse
+                        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityAccountImportOptionResponse'})
+
+                    def post(self, CertificateAuthorityAccountImportOptionRequest: caoperations_service.CertificateAuthorityAccountImportOptionRequest):
+                        data = {**CertificateAuthorityAccountImportOptionRequest.dict()}
+
+                        class Output(CloudApiOutputModel):
+                            CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
+                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityImportOptionInformation'})
+
+                    class _ID(CloudApiEndpoint):
+                        def delete(self):
+                            class Output(CloudApiOutputModel):
+                                pass
+                            return generate_output(output_cls=Output, response=self._delete(params={}))
+
+                        def get(self):
+                            class Output(CloudApiOutputModel):
+                                CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
+                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityImportOptionInformation'})
+
+                class _operations(CloudApiEndpoint):
+                    def post(self, CaOperationRequest: caoperations_service.CaOperationRequest):
+                        data = {**CaOperationRequest.dict()}
+
+                        class Output(CloudApiOutputModel):
+                            CertificateAuthorityAccountInformation: caoperations_service.CertificateAuthorityAccountInformation
+                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountInformation'})
 
                 class _productoptions(CloudApiEndpoint):
                     def __init__(self, *args, **kwargs):
@@ -219,43 +173,89 @@ class _certificateauthorities(CloudApiEndpoint):
                                 pass
                             return generate_output(output_cls=Output, response=self._post(data=data))
 
-                class _importoptions(CloudApiEndpoint):
-                    def __init__(self, *args, **kwargs):
-                        super().__init__(*args, **kwargs)
+            class _ID(CloudApiEndpoint):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.certificateimportstatus = self._certificateimportstatus(
+                        api_obj=self._api_obj, url=f'{self._url}/certificateimportstatus')
+                    self.issuingrules = self._issuingrules(api_obj=self._api_obj, url=f'{self._url}/issuingrules')
 
-                    def ID(self, id: str):
-                        return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
+                def delete(self):
+                    class Output(CloudApiOutputModel):
+                        CertificateAuthorityAccountDeleteResponse: caoperations_service.CertificateAuthorityAccountDeleteResponse
+                    return generate_output(output_cls=Output, response=self._delete(params={}), rc_mapping={204: 'CertificateAuthorityAccountDeleteResponse'})
 
+                def get(self, includeObsoleteOptionsDetails: bool, includeOptionsDetails: bool, reloadAccountDetails: bool, reloadOptionsDetails: bool):
+                    data = {
+                        'includeObsoleteOptionsDetails': includeObsoleteOptionsDetails,
+                        'includeOptionsDetails': includeOptionsDetails,
+                        'reloadAccountDetails': reloadAccountDetails,
+                        'reloadOptionsDetails': reloadOptionsDetails,
+                    }
+
+                    class Output(CloudApiOutputModel):
+                        ExtendedCertificateAuthorityAccountInformation: caoperations_service.ExtendedCertificateAuthorityAccountInformation
+                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ExtendedCertificateAuthorityAccountInformation'})
+
+                def put(self, CertificateAuthorityAccountUpdateRequest: caoperations_service.CertificateAuthorityAccountUpdateRequest):
+                    data = {**CertificateAuthorityAccountUpdateRequest.dict()}
+
+                    class Output(CloudApiOutputModel):
+                        CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
+                    return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
+
+                class _certificateimportstatus(CloudApiEndpoint):
+                    def put(self, CertificateImportRequest: caoperations_service.CertificateImportRequest):
+                        data = {**CertificateImportRequest.dict()}
+
+                        class Output(CloudApiOutputModel):
+                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
+                        return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={204: 'CertificateAuthorityAccountResponse'})
+
+                class _issuingrules(CloudApiEndpoint):
                     def get(self):
                         class Output(CloudApiOutputModel):
-                            CertificateAuthorityAccountImportOptionResponse: caoperations_service.CertificateAuthorityAccountImportOptionResponse
-                        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityAccountImportOptionResponse'})
+                            CertificateIssuingTemplateRulesInformation: caoperations_service.CertificateIssuingTemplateRulesInformation
+                        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateIssuingTemplateRulesInformation'})
 
-                    def post(self, CertificateAuthorityAccountImportOptionRequest: caoperations_service.CertificateAuthorityAccountImportOptionRequest):
-                        data = {**CertificateAuthorityAccountImportOptionRequest.dict()}
+            class _configuration(CloudApiEndpoint):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
 
-                        class Output(CloudApiOutputModel):
-                            CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
-                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateAuthorityImportOptionInformation'})
-
-                    class _ID(CloudApiEndpoint):
-                        def delete(self):
-                            class Output(CloudApiOutputModel):
-                                pass
-                            return generate_output(output_cls=Output, response=self._delete(params={}))
-
-                        def get(self):
-                            class Output(CloudApiOutputModel):
-                                CertificateAuthorityImportOptionInformation: caoperations_service.CertificateAuthorityImportOptionInformation
-                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateAuthorityImportOptionInformation'})
-
-                class _operations(CloudApiEndpoint):
-                    def post(self, CaOperationRequest: caoperations_service.CaOperationRequest):
-                        data = {**CaOperationRequest.dict()}
+                class _validation(CloudApiEndpoint):
+                    def post(self, CertificateAuthorityAccountConfigurationRequest: caoperations_service.CertificateAuthorityAccountConfigurationRequest):
+                        data = {**CertificateAuthorityAccountConfigurationRequest.dict()}
 
                         class Output(CloudApiOutputModel):
-                            CertificateAuthorityAccountInformation: caoperations_service.CertificateAuthorityAccountInformation
-                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountInformation'})
+                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
+                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse', 204: 'CertificateAuthorityAccountResponse'})
+
+            class _connection(CloudApiEndpoint):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
+
+                class _validation(CloudApiEndpoint):
+                    def post(self, CertificateAuthorityTestConnectionRequest: caoperations_service.CertificateAuthorityTestConnectionRequest):
+                        data = {**CertificateAuthorityTestConnectionRequest.dict()}
+
+                        class Output(CloudApiOutputModel):
+                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
+                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
+
+            class _credentials(CloudApiEndpoint):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.validation = self._validation(api_obj=self._api_obj, url=f'{self._url}/validation')
+
+                class _validation(CloudApiEndpoint):
+                    def post(self, CertificateAuthorityCredentialsRequest: caoperations_service.CertificateAuthorityCredentialsRequest):
+                        data = {**CertificateAuthorityCredentialsRequest.dict()}
+
+                        class Output(CloudApiOutputModel):
+                            CertificateAuthorityAccountResponse: caoperations_service.CertificateAuthorityAccountResponse
+                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateAuthorityAccountResponse'})
 
 
 class _certificateissuingtemplates(CloudApiEndpoint):
@@ -307,19 +307,6 @@ class _builtinca(CloudApiEndpoint):
         self.cachain = self._cachain(api_obj=self._api_obj, url=f'{self._url}/cachain')
         self.crl = self._crl(api_obj=self._api_obj, url=f'{self._url}/crl')
 
-    class _crl(CloudApiEndpoint):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-
-        def CANAME(self, caname: str):
-            return self._CANAME(api_obj=self._api_obj, url=f'{self._url}/{caname}')
-
-        class _CANAME(CloudApiEndpoint):
-            def get(self):
-                class Output(CloudApiOutputModel):
-                    str: str
-                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})
-
     class _ca(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -334,6 +321,19 @@ class _builtinca(CloudApiEndpoint):
                 return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})
 
     class _cachain(CloudApiEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def CANAME(self, caname: str):
+            return self._CANAME(api_obj=self._api_obj, url=f'{self._url}/{caname}')
+
+        class _CANAME(CloudApiEndpoint):
+            def get(self):
+                class Output(CloudApiOutputModel):
+                    str: str
+                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})
+
+    class _crl(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 

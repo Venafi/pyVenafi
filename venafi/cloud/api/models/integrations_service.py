@@ -18,11 +18,11 @@ class EnhancedDiscoveryTargetsInformation(ObjectModel):
 
 
 class EnvironmentInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
     companyId: UUID = ApiField(alias='companyId')
+    id: UUID = ApiField(alias='id')
+    modificationDate: datetime = ApiField(alias='modificationDate')
     name: str = ApiField(alias='name')
     productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
-    modificationDate: datetime = ApiField(alias='modificationDate')
 
 
 class EnvironmentResponse(ObjectModel):
@@ -30,9 +30,9 @@ class EnvironmentResponse(ObjectModel):
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -44,16 +44,16 @@ class ExternalScanTargetsInformation(ObjectModel):
 
 
 class IntegrationServiceCreationRequest(ObjectModel):
+    edgeInstancesIds: List[UUID] = ApiField(alias='edgeInstancesIds', default_factory=list)
     environmentId: UUID = ApiField(alias='environmentId')
     name: str = ApiField(alias='name')
-    workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
-    serviceType: Literal['ACME', 'BASIC_DISCOVERY', 'ENHANCED_DISCOVERY', 'EXTERNAL_SCAN', 'INTERNET_DISCOVERY',
-                         'KEY_GENERATION', 'MSCA', 'SMART_DISCOVERY_EXTERNAL'] = ApiField(alias='serviceType')
-    edgeInstancesIds: List[UUID] = ApiField(alias='edgeInstancesIds', default_factory=list)
+    runNow: bool = ApiField(alias='runNow')
     scheduleEnabled: bool = ApiField(alias='scheduleEnabled')
     schedulePattern: SchedulerPatternInformation = ApiField(alias='schedulePattern')
-    runNow: bool = ApiField(alias='runNow')
+    serviceType: Literal['ACME', 'BASIC_DISCOVERY', 'ENHANCED_DISCOVERY', 'EXTERNAL_SCAN', 'INTERNET_DISCOVERY',
+                         'KEY_GENERATION', 'MSCA', 'SMART_DISCOVERY_EXTERNAL'] = ApiField(alias='serviceType')
     targets: TargetsInformation = ApiField(alias='targets')
+    workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
 
 
 class IntegrationServiceDetailsResponse(ObjectModel):
@@ -62,38 +62,38 @@ class IntegrationServiceDetailsResponse(ObjectModel):
 
 
 class IntegrationServiceInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
     companyId: UUID = ApiField(alias='companyId')
-    environmentId: UUID = ApiField(alias='environmentId')
     edgeInstancesIds: List[UUID] = ApiField(alias='edgeInstancesIds', default_factory=list)
+    encryptionKeyId: UUID = ApiField(alias='encryptionKeyId')
+    environmentId: UUID = ApiField(alias='environmentId')
+    id: UUID = ApiField(alias='id')
+    lastRunDate: datetime = ApiField(alias='lastRunDate')
     name: str = ApiField(alias='name')
-    status: Literal['ACTIVE', 'DISABLED', 'DRAFT', 'ERROR', 'RUNNING', 'WARNING'] = ApiField(alias='status')
-    statusMessage: str = ApiField(alias='statusMessage')
-    workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
+    operationsCount: int = ApiField(alias='operationsCount')
+    schedulePattern: SchedulerPatternInformation = ApiField(alias='schedulePattern')
+    schedulerEnabled: bool = ApiField(alias='schedulerEnabled')
     serviceType: Literal['ACME', 'BASIC_DISCOVERY', 'ENHANCED_DISCOVERY', 'EXTERNAL_SCAN', 'INTERNET_DISCOVERY',
                          'KEY_GENERATION', 'MSCA', 'SMART_DISCOVERY_EXTERNAL'] = ApiField(alias='serviceType')
-    schedulerEnabled: bool = ApiField(alias='schedulerEnabled')
-    schedulePattern: SchedulerPatternInformation = ApiField(alias='schedulePattern')
-    operationsCount: int = ApiField(alias='operationsCount')
-    lastRunDate: datetime = ApiField(alias='lastRunDate')
+    status: Literal['ACTIVE', 'DISABLED', 'DRAFT', 'ERROR', 'RUNNING', 'WARNING'] = ApiField(alias='status')
+    statusMessage: str = ApiField(alias='statusMessage')
     systemGenerated: bool = ApiField(alias='systemGenerated')
     targets: TargetsInformation = ApiField(alias='targets')
-    encryptionKeyId: UUID = ApiField(alias='encryptionKeyId')
+    workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
 
 
 class IntegrationServiceUpdateRequest(ObjectModel):
-    workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
-    name: str = ApiField(alias='name')
     edgeInstancesIds: List[UUID] = ApiField(alias='edgeInstancesIds', default_factory=list)
+    name: str = ApiField(alias='name')
     scheduleEnabled: bool = ApiField(alias='scheduleEnabled')
     schedulePattern: SchedulerPatternInformation = ApiField(alias='schedulePattern')
     targets: TargetsInformation = ApiField(alias='targets')
+    workTypes: List[Literal['DISCOVER', 'MANAGE']] = ApiField(alias='workTypes', default_factory=list)
 
 
 class IntegrationsServicesAggregatesResponse(ObjectModel):
     companyId: UUID = ApiField(alias='companyId')
-    totalServicesCount: int = ApiField(alias='totalServicesCount')
     integrationsServices: Dict[str, Dict[str, Dict[str, int]]] = ApiField(alias='integrationsServices', default_factory=dict)
+    totalServicesCount: int = ApiField(alias='totalServicesCount')
 
 
 class InternetDiscoveryTargetsInformation(ObjectModel):

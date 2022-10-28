@@ -6,17 +6,17 @@ from uuid import UUID
 
 
 class ActivityLogEntriesResponse(ObjectModel):
-    count: int = ApiField(alias='count')
     activityLogEntries: List[ActivityLogEntryInformation] = ApiField(alias='activityLogEntries', default_factory=list)
+    count: int = ApiField(alias='count')
 
 
 class ActivityLogEntryInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
     activityDate: datetime = ApiField(alias='activityDate')
-    activityType: str = ApiField(alias='activityType')
     activityName: str = ApiField(alias='activityName')
+    activityType: str = ApiField(alias='activityType')
+    companyId: UUID = ApiField(alias='companyId')
     criticality: int = ApiField(alias='criticality')
+    id: UUID = ApiField(alias='id')
     message: str = ApiField(alias='message')
     payload: Dict[str, str] = ApiField(alias='payload', default_factory=dict)
 
@@ -39,9 +39,9 @@ class ActivityLogType(ObjectModel):
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -53,8 +53,8 @@ class Expression(ObjectModel):
 
 
 class OrderObject(ObjectModel):
-    field: str = ApiField(alias='field')
     direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
+    field: str = ApiField(alias='field')
 
 
 class Ordering(ObjectModel):

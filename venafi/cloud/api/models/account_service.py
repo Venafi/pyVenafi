@@ -6,15 +6,15 @@ from uuid import UUID
 
 
 class ApiKeyInformation(ObjectModel):
+    apiKeyStatus: Literal['ACTIVE', 'EXPIRED', 'INACTIVE', 'PENDING_ACTIVATION', 'PENDING_ROTATION', 'ROTATED'] = ApiField(alias='apiKeyStatus')
+    apiVersion: Literal['ALL', 'V1'] = ApiField(alias='apiVersion')
+    companyId: UUID = ApiField(alias='companyId')
+    creationDate: datetime = ApiField(alias='creationDate')
     key: UUID = ApiField(alias='key')
     userId: UUID = ApiField(alias='userId')
     username: str = ApiField(alias='username')
-    companyId: UUID = ApiField(alias='companyId')
-    apiVersion: Literal['ALL', 'V1'] = ApiField(alias='apiVersion')
-    apiKeyStatus: Literal['ACTIVE', 'EXPIRED', 'INACTIVE', 'PENDING_ACTIVATION', 'PENDING_ROTATION', 'ROTATED'] = ApiField(alias='apiKeyStatus')
-    creationDate: datetime = ApiField(alias='creationDate')
-    validityStartDate: datetime = ApiField(alias='validityStartDate')
     validityEndDate: datetime = ApiField(alias='validityEndDate')
+    validityStartDate: datetime = ApiField(alias='validityStartDate')
 
 
 class ApiKeyNullResponse(ObjectModel):
@@ -32,37 +32,37 @@ class ApiKeyResponse(ObjectModel):
 
 
 class CUser(ObjectModel):
-    pk: CUserPk = ApiField(alias='pk')
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    firstname: str = ApiField(alias='firstname')
-    lastname: str = ApiField(alias='lastname')
-    passwordHash: str = ApiField(alias='passwordHash')
-    userType: Literal['EXTERNAL', 'INTERNAL'] = ApiField(alias='userType')
-    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
-    userStatus: Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION'] = ApiField(alias='userStatus')
-    ssoStatus: Literal['ACTIVE', 'INACTIVE'] = ApiField(alias='ssoStatus')
-    activationKey: UUID = ApiField(alias='activationKey')
-    firstLoginDate: datetime = ApiField(alias='firstLoginDate')
-    failedLoginCount: int = ApiField(alias='failedLoginCount')
-    eulaAcceptDate: datetime = ApiField(alias='eulaAcceptDate')
     activationEmailDelayedSendDate: datetime = ApiField(alias='activationEmailDelayedSendDate')
-    creationDate: datetime = ApiField(alias='creationDate')
-    dataEncryptionKeyId: UUID = ApiField(alias='dataEncryptionKeyId')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
-    requestedEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']
-                                ] = ApiField(alias='requestedEntitlements', default_factory=list)
-    localLoginDisabled: bool = ApiField(alias='localLoginDisabled')
     activationEmailSendDate: datetime = ApiField(alias='activationEmailSendDate')
+    activationKey: UUID = ApiField(alias='activationKey')
+    companyId: UUID = ApiField(alias='companyId')
+    creationDate: datetime = ApiField(alias='creationDate')
+    dataEncryptionKeyContainerId: UUID = ApiField(alias='dataEncryptionKeyContainerId')
+    dataEncryptionKeyId: UUID = ApiField(alias='dataEncryptionKeyId')
+    emailAddress: str = ApiField(alias='emailAddress')
+    encryptorDecryptors: List[EncryptorDecryptor] = ApiField(alias='encryptorDecryptors', default_factory=list)
+    eulaAcceptDate: datetime = ApiField(alias='eulaAcceptDate')
+    failedLoginCount: int = ApiField(alias='failedLoginCount')
+    firstLoginDate: datetime = ApiField(alias='firstLoginDate')
+    firstname: str = ApiField(alias='firstname')
+    id: UUID = ApiField(alias='id')
+    lastname: str = ApiField(alias='lastname')
+    localLoginDisabled: bool = ApiField(alias='localLoginDisabled')
     marketoAttributes: Dict[str, str] = ApiField(alias='marketoAttributes', default_factory=dict)
-    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
     memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
+    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
+    passwordHash: str = ApiField(alias='passwordHash')
+    pk: CUserPk = ApiField(alias='pk')
     productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                                          'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
-    emailAddress: str = ApiField(alias='emailAddress')
+    requestedEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']
+                                ] = ApiField(alias='requestedEntitlements', default_factory=list)
+    ssoStatus: Literal['ACTIVE', 'INACTIVE'] = ApiField(alias='ssoStatus')
+    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
     userFullName: str = ApiField(alias='userFullName')
-    dataEncryptionKeyContainerId: UUID = ApiField(alias='dataEncryptionKeyContainerId')
-    encryptorDecryptors: List[EncryptorDecryptor] = ApiField(alias='encryptorDecryptors', default_factory=list)
+    userStatus: Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION'] = ApiField(alias='userStatus')
+    userType: Literal['EXTERNAL', 'INTERNAL'] = ApiField(alias='userType')
 
 
 class CUserPk(ObjectModel):
@@ -71,10 +71,10 @@ class CUserPk(ObjectModel):
 
 
 class CapabilityInformation(ObjectModel):
+    isTrial: bool = ApiField(alias='isTrial')
     name: Literal['DEFAULT', 'DISTRIBUTED_ISSUER', 'ENTERPRISE', 'ISSUANCE',
                   'PROVISIONING', 'SINGLE_SIGN_ON', 'VALIDATION'] = ApiField(alias='name')
     productExpiryDate: datetime = ApiField(alias='productExpiryDate')
-    isTrial: bool = ApiField(alias='isTrial')
 
 
 class ChangePasswordRequest(ObjectModel):
@@ -83,29 +83,29 @@ class ChangePasswordRequest(ObjectModel):
 
 
 class CompanyInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    name: str = ApiField(alias='name')
-    companyType: Literal['CA', 'INTERNAL', 'OTHER', 'REGULAR', 'TPP_CUSTOMER'] = ApiField(alias='companyType')
     active: bool = ApiField(alias='active')
+    companyType: Literal['CA', 'INTERNAL', 'OTHER', 'REGULAR', 'TPP_CUSTOMER'] = ApiField(alias='companyType')
     creationDate: datetime = ApiField(alias='creationDate')
     domains: List[str] = ApiField(alias='domains', default_factory=list)
-    referralPartner: Literal['digicert-certcentral', 'globalsign-hvca'] = ApiField(alias='referralPartner')
+    id: UUID = ApiField(alias='id')
+    name: str = ApiField(alias='name')
     productEntitlements: List[ProductEntitlementInformation] = ApiField(alias='productEntitlements', default_factory=list)
+    referralPartner: Literal['digicert-certcentral', 'globalsign-hvca'] = ApiField(alias='referralPartner')
 
 
 class CreateTeamRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
     members: List[UUID] = ApiField(alias='members', default_factory=list)
+    name: str = ApiField(alias='name')
     owners: List[UUID] = ApiField(alias='owners', default_factory=list)
+    role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
     userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
 
 
 class DataEncryptionKeyInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    algorithm: str = ApiField(alias='algorithm')
     active: bool = ApiField(alias='active')
+    algorithm: str = ApiField(alias='algorithm')
+    companyId: UUID = ApiField(alias='companyId')
+    id: UUID = ApiField(alias='id')
 
 
 class EncryptorDecryptor(ObjectModel):
@@ -113,9 +113,9 @@ class EncryptorDecryptor(ObjectModel):
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -123,12 +123,12 @@ class ErrorResponse(ObjectModel):
 
 
 class InvitationConfirmationRequest(ObjectModel):
-    invitationId: UUID = ApiField(alias='invitationId')
-    username: str = ApiField(alias='username')
-    password: str = ApiField(alias='password')
     firstname: str = ApiField(alias='firstname')
-    lastname: str = ApiField(alias='lastname')
     grecaptchaResponse: str = ApiField(alias='grecaptchaResponse')
+    invitationId: UUID = ApiField(alias='invitationId')
+    lastname: str = ApiField(alias='lastname')
+    password: str = ApiField(alias='password')
+    username: str = ApiField(alias='username')
 
 
 class InvitationInformation(ObjectModel):
@@ -139,10 +139,10 @@ class InvitationInformation(ObjectModel):
 
 
 class InvitationRequest(ObjectModel):
+    properties: Dict[str, str] = ApiField(alias='properties', default_factory=dict)
     roles: Dict[str, Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                              'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']] = ApiField(alias='roles', default_factory=dict)
     teams: List[UUID] = ApiField(alias='teams', default_factory=list)
-    properties: Dict[str, str] = ApiField(alias='properties', default_factory=dict)
 
 
 class InvitationResponse(ObjectModel):
@@ -155,15 +155,15 @@ class LocalLoginRequest(ObjectModel):
 
 class NotificationConfigurationInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
-    type: Literal['APPLICATION_CERTIFICATE_EXPIRATION', 'CERTIFICATE_EXPIRATION', 'CERTIFICATE_STATUS_DIGEST'] = ApiField(alias='type')
-    recurrencePattern: RecurrencePatternInformation = ApiField(alias='recurrencePattern')
     recipients: List[str] = ApiField(alias='recipients', default_factory=list)
+    recurrencePattern: RecurrencePatternInformation = ApiField(alias='recurrencePattern')
+    type: Literal['APPLICATION_CERTIFICATE_EXPIRATION', 'CERTIFICATE_EXPIRATION', 'CERTIFICATE_STATUS_DIGEST'] = ApiField(alias='type')
 
 
 class NotificationConfigurationRequest(ObjectModel):
-    type: Literal['APPLICATION_CERTIFICATE_EXPIRATION', 'CERTIFICATE_EXPIRATION', 'CERTIFICATE_STATUS_DIGEST'] = ApiField(alias='type')
-    recurrencePattern: RecurrencePatternInformation = ApiField(alias='recurrencePattern')
     recipients: List[str] = ApiField(alias='recipients', default_factory=list)
+    recurrencePattern: RecurrencePatternInformation = ApiField(alias='recurrencePattern')
+    type: Literal['APPLICATION_CERTIFICATE_EXPIRATION', 'CERTIFICATE_EXPIRATION', 'CERTIFICATE_STATUS_DIGEST'] = ApiField(alias='type')
 
 
 class NotificationConfigurationResponse(ObjectModel):
@@ -171,8 +171,8 @@ class NotificationConfigurationResponse(ObjectModel):
 
 
 class ProductEntitlementInformation(ObjectModel):
-    label: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='label')
     capabilities: List[CapabilityInformation] = ApiField(alias='capabilities', default_factory=list)
+    label: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='label')
     visibilityConstraintsInformation: VisibilityConstraintsInformation = ApiField(alias='visibilityConstraintsInformation')
 
 
@@ -199,18 +199,18 @@ class ResetPasswordResponse(ObjectModel):
 
 
 class RolesRequest(ObjectModel):
-    systemAdmin: bool = ApiField(alias='systemAdmin')
     roles: Dict[str, Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                              'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']] = ApiField(alias='roles', default_factory=dict)
+    systemAdmin: bool = ApiField(alias='systemAdmin')
 
 
 class SsoConfigurationInformation(ObjectModel):
     clientId: str = ApiField(alias='clientId')
     clientSecret: str = ApiField(alias='clientSecret')
+    companyId: UUID = ApiField(alias='companyId')
+    id: UUID = ApiField(alias='id')
     issuerUrl: str = ApiField(alias='issuerUrl')
     scopes: List[str] = ApiField(alias='scopes', default_factory=list)
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
 
 
 class SsoConfigurationRequest(ObjectModel):
@@ -225,17 +225,17 @@ class SsoConfigurationResponse(ObjectModel):
 
 
 class TeamInformation(ObjectModel):
+    companyId: UUID = ApiField(alias='companyId')
     id: UUID = ApiField(alias='id')
+    members: List[UUID] = ApiField(alias='members', default_factory=list)
+    modificationDate: datetime = ApiField(alias='modificationDate')
     name: str = ApiField(alias='name')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
     productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                                          'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
     role: Literal['GUEST', 'PKI_ADMIN', 'RESOURCE_OWNER', 'SYSTEM_ADMIN'] = ApiField(alias='role')
-    members: List[UUID] = ApiField(alias='members', default_factory=list)
-    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
-    companyId: UUID = ApiField(alias='companyId')
+    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
     userMatchingRules: List[UserMatchingRule] = ApiField(alias='userMatchingRules', default_factory=list)
-    modificationDate: datetime = ApiField(alias='modificationDate')
 
 
 class TeamMembersRequest(ObjectModel):
@@ -270,23 +270,23 @@ class UpdateTeamRequest(ObjectModel):
 
 
 class UserAccountRequest(ObjectModel):
-    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
-    username: str = ApiField(alias='username')
-    password: str = ApiField(alias='password')
-    firstname: str = ApiField(alias='firstname')
-    lastname: str = ApiField(alias='lastname')
     companyId: UUID = ApiField(alias='companyId')
     companyName: str = ApiField(alias='companyName')
-    referralPartner: Literal['digicert-certcentral', 'globalsign-hvca'] = ApiField(alias='referralPartner')
-    productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
-    marketoAttributes: Dict[str, str] = ApiField(alias='marketoAttributes', default_factory=dict)
+    firstname: str = ApiField(alias='firstname')
     grecaptchaResponse: str = ApiField(alias='grecaptchaResponse')
+    lastname: str = ApiField(alias='lastname')
+    marketoAttributes: Dict[str, str] = ApiField(alias='marketoAttributes', default_factory=dict)
+    password: str = ApiField(alias='password')
+    productEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']] = ApiField(alias='productEntitlements', default_factory=list)
+    referralPartner: Literal['digicert-certcentral', 'globalsign-hvca'] = ApiField(alias='referralPartner')
+    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
+    username: str = ApiField(alias='username')
 
 
 class UserAccountResponse(ObjectModel):
-    user: UserInformation = ApiField(alias='user')
-    company: CompanyInformation = ApiField(alias='company')
     apiKey: ApiKeyInformation = ApiField(alias='apiKey')
+    company: CompanyInformation = ApiField(alias='company')
+    user: UserInformation = ApiField(alias='user')
 
 
 class UserAccountTypeRequest(ObjectModel):
@@ -294,25 +294,25 @@ class UserAccountTypeRequest(ObjectModel):
 
 
 class UserInformation(ObjectModel):
-    username: str = ApiField(alias='username')
-    id: UUID = ApiField(alias='id')
     companyId: UUID = ApiField(alias='companyId')
-    firstname: str = ApiField(alias='firstname')
-    lastname: str = ApiField(alias='lastname')
+    creationDate: datetime = ApiField(alias='creationDate')
     emailAddress: str = ApiField(alias='emailAddress')
-    userType: Literal['EXTERNAL', 'INTERNAL'] = ApiField(alias='userType')
-    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
-    ssoStatus: Literal['ACTIVE', 'INACTIVE'] = ApiField(alias='ssoStatus')
-    userStatus: Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION'] = ApiField(alias='userStatus')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    firstLoginDate: datetime = ApiField(alias='firstLoginDate')
+    firstname: str = ApiField(alias='firstname')
+    hasPassword: bool = ApiField(alias='hasPassword')
+    id: UUID = ApiField(alias='id')
+    lastname: str = ApiField(alias='lastname')
+    localLoginDisabled: bool = ApiField(alias='localLoginDisabled')
+    memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
+    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
     productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                                          'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
-    localLoginDisabled: bool = ApiField(alias='localLoginDisabled')
-    hasPassword: bool = ApiField(alias='hasPassword')
-    firstLoginDate: datetime = ApiField(alias='firstLoginDate')
-    creationDate: datetime = ApiField(alias='creationDate')
-    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
-    memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
+    ssoStatus: Literal['ACTIVE', 'INACTIVE'] = ApiField(alias='ssoStatus')
+    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
+    userStatus: Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION'] = ApiField(alias='userStatus')
+    userType: Literal['EXTERNAL', 'INTERNAL'] = ApiField(alias='userType')
+    username: str = ApiField(alias='username')
 
 
 class UserMatchingRule(ObjectModel):
@@ -344,9 +344,9 @@ class UserResponse(ObjectModel):
 
 class VisibilityConstraintsInformation(ObjectModel):
     fullAccessDurationDays: int = ApiField(alias='fullAccessDurationDays')
+    limitedAccessNotificationDays: int = ApiField(alias='limitedAccessNotificationDays')
     limitedVisibilityCertCount: int = ApiField(alias='limitedVisibilityCertCount')
     limitedVisibilityCertInstallPerCertCount: int = ApiField(alias='limitedVisibilityCertInstallPerCertCount')
-    limitedAccessNotificationDays: int = ApiField(alias='limitedAccessNotificationDays')
 
 
 ApiKeyInformation.update_forward_refs()

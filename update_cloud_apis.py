@@ -329,7 +329,7 @@ class Node:
             *rest_methods,
         ]
 
-        for child in self.children:
+        for child in self.sorted_children:
             lns, dts, opfp = child.lines(depth=depth + 1)
             lines += lns
             object_properties_from_paths.update(opfp)
@@ -540,7 +540,7 @@ class ComponentSchemaParser:
         self.refs.append(name)
         return [
             f'class {name}(ObjectModel):'
-        ] + lines
+        ] + sorted(lines)
 
 
 def main():

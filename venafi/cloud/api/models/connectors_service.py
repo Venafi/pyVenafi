@@ -5,8 +5,8 @@ from uuid import UUID
 
 
 class ConnectorProperties(ObjectModel):
-    connectorType: Literal['WEBHOOK'] = ApiField(alias='connectorType')
     connectorKind: str = ApiField(alias='connectorKind')
+    connectorType: Literal['WEBHOOK'] = ApiField(alias='connectorType')
 
 
 class ConnectorsCreationRequest(ObjectModel):
@@ -30,9 +30,9 @@ class ConnectorsUpdateRequest(ObjectModel):
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -48,8 +48,8 @@ class JsonNode(ObjectModel):
 
 
 class Target(ObjectModel):
-    type: str = ApiField(alias='type')
     connection: JsonNode = ApiField(alias='connection')
+    type: str = ApiField(alias='type')
 
 
 class WebhookProperties(ObjectModel):

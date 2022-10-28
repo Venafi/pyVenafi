@@ -67,10 +67,10 @@ class CertificateAuthorityAccountConfigurationRequest(ObjectModel):
 
 
 class CertificateAuthorityAccountDeleteResponse(ObjectModel):
-    key: str = ApiField(alias='key')
-    id: UUID = ApiField(alias='id')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
+    id: UUID = ApiField(alias='id')
+    key: str = ApiField(alias='key')
 
 
 class CertificateAuthorityAccountDetails(ObjectModel):
@@ -82,8 +82,8 @@ class CertificateAuthorityAccountDomainInformation(ObjectModel):
 
 
 class CertificateAuthorityAccountDomainRequest(ObjectModel):
-    domainAction: Literal['ASSERT_DOMAIN_OVER_DNS', 'DELETE', 'SUBMIT'] = ApiField(alias='domainAction')
     domain: str = ApiField(alias='domain')
+    domainAction: Literal['ASSERT_DOMAIN_OVER_DNS', 'DELETE', 'SUBMIT'] = ApiField(alias='domainAction')
     identifier: str = ApiField(alias='identifier')
 
 
@@ -97,41 +97,41 @@ class CertificateAuthorityAccountImportOptionResponse(ObjectModel):
 
 
 class CertificateAuthorityAccountInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
+    accountDetails: CertificateAuthorityAccountDetails = ApiField(alias='accountDetails')
+    caAccountConfiguration: CAAccountConfigurationInformation = ApiField(alias='caAccountConfiguration')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
-    key: str = ApiField(alias='key')
-    accountDetails: CertificateAuthorityAccountDetails = ApiField(alias='accountDetails')
-    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
-    caAccountConfiguration: CAAccountConfigurationInformation = ApiField(alias='caAccountConfiguration')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
-    lastTestDate: datetime = ApiField(alias='lastTestDate')
-    lastTestSuccessDate: datetime = ApiField(alias='lastTestSuccessDate')
-    lastTestError: str = ApiField(alias='lastTestError')
+    companyId: UUID = ApiField(alias='companyId')
     connectionStatus: Literal['FAILED', 'OK'] = ApiField(alias='connectionStatus')
-    lastImportStartDate: datetime = ApiField(alias='lastImportStartDate')
-    lastImportEndDate: datetime = ApiField(alias='lastImportEndDate')
-    lastImportRunId: UUID = ApiField(alias='lastImportRunId')
-    importStatus: Literal['ABORTED', 'COMPLETE', 'FAILED', 'PENDING', 'RUNNING'] = ApiField(alias='importStatus')
+    creationDate: datetime = ApiField(alias='creationDate')
+    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    id: UUID = ApiField(alias='id')
     importConfiguration: ImportConfigurationDetails = ApiField(alias='importConfiguration')
     importSchedulerEnabled: bool = ApiField(alias='importSchedulerEnabled')
     importSchedulerPattern: SchedulerPatternInformation = ApiField(alias='importSchedulerPattern')
-    creationDate: datetime = ApiField(alias='creationDate')
+    importStatus: Literal['ABORTED', 'COMPLETE', 'FAILED', 'PENDING', 'RUNNING'] = ApiField(alias='importStatus')
+    key: str = ApiField(alias='key')
+    lastImportEndDate: datetime = ApiField(alias='lastImportEndDate')
+    lastImportRunId: UUID = ApiField(alias='lastImportRunId')
+    lastImportStartDate: datetime = ApiField(alias='lastImportStartDate')
+    lastTestDate: datetime = ApiField(alias='lastTestDate')
+    lastTestError: str = ApiField(alias='lastTestError')
+    lastTestSuccessDate: datetime = ApiField(alias='lastTestSuccessDate')
     modificationDate: datetime = ApiField(alias='modificationDate')
 
 
 class CertificateAuthorityAccountRequest(ObjectModel):
-    key: str = ApiField(alias='key')
-    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
     caAccountConfiguration: CAAccountConfigurationInformation = ApiField(alias='caAccountConfiguration')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    caAccountImportOptions: List[CertificateAuthorityImportDetailsInformation] = ApiField(alias='caAccountImportOptions', default_factory=list)
     caAccountProductOptions: List[CertificateAuthorityProductDetailsInformation] = ApiField(
         alias='caAccountProductOptions', default_factory=list)
-    caAccountImportOptions: List[CertificateAuthorityImportDetailsInformation] = ApiField(alias='caAccountImportOptions', default_factory=list)
+    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    importConfiguration: CAAccountImportConfigurationInformation = ApiField(alias='importConfiguration')
     importSchedulerEnabled: bool = ApiField(alias='importSchedulerEnabled')
     importSchedulerPattern: SchedulerPatternInformation = ApiField(alias='importSchedulerPattern')
-    importConfiguration: CAAccountImportConfigurationInformation = ApiField(alias='importConfiguration')
+    key: str = ApiField(alias='key')
 
 
 class CertificateAuthorityAccountResponse(ObjectModel):
@@ -139,25 +139,25 @@ class CertificateAuthorityAccountResponse(ObjectModel):
 
 
 class CertificateAuthorityAccountUpdateRequest(ObjectModel):
-    key: str = ApiField(alias='key')
-    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
     caAccountConfiguration: CAAccountConfigurationInformation = ApiField(alias='caAccountConfiguration')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    caAccountImportOptions: List[CertificateAuthorityImportDetailsInformation] = ApiField(alias='caAccountImportOptions', default_factory=list)
     caAccountProductOptions: List[CertificateAuthorityProductDetailsInformation] = ApiField(
         alias='caAccountProductOptions', default_factory=list)
-    caAccountImportOptions: List[CertificateAuthorityImportDetailsInformation] = ApiField(alias='caAccountImportOptions', default_factory=list)
+    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    importConfiguration: CAAccountImportConfigurationInformation = ApiField(alias='importConfiguration')
     importSchedulerEnabled: bool = ApiField(alias='importSchedulerEnabled')
     importSchedulerPattern: SchedulerPatternInformation = ApiField(alias='importSchedulerPattern')
-    importConfiguration: CAAccountImportConfigurationInformation = ApiField(alias='importConfiguration')
+    key: str = ApiField(alias='key')
 
 
 class CertificateAuthorityApiInformation(ObjectModel):
-    certificateAuthorityApi: Literal['ACME', 'BUILTIN_CA', 'DIGICERT_TEST', 'ENTRUST', 'GLOBALSIGN_HVCA_V2',
-                                     'GLOBALSIGN_MSSL', 'MICROSOFT', 'MOCKCA_TEST', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthorityApi')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
-    urlTemplate: str = ApiField(alias='urlTemplate')
+    certificateAuthorityApi: Literal['ACME', 'BUILTIN_CA', 'DIGICERT_TEST', 'ENTRUST', 'GLOBALSIGN_HVCA_V2',
+                                     'GLOBALSIGN_MSSL', 'MICROSOFT', 'MOCKCA_TEST', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthorityApi')
     credentialsTemplate: CertificateAuthorityCredentials = ApiField(alias='credentialsTemplate')
+    urlTemplate: str = ApiField(alias='urlTemplate')
 
 
 class CertificateAuthorityCredentials(ObjectModel):
@@ -169,16 +169,16 @@ class CertificateAuthorityCredentialsInformation(ObjectModel):
 
 
 class CertificateAuthorityCredentialsRequest(ObjectModel):
-    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
     caAccountConfiguration: CAAccountConfigurationInformation = ApiField(alias='caAccountConfiguration')
+    credentials: CertificateAuthorityCredentialsInformation = ApiField(alias='credentials')
     edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
 
 
 class CertificateAuthorityDomainDetails(ObjectModel):
-    identifier: str = ApiField(alias='identifier')
-    domain: str = ApiField(alias='domain')
-    status: Literal['INVALID', 'PENDING', 'REQUESTED', 'VALID'] = ApiField(alias='status')
     certificateAuthority: str = ApiField(alias='certificateAuthority')
+    domain: str = ApiField(alias='domain')
+    identifier: str = ApiField(alias='identifier')
+    status: Literal['INVALID', 'PENDING', 'REQUESTED', 'VALID'] = ApiField(alias='status')
 
 
 class CertificateAuthorityImportDetailsInformation(ObjectModel):
@@ -186,52 +186,52 @@ class CertificateAuthorityImportDetailsInformation(ObjectModel):
 
 
 class CertificateAuthorityImportOptionInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
     certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
-    importDetails: CertificateAuthorityImportDetailsInformation = ApiField(alias='importDetails')
-    status: Literal['ABORTED', 'COMPLETE', 'FAILED', 'PENDING', 'RUNNING'] = ApiField(alias='status')
-    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
+    companyId: UUID = ApiField(alias='companyId')
     creationDate: datetime = ApiField(alias='creationDate')
+    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
+    id: UUID = ApiField(alias='id')
+    importDetails: CertificateAuthorityImportDetailsInformation = ApiField(alias='importDetails')
     modificationDate: datetime = ApiField(alias='modificationDate')
+    status: Literal['ABORTED', 'COMPLETE', 'FAILED', 'PENDING', 'RUNNING'] = ApiField(alias='status')
 
 
 class CertificateAuthorityInformation(ObjectModel):
+    apis: List[CertificateAuthorityApiInformation] = ApiField(alias='apis', default_factory=list)
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
-    apis: List[CertificateAuthorityApiInformation] = ApiField(alias='apis', default_factory=list)
 
 
 class CertificateAuthorityProductDetailsInformation(ObjectModel):
-    productName: str = ApiField(alias='productName')
+    certificateAuthority: str = ApiField(alias='certificateAuthority')
     certificateType: Literal['DOMAIN_VALIDATED_SSL', 'OTHER'] = ApiField(alias='certificateType')
     hashAlgorithms: List[Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224', 'SHA256',
                                  'SHA384', 'SHA512', 'UNKNOWN']] = ApiField(alias='hashAlgorithms', default_factory=list)
+    productName: str = ApiField(alias='productName')
     productTemplate: CertificateAuthorityProductInformation = ApiField(alias='productTemplate')
-    certificateAuthority: str = ApiField(alias='certificateAuthority')
 
 
 class CertificateAuthorityProductInformation(ObjectModel):
-    productName: str = ApiField(alias='productName')
-    validityPeriod: str = ApiField(alias='validityPeriod')
+    certificateAuthority: str = ApiField(alias='certificateAuthority')
     certificateType: Literal['DOMAIN_VALIDATED_SSL', 'OTHER'] = ApiField(alias='certificateType')
     hashAlgorithm: Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224',
                            'SHA256', 'SHA384', 'SHA512', 'UNKNOWN'] = ApiField(alias='hashAlgorithm')
-    certificateAuthority: str = ApiField(alias='certificateAuthority')
+    productName: str = ApiField(alias='productName')
+    validityPeriod: str = ApiField(alias='validityPeriod')
 
 
 class CertificateAuthorityProductOptionInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
     certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
-    productName: str = ApiField(alias='productName')
-    productDetails: CertificateAuthorityProductDetailsInformation = ApiField(alias='productDetails')
+    companyId: UUID = ApiField(alias='companyId')
     creationDate: datetime = ApiField(alias='creationDate')
+    id: UUID = ApiField(alias='id')
     modificationDate: datetime = ApiField(alias='modificationDate')
+    productDetails: CertificateAuthorityProductDetailsInformation = ApiField(alias='productDetails')
+    productName: str = ApiField(alias='productName')
 
 
 class CertificateAuthorityProductOptionRequest(ObjectModel):
@@ -264,14 +264,14 @@ class CertificateImportRequest(ObjectModel):
 
 
 class CertificateInformation(ObjectModel):
+    keySize: int = ApiField(alias='keySize')
+    keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
+    subjectC: str = ApiField(alias='subjectC')
     subjectCN: str = ApiField(alias='subjectCN')
+    subjectL: str = ApiField(alias='subjectL')
     subjectO: str = ApiField(alias='subjectO')
     subjectOU: str = ApiField(alias='subjectOU')
-    subjectL: str = ApiField(alias='subjectL')
     subjectST: str = ApiField(alias='subjectST')
-    subjectC: str = ApiField(alias='subjectC')
-    keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
-    keySize: int = ApiField(alias='keySize')
 
 
 class CertificateIssuingTemplateDeleteResponse(ObjectModel):
@@ -280,41 +280,41 @@ class CertificateIssuingTemplateDeleteResponse(ObjectModel):
 
 
 class CertificateIssuingTemplateInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
-    name: str = ApiField(alias='name')
     certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
     certificateAuthorityProductOptionId: UUID = ApiField(alias='certificateAuthorityProductOptionId')
-    product: CertificateAuthorityProductInformation = ApiField(alias='product')
-    priority: int = ApiField(alias='priority')
-    systemGenerated: bool = ApiField(alias='systemGenerated')
+    companyId: UUID = ApiField(alias='companyId')
     creationDate: datetime = ApiField(alias='creationDate')
+    csrUploadAllowed: bool = ApiField(alias='csrUploadAllowed')
+    everyoneIsConsumer: bool = ApiField(alias='everyoneIsConsumer')
+    extendedKeyUsageValues: List[Literal['CLIENT', 'SERVER']] = ApiField(alias='extendedKeyUsageValues', default_factory=list)
+    id: UUID = ApiField(alias='id')
+    keyGeneratedByVenafiAllowed: bool = ApiField(alias='keyGeneratedByVenafiAllowed')
+    keyReuse: bool = ApiField(alias='keyReuse')
+    keyTypes: List[KeyTypeInformation] = ApiField(alias='keyTypes', default_factory=list)
     modificationDate: datetime = ApiField(alias='modificationDate')
-    status: Literal['AVAILABLE', 'UNAVAILABLE'] = ApiField(alias='status')
+    name: str = ApiField(alias='name')
+    priority: int = ApiField(alias='priority')
+    product: CertificateAuthorityProductInformation = ApiField(alias='product')
     reason: str = ApiField(alias='reason')
+    recommendedSettings: RecommendedSettingsInformation = ApiField(alias='recommendedSettings')
     referencingApplicationIds: List[UUID] = ApiField(alias='referencingApplicationIds', default_factory=list)
+    resourceConsumerTeamIds: List[UUID] = ApiField(alias='resourceConsumerTeamIds', default_factory=list)
+    resourceConsumerUserIds: List[UUID] = ApiField(alias='resourceConsumerUserIds', default_factory=list)
+    sanDnsNameRegexes: List[str] = ApiField(alias='sanDnsNameRegexes', default_factory=list)
+    sanIpAddressRegexes: List[str] = ApiField(alias='sanIpAddressRegexes', default_factory=list)
+    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
+    sanRfc822NameRegexes: List[str] = ApiField(alias='sanRfc822NameRegexes', default_factory=list)
+    sanUniformResourceIdentifierRegexes: List[str] = ApiField(alias='sanUniformResourceIdentifierRegexes', default_factory=list)
+    status: Literal['AVAILABLE', 'UNAVAILABLE'] = ApiField(alias='status')
     subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
+    subjectCValues: List[str] = ApiField(alias='subjectCValues', default_factory=list)
+    subjectLRegexes: List[str] = ApiField(alias='subjectLRegexes', default_factory=list)
     subjectORegexes: List[str] = ApiField(alias='subjectORegexes', default_factory=list)
     subjectOURegexes: List[str] = ApiField(alias='subjectOURegexes', default_factory=list)
     subjectSTRegexes: List[str] = ApiField(alias='subjectSTRegexes', default_factory=list)
-    subjectLRegexes: List[str] = ApiField(alias='subjectLRegexes', default_factory=list)
-    subjectCValues: List[str] = ApiField(alias='subjectCValues', default_factory=list)
-    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
-    sanDnsNameRegexes: List[str] = ApiField(alias='sanDnsNameRegexes', default_factory=list)
-    sanRfc822NameRegexes: List[str] = ApiField(alias='sanRfc822NameRegexes', default_factory=list)
-    sanIpAddressRegexes: List[str] = ApiField(alias='sanIpAddressRegexes', default_factory=list)
-    sanUniformResourceIdentifierRegexes: List[str] = ApiField(alias='sanUniformResourceIdentifierRegexes', default_factory=list)
-    keyTypes: List[KeyTypeInformation] = ApiField(alias='keyTypes', default_factory=list)
-    keyReuse: bool = ApiField(alias='keyReuse')
-    extendedKeyUsageValues: List[Literal['CLIENT', 'SERVER']] = ApiField(alias='extendedKeyUsageValues', default_factory=list)
-    csrUploadAllowed: bool = ApiField(alias='csrUploadAllowed')
-    keyGeneratedByVenafiAllowed: bool = ApiField(alias='keyGeneratedByVenafiAllowed')
-    resourceConsumerUserIds: List[UUID] = ApiField(alias='resourceConsumerUserIds', default_factory=list)
-    resourceConsumerTeamIds: List[UUID] = ApiField(alias='resourceConsumerTeamIds', default_factory=list)
-    everyoneIsConsumer: bool = ApiField(alias='everyoneIsConsumer')
-    recommendedSettings: RecommendedSettingsInformation = ApiField(alias='recommendedSettings')
+    systemGenerated: bool = ApiField(alias='systemGenerated')
     trackingData: TrackingDataInformation = ApiField(alias='trackingData')
 
 
@@ -322,28 +322,28 @@ class CertificateIssuingTemplateRequest(ObjectModel):
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'TPP', 'ZTPKI'] = ApiField(alias='certificateAuthority')
     certificateAuthorityProductOptionId: UUID = ApiField(alias='certificateAuthorityProductOptionId')
+    csrUploadAllowed: bool = ApiField(alias='csrUploadAllowed')
+    everyoneIsConsumer: bool = ApiField(alias='everyoneIsConsumer')
+    extendedKeyUsageValues: List[Literal['CLIENT', 'SERVER']] = ApiField(alias='extendedKeyUsageValues', default_factory=list)
+    keyGeneratedByVenafiAllowed: bool = ApiField(alias='keyGeneratedByVenafiAllowed')
+    keyReuse: bool = ApiField(alias='keyReuse')
+    keyTypes: List[KeyTypeParameters] = ApiField(alias='keyTypes', default_factory=list)
     name: str = ApiField(alias='name')
-    product: CertificateAuthorityProductInformation = ApiField(alias='product')
     priority: int = ApiField(alias='priority')
+    product: CertificateAuthorityProductInformation = ApiField(alias='product')
+    recommendedSettings: RecommendedSettingsRequest = ApiField(alias='recommendedSettings')
+    resourceConsumerTeamIds: List[UUID] = ApiField(alias='resourceConsumerTeamIds', default_factory=list)
+    resourceConsumerUserIds: List[UUID] = ApiField(alias='resourceConsumerUserIds', default_factory=list)
+    sanIpAddressRegexes: List[str] = ApiField(alias='sanIpAddressRegexes', default_factory=list)
+    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
+    sanRfc822NameRegexes: List[str] = ApiField(alias='sanRfc822NameRegexes', default_factory=list)
+    sanUniformResourceIdentifierRegexes: List[str] = ApiField(alias='sanUniformResourceIdentifierRegexes', default_factory=list)
     subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
+    subjectCValues: List[str] = ApiField(alias='subjectCValues', default_factory=list)
+    subjectLRegexes: List[str] = ApiField(alias='subjectLRegexes', default_factory=list)
     subjectORegexes: List[str] = ApiField(alias='subjectORegexes', default_factory=list)
     subjectOURegexes: List[str] = ApiField(alias='subjectOURegexes', default_factory=list)
     subjectSTRegexes: List[str] = ApiField(alias='subjectSTRegexes', default_factory=list)
-    subjectLRegexes: List[str] = ApiField(alias='subjectLRegexes', default_factory=list)
-    subjectCValues: List[str] = ApiField(alias='subjectCValues', default_factory=list)
-    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
-    sanRfc822NameRegexes: List[str] = ApiField(alias='sanRfc822NameRegexes', default_factory=list)
-    sanIpAddressRegexes: List[str] = ApiField(alias='sanIpAddressRegexes', default_factory=list)
-    sanUniformResourceIdentifierRegexes: List[str] = ApiField(alias='sanUniformResourceIdentifierRegexes', default_factory=list)
-    keyTypes: List[KeyTypeParameters] = ApiField(alias='keyTypes', default_factory=list)
-    keyReuse: bool = ApiField(alias='keyReuse')
-    extendedKeyUsageValues: List[Literal['CLIENT', 'SERVER']] = ApiField(alias='extendedKeyUsageValues', default_factory=list)
-    csrUploadAllowed: bool = ApiField(alias='csrUploadAllowed')
-    keyGeneratedByVenafiAllowed: bool = ApiField(alias='keyGeneratedByVenafiAllowed')
-    resourceConsumerUserIds: List[UUID] = ApiField(alias='resourceConsumerUserIds', default_factory=list)
-    resourceConsumerTeamIds: List[UUID] = ApiField(alias='resourceConsumerTeamIds', default_factory=list)
-    everyoneIsConsumer: bool = ApiField(alias='everyoneIsConsumer')
-    recommendedSettings: RecommendedSettingsRequest = ApiField(alias='recommendedSettings')
     trackingData: TrackingDataInformation = ApiField(alias='trackingData')
 
 
@@ -353,15 +353,15 @@ class CertificateIssuingTemplateResponse(ObjectModel):
 
 
 class CertificateIssuingTemplateRulesInformation(ObjectModel):
-    keySizes: List[int] = ApiField(alias='keySizes', default_factory=list)
-    keyType: str = ApiField(alias='keyType')
-    subjectAlternativeNames: List[str] = ApiField(alias='subjectAlternativeNames', default_factory=list)
     commonName: StringList = ApiField(alias='commonName')
     country: StringField = ApiField(alias='country')
-    state: StringField = ApiField(alias='state')
+    keySizes: List[int] = ApiField(alias='keySizes', default_factory=list)
+    keyType: str = ApiField(alias='keyType')
     locality: StringField = ApiField(alias='locality')
     organization: StringField = ApiField(alias='organization')
     organizationalUnit: StringList = ApiField(alias='organizationalUnit')
+    state: StringField = ApiField(alias='state')
+    subjectAlternativeNames: List[str] = ApiField(alias='subjectAlternativeNames', default_factory=list)
 
 
 class ClientCredentials(ObjectModel):
@@ -398,10 +398,10 @@ class DigitalOceanDnsProviderInformation(ObjectModel):
 
 
 class DnComponentInformation(ObjectModel):
-    tag: str = ApiField(alias='tag')
     label: str = ApiField(alias='label')
-    required: bool = ApiField(alias='required')
     modifiable: bool = ApiField(alias='modifiable')
+    required: bool = ApiField(alias='required')
+    tag: str = ApiField(alias='tag')
 
 
 class DnsMethod(ObjectModel):
@@ -452,9 +452,9 @@ class EntrustTrackingDataInformation(ObjectModel):
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -463,8 +463,8 @@ class ErrorResponse(ObjectModel):
 
 class ExtendedCertificateAuthorityAccountInformation(ObjectModel):
     account: CertificateAuthorityAccountInformation = ApiField(alias='account')
-    productOptions: List[CertificateAuthorityProductOptionInformation] = ApiField(alias='productOptions', default_factory=list)
     importOptions: List[CertificateAuthorityImportOptionInformation] = ApiField(alias='importOptions', default_factory=list)
+    productOptions: List[CertificateAuthorityProductOptionInformation] = ApiField(alias='productOptions', default_factory=list)
 
 
 class GenerateCaCSROperationRequest(ObjectModel):
@@ -484,8 +484,8 @@ class GlobalSignDomainDetails(ObjectModel):
 
 
 class GlobalSignLogEntry(ObjectModel):
-    status: Literal['ERROR', 'SUCCESS'] = ApiField(alias='status')
     description: str = ApiField(alias='description')
+    status: Literal['ERROR', 'SUCCESS'] = ApiField(alias='status')
     timestamp: datetime = ApiField(alias='timestamp')
 
 
@@ -530,9 +530,9 @@ class GoogleCloudDnsProviderInformation(ObjectModel):
 
 
 class ImportConfigurationDetails(ObjectModel):
-    includeRevokedCertificates: bool = ApiField(alias='includeRevokedCertificates')
-    includeExpiredCertificates: bool = ApiField(alias='includeExpiredCertificates')
     certificateAuthority: str = ApiField(alias='certificateAuthority')
+    includeExpiredCertificates: bool = ApiField(alias='includeExpiredCertificates')
+    includeRevokedCertificates: bool = ApiField(alias='includeRevokedCertificates')
 
 
 class KeyTypeInformation(ObjectModel):
@@ -540,9 +540,9 @@ class KeyTypeInformation(ObjectModel):
 
 
 class KeyTypeParameters(ObjectModel):
-    keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
-    keyLengths: List[int] = ApiField(alias='keyLengths', default_factory=list)
     keyCurves: List[Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN']] = ApiField(alias='keyCurves', default_factory=list)
+    keyLengths: List[int] = ApiField(alias='keyLengths', default_factory=list)
+    keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
 
 
 class MicrosoftCAAccountConfigurationInformation(ObjectModel):
@@ -626,19 +626,19 @@ class NewCaCertificatesOperationRequest(ObjectModel):
 
 
 class Period(ObjectModel):
-    seconds: int = ApiField(alias='seconds')
-    years: int = ApiField(alias='years')
-    months: int = ApiField(alias='months')
     days: int = ApiField(alias='days')
+    fieldTypes: List[DurationFieldType] = ApiField(alias='fieldTypes', default_factory=list)
     hours: int = ApiField(alias='hours')
-    minutes: int = ApiField(alias='minutes')
     millis: int = ApiField(alias='millis')
-    weeks: int = ApiField(alias='weeks')
-    periodType: PeriodType = ApiField(alias='periodType')
-    values: List[int] = ApiField(alias='values', default_factory=list)
+    minutes: int = ApiField(alias='minutes')
+    months: int = ApiField(alias='months')
     period: ReadablePeriod = ApiField(alias='period')
     periodInternal: ReadablePeriod = ApiField(alias='periodInternal')
-    fieldTypes: List[DurationFieldType] = ApiField(alias='fieldTypes', default_factory=list)
+    periodType: PeriodType = ApiField(alias='periodType')
+    seconds: int = ApiField(alias='seconds')
+    values: List[int] = ApiField(alias='values', default_factory=list)
+    weeks: int = ApiField(alias='weeks')
+    years: int = ApiField(alias='years')
 
 
 class PeriodType(ObjectModel):
@@ -646,9 +646,9 @@ class PeriodType(ObjectModel):
 
 
 class ProductOptionTestIssuanceInformation(ObjectModel):
-    status: Literal['FAILED', 'IN_PROGRESS', 'OK', 'PENDING'] = ApiField(alias='status')
-    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
     certificateAuthority: str = ApiField(alias='certificateAuthority')
+    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
+    status: Literal['FAILED', 'IN_PROGRESS', 'OK', 'PENDING'] = ApiField(alias='status')
 
 
 class RSAKeyTypeInformation(ObjectModel):
@@ -660,39 +660,39 @@ class ReadablePeriod(ObjectModel):
 
 
 class RecommendedSettingsInformation(ObjectModel):
-    subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
-    subjectOValue: str = ApiField(alias='subjectOValue')
-    subjectOUValue: str = ApiField(alias='subjectOUValue')
-    subjectSTValue: str = ApiField(alias='subjectSTValue')
-    subjectLValue: str = ApiField(alias='subjectLValue')
-    subjectCValue: str = ApiField(alias='subjectCValue')
-    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
     key: RecommendedSettingsKeyTypeInformation = ApiField(alias='key')
     keyGeneratedBy: str = ApiField(alias='keyGeneratedBy')
+    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
+    subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
+    subjectCValue: str = ApiField(alias='subjectCValue')
+    subjectLValue: str = ApiField(alias='subjectLValue')
+    subjectOUValue: str = ApiField(alias='subjectOUValue')
+    subjectOValue: str = ApiField(alias='subjectOValue')
+    subjectSTValue: str = ApiField(alias='subjectSTValue')
 
 
 class RecommendedSettingsKeyTypeInformation(ObjectModel):
-    type: Literal['EC', 'RSA'] = ApiField(alias='type')
-    length: int = ApiField(alias='length')
     curve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='curve')
+    length: int = ApiField(alias='length')
+    type: Literal['EC', 'RSA'] = ApiField(alias='type')
 
 
 class RecommendedSettingsKeyTypeParameter(ObjectModel):
-    type: Literal['EC', 'RSA'] = ApiField(alias='type')
-    length: int = ApiField(alias='length')
     curve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='curve')
+    length: int = ApiField(alias='length')
+    type: Literal['EC', 'RSA'] = ApiField(alias='type')
 
 
 class RecommendedSettingsRequest(ObjectModel):
-    subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
-    subjectOValue: str = ApiField(alias='subjectOValue')
-    subjectOUValue: str = ApiField(alias='subjectOUValue')
-    subjectSTValue: str = ApiField(alias='subjectSTValue')
-    subjectLValue: str = ApiField(alias='subjectLValue')
-    subjectCValue: str = ApiField(alias='subjectCValue')
-    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
     key: RecommendedSettingsKeyTypeParameter = ApiField(alias='key')
     keyGeneratedBy: str = ApiField(alias='keyGeneratedBy')
+    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
+    subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
+    subjectCValue: str = ApiField(alias='subjectCValue')
+    subjectLValue: str = ApiField(alias='subjectLValue')
+    subjectOUValue: str = ApiField(alias='subjectOUValue')
+    subjectOValue: str = ApiField(alias='subjectOValue')
+    subjectSTValue: str = ApiField(alias='subjectSTValue')
 
 
 class SchedulerPatternInformation(ObjectModel):
@@ -700,20 +700,20 @@ class SchedulerPatternInformation(ObjectModel):
 
 
 class StringField(ObjectModel):
-    presence: str = ApiField(alias='presence')
     format: str = ApiField(alias='format')
+    presence: str = ApiField(alias='presence')
 
 
 class StringList(ObjectModel):
-    presence: str = ApiField(alias='presence')
     format: List[str] = ApiField(alias='format', default_factory=list)
+    presence: str = ApiField(alias='presence')
 
 
 class SubjectAltNamesInformation(ObjectModel):
-    tag: str = ApiField(alias='tag')
     label: str = ApiField(alias='label')
-    required: bool = ApiField(alias='required')
     modifiable: bool = ApiField(alias='modifiable')
+    required: bool = ApiField(alias='required')
+    tag: str = ApiField(alias='tag')
 
 
 class TppCredentials(ObjectModel):
@@ -734,8 +734,8 @@ class ValidityInformation(ObjectModel):
 
 
 class WebServerMethod(ObjectModel):
-    fileLocation: str = ApiField(alias='fileLocation')
     fileContents: str = ApiField(alias='fileContents')
+    fileLocation: str = ApiField(alias='fileLocation')
 
 
 class WeeklyPatternInformation(ObjectModel):

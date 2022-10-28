@@ -6,54 +6,54 @@ from uuid import UUID
 
 
 class ApiClientInformation(ObjectModel):
-    type: str = ApiField(alias='type')
     identifier: str = ApiField(alias='identifier')
+    type: str = ApiField(alias='type')
 
 
 class ApplicationInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    name: str = ApiField(alias='name')
-    description: str = ApiField(alias='description')
-    ownerIdsAndTypes: List[OwnerIdAndType] = ApiField(alias='ownerIdsAndTypes', default_factory=list)
-    owningUsers: List[UserInformation] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[TeamInformation] = ApiField(alias='owningTeams', default_factory=list)
-    fullyQualifiedDomainNames: List[str] = ApiField(alias='fullyQualifiedDomainNames', default_factory=list)
-    ipRanges: List[str] = ApiField(alias='ipRanges', default_factory=list)
-    ports: List[str] = ApiField(alias='ports', default_factory=list)
     certificateIssuingTemplateAliasIdMap: Dict[str, UUID] = ApiField(alias='certificateIssuingTemplateAliasIdMap', default_factory=dict)
+    companyId: UUID = ApiField(alias='companyId')
+    description: str = ApiField(alias='description')
+    fullyQualifiedDomainNames: List[str] = ApiField(alias='fullyQualifiedDomainNames', default_factory=list)
+    id: UUID = ApiField(alias='id')
+    ipRanges: List[str] = ApiField(alias='ipRanges', default_factory=list)
+    name: str = ApiField(alias='name')
+    ownerIdsAndTypes: List[OwnerIdAndType] = ApiField(alias='ownerIdsAndTypes', default_factory=list)
     ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    owningTeams: List[TeamInformation] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UserInformation] = ApiField(alias='owningUsers', default_factory=list)
+    ports: List[str] = ApiField(alias='ports', default_factory=list)
 
 
 class ApplicationRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    ownerIdsAndTypes: List[OwnerIdAndType] = ApiField(alias='ownerIdsAndTypes', default_factory=list)
+    certificateIssuingTemplateAliasIdMap: Dict[str, UUID] = ApiField(alias='certificateIssuingTemplateAliasIdMap', default_factory=dict)
     description: str = ApiField(alias='description')
+    externalIpRanges: List[str] = ApiField(alias='externalIpRanges', default_factory=list)
     fqdns: List[str] = ApiField(alias='fqdns', default_factory=list)
+    fullyQualifiedDomainNames: List[str] = ApiField(alias='fullyQualifiedDomainNames', default_factory=list)
     internalFqdns: List[str] = ApiField(alias='internalFqdns', default_factory=list)
     internalIpRanges: List[str] = ApiField(alias='internalIpRanges', default_factory=list)
-    externalIpRanges: List[str] = ApiField(alias='externalIpRanges', default_factory=list)
     internalPorts: List[str] = ApiField(alias='internalPorts', default_factory=list)
-    fullyQualifiedDomainNames: List[str] = ApiField(alias='fullyQualifiedDomainNames', default_factory=list)
     ipRanges: List[str] = ApiField(alias='ipRanges', default_factory=list)
+    name: str = ApiField(alias='name')
+    ownerIdsAndTypes: List[OwnerIdAndType] = ApiField(alias='ownerIdsAndTypes', default_factory=list)
     ports: List[str] = ApiField(alias='ports', default_factory=list)
-    certificateIssuingTemplateAliasIdMap: Dict[str, UUID] = ApiField(alias='certificateIssuingTemplateAliasIdMap', default_factory=dict)
     startTargetedDiscovery: bool = ApiField(alias='startTargetedDiscovery')
 
 
 class ApplicationResponse(ObjectModel):
     applications: List[ApplicationInformation] = ApiField(alias='applications', default_factory=list)
-    totalCount: int = ApiField(alias='totalCount')
     ownershipCount: int = ApiField(alias='ownershipCount')
+    totalCount: int = ApiField(alias='totalCount')
 
 
 class ApplicationServerTypeInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    creationDate: datetime = ApiField(alias='creationDate')
-    keyStoreType: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='keyStoreType')
     applicationServerType: Literal['APACHE', 'CITRIX', 'F5', 'IIS', 'JETTY',
                                    'NGINX', 'OTHER', 'TOMCAT'] = ApiField(alias='applicationServerType')
+    companyId: UUID = ApiField(alias='companyId')
+    creationDate: datetime = ApiField(alias='creationDate')
+    id: UUID = ApiField(alias='id')
+    keyStoreType: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='keyStoreType')
     platformName: str = ApiField(alias='platformName')
 
 
@@ -74,29 +74,29 @@ class ApplicationsAssignResponse(ObjectModel):
 class BaseApplicationServerTypeRequest(ObjectModel):
     applicationServerType: Literal['APACHE', 'CITRIX', 'F5', 'IIS', 'JETTY',
                                    'NGINX', 'OTHER', 'TOMCAT'] = ApiField(alias='applicationServerType')
-    platformName: str = ApiField(alias='platformName')
     keyStoreType: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='keyStoreType')
+    platformName: str = ApiField(alias='platformName')
 
 
 class CSRAttributesInformation(ObjectModel):
     commonName: str = ApiField(alias='commonName')
+    country: str = ApiField(alias='country')
+    keyTypeParameters: KeyTypeParameters = ApiField(alias='keyTypeParameters')
+    locality: str = ApiField(alias='locality')
     organization: str = ApiField(alias='organization')
     organizationalUnits: List[str] = ApiField(alias='organizationalUnits', default_factory=list)
-    locality: str = ApiField(alias='locality')
     state: str = ApiField(alias='state')
-    country: str = ApiField(alias='country')
     subjectAlternativeNamesByType: SubjectAlternativeNamesByType = ApiField(alias='subjectAlternativeNamesByType')
-    keyTypeParameters: KeyTypeParameters = ApiField(alias='keyTypeParameters')
 
 
 class CertificateAggregatesRangeResponse(ObjectModel):
-    companyId: UUID = ApiField(alias='companyId')
     certificateAggregatesMap: Dict[str, int] = ApiField(alias='certificateAggregatesMap', default_factory=dict)
+    companyId: UUID = ApiField(alias='companyId')
 
 
 class CertificateAggregatesResponse(ObjectModel):
-    companyId: UUID = ApiField(alias='companyId')
     certificateAggregatesMap: Dict[str, CertificateCategoryInformation] = ApiField(alias='certificateAggregatesMap', default_factory=dict)
+    companyId: UUID = ApiField(alias='companyId')
 
 
 class CertificateAggregationsRequest(ObjectModel):
@@ -106,8 +106,8 @@ class CertificateAggregationsRequest(ObjectModel):
 
 
 class CertificateCategoryInformation(ObjectModel):
-    certificatesCount: int = ApiField(alias='certificatesCount')
     certificateCategoryAggregatesMap: Dict[str, int] = ApiField(alias='certificateCategoryAggregatesMap', default_factory=dict)
+    certificatesCount: int = ApiField(alias='certificatesCount')
 
 
 class CertificateDeletionRequest(ObjectModel):
@@ -115,11 +115,11 @@ class CertificateDeletionRequest(ObjectModel):
 
 
 class CertificateImportInfo(ObjectModel):
-    certificate: str = ApiField(alias='certificate')
-    issuerCertificates: List[str] = ApiField(alias='issuerCertificates', default_factory=list)
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
     apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    certificate: str = ApiField(alias='certificate')
     certificateUsageMetadata: List[CertificateUsageMetadata] = ApiField(alias='certificateUsageMetadata', default_factory=list)
+    issuerCertificates: List[str] = ApiField(alias='issuerCertificates', default_factory=list)
 
 
 class CertificateImportRequest(ObjectModel):
@@ -133,66 +133,66 @@ class CertificateImportResponse(ObjectModel):
 
 
 class CertificateInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    managedCertificateId: UUID = ApiField(alias='managedCertificateId')
-    certificateRequestId: UUID = ApiField(alias='certificateRequestId')
-    certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
-    fingerprint: str = ApiField(alias='fingerprint')
-    certificateName: str = ApiField(alias='certificateName')
-    issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
-    certificateStatus: Literal['ACTIVE', 'DELETED', 'RETIRED'] = ApiField(alias='certificateStatus')
-    statusModificationUserId: UUID = ApiField(alias='statusModificationUserId')
-    modificationDate: datetime = ApiField(alias='modificationDate')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    applicationServerTypeId: UUID = ApiField(alias='applicationServerTypeId')
     archivedDate: datetime = ApiField(alias='archivedDate')
-    statusModificationDate: datetime = ApiField(alias='statusModificationDate')
-    validityStart: datetime = ApiField(alias='validityStart')
-    validityEnd: datetime = ApiField(alias='validityEnd')
+    authorityKeyIdentifierHash: str = ApiField(alias='authorityKeyIdentifierHash')
+    certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
+    certificateName: str = ApiField(alias='certificateName')
+    certificateRequestId: UUID = ApiField(alias='certificateRequestId')
+    certificateStatus: Literal['ACTIVE', 'DELETED', 'RETIRED'] = ApiField(alias='certificateStatus')
+    companyId: UUID = ApiField(alias='companyId')
+    dekHash: str = ApiField(alias='dekHash')
+    encryptionType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='encryptionType')
+    extendedKeyUsage: List[str] = ApiField(alias='extendedKeyUsage', default_factory=list)
+    fingerprint: str = ApiField(alias='fingerprint')
+    id: UUID = ApiField(alias='id')
+    inhibitAnyPolicy: int = ApiField(alias='inhibitAnyPolicy')
+    inhibitPolicyMapping: int = ApiField(alias='inhibitPolicyMapping')
+    instances: List[CertificateInstanceInformation] = ApiField(alias='instances', default_factory=list)
+    issuerAlternativeNameDns: List[str] = ApiField(alias='issuerAlternativeNameDns', default_factory=list)
+    issuerAlternativeNameNonDns: List[str] = ApiField(alias='issuerAlternativeNameNonDns', default_factory=list)
+    issuerC: str = ApiField(alias='issuerC')
+    issuerCN: List[str] = ApiField(alias='issuerCN', default_factory=list)
+    issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
+    issuerDN: str = ApiField(alias='issuerDN')
+    issuerL: str = ApiField(alias='issuerL')
+    issuerOU: List[str] = ApiField(alias='issuerOU', default_factory=list)
+    issuerST: str = ApiField(alias='issuerST')
+    keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
+    keyStrength: int = ApiField(alias='keyStrength')
+    keyUsage: List[str] = ApiField(alias='keyUsage', default_factory=list)
+    managedCertificateId: UUID = ApiField(alias='managedCertificateId')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    ocspNoCheck: bool = ApiField(alias='ocspNoCheck')
+    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    pathLength: int = ApiField(alias='pathLength')
+    requireExplicitPolicy: int = ApiField(alias='requireExplicitPolicy')
     selfSigned: bool = ApiField(alias='selfSigned')
+    serialNumber: str = ApiField(alias='serialNumber')
     signatureAlgorithm: Literal['EC_DSA_WITH_SHA1', 'EC_DSA_WITH_SHA224', 'EC_DSA_WITH_SHA256', 'EC_DSA_WITH_SHA384', 'EC_DSA_WITH_SHA512', 'GOST_R3411_94_WITH_GOST_R3410_2001', 'GOST_R3411_94_WITH_GOST_R3410_94', 'ID_DSA_WITH_SHA1', 'MD2_WITH_RSA_ENCRYPTION',
                                 'MD5_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION2', 'SHA1_WITH_RSAandMGF1', 'SHA256_WITH_RSA_ENCRYPTION', 'SHA384_WITH_RSA_ENCRYPTION', 'SHA512_WITH_RSA_ENCRYPTION', 'UNKNOWN', 'dsaWithSHA1'] = ApiField(alias='signatureAlgorithm')
     signatureHashAlgorithm: Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224',
                                     'SHA256', 'SHA384', 'SHA512', 'UNKNOWN'] = ApiField(alias='signatureHashAlgorithm')
-    encryptionType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='encryptionType')
-    keyStrength: int = ApiField(alias='keyStrength')
-    keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
-    subjectKeyIdentifierHash: str = ApiField(alias='subjectKeyIdentifierHash')
-    authorityKeyIdentifierHash: str = ApiField(alias='authorityKeyIdentifierHash')
-    serialNumber: str = ApiField(alias='serialNumber')
-    subjectDN: str = ApiField(alias='subjectDN')
+    statusModificationDate: datetime = ApiField(alias='statusModificationDate')
+    statusModificationUserId: UUID = ApiField(alias='statusModificationUserId')
+    subjectAlternativeNameDns: List[str] = ApiField(alias='subjectAlternativeNameDns', default_factory=list)
+    subjectAlternativeNameNonDns: List[str] = ApiField(alias='subjectAlternativeNameNonDns', default_factory=list)
+    subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
+    subjectC: str = ApiField(alias='subjectC')
     subjectCN: List[str] = ApiField(alias='subjectCN', default_factory=list)
+    subjectDN: str = ApiField(alias='subjectDN')
+    subjectKeyIdentifierHash: str = ApiField(alias='subjectKeyIdentifierHash')
+    subjectL: str = ApiField(alias='subjectL')
     subjectO: str = ApiField(alias='subjectO')
     subjectOU: List[str] = ApiField(alias='subjectOU', default_factory=list)
     subjectST: str = ApiField(alias='subjectST')
-    subjectL: str = ApiField(alias='subjectL')
-    subjectC: str = ApiField(alias='subjectC')
-    subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
-    subjectAlternativeNameDns: List[str] = ApiField(alias='subjectAlternativeNameDns', default_factory=list)
-    subjectAlternativeNameNonDns: List[str] = ApiField(alias='subjectAlternativeNameNonDns', default_factory=list)
-    issuerDN: str = ApiField(alias='issuerDN')
-    issuerCN: List[str] = ApiField(alias='issuerCN', default_factory=list)
-    issuerOU: List[str] = ApiField(alias='issuerOU', default_factory=list)
-    issuerST: str = ApiField(alias='issuerST')
-    issuerL: str = ApiField(alias='issuerL')
-    issuerC: str = ApiField(alias='issuerC')
-    issuerAlternativeNameDns: List[str] = ApiField(alias='issuerAlternativeNameDns', default_factory=list)
-    issuerAlternativeNameNonDns: List[str] = ApiField(alias='issuerAlternativeNameNonDns', default_factory=list)
-    keyUsage: List[str] = ApiField(alias='keyUsage', default_factory=list)
-    extendedKeyUsage: List[str] = ApiField(alias='extendedKeyUsage', default_factory=list)
-    pathLength: int = ApiField(alias='pathLength')
-    ocspNoCheck: bool = ApiField(alias='ocspNoCheck')
-    requireExplicitPolicy: int = ApiField(alias='requireExplicitPolicy')
-    inhibitPolicyMapping: int = ApiField(alias='inhibitPolicyMapping')
-    inhibitAnyPolicy: int = ApiField(alias='inhibitAnyPolicy')
-    versionType: Literal['CURRENT', 'OLD'] = ApiField(alias='versionType')
-    totalInstanceCount: int = ApiField(alias='totalInstanceCount')
-    totalActiveInstanceCount: int = ApiField(alias='totalActiveInstanceCount')
-    instances: List[CertificateInstanceInformation] = ApiField(alias='instances', default_factory=list)
-    dekHash: str = ApiField(alias='dekHash')
-    applicationServerTypeId: UUID = ApiField(alias='applicationServerTypeId')
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
     tags: List[str] = ApiField(alias='tags', default_factory=list)
-    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    totalActiveInstanceCount: int = ApiField(alias='totalActiveInstanceCount')
+    totalInstanceCount: int = ApiField(alias='totalInstanceCount')
+    validityEnd: datetime = ApiField(alias='validityEnd')
+    validityStart: datetime = ApiField(alias='validityStart')
+    versionType: Literal['CURRENT', 'OLD'] = ApiField(alias='versionType')
 
 
 class CertificateInstallationsUsageResponse(ObjectModel):
@@ -200,25 +200,25 @@ class CertificateInstallationsUsageResponse(ObjectModel):
 
 
 class CertificateInstanceInformation(ObjectModel):
-    certificateInstanceId: UUID = ApiField(alias='certificateInstanceId')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
     certificateId: UUID = ApiField(alias='certificateId')
+    certificateInstanceId: UUID = ApiField(alias='certificateInstanceId')
     certificateSource: Literal['DOMAIN_SCAN', 'EXTERNAL_CA_IMPORT', 'EXTERNAL_SCAN', 'FILE_IMPORT', 'ON_PREM_CA_IMPORT', 'SMART_SCAN_EXTERNAL', 'SMART_SCAN_INTERNAL',
                                'SMART_VALIDATION_EXTERNAL', 'SMART_VALIDATION_INTERNAL', 'TRUSTNET_SCAN', 'UNKNOWN', 'USER_IMPORTED', 'USER_PROVIDED', 'USER_SCAN'] = ApiField(alias='certificateSource')
-    ipAddress: str = ApiField(alias='ipAddress')
+    deploymentStatus: Literal['IN_USE', 'SUPERSEDED', 'UNKNOWN'] = ApiField(alias='deploymentStatus')
     hostname: str = ApiField(alias='hostname')
-    port: int = ApiField(alias='port')
     instanceChainValidationStatus: List[Literal['CHAIN_BUILDING_FAILED', 'CHAIN_EXPIRE_BEFORE_EE', 'DISTRUSTED', 'INCOMPLETE_CHAIN',
                                                 'OK', 'SELF_SIGNED', 'UNKNOWN_ERROR']] = ApiField(alias='instanceChainValidationStatus', default_factory=list)
+    ipAddress: str = ApiField(alias='ipAddress')
+    lastScanDate: datetime = ApiField(alias='lastScanDate')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    port: int = ApiField(alias='port')
+    serviceIds: List[UUID] = ApiField(alias='serviceIds', default_factory=list)
+    sslProtocols: List[str] = ApiField(alias='sslProtocols', default_factory=list)
+    sslValidationErrorArguments: List[str] = ApiField(alias='sslValidationErrorArguments', default_factory=list)
     sslValidationStatus: Literal['HOSTNAME_NOT_RESOLVABLE', 'INVALID_CERTIFICATE_FOUND', 'NO_CERTIFICATE_PRESENTED', 'OK',
                                  'OLD_VERSION_CERTIFICATE_FOUND', 'TARGET_UNREACHABLE', 'UNEXPECTED_CERTIFICATE_FOUND', 'UNKNOWN_ERROR'] = ApiField(alias='sslValidationStatus')
     sslValidationStatusMessage: str = ApiField(alias='sslValidationStatusMessage')
-    sslValidationErrorArguments: List[str] = ApiField(alias='sslValidationErrorArguments', default_factory=list)
-    sslProtocols: List[str] = ApiField(alias='sslProtocols', default_factory=list)
-    lastScanDate: datetime = ApiField(alias='lastScanDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
-    serviceIds: List[UUID] = ApiField(alias='serviceIds', default_factory=list)
-    deploymentStatus: Literal['IN_USE', 'SUPERSEDED', 'UNKNOWN'] = ApiField(alias='deploymentStatus')
 
 
 class CertificateInstanceSearchRequest(ObjectModel):
@@ -232,73 +232,73 @@ class CertificateInstanceValidationRequest(ObjectModel):
 
 
 class CertificateIssuingTemplateInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    name: str = ApiField(alias='name')
     certificateAuthority: Literal['ACME', 'BUILTIN', 'DIGICERT', 'ENTRUST', 'GLOBALSIGN',
                                   'GLOBALSIGNMSSL', 'MICROSOFT', 'MOCKCA', 'ZTPKI'] = ApiField(alias='certificateAuthority')
     certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
     certificateAuthorityProductOptionId: UUID = ApiField(alias='certificateAuthorityProductOptionId')
-    priority: int = ApiField(alias='priority')
-    systemGenerated: bool = ApiField(alias='systemGenerated')
+    companyId: UUID = ApiField(alias='companyId')
     creationDate: datetime = ApiField(alias='creationDate')
+    csrUploadAllowed: bool = ApiField(alias='csrUploadAllowed')
+    everyoneIsConsumer: bool = ApiField(alias='everyoneIsConsumer')
+    id: UUID = ApiField(alias='id')
+    keyGeneratedByVenafiAllowed: bool = ApiField(alias='keyGeneratedByVenafiAllowed')
+    keyReuse: bool = ApiField(alias='keyReuse')
+    keyTypes: List[KeyTypeInformation] = ApiField(alias='keyTypes', default_factory=list)
     modificationDate: datetime = ApiField(alias='modificationDate')
-    status: Literal['AVAILABLE', 'UNAVAILABLE'] = ApiField(alias='status')
+    name: str = ApiField(alias='name')
+    priority: int = ApiField(alias='priority')
+    productEntitlement: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='productEntitlement')
+    productEntitlements: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='productEntitlements')
     reason: str = ApiField(alias='reason')
+    recommendedSettings: RecommendedSettingsInformation = ApiField(alias='recommendedSettings')
+    resourceConsumerTeamIds: List[UUID] = ApiField(alias='resourceConsumerTeamIds', default_factory=list)
+    resourceConsumerUserIds: List[UUID] = ApiField(alias='resourceConsumerUserIds', default_factory=list)
+    sanDnsNameRegexes: List[str] = ApiField(alias='sanDnsNameRegexes', default_factory=list)
+    sanIpAddressRegexes: List[str] = ApiField(alias='sanIpAddressRegexes', default_factory=list)
+    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
+    sanRfc822NameRegexes: List[str] = ApiField(alias='sanRfc822NameRegexes', default_factory=list)
+    sanUniformResourceIdentifierRegexes: List[str] = ApiField(alias='sanUniformResourceIdentifierRegexes', default_factory=list)
+    status: Literal['AVAILABLE', 'UNAVAILABLE'] = ApiField(alias='status')
     subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
+    subjectCValues: List[str] = ApiField(alias='subjectCValues', default_factory=list)
+    subjectLRegexes: List[str] = ApiField(alias='subjectLRegexes', default_factory=list)
     subjectORegexes: List[str] = ApiField(alias='subjectORegexes', default_factory=list)
     subjectOURegexes: List[str] = ApiField(alias='subjectOURegexes', default_factory=list)
     subjectSTRegexes: List[str] = ApiField(alias='subjectSTRegexes', default_factory=list)
-    subjectLRegexes: List[str] = ApiField(alias='subjectLRegexes', default_factory=list)
-    subjectCValues: List[str] = ApiField(alias='subjectCValues', default_factory=list)
-    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
-    sanDnsNameRegexes: List[str] = ApiField(alias='sanDnsNameRegexes', default_factory=list)
-    sanRfc822NameRegexes: List[str] = ApiField(alias='sanRfc822NameRegexes', default_factory=list)
-    sanIpAddressRegexes: List[str] = ApiField(alias='sanIpAddressRegexes', default_factory=list)
-    sanUniformResourceIdentifierRegexes: List[str] = ApiField(alias='sanUniformResourceIdentifierRegexes', default_factory=list)
-    keyTypes: List[KeyTypeInformation] = ApiField(alias='keyTypes', default_factory=list)
-    keyReuse: bool = ApiField(alias='keyReuse')
-    csrUploadAllowed: bool = ApiField(alias='csrUploadAllowed')
-    keyGeneratedByVenafiAllowed: bool = ApiField(alias='keyGeneratedByVenafiAllowed')
-    recommendedSettings: RecommendedSettingsInformation = ApiField(alias='recommendedSettings')
-    productEntitlement: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='productEntitlement')
-    resourceConsumerUserIds: List[UUID] = ApiField(alias='resourceConsumerUserIds', default_factory=list)
-    resourceConsumerTeamIds: List[UUID] = ApiField(alias='resourceConsumerTeamIds', default_factory=list)
-    everyoneIsConsumer: bool = ApiField(alias='everyoneIsConsumer')
+    systemGenerated: bool = ApiField(alias='systemGenerated')
     validityPeriod: str = ApiField(alias='validityPeriod')
-    productEntitlements: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='productEntitlements')
 
 
 class CertificateKeystoreRequest(ObjectModel):
-    exportFormat: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='exportFormat')
-    encryptedPrivateKeyPassphrase: str = ApiField(alias='encryptedPrivateKeyPassphrase')
-    encryptedKeystorePassphrase: str = ApiField(alias='encryptedKeystorePassphrase')
     certificateLabel: str = ApiField(alias='certificateLabel')
+    encryptedKeystorePassphrase: str = ApiField(alias='encryptedKeystorePassphrase')
+    encryptedPrivateKeyPassphrase: str = ApiField(alias='encryptedPrivateKeyPassphrase')
+    exportFormat: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='exportFormat')
 
 
 class CertificateRecoveryRequest(ObjectModel):
-    certificateIds: List[UUID] = ApiField(alias='certificateIds', default_factory=list)
     applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    certificateIds: List[UUID] = ApiField(alias='certificateIds', default_factory=list)
 
 
 class CertificateRequestDocumentInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
     applicationId: UUID = ApiField(alias='applicationId')
-    status: Literal['CANCELLED', 'DELETED', 'FAILED', 'ISSUED', 'NEW', 'PENDING', 'REJECTED', 'REQUESTED', 'REVOKED'] = ApiField(alias='status')
-    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
-    certificateOwnerUserId: UUID = ApiField(alias='certificateOwnerUserId')
-    certificateIssuingTemplateId: UUID = ApiField(alias='certificateIssuingTemplateId')
     caOrderId: str = ApiField(alias='caOrderId')
     certificateIds: List[UUID] = ApiField(alias='certificateIds', default_factory=list)
-    subjectDN: str = ApiField(alias='subjectDN')
-    subjectCN: str = ApiField(alias='subjectCN')
-    keyLength: int = ApiField(alias='keyLength')
-    keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
-    keyType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='keyType')
+    certificateIssuingTemplateId: UUID = ApiField(alias='certificateIssuingTemplateId')
+    certificateOwnerUserId: UUID = ApiField(alias='certificateOwnerUserId')
+    companyId: UUID = ApiField(alias='companyId')
     creationDate: datetime = ApiField(alias='creationDate')
+    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
+    id: UUID = ApiField(alias='id')
+    keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
+    keyLength: int = ApiField(alias='keyLength')
+    keyType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='keyType')
     modificationDate: datetime = ApiField(alias='modificationDate')
+    status: Literal['CANCELLED', 'DELETED', 'FAILED', 'ISSUED', 'NEW', 'PENDING', 'REJECTED', 'REQUESTED', 'REVOKED'] = ApiField(alias='status')
     subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
+    subjectCN: str = ApiField(alias='subjectCN')
+    subjectDN: str = ApiField(alias='subjectDN')
     validityPeriod: str = ApiField(alias='validityPeriod')
 
 
@@ -307,39 +307,39 @@ class CertificateRequestDocumentResponse(ObjectModel):
 
 
 class CertificateRequestInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
+    apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
     applicationId: UUID = ApiField(alias='applicationId')
-    creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    status: Literal['CANCELLED', 'DELETED', 'FAILED', 'ISSUED', 'NEW', 'PENDING', 'REJECTED', 'REQUESTED', 'REVOKED'] = ApiField(alias='status')
-    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
-    certificateOwnerUserId: UUID = ApiField(alias='certificateOwnerUserId')
-    certificateIssuingTemplateId: UUID = ApiField(alias='certificateIssuingTemplateId')
     caOrderId: str = ApiField(alias='caOrderId')
     certificateIds: List[UUID] = ApiField(alias='certificateIds', default_factory=list)
+    certificateIssuingTemplateId: UUID = ApiField(alias='certificateIssuingTemplateId')
+    certificateOwnerUserId: UUID = ApiField(alias='certificateOwnerUserId')
     certificateSigningRequest: str = ApiField(alias='certificateSigningRequest')
-    subjectDN: str = ApiField(alias='subjectDN')
+    certificateUsageMetadata: List[CertificateUsageMetadata] = ApiField(alias='certificateUsageMetadata', default_factory=list)
+    companyId: UUID = ApiField(alias='companyId')
+    creationDate: datetime = ApiField(alias='creationDate')
+    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
+    id: UUID = ApiField(alias='id')
     keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
     keyLength: int = ApiField(alias='keyLength')
     keyType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='keyType')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    status: Literal['CANCELLED', 'DELETED', 'FAILED', 'ISSUED', 'NEW', 'PENDING', 'REJECTED', 'REQUESTED', 'REVOKED'] = ApiField(alias='status')
     subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
-    apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
-    certificateUsageMetadata: List[CertificateUsageMetadata] = ApiField(alias='certificateUsageMetadata', default_factory=list)
+    subjectDN: str = ApiField(alias='subjectDN')
     validityPeriod: str = ApiField(alias='validityPeriod')
 
 
 class CertificateRequestRequest(ObjectModel):
-    isVaaSGenerated: bool = ApiField(alias='isVaaSGenerated')
-    csrAttributes: CSRAttributesInformation = ApiField(alias='csrAttributes')
-    applicationServerTypeId: UUID = ApiField(alias='applicationServerTypeId')
-    certificateSigningRequest: str = ApiField(alias='certificateSigningRequest')
+    apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
     applicationId: UUID = ApiField(alias='applicationId')
+    applicationServerTypeId: UUID = ApiField(alias='applicationServerTypeId')
     certificateIssuingTemplateId: UUID = ApiField(alias='certificateIssuingTemplateId')
     certificateOwnerUserId: UUID = ApiField(alias='certificateOwnerUserId')
-    existingCertificateId: UUID = ApiField(alias='existingCertificateId')
-    apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
+    certificateSigningRequest: str = ApiField(alias='certificateSigningRequest')
     certificateUsageMetadata: List[CertificateUsageMetadata] = ApiField(alias='certificateUsageMetadata', default_factory=list)
+    csrAttributes: CSRAttributesInformation = ApiField(alias='csrAttributes')
+    existingCertificateId: UUID = ApiField(alias='existingCertificateId')
+    isVaaSGenerated: bool = ApiField(alias='isVaaSGenerated')
     reuseCSR: bool = ApiField(alias='reuseCSR')
     validityPeriod: str = ApiField(alias='validityPeriod')
 
@@ -362,13 +362,13 @@ class CertificateRequestsSearchRequest(ObjectModel):
 
 
 class CertificateResponse(ObjectModel):
-    count: int = ApiField(alias='count')
     certificates: List[CertificateInformation] = ApiField(alias='certificates', default_factory=list)
+    count: int = ApiField(alias='count')
 
 
 class CertificateRetirementRequest(ObjectModel):
-    certificateIds: List[UUID] = ApiField(alias='certificateIds', default_factory=list)
     addToBlocklist: bool = ApiField(alias='addToBlocklist')
+    certificateIds: List[UUID] = ApiField(alias='certificateIds', default_factory=list)
 
 
 class CertificateSearchRequest(ObjectModel):
@@ -379,8 +379,8 @@ class CertificateSearchRequest(ObjectModel):
 
 class CertificateUsageMetadata(ObjectModel):
     appName: str = ApiField(alias='appName')
-    nodeName: str = ApiField(alias='nodeName')
     automationMetadata: str = ApiField(alias='automationMetadata')
+    nodeName: str = ApiField(alias='nodeName')
 
 
 class CertificateValidationRequest(ObjectModel):
@@ -388,24 +388,24 @@ class CertificateValidationRequest(ObjectModel):
 
 
 class CertificationRequestInformation(ObjectModel):
-    subjectDN: str = ApiField(alias='subjectDN')
+    hashAlgorithm: Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224',
+                           'SHA256', 'SHA384', 'SHA512', 'UNKNOWN'] = ApiField(alias='hashAlgorithm')
     keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
     keyLength: int = ApiField(alias='keyLength')
     keyType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='keyType')
-    subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
+    publicKeyHash: str = ApiField(alias='publicKeyHash')
     signatureAlgorithm: Literal['EC_DSA_WITH_SHA1', 'EC_DSA_WITH_SHA224', 'EC_DSA_WITH_SHA256', 'EC_DSA_WITH_SHA384', 'EC_DSA_WITH_SHA512', 'GOST_R3411_94_WITH_GOST_R3410_2001', 'GOST_R3411_94_WITH_GOST_R3410_94', 'ID_DSA_WITH_SHA1', 'MD2_WITH_RSA_ENCRYPTION',
                                 'MD5_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION2', 'SHA1_WITH_RSAandMGF1', 'SHA256_WITH_RSA_ENCRYPTION', 'SHA384_WITH_RSA_ENCRYPTION', 'SHA512_WITH_RSA_ENCRYPTION', 'UNKNOWN', 'dsaWithSHA1'] = ApiField(alias='signatureAlgorithm')
-    hashAlgorithm: Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224',
-                           'SHA256', 'SHA384', 'SHA512', 'UNKNOWN'] = ApiField(alias='hashAlgorithm')
-    publicKeyHash: str = ApiField(alias='publicKeyHash')
+    subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
+    subjectDN: str = ApiField(alias='subjectDN')
 
 
 class DefaultOwnershipInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
-    type: str = ApiField(alias='type')
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
     owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    type: str = ApiField(alias='type')
 
 
 class ECKeyTypeInformation(ObjectModel):
@@ -413,9 +413,9 @@ class ECKeyTypeInformation(ObjectModel):
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -427,90 +427,90 @@ class Expression(ObjectModel):
 
 
 class ExtendedCertificateInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    managedCertificateId: UUID = ApiField(alias='managedCertificateId')
-    certificateRequestId: UUID = ApiField(alias='certificateRequestId')
-    certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
-    fingerprint: str = ApiField(alias='fingerprint')
-    certificateName: str = ApiField(alias='certificateName')
-    issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
-    certificateStatus: Literal['ACTIVE', 'DELETED', 'RETIRED'] = ApiField(alias='certificateStatus')
-    statusModificationUserId: UUID = ApiField(alias='statusModificationUserId')
-    modificationDate: datetime = ApiField(alias='modificationDate')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    applicationServerTypeId: UUID = ApiField(alias='applicationServerTypeId')
     archivedDate: datetime = ApiField(alias='archivedDate')
-    statusModificationDate: datetime = ApiField(alias='statusModificationDate')
-    validityStart: datetime = ApiField(alias='validityStart')
-    validityEnd: datetime = ApiField(alias='validityEnd')
+    authorityKeyIdentifierHash: str = ApiField(alias='authorityKeyIdentifierHash')
+    certificateAuthorityAccountId: UUID = ApiField(alias='certificateAuthorityAccountId')
+    certificateName: str = ApiField(alias='certificateName')
+    certificateRequestId: UUID = ApiField(alias='certificateRequestId')
+    certificateStatus: Literal['ACTIVE', 'DELETED', 'RETIRED'] = ApiField(alias='certificateStatus')
+    companyId: UUID = ApiField(alias='companyId')
+    dekHash: str = ApiField(alias='dekHash')
+    encryptionType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='encryptionType')
+    extendedKeyUsage: List[str] = ApiField(alias='extendedKeyUsage', default_factory=list)
+    fingerprint: str = ApiField(alias='fingerprint')
+    id: UUID = ApiField(alias='id')
+    inhibitAnyPolicy: int = ApiField(alias='inhibitAnyPolicy')
+    inhibitPolicyMapping: int = ApiField(alias='inhibitPolicyMapping')
+    instances: List[CertificateInstanceInformation] = ApiField(alias='instances', default_factory=list)
+    issuerAlternativeNameDns: List[str] = ApiField(alias='issuerAlternativeNameDns', default_factory=list)
+    issuerAlternativeNameNonDns: List[str] = ApiField(alias='issuerAlternativeNameNonDns', default_factory=list)
+    issuerC: str = ApiField(alias='issuerC')
+    issuerCN: List[str] = ApiField(alias='issuerCN', default_factory=list)
+    issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
+    issuerCertificates: List[CertificateInformation] = ApiField(alias='issuerCertificates', default_factory=list)
+    issuerDN: str = ApiField(alias='issuerDN')
+    issuerL: str = ApiField(alias='issuerL')
+    issuerOU: List[str] = ApiField(alias='issuerOU', default_factory=list)
+    issuerST: str = ApiField(alias='issuerST')
+    keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
+    keyStrength: int = ApiField(alias='keyStrength')
+    keyUsage: List[str] = ApiField(alias='keyUsage', default_factory=list)
+    managedCertificateId: UUID = ApiField(alias='managedCertificateId')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    ocspNoCheck: bool = ApiField(alias='ocspNoCheck')
+    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    pathLength: int = ApiField(alias='pathLength')
+    requireExplicitPolicy: int = ApiField(alias='requireExplicitPolicy')
     selfSigned: bool = ApiField(alias='selfSigned')
+    serialNumber: str = ApiField(alias='serialNumber')
     signatureAlgorithm: Literal['EC_DSA_WITH_SHA1', 'EC_DSA_WITH_SHA224', 'EC_DSA_WITH_SHA256', 'EC_DSA_WITH_SHA384', 'EC_DSA_WITH_SHA512', 'GOST_R3411_94_WITH_GOST_R3410_2001', 'GOST_R3411_94_WITH_GOST_R3410_94', 'ID_DSA_WITH_SHA1', 'MD2_WITH_RSA_ENCRYPTION',
                                 'MD5_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION2', 'SHA1_WITH_RSAandMGF1', 'SHA256_WITH_RSA_ENCRYPTION', 'SHA384_WITH_RSA_ENCRYPTION', 'SHA512_WITH_RSA_ENCRYPTION', 'UNKNOWN', 'dsaWithSHA1'] = ApiField(alias='signatureAlgorithm')
     signatureHashAlgorithm: Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224',
                                     'SHA256', 'SHA384', 'SHA512', 'UNKNOWN'] = ApiField(alias='signatureHashAlgorithm')
-    encryptionType: Literal['DSA', 'EC', 'ECGOST3410', 'GOST3410', 'RESERVED3', 'RSA', 'UNKNOWN'] = ApiField(alias='encryptionType')
-    keyStrength: int = ApiField(alias='keyStrength')
-    keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
-    subjectKeyIdentifierHash: str = ApiField(alias='subjectKeyIdentifierHash')
-    authorityKeyIdentifierHash: str = ApiField(alias='authorityKeyIdentifierHash')
-    serialNumber: str = ApiField(alias='serialNumber')
-    subjectDN: str = ApiField(alias='subjectDN')
+    statusModificationDate: datetime = ApiField(alias='statusModificationDate')
+    statusModificationUserId: UUID = ApiField(alias='statusModificationUserId')
+    subjectAlternativeNameDns: List[str] = ApiField(alias='subjectAlternativeNameDns', default_factory=list)
+    subjectAlternativeNameNonDns: List[str] = ApiField(alias='subjectAlternativeNameNonDns', default_factory=list)
+    subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
+    subjectC: str = ApiField(alias='subjectC')
     subjectCN: List[str] = ApiField(alias='subjectCN', default_factory=list)
+    subjectDN: str = ApiField(alias='subjectDN')
+    subjectKeyIdentifierHash: str = ApiField(alias='subjectKeyIdentifierHash')
+    subjectL: str = ApiField(alias='subjectL')
     subjectO: str = ApiField(alias='subjectO')
     subjectOU: List[str] = ApiField(alias='subjectOU', default_factory=list)
     subjectST: str = ApiField(alias='subjectST')
-    subjectL: str = ApiField(alias='subjectL')
-    subjectC: str = ApiField(alias='subjectC')
-    subjectAlternativeNamesByType: GeneralNamesData = ApiField(alias='subjectAlternativeNamesByType')
-    subjectAlternativeNameDns: List[str] = ApiField(alias='subjectAlternativeNameDns', default_factory=list)
-    subjectAlternativeNameNonDns: List[str] = ApiField(alias='subjectAlternativeNameNonDns', default_factory=list)
-    issuerDN: str = ApiField(alias='issuerDN')
-    issuerCN: List[str] = ApiField(alias='issuerCN', default_factory=list)
-    issuerOU: List[str] = ApiField(alias='issuerOU', default_factory=list)
-    issuerST: str = ApiField(alias='issuerST')
-    issuerL: str = ApiField(alias='issuerL')
-    issuerC: str = ApiField(alias='issuerC')
-    issuerAlternativeNameDns: List[str] = ApiField(alias='issuerAlternativeNameDns', default_factory=list)
-    issuerAlternativeNameNonDns: List[str] = ApiField(alias='issuerAlternativeNameNonDns', default_factory=list)
-    keyUsage: List[str] = ApiField(alias='keyUsage', default_factory=list)
-    extendedKeyUsage: List[str] = ApiField(alias='extendedKeyUsage', default_factory=list)
-    pathLength: int = ApiField(alias='pathLength')
-    ocspNoCheck: bool = ApiField(alias='ocspNoCheck')
-    requireExplicitPolicy: int = ApiField(alias='requireExplicitPolicy')
-    inhibitPolicyMapping: int = ApiField(alias='inhibitPolicyMapping')
-    inhibitAnyPolicy: int = ApiField(alias='inhibitAnyPolicy')
-    versionType: Literal['CURRENT', 'OLD'] = ApiField(alias='versionType')
-    totalInstanceCount: int = ApiField(alias='totalInstanceCount')
-    totalActiveInstanceCount: int = ApiField(alias='totalActiveInstanceCount')
-    instances: List[CertificateInstanceInformation] = ApiField(alias='instances', default_factory=list)
-    dekHash: str = ApiField(alias='dekHash')
-    applicationServerTypeId: UUID = ApiField(alias='applicationServerTypeId')
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
     tags: List[str] = ApiField(alias='tags', default_factory=list)
-    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
-    issuerCertificates: List[CertificateInformation] = ApiField(alias='issuerCertificates', default_factory=list)
+    totalActiveInstanceCount: int = ApiField(alias='totalActiveInstanceCount')
+    totalInstanceCount: int = ApiField(alias='totalInstanceCount')
+    validityEnd: datetime = ApiField(alias='validityEnd')
+    validityStart: datetime = ApiField(alias='validityStart')
+    versionType: Literal['CURRENT', 'OLD'] = ApiField(alias='versionType')
 
 
 class ExtendedCertificateInstanceInformation(ObjectModel):
-    certificateInstanceId: UUID = ApiField(alias='certificateInstanceId')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    certificate: CertificateInformation = ApiField(alias='certificate')
     certificateId: UUID = ApiField(alias='certificateId')
+    certificateInstanceId: UUID = ApiField(alias='certificateInstanceId')
     certificateSource: Literal['DOMAIN_SCAN', 'EXTERNAL_CA_IMPORT', 'EXTERNAL_SCAN', 'FILE_IMPORT', 'ON_PREM_CA_IMPORT', 'SMART_SCAN_EXTERNAL', 'SMART_SCAN_INTERNAL',
                                'SMART_VALIDATION_EXTERNAL', 'SMART_VALIDATION_INTERNAL', 'TRUSTNET_SCAN', 'UNKNOWN', 'USER_IMPORTED', 'USER_PROVIDED', 'USER_SCAN'] = ApiField(alias='certificateSource')
-    ipAddress: str = ApiField(alias='ipAddress')
+    deploymentStatus: Literal['IN_USE', 'SUPERSEDED', 'UNKNOWN'] = ApiField(alias='deploymentStatus')
     hostname: str = ApiField(alias='hostname')
-    port: int = ApiField(alias='port')
     instanceChainValidationStatus: List[Literal['CHAIN_BUILDING_FAILED', 'CHAIN_EXPIRE_BEFORE_EE', 'DISTRUSTED', 'INCOMPLETE_CHAIN',
                                                 'OK', 'SELF_SIGNED', 'UNKNOWN_ERROR']] = ApiField(alias='instanceChainValidationStatus', default_factory=list)
+    ipAddress: str = ApiField(alias='ipAddress')
+    lastScanDate: datetime = ApiField(alias='lastScanDate')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    port: int = ApiField(alias='port')
+    serviceIds: List[UUID] = ApiField(alias='serviceIds', default_factory=list)
+    sslProtocols: List[str] = ApiField(alias='sslProtocols', default_factory=list)
+    sslValidationErrorArguments: List[str] = ApiField(alias='sslValidationErrorArguments', default_factory=list)
     sslValidationStatus: Literal['HOSTNAME_NOT_RESOLVABLE', 'INVALID_CERTIFICATE_FOUND', 'NO_CERTIFICATE_PRESENTED', 'OK',
                                  'OLD_VERSION_CERTIFICATE_FOUND', 'TARGET_UNREACHABLE', 'UNEXPECTED_CERTIFICATE_FOUND', 'UNKNOWN_ERROR'] = ApiField(alias='sslValidationStatus')
     sslValidationStatusMessage: str = ApiField(alias='sslValidationStatusMessage')
-    sslValidationErrorArguments: List[str] = ApiField(alias='sslValidationErrorArguments', default_factory=list)
-    sslProtocols: List[str] = ApiField(alias='sslProtocols', default_factory=list)
-    lastScanDate: datetime = ApiField(alias='lastScanDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
-    serviceIds: List[UUID] = ApiField(alias='serviceIds', default_factory=list)
-    deploymentStatus: Literal['IN_USE', 'SUPERSEDED', 'UNKNOWN'] = ApiField(alias='deploymentStatus')
-    certificate: CertificateInformation = ApiField(alias='certificate')
 
 
 class ExtendedCertificateInstanceResponse(ObjectModel):
@@ -535,37 +535,37 @@ class FlattenedCertificateSavedSearch(ObjectModel):
 
 
 class GeneralNamesData(ObjectModel):
-    otherName: List[str] = ApiField(alias='otherName', default_factory=list)
-    rfc822Name: List[str] = ApiField(alias='rfc822Name', default_factory=list)
     dNSName: List[str] = ApiField(alias='dNSName', default_factory=list)
-    x400Address: List[str] = ApiField(alias='x400Address', default_factory=list)
     directoryName: List[str] = ApiField(alias='directoryName', default_factory=list)
     ediPartyName: List[str] = ApiField(alias='ediPartyName', default_factory=list)
-    uniformResourceIdentifier: List[str] = ApiField(alias='uniformResourceIdentifier', default_factory=list)
     iPAddress: List[str] = ApiField(alias='iPAddress', default_factory=list)
+    otherName: List[str] = ApiField(alias='otherName', default_factory=list)
     registeredID: List[str] = ApiField(alias='registeredID', default_factory=list)
+    rfc822Name: List[str] = ApiField(alias='rfc822Name', default_factory=list)
+    uniformResourceIdentifier: List[str] = ApiField(alias='uniformResourceIdentifier', default_factory=list)
+    x400Address: List[str] = ApiField(alias='x400Address', default_factory=list)
 
 
 class ImportedCertificateInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    managedCertificateId: UUID = ApiField(alias='managedCertificateId')
-    companyId: UUID = ApiField(alias='companyId')
-    fingerprint: str = ApiField(alias='fingerprint')
+    apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
     base64Certificate: str = ApiField(alias='base64Certificate')
-    issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
     certificateSource: Literal['DOMAIN_SCAN', 'EXTERNAL_CA_IMPORT', 'EXTERNAL_SCAN', 'FILE_IMPORT', 'ON_PREM_CA_IMPORT', 'SMART_SCAN_EXTERNAL', 'SMART_SCAN_INTERNAL',
                                'SMART_VALIDATION_EXTERNAL', 'SMART_VALIDATION_INTERNAL', 'TRUSTNET_SCAN', 'UNKNOWN', 'USER_IMPORTED', 'USER_PROVIDED', 'USER_SCAN'] = ApiField(alias='certificateSource')
-    apiClientInformation: ApiClientInformation = ApiField(alias='apiClientInformation')
     certificateUsageMetadata: List[CertificateUsageMetadata] = ApiField(alias='certificateUsageMetadata', default_factory=list)
+    companyId: UUID = ApiField(alias='companyId')
+    fingerprint: str = ApiField(alias='fingerprint')
+    id: UUID = ApiField(alias='id')
+    issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
+    managedCertificateId: UUID = ApiField(alias='managedCertificateId')
 
 
 class InvitationInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    userId: UUID = ApiField(alias='userId')
     companyId: UUID = ApiField(alias='companyId')
+    id: UUID = ApiField(alias='id')
     productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                                          'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
     properties: Dict[str, str] = ApiField(alias='properties', default_factory=dict)
+    userId: UUID = ApiField(alias='userId')
 
 
 class InvitationRequest(ObjectModel):
@@ -582,9 +582,9 @@ class KeyTypeInformation(ObjectModel):
 
 
 class KeyTypeParameters(ObjectModel):
-    keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
-    keyLength: int = ApiField(alias='keyLength')
     keyCurve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='keyCurve')
+    keyLength: int = ApiField(alias='keyLength')
+    keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
 
 
 class MetadataInformation(ObjectModel):
@@ -593,8 +593,8 @@ class MetadataInformation(ObjectModel):
 
 
 class OrderObject(ObjectModel):
-    field: str = ApiField(alias='field')
     direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
+    field: str = ApiField(alias='field')
 
 
 class Ordering(ObjectModel):
@@ -611,11 +611,11 @@ class OwnerIdAndType(ObjectModel):
 
 
 class OwnershipInformation(ObjectModel):
-    type: str = ApiField(alias='type')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
     id: UUID = ApiField(alias='id')
+    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    type: str = ApiField(alias='type')
 
 
 class Paging(ObjectModel):
@@ -634,16 +634,16 @@ class ProviderConfigInformation(ObjectModel):
 
 
 class ProviderInformation(ObjectModel):
-    type: str = ApiField(alias='type')
     config: ProviderConfigInformation = ApiField(alias='config')
     inputs: List[ProviderInputInformation] = ApiField(alias='inputs', default_factory=list)
+    type: str = ApiField(alias='type')
 
 
 class ProviderInputInformation(ObjectModel):
-    type: str = ApiField(alias='type')
-    subnet: str = ApiField(alias='subnet')
     hosts: List[str] = ApiField(alias='hosts', default_factory=list)
     ports: List[str] = ApiField(alias='ports', default_factory=list)
+    subnet: str = ApiField(alias='subnet')
+    type: str = ApiField(alias='type')
 
 
 class RSAKeyTypeInformation(ObjectModel):
@@ -651,39 +651,39 @@ class RSAKeyTypeInformation(ObjectModel):
 
 
 class RecommendedSettingsInformation(ObjectModel):
-    subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
-    subjectOValue: str = ApiField(alias='subjectOValue')
-    subjectOUValue: str = ApiField(alias='subjectOUValue')
-    subjectSTValue: str = ApiField(alias='subjectSTValue')
-    subjectLValue: str = ApiField(alias='subjectLValue')
-    subjectCValue: str = ApiField(alias='subjectCValue')
-    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
     key: RecommendedSettingsKeyTypeInformation = ApiField(alias='key')
+    sanRegexes: List[str] = ApiField(alias='sanRegexes', default_factory=list)
+    subjectCNRegexes: List[str] = ApiField(alias='subjectCNRegexes', default_factory=list)
+    subjectCValue: str = ApiField(alias='subjectCValue')
+    subjectLValue: str = ApiField(alias='subjectLValue')
+    subjectOUValue: str = ApiField(alias='subjectOUValue')
+    subjectOValue: str = ApiField(alias='subjectOValue')
+    subjectSTValue: str = ApiField(alias='subjectSTValue')
 
 
 class RecommendedSettingsKeyTypeInformation(ObjectModel):
-    type: Literal['EC', 'RSA'] = ApiField(alias='type')
-    length: int = ApiField(alias='length')
     curve: Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN'] = ApiField(alias='curve')
+    length: int = ApiField(alias='length')
+    type: Literal['EC', 'RSA'] = ApiField(alias='type')
 
 
 class SavedSearchInfo(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    userId: UUID = ApiField(alias='userId')
     companyId: UUID = ApiField(alias='companyId')
+    id: UUID = ApiField(alias='id')
+    isDefault: bool = ApiField(alias='isDefault')
     name: str = ApiField(alias='name')
     searchDetails: FlattenedCertificateSavedSearch = ApiField(alias='searchDetails')
     type: Literal['FULL_TEXT', 'PREDEFINED_FILTER'] = ApiField(alias='type')
-    isDefault: bool = ApiField(alias='isDefault')
+    userId: UUID = ApiField(alias='userId')
 
 
 class SavedSearchRequest(ObjectModel):
-    name: str = ApiField(alias='name')
     expression: Expression = ApiField(alias='expression')
+    isDefault: bool = ApiField(alias='isDefault')
+    name: str = ApiField(alias='name')
     ordering: Ordering = ApiField(alias='ordering')
     paging: Paging = ApiField(alias='paging')
     type: Literal['FULL_TEXT', 'PREDEFINED_FILTER'] = ApiField(alias='type')
-    isDefault: bool = ApiField(alias='isDefault')
 
 
 class SavedSearchResponse(ObjectModel):
@@ -698,45 +698,45 @@ class ScanafiConfigResponseV1(ObjectModel):
 
 class SubjectAlternativeNamesByType(ObjectModel):
     dnsNames: List[str] = ApiField(alias='dnsNames', default_factory=list)
-    rfc822Names: List[str] = ApiField(alias='rfc822Names', default_factory=list)
     ipAddresses: List[str] = ApiField(alias='ipAddresses', default_factory=list)
+    rfc822Names: List[str] = ApiField(alias='rfc822Names', default_factory=list)
     uniformResourceIdentifiers: List[str] = ApiField(alias='uniformResourceIdentifiers', default_factory=list)
 
 
 class TeamInformation(ObjectModel):
+    companyId: UUID = ApiField(alias='companyId')
     id: UUID = ApiField(alias='id')
+    members: List[UUID] = ApiField(alias='members', default_factory=list)
     name: str = ApiField(alias='name')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
+    ownership: Dict[str, List[UUID]] = ApiField(alias='ownership', default_factory=dict)
     productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                                          'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
-    members: List[UUID] = ApiField(alias='members', default_factory=list)
-    owners: List[UUID] = ApiField(alias='owners', default_factory=list)
-    companyId: UUID = ApiField(alias='companyId')
-    ownership: Dict[str, List[UUID]] = ApiField(alias='ownership', default_factory=dict)
+    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
 
 
 class UnassignedCertificateAggregatesResponse(ObjectModel):
-    companyId: UUID = ApiField(alias='companyId')
     certificateAggregatesMap: Dict[str, int] = ApiField(alias='certificateAggregatesMap', default_factory=dict)
+    companyId: UUID = ApiField(alias='companyId')
 
 
 class UserInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
+    admin: bool = ApiField(alias='admin')
     companyId: UUID = ApiField(alias='companyId')
-    username: str = ApiField(alias='username')
+    creationDate: datetime = ApiField(alias='creationDate')
     firstname: str = ApiField(alias='firstname')
+    id: UUID = ApiField(alias='id')
     lastname: str = ApiField(alias='lastname')
-    userStatus: str = ApiField(alias='userStatus')
-    userType: str = ApiField(alias='userType')
-    userAccountType: str = ApiField(alias='userAccountType')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
+    memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
+    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
     productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
                                          'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
-    creationDate: datetime = ApiField(alias='creationDate')
-    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
-    memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
-    admin: bool = ApiField(alias='admin')
+    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
     teamsIds: List[UUID] = ApiField(alias='teamsIds', default_factory=list)
+    userAccountType: str = ApiField(alias='userAccountType')
+    userStatus: str = ApiField(alias='userStatus')
+    userType: str = ApiField(alias='userType')
+    username: str = ApiField(alias='username')
 
 
 class entityTag(ObjectModel):
@@ -745,34 +745,34 @@ class entityTag(ObjectModel):
 
 
 class language(ObjectModel):
-    language: str = ApiField(alias='language')
-    script: str = ApiField(alias='script')
-    variant: str = ApiField(alias='variant')
-    displayName: str = ApiField(alias='displayName')
     country: str = ApiField(alias='country')
-    unicodeLocaleAttributes: List[str] = ApiField(alias='unicodeLocaleAttributes', default_factory=list)
-    unicodeLocaleKeys: List[str] = ApiField(alias='unicodeLocaleKeys', default_factory=list)
-    displayLanguage: str = ApiField(alias='displayLanguage')
-    displayScript: str = ApiField(alias='displayScript')
     displayCountry: str = ApiField(alias='displayCountry')
+    displayLanguage: str = ApiField(alias='displayLanguage')
+    displayName: str = ApiField(alias='displayName')
+    displayScript: str = ApiField(alias='displayScript')
     displayVariant: str = ApiField(alias='displayVariant')
     extensionKeys: List[str] = ApiField(alias='extensionKeys', default_factory=list)
-    iso3Language: str = ApiField(alias='iso3Language')
     iso3Country: str = ApiField(alias='iso3Country')
+    iso3Language: str = ApiField(alias='iso3Language')
+    language: str = ApiField(alias='language')
+    script: str = ApiField(alias='script')
+    unicodeLocaleAttributes: List[str] = ApiField(alias='unicodeLocaleAttributes', default_factory=list)
+    unicodeLocaleKeys: List[str] = ApiField(alias='unicodeLocaleKeys', default_factory=list)
+    variant: str = ApiField(alias='variant')
 
 
 class mediaType(ObjectModel):
-    type: str = ApiField(alias='type')
-    subtype: str = ApiField(alias='subtype')
     parameters: Dict[str, str] = ApiField(alias='parameters', default_factory=dict)
-    wildcardType: bool = ApiField(alias='wildcardType')
+    subtype: str = ApiField(alias='subtype')
+    type: str = ApiField(alias='type')
     wildcardSubtype: bool = ApiField(alias='wildcardSubtype')
+    wildcardType: bool = ApiField(alias='wildcardType')
 
 
 class statusInfo(ObjectModel):
     family: Literal['CLIENT_ERROR', 'INFORMATIONAL', 'OTHER', 'REDIRECTION', 'SERVER_ERROR', 'SUCCESSFUL'] = ApiField(alias='family')
-    statusCode: int = ApiField(alias='statusCode')
     reasonPhrase: str = ApiField(alias='reasonPhrase')
+    statusCode: int = ApiField(alias='statusCode')
 
 
 ApiClientInformation.update_forward_refs()

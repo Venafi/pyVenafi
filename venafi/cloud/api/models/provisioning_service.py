@@ -7,16 +7,16 @@ from uuid import UUID
 
 class DefaultOwnershipInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
-    type: str = ApiField(alias='type')
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
     owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    type: str = ApiField(alias='type')
 
 
 class ErrorInformation(ObjectModel):
+    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
-    args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
 
 
 class ErrorResponse(ObjectModel):
@@ -32,57 +32,57 @@ class JsonNode(ObjectModel):
 
 
 class MachineCreationRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    machineTypeId: UUID = ApiField(alias='machineTypeId')
-    pluginId: UUID = ApiField(alias='pluginId')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
-    dekId: str = ApiField(alias='dekId')
-    tags: List[str] = ApiField(alias='tags', default_factory=list)
     connectionDetails: JsonNode = ApiField(alias='connectionDetails')
-    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
+    dekId: str = ApiField(alias='dekId')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    machineTypeId: UUID = ApiField(alias='machineTypeId')
+    name: str = ApiField(alias='name')
     owningTeamId: UUID = ApiField(alias='owningTeamId')
+    pluginId: UUID = ApiField(alias='pluginId')
+    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
+    tags: List[str] = ApiField(alias='tags', default_factory=list)
 
 
 class MachineDocumentInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
     companyId: UUID = ApiField(alias='companyId')
-    machineTypeId: UUID = ApiField(alias='machineTypeId')
-    pluginId: UUID = ApiField(alias='pluginId')
-    integrationId: UUID = ApiField(alias='integrationId')
-    machineName: str = ApiField(alias='machineName')
-    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
-    machineType: str = ApiField(alias='machineType')
     creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
+    id: UUID = ApiField(alias='id')
+    integrationId: UUID = ApiField(alias='integrationId')
     machineIdentitiesCount: int = ApiField(alias='machineIdentitiesCount')
-    owningTeam: UUID = ApiField(alias='owningTeam')
+    machineName: str = ApiField(alias='machineName')
+    machineType: str = ApiField(alias='machineType')
+    machineTypeId: UUID = ApiField(alias='machineTypeId')
+    modificationDate: datetime = ApiField(alias='modificationDate')
     ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    owningTeam: UUID = ApiField(alias='owningTeam')
+    pluginId: UUID = ApiField(alias='pluginId')
+    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
 
 
 class MachineDocumentResponse(ObjectModel):
-    totalCount: int = ApiField(alias='totalCount')
     machines: List[MachineDocumentInformation] = ApiField(alias='machines', default_factory=list)
+    totalCount: int = ApiField(alias='totalCount')
 
 
 class MachineIdentityCreationRequest(ObjectModel):
-    certificateId: UUID = ApiField(alias='certificateId')
-    machineId: UUID = ApiField(alias='machineId')
-    keystore: JsonNode = ApiField(alias='keystore')
     binding: JsonNode = ApiField(alias='binding')
+    certificateId: UUID = ApiField(alias='certificateId')
+    keystore: JsonNode = ApiField(alias='keystore')
+    machineId: UUID = ApiField(alias='machineId')
 
 
 class MachineIdentityDocumentInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    machineId: UUID = ApiField(alias='machineId')
-    machineName: str = ApiField(alias='machineName')
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
     certificateId: UUID = ApiField(alias='certificateId')
     certificateName: str = ApiField(alias='certificateName')
-    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
-    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
-    creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
     certificateValidityEnd: datetime = ApiField(alias='certificateValidityEnd')
+    companyId: UUID = ApiField(alias='companyId')
+    creationDate: datetime = ApiField(alias='creationDate')
+    id: UUID = ApiField(alias='id')
+    machineId: UUID = ApiField(alias='machineId')
+    machineName: str = ApiField(alias='machineName')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
 
 
 class MachineIdentityDocumentResponse(ObjectModel):
@@ -90,14 +90,14 @@ class MachineIdentityDocumentResponse(ObjectModel):
 
 
 class MachineIdentityInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    companyId: UUID = ApiField(alias='companyId')
-    certificateId: UUID = ApiField(alias='certificateId')
-    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
-    creationDate: datetime = ApiField(alias='creationDate')
-    modificationDate: datetime = ApiField(alias='modificationDate')
-    keystore: JsonNode = ApiField(alias='keystore')
     binding: JsonNode = ApiField(alias='binding')
+    certificateId: UUID = ApiField(alias='certificateId')
+    companyId: UUID = ApiField(alias='companyId')
+    creationDate: datetime = ApiField(alias='creationDate')
+    id: UUID = ApiField(alias='id')
+    keystore: JsonNode = ApiField(alias='keystore')
+    modificationDate: datetime = ApiField(alias='modificationDate')
+    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
 
 
 class MachineIdentityResponse(ObjectModel):
@@ -111,10 +111,10 @@ class MachineIdentitySearchRequest(ObjectModel):
 
 
 class MachineIdentityUpdateRequest(ObjectModel):
-    certificateId: UUID = ApiField(alias='certificateId')
-    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
-    keystore: JsonNode = ApiField(alias='keystore')
     binding: JsonNode = ApiField(alias='binding')
+    certificateId: UUID = ApiField(alias='certificateId')
+    keystore: JsonNode = ApiField(alias='keystore')
+    status: Literal['FAILED', 'INSTALLED', 'NEW', 'PENDING'] = ApiField(alias='status')
 
 
 class MachineIdentityWorkflowInformation(ObjectModel):
@@ -123,22 +123,22 @@ class MachineIdentityWorkflowInformation(ObjectModel):
 
 
 class MachineIdentityWorkflowRequest(ObjectModel):
-    workflowName: str = ApiField(alias='workflowName')
     workflowInput: ProvisionCertificateWorkflowInputInformation = ApiField(alias='workflowInput')
+    workflowName: str = ApiField(alias='workflowName')
 
 
 class MachineInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
     companyId: UUID = ApiField(alias='companyId')
-    name: str = ApiField(alias='name')
-    machineType: str = ApiField(alias='machineType')
-    pluginId: UUID = ApiField(alias='pluginId')
-    integrationId: UUID = ApiField(alias='integrationId')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
     creationDate: datetime = ApiField(alias='creationDate')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    id: UUID = ApiField(alias='id')
+    integrationId: UUID = ApiField(alias='integrationId')
+    machineType: str = ApiField(alias='machineType')
     modificationDate: datetime = ApiField(alias='modificationDate')
-    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
+    name: str = ApiField(alias='name')
     owningTeamId: UUID = ApiField(alias='owningTeamId')
+    pluginId: UUID = ApiField(alias='pluginId')
+    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
 
 
 class MachineTypeInformation(ObjectModel):
@@ -152,16 +152,16 @@ class MachineTypeResponse(ObjectModel):
 
 
 class MachineUpdateRequest(ObjectModel):
-    name: str = ApiField(alias='name')
-    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
     connectionDetails: JsonNode = ApiField(alias='connectionDetails')
-    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
+    edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
+    name: str = ApiField(alias='name')
     owningTeamId: UUID = ApiField(alias='owningTeamId')
+    status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
 
 
 class MachineWorkflowRequest(ObjectModel):
-    workflowName: str = ApiField(alias='workflowName')
     workflowInput: JsonNode = ApiField(alias='workflowInput')
+    workflowName: str = ApiField(alias='workflowName')
 
 
 class MachinesResponse(ObjectModel):
@@ -175,8 +175,8 @@ class MachinesSearchRequest(ObjectModel):
 
 
 class OrderObject(ObjectModel):
-    field: str = ApiField(alias='field')
     direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
+    field: str = ApiField(alias='field')
 
 
 class Ordering(ObjectModel):
@@ -184,11 +184,11 @@ class Ordering(ObjectModel):
 
 
 class OwnershipInformation(ObjectModel):
-    type: str = ApiField(alias='type')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
     id: UUID = ApiField(alias='id')
+    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    type: str = ApiField(alias='type')
 
 
 class Paging(ObjectModel):

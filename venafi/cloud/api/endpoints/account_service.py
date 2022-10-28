@@ -201,21 +201,6 @@ class _teams(CloudApiEndpoint):
                 TeamInformation: account_service.TeamInformation
             return generate_output(output_cls=Output, response=self._patch(data=data), rc_mapping={200: 'TeamInformation'})
 
-        class _owners(CloudApiEndpoint):
-            def delete(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
-                data = {**TeamOwnersRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    TeamInformation: account_service.TeamInformation
-                return generate_output(output_cls=Output, response=self._delete(params=data), rc_mapping={200: 'TeamInformation'})
-
-            def post(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
-                data = {**TeamOwnersRequest.dict()}
-
-                class Output(CloudApiOutputModel):
-                    TeamInformation: account_service.TeamInformation
-                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'TeamInformation'})
-
         class _members(CloudApiEndpoint):
             def delete(self, TeamMembersRequest: account_service.TeamMembersRequest):
                 data = {**TeamMembersRequest.dict()}
@@ -226,6 +211,21 @@ class _teams(CloudApiEndpoint):
 
             def post(self, TeamMembersRequest: account_service.TeamMembersRequest):
                 data = {**TeamMembersRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    TeamInformation: account_service.TeamInformation
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'TeamInformation'})
+
+        class _owners(CloudApiEndpoint):
+            def delete(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
+                data = {**TeamOwnersRequest.dict()}
+
+                class Output(CloudApiOutputModel):
+                    TeamInformation: account_service.TeamInformation
+                return generate_output(output_cls=Output, response=self._delete(params=data), rc_mapping={200: 'TeamInformation'})
+
+            def post(self, TeamOwnersRequest: account_service.TeamOwnersRequest):
+                data = {**TeamOwnersRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     TeamInformation: account_service.TeamInformation
@@ -255,6 +255,17 @@ class _useraccounts(CloudApiEndpoint):
             UserAccountResponse: account_service.UserAccountResponse
         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'UserAccountResponse', 202: 'UserAccountResponse'})
 
+    class _activation(CloudApiEndpoint):
+        def get(self, k: UUID, v: bool):
+            data = {
+                'k': k,
+                'v': v,
+            }
+
+            class Output(CloudApiOutputModel):
+                UserInformation: account_service.UserInformation
+            return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'UserInformation'})
+
     class _activationresend(CloudApiEndpoint):
         def post(self, ResendActivationRequest: account_service.ResendActivationRequest):
             data = {**ResendActivationRequest.dict()}
@@ -263,38 +274,16 @@ class _useraccounts(CloudApiEndpoint):
                 ResendActivationResponse: account_service.ResendActivationResponse
             return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={202: 'ResendActivationResponse'})
 
-    class _passwordreset(CloudApiEndpoint):
-        def get(self, token: str):
+    class _apikeyrotation(CloudApiEndpoint):
+        def get(self, k: UUID, v: bool):
             data = {
-                'token': token,
+                'k': k,
+                'v': v,
             }
 
             class Output(CloudApiOutputModel):
                 ApiKeyInformation: account_service.ApiKeyInformation
-            return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={201: 'ApiKeyInformation'})
-
-        def post(self, ResetPasswordRequest: account_service.ResetPasswordRequest):
-            data = {**ResetPasswordRequest.dict()}
-
-            class Output(CloudApiOutputModel):
-                ResetPasswordResponse: account_service.ResetPasswordResponse
-            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={202: 'ResetPasswordResponse'})
-
-    class _updatepassword(CloudApiEndpoint):
-        def post(self, UpdatePasswordRequest: account_service.UpdatePasswordRequest):
-            data = {**UpdatePasswordRequest.dict()}
-
-            class Output(CloudApiOutputModel):
-                UpdatePasswordResponse: account_service.UpdatePasswordResponse
-            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'UpdatePasswordResponse'})
-
-    class _password(CloudApiEndpoint):
-        def post(self, ChangePasswordRequest: account_service.ChangePasswordRequest):
-            data = {**ChangePasswordRequest.dict()}
-
-            class Output(CloudApiOutputModel):
-                UserInformation: account_service.UserInformation
-            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'UserInformation'})
+            return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ApiKeyInformation'})
 
     class _invitations(CloudApiEndpoint):
         def get(self, id: UUID):
@@ -320,27 +309,38 @@ class _useraccounts(CloudApiEndpoint):
                 UserInformation: account_service.UserInformation
             return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={202: 'UserInformation'})
 
-    class _activation(CloudApiEndpoint):
-        def get(self, k: UUID, v: bool):
-            data = {
-                'k': k,
-                'v': v,
-            }
+    class _password(CloudApiEndpoint):
+        def post(self, ChangePasswordRequest: account_service.ChangePasswordRequest):
+            data = {**ChangePasswordRequest.dict()}
 
             class Output(CloudApiOutputModel):
                 UserInformation: account_service.UserInformation
-            return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'UserInformation'})
+            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'UserInformation'})
 
-    class _apikeyrotation(CloudApiEndpoint):
-        def get(self, k: UUID, v: bool):
+    class _passwordreset(CloudApiEndpoint):
+        def get(self, token: str):
             data = {
-                'k': k,
-                'v': v,
+                'token': token,
             }
 
             class Output(CloudApiOutputModel):
                 ApiKeyInformation: account_service.ApiKeyInformation
-            return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ApiKeyInformation'})
+            return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={201: 'ApiKeyInformation'})
+
+        def post(self, ResetPasswordRequest: account_service.ResetPasswordRequest):
+            data = {**ResetPasswordRequest.dict()}
+
+            class Output(CloudApiOutputModel):
+                ResetPasswordResponse: account_service.ResetPasswordResponse
+            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={202: 'ResetPasswordResponse'})
+
+    class _updatepassword(CloudApiEndpoint):
+        def post(self, UpdatePasswordRequest: account_service.UpdatePasswordRequest):
+            data = {**UpdatePasswordRequest.dict()}
+
+            class Output(CloudApiOutputModel):
+                UpdatePasswordResponse: account_service.UpdatePasswordResponse
+            return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'UpdatePasswordResponse'})
 
 
 class _users(CloudApiEndpoint):
@@ -381,14 +381,6 @@ class _users(CloudApiEndpoint):
                 UserInformation: account_service.UserInformation
             return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserInformation'})
 
-        class _roles(CloudApiEndpoint):
-            def put(self, CUser: account_service.CUser):
-                data = {**CUser.dict()}
-
-                class Output(CloudApiOutputModel):
-                    UserInformation: account_service.UserInformation
-                return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'UserInformation'})
-
         class _accounttype(CloudApiEndpoint):
             def put(self, CUser: account_service.CUser):
                 data = {**CUser.dict()}
@@ -405,28 +397,13 @@ class _users(CloudApiEndpoint):
                     UserInformation: account_service.UserInformation
                 return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'UserInformation'})
 
-    class _username(CloudApiEndpoint):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+        class _roles(CloudApiEndpoint):
+            def put(self, CUser: account_service.CUser):
+                data = {**CUser.dict()}
 
-        def USERNAME(self, username: str):
-            return self._USERNAME(api_obj=self._api_obj, url=f'{self._url}/{username}')
-
-        class _USERNAME(CloudApiEndpoint):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-                self.loginconfig = self._loginconfig(api_obj=self._api_obj, url=f'{self._url}/loginconfig')
-
-            def get(self):
                 class Output(CloudApiOutputModel):
-                    UserResponse: account_service.UserResponse
-                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserResponse'})
-
-            class _loginconfig(CloudApiEndpoint):
-                def get(self):
-                    class Output(CloudApiOutputModel):
-                        UserResponse: account_service.UserResponse
-                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserResponse'})
+                    UserInformation: account_service.UserInformation
+                return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'UserInformation'})
 
     class _USERID(CloudApiEndpoint):
         def __init__(self, *args, **kwargs):
@@ -476,6 +453,12 @@ class _users(CloudApiEndpoint):
                             ApiKeyResponse: account_service.ApiKeyResponse
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'ApiKeyResponse'})
 
+                class _rotation(CloudApiEndpoint):
+                    def put(self):
+                        class Output(CloudApiOutputModel):
+                            ApiKeyNullResponse: account_service.ApiKeyNullResponse
+                        return generate_output(output_cls=Output, response=self._put(data={}), rc_mapping={200: 'ApiKeyNullResponse'})
+
                 class _rotationrequest(CloudApiEndpoint):
                     def post(self, ApiKeyRequest: account_service.ApiKeyRequest):
                         data = {**ApiKeyRequest.dict()}
@@ -484,11 +467,28 @@ class _users(CloudApiEndpoint):
                             ApiKeyResponse: account_service.ApiKeyResponse
                         return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'ApiKeyResponse'})
 
-                class _rotation(CloudApiEndpoint):
-                    def put(self):
-                        class Output(CloudApiOutputModel):
-                            ApiKeyNullResponse: account_service.ApiKeyNullResponse
-                        return generate_output(output_cls=Output, response=self._put(data={}), rc_mapping={200: 'ApiKeyNullResponse'})
+    class _username(CloudApiEndpoint):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def USERNAME(self, username: str):
+            return self._USERNAME(api_obj=self._api_obj, url=f'{self._url}/{username}')
+
+        class _USERNAME(CloudApiEndpoint):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.loginconfig = self._loginconfig(api_obj=self._api_obj, url=f'{self._url}/loginconfig')
+
+            def get(self):
+                class Output(CloudApiOutputModel):
+                    UserResponse: account_service.UserResponse
+                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserResponse'})
+
+            class _loginconfig(CloudApiEndpoint):
+                def get(self):
+                    class Output(CloudApiOutputModel):
+                        UserResponse: account_service.UserResponse
+                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'UserResponse'})
 
 
 class _dataencryptionkeys(CloudApiEndpoint):
