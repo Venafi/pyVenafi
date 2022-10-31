@@ -8,9 +8,9 @@ from venafi.tpp.api.api_base import ObjectModel
 
 PROJECT_ROOT = Path(__file__).parent.parent
 FEATURES_PATH = Path(PROJECT_ROOT, 'venafi', 'tpp', 'features')
-FEATURES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'features')
+FEATURES_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'tpp', 'features')
 MODELS_PATH = Path(PROJECT_ROOT, 'venafi', 'tpp', 'api', 'websdk', 'models')
-MODELS_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'models')
+MODELS_DOC_PATH = Path(PROJECT_ROOT, 'docs', 'rst', 'tpp', 'models')
 
 
 def make_title(title: str, underline: str = '='):
@@ -90,7 +90,7 @@ def get_feature_docs():
         def process_class_rst(f_cls):
             # Create the .. autoclass:: rst file.
             rst = feature_class_rst_template(module_path=module_path, class_=f_cls)
-            rst_file_name = Path(re.sub("[^a-zA-Z\d]+", "_", f_cls.__feature__).lower() + '.rst')
+            rst_file_name = Path(re.sub(r"[^a-zA-Z\d]+", "_", f_cls.__feature__).lower() + '.rst')
             rst_file_path = Path(feature_file_path, rst_file_name)  # rst/features/<feature>/<feature_class>.rst
             with rst_file_path.open('w') as ff:
                 ff.write(rst)
@@ -112,17 +112,17 @@ def get_feature_docs():
             features_rst_files.append(feature_rst_file)
         else:
             features_rst_files.append(process_class_rst(feature_classes[0]))
-    pytpp_features_rst = toc_rst_template(
+    tpp_features_rst = toc_rst_template(
         title='Features',
         toc_items=[f'{f.parent.name}/{f.stem}' for f in sorted(features_rst_files)]
     )
-    pytpp_features_rst = f'.. _features:\n\n{pytpp_features_rst}'
+    tpp_features_rst = f'.. _features:\n\n{tpp_features_rst}'
     with Path(FEATURES_DOC_PATH, 'features_toc.rst').open('w') as f:
-        f.write(pytpp_features_rst)
+        f.write(tpp_features_rst)
 
 
 def get_property_docs():
-    from pytpp.api.websdk import models
+    from venafi.tpp.api.websdk import models
     import inspect
 
     # Recreate the dataclasses doc folder.
@@ -136,7 +136,7 @@ def get_property_docs():
         mod_file = Path(item.__file__)
         title, h1 = make_title(mod_file.stem.replace('_', ' ').title())
         rst_path = Path(MODELS_DOC_PATH, f'{mod_file.stem}.rst')
-        objects = run_path(mod_file)
+        objects = run_path(str(mod_file))
         rst_content = [f'{title}\n{h1}\n']
         for name, obj in sorted(objects.items(), key=lambda x: x[0]):
             if isinstance(obj, type) and issubclass(obj, ObjectModel) and obj is not ObjectModel:
@@ -157,4 +157,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

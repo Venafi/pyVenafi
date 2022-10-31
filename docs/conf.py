@@ -2,12 +2,12 @@ import os
 import sys
 sys.path += [os.path.abspath('..'), os.path.abspath('../..')]
 import re
-from pytpp import __version__, __author__
+from venafi import __version__, __author__
 import time
 
 # -- Project information -----------------------------------------------------
 
-project = 'PyTPP'
+project = 'Venafi'
 copyright = time.strftime('%Y, Venafi')
 author = __author__
 version = __version__
@@ -90,7 +90,7 @@ link = lambda name, label, href:  f"""
 
 doc_variables = [
     string(name='Websdk', value='TPP WebSDK API'),
-    string(name='Product', value='PyTPP'),
+    string(name='TPP Module', value='The TPP Module'),
     link(name='Doc Home Page', label='Venafi TPP WebSDK Documentation', href='https://docs.venafi.com/index.php'),
     link(name='Pydantic Docs', label='Pydantic Documentation', href='https://pydantic-docs.helpmanual.io'),
     link(name='Python Requests library', label='Python Requests library', href='https://docs.python-requests.org/en/latest/'),
