@@ -209,7 +209,7 @@ def get_logger(name: str = None) -> Logger:
         logging._releaseLock()
 
 
-logger = get_logger('tpp')
+logger = get_logger('venafi')
 api_logger = logger.getChild('api')
 features_logger = logger.getChild('features')
 

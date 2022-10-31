@@ -7,3 +7,5 @@ from venafi.tpp.features.definitions.attribute_values import AttributeValues  # 
 from venafi.tpp.features.definitions.classes import Classes as ClassNames  # noqa
 from venafi.tpp.plugins.api.websdk.websdk import WebSDK  # noqa
 from venafi.tpp.plugins.api.aperture.aperture import Aperture  # noqa
+from venafi.tpp.api.websdk import models, enums  # noqa
+from venafi.tpp import vtypes as Types  # noqa

@@ -6,3 +6,4 @@ from venafi.tpp.features.definitions.attributes import Attributes  # noqa
 from venafi.tpp.features.definitions.attribute_values import AttributeValues  # noqa
 from venafi.tpp.features.definitions.classes import Classes as ClassNames  # noqa
 from venafi.tpp.api.websdk import models, enums  # noqa
+from venafi.tpp import vtypes as Types  # noqa
