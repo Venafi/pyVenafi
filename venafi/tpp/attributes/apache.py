@@ -9,6 +9,7 @@ class ApacheAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     certificate_file = Attribute('Certificate File')
     client_tools_path = Attribute('Client Tools Path', min_version='17.2')
     file_validation_disabled = Attribute('File Validation Disabled')
+    kmdata_key_file = Attribute('KMDATA Key File', min_version='22.2')
     network_validation_disabled = Attribute('Network Validation Disabled')
     ocs_identifier = Attribute('OCS Identifier', min_version='18.3')
     overwrite_existing_chain = Attribute('Overwrite Existing Chain')

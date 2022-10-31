@@ -19,4 +19,5 @@ class DigiCertCAAttributes(HTTPCABaseAttributes, metaclass=IterableMeta):
     renewal_window = Attribute('Renewal Window', min_version='17.3')
     san_enabled = Attribute('SAN Enabled')
     uc_allowed = Attribute('UC Allowed')
+    web_service_url = Attribute('Web Service URL', min_version='22.2')
     wildcard_allowed = Attribute('Wildcard Allowed')

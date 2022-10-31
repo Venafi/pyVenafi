@@ -10,6 +10,7 @@ class CodeSigningEnvironmentBaseAttributes(TopAttributes, metaclass=IterableMeta
     key_use_authentication = Attribute('Key Use Authentication', min_version='20.1')
     key_use_flow_dn = Attribute('Key Use Flow DN', min_version='20.1')
     per_user = Attribute('Per User', min_version='20.3')
+    related_items_deleted_along_with_this_environment = Attribute('Related Items Deleted Along With This Environment', min_version='22.2')
     require_justification = Attribute('Require Justification', min_version='20.1')
     status = Attribute('Status', min_version='20.3')
     template_dn = Attribute('Template DN', min_version='20.1')

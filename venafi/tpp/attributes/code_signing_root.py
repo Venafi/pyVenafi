@@ -4,6 +4,7 @@ from venafi.tpp.attributes.branch_base import BranchBaseAttributes
 
 class CodeSigningRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Code Signing Root"
+    archive_last_evaluated_on = Attribute('Archive Last Evaluated On', min_version='22.3')
     default_ca_container = Attribute('Default CA Container', min_version='19.2')
     default_certificate_container = Attribute('Default Certificate Container', min_version='19.2')
     default_credential_container = Attribute('Default Credential Container', min_version='19.2')
@@ -12,7 +13,9 @@ class CodeSigningRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
     flow_instance_macro = Attribute('Flow Instance Macro', min_version='19.3')
     key_storage_location = Attribute('Key Storage Location', min_version='19.2')
     key_use_timeout = Attribute('Key Use Timeout', min_version='19.2')
+    max_archive_age_days = Attribute('Max Archive Age Days', min_version='22.3')
     prevent_self_dealing = Attribute('Prevent Self Dealing', min_version='19.2')
     project_delete_flow_dn = Attribute('Project Delete Flow DN', min_version='21.1')
     project_description_tooltip = Attribute('Project Description Tooltip', min_version='19.2')
     request_in_progress_message = Attribute('Request In Progress Message', min_version='19.3')
+    storage_driver = Attribute('Storage Driver', min_version='22.3')

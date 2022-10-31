@@ -4,6 +4,7 @@ from venafi.tpp.attributes.identity_driver import IdentityDriverAttributes
 
 class LDAPIdentityDriverAttributes(IdentityDriverAttributes, metaclass=IterableMeta):
     __config_class__ = "LDAP Identity Driver"
+    additional_name_attributes = Attribute('Additional Name Attributes')
     ambiguous_name_resolution = Attribute('Ambiguous Name Resolution')
     base_dn = Attribute('Base DN')
     configuration = Attribute('Configuration')
@@ -17,6 +18,7 @@ class LDAPIdentityDriverAttributes(IdentityDriverAttributes, metaclass=IterableM
     group_search_root = Attribute('Group Search Root')
     host = Attribute('Host')
     internal_identifier = Attribute('Internal Identifier')
+    lockout_timestamp_attribute = Attribute('Lockout Timestamp Attribute')
     login_name_resolution = Attribute('Login Name Resolution')
     member_identifier = Attribute('Member Identifier')
     memberof_enabled = Attribute('MemberOf Enabled', min_version='15.2')

@@ -12,7 +12,7 @@ from threading import Lock
 
 PRINT_LOCK = Lock()
 
-DB_ADDRESS = '10.100.211.46'
+DB_ADDRESS = '10.100.205.70'
 DB_NAME = 'tpp'
 DB_USERNAME = 'sa'
 DB_PASSWORD = 'newPassw0rd!'

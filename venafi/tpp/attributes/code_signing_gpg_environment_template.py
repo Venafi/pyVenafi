@@ -7,6 +7,7 @@ class CodeSigningGPGEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplate
     authentication_key_algorithm = Attribute('Authentication Key Algorithm', min_version='20.2')
     encryption_key_algorithm = Attribute('Encryption Key Algorithm', min_version='20.2')
     internet_email_address = Attribute('Internet EMail Address', min_version='20.2')
+    is_issuer = Attribute('Is Issuer', min_version='22.3')
     key_container_dn = Attribute('Key Container DN', min_version='20.2')
     key_storage_location = Attribute('Key Storage Location', min_version='20.2')
     max_uses = Attribute('Max Uses', min_version='20.2')

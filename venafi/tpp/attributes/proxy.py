@@ -1,7 +1,8 @@
 from venafi.tpp.attributes._helper import IterableMeta, Attribute
+from venafi.tpp.attributes.top import TopAttributes
 
 
-class ProxyAttributes(metaclass=IterableMeta):
+class ProxyAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Proxy"
     bypass_proxy_on_local = Attribute('Bypass Proxy on Local')
     credential = Attribute('Credential')

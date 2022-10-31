@@ -5,6 +5,7 @@ from venafi.tpp.attributes.log_channel import LogChannelAttributes
 class LogSMTPAttributes(LogChannelAttributes, metaclass=IterableMeta):
     __config_class__ = "Log SMTP"
     attachment_behavior = Attribute('Attachment Behavior', min_version='21.2')
+    bcc = Attribute('BCC', min_version='22.2')
     cc = Attribute('CC')
     host = Attribute('Host')
     item_vault_id = Attribute('Item Vault Id')

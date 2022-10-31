@@ -376,9 +376,6 @@ class _SSH(WebSdkEndpoint):
             class Output(WebSdkOutputModel, ssh.KeySetData):
                 pass
 
-            # This cannot be inherited as that method is broken. Instead, manually update the fields.
-            Output.__fields__.update(ssh.KeySetData.__fields__)
-
             return generate_output(output_cls=Output, response=self._get(params=params))
 
         def post(self, page_size: int, keyset_filter: List[ssh.KeySetFilter] = None, load_key_data: bool = None,

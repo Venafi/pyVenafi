@@ -11,3 +11,4 @@ class PEMAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     overwrite_existing_chain = Attribute('Overwrite Existing Chain')
     pbes2_algorithm = Attribute('PBES2 Algorithm')
     private_key_file = Attribute('Private Key File')
+    private_key_syntax = Attribute('Private Key Syntax')

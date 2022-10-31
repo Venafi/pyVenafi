@@ -47,4 +47,8 @@ class X509RootCertificateAttributes(TopAttributes, metaclass=IterableMeta):
     monitored_uri_verification_last_notification = Attribute('Monitored URI Verification Last Notification')
     monitored_uri_verification_run_identifier = Attribute('Monitored URI Verification Run Identifier')
     monitored_uri_verification_uri_identifier = Attribute('Monitored URI Verification URI Identifier')
+    required_attribute_for_signing_certificate = Attribute('Required Attribute For Signing Certificate', min_version='22.2')
+    required_attribute_for_time_stamping_certificate = Attribute('Required Attribute For Time Stamping Certificate', min_version='22.2')
+    trust_for_signing = Attribute('Trust For Signing', min_version='22.2')
+    trust_for_time_stamping = Attribute('Trust For Time Stamping', min_version='22.2')
     trusted_status = Attribute('Trusted Status')

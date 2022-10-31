@@ -13,6 +13,7 @@ class NetScalerAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     issuer_certificate_name = Attribute('Issuer Certificate Name', min_version='15.1')
     max_filesize = Attribute('Max Filesize')
     network_validation_disabled = Attribute('Network Validation Disabled')
+    partition = Attribute('Partition', min_version='22.2')
     private_key_file = Attribute('Private Key File')
     sni_certificate = Attribute('SNI Certificate', min_version='17.1')
     ssl_object_type = Attribute('SSL Object Type', min_version='17.1')

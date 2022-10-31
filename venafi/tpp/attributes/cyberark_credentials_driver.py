@@ -11,4 +11,5 @@ class CyberArkCredentialsDriverAttributes(CredentialDriverBaseAttributes, metacl
     use_proxy = Attribute('Use Proxy', min_version='18.1')
     web_service_url = Attribute('Web Service URL', min_version='17.2')
     web_service_user = Attribute('Web Service User', min_version='17.2')
+    web_services_authentication_method = Attribute('Web Services Authentication Method', min_version='22.2')
     windows_credential_provider_version = Attribute('Windows Credential Provider Version', min_version='21.4')
