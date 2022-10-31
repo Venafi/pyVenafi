@@ -133,9 +133,9 @@ class UpdateConfig:
         for key, data in d.items():
             imports = []
             if data.get('options'):
-                imports.append('from tpp.attributes._helper import IterableMeta, Attribute')
+                imports.append('from venafi.tpp.attributes._helper import IterableMeta, Attribute')
             else:
-                imports.append('from tpp.attributes._helper import IterableMeta')
+                imports.append('from venafi.tpp.attributes._helper import IterableMeta')
             parents = list(self.config_relations.query(
                 f'ClassName == "{key}" and Flags == "SuperClass"'
             )['Reference'].values)
@@ -160,7 +160,7 @@ class UpdateConfig:
                     continue
                 parent_class = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(parent))}""".replace(' ', '') + 'Attributes'
                 parent_classes.append(parent_class)
-                imports.append(f'from tpp.attributes.{self.snake_case(parent)} import {parent_class}')
+                imports.append(f'from venafi.tpp.attributes.{self.snake_case(parent)} import {parent_class}')
             script = '\n'.join(imports) + '\n\n'
             file_name = self.snake_case(key)
             class_name = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(key))}""".replace(' ', '') + 'Attributes'
@@ -299,7 +299,7 @@ class UpdateConfig:
     def dump_classes(self):
         classes = '\n    '.join(f'{self.snake_case(c)} = "{c}"' for c in sorted(set(self.all_classes)))
         script = '\n'.join([
-            'from tpp.attributes._helper import IterableMeta\n\n',
+            'from venafi.tpp.attributes._helper import IterableMeta\n\n',
             'class Classes(metaclass=IterableMeta):',
             f'    {classes}',
             ''
