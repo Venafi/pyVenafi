@@ -47,7 +47,6 @@ class Folder(FeatureBase):
             value=workflow_dn
         )
 
-
     def clear_policy(self, folder: 'Union[config.Object, str]', class_name: str, attributes: Union[dict, List[str]]):
         """
         If ``attributes`` are not provided, clears the policy attribute name along with all of its values
@@ -312,7 +311,7 @@ class Folder(FeatureBase):
     def write_policy(self, folder: 'Union[config.Object, str]', class_name: str, attributes: dict, locked: bool):
         """
         Writes policy settings on a folder. In order to set engines on this folder, use :meth:`set_engines`.
-        In order to set custom field policies, use :meth:`tpp.features.custom_fields.CustomField.write_policy`.
+        In order to set custom field policies, use :meth:`venafi.tpp.features.custom_fields.CustomField.write_policy`.
 
         Args:
             folder: :ref:`config_object` or :ref:`dn` of the folder.

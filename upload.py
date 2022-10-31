@@ -30,7 +30,7 @@ class UploadFiles:
         print(f'\n>>>>>>>>>>>>>>>>>>>>>>>>> {msg} <<<<<<<<<<<<<<<<<<<<<<<<<\n')
 
     def upload(self):
-        self.print_stage('Uploading PyTPP package')
+        self.print_stage('Uploading Venafi package')
         # response = requests.get('http://spi.eng.venafi.com/spi/api/latestVersion',
         #                         params={'baseVersion': __version__})
         # response.raise_for_status()

@@ -1,12 +1,4 @@
 from venafi.tpp.api.websdk.enums import (
-    certificate,
-    codesign,
-    config,
-    config_schema,
-    metadata,
-    oauth,
-    permissions,
-    rights,
-    secret_store,
-    ssh,
+    certificate, codesign, config, config_schema, metadata, oauth,
+    permissions, rights, secret_store, ssh
 )

@@ -1,4 +1,5 @@
 from base64 import b64encode
+from datetime import datetime
 from hashlib import sha256
 from venafi.tpp.api.websdk.enums.config import ApplicationAttributeValues
 from venafi.tpp.attributes.adaptable_app import AdaptableAppAttributes
@@ -33,7 +34,6 @@ from venafi.tpp.features.definitions.exceptions import InvalidResultCode, Unexpe
 from venafi.tpp.features.definitions.classes import Classes
 from venafi.tpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
 from venafi.tpp.api.websdk.models import config
-from pydantic.datetime_parse import parse_datetime
 from typing import Union, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -195,7 +195,7 @@ class _ApplicationBase(FeatureBase):
         or equal to the "Last Renewed On" date on the associated certificate. If the certificate
         has not been recently renewed and is simply being associated to the certificate, either
         clear the "Last Pushed On" date from the application object or use
-        :meth:`tpp.tpp.features.certificate.Certificate.associate_application` with
+        :meth:`venafi.tpp.features.certificate.Certificate.associate_application` with
         ``push_to_new=True``.
 
         Args:
@@ -221,7 +221,7 @@ class _ApplicationBase(FeatureBase):
                 f'Cannot validate that the certificate "{certificate_dn}" is installed on the application '
                 f'"{application_dn}" as it seems that the certificate has never been renewed.'
             )
-        certificate_last_renewed_time = parse_datetime(response.values[0])
+        certificate_last_renewed_time = datetime.strptime(response.values[0], '%m/%d/%Y %H:%M:%S')
 
         def _certificate_is_installed():
             resp = self._api.websdk.Config.Read.post(
@@ -231,7 +231,7 @@ class _ApplicationBase(FeatureBase):
 
             if not resp.values:
                 return False
-            application_last_pushed_on = parse_datetime(resp.values[0])
+            application_last_pushed_on = datetime.strptime(resp.values[0], '%m/%d/%Y %H:%M:%S')
             return application_last_pushed_on >= certificate_last_renewed_time
 
         stage = self._get_stage(application=application)

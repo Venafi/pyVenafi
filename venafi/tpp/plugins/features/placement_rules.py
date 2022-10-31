@@ -288,7 +288,7 @@ class PlacementRules(_OriginalPlacementRules):
         Args:
             rule: Config object of the placement rule.
             conditions: The conditional logic that defines the rule. This will overwrite the existing rules.
-                        Use ``:meth:`tpp.features.placement_rules.PlacementRuleCondition`` to create a list of rules.
+                        Use :meth:`venafi.tpp.features.placement_rules.PlacementRuleCondition` to create a list of rules.
             device_location: Absolute path to folder that should received all device and application objects that apply to
                                 this rule.
             certificate_location: Absolute path to folder that should received all certificate objects that apply to this

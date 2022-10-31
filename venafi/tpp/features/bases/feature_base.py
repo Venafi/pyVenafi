@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 def feature(name: str):
     def decorate(cls):
-        if int(os.getenv('PYTPP_DOC_IN_PROGRESS', 0)):
+        if int(os.getenv('VENAFI_DOC_IN_PROGRESS', 0)):
             return cls
         setattr(cls, '__feature__', name)
         return features_logger.wrap_class(

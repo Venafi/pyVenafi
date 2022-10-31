@@ -4,6 +4,7 @@ from venafi.tpp.plugins.api.aperture.endpoints.approvers import _Approvers
 from venafi.tpp.plugins.api.aperture.endpoints.certificates import _Certificates
 from venafi.tpp.plugins.api.aperture.endpoints.configobjects import _ConfigObjects
 from venafi.tpp.plugins.api.aperture.endpoints.certificatedashboard import _CertificateDashboard
+from venafi.tpp.plugins.api.aperture.endpoints.credentials import _Credentials
 from venafi.tpp.plugins.api.aperture.endpoints.device import _Device
 from venafi.tpp.plugins.api.aperture.endpoints.discovery import _Discovery
 from venafi.tpp.plugins.api.aperture.endpoints.jobs import _Jobs
@@ -88,6 +89,7 @@ class Aperture:
         self.Certificates = _Certificates(self)
         self.ConfigObjects = _ConfigObjects(self)
         self.CertificateDashboard = _CertificateDashboard(self)
+        self.Credentials = _Credentials(self)
         self.Device = _Device(self)
         self.Discovery = _Discovery(self)
         self.Jobs = _Jobs(self)
