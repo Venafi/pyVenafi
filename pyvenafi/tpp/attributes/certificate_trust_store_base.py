@@ -1,9 +1,9 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
-from pyvenafi.tpp.attributes.device import DeviceAttributes
 
 
-class CertificateTrustStoreBaseAttributes(DriverBaseAttributes, DeviceAttributes, metaclass=IterableMeta):
+class CertificateTrustStoreBaseAttributes(ConnectionBaseAttributes, DriverBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Certificate Trust Store Base"
     approver = Attribute('Approver')
     automatic_provisioning_disabled = Attribute('Automatic Provisioning Disabled')

@@ -1,12 +1,12 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 from pyvenafi.tpp.attributes.discovery_statistics import DiscoveryStatisticsAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
-from pyvenafi.tpp.attributes.discovery_container import DiscoveryContainerAttributes
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 
-class DiscoveryAttributes(DiscoveryStatisticsAttributes, ScheduleBaseAttributes, DiscoveryContainerAttributes, metaclass=IterableMeta):
+class DiscoveryAttributes(DiscoveryStatisticsAttributes, ScheduleBaseAttributes, TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Discovery"
-    address_parsing_errors = Attribute('Address Parsing Errors', min_version='15.4')
+    address_parsing_errors = Attribute('Address Parsing Errors')
     address_range = Attribute('Address Range')
     automatically_import = Attribute('Automatically Import')
     certificate_instances_found = Attribute('Certificate Instances Found')
@@ -23,10 +23,10 @@ class DiscoveryAttributes(DiscoveryStatisticsAttributes, ScheduleBaseAttributes,
     in_progress = Attribute('In Progress')
     keys_already_known = Attribute('Keys Already Known')
     keys_excluded = Attribute('Keys Excluded')
-    last_update = Attribute('Last Update', min_version='16.2')
+    last_update = Attribute('Last Update')
     new_certificate_instances_found = Attribute('New Certificate Instances Found')
     new_certificates_found = Attribute('New Certificates Found')
-    new_ssh_servers_found = Attribute('New SSH Servers Found', min_version='16.3')
+    new_ssh_servers_found = Attribute('New SSH Servers Found')
     placement_preview = Attribute('Placement Preview')
     placement_rule = Attribute('Placement Rule')
     placement_summary = Attribute('Placement Summary')
@@ -34,7 +34,7 @@ class DiscoveryAttributes(DiscoveryStatisticsAttributes, ScheduleBaseAttributes,
     protection_key = Attribute('Protection Key')
     report_dn = Attribute('Report DN')
     resolve_host = Attribute('Resolve Host')
-    ssh_servers_found = Attribute('SSH Servers Found', min_version='16.3')
+    ssh_servers_found = Attribute('SSH Servers Found')
     started = Attribute('Started')
     status = Attribute('Status')
     total_assignments = Attribute('Total Assignments')

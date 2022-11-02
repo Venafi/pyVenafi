@@ -1,3 +1,6 @@
+from __future__ import annotations
+from dataclasses import dataclass, field
+from typing import List, Set
 import pyodbc
 import pandas as pd
 import re
@@ -16,6 +19,20 @@ DB_ADDRESS = '10.100.205.56'
 DB_NAME = 'tpp'
 DB_USERNAME = 'sa'
 DB_PASSWORD = 'newPassw0rd!'
+
+
+@dataclass
+class Option:
+    name: str
+    schema_version: str = None
+
+
+@dataclass
+class Node:
+    name: str
+    parents: List[Node] = field(default_factory=list)
+    children: List[Node] = field(default_factory=list)
+    options: List[Option] = field(default_factory=list)
 
 
 class UpdateConfig:
@@ -85,26 +102,12 @@ class UpdateConfig:
     def snake_case(string: str):
         return re.sub(r'[^a-zA-Z0-9]\s*', '_', str(string)).lower()
 
-    def get_root_classes(self):
+    def get_root_classes(self) -> List[Node]:
         children = sorted(list(self.config_relations.query(
             f'Flags in ("SuperClass", "ContainedBy")'
         )['ClassName']))
-        return sorted(set([c for c in list(self.config_relations['ClassName']) if c not in children]))
-
-    def get_child_classes(self, reference: str):
-        all_classes = self.config_relations.query(
-            f'Reference == "{reference}" and Flags == "SuperClass"'
-        )['ClassName']
-        classes = set()
-        for cls in all_classes:
-            classes.add(cls)
-            classes.update(self.get_child_classes(reference=cls))
-        return sorted(classes)
-
-    def get_options(self, reference: str):
-        return [
-            x for x in sorted(self.config_relations.query(f'ClassName == "{reference}" and Flags == "Optional"')['Reference'])
-        ]
+        roots = sorted(set([c for c in list(self.config_relations['ClassName']) if c not in children]))
+        return [Node(name=n) for n in roots]
 
     def option_to_variable(self, option: str, schema_version: str):
         if schema_version:
@@ -116,71 +119,88 @@ class UpdateConfig:
                 pass
         return f"""{self.snake_case(option)} = Attribute('{str(option).replace("'", '"')}')"""
 
-    def get_attributes(self, reference):
-        attributes = {
-            'options' : self.get_options(reference),
-            'children': {}
-        }
-        children = self.get_child_classes(reference)
-        if children:
-            for child in children:
-                attributes['children'].update(self.get_attributes(child))
-        return {
-            reference: attributes
-        }
+    def create_tree(self, node: Node) -> Node:
+        node.options = [
+            Option(x) for x in sorted(self.config_relations.query(
+                f'ClassName == "{node.name}" and Flags == "Optional"'
+            )['Reference'])
+        ]
+        all_parent_classes = self.config_relations.query(
+            f'Reference == "{node.name}" and Flags == "ContainedBy"'
+        )['ClassName']
+        for cls in sorted(set(all_parent_classes)):
+            parent = Node(cls)
+            parent.options = [
+                Option(x) for x in sorted(self.config_relations.query(
+                    f'ClassName == "{parent.name}" and Flags == "Optional"'
+                )['Reference'])
+            ]
+            node.parents.append(parent)
 
-    def dump_attributes(self, d: dict):
-        for key, data in d.items():
+        all_child_classes = self.config_relations.query(
+            f'Reference == "{node.name}" and Flags == "SuperClass"'
+        )['ClassName']
+        for cls in sorted(set(all_child_classes)):
+            child = Node(cls)
+            node.children.append(child)
+            self.create_tree(node=child)
+
+        return node
+
+    def dump_attributes(self, tree: Node):
+        def dump(node: Node):
             imports = []
-            if data.get('options'):
+            if node.options:
                 imports.append('from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute')
             else:
                 imports.append('from pyvenafi.tpp.attributes._helper import IterableMeta')
-            parents = list(self.config_relations.query(
-                f'ClassName == "{key}" and Flags == "SuperClass"'
-            )['Reference'].values)
+            parents = [Node(x) for x in self.config_relations.query(
+                f'ClassName == "{node.name}" and Flags == "SuperClass"'
+            )['Reference'].values]
             parent_classes = []
             superclasses = []
 
-            def get_superclass_hierarchy(x):
+            def get_superclass_hierarchy(x: Node):
                 ps = list(self.config_relations.query(
-                    f'ClassName == "{x}" and Flags == "SuperClass"'
+                    f'ClassName == "{x.name}" and Flags == "SuperClass"'
                 )['Reference'].values)
                 results = ps
                 for p in ps:
-                    results += get_superclass_hierarchy(p)
+                    results += get_superclass_hierarchy(Node(p))
                 return results
 
             for parent in parents:
                 superclasses += get_superclass_hierarchy(parent)
             for parent in parents:
-                if parent not in list(self.config_relations['ClassName'].values):
+                if parent.name not in list(self.config_relations['ClassName'].values):
                     continue
-                if parent in superclasses:
+                if parent.name in superclasses:
                     continue
-                parent_class = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(parent))}""".replace(' ', '') + 'Attributes'
+                parent_class = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(parent.name))}""".replace(' ', '') + 'Attributes'
                 parent_classes.append(parent_class)
-                imports.append(f'from pyvenafi.tpp.attributes.{self.snake_case(parent)} import {parent_class}')
+                imports.append(f'from pyvenafi.tpp.attributes.{self.snake_case(parent.name)} import {parent_class}')
             script = '\n'.join(imports) + '\n\n'
-            file_name = self.snake_case(key)
-            class_name = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(key))}""".replace(' ', '') + 'Attributes'
+            file_name = self.snake_case(node.name)
+            class_name = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(node.name))}""".replace(' ', '') + 'Attributes'
             if parent_classes:
                 class_def = f'class {class_name}({", ".join(parent_classes)}, metaclass=IterableMeta):'
             else:
                 class_def = f'class {class_name}(metaclass=IterableMeta):'
             script += f'\n{class_def}\n'
-            script += f'    __config_class__ = "{key}"\n'
-            if data.get('options'):
-                for value, schema_version in data['options']:
-                    script += f'    {self.option_to_variable(value, str(schema_version))}\n'
-            if data.get('children'):
-                self.dump_attributes(data['children'])
+            script += f'    __config_class__ = "{node.name}"\n'
+            for option in node.options:
+                script += f'    {self.option_to_variable(option.name, str(option.schema_version))}\n'
+            for child in node.children:
+                dump(child)
+            for parent in node.parents:
+                dump(parent)
             file_path = Path(f'pyvenafi/tpp/attributes/{file_name}.py')
             if not file_path.parent.exists():
                 file_path.parent.mkdir(parents=True, exist_ok=True)
             with file_path.open('w') as f:
                 print(script, end='', file=f)
-            self.all_classes.append(key)
+            self.all_classes.append(node.name)
+        dump(tree)
 
     def get_xml_files(self):
         ctx = ssl.create_default_context()
@@ -263,7 +283,7 @@ class UpdateConfig:
             'schema'        : parse(start_node=xml_root.xpath(schema_root))
         }
 
-    def apply_version_to_attrs(self, attrs: dict):
+    def apply_version_to_attrs(self, tree: Node):
         xml_files = self.get_xml_files()
         results = [self.parse_xml(xml_file) for xml_file in xml_files]
         parsed = sorted(list(filter(
@@ -281,20 +301,13 @@ class UpdateConfig:
                         continue
                     flattened_attrs[class_name][option] = schema['schema_version']
 
-        def apply_version(d: dict):
-            opts = {}
-            for cls_name, cls_dict in d.items():
-                opts[cls_name] = {
-                    'options' : [],
-                    'children': {}
-                }
-                for opt in cls_dict['options']:
-                    opts[cls_name]['options'].append((opt, flattened_attrs.get(cls_name, {}).get(opt)))
-                opts[cls_name]['children'] = (apply_version(cls_dict['children']))
-            return opts
+        def apply_version(node: Node):
+            for opt in node.options:
+                opt.schema_version = flattened_attrs.get(node.name, {}).get(opt.name)
+            for child in node.children:
+                apply_version(child)
 
-        new_attrs = apply_version(attrs)
-        return new_attrs
+        apply_version(tree)
 
     def dump_classes(self):
         classes = '\n    '.join(f'{self.snake_case(c)} = "{c}"' for c in sorted(set(self.all_classes)))
@@ -314,9 +327,9 @@ class UpdateConfig:
         def doit(root):
             with PRINT_LOCK:
                 print(f'Processing {root} tree...')
-            attrs = self.get_attributes(root)
-            attrs = self.apply_version_to_attrs(attrs)
-            self.dump_attributes(attrs)
+            tree = self.create_tree(root)
+            self.apply_version_to_attrs(tree)
+            self.dump_attributes(tree)
 
         with ThreadPoolExecutor(4) as pool:
             list(pool.map(doit, roots))

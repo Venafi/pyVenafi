@@ -1,9 +1,8 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
-from pyvenafi.tpp.attributes.recycle_bin_root import RecycleBinRootAttributes
 
 
-class PEMAttributes(ApplicationBaseAttributes, RecycleBinRootAttributes, metaclass=IterableMeta):
+class PEMAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "PEM"
     certificate_chain_file = Attribute('Certificate Chain File')
     certificate_file = Attribute('Certificate File')

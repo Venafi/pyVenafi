@@ -1,12 +1,11 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 from pyvenafi.tpp.attributes.service_module import ServiceModuleAttributes
-from pyvenafi.tpp.attributes.recycle_bin_root import RecycleBinRootAttributes
 
 
-class CertificateManagerAttributes(ServiceModuleAttributes, RecycleBinRootAttributes, metaclass=IterableMeta):
+class CertificateManagerAttributes(ServiceModuleAttributes, metaclass=IterableMeta):
     __config_class__ = "Certificate Manager"
     cdp_aia_verification_disabled = Attribute('CDP AIA Verification Disabled')
-    certificate_api_todo_timeout = Attribute('Certificate API ToDo Timeout', min_version='21.4')
+    certificate_api_todo_timeout = Attribute('Certificate API ToDo Timeout')
     certificate_retrieve_cache = Attribute('Certificate Retrieve Cache')
     escalation_notice_interval = Attribute('Escalation Notice Interval')
     escalation_notice_start = Attribute('Escalation Notice Start')

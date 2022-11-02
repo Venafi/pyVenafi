@@ -1,9 +1,10 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
-from pyvenafi.tpp.attributes.device import DeviceAttributes
+from pyvenafi.tpp.attributes.validation_base import ValidationBaseAttributes
 
 
-class ApplicationBaseAttributes(DriverBaseAttributes, DeviceAttributes, metaclass=IterableMeta):
+class ApplicationBaseAttributes(ConnectionBaseAttributes, DriverBaseAttributes, ValidationBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Application Base"
     adaptable_workflow_approvers = Attribute('Adaptable Workflow Approvers', min_version='18.3')
     adaptable_workflow_reference_id = Attribute('Adaptable Workflow Reference ID', min_version='18.3')

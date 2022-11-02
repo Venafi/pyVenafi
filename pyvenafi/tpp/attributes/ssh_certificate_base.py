@@ -1,6 +1,33 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta
-from pyvenafi.tpp.attributes.policy import PolicyAttributes
+from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 
 
-class SSHCertificateBaseAttributes(PolicyAttributes, metaclass=IterableMeta):
+class SSHCertificateBaseAttributes(metaclass=IterableMeta):
     __config_class__ = "SSH Certificate Base"
+    certificate_identifier = Attribute('Certificate Identifier')
+    certificate_vault_id = Attribute('Certificate Vault Id')
+    destination_address = Attribute('Destination Address')
+    error_message = Attribute('Error Message')
+    extension = Attribute('Extension')
+    force_command = Attribute('Force Command')
+    hash_algorithm = Attribute('Hash Algorithm')
+    in_error = Attribute('In Error')
+    key_algorithm = Attribute('Key Algorithm')
+    key_id = Attribute('Key ID')
+    origin = Attribute('Origin')
+    originating_ip = Attribute('Originating IP')
+    principal = Attribute('Principal')
+    private_key_vault_id = Attribute('Private Key Vault Id')
+    private_signing_key_vault_id = Attribute('Private Signing Key Vault Id')
+    public_key_hash = Attribute('Public Key Hash')
+    public_key_vault_id = Attribute('Public Key Vault Id')
+    requested_by = Attribute('Requested By')
+    ssh_ca_template_dn = Attribute('SSH CA Template DN')
+    ssh_certificate_issuance_flow = Attribute('SSH Certificate Issuance Flow')
+    serial = Attribute('Serial')
+    signing_key_fingerprint_sha256 = Attribute('Signing Key Fingerprint SHA256')
+    source_address = Attribute('Source Address')
+    stage = Attribute('Stage')
+    status = Attribute('Status')
+    valid_from = Attribute('Valid From')
+    valid_to = Attribute('Valid To')
+    validity_period = Attribute('Validity Period')

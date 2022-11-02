@@ -1,8 +1,8 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.device import DeviceAttributes
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 
-class CertificateTrustBundleAttributes(DeviceAttributes, metaclass=IterableMeta):
+class CertificateTrustBundleAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Certificate Trust Bundle"
     excluded_certificates = Attribute('Excluded Certificates')
     included_certificates = Attribute('Included Certificates')

@@ -1,9 +1,9 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 from pyvenafi.tpp.attributes.agent_base import AgentBaseAttributes
-from pyvenafi.tpp.attributes.agent_container import AgentContainerAttributes
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 
-class AgentAttributes(AgentBaseAttributes, AgentContainerAttributes, metaclass=IterableMeta):
+class AgentAttributes(AgentBaseAttributes, TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Agent"
     action = Attribute('Action')
     active_directory_dn_host_detail = Attribute('Active Directory DN Host Detail')

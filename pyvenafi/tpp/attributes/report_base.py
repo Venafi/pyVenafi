@@ -1,10 +1,9 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
-from pyvenafi.tpp.attributes.report_container import ReportContainerAttributes
 
 
-class ReportBaseAttributes(DriverBaseAttributes, ScheduleBaseAttributes, ReportContainerAttributes, metaclass=IterableMeta):
+class ReportBaseAttributes(DriverBaseAttributes, ScheduleBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Report Base"
     csv_vault_id = Attribute('CSV Vault Id')
     configuration = Attribute('Configuration')

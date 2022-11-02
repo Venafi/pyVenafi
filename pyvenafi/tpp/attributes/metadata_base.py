@@ -14,5 +14,5 @@ class MetadataBaseAttributes(TopAttributes, metaclass=IterableMeta):
     mandatory = Attribute('Mandatory')
     not_before = Attribute('Not Before')
     policyable = Attribute('Policyable')
-    render_hidden = Attribute('Render Hidden', min_version='16.2')
-    render_read_only = Attribute('Render Read Only', min_version='16.2')
+    render_hidden = Attribute('Render Hidden')
+    render_read_only = Attribute('Render Read Only')

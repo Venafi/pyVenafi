@@ -4,5 +4,5 @@ from pyvenafi.tpp.attributes.top import TopAttributes
 
 class LayoutRuleBaseAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Layout Rule Base"
-    rule = Attribute('Rule', min_version='19.1')
+    rule = Attribute('Rule')
     vault_id = Attribute('Vault Id')

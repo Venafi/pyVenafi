@@ -7,4 +7,4 @@ class ClientCertificateWorkAttributes(ClientWorkBaseAttributes, X509CertificateB
     __config_class__ = "Client Certificate Work"
     certificate_container = Attribute('Certificate Container')
     naming_pattern = Attribute('Naming Pattern')
-    transfer_allowed = Attribute('Transfer Allowed', min_version='18.3')
+    transfer_allowed = Attribute('Transfer Allowed')

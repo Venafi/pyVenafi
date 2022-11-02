@@ -1,9 +1,9 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
-from pyvenafi.tpp.attributes.placement_job_container import PlacementJobContainerAttributes
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 
-class PlacementJobAttributes(ScheduleBaseAttributes, PlacementJobContainerAttributes, metaclass=IterableMeta):
+class PlacementJobAttributes(ScheduleBaseAttributes, TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Placement Job"
     archive_old_certificates = Attribute('Archive Old Certificates', min_version='19.1')
     default_container = Attribute('Default Container', min_version='19.1')
