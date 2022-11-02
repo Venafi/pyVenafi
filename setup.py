@@ -1,10 +1,10 @@
 # All of these attributes are defined in _about.py, but it must be imported this way.
-__project_name__ = None
-__version__ = None
-__author__ = None
-__author_email__ = None
-__project_url__ = None
-exec(open('venafi/_about.py', 'r').read())
+__project_name__: str = ''
+__version__: str = ''
+__author__: str = ''
+__author_email__: str = ''
+__project_url__: str = ''
+exec(open('pyvenafi/_about.py', 'r').read())
 
 from setuptools import setup, find_packages
 import os
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         version=__version__,
         author=__author__,
         author_email=__author_email__,
-        packages=find_packages(include=('venafi*',)),
+        packages=find_packages(include=('pyvenafi*',)),
         package_dir={
             '': '.'
         },

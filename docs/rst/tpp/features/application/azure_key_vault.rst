@@ -3,7 +3,7 @@
 Azure Key Vault
 ===============
 
-.. autoclass:: venafi.tpp.features.application.AzureKeyVault
+.. autoclass:: pyvenafi.tpp.features.application.AzureKeyVault
    :members:
    :undoc-members:
    :show-inheritance:

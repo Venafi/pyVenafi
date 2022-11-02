@@ -3,7 +3,7 @@
 Basic Application
 =================
 
-.. autoclass:: venafi.tpp.features.application.Basic
+.. autoclass:: pyvenafi.tpp.features.application.Basic
    :members:
    :undoc-members:
    :show-inheritance:

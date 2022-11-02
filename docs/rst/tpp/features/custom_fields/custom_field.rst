@@ -3,7 +3,7 @@
 Custom Field
 ============
 
-.. autoclass:: venafi.tpp.features.custom_fields.CustomField
+.. autoclass:: pyvenafi.tpp.features.custom_fields.CustomField
    :members:
    :undoc-members:
    :show-inheritance:

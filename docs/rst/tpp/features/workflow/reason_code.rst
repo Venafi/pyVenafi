@@ -3,7 +3,7 @@
 Reason Code
 ===========
 
-.. autoclass:: venafi.tpp.features.workflow.ReasonCode
+.. autoclass:: pyvenafi.tpp.features.workflow.ReasonCode
    :members:
    :undoc-members:
    :show-inheritance:

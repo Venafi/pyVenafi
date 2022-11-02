@@ -3,7 +3,7 @@
 PEM
 ===
 
-.. autoclass:: venafi.tpp.features.application.PEM
+.. autoclass:: pyvenafi.tpp.features.application.PEM
    :members:
    :undoc-members:
    :show-inheritance:

@@ -16,7 +16,7 @@ Creating, Updating, & Deleting Permissions
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -53,7 +53,7 @@ Getting Explicit Permissions
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -72,7 +72,7 @@ Getting Implicit Permissions
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -91,7 +91,7 @@ Getting Effective Permissions
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -109,7 +109,7 @@ Listing Identities Permitted On An Object
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

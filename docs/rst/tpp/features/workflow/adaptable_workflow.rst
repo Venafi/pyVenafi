@@ -3,7 +3,7 @@
 Adaptable Workflow
 ==================
 
-.. autoclass:: venafi.tpp.features.workflow.AdaptableWorkflow
+.. autoclass:: pyvenafi.tpp.features.workflow.AdaptableWorkflow
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Agentless Group
 ===============
 
-.. autoclass:: venafi.tpp.features.client_groups.Agentless
+.. autoclass:: pyvenafi.tpp.features.client_groups.Agentless
    :members:
    :undoc-members:
    :show-inheritance:

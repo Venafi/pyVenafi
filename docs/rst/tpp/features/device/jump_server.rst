@@ -3,7 +3,7 @@
 Jump Server
 ===========
 
-.. autoclass:: venafi.tpp.features.device.JumpServer
+.. autoclass:: pyvenafi.tpp.features.device.JumpServer
    :members:
    :undoc-members:
    :show-inheritance:

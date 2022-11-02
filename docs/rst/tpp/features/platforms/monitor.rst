@@ -3,7 +3,7 @@
 Monitor
 =======
 
-.. autoclass:: venafi.tpp.features.platforms.Monitor
+.. autoclass:: pyvenafi.tpp.features.platforms.Monitor
    :members:
    :undoc-members:
    :show-inheritance:

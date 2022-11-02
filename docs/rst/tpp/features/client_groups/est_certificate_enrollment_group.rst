@@ -3,7 +3,7 @@
 EST Certificate Enrollment Group
 ================================
 
-.. autoclass:: venafi.tpp.features.client_groups.EstCertificateEnrollment
+.. autoclass:: pyvenafi.tpp.features.client_groups.EstCertificateEnrollment
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Onboard Discovery Manager
 =========================
 
-.. autoclass:: venafi.tpp.features.platforms.OnboardDiscoveryManager
+.. autoclass:: pyvenafi.tpp.features.platforms.OnboardDiscoveryManager
    :members:
    :undoc-members:
    :show-inheritance:

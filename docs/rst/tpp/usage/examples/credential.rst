@@ -18,7 +18,7 @@ Creating & Deleting A Credential
 --------------------------------
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -55,7 +55,7 @@ Creating A Google Credential
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

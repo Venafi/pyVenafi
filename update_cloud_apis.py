@@ -433,7 +433,7 @@ class RootNode:
         object_properties_from_paths = {}
         imports = [
             'from __future__ import annotations',
-            'from venafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output',
+            'from pyvenafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output',
             f'from {CLOUD_API_MODEL_MODULE} import {self.model_filename}'
         ]
         data_types = defaultdict(set)
@@ -509,7 +509,7 @@ class ComponentSchemaParser:
     def _get_imports(self):
         lines = [
             'from __future__ import annotations',
-            'from venafi.cloud.api.api_base import ApiField, ObjectModel'
+            'from pyvenafi.cloud.api.api_base import ApiField, ObjectModel'
         ]
         for package, items in sorted(self._imports.items(), key=lambda x: x[0]):
             if len(items) > 1:

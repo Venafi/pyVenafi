@@ -3,7 +3,7 @@
 SSH Manager
 ===========
 
-.. autoclass:: venafi.tpp.features.platforms.SSHManager
+.. autoclass:: pyvenafi.tpp.features.platforms.SSHManager
    :members:
    :undoc-members:
    :show-inheritance:

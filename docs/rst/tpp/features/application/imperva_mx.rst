@@ -3,7 +3,7 @@
 Imperva MX
 ==========
 
-.. autoclass:: venafi.tpp.features.application.ImpervaMX
+.. autoclass:: pyvenafi.tpp.features.application.ImpervaMX
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Folder
 ======
 
-.. autoclass:: venafi.tpp.features.folder.Folder
+.. autoclass:: pyvenafi.tpp.features.folder.Folder
    :members:
    :undoc-members:
    :show-inheritance:

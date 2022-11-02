@@ -3,7 +3,7 @@
 CAPI
 ====
 
-.. autoclass:: venafi.tpp.features.application.CAPI
+.. autoclass:: pyvenafi.tpp.features.application.CAPI
    :members:
    :undoc-members:
    :show-inheritance:

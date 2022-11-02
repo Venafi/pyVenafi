@@ -11,7 +11,7 @@ Managing Placement Rules
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -53,7 +53,7 @@ Creating & Deleting Jobs
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -79,7 +79,7 @@ Scheduling, Unscheduling, And Blacking Out Jobs
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -113,7 +113,7 @@ Running, Pausing, And Cancelling Jobs
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

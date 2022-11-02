@@ -3,7 +3,7 @@
 Amazon AWS
 ==========
 
-.. autoclass:: venafi.tpp.features.application.AmazonAWS
+.. autoclass:: pyvenafi.tpp.features.application.AmazonAWS
    :members:
    :undoc-members:
    :show-inheritance:

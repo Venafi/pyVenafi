@@ -3,7 +3,7 @@
 Auto Layout Manager
 ===================
 
-.. autoclass:: venafi.tpp.features.platforms.AutoLayoutManager
+.. autoclass:: pyvenafi.tpp.features.platforms.AutoLayoutManager
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Adaptable Application
 =====================
 
-.. autoclass:: venafi.tpp.features.application.Adaptable
+.. autoclass:: pyvenafi.tpp.features.application.Adaptable
    :members:
    :undoc-members:
    :show-inheritance:

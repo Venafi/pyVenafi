@@ -3,7 +3,7 @@
 Group
 =====
 
-.. autoclass:: venafi.tpp.features.identity.Group
+.. autoclass:: pyvenafi.tpp.features.identity.Group
    :members:
    :undoc-members:
    :show-inheritance:

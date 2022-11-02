@@ -3,7 +3,7 @@
 Certificate Installation
 ========================
 
-.. autoclass:: venafi.tpp.features.client_work.CertificateInstallation
+.. autoclass:: pyvenafi.tpp.features.client_work.CertificateInstallation
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Certificate
 ===========
 
-.. autoclass:: venafi.tpp.features.certificate.Certificate
+.. autoclass:: pyvenafi.tpp.features.certificate.Certificate
    :members:
    :undoc-members:
    :show-inheritance:

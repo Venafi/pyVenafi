@@ -3,7 +3,7 @@
 Private Key Credential
 ======================
 
-.. autoclass:: venafi.tpp.features.credentials.PrivateKeyCredential
+.. autoclass:: pyvenafi.tpp.features.credentials.PrivateKeyCredential
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Self-Signed CA
 ==============
 
-.. autoclass:: venafi.tpp.features.certificate_authorities.SelfSignedCA
+.. autoclass:: pyvenafi.tpp.features.certificate_authorities.SelfSignedCA
    :members:
    :undoc-members:
    :show-inheritance:

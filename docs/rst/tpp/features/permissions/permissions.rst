@@ -3,7 +3,7 @@
 Permissions
 ===========
 
-.. autoclass:: venafi.tpp.features.permissions.Permissions
+.. autoclass:: pyvenafi.tpp.features.permissions.Permissions
    :members:
    :undoc-members:
    :show-inheritance:

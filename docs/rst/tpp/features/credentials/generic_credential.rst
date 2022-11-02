@@ -3,7 +3,7 @@
 Generic Credential
 ==================
 
-.. autoclass:: venafi.tpp.features.credentials.GenericCredential
+.. autoclass:: pyvenafi.tpp.features.credentials.GenericCredential
    :members:
    :undoc-members:
    :show-inheritance:

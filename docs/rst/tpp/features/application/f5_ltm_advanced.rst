@@ -3,7 +3,7 @@
 F5 LTM Advanced
 ===============
 
-.. autoclass:: venafi.tpp.features.application.F5LTMAdvanced
+.. autoclass:: pyvenafi.tpp.features.application.F5LTMAdvanced
    :members:
    :undoc-members:
    :show-inheritance:

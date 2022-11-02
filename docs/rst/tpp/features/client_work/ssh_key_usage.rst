@@ -3,7 +3,7 @@
 SSH Key Usage
 =============
 
-.. autoclass:: venafi.tpp.features.client_work.SSHKeyUsage
+.. autoclass:: pyvenafi.tpp.features.client_work.SSHKeyUsage
    :members:
    :undoc-members:
    :show-inheritance:

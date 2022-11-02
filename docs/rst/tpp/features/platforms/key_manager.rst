@@ -3,7 +3,7 @@
 Key Manager
 ===========
 
-.. autoclass:: venafi.tpp.features.platforms.KeyManager
+.. autoclass:: pyvenafi.tpp.features.platforms.KeyManager
    :members:
    :undoc-members:
    :show-inheritance:

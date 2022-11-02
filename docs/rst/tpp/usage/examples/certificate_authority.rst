@@ -18,7 +18,7 @@ Creating & Deleting A Certificate Authority
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

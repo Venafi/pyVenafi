@@ -3,7 +3,7 @@
 Google Cloud Load Balancer
 ==========================
 
-.. autoclass:: venafi.tpp.features.application.GoogleCloudLoadBalancer
+.. autoclass:: pyvenafi.tpp.features.application.GoogleCloudLoadBalancer
    :members:
    :undoc-members:
    :show-inheritance:

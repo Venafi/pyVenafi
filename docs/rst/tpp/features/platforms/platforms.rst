@@ -3,7 +3,7 @@
 Platforms
 =========
 
-.. autoclass:: venafi.tpp.features.platforms.Platforms
+.. autoclass:: pyvenafi.tpp.features.platforms.Platforms
    :members:
    :undoc-members:
    :show-inheritance:

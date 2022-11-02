@@ -14,7 +14,7 @@ Creating, Applying, & Deleting A Standard Workflow
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -43,7 +43,7 @@ Creating, Applying, & Deleting An Adaptable Workflow
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -81,7 +81,7 @@ Creating, Getting, & Deleting A Workflow Ticket
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -107,7 +107,7 @@ Getting All Workflow Tickets Pending My Approval
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, AttributeValues
+    from pyvenafi.tpp import Authenticate, Features, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -128,7 +128,7 @@ Approving And Rejecting Workflow Tickets
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, AttributeValues
+    from pyvenafi.tpp import Authenticate, Features, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -160,7 +160,7 @@ Creating & Deleting Reason Codes
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

@@ -3,7 +3,7 @@
 Ticket
 ======
 
-.. autoclass:: venafi.tpp.features.workflow.Ticket
+.. autoclass:: pyvenafi.tpp.features.workflow.Ticket
    :members:
    :undoc-members:
    :show-inheritance:

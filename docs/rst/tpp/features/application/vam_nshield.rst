@@ -3,7 +3,7 @@
 VAM nShield
 ===========
 
-.. autoclass:: venafi.tpp.features.application.VAMnShield
+.. autoclass:: pyvenafi.tpp.features.application.VAMnShield
    :members:
    :undoc-members:
    :show-inheritance:

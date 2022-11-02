@@ -3,7 +3,7 @@
 Riverbed Steelhead
 ==================
 
-.. autoclass:: venafi.tpp.features.application.RiverbedSteelHead
+.. autoclass:: pyvenafi.tpp.features.application.RiverbedSteelHead
    :members:
    :undoc-members:
    :show-inheritance:

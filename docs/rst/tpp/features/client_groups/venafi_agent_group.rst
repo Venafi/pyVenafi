@@ -3,7 +3,7 @@
 Venafi Agent Group
 ==================
 
-.. autoclass:: venafi.tpp.features.client_groups.VenafiAgent
+.. autoclass:: pyvenafi.tpp.features.client_groups.VenafiAgent
    :members:
    :undoc-members:
    :show-inheritance:

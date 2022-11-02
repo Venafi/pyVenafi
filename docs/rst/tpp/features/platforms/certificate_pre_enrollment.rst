@@ -3,7 +3,7 @@
 Certificate Pre-Enrollment
 ==========================
 
-.. autoclass:: venafi.tpp.features.platforms.CertificatePreEnrollment
+.. autoclass:: pyvenafi.tpp.features.platforms.CertificatePreEnrollment
    :members:
    :undoc-members:
    :show-inheritance:

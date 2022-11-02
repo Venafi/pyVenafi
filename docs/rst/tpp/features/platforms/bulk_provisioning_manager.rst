@@ -3,7 +3,7 @@
 Bulk Provisioning Manager
 =========================
 
-.. autoclass:: venafi.tpp.features.platforms.BulkProvisioningManager
+.. autoclass:: pyvenafi.tpp.features.platforms.BulkProvisioningManager
    :members:
    :undoc-members:
    :show-inheritance:

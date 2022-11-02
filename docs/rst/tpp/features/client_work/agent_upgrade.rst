@@ -3,7 +3,7 @@
 Agent Upgrade
 =============
 
-.. autoclass:: venafi.tpp.features.client_work.AgentUpgrade
+.. autoclass:: pyvenafi.tpp.features.client_work.AgentUpgrade
    :members:
    :undoc-members:
    :show-inheritance:

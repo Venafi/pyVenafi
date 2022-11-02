@@ -3,7 +3,7 @@
 Certificate Discovery
 =====================
 
-.. autoclass:: venafi.tpp.features.client_work.CertificateDiscovery
+.. autoclass:: pyvenafi.tpp.features.client_work.CertificateDiscovery
    :members:
    :undoc-members:
    :show-inheritance:

@@ -16,7 +16,7 @@ Updating Platform Compmonents
 
 .. code-block:: python
 
-    from venafi.tpp import Attributes, Authenticate, Features
+    from pyvenafi.tpp import Attributes, Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -35,7 +35,7 @@ Getting The Platforms Root
 
 .. code-block:: python
 
-    from venafi.tpp import Attributes, Authenticate, Features
+    from pyvenafi.tpp import Attributes, Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

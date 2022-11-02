@@ -3,7 +3,7 @@
 Apache
 ======
 
-.. autoclass:: venafi.tpp.features.application.Apache
+.. autoclass:: pyvenafi.tpp.features.application.Apache
    :members:
    :undoc-members:
    :show-inheritance:

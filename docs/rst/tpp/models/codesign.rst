@@ -4,143 +4,143 @@ Codesign
 AppleEnvironment
 ----------------
 
-.. _venafi.tpp.api.websdk.models.codesign.appleenvironment_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.AppleEnvironment
+.. _pyvenafi.tpp.api.websdk.models.codesign.appleenvironment_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.AppleEnvironment
 
 AppleTemplate
 -------------
 
-.. _venafi.tpp.api.websdk.models.codesign.appletemplate_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.AppleTemplate
+.. _pyvenafi.tpp.api.websdk.models.codesign.appletemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.AppleTemplate
 
 Application
 -----------
 
-.. _venafi.tpp.api.websdk.models.codesign.application_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.Application
+.. _pyvenafi.tpp.api.websdk.models.codesign.application_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.Application
 
 ApplicationCollection
 ---------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.applicationcollection_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.ApplicationCollection
+.. _pyvenafi.tpp.api.websdk.models.codesign.applicationcollection_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.ApplicationCollection
 
 CSPEnvironment
 --------------
 
-.. _venafi.tpp.api.websdk.models.codesign.cspenvironment_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.CSPEnvironment
+.. _pyvenafi.tpp.api.websdk.models.codesign.cspenvironment_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CSPEnvironment
 
 CSPTemplate
 -----------
 
-.. _venafi.tpp.api.websdk.models.codesign.csptemplate_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.CSPTemplate
+.. _pyvenafi.tpp.api.websdk.models.codesign.csptemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CSPTemplate
 
 CertificateEnvironment
 ----------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.certificateenvironment_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.CertificateEnvironment
+.. _pyvenafi.tpp.api.websdk.models.codesign.certificateenvironment_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CertificateEnvironment
 
 CertificateTemplate
 -------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.certificatetemplate_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.CertificateTemplate
+.. _pyvenafi.tpp.api.websdk.models.codesign.certificatetemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CertificateTemplate
 
 CustomFieldAttributes
 ---------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.customfieldattributes_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.CustomFieldAttributes
+.. _pyvenafi.tpp.api.websdk.models.codesign.customfieldattributes_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CustomFieldAttributes
 
 DotNetEnvironment
 -----------------
 
-.. _venafi.tpp.api.websdk.models.codesign.dotnetenvironment_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.DotNetEnvironment
+.. _pyvenafi.tpp.api.websdk.models.codesign.dotnetenvironment_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.DotNetEnvironment
 
 DotNetTemplate
 --------------
 
-.. _venafi.tpp.api.websdk.models.codesign.dotnettemplate_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.DotNetTemplate
+.. _pyvenafi.tpp.api.websdk.models.codesign.dotnettemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.DotNetTemplate
 
 EnvironmentTemplateDetails
 --------------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.environmenttemplatedetails_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.EnvironmentTemplateDetails
+.. _pyvenafi.tpp.api.websdk.models.codesign.environmenttemplatedetails_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.EnvironmentTemplateDetails
 
 GPGEnvironment
 --------------
 
-.. _venafi.tpp.api.websdk.models.codesign.gpgenvironment_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.GPGEnvironment
+.. _pyvenafi.tpp.api.websdk.models.codesign.gpgenvironment_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.GPGEnvironment
 
 GPGTemplate
 -----------
 
-.. _venafi.tpp.api.websdk.models.codesign.gpgtemplate_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.GPGTemplate
+.. _pyvenafi.tpp.api.websdk.models.codesign.gpgtemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.GPGTemplate
 
 GlobalConfiguration
 -------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.globalconfiguration_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.GlobalConfiguration
+.. _pyvenafi.tpp.api.websdk.models.codesign.globalconfiguration_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.GlobalConfiguration
 
 InfoValue
 ---------
 
-.. _venafi.tpp.api.websdk.models.codesign.infovalue_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.InfoValue
+.. _pyvenafi.tpp.api.websdk.models.codesign.infovalue_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.InfoValue
 
 Items
 -----
 
-.. _venafi.tpp.api.websdk.models.codesign.items_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.Items
+.. _pyvenafi.tpp.api.websdk.models.codesign.items_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.Items
 
 KeyPairEnvironment
 ------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.keypairenvironment_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.KeyPairEnvironment
+.. _pyvenafi.tpp.api.websdk.models.codesign.keypairenvironment_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.KeyPairEnvironment
 
 KeyPairTemplate
 ---------------
 
-.. _venafi.tpp.api.websdk.models.codesign.keypairtemplate_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.KeyPairTemplate
+.. _pyvenafi.tpp.api.websdk.models.codesign.keypairtemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.KeyPairTemplate
 
 Project
 -------
 
-.. _venafi.tpp.api.websdk.models.codesign.project_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.Project
+.. _pyvenafi.tpp.api.websdk.models.codesign.project_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.Project
 
 ResultCode
 ----------
 
-.. _venafi.tpp.api.websdk.models.codesign.resultcode_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.ResultCode
+.. _pyvenafi.tpp.api.websdk.models.codesign.resultcode_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.ResultCode
 
 Rights
 ------
 
-.. _venafi.tpp.api.websdk.models.codesign.rights_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.Rights
+.. _pyvenafi.tpp.api.websdk.models.codesign.rights_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.Rights
 
 RightsKeyValue
 --------------
 
-.. _venafi.tpp.api.websdk.models.codesign.rightskeyvalue_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.RightsKeyValue
+.. _pyvenafi.tpp.api.websdk.models.codesign.rightskeyvalue_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.RightsKeyValue
 
 SignApplicationCollection
 -------------------------
 
-.. _venafi.tpp.api.websdk.models.codesign.signapplicationcollection_model:
-.. autopydantic_model:: venafi.tpp.api.websdk.models.codesign.SignApplicationCollection
+.. _pyvenafi.tpp.api.websdk.models.codesign.signapplicationcollection_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.SignApplicationCollection

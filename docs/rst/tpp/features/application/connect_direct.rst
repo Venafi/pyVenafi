@@ -3,7 +3,7 @@
 Connect:Direct
 ==============
 
-.. autoclass:: venafi.tpp.features.application.ConnectDirect
+.. autoclass:: pyvenafi.tpp.features.application.ConnectDirect
    :members:
    :undoc-members:
    :show-inheritance:

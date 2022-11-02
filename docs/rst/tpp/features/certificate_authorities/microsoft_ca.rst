@@ -3,7 +3,7 @@
 Microsoft CA
 ============
 
-.. autoclass:: venafi.tpp.features.certificate_authorities.MSCA
+.. autoclass:: pyvenafi.tpp.features.certificate_authorities.MSCA
    :members:
    :undoc-members:
    :show-inheritance:

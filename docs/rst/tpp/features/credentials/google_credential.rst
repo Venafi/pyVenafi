@@ -3,7 +3,7 @@
 Google Credential
 =================
 
-.. autoclass:: venafi.tpp.features.credentials.GoogleCredential
+.. autoclass:: pyvenafi.tpp.features.credentials.GoogleCredential
    :members:
    :undoc-members:
    :show-inheritance:

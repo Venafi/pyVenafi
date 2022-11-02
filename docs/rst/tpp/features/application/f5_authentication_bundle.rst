@@ -3,7 +3,7 @@
 F5 Authentication Bundle
 ========================
 
-.. autoclass:: venafi.tpp.features.application.F5AuthenticationBundle
+.. autoclass:: pyvenafi.tpp.features.application.F5AuthenticationBundle
    :members:
    :undoc-members:
    :show-inheritance:

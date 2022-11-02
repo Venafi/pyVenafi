@@ -3,7 +3,7 @@
 Certificate Manager
 ===================
 
-.. autoclass:: venafi.tpp.features.platforms.CertificateManager
+.. autoclass:: pyvenafi.tpp.features.platforms.CertificateManager
    :members:
    :undoc-members:
    :show-inheritance:

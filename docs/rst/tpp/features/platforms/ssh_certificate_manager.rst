@@ -3,7 +3,7 @@
 SSH Certificate Manager
 =======================
 
-.. autoclass:: venafi.tpp.features.platforms.SSHCertificateManager
+.. autoclass:: pyvenafi.tpp.features.platforms.SSHCertificateManager
    :members:
    :undoc-members:
    :show-inheritance:

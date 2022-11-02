@@ -16,7 +16,7 @@ Getting & Validating Config Objects
 .. rubric:: Getting Config Objects By DN
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -28,8 +28,8 @@ Getting & Validating Config Objects
 .. rubric:: Handling Objects That May Not Exist
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
-    from venafi.tpp.features.definitions.exceptions import ObjectDoesNotExist
+    from pyvenafi.tpp import Authenticate, Features
+    from pyvenafi.tpp.features.definitions.exceptions import ObjectDoesNotExist
 
     api = Authenticate(...)
     features = Features(api)
@@ -64,7 +64,7 @@ Reading Attributes
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -92,7 +92,7 @@ Writing Attributes
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes, AttributeValues
+    from pyvenafi.tpp import Authenticate, Features, Attributes, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -115,7 +115,7 @@ Waiting For Attribute Values
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -134,7 +134,7 @@ Renaming Objects
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)

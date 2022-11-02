@@ -3,7 +3,7 @@
 Device Certificate Creation
 ===========================
 
-.. autoclass:: venafi.tpp.features.client_work.DeviceCertificateCreation
+.. autoclass:: pyvenafi.tpp.features.client_work.DeviceCertificateCreation
    :members:
    :undoc-members:
    :show-inheritance:

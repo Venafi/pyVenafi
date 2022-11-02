@@ -3,7 +3,7 @@
 SSH Discovery
 =============
 
-.. autoclass:: venafi.tpp.features.client_work.SSHDiscovery
+.. autoclass:: pyvenafi.tpp.features.client_work.SSHDiscovery
    :members:
    :undoc-members:
    :show-inheritance:

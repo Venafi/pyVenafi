@@ -1,7 +1,7 @@
 Authenticate
 ============
 
-.. automodule:: venafi.tpp.api.authenticate
+.. automodule:: pyvenafi.tpp.api.authenticate
    :members:
    :undoc-members:
    :show-inheritance:

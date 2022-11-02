@@ -1,4 +1,4 @@
-Usage Guide
+Venafi Cloud
 ============
 
 Authentication
@@ -12,7 +12,7 @@ Authentication
 .. code-block:: python
 
    import os
-   from venafi.cloud import Authenticate
+   from pyvenafi.cloud import Authenticate
 
    session = Authenticate(server='api.venafi.cloud', api_key=os.getenv('VENAFI_CLOUD_API_KEY'))
 
@@ -25,21 +25,21 @@ Making API Calls
    to and from the API servers.
 
 Making API calls is super easy! Just pay attention to these details.
- * Import the basics: ``from venafi import Authenticate, models``
+ * Import the basics: ``from pyvenafi import Authenticate, models``
  * Specify the same path pattern in code as you would see in the url, minus ``v1``. The REST method follows. For example,
    ``GET /v1/users/username/{username}`` becomes ``session.cloud_api.users.username.USERNAME('my_awesome_email@awesomeness.com').get(...)``.
  * The parameters for the method often require a model. Find the model you need under ``models.[service].[model_name]`` where ``[service]``
    is the service name for the API (found in the Swagger documentation) and the ``[model_name]`` is the name of the Component Schema, which
    is usually the same name as the parameter. For example, ``POST /v1/pairingcodes`` (part of the ``edgemanagement_service``) requires an input of
    the ``PairingCodeRequest`` model, which becomes:
-   ``session.cloud_api.pairingcodes.post(PairingCodeRequest=models.edgemanagement_service.PairingCodeRequest(...)``
+   ``session.cloud_api.pairingcodes.post(PairingCodeRequest=models.edgemanagement_service.PairingCodeRequest(...))``
  * The output contains the response from Python's ``requests`` library as well as a model of the Component Schema. While most APIs only return one
    possible schema on an OK response, some may return one of many, dependent on the return code. Be sure you know which schema to expect in return
    and reference that schema in the code.
 
 **Example 1**
 
-.. code-block::
+.. code-block:: text
 
     Given: GET /v1/users/username/{username}
     USERNAME: my_awesome_email@awesomeness.com
@@ -73,7 +73,7 @@ Making API calls is super easy! Just pay attention to these details.
 
 .. code-block:: python
 
-    from venafi.cloud import Authenticate
+    from pyvenafi.cloud import Authenticate
 
     session = Authenticate(...)
     response = session.cloud_api.users.username.USERNAME('my_awesome_email@awesomeness.com').get()
@@ -87,7 +87,7 @@ Making API calls is super easy! Just pay attention to these details.
 
 .. code-block:: python
 
-   from venafi.cloud import Authenticate, models
+   from pyvenafi.cloud import Authenticate, models
    from datetime import datetime
    from uuid import UUID
 

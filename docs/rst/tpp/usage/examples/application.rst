@@ -16,7 +16,7 @@ Creating & Deleting Applications
 
 .. code-block:: python
 
-    from venafi.tpp import AttributeValues, Attributes, Authenticate, Features
+    from pyvenafi.tpp import AttributeValues, Attributes, Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -40,7 +40,7 @@ Enabling & Disabling Applications
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -56,7 +56,7 @@ Getting Application Certificate
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -68,7 +68,7 @@ Getting Processing Stage & Status
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -81,7 +81,7 @@ Installing A Certificate To An Application
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

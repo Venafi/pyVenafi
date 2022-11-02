@@ -3,7 +3,7 @@
 User
 ====
 
-.. autoclass:: venafi.tpp.features.identity.User
+.. autoclass:: pyvenafi.tpp.features.identity.User
    :members:
    :undoc-members:
    :show-inheritance:

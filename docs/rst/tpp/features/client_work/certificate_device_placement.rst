@@ -3,7 +3,7 @@
 Certificate Device Placement
 ============================
 
-.. autoclass:: venafi.tpp.features.client_work.CertificateDevicePlacement
+.. autoclass:: pyvenafi.tpp.features.client_work.CertificateDevicePlacement
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,6 @@
 @ECHO OFF
 
-set VENAFI_DOC_IN_PROGRESS=1
+set PYVENAFI_DOC_IN_PROGRESS=1
 
 pushd %~dp0
 

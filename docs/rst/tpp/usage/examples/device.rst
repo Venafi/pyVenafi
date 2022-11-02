@@ -12,7 +12,7 @@ Creating And Deleting A Device
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, AttributeValues
+    from pyvenafi.tpp import Authenticate, Features, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -47,7 +47,7 @@ Scanning A Device For SSH Keys
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

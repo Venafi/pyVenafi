@@ -17,7 +17,7 @@ Create your Application ID and OAuth scope definition in a separate file.
 .. code-block:: python
     :caption: tpp_authentication.py
 
-    from venafi.tpp import Scope
+    from pyvenafi.tpp import Scope
 
     # Only set the scope needed for this application. This example sets all to True just as an
     # example of the possible options.
@@ -46,7 +46,7 @@ Username/Password Authentication
 .. code-block:: python
 
     from tpp_authentication import my_oauth_application
-    from venafi.tpp import Authenticate
+    from pyvenafi.tpp import Authenticate
 
     api = Authenticate(
         host='tppserver.mycompany.com', username='|LocalUser|', password='passw0rd!@#$',
@@ -61,7 +61,7 @@ Certificate Authentication
 .. code-block:: python
 
     from tpp_authentication import my_oauth_application
-    from venafi.tpp import Authenticate
+    from pyvenafi.tpp import Authenticate
 
     api = Authenticate(
         host='tppserver.mycompany.com', certificate_path='/local/path/to/cert.crt',
@@ -76,7 +76,7 @@ Reusing An OAuth Token
 .. code-block:: python
 
     from tpp_authentication import my_oauth_application
-    from venafi.tpp import Authenticate
+    from pyvenafi.tpp import Authenticate
 
     api = Authenticate(
         host='tppserver.mycompany.com', token='IpGB3icCfMn6YeyIvWu9tB==', **my_oauth_application
@@ -94,7 +94,7 @@ requests made with this object.
 .. code-block:: python
 
     from tpp_authentication import my_oauth_application
-    from venafi.tpp import Authenticate
+    from pyvenafi.tpp import Authenticate
 
     api = Authenticate(
         host='tppserver.mycompany.com', username='|LocalUser|', password='passw0rd!@#$',

@@ -15,7 +15,7 @@ Creating Custom Fields
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes, AttributeValues
+    from pyvenafi.tpp import Authenticate, Features, Attributes, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -49,7 +49,7 @@ Reading Custom Fields
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -79,7 +79,7 @@ Writing Custom Fields
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)

@@ -3,7 +3,7 @@
 SSH Remediation
 ===============
 
-.. autoclass:: venafi.tpp.features.client_work.SSHRemediation
+.. autoclass:: pyvenafi.tpp.features.client_work.SSHRemediation
    :members:
    :undoc-members:
    :show-inheritance:

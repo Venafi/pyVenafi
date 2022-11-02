@@ -3,7 +3,7 @@
 Objects
 =======
 
-.. autoclass:: venafi.tpp.features.objects.Objects
+.. autoclass:: pyvenafi.tpp.features.objects.Objects
    :members:
    :undoc-members:
    :show-inheritance:

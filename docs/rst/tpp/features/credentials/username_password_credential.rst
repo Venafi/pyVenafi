@@ -3,7 +3,7 @@
 Username/Password Credential
 ============================
 
-.. autoclass:: venafi.tpp.features.credentials.UsernamePasswordCredential
+.. autoclass:: pyvenafi.tpp.features.credentials.UsernamePasswordCredential
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 IBM DataPower
 =============
 
-.. autoclass:: venafi.tpp.features.application.IBMDataPower
+.. autoclass:: pyvenafi.tpp.features.application.IBMDataPower
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 User Certificate Creation
 =========================
 
-.. autoclass:: venafi.tpp.features.client_work.UserCertificateCreation
+.. autoclass:: pyvenafi.tpp.features.client_work.UserCertificateCreation
    :members:
    :undoc-members:
    :show-inheritance:

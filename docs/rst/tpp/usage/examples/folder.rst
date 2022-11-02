@@ -18,7 +18,7 @@ Creating And Deleting A Folder
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -41,7 +41,7 @@ Getting, Adding And Removing Engines
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -74,7 +74,7 @@ Applying And Removing Workflows
 .. rubric:: Managing Applied Workflows
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -94,7 +94,7 @@ Applying And Removing Workflows
 .. rubric:: Managing Blocked Workflows
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -116,7 +116,7 @@ Searching Objects
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -147,7 +147,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -170,7 +170,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -196,7 +196,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)
@@ -222,7 +222,7 @@ Managing Policies
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes
+    from pyvenafi.tpp import Authenticate, Features, Attributes
 
     api = Authenticate(...)
     features = Features(api)

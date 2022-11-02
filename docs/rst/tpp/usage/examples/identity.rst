@@ -18,7 +18,7 @@ Creating & Deleting Users
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -41,7 +41,7 @@ Changing User Passwords
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -58,7 +58,7 @@ Searching Users
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -76,7 +76,7 @@ Getting Memberships
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -94,7 +94,7 @@ Creating & Deleting Groups
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -114,7 +114,7 @@ Adding, Getting, & Removing Members
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -140,7 +140,7 @@ Searching Users
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -160,7 +160,7 @@ Getting Memberships
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -175,7 +175,7 @@ Renaming Groups
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)

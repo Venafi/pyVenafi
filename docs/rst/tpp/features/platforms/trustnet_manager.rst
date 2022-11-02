@@ -3,7 +3,7 @@
 TrustNet Manager
 ================
 
-.. autoclass:: venafi.tpp.features.platforms.TrustNetManager
+.. autoclass:: pyvenafi.tpp.features.platforms.TrustNetManager
    :members:
    :undoc-members:
    :show-inheritance:

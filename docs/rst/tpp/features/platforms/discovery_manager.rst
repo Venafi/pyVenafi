@@ -3,7 +3,7 @@
 Discovery Manager
 =================
 
-.. autoclass:: venafi.tpp.features.platforms.DiscoveryManager
+.. autoclass:: pyvenafi.tpp.features.platforms.DiscoveryManager
    :members:
    :undoc-members:
    :show-inheritance:

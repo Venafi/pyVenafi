@@ -3,7 +3,7 @@
 Standard Workflow
 =================
 
-.. autoclass:: venafi.tpp.features.workflow.StandardWorkflow
+.. autoclass:: pyvenafi.tpp.features.workflow.StandardWorkflow
    :members:
    :undoc-members:
    :show-inheritance:

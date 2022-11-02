@@ -3,7 +3,7 @@
 Network Discovery
 =================
 
-.. autoclass:: venafi.tpp.features.discovery.NetworkDiscovery
+.. autoclass:: pyvenafi.tpp.features.discovery.NetworkDiscovery
    :members:
    :undoc-members:
    :show-inheritance:

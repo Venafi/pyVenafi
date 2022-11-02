@@ -3,7 +3,7 @@
 Blue Coat SSLVA
 ===============
 
-.. autoclass:: venafi.tpp.features.application.BlueCoatSSLVA
+.. autoclass:: pyvenafi.tpp.features.application.BlueCoatSSLVA
    :members:
    :undoc-members:
    :show-inheritance:

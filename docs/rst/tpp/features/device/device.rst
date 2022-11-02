@@ -3,7 +3,7 @@
 Device
 ======
 
-.. autoclass:: venafi.tpp.features.device.Device
+.. autoclass:: pyvenafi.tpp.features.device.Device
    :members:
    :undoc-members:
    :show-inheritance:

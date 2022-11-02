@@ -3,7 +3,7 @@
 PKCS11
 ======
 
-.. autoclass:: venafi.tpp.features.application.PKCS11
+.. autoclass:: pyvenafi.tpp.features.application.PKCS11
    :members:
    :undoc-members:
    :show-inheritance:

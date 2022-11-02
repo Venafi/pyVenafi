@@ -3,7 +3,7 @@
 Amazon Credential
 =================
 
-.. autoclass:: venafi.tpp.features.credentials.AmazonCredential
+.. autoclass:: pyvenafi.tpp.features.credentials.AmazonCredential
    :members:
    :undoc-members:
    :show-inheritance:

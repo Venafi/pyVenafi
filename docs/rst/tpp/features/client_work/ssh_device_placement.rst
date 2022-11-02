@@ -3,7 +3,7 @@
 SSH Device Placement
 ====================
 
-.. autoclass:: venafi.tpp.features.client_work.SSHDevicePlacement
+.. autoclass:: pyvenafi.tpp.features.client_work.SSHDevicePlacement
    :members:
    :undoc-members:
    :show-inheritance:

@@ -11,7 +11,7 @@ Creating & Deleting Certiifcate Objects
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate, AttributeValues
+    from pyvenafi.tpp import Features, Authenticate, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -48,7 +48,7 @@ Listing Certificates
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
     from datetime import datetime, timedelta
 
     api = Authenticate(...)
@@ -85,7 +85,7 @@ Renewing & Downloading A Certificate
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate, AttributeValues
+    from pyvenafi.tpp import Features, Authenticate, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -109,7 +109,7 @@ Revoking A Certificate
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
     from datetime import datetime
 
     api = Authenticate(...)
@@ -132,7 +132,7 @@ Resetting & Retrying Certificate Requests
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate, AttributeValues
+    from pyvenafi.tpp import Features, Authenticate, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)
@@ -157,7 +157,7 @@ File & SSL Validation
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -186,7 +186,7 @@ Getting Certificate Data
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -201,7 +201,7 @@ Associating/Dissociating A Certificate
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate
+    from pyvenafi.tpp import Features, Authenticate
 
     api = Authenticate(...)
     features = Features(api)
@@ -234,7 +234,7 @@ Handling Workflows
 
 .. code-block:: python
 
-    from venafi.tpp import Features, Authenticate, AttributeValues
+    from pyvenafi.tpp import Features, Authenticate, AttributeValues
 
     api = Authenticate(...)
     features = Features(api)

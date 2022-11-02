@@ -1,7 +1,7 @@
 API Session Class
 =================
 
-.. automodule:: venafi.tpp.api.session
+.. automodule:: pyvenafi.tpp.api.session
    :members:
    :undoc-members:
    :show-inheritance:

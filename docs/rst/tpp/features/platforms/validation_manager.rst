@@ -3,7 +3,7 @@
 Validation Manager
 ==================
 
-.. autoclass:: venafi.tpp.features.platforms.ValidationManager
+.. autoclass:: pyvenafi.tpp.features.platforms.ValidationManager
    :members:
    :undoc-members:
    :show-inheritance:

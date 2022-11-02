@@ -3,7 +3,7 @@
 Certificate Revocation
 ======================
 
-.. autoclass:: venafi.tpp.features.platforms.CertificateRevocation
+.. autoclass:: pyvenafi.tpp.features.platforms.CertificateRevocation
    :members:
    :undoc-members:
    :show-inheritance:

@@ -3,7 +3,7 @@
 Apache Group
 ============
 
-.. autoclass:: venafi.tpp.features.application.ApacheApplicationGroup
+.. autoclass:: pyvenafi.tpp.features.application.ApacheApplicationGroup
    :members:
    :undoc-members:
    :show-inheritance:

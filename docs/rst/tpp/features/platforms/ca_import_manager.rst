@@ -3,7 +3,7 @@
 CA Import Manager
 =================
 
-.. autoclass:: venafi.tpp.features.platforms.CAImportManager
+.. autoclass:: pyvenafi.tpp.features.platforms.CAImportManager
    :members:
    :undoc-members:
    :show-inheritance:

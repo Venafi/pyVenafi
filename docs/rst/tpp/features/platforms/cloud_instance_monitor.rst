@@ -3,7 +3,7 @@
 Cloud Instance Monitor
 ======================
 
-.. autoclass:: venafi.tpp.features.platforms.CloudInstanceMonitor
+.. autoclass:: pyvenafi.tpp.features.platforms.CloudInstanceMonitor
    :members:
    :undoc-members:
    :show-inheritance:

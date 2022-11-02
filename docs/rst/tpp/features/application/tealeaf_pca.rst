@@ -3,7 +3,7 @@
 Tealeaf PCA
 ===========
 
-.. autoclass:: venafi.tpp.features.application.TealeafPCA
+.. autoclass:: pyvenafi.tpp.features.application.TealeafPCA
    :members:
    :undoc-members:
    :show-inheritance:

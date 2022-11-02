@@ -3,7 +3,7 @@
 Agent Connectivity
 ==================
 
-.. autoclass:: venafi.tpp.features.client_work.AgentConnectivity
+.. autoclass:: pyvenafi.tpp.features.client_work.AgentConnectivity
    :members:
    :undoc-members:
    :show-inheritance:

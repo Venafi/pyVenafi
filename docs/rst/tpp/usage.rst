@@ -58,22 +58,13 @@ The path of the URL for the WebSDK API is translated to Python by following this
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
 
-    # The response is not validated until either a property of the return object is called
-    # or the response is explicitly validated.
+    # The response is always automatically validated. Handle errors accordingly.
     response = api.websdk.Config.IsValid.post(object_dn=r'\VED\Policy')
 
-    # The response can be explicitly validated.
-    response.assert_valid_response()
-    # -- OR --
-    if not response.is_valid_response():
-        raise AssertionError()
-
-    # The response can be automatically validate by calling one of the returned properties.
-    # In this case it is ".object".
     policy = response.object
     print(policy.dn)  # Print the Policy DN.
     print(policy.json(by_alias=True))  # Print the Policy Config Object as JSON.
@@ -142,7 +133,7 @@ reusing the schema, such as when submitting models in an API request to the serv
     """
     Let's update a CodeSign project description and custom field attributes.
     """
-    from venafi.tpp import Authenticate, Attributes, models
+    from pyvenafi.tpp import Authenticate, Attributes, models
 
     api = Authenticate(...)
 
@@ -227,7 +218,7 @@ jobs and managing permissions.
 .. rubric:: API vs Features: Creating A Certificate
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features, Attributes, AttributeValues, models
+    from pyvenafi.tpp import Authenticate, Features, Attributes, AttributeValues, models
 
     api = Authenticate(...)
     features = Features(api)
@@ -412,7 +403,7 @@ requiring a ``Config.Object`` or a :ref:`dn` value.
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -465,7 +456,7 @@ requiring an ``Identity.Identity`` or a :ref:`prefixed_name` value.
 
 .. code-block:: python
 
-    from venafi.tpp import Authenticate, Features
+    from pyvenafi.tpp import Authenticate, Features
 
     api = Authenticate(...)
     features = Features(api)
@@ -497,7 +488,7 @@ compatibility.
 
 .. code-block:: python
 
-    from venafi.tpp import Attributes
+    from pyvenafi.tpp import Attributes
 
     # This will show that the Certificate attribute on the Apache Application Group is TPP 19.4.
     # This means that the attribute has no effect on versions prior to then.
@@ -510,11 +501,11 @@ attribute:
 
 .. code-block:: python
 
-    #from venafi.tpp.attributes.<object class> import <object class>Attributes
-    from venafi.tpp.attributes.apache import ApacheAttributes
+    #from pyvenafi.tpp.attributes.<object class> import <object class>Attributes
+    from pyvenafi.tpp.attributes.apache import ApacheAttributes
 
     # That is the equivalent to this:
-    from venafi.tpp import Attributes
+    from pyvenafi.tpp import Attributes
 
     print(Attributes.application.apache == ApacheAttributes)  # prints "True"
 
@@ -524,7 +515,7 @@ reason we have this naming convention:
 
 .. code-block:: python
 
-    from venafi.tpp import AttributeValues
+    from pyvenafi.tpp import AttributeValues
 
     # AttributeValues.<object class>.<attribute name in the UI>.<attribute value in the UI>
     print(AttributeValues.Certificate.ManagementType.enrollment)
@@ -534,7 +525,7 @@ that only interpret a limited list of values.
 
 .. code-block:: python
 
-    from venafi.tpp import Attributes, AttributeValues
+    from pyvenafi.tpp import Attributes, AttributeValues
 
     # This pair references the OS Type of a Device object. This will print:
     # Remote Server Type = OS_WINDOWS
@@ -547,7 +538,7 @@ or setting policy values. There are two ways to get a class name:
 
 .. code-block:: python
 
-    from venafi.tpp import Attributes, ClassNames
+    from pyvenafi.tpp import Attributes, ClassNames
 
     print(ClassNames.x509_certificate == Attributes.certificate.__config_class__)
 
@@ -565,7 +556,7 @@ IDE, and we highly value autocompleting features. For this reason we have ``Type
 
     from typing import TYPE_CHECKING
     if TYPE_CHECKING:
-        from venafi.tpp import Types
+        from pyvenafi.tpp import Types
 
     def do_something(certificate: 'Types.Config.Object') -> 'Types.Identity.Identity':
         ...

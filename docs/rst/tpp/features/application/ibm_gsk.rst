@@ -3,7 +3,7 @@
 IBM GSK
 =======
 
-.. autoclass:: venafi.tpp.features.application.IBMGSK
+.. autoclass:: pyvenafi.tpp.features.application.IBMGSK
    :members:
    :undoc-members:
    :show-inheritance:

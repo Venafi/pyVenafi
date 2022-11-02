@@ -3,7 +3,7 @@
 Placement Rule Condition
 ========================
 
-.. autoclass:: venafi.tpp.features.placement_rules.PlacementRuleCondition
+.. autoclass:: pyvenafi.tpp.features.placement_rules.PlacementRuleCondition
    :members:
    :undoc-members:
    :show-inheritance:

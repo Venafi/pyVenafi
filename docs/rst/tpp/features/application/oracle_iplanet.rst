@@ -3,7 +3,7 @@
 Oracle iPlanet
 ==============
 
-.. autoclass:: venafi.tpp.features.application.OracleIPlanet
+.. autoclass:: pyvenafi.tpp.features.application.OracleIPlanet
    :members:
    :undoc-members:
    :show-inheritance:

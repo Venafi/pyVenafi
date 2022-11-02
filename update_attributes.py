@@ -12,7 +12,7 @@ from threading import Lock
 
 PRINT_LOCK = Lock()
 
-DB_ADDRESS = '10.100.205.70'
+DB_ADDRESS = '10.100.205.56'
 DB_NAME = 'tpp'
 DB_USERNAME = 'sa'
 DB_PASSWORD = 'newPassw0rd!'
@@ -95,10 +95,10 @@ class UpdateConfig:
         all_classes = self.config_relations.query(
             f'Reference == "{reference}" and Flags == "SuperClass"'
         )['ClassName']
-        classes = []
+        classes = set()
         for cls in all_classes:
-            classes.append(cls)
-            classes += self.get_child_classes(cls)
+            classes.add(cls)
+            classes.update(self.get_child_classes(reference=cls))
         return sorted(classes)
 
     def get_options(self, reference: str):
@@ -133,9 +133,9 @@ class UpdateConfig:
         for key, data in d.items():
             imports = []
             if data.get('options'):
-                imports.append('from venafi.tpp.attributes._helper import IterableMeta, Attribute')
+                imports.append('from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute')
             else:
-                imports.append('from venafi.tpp.attributes._helper import IterableMeta')
+                imports.append('from pyvenafi.tpp.attributes._helper import IterableMeta')
             parents = list(self.config_relations.query(
                 f'ClassName == "{key}" and Flags == "SuperClass"'
             )['Reference'].values)
@@ -160,7 +160,7 @@ class UpdateConfig:
                     continue
                 parent_class = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(parent))}""".replace(' ', '') + 'Attributes'
                 parent_classes.append(parent_class)
-                imports.append(f'from venafi.tpp.attributes.{self.snake_case(parent)} import {parent_class}')
+                imports.append(f'from pyvenafi.tpp.attributes.{self.snake_case(parent)} import {parent_class}')
             script = '\n'.join(imports) + '\n\n'
             file_name = self.snake_case(key)
             class_name = f"""{re.sub(r'[^a-zA-Z0-9 ]', '', str(key))}""".replace(' ', '') + 'Attributes'
@@ -175,7 +175,7 @@ class UpdateConfig:
                     script += f'    {self.option_to_variable(value, str(schema_version))}\n'
             if data.get('children'):
                 self.dump_attributes(data['children'])
-            file_path = Path(f'venafi/tpp/attributes/{file_name}.py')
+            file_path = Path(f'pyvenafi/tpp/attributes/{file_name}.py')
             if not file_path.parent.exists():
                 file_path.parent.mkdir(parents=True, exist_ok=True)
             with file_path.open('w') as f:
@@ -299,12 +299,12 @@ class UpdateConfig:
     def dump_classes(self):
         classes = '\n    '.join(f'{self.snake_case(c)} = "{c}"' for c in sorted(set(self.all_classes)))
         script = '\n'.join([
-            'from venafi.tpp.attributes._helper import IterableMeta\n\n',
+            'from pyvenafi.tpp.attributes._helper import IterableMeta\n\n',
             'class Classes(metaclass=IterableMeta):',
             f'    {classes}',
             ''
         ])
-        file_path = Path(f'venafi/tpp/features/definitions/classes.py')
+        file_path = Path(f'pyvenafi/tpp/features/definitions/classes.py')
         with file_path.open('w') as f:
             print(script, end='', file=f)
 

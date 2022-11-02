@@ -3,7 +3,7 @@
 Citrix NetScaler
 ================
 
-.. autoclass:: venafi.tpp.features.application.CitrixNetScaler
+.. autoclass:: pyvenafi.tpp.features.application.CitrixNetScaler
    :members:
    :undoc-members:
    :show-inheritance:
