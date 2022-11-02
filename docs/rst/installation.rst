@@ -15,7 +15,7 @@ Installation
 
 **Using GitHub**
 
-``pip install git+https://github.com/Venafi/pyvenafi.git#egg=pyvenafi``
+``pip install git+https://github.com/Venafi/pyVenafi.git#egg=pyvenafi``
 
 Uninstallation
 --------------

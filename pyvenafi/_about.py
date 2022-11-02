@@ -1,5 +1,5 @@
 __author__ = 'Venafi SPI Team'
 __author_email__ = 'spi@venafi.com'
 __project_name__ = 'pyvenafi-dev'
-__project_url__ = 'https://github.com/Venafi/pyvenafi'
+__project_url__ = 'https://github.com/Venafi/pyVenafi'
 __version__ = '0.0.1'

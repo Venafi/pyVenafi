@@ -1,1 +1,1 @@
-See the full documentation [here](https://pytpp.readthedocs.io).
+See the full documentation [here](https://pyvenafi.readthedocs.io).
