@@ -17,6 +17,10 @@
     --venafi-secondary-py-section: rgba(225, 129, 70, 1.0);
 }
 
+#rtd-sidebar {
+    display: none;
+}
+
 html {
     scrollbar-face-color: #646464;
     scrollbar-base-color: #646464;
