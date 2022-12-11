@@ -5,14 +5,6 @@ from typing import (Any, Dict, List, Literal)
 from uuid import UUID
 
 
-class DefaultOwnershipInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    type: str = ApiField(alias='type')
-
-
 class ErrorInformation(ObjectModel):
     args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
@@ -53,7 +45,7 @@ class MachineDocumentInformation(ObjectModel):
     machineType: str = ApiField(alias='machineType')
     machineTypeId: UUID = ApiField(alias='machineTypeId')
     modificationDate: datetime = ApiField(alias='modificationDate')
-    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    ownership: MachineOwnership = ApiField(alias='ownership')
     owningTeam: UUID = ApiField(alias='owningTeam')
     pluginId: UUID = ApiField(alias='pluginId')
     status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
@@ -141,6 +133,10 @@ class MachineInformation(ObjectModel):
     status: Literal['DRAFT', 'UNVERIFIED', 'VERIFIED'] = ApiField(alias='status')
 
 
+class MachineOwnership(ObjectModel):
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+
+
 class MachineTypeInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
     machineType: str = ApiField(alias='machineType')
@@ -183,14 +179,6 @@ class Ordering(ObjectModel):
     orders: List[OrderObject] = ApiField(alias='orders', default_factory=list)
 
 
-class OwnershipInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    type: str = ApiField(alias='type')
-
-
 class Paging(ObjectModel):
     pageNumber: int = ApiField(alias='pageNumber')
     pageSize: int = ApiField(alias='pageSize')
@@ -200,7 +188,6 @@ class ProvisionCertificateWorkflowInputInformation(ObjectModel):
     wsClientId: str = ApiField(alias='wsClientId')
 
 
-DefaultOwnershipInformation.update_forward_refs()
 ErrorInformation.update_forward_refs()
 ErrorResponse.update_forward_refs()
 Expression.update_forward_refs()
@@ -218,6 +205,7 @@ MachineIdentityUpdateRequest.update_forward_refs()
 MachineIdentityWorkflowInformation.update_forward_refs()
 MachineIdentityWorkflowRequest.update_forward_refs()
 MachineInformation.update_forward_refs()
+MachineOwnership.update_forward_refs()
 MachineTypeInformation.update_forward_refs()
 MachineTypeResponse.update_forward_refs()
 MachineUpdateRequest.update_forward_refs()
@@ -226,6 +214,5 @@ MachinesResponse.update_forward_refs()
 MachinesSearchRequest.update_forward_refs()
 OrderObject.update_forward_refs()
 Ordering.update_forward_refs()
-OwnershipInformation.update_forward_refs()
 Paging.update_forward_refs()
 ProvisionCertificateWorkflowInputInformation.update_forward_refs()

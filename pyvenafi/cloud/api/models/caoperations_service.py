@@ -5,46 +5,6 @@ from typing import (Any, Dict, List, Literal)
 from uuid import UUID
 
 
-class AcmeCAAccountConfigurationInformation(ObjectModel):
-    pass
-
-
-class AcmeCredentials(ObjectModel):
-    pass
-
-
-class AcmeCredentialsInformation(ObjectModel):
-    pass
-
-
-class AcmeProductDetailsInformation(ObjectModel):
-    pass
-
-
-class AcmeProductInformation(ObjectModel):
-    pass
-
-
-class AkamaiDnsProviderInformation(ObjectModel):
-    pass
-
-
-class AwsRoute53DnsProviderInformation(ObjectModel):
-    pass
-
-
-class AzureDnsProviderInformation(ObjectModel):
-    pass
-
-
-class BuiltInCAProductDetailsInformation(ObjectModel):
-    pass
-
-
-class BuiltInCAProductInformation(ObjectModel):
-    pass
-
-
 class CAAccountConfigurationInformation(ObjectModel):
     certificateAuthority: str = ApiField(alias='certificateAuthority')
 
@@ -57,7 +17,7 @@ class CaOperationRequest(ObjectModel):
     operation: str = ApiField(alias='operation')
 
 
-class CancelCaEditOperationRequest(ObjectModel):
+class CancelCaEditOperationRequest(CaOperationRequest):
     pass
 
 
@@ -369,32 +329,25 @@ class ClientCredentials(ObjectModel):
     secret: str = ApiField(alias='secret')
 
 
-class CloudFlareDnsProviderInformation(ObjectModel):
-    pass
+class DigicertCredentials(CertificateAuthorityCredentials):
+    apiKey: str = ApiField(alias='apiKey')
 
 
-class CronPatternInformation(ObjectModel):
-    pass
+class DigicertCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    apiKey: str = ApiField(alias='apiKey')
 
 
-class DigicertCredentials(ObjectModel):
-    pass
+class DigicertProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
+    allowAutoRenew: bool = ApiField(alias='allowAutoRenew')
+    defaultHashAlgorithm: Literal['GOSTR3411_94', 'MD2', 'MD5', 'SHA1', 'SHA224',
+                                  'SHA256', 'SHA384', 'SHA512', 'UNKNOWN'] = ApiField(alias='defaultHashAlgorithm')
+    organizationIds: List[int] = ApiField(alias='organizationIds', default_factory=list)
+    productFriendlyName: str = ApiField(alias='productFriendlyName')
 
 
-class DigicertCredentialsInformation(ObjectModel):
-    pass
-
-
-class DigicertProductDetailsInformation(ObjectModel):
-    pass
-
-
-class DigicertProductInformation(ObjectModel):
-    pass
-
-
-class DigitalOceanDnsProviderInformation(ObjectModel):
-    pass
+class DigicertProductInformation(CertificateAuthorityProductInformation):
+    autoRenew: bool = ApiField(alias='autoRenew')
+    organizationId: int = ApiField(alias='organizationId')
 
 
 class DnComponentInformation(ObjectModel):
@@ -419,35 +372,43 @@ class DurationFieldType(ObjectModel):
     name: str = ApiField(alias='name')
 
 
-class ECKeyTypeInformation(ObjectModel):
+class EntrustCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    clientId: int = ApiField(alias='clientId')
+
+
+class EntrustCredentials(CertificateAuthorityCredentials):
+    key: str = ApiField(alias='key')
+    keyPassword: str = ApiField(alias='keyPassword')
+    keyStoreBase64: str = ApiField(alias='keyStoreBase64')
+    keyStorePassword: str = ApiField(alias='keyStorePassword')
+    username: str = ApiField(alias='username')
+
+
+class EntrustCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    key: str = ApiField(alias='key')
+    keyPassword: str = ApiField(alias='keyPassword')
+    keyStoreBase64: str = ApiField(alias='keyStoreBase64')
+    keyStorePassword: str = ApiField(alias='keyStorePassword')
+    username: str = ApiField(alias='username')
+
+
+class EntrustDomainDetails(CertificateAuthorityDomainDetails):
+    clientId: int = ApiField(alias='clientId')
+    dnsMethod: DnsMethod = ApiField(alias='dnsMethod')
+    emailMethod: List[str] = ApiField(alias='emailMethod', default_factory=list)
+    evEligible: bool = ApiField(alias='evEligible')
+    evExpiryDate: datetime = ApiField(alias='evExpiryDate')
+    ovEligible: bool = ApiField(alias='ovEligible')
+    ovExpiryDate: datetime = ApiField(alias='ovExpiryDate')
+    validationMethod: str = ApiField(alias='validationMethod')
+    webServerMethod: WebServerMethod = ApiField(alias='webServerMethod')
+
+
+class EntrustProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
     pass
 
 
-class EntrustCAAccountConfigurationInformation(ObjectModel):
-    pass
-
-
-class EntrustCredentials(ObjectModel):
-    pass
-
-
-class EntrustCredentialsInformation(ObjectModel):
-    pass
-
-
-class EntrustDomainDetails(ObjectModel):
-    pass
-
-
-class EntrustProductDetailsInformation(ObjectModel):
-    pass
-
-
-class EntrustProductInformation(ObjectModel):
-    pass
-
-
-class EntrustTrackingDataInformation(ObjectModel):
+class EntrustProductInformation(CertificateAuthorityProductInformation):
     pass
 
 
@@ -467,20 +428,26 @@ class ExtendedCertificateAuthorityAccountInformation(ObjectModel):
     productOptions: List[CertificateAuthorityProductOptionInformation] = ApiField(alias='productOptions', default_factory=list)
 
 
-class GenerateCaCSROperationRequest(ObjectModel):
-    pass
+class GenerateCaCSROperationRequest(CaOperationRequest):
+    intermediateProps: CertificateInformation = ApiField(alias='intermediateProps')
 
 
-class GlobalSignCredentials(ObjectModel):
-    pass
+class GlobalSignCredentials(CertificateAuthorityCredentials):
+    clientCredentials: ClientCredentials = ApiField(alias='clientCredentials')
+    credentials: str = ApiField(alias='credentials')
 
 
-class GlobalSignCredentialsInformation(ObjectModel):
-    pass
+class GlobalSignCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    credentials: str = ApiField(alias='credentials')
 
 
-class GlobalSignDomainDetails(ObjectModel):
-    pass
+class GlobalSignDomainDetails(CertificateAuthorityDomainDetails):
+    assertBy: datetime = ApiField(alias='assertBy')
+    claimId: str = ApiField(alias='claimId')
+    createdAt: datetime = ApiField(alias='createdAt')
+    expiresAt: datetime = ApiField(alias='expiresAt')
+    log: List[GlobalSignLogEntry] = ApiField(alias='log', default_factory=list)
+    validationToken: str = ApiField(alias='validationToken')
 
 
 class GlobalSignLogEntry(ObjectModel):
@@ -489,44 +456,47 @@ class GlobalSignLogEntry(ObjectModel):
     timestamp: datetime = ApiField(alias='timestamp')
 
 
-class GlobalSignMSSLCAAccountConfigurationInformation(ObjectModel):
+class GlobalSignMSSLCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    connectTestServer: bool = ApiField(alias='connectTestServer')
+    profileId: str = ApiField(alias='profileId')
+
+
+class GlobalSignMSSLCredentials(CertificateAuthorityCredentials):
+    password: str = ApiField(alias='password')
+    username: str = ApiField(alias='username')
+
+
+class GlobalSignMSSLCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    password: str = ApiField(alias='password')
+    username: str = ApiField(alias='username')
+
+
+class GlobalSignMSSLDomainDetails(CertificateAuthorityDomainDetails):
+    domainId: str = ApiField(alias='domainId')
+
+
+class GlobalSignMSSLProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
+    productFriendlyName: str = ApiField(alias='productFriendlyName')
+
+
+class GlobalSignMSSLProductInformation(CertificateAuthorityProductInformation):
     pass
 
 
-class GlobalSignMSSLCredentials(ObjectModel):
+class GlobalSignProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
     pass
 
 
-class GlobalSignMSSLCredentialsInformation(ObjectModel):
+class GlobalSignProductInformation(CertificateAuthorityProductInformation):
     pass
 
 
-class GlobalSignMSSLDomainDetails(ObjectModel):
-    pass
-
-
-class GlobalSignMSSLProductDetailsInformation(ObjectModel):
-    pass
-
-
-class GlobalSignMSSLProductInformation(ObjectModel):
-    pass
-
-
-class GlobalSignMSSLTrackingDataInformation(ObjectModel):
-    pass
-
-
-class GlobalSignProductDetailsInformation(ObjectModel):
-    pass
-
-
-class GlobalSignProductInformation(ObjectModel):
-    pass
-
-
-class GoogleCloudDnsProviderInformation(ObjectModel):
-    pass
+class GoogleCloudDnsProviderInformation(DnsProviderInformation):
+    clientEmail: str = ApiField(alias='clientEmail')
+    privateKey: str = ApiField(alias='privateKey')
+    privateKeyId: str = ApiField(alias='privateKeyId')
+    projectId: str = ApiField(alias='projectId')
+    tokenUri: str = ApiField(alias='tokenUri')
 
 
 class ImportConfigurationDetails(ObjectModel):
@@ -545,84 +515,82 @@ class KeyTypeParameters(ObjectModel):
     keyType: Literal['EC', 'RSA'] = ApiField(alias='keyType')
 
 
-class MicrosoftCAAccountConfigurationInformation(ObjectModel):
+class MicrosoftCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    address: str = ApiField(alias='address')
+    serviceName: str = ApiField(alias='serviceName')
+    workerId: UUID = ApiField(alias='workerId')
+
+
+class MicrosoftCAAccountImportConfigurationInformation(CAAccountImportConfigurationInformation):
+    includeExpiredCertificates: bool = ApiField(alias='includeExpiredCertificates')
+    includeRevokedCertificates: bool = ApiField(alias='includeRevokedCertificates')
+
+
+class MicrosoftCAImportDetailsInformation(CertificateAuthorityImportDetailsInformation):
+    name: str = ApiField(alias='name')
+    oid: str = ApiField(alias='oid')
+
+
+class MicrosoftCredentials(CertificateAuthorityCredentials):
+    dekId: str = ApiField(alias='dekId')
+    password: str = ApiField(alias='password')
+    username: str = ApiField(alias='username')
+
+
+class MicrosoftCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    dekId: str = ApiField(alias='dekId')
+    password: str = ApiField(alias='password')
+    username: str = ApiField(alias='username')
+
+
+class MicrosoftImportConfigurationDetails(ImportConfigurationDetails):
     pass
 
 
-class MicrosoftCAAccountImportConfigurationInformation(ObjectModel):
+class MicrosoftProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
+    errorInformation: ErrorInformation = ApiField(alias='errorInformation')
+    oid: str = ApiField(alias='oid')
+    status: Literal['FAILED', 'IN_PROGRESS', 'OK', 'PENDING'] = ApiField(alias='status')
+
+
+class MicrosoftProductInformation(CertificateAuthorityProductInformation):
+    templateOid: str = ApiField(alias='templateOid')
+
+
+class MockCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    someId: int = ApiField(alias='someId')
+    someName: str = ApiField(alias='someName')
+
+
+class MockCACredentials(CertificateAuthorityCredentials):
+    apiKey: str = ApiField(alias='apiKey')
+
+
+class MockCACredentialsInformation(CertificateAuthorityCredentialsInformation):
+    apiKey: str = ApiField(alias='apiKey')
+
+
+class MockCADomainDetails(CertificateAuthorityDomainDetails):
     pass
 
 
-class MicrosoftCAImportDetailsInformation(ObjectModel):
+class MockCAImportConfiguration(ImportConfigurationDetails):
     pass
 
 
-class MicrosoftCredentials(ObjectModel):
-    pass
+class MockCAProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
+    signatureAlgorithms: List[Literal['EC_DSA_WITH_SHA1', 'EC_DSA_WITH_SHA224', 'EC_DSA_WITH_SHA256', 'EC_DSA_WITH_SHA384', 'EC_DSA_WITH_SHA512', 'GOST_R3411_94_WITH_GOST_R3410_2001', 'GOST_R3411_94_WITH_GOST_R3410_94', 'ID_DSA_WITH_SHA1', 'MD2_WITH_RSA_ENCRYPTION',
+                                      'MD5_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION2', 'SHA1_WITH_RSAandMGF1', 'SHA256_WITH_RSA_ENCRYPTION', 'SHA384_WITH_RSA_ENCRYPTION', 'SHA512_WITH_RSA_ENCRYPTION', 'UNKNOWN', 'dsaWithSHA1']] = ApiField(alias='signatureAlgorithms', default_factory=list)
 
 
-class MicrosoftCredentialsInformation(ObjectModel):
-    pass
+class MockCAProductInformation(CertificateAuthorityProductInformation):
+    signatureAlgorithm: Literal['EC_DSA_WITH_SHA1', 'EC_DSA_WITH_SHA224', 'EC_DSA_WITH_SHA256', 'EC_DSA_WITH_SHA384', 'EC_DSA_WITH_SHA512', 'GOST_R3411_94_WITH_GOST_R3410_2001', 'GOST_R3411_94_WITH_GOST_R3410_94', 'ID_DSA_WITH_SHA1', 'MD2_WITH_RSA_ENCRYPTION',
+                                'MD5_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION', 'SHA1_WITH_RSA_ENCRYPTION2', 'SHA1_WITH_RSAandMGF1', 'SHA256_WITH_RSA_ENCRYPTION', 'SHA384_WITH_RSA_ENCRYPTION', 'SHA512_WITH_RSA_ENCRYPTION', 'UNKNOWN', 'dsaWithSHA1'] = ApiField(alias='signatureAlgorithm')
 
 
-class MicrosoftImportConfigurationDetails(ObjectModel):
-    pass
-
-
-class MicrosoftProductDetailsInformation(ObjectModel):
-    pass
-
-
-class MicrosoftProductInformation(ObjectModel):
-    pass
-
-
-class MicrosoftProductOptionTestIssuanceInformation(ObjectModel):
-    pass
-
-
-class MockCAAccountConfigurationInformation(ObjectModel):
-    pass
-
-
-class MockCACredentials(ObjectModel):
-    pass
-
-
-class MockCACredentialsInformation(ObjectModel):
-    pass
-
-
-class MockCADomainDetails(ObjectModel):
-    pass
-
-
-class MockCAImportConfiguration(ObjectModel):
-    pass
-
-
-class MockCAProductDetailsInformation(ObjectModel):
-    pass
-
-
-class MockCAProductInformation(ObjectModel):
-    pass
-
-
-class MockCAProductOptionTestIssuanceInformation(ObjectModel):
-    pass
-
-
-class MockCATrackingDataInformation(ObjectModel):
-    pass
-
-
-class MonthlyPatternInformation(ObjectModel):
-    pass
-
-
-class NewCaCertificatesOperationRequest(ObjectModel):
-    pass
+class NewCaCertificatesOperationRequest(CaOperationRequest):
+    intermediateProps: CertificateInformation = ApiField(alias='intermediateProps')
+    rootProps: CertificateInformation = ApiField(alias='rootProps')
 
 
 class Period(ObjectModel):
@@ -651,8 +619,8 @@ class ProductOptionTestIssuanceInformation(ObjectModel):
     status: Literal['FAILED', 'IN_PROGRESS', 'OK', 'PENDING'] = ApiField(alias='status')
 
 
-class RSAKeyTypeInformation(ObjectModel):
-    pass
+class RSAKeyTypeInformation(KeyTypeInformation):
+    keyLengths: List[int] = ApiField(alias='keyLengths', default_factory=list)
 
 
 class ReadablePeriod(ObjectModel):
@@ -716,7 +684,32 @@ class SubjectAltNamesInformation(ObjectModel):
     tag: str = ApiField(alias='tag')
 
 
-class TppCredentials(ObjectModel):
+class TppCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    clientId: str = ApiField(alias='clientId')
+    hostnameOrAddress: str = ApiField(alias='hostnameOrAddress')
+    pluginId: UUID = ApiField(alias='pluginId')
+
+
+class TppCredentials(CertificateAuthorityCredentials):
+    accessToken: str = ApiField(alias='accessToken')
+    dekId: str = ApiField(alias='dekId')
+    expires: datetime = ApiField(alias='expires')
+    refreshToken: str = ApiField(alias='refreshToken')
+    refreshUntil: datetime = ApiField(alias='refreshUntil')
+
+
+class TppCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    dekId: str = ApiField(alias='dekId')
+    expires: datetime = ApiField(alias='expires')
+    refreshToken: str = ApiField(alias='refreshToken')
+    refreshUntil: datetime = ApiField(alias='refreshUntil')
+
+
+class TppProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
+    pass
+
+
+class TppProductInformation(CertificateAuthorityProductInformation):
     pass
 
 
@@ -724,8 +717,8 @@ class TrackingDataInformation(ObjectModel):
     certificateAuthority: str = ApiField(alias='certificateAuthority')
 
 
-class UploadCaCertificateOperationRequest(ObjectModel):
-    pass
+class UploadCaCertificateOperationRequest(CaOperationRequest):
+    pemCertificates: str = ApiField(alias='pemCertificates')
 
 
 class ValidityInformation(ObjectModel):
@@ -738,28 +731,154 @@ class WebServerMethod(ObjectModel):
     fileLocation: str = ApiField(alias='fileLocation')
 
 
-class WeeklyPatternInformation(ObjectModel):
+class WeeklyPatternInformation(SchedulerPatternInformation):
+    daysOfWeek: List[Literal['FRIDAY', 'MONDAY', 'SATURDAY', 'SUNDAY', 'THURSDAY',
+                             'TUESDAY', 'WEDNESDAY']] = ApiField(alias='daysOfWeek', default_factory=list)
+    recurrenceTime: datetime = ApiField(alias='recurrenceTime')
+
+
+class ZtpkiCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    serverUrl: str = ApiField(alias='serverUrl')
+
+
+class ZtpkiCredentials(CertificateAuthorityCredentials):
+    keyId: str = ApiField(alias='keyId')
+    macKey: str = ApiField(alias='macKey')
+
+
+class ZtpkiCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    keyId: str = ApiField(alias='keyId')
+    macKey: str = ApiField(alias='macKey')
+
+
+class ZtpkiProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
+    approvalRequired: bool = ApiField(alias='approvalRequired')
+    certificateAuthorityId: str = ApiField(alias='certificateAuthorityId')
+    dnComponents: List[DnComponentInformation] = ApiField(alias='dnComponents', default_factory=list)
+    id: str = ApiField(alias='id')
+    organizationId: str = ApiField(alias='organizationId')
+    sans: List[SubjectAltNamesInformation] = ApiField(alias='sans', default_factory=list)
+    validity: ValidityInformation = ApiField(alias='validity')
+
+
+class ZtpkiProductInformation(CertificateAuthorityProductInformation):
+    days: List[str] = ApiField(alias='days', default_factory=list)
+    maxValidityPeriod: Period = ApiField(alias='maxValidityPeriod')
+    months: List[str] = ApiField(alias='months', default_factory=list)
+    policyId: str = ApiField(alias='policyId')
+    years: List[str] = ApiField(alias='years', default_factory=list)
+
+
+class AcmeCAAccountConfigurationInformation(CAAccountConfigurationInformation):
+    caType: Literal['CUSTOM', 'GO_DADDY', 'LETS_ENCRYPT', 'SECTIGO', 'ZERO_TOUCH_PKI'] = ApiField(alias='caType')
+    directoryUrl: str = ApiField(alias='directoryUrl')
+    dnsProvider: DnsProviderInformation = ApiField(alias='dnsProvider')
+    logo: str = ApiField(alias='logo')
+    termsOfServiceAgreed: bool = ApiField(alias='termsOfServiceAgreed')
+    useDnsProvider: bool = ApiField(alias='useDnsProvider')
+
+
+class AcmeCredentials(CertificateAuthorityCredentials):
+    dekId: str = ApiField(alias='dekId')
+    emailAddresses: List[str] = ApiField(alias='emailAddresses', default_factory=list)
+    keyId: str = ApiField(alias='keyId')
+    macKey: str = ApiField(alias='macKey')
+    privateKey: Dict[str, Any] = ApiField(alias='privateKey', default_factory=dict)
+
+
+class AcmeCredentialsInformation(CertificateAuthorityCredentialsInformation):
+    dekId: str = ApiField(alias='dekId')
+    emailAddresses: List[str] = ApiField(alias='emailAddresses', default_factory=list)
+    keyId: str = ApiField(alias='keyId')
+    macKey: str = ApiField(alias='macKey')
+
+
+class AcmeProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
     pass
 
 
-class ZtpkiCAAccountConfigurationInformation(ObjectModel):
+class AcmeProductInformation(CertificateAuthorityProductInformation):
     pass
 
 
-class ZtpkiCredentials(ObjectModel):
+class AkamaiDnsProviderInformation(DnsProviderInformation):
+    accessToken: str = ApiField(alias='accessToken')
+    clientSecret: str = ApiField(alias='clientSecret')
+    clientToken: str = ApiField(alias='clientToken')
+    host: str = ApiField(alias='host')
+
+
+class AwsRoute53DnsProviderInformation(DnsProviderInformation):
+    accessKeyId: str = ApiField(alias='accessKeyId')
+    hostedZoneId: str = ApiField(alias='hostedZoneId')
+    secretAccessKey: str = ApiField(alias='secretAccessKey')
+
+
+class AzureDnsProviderInformation(DnsProviderInformation):
+    clientId: str = ApiField(alias='clientId')
+    clientSecret: str = ApiField(alias='clientSecret')
+    resourceGroup: str = ApiField(alias='resourceGroup')
+    subscriptionId: str = ApiField(alias='subscriptionId')
+    tenantId: str = ApiField(alias='tenantId')
+
+
+class BuiltInCAProductDetailsInformation(CertificateAuthorityProductDetailsInformation):
     pass
 
 
-class ZtpkiCredentialsInformation(ObjectModel):
+class BuiltInCAProductInformation(CertificateAuthorityProductInformation):
     pass
 
 
-class ZtpkiProductDetailsInformation(ObjectModel):
+class CloudFlareDnsProviderInformation(DnsProviderInformation):
+    apiKey: str = ApiField(alias='apiKey')
+    dnsApiToken: str = ApiField(alias='dnsApiToken')
+    email: str = ApiField(alias='email')
+    zoneApiToken: str = ApiField(alias='zoneApiToken')
+
+
+class CronPatternInformation(SchedulerPatternInformation):
+    cronExpression: str = ApiField(alias='cronExpression')
+
+
+class DigitalOceanDnsProviderInformation(DnsProviderInformation):
+    authenticationToken: str = ApiField(alias='authenticationToken')
+
+
+class ECKeyTypeInformation(KeyTypeInformation):
+    keyCurves: List[Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN']] = ApiField(alias='keyCurves', default_factory=list)
+
+
+class EntrustTrackingDataInformation(TrackingDataInformation):
+    requesterEmail: str = ApiField(alias='requesterEmail')
+    requesterName: str = ApiField(alias='requesterName')
+    requesterPhone: str = ApiField(alias='requesterPhone')
+
+
+class GlobalSignMSSLTrackingDataInformation(TrackingDataInformation):
+    requesterEmail: str = ApiField(alias='requesterEmail')
+    requesterFirstName: str = ApiField(alias='requesterFirstName')
+    requesterLastName: str = ApiField(alias='requesterLastName')
+    requesterPhone: str = ApiField(alias='requesterPhone')
+
+
+class MicrosoftProductOptionTestIssuanceInformation(ProductOptionTestIssuanceInformation):
+    name: str = ApiField(alias='name')
+    oid: str = ApiField(alias='oid')
+
+
+class MockCAProductOptionTestIssuanceInformation(ProductOptionTestIssuanceInformation):
     pass
 
 
-class ZtpkiProductInformation(ObjectModel):
-    pass
+class MockCATrackingDataInformation(TrackingDataInformation):
+    requesterName: str = ApiField(alias='requesterName')
+
+
+class MonthlyPatternInformation(SchedulerPatternInformation):
+    daysOfMonth: List[Literal['D1', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D2', 'D20', 'D21', 'D22', 'D23', 'D24', 'D25',
+                              'D26', 'D27', 'D28', 'D29', 'D3', 'D30', 'D31', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'L', 'LW']] = ApiField(alias='daysOfMonth', default_factory=list)
+    recurrenceTime: datetime = ApiField(alias='recurrenceTime')
 
 
 AcmeCAAccountConfigurationInformation.update_forward_refs()
@@ -885,7 +1004,11 @@ SchedulerPatternInformation.update_forward_refs()
 StringField.update_forward_refs()
 StringList.update_forward_refs()
 SubjectAltNamesInformation.update_forward_refs()
+TppCAAccountConfigurationInformation.update_forward_refs()
 TppCredentials.update_forward_refs()
+TppCredentialsInformation.update_forward_refs()
+TppProductDetailsInformation.update_forward_refs()
+TppProductInformation.update_forward_refs()
 TrackingDataInformation.update_forward_refs()
 UploadCaCertificateOperationRequest.update_forward_refs()
 ValidityInformation.update_forward_refs()

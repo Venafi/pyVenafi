@@ -1,29 +1,14 @@
 from pyvenafi.cloud.api.session import Session
-from pyvenafi.cloud.api.endpoints.account_service import (
-    _teams, _users, _preferences, _useraccounts, _notifications, _ssoconfigurations, 
-    _dataencryptionkeys
-)
-from pyvenafi.cloud.api.endpoints.activitylog_service import (
-    _activitytypes, _activitylogsearch
-)
-from pyvenafi.cloud.api.endpoints.caoperations_service import (
-    _builtinca, _certificateissuingtemplates, _certificateauthorities
-)
-from pyvenafi.cloud.api.endpoints.connectors_service import (
-    _connectors
-)
-from pyvenafi.cloud.api.endpoints.edgemanagement_service import (
-    _pairingcodes, _edgeworkers, _edgeinstances, _billofmaterials, _edgeencryptionkeys
-)
-from pyvenafi.cloud.api.endpoints.integrations_service import (
-    _environments, _integrationservices, _integrationservicesaggregates
-)
-from pyvenafi.cloud.api.endpoints.outagedetection_service import (
-    _outagedetection
-)
-from pyvenafi.cloud.api.endpoints.provisioning_service import (
-    _machines, _machinesearch, _machinetypes, _machineidentities, _machineidentitysearch
-)
+from pyvenafi.cloud.api.endpoints.account_service import _account_service
+from pyvenafi.cloud.api.endpoints.activitylog_service import _activitylog_service
+from pyvenafi.cloud.api.endpoints.caoperations_service import _caoperations_service
+from pyvenafi.cloud.api.endpoints.certificate_service import _certificate_service
+from pyvenafi.cloud.api.endpoints.connectors_service import _connectors_service
+from pyvenafi.cloud.api.endpoints.edgemanagement_service import _edgemanagement_service
+from pyvenafi.cloud.api.endpoints.integrations_service import _integrations_service
+from pyvenafi.cloud.api.endpoints.outagedetection_service import _outagedetection_service
+from pyvenafi.cloud.api.endpoints.provisioning_service import _provisioning_service
+from pyvenafi.cloud.api.endpoints.tagging_service import _tagging_service
 
 
 class CloudApi:
@@ -52,31 +37,14 @@ class CloudApi:
         # endregion Authentication
 
         # region Endpoints
-        self.activitylogsearch = _activitylogsearch(self)
-        self.activitytypes = _activitytypes(self)
-        self.billofmaterials = _billofmaterials(self)
-        self.builtinca = _builtinca(self)
-        self.certificateauthorities = _certificateauthorities(self)
-        self.certificateissuingtemplates = _certificateissuingtemplates(self)
-        self.connectors = _connectors(self)
-        self.dataencryptionkeys = _dataencryptionkeys(self)
-        self.edgeencryptionkeys = _edgeencryptionkeys(self)
-        self.edgeinstances = _edgeinstances(self)
-        self.edgeworkers = _edgeworkers(self)
-        self.environments = _environments(self)
-        self.integrationservices = _integrationservices(self)
-        self.integrationservicesaggregates = _integrationservicesaggregates(self)
-        self.machineidentities = _machineidentities(self)
-        self.machineidentitysearch = _machineidentitysearch(self)
-        self.machines = _machines(self)
-        self.machinesearch = _machinesearch(self)
-        self.machinetypes = _machinetypes(self)
-        self.notifications = _notifications(self)
-        self.outagedetection = _outagedetection(self)
-        self.pairingcodes = _pairingcodes(self)
-        self.preferences = _preferences(self)
-        self.ssoconfigurations = _ssoconfigurations(self)
-        self.teams = _teams(self)
-        self.useraccounts = _useraccounts(self)
-        self.users = _users(self)
+        self.account_service = _account_service(self)
+        self.activitylog_service = _activitylog_service(self)
+        self.caoperations_service = _caoperations_service(self)
+        self.certificate_service = _certificate_service(self)
+        self.connectors_service = _connectors_service(self)
+        self.edgemanagement_service = _edgemanagement_service(self)
+        self.integrations_service = _integrations_service(self)
+        self.outagedetection_service = _outagedetection_service(self)
+        self.provisioning_service = _provisioning_service(self)
+        self.tagging_service = _tagging_service(self)
         # endregion Endpoints

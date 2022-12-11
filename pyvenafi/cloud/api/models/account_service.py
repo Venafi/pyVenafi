@@ -31,45 +31,6 @@ class ApiKeyResponse(ObjectModel):
     apiKeys: List[ApiKeyInformation] = ApiField(alias='apiKeys', default_factory=list)
 
 
-class CUser(ObjectModel):
-    activationEmailDelayedSendDate: datetime = ApiField(alias='activationEmailDelayedSendDate')
-    activationEmailSendDate: datetime = ApiField(alias='activationEmailSendDate')
-    activationKey: UUID = ApiField(alias='activationKey')
-    companyId: UUID = ApiField(alias='companyId')
-    creationDate: datetime = ApiField(alias='creationDate')
-    dataEncryptionKeyContainerId: UUID = ApiField(alias='dataEncryptionKeyContainerId')
-    dataEncryptionKeyId: UUID = ApiField(alias='dataEncryptionKeyId')
-    emailAddress: str = ApiField(alias='emailAddress')
-    encryptorDecryptors: List[EncryptorDecryptor] = ApiField(alias='encryptorDecryptors', default_factory=list)
-    eulaAcceptDate: datetime = ApiField(alias='eulaAcceptDate')
-    failedLoginCount: int = ApiField(alias='failedLoginCount')
-    firstLoginDate: datetime = ApiField(alias='firstLoginDate')
-    firstname: str = ApiField(alias='firstname')
-    id: UUID = ApiField(alias='id')
-    lastname: str = ApiField(alias='lastname')
-    localLoginDisabled: bool = ApiField(alias='localLoginDisabled')
-    marketoAttributes: Dict[str, str] = ApiField(alias='marketoAttributes', default_factory=dict)
-    memberedTeams: List[UUID] = ApiField(alias='memberedTeams', default_factory=list)
-    ownedTeams: List[UUID] = ApiField(alias='ownedTeams', default_factory=list)
-    passwordHash: str = ApiField(alias='passwordHash')
-    pk: CUserPk = ApiField(alias='pk')
-    productRoles: Dict[str, List[Literal['DEVOPS_LEAD', 'DEVOPS_USER', 'GUEST', 'OUTAGEDETECTION_ADMIN',
-                                         'PKI_ADMIN', 'RESOURCE_OWNER', 'SECURITY_ADMIN']]] = ApiField(alias='productRoles', default_factory=dict)
-    requestedEntitlements: List[Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION']
-                                ] = ApiField(alias='requestedEntitlements', default_factory=list)
-    ssoStatus: Literal['ACTIVE', 'INACTIVE'] = ApiField(alias='ssoStatus')
-    systemRoles: List[Literal['CONDOR_METRICS', 'SYSTEM_ADMIN']] = ApiField(alias='systemRoles', default_factory=list)
-    userAccountType: Literal['API', 'WEB_UI'] = ApiField(alias='userAccountType')
-    userFullName: str = ApiField(alias='userFullName')
-    userStatus: Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION'] = ApiField(alias='userStatus')
-    userType: Literal['EXTERNAL', 'INTERNAL'] = ApiField(alias='userType')
-
-
-class CUserPk(ObjectModel):
-    encryptedUsername: str = ApiField(alias='encryptedUsername')
-    username: str = ApiField(alias='username')
-
-
 class CapabilityInformation(ObjectModel):
     isTrial: bool = ApiField(alias='isTrial')
     name: Literal['DEFAULT', 'DISTRIBUTED_ISSUER', 'ENTERPRISE', 'ISSUANCE',
@@ -106,10 +67,6 @@ class DataEncryptionKeyInformation(ObjectModel):
     algorithm: str = ApiField(alias='algorithm')
     companyId: UUID = ApiField(alias='companyId')
     id: UUID = ApiField(alias='id')
-
-
-class EncryptorDecryptor(ObjectModel):
-    pass
 
 
 class ErrorInformation(ObjectModel):
@@ -353,14 +310,11 @@ ApiKeyInformation.update_forward_refs()
 ApiKeyNullResponse.update_forward_refs()
 ApiKeyRequest.update_forward_refs()
 ApiKeyResponse.update_forward_refs()
-CUser.update_forward_refs()
-CUserPk.update_forward_refs()
 CapabilityInformation.update_forward_refs()
 ChangePasswordRequest.update_forward_refs()
 CompanyInformation.update_forward_refs()
 CreateTeamRequest.update_forward_refs()
 DataEncryptionKeyInformation.update_forward_refs()
-EncryptorDecryptor.update_forward_refs()
 ErrorInformation.update_forward_refs()
 ErrorResponse.update_forward_refs()
 InvitationConfirmationRequest.update_forward_refs()

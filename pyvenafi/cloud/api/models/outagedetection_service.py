@@ -19,10 +19,15 @@ class ApplicationInformation(ObjectModel):
     ipRanges: List[str] = ApiField(alias='ipRanges', default_factory=list)
     name: str = ApiField(alias='name')
     ownerIdsAndTypes: List[OwnerIdAndType] = ApiField(alias='ownerIdsAndTypes', default_factory=list)
-    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    ownership: ApplicationOwnership = ApiField(alias='ownership')
     owningTeams: List[TeamInformation] = ApiField(alias='owningTeams', default_factory=list)
     owningUsers: List[UserInformation] = ApiField(alias='owningUsers', default_factory=list)
     ports: List[str] = ApiField(alias='ports', default_factory=list)
+
+
+class ApplicationOwnership(ObjectModel):
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
 
 
 class ApplicationRequest(ObjectModel):
@@ -76,6 +81,11 @@ class BaseApplicationServerTypeRequest(ObjectModel):
                                    'NGINX', 'OTHER', 'TOMCAT'] = ApiField(alias='applicationServerType')
     keyStoreType: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='keyStoreType')
     platformName: str = ApiField(alias='platformName')
+
+
+class Bucket(ObjectModel):
+    first: str = ApiField(alias='first')
+    second: List[NestedFacet] = ApiField(alias='second', default_factory=list)
 
 
 class CSRAttributesInformation(ObjectModel):
@@ -165,7 +175,7 @@ class CertificateInformation(ObjectModel):
     managedCertificateId: UUID = ApiField(alias='managedCertificateId')
     modificationDate: datetime = ApiField(alias='modificationDate')
     ocspNoCheck: bool = ApiField(alias='ocspNoCheck')
-    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    ownership: CertificateOwnership = ApiField(alias='ownership')
     pathLength: int = ApiField(alias='pathLength')
     requireExplicitPolicy: int = ApiField(alias='requireExplicitPolicy')
     selfSigned: bool = ApiField(alias='selfSigned')
@@ -211,6 +221,7 @@ class CertificateInstanceInformation(ObjectModel):
                                                 'OK', 'SELF_SIGNED', 'UNKNOWN_ERROR']] = ApiField(alias='instanceChainValidationStatus', default_factory=list)
     ipAddress: str = ApiField(alias='ipAddress')
     lastScanDate: datetime = ApiField(alias='lastScanDate')
+    lastValidatedAttempt: datetime = ApiField(alias='lastValidatedAttempt')
     modificationDate: datetime = ApiField(alias='modificationDate')
     port: int = ApiField(alias='port')
     serviceIds: List[UUID] = ApiField(alias='serviceIds', default_factory=list)
@@ -274,6 +285,10 @@ class CertificateKeystoreRequest(ObjectModel):
     encryptedKeystorePassphrase: str = ApiField(alias='encryptedKeystorePassphrase')
     encryptedPrivateKeyPassphrase: str = ApiField(alias='encryptedPrivateKeyPassphrase')
     exportFormat: Literal['JKS', 'PEM', 'PKCS12'] = ApiField(alias='exportFormat')
+
+
+class CertificateOwnership(ObjectModel):
+    owningContainers: List[ExtendedApplicationOwnership] = ApiField(alias='owningContainers', default_factory=list)
 
 
 class CertificateRecoveryRequest(ObjectModel):
@@ -363,7 +378,7 @@ class CertificateRequestsSearchRequest(ObjectModel):
 
 class CertificateResponse(ObjectModel):
     certificates: List[CertificateInformation] = ApiField(alias='certificates', default_factory=list)
-    count: int = ApiField(alias='count')
+    count: List[int] = ApiField(alias='count', default_factory=list)
 
 
 class CertificateRetirementRequest(ObjectModel):
@@ -400,18 +415,6 @@ class CertificationRequestInformation(ObjectModel):
     subjectDN: str = ApiField(alias='subjectDN')
 
 
-class DefaultOwnershipInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    type: str = ApiField(alias='type')
-
-
-class ECKeyTypeInformation(ObjectModel):
-    pass
-
-
 class ErrorInformation(ObjectModel):
     args: List[Dict[str, Any]] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
@@ -424,6 +427,13 @@ class ErrorResponse(ObjectModel):
 
 class Expression(ObjectModel):
     pass
+
+
+class ExtendedApplicationOwnership(ObjectModel):
+    id: UUID = ApiField(alias='id')
+    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
+    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
+    type: str = ApiField(alias='type')
 
 
 class ExtendedCertificateInformation(ObjectModel):
@@ -460,7 +470,7 @@ class ExtendedCertificateInformation(ObjectModel):
     managedCertificateId: UUID = ApiField(alias='managedCertificateId')
     modificationDate: datetime = ApiField(alias='modificationDate')
     ocspNoCheck: bool = ApiField(alias='ocspNoCheck')
-    ownership: DefaultOwnershipInformation = ApiField(alias='ownership')
+    ownership: CertificateOwnership = ApiField(alias='ownership')
     pathLength: int = ApiField(alias='pathLength')
     requireExplicitPolicy: int = ApiField(alias='requireExplicitPolicy')
     selfSigned: bool = ApiField(alias='selfSigned')
@@ -503,6 +513,7 @@ class ExtendedCertificateInstanceInformation(ObjectModel):
                                                 'OK', 'SELF_SIGNED', 'UNKNOWN_ERROR']] = ApiField(alias='instanceChainValidationStatus', default_factory=list)
     ipAddress: str = ApiField(alias='ipAddress')
     lastScanDate: datetime = ApiField(alias='lastScanDate')
+    lastValidatedAttempt: datetime = ApiField(alias='lastValidatedAttempt')
     modificationDate: datetime = ApiField(alias='modificationDate')
     port: int = ApiField(alias='port')
     serviceIds: List[UUID] = ApiField(alias='serviceIds', default_factory=list)
@@ -525,7 +536,7 @@ class Facet(ObjectModel):
 
 class FacetResponse(ObjectModel):
     aggregates: Dict[str, str] = ApiField(alias='aggregates', default_factory=dict)
-    buckets: List[PairStringListFacetResponse] = ApiField(alias='buckets', default_factory=list)
+    buckets: List[Bucket] = ApiField(alias='buckets', default_factory=list)
 
 
 class FlattenedCertificateSavedSearch(ObjectModel):
@@ -557,6 +568,14 @@ class ImportedCertificateInformation(ObjectModel):
     id: UUID = ApiField(alias='id')
     issuerCertificateIds: List[UUID] = ApiField(alias='issuerCertificateIds', default_factory=list)
     managedCertificateId: UUID = ApiField(alias='managedCertificateId')
+
+
+class InventoryMonitoringConfigurationInformation(ObjectModel):
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+    id: UUID = ApiField(alias='id')
+    includeUnassignedCertificates: bool = ApiField(alias='includeUnassignedCertificates')
+    isEnabled: bool = ApiField(alias='isEnabled')
+    thresholds: List[int] = ApiField(alias='thresholds', default_factory=list)
 
 
 class InvitationInformation(ObjectModel):
@@ -592,6 +611,16 @@ class MetadataInformation(ObjectModel):
     productEntitlement: Literal['ANY', 'DEVOPS', 'MIRA', 'OUTAGE_DETECTION'] = ApiField(alias='productEntitlement')
 
 
+class NestedBucket(ObjectModel):
+    first: str = ApiField(alias='first')
+    second: List[Dict[str, Any]] = ApiField(alias='second', default_factory=list)
+
+
+class NestedFacet(ObjectModel):
+    aggregates: Dict[str, str] = ApiField(alias='aggregates', default_factory=dict)
+    buckets: List[NestedBucket] = ApiField(alias='buckets', default_factory=list)
+
+
 class OrderObject(ObjectModel):
     direction: Literal['ASC', 'DESC'] = ApiField(alias='direction')
     field: str = ApiField(alias='field')
@@ -601,7 +630,7 @@ class Ordering(ObjectModel):
     orders: List[OrderObject] = ApiField(alias='orders', default_factory=list)
 
 
-class OtherApplicationServerTypeRequest(ObjectModel):
+class OtherApplicationServerTypeRequest(BaseApplicationServerTypeRequest):
     pass
 
 
@@ -610,22 +639,9 @@ class OwnerIdAndType(ObjectModel):
     ownerType: Literal['TEAM', 'USER'] = ApiField(alias='ownerType')
 
 
-class OwnershipInformation(ObjectModel):
-    id: UUID = ApiField(alias='id')
-    owningContainers: List[OwnershipInformation] = ApiField(alias='owningContainers', default_factory=list)
-    owningTeams: List[UUID] = ApiField(alias='owningTeams', default_factory=list)
-    owningUsers: List[UUID] = ApiField(alias='owningUsers', default_factory=list)
-    type: str = ApiField(alias='type')
-
-
 class Paging(ObjectModel):
     pageNumber: int = ApiField(alias='pageNumber')
     pageSize: int = ApiField(alias='pageSize')
-
-
-class PairStringListFacetResponse(ObjectModel):
-    first: str = ApiField(alias='first')
-    second: List[FacetResponse] = ApiField(alias='second', default_factory=list)
 
 
 class ProviderConfigInformation(ObjectModel):
@@ -646,8 +662,8 @@ class ProviderInputInformation(ObjectModel):
     type: str = ApiField(alias='type')
 
 
-class RSAKeyTypeInformation(ObjectModel):
-    pass
+class RSAKeyTypeInformation(KeyTypeInformation):
+    keyLengths: List[int] = ApiField(alias='keyLengths', default_factory=list)
 
 
 class RecommendedSettingsInformation(ObjectModel):
@@ -775,8 +791,13 @@ class statusInfo(ObjectModel):
     statusCode: int = ApiField(alias='statusCode')
 
 
+class ECKeyTypeInformation(KeyTypeInformation):
+    keyCurves: List[Literal['ED25519', 'P256', 'P384', 'P521', 'UNKNOWN']] = ApiField(alias='keyCurves', default_factory=list)
+
+
 ApiClientInformation.update_forward_refs()
 ApplicationInformation.update_forward_refs()
+ApplicationOwnership.update_forward_refs()
 ApplicationRequest.update_forward_refs()
 ApplicationResponse.update_forward_refs()
 ApplicationServerTypeInformation.update_forward_refs()
@@ -784,6 +805,7 @@ ApplicationServerTypeResponse.update_forward_refs()
 ApplicationsAssignRequest.update_forward_refs()
 ApplicationsAssignResponse.update_forward_refs()
 BaseApplicationServerTypeRequest.update_forward_refs()
+Bucket.update_forward_refs()
 CSRAttributesInformation.update_forward_refs()
 CertificateAggregatesRangeResponse.update_forward_refs()
 CertificateAggregatesResponse.update_forward_refs()
@@ -800,6 +822,7 @@ CertificateInstanceSearchRequest.update_forward_refs()
 CertificateInstanceValidationRequest.update_forward_refs()
 CertificateIssuingTemplateInformation.update_forward_refs()
 CertificateKeystoreRequest.update_forward_refs()
+CertificateOwnership.update_forward_refs()
 CertificateRecoveryRequest.update_forward_refs()
 CertificateRequestDocumentInformation.update_forward_refs()
 CertificateRequestDocumentResponse.update_forward_refs()
@@ -814,11 +837,11 @@ CertificateSearchRequest.update_forward_refs()
 CertificateUsageMetadata.update_forward_refs()
 CertificateValidationRequest.update_forward_refs()
 CertificationRequestInformation.update_forward_refs()
-DefaultOwnershipInformation.update_forward_refs()
 ECKeyTypeInformation.update_forward_refs()
 ErrorInformation.update_forward_refs()
 ErrorResponse.update_forward_refs()
 Expression.update_forward_refs()
+ExtendedApplicationOwnership.update_forward_refs()
 ExtendedCertificateInformation.update_forward_refs()
 ExtendedCertificateInstanceInformation.update_forward_refs()
 ExtendedCertificateInstanceResponse.update_forward_refs()
@@ -827,19 +850,20 @@ FacetResponse.update_forward_refs()
 FlattenedCertificateSavedSearch.update_forward_refs()
 GeneralNamesData.update_forward_refs()
 ImportedCertificateInformation.update_forward_refs()
+InventoryMonitoringConfigurationInformation.update_forward_refs()
 InvitationInformation.update_forward_refs()
 InvitationRequest.update_forward_refs()
 InvitationResponse.update_forward_refs()
 KeyTypeInformation.update_forward_refs()
 KeyTypeParameters.update_forward_refs()
 MetadataInformation.update_forward_refs()
+NestedBucket.update_forward_refs()
+NestedFacet.update_forward_refs()
 OrderObject.update_forward_refs()
 Ordering.update_forward_refs()
 OtherApplicationServerTypeRequest.update_forward_refs()
 OwnerIdAndType.update_forward_refs()
-OwnershipInformation.update_forward_refs()
 Paging.update_forward_refs()
-PairStringListFacetResponse.update_forward_refs()
 ProviderConfigInformation.update_forward_refs()
 ProviderInformation.update_forward_refs()
 ProviderInputInformation.update_forward_refs()

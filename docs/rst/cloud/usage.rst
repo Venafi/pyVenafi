@@ -5,8 +5,8 @@ Authentication
 --------------
 
 .. note::
-   Be sure to create your own API Key before authenticating. Refer to
-   `Obtaining an API Key <https://docs.venafi.cloud/api/obtaining-api-key/>`_ for directions.
+   Be sure to create your own API Key before authenticating. Refer to `Obtaining an API Key <https://docs.venafi.cloud/api/obtaining-api-key/>`_ for directions.
+   All API and model definitions reflect the Venafi Cloud Swagger documentation found `here <https://api.venafi.cloud/webjars/swagger-ui/index.html>`_.
 
 
 .. code-block:: python
@@ -24,15 +24,18 @@ Making API Calls
    All schema models are defined with `pydantic <https://pydantic-docs.helpmanual.io>`_ , which automatically serializes inputs and outputs
    to and from the API servers.
 
+**Terminology**
+
+* *service* refers to the API service that defines a set of APIs.
+* *model* refers to an API component schema definition in *pyVenafi*.
+
 Making API calls is super easy! Just pay attention to these details.
  * Import the basics: ``from pyvenafi import Authenticate, models``
- * Specify the same path pattern in code as you would see in the url, minus ``v1``. The REST method follows. For example,
-   ``GET /v1/users/username/{username}`` becomes ``session.cloud_api.users.username.USERNAME('my_awesome_email@awesomeness.com').get(...)``.
- * The parameters for the method often require a model. Find the model you need under ``models.[service].[model_name]`` where ``[service]``
-   is the service name for the API (found in the Swagger documentation) and the ``[model_name]`` is the name of the Component Schema, which
-   is usually the same name as the parameter. For example, ``POST /v1/pairingcodes`` (part of the ``edgemanagement_service``) requires an input of
-   the ``PairingCodeRequest`` model, which becomes:
-   ``session.cloud_api.pairingcodes.post(PairingCodeRequest=models.edgemanagement_service.PairingCodeRequest(...))``
+ * Specify the same path pattern in code as you would see in the url, including the service name. The REST method follows. For example,
+   ``GET /v1/users/username/{username}`` in the ``account_service`` space becomes
+   ``session.cloud_api.account_service.v1.users.username.USERNAME('my_awesome_email@awesomeness.com').get(...)``. For example, ``POST /v1/pairingcodes``
+   in the ``edgemanagement_service`` space requires an input of the ``PairingCodeRequest`` model, which becomes:
+   ``session.cloud_api.edgemanagement_service.v1.pairingcodes.post(PairingCodeRequest=models.edgemanagement_service.PairingCodeRequest(...))``
  * The output contains the response from Python's ``requests`` library as well as a model of the Component Schema. While most APIs only return one
    possible schema on an OK response, some may return one of many, dependent on the return code. Be sure you know which schema to expect in return
    and reference that schema in the code.
@@ -76,7 +79,7 @@ Making API calls is super easy! Just pay attention to these details.
     from pyvenafi.cloud import Authenticate
 
     session = Authenticate(...)
-    response = session.cloud_api.users.username.USERNAME('my_awesome_email@awesomeness.com').get()
+    response = session.cloud_api.account_service.v1.users.username.USERNAME('my_awesome_email@awesomeness.com').get()
     # This will print everything returned by the method above as JSON.
     print(response.json(indent=2))
     # This will print the usernames returned.
@@ -94,11 +97,13 @@ Making API calls is super easy! Just pay attention to these details.
    ENVIRONMENT_ID = UUID(...)
 
    session = Authenticate(...)
-   response = session.cloud_api.pairingcodes.post(PairingCodeRequest=models.edgemanagement_service.PairingCodeRequest(
-       environmentId=ENVIRONMENT_ID,
-       reuseCount=1,
-       expirationDate=datetime.today() + timedelta(days=1)
-   ))
+   response = session.cloud_api.edgemanagement_service.v1.pairingcodes.post(
+       PairingCodeRequest=models.edgemanagement_service.PairingCodeRequest(
+           environmentId=ENVIRONMENT_ID,
+           reuseCount=1,
+           expirationDate=datetime.today() + timedelta(days=1)
+       )
+   )
    print(response.PairingCodeInformation.pairingCode)
 
 

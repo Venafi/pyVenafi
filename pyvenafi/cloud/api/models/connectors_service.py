@@ -40,7 +40,7 @@ class ErrorResponse(ObjectModel):
 
 
 class Filter(ObjectModel):
-    activityTypes: List[str] = ApiField(alias='activityTypes', default_factory=list)
+    filterType: str = ApiField(alias='filterType')
 
 
 class JsonNode(ObjectModel):
@@ -52,10 +52,22 @@ class Target(ObjectModel):
     type: str = ApiField(alias='type')
 
 
-class WebhookProperties(ObjectModel):
-    pass
+class WebhookProperties(ConnectorProperties):
+    filter: Filter = ApiField(alias='filter')
+    target: Target = ApiField(alias='target')
 
 
+class ActivityFilter(Filter):
+    activities: List[str] = ApiField(alias='activities', default_factory=list)
+    activityTypes: List[str] = ApiField(alias='activityTypes', default_factory=list)
+    criticality: int = ApiField(alias='criticality')
+
+
+class ExpirationFilter(Filter):
+    applicationIds: List[UUID] = ApiField(alias='applicationIds', default_factory=list)
+
+
+ActivityFilter.update_forward_refs()
 ConnectorProperties.update_forward_refs()
 ConnectorsCreationRequest.update_forward_refs()
 ConnectorsInformation.update_forward_refs()
@@ -63,6 +75,7 @@ ConnectorsResponse.update_forward_refs()
 ConnectorsUpdateRequest.update_forward_refs()
 ErrorInformation.update_forward_refs()
 ErrorResponse.update_forward_refs()
+ExpirationFilter.update_forward_refs()
 Filter.update_forward_refs()
 JsonNode.update_forward_refs()
 Target.update_forward_refs()
