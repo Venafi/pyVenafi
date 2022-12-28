@@ -39,6 +39,8 @@ Making API calls is super easy! Just pay attention to these details.
  * The output contains the response from Python's ``requests`` library as well as a model of the Component Schema. While most APIs only return one
    possible schema on an OK response, some may return one of many, dependent on the return code. Be sure you know which schema to expect in return
    and reference that schema in the code.
+ * Not all models are perfectly defined. They are derived from what is documented and may be missing attributes. While this shouldn't happen, in case it
+   does you can call ``<model>.with_extra_properties(**<properties>)`` where *properties* is a dictionary of items to dynamically add to the model.
 
 **Example 1**
 
@@ -106,6 +108,31 @@ Making API calls is super easy! Just pay attention to these details.
    )
    print(response.PairingCodeInformation.pairingCode)
 
+**Example 3**
+
+
+.. code-block:: python
+
+   from pyvenafi.cloud import models
+
+   facet = models.outagedetection_service.Facet(
+       name='FacetName',
+       facets=[
+           models.outagedetection_service.Facet(
+               name='SubFacetName'
+           ).with_extra_properties(
+               function=dict(
+                   field='SubFacetField',
+                   type='SubFacetType'
+               )
+           )
+       ]
+   ).with_extra_properties(
+       type='FacetType',
+       field='FacetField',
+       limit=10,
+   )
+   print(facet.json(indent=2))
 
 Logging
 -------

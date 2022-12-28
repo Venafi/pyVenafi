@@ -72,18 +72,19 @@ class WebSDK:
             read_timeout: Timeout in seconds between each byte received from the server.
         """
         # region Instance Variables
-        self._host = host
-        self._username = username
-        self._password = password
-        self._application_id = application_id
-        self._oauth = None
-        self._token = None
-        self._proxies = proxies
-        self._certificate_path = certificate_path
-        self._key_file_path = key_file_path
-        self._verify_ssl = verify_ssl
-        self._connection_timeout = connection_timeout
-        self._read_timeout = read_timeout
+        self._host: str = host
+        self._username: str = username
+        self._password: str = password
+        self._application_id: str = application_id
+        self._scope: str = scope.to_string() if isinstance(scope, Scope) else scope
+        self._token: str = token
+        self._proxies: dict = proxies
+        self._certificate_path: str = certificate_path
+        self._key_file_path: str = key_file_path
+        self._verify_ssl: bool = verify_ssl
+        self._connection_timeout: float = connection_timeout
+        self._read_timeout: float = read_timeout
+        self._refresh_token: str = refresh_token
 
         # This is used by the endpoints to avoid redundancy.
         self._scheme = 'https'
@@ -92,12 +93,13 @@ class WebSDK:
         # endregion Instance Variables
 
         # region Authentication
-        # This is used by the endpoints to authorize the API writes.
         self._session = Session(
             headers={
                 'Content-Type': 'application/json'
-            }, proxies=self._proxies,
-            certificate_path=certificate_path, key_file_path=key_file_path,
+            },
+            proxies=self._proxies,
+            certificate_path=certificate_path,
+            key_file_path=key_file_path,
             verify_ssl=verify_ssl,
             connection_timeout=connection_timeout,
             read_timeout=read_timeout
@@ -105,51 +107,7 @@ class WebSDK:
 
         # Authorize the WebSDK session and store the API token.
         self.Authorize = _Authorize(self)
-
-        if not token:
-            if application_id:
-                if not scope:
-                    raise ValueError(f'OAuth authentication requires both an Application ID and a scope. '
-                                     f'The scope was not defined.')
-                elif isinstance(scope, Scope):
-                    scope = scope.to_string()
-
-                if certificate_path and key_file_path:
-                    oauth = self.Authorize.Certificate.post(
-                        client_id=application_id,
-                        scope=scope
-                    )
-                else:
-                    oauth = self.Authorize.OAuth.post(
-                        client_id=application_id,
-                        username=username,
-                        password=password,
-                        scope=scope
-                    )
-                self._oauth = oauth
-                token = oauth.access_token
-            else:
-                # Deprecated since TPP Version 20.1
-                token = self.Authorize.post(username=username, password=password).token
-        elif refresh_token:
-            oauth = self.Authorize.Token.post(
-                client_id=application_id,
-                refresh_token=refresh_token
-            )
-            self._oauth = oauth
-            token = oauth.access_token
-
-        if token.endswith('=='):
-            self._token = f'Bearer {token}'
-            authorization_header = {
-                'Authorization': self._token
-            }
-        else:
-            self._token = token
-            authorization_header = {
-                'X-Venafi-API-Key': self._token
-            }
-        self._session.update_headers(authorization_header)
+        self._authenticate()
         # endregion Authentication
 
         # region Initialize All WebSDK Endpoints
@@ -197,34 +155,50 @@ class WebSDK:
         _TPP_VERSION = parse_version(self.SystemStatus.Version.get().version)
         return _TPP_VERSION
 
+    def _authenticate(self):
+        if self._refresh_token:
+            oauth = self.Authorize.Token.post(
+                client_id=self._application_id,
+                refresh_token=self._refresh_token
+            )
+            self._token = f'Bearer {oauth.access_token}'
+            self._refresh_token = oauth.refresh_token
+        elif not self._token:
+            if self._application_id:
+                if not self._scope:
+                    raise ValueError(f'OAuth authentication requires both an Application ID and a scope. '
+                                     f'The scope was not defined.')
+                if self._certificate_path and self._key_file_path:
+                    oauth = self.Authorize.Certificate.post(
+                        client_id=self._application_id,
+                        scope=self._scope
+                    )
+                else:
+                    oauth = self.Authorize.OAuth.post(
+                        username=self._username,
+                        password=self._password,
+                        client_id=self._application_id,
+                        scope=self._scope
+                    )
+                self._token = f'Bearer {oauth.access_token}'
+                self._refresh_token = oauth.refresh_token
+            else:
+                # Deprecated since TPP Version 20.1
+                self._token = self.Authorize.post(username=self._username, password=self._password).token
+
+        if self._token.endswith('=='):
+            authorization_header = {
+                'Authorization': self._token
+            }
+        else:
+            authorization_header = {
+                'X-Venafi-API-Key': self._token
+            }
+        self._session.update_headers(authorization_header)
+
     def re_authenticate(self):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
         """
-        if self._oauth is not None:
-            self.__init__(
-                host=self._host,
-                username=self._username,
-                password=self._password,
-                certificate_path=self._certificate_path,
-                key_file_path=self._key_file_path,
-                verify_ssl=self._verify_ssl,
-                proxies=self._proxies,
-                application_id=self._application_id,
-                scope=self._oauth.scope,
-                refresh_token=self._oauth.refresh_token,
-                connection_timeout=self._connection_timeout,
-                read_timeout=self._read_timeout,
-            )
-        else:
-            self.__init__(
-                host=self._host,
-                username=self._username,
-                password=self._password,
-                certificate_path=self._certificate_path,
-                key_file_path=self._key_file_path,
-                verify_ssl=self._verify_ssl,
-                proxies=self._proxies,
-                connection_timeout=self._connection_timeout,
-                read_timeout=self._read_timeout,
-            )
+        self._token = None
+        self._authenticate()

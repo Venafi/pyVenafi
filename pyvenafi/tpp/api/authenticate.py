@@ -64,41 +64,8 @@ class Authenticate:
     def password(self):
         return self._password
 
-    def re_authenticate(self, host: str = None, username: str = None, password: str = None,
-                        application_id: str = None, scope: str = None, proxies: dict = None,
-                        certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = None,
-                        connection_timeout: float = None, read_timeout: float = None, **kwargs):
+    def re_authenticate(self, **kwargs):
         """
         Performs a re-authentication using the same parameters used to authorize initially.
-
-        Args:
-            host: Hostname or IP Address
-            username: Username
-            password: Password
-            application_id: Application ID applicable to OAuth. Must supply ``scope``.
-            scope: Scope within the Application. Must supply ``application_id``.
-            proxies: An OrderedDict used by the python Requests library.
-            certificate_path: Absolute path to the public certificate file.
-            key_file_path: Absolute path to the private key file.
-            verify_ssl: If ``True``, verify the SSL certificate of the target endpoints.
-            connection_timeout: Timeout in seconds to establish a connection to the API service.
-            read_timeout: Timeout in seconds between each byte received from the server.
         """
-        if any([host, username, password, application_id, scope, certificate_path, key_file_path, proxies,
-                verify_ssl, connection_timeout, read_timeout]):
-            self.__init__(
-                host=host or self._host,
-                username=username or self._username,
-                password=password or self._password,
-                application_id=application_id or self._application_id,
-                scope=scope or self._scope,
-                version=str(self._tpp_version),
-                proxies=self._proxies,
-                certificate_path=certificate_path or self._certificate_path,
-                key_file_path=key_file_path or self._key_file_path,
-                verify_ssl=verify_ssl if verify_ssl is not None else self._verify_ssl,
-                connection_timeout=connection_timeout if connection_timeout is not None else self._connection_timeout,
-                read_timeout=read_timeout if read_timeout is not None else self._read_timeout,
-            )
-        else:
-            self.websdk.re_authenticate()
+        self.websdk.re_authenticate()

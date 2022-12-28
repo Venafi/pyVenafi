@@ -4,6 +4,7 @@ import time
 import pydantic.main
 from datetime import datetime
 from pydantic.fields import Undefined
+from pydantic import create_model
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from pyvenafi.logger import api_logger, json_pickler
@@ -345,6 +346,16 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
                 new_value = converter(new_value)
             new_values[fv.alias] = new_value
         return new_values
+
+    def with_extra_properties(self, **kwargs) -> 'ObjectModel':
+        d = self.__dict__
+        d.update(kwargs)
+        return create_model(
+            f'New{self.__class__.__name__}',
+            __base__=self.__class__,
+            __module__=self.__module__,
+            **d
+        )()
 
 
 class RootOutputModel(ObjectModel):

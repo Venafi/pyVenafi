@@ -24,7 +24,9 @@ DEV_REQUIREMENTS = [
     'lxml==4.4.1',
     'pandas==1.3.3',
     'paramiko==2.10.4',
-    'autopep8>=1.7.0'
+    'autopep8>=1.7.0',
+    'twine==4.0.2',
+    'keyring==23.0.1',
 ]
 
 DOC_REQUIREMENTS = [
