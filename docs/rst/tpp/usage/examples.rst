@@ -10,6 +10,7 @@ Examples
     examples/certificate_authority
     examples/client_groups
     examples/client_work
+    examples/codesign
     examples/credential
     examples/custom_fields
     examples/device
@@ -20,3 +21,4 @@ Examples
     examples/permissions
     examples/platforms
     examples/workflow
+    examples/codesign/codesign

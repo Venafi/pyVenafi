@@ -25,6 +25,18 @@ ApplicationCollection
 .. _pyvenafi.tpp.api.websdk.models.codesign.applicationcollection_model:
 .. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.ApplicationCollection
 
+ArchiveFilter
+-------------
+
+.. _pyvenafi.tpp.api.websdk.models.codesign.archivefilter_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.ArchiveFilter
+
+ArchiveResults
+--------------
+
+.. _pyvenafi.tpp.api.websdk.models.codesign.archiveresults_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.ArchiveResults
+
 CSPEnvironment
 --------------
 

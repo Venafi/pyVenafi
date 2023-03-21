@@ -13,10 +13,11 @@ Features
     certificate_authorities/certificate_authorities_toc
     client_groups/client_groups_toc
     client_work/client_work_toc
+    codesign/codesign_toc
     credentials/credentials_toc
     custom_fields/custom_field
     device/device_toc
-    discovery/network_discovery
+    discovery/discovery_toc
     folder/folder
     identity/identity_toc
     objects/objects

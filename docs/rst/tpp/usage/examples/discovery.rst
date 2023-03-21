@@ -132,3 +132,93 @@ Running, Pausing, And Cancelling Jobs
         # Kill the job if it is running longer than expected.
         features.discovery.network.cancel(job=job)
         raise
+
+.. _onboard_discovery_usage:
+
+Onboard Discovery
+-----------------
+
+.. note::
+    These examples demonstrate Adaptable Onboard discoveries, but all types of onboard discoveries are supported, such
+    as AWS, Azure, IIS (CAPI), F5, IBM DataPower, and NetScaler.
+
+Creating & Deleting Jobs
+************************
+
+.. code-block:: python
+
+    from pyvenafi.tpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
+
+    #### CREATE ####
+
+    obj = features.discovery.onboard.adaptable.create(
+        name='Awesome Discovery',
+        description="This is it!",
+        contacts=['|LocalUser|', '|DomainUser|'],
+        devices_to_scan=[r'|DevDn|'],
+        certificate_placement_folder=r'|CertDn|'
+    )
+
+    #### DELETE ####
+
+    features.discovery.onboard.adaptable.delete('Awesome Discovery')
+
+    # OR
+
+    features.discovery.onboard.adaptable.delete(obj)
+
+
+Scheduling And Unscheduling Jobs
+********************************
+
+.. code-block:: python
+
+    from pyvenafi.tpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
+
+    #### SCHEDULE ####
+    features.discovery.onboard.adaptable.schedule(
+        job='Awesome Discovery',
+        hour=23,                # 24-Hour Format (11 PM) in UTC
+        days_of_week=[0, 6],    # Every Saturday and Sunday
+        days_of_month=[1, 15],  # The 1st and 15th day of every month
+        days_of_year=['5/31']   # May 31st
+    )
+
+    #### UNSCHEDULE ####
+    features.discovery.onboard.adaptable.unschedule(job='Deprecated Job')
+
+Running, Pausing, And Cancelling Jobs
+*************************************
+
+.. warning::
+    There is a known bug when running jobs using the WebSDK in that the job may actually fail to
+    run and will return a "CacheEntryNotFound". There is currently no workaround, so the best
+    way to avoid this problem is to schedule the job.
+
+.. code-block:: python
+
+    from pyvenafi.tpp import Authenticate, Features
+
+    api = Authenticate(...)
+    features = Features(api)
+
+    job = 'Awesome Discovery'
+    features.discovery.onboard.adaptable.run_now(job=job)
+    # Do some stuff...
+    if features.discovery.onboard.adaptable.is_in_progress(job=job):
+        features.discovery.onboard.adaptable.pause(job=job)
+        # Do some stuff...
+        features.discovery.onboard.adaptable.resume(job=job)
+    try:
+        # Wait for 1 hour for the job to complete.
+        features.discovery.onboard.adaptable.wait_for_job_to_finish(job=job, timeout=(60 * 60))
+    except TimeoutError:
+        # Kill the job if it is running longer than expected.
+        features.discovery.onboard.adaptable.cancel(job=job)
+        raise
