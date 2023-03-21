@@ -7,3 +7,4 @@ class FlowAttributes(TopAttributes, metaclass=IterableMeta):
     archive_process = Attribute('Archive Process')
     archive_validity = Attribute('Archive Validity')
     product_code = Attribute('Product Code')
+    timeout = Attribute('Timeout')

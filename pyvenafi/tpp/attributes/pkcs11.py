@@ -37,4 +37,5 @@ class PKCS11Attributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     hsm_tmp_issued_kpblob = Attribute('HSM:TMP Issued KPBlob')
     hsm_token_label = Attribute('HSM:Token Label')
     hsm_token_password = Attribute('HSM:Token Password')
+    hsm_utility_timeout = Attribute('HSM:Utility Timeout')
     network_validation_disabled = Attribute('Network Validation Disabled')

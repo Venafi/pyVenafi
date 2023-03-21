@@ -3013,6 +3013,45 @@ class CloudInstanceMonitoringClassNames(metaclass=_PropertyMeta):
 
 # endregion
 
+# region Code Sign
+class CodeSignAttributeValues(metaclass=_PropertyMeta):
+
+    class TemplateType(metaclass=_PropertyMeta):
+        apple_template = 'Code Signing Apple Environment Template'
+        certificate_template = 'Code Signing Certificate Environment Template'
+        csp_template = 'Code Signing CSP Environment Template'
+        dotnet_template = 'Code Signing DotNet Environment Template'
+        key_pair_template = 'Code Signing Key Pair Environment Template'
+        gpg_template = 'Code Signing GPG Environment Template'
+
+    class TemplateTypeKey(metaclass=_PropertyMeta):
+        apple_template = 'AppleTemplate'
+        csp_template = 'CSPTemplate'
+        certificate_template = 'CertificateTemplate'
+        dotnet_template = 'DotNetTemplate'
+        gpg_template = 'GPGTemplate'
+        key_pair_template = 'KeyPairTemplate'
+
+    class EnvironmentType(metaclass=_PropertyMeta):
+        apple_environment = 'Code Signing Apple Environment'
+        certificate_environment = 'Code Signing Certificate Environment'
+        csp_environment = 'Code Signing CSP Environment'
+        dotnet_environment = 'Code Signing DotNet Environment'
+        key_pair_environment = 'Code Signing Key Pair Environment'
+        gpg_environment = 'Code Signing GPG Environment'
+
+    class ProjectStatus(metaclass=_PropertyMeta):
+        disabled = 0
+        enabled = 1
+        draft = 2
+        pending = 3
+
+    class KeyStorageLocation(metaclass=_PropertyMeta):
+        software = 'Software'
+        hsm = 'HSM'
+
+# endregion Code Sign
+
 # region Credential
 class _CredentialAttributesBase(metaclass=_PropertyMeta):
     contact = "Contact"
@@ -3376,7 +3415,26 @@ class DiscoveryAttributes(metaclass=_PropertyMeta):
 
 
 class DiscoveryAttributeValues(metaclass=_PropertyMeta):
-    pass
+    class Onboard:
+        class NetScaler:
+            class CertificatesToImport:
+                only_virtual_servers = 0
+                only_services_and_groups = 1
+                all = 2
+                only_gateway_virtual_servers = 3
+
+        class F5LtmAdvanced:
+            class CertificatesToImport:
+                both = 0
+                client = 1
+                server = 2
+
+        class IbmDataPower:
+            class CertificatesToImport:
+                all = 0
+                client = 1
+                proxy = 2
+                server = 3
 
 
 class DiscoveryClassNames(metaclass=_PropertyMeta):

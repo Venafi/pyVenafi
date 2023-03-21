@@ -12,6 +12,7 @@ class EngineRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
     authentication_scheme = Attribute('Authentication Scheme')
     automatically_apply_filters = Attribute('Automatically Apply Filters', min_version='21.3')
     disabled_features = Attribute('Disabled Features', min_version='21.1')
+    enable_acme_cert_history = Attribute('Enable ACME Cert History', min_version='23.1')
     flow_process_expiry = Attribute('Flow Process Expiry', min_version='21.2')
     key_pair_renewal_flow = Attribute('Key Pair Renewal Flow', min_version='20.2')
     known_cloud_service = Attribute('Known Cloud Service', min_version='17.1')

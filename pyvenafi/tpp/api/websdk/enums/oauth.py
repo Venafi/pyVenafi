@@ -18,7 +18,7 @@ class Permissions:
             'discover': self.discover,
             'manage'  : self.manage,
             'read'    : self.read,
-            'revoke'  : self.revoke,
+            'revoke'  : self.revoke
         }
 
     def effective(self):
@@ -37,6 +37,8 @@ class Scope:
         self._security = Permissions(name='security')
         self._statistics = Permissions(name='statistics')
         self._agent = Permissions(name='agent')
+        self._admin = Permissions(name='admin')
+        self._codesignclient = Permissions(name='codesignclient')
 
     def __str__(self):
         return self.to_string()
@@ -58,7 +60,8 @@ class Scope:
         return [
             self._certificate, self._ssh, self._codesign,
             self._configuration, self._restricted,
-            self._security, self._statistics, self._agent
+            self._security, self._statistics, self._agent,
+            self._admin, self._codesignclient
         ]
 
     def to_string(self):
@@ -73,9 +76,44 @@ class Scope:
                 scopes.append(f'{p.name}:{",".join(effective)}')
         return ';'.join(scopes)
 
+    def admin(self, delete: bool = False, read: bool = False):
+        self._admin.delete = delete
+        self._admin.read = read
+        return self
+
     def agent(self, delete: bool = False, read: bool = False):
         self._agent.delete = delete
         self._agent.read = read
+        return self
+
+    @classmethod
+    def _all(cls, admin: bool = True, agent: bool = True, certificate: bool = True, configuration: bool = True, codesign: bool = True,
+             codesignclient: bool = True, restricted: bool = True, security: bool = True, ssh: bool = True, statistics: bool = True):
+        self = cls()
+        if admin:
+            self.admin(delete=True, read=True)
+        if agent:
+            self.agent(delete=True, read=True)
+        if certificate:
+            self.certificate(approve=True, delete=True, discover=True, manage=True, read=True, revoke=True)
+        if configuration:
+            self.configuration(delete=True, manage=True, read=True)
+        if codesignclient:
+            self.codesignclient(read=True)
+        if codesign:
+            self.codesign(delete=True, manage=True, read=True)
+        if restricted:
+            self.restricted(delete=True, manage=True, read=True)
+        if security:
+            self.security(delete=True, manage=True, read=True)
+        if ssh:
+            self.ssh(approve=True, delete=True, discover=True, manage=True, read=True)
+        if statistics:
+            self.statistics(read=True)
+        return self
+
+    def codesignclient(self, read: bool = False):
+        self._codesignclient.read = read
         return self
 
     def certificate(self, approve: bool = False, delete: bool = False, discover: bool = False,

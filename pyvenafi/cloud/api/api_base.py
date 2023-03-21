@@ -387,7 +387,7 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
         d.update(kwargs)
         return create_model(
             f'New{self.__class__.__name__}',
-            __base__=self.__class__,
+            __base__=self.__class__,  # noqa
             __module__=self.__module__,
             **d
         )()

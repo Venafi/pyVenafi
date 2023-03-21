@@ -1,34 +1,107 @@
-from pyvenafi.tpp.features.objects import Objects
-from pyvenafi.tpp.features.folder import Folder
-from pyvenafi.tpp.features.client_groups import (
-    Agentless, EstCertificateEnrollment, VenafiAgent
-)
-from pyvenafi.tpp.features.client_work import (
-    AgentConnectivity, AgentUpgrade, CertificateDevicePlacement, CertificateDiscovery,
-    CertificateEnrollmentViaESTProtocol, CertificateInstallation, DynamicProvisioning,
-    SSHDevicePlacement, SSHDiscovery, SSHKeyUsage, SSHRemediation, UserCertificateCreation
+from pyvenafi.tpp.features.application import (
+    Adaptable as AdaptableApplication,
+    AmazonAWS,
+    Apache,
+    ApacheApplicationGroup,
+    AzureKeyVault,
+    Basic,
+    BlueCoatSSLVA,
+    CAPI,
+    CitrixNetScaler,
+    ConnectDirect,
+    F5AuthenticationBundle,
+    F5LTMAdvanced,
+    GoogleCloudLoadBalancer,
+    IBMDataPower,
+    IBMGSK,
+    ImpervaMX,
+    JKS,
+    OracleIPlanet,
+    PaloAltoNetworkFW,
+    PEM,
+    PKCS11,
+    PKCS11ApplicationGroup,
+    PKCS12,
+    RiverbedSteelHead,
+    TealeafPCA,
+    VAMnShield,
 )
 from pyvenafi.tpp.features.certificate import Certificate
-from pyvenafi.tpp.features.device import Device, JumpServer
-from pyvenafi.tpp.features.application import (
-    Adaptable as AdaptableApplication, AmazonAWS, Apache, AzureKeyVault, Basic, BlueCoatSSLVA, CAPI, CitrixNetScaler,
-    ConnectDirect, F5AuthenticationBundle, F5LTMAdvanced, GoogleCloudLoadBalancer, IBMDataPower, IBMGSK, ImpervaMX, JKS,
-    OracleIPlanet, PaloAltoNetworkFW, PEM, PKCS11, PKCS12, RiverbedSteelHead, TealeafPCA, VAMnShield,
-    PKCS11ApplicationGroup, ApacheApplicationGroup
+from pyvenafi.tpp.features.certificate_authorities import (
+    MSCA,
+    SelfSignedCA,
 )
-from pyvenafi.tpp.features.discovery import NetworkDiscovery
+from pyvenafi.tpp.features.client_groups import (
+    Agentless,
+    EstCertificateEnrollment,
+    VenafiAgent,
+)
+from pyvenafi.tpp.features.client_work import (
+    AgentConnectivity,
+    AgentUpgrade,
+    CertificateDevicePlacement,
+    CertificateDiscovery,
+    CertificateEnrollmentViaESTProtocol,
+    CertificateInstallation,
+    DynamicProvisioning,
+    SSHDevicePlacement,
+    SSHDiscovery,
+    SSHKeyUsage,
+    SSHRemediation,
+    UserCertificateCreation,
+)
+from pyvenafi.tpp.features.codesign.application import (
+    CodeSignApplication,
+    CodeSignApplicationCollection,
+)
+from pyvenafi.tpp.features.codesign.auditing import CodeSignAuditing
+from pyvenafi.tpp.features.codesign.environment import CodeSignEnvironment
+from pyvenafi.tpp.features.codesign.global_configuration import CodeSignGlobalConfiguration
+from pyvenafi.tpp.features.codesign.project import CodeSignProject
+from pyvenafi.tpp.features.codesign.rights import CodeSignRights
+from pyvenafi.tpp.features.codesign.template import CodeSignTemplate
 from pyvenafi.tpp.features.credentials import (
-    AmazonCredential, CertificateCredential, GenericCredential, PasswordCredential, PrivateKeyCredential,
-    UsernamePasswordCredential, GoogleCredential
+    AmazonCredential,
+    CertificateCredential,
+    GenericCredential,
+    GoogleCredential,
+    PasswordCredential,
+    PrivateKeyCredential,
+    UsernamePasswordCredential,
 )
-from pyvenafi.tpp.features.certificate_authorities import (MSCA, SelfSignedCA)
-from pyvenafi.tpp.features.identity import User, Group
-from pyvenafi.tpp.features.permissions import Permissions
-from pyvenafi.tpp.features.platforms import Platforms
-from pyvenafi.tpp.features.placement_rules import PlacementRules, PlacementRuleCondition
-from pyvenafi.tpp.features.workflow import ReasonCode, AdaptableWorkflow, StandardWorkflow, Ticket
 from pyvenafi.tpp.features.custom_fields import CustomField
-
+from pyvenafi.tpp.features.device import (
+    Device,
+    JumpServer,
+)
+from pyvenafi.tpp.features.discovery import (
+    AdaptableOnboardDiscovery,
+    AmazonOnboardDiscovery,
+    AzureOnboardDiscovery,
+    CapiOnboardDiscovery,
+    F5LtmAdvancedOnboardDiscovery,
+    IbmDataPowerOnboardDiscovery,
+    NetScalerOnboardDiscovery,
+    NetworkDiscovery,
+)
+from pyvenafi.tpp.features.folder import Folder
+from pyvenafi.tpp.features.identity import (
+    Group,
+    User,
+)
+from pyvenafi.tpp.features.objects import Objects
+from pyvenafi.tpp.features.permissions import Permissions
+from pyvenafi.tpp.features.placement_rules import (
+    PlacementRuleCondition,
+    PlacementRules,
+)
+from pyvenafi.tpp.features.platforms import Platforms
+from pyvenafi.tpp.features.workflow import (
+    AdaptableWorkflow,
+    ReasonCode,
+    StandardWorkflow,
+    Ticket,
+)
 
 # region Features
 class _Application:
@@ -216,6 +289,58 @@ class _CertificateAuthority:
         self._self_signed = self._self_signed or SelfSignedCA(self._api)
         return self._self_signed
 
+class _CodeSign:
+    def __init__(self, api):
+        self._api = api
+
+        self._application = None
+        self._application_collection = None
+        self._auditing = None
+        self._environment = None
+        self._global_configuration = None
+        self._project = None
+        self._rights = None
+        self._template = None
+
+    @property
+    def application(self) -> CodeSignApplication:
+        self._application = self._application or CodeSignApplication(self._api)
+        return self._application
+
+    @property
+    def application_collection(self) -> CodeSignApplicationCollection:
+        self._application_collection = self._application_collection or CodeSignApplicationCollection(self._api)
+        return self._application_collection
+
+    @property
+    def auditing(self) -> CodeSignAuditing:
+        self._auditing = self._auditing or CodeSignAuditing(self._api)
+        return self._auditing
+
+    @property
+    def environment(self) -> CodeSignEnvironment:
+        self._environment = self._environment or CodeSignEnvironment(self._api)
+        return self._environment
+
+    @property
+    def global_configuration(self) -> CodeSignGlobalConfiguration:
+        self._global_configuration = self._global_configuration or CodeSignGlobalConfiguration(self._api)
+        return self._global_configuration
+
+    @property
+    def project(self) -> CodeSignProject:
+        self._project = self._project or CodeSignProject(self._api)
+        return self._project
+
+    @property
+    def rights(self) -> CodeSignRights:
+        self._rights = self._rights or CodeSignRights(self._api)
+        return self._rights
+
+    @property
+    def template(self) -> CodeSignTemplate:
+        self._template = self._template or CodeSignTemplate(self._api)
+        return self._template
 
 class _ClientGroup:
     def __init__(self, api):
@@ -375,18 +500,71 @@ class _Credential:
         return self._upcred
 
 
+class _OnboardDiscovery:
+    def __init__(self, api):
+        self._api = api
+
+        self._adaptable = None
+        self._amazon = None
+        self._azure = None
+        self._capi = None
+        self._f5 = None
+        self._ibm = None
+        self._netscaler = None
+
+    @property
+    def adaptable(self):
+        self._adaptable = self._adaptable or AdaptableOnboardDiscovery(self._api)
+        return self._adaptable
+
+    @property
+    def amazon(self):
+        self._amazon = self._amazon or AmazonOnboardDiscovery(self._api)
+        return self._amazon
+
+    @property
+    def azure(self):
+        self._azure = self._azure or AzureOnboardDiscovery(self._api)
+        return self._azure
+
+    @property
+    def capi(self):
+        self._capi = self._capi or CapiOnboardDiscovery(self._api)
+        return self._capi
+
+    @property
+    def f5_ltm_advanced(self):
+        self._f5 = self._f5 or F5LtmAdvancedOnboardDiscovery(self._api)
+        return self._f5
+
+    @property
+    def ibm_datapower(self):
+        self._ibm = self._ibm or IbmDataPowerOnboardDiscovery(self._api)
+        return self._ibm
+
+    @property
+    def netscaler(self):
+        self._netscaler = self._netscaler or NetScalerOnboardDiscovery(self._api)
+        return self._netscaler
+
+
 class _Discovery:
     def __init__(self, api):
         self._api = api
 
         self._network = None
+        self._onboard = None
 
     @property
     def network(self) -> NetworkDiscovery:
         self._network = self._network or NetworkDiscovery(api=self._api)
         return self._network
 
-
+    @property
+    def onboard(self) -> _OnboardDiscovery:
+        self._onboard = self._onboard or _OnboardDiscovery(api=self._api)
+        return self._onboard
+    
 class _Identity:
     def __init__(self, api):
         self._api = api
@@ -403,7 +581,6 @@ class _Identity:
     def user(self) -> User:
         self._user = self._user or User(self._api)
         return self._user
-
 
 class _Workflow:
     def __init__(self, api):
@@ -445,6 +622,7 @@ class Features:
         self._certificate = None
         self._client_groups = None
         self._client_work = None
+        self._codesign = None
         self._credentials = None
         self._custom_fields = None
         self._device = None
@@ -488,6 +666,11 @@ class Features:
     def client_work(self) -> _ClientWork:
         self._client_work = self._client_work or _ClientWork(self._api)
         return self._client_work
+
+    @property
+    def codesign(self) -> _CodeSign:
+        self._codesign = self._codesign or _CodeSign(self._api)
+        return self._codesign
 
     @property
     def credential(self) -> _Credential:

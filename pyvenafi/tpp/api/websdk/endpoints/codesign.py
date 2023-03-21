@@ -1,4 +1,6 @@
 from typing import List, Dict, Union
+
+from pyvenafi.tpp.api.websdk.enums.config import CodeSignAttributeValues
 from pyvenafi.tpp.api.websdk.models import codesign
 from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
@@ -8,8 +10,8 @@ class _Codesign(WebSdkEndpoint):
         super().__init__(api_obj=api_obj, url='/Codesign')
         self.AddAdministrator = self._AddAdministrator(api_obj=api_obj, url=f'{self._url}/AddAdministrator')
         self.AddApplicationAdministrator = self._AddApplicationAdministrator(api_obj=api_obj, url=f'{self._url}/AddApplicationAdministrator')
-        self.AddProjectAdministrator = self._AddProjectAdministrator(api_obj=api_obj, url=f'{self._url}/AddProjectAdministrator')
         self.AddProjectApprover = self._AddProjectApprover(api_obj=api_obj, url=f'{self._url}/AddProjectApprover')
+        self.AddPreApproval = self._AddPreApproval(api_obj=api_obj, url=f'{self._url}/AddPreApproval')
         self.CountReferences = self._CountReferences(api_obj=api_obj, url=f'{self._url}/CountReferences')
         self.CreateApplication = self._CreateApplication(api_obj=api_obj, url=f'{self._url}/CreateApplication')
         self.CreateApplicationCollection = self._CreateApplicationCollection(api_obj=api_obj, url=f'{self._url}/CreateApplicationCollection')
@@ -39,11 +41,12 @@ class _Codesign(WebSdkEndpoint):
         self.GetTrusteeRights = self._GetTrusteeRights(api_obj=api_obj, url=f'{self._url}/GetTrusteeRights')
         self.RemoveAdministrator = self._RemoveAdministrator(api_obj=api_obj, url=f'{self._url}/RemoveAdministrator')
         self.RemoveApplicationAdministrator = self._RemoveApplicationAdministrator(api_obj=api_obj, url=f'{self._url}/RemoveApplicationAdministrator')
-        self.RemoveProjectAdministrator = self._RemoveProjectAdministrator(api_obj=api_obj, url=f'{self._url}/RemoveProjectAdministrator')
+        self.RemoveProjectApprover = self._RemoveProjectApprover(api_obj=api_obj, url=f'{self._url}/RemoveProjectApprover')
         self.RenameApplication = self._RenameApplication(api_obj=api_obj, url=f'{self._url}/RenameApplication')
         self.RenameApplicationCollection = self._RenameApplicationCollection(api_obj=api_obj, url=f'{self._url}/RenameApplicationCollection')
         self.RenameProject = self._RenameProject(api_obj=api_obj, url=f'{self._url}/RenameProject')
         self.RenameTemplate = self._RenameTemplate(api_obj=api_obj, url=f'{self._url}/RenameTemplate')
+        self.RetrieveArchiveEntries = self._RetrieveArchiveEntries(api_obj=api_obj, url=f'{self._url}/RetrieveArchiveEntries')
         self.SetGlobalConfiguration = self._SetGlobalConfiguration(api_obj=api_obj, url=f'{self._url}/SetGlobalConfiguration')
         self.UpdateApplication = self._UpdateApplication(api_obj=api_obj, url=f'{self._url}/UpdateApplication')
         self.UpdateApplicationCollection = self._UpdateApplicationCollection(api_obj=api_obj, url=f'{self._url}/UpdateApplicationCollection')
@@ -65,18 +68,6 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _AddApplicationAdministrator(WebSdkEndpoint):
-        def post(self, trustee: str):
-            body = {
-                'Trustee': trustee
-            }
-
-            class Output(WebSdkOutputModel):
-                result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
-                success: bool = ApiField(alias='Success')
-
-            return generate_output(response=self._post(data=body), output_cls=Output)
-
-    class _AddProjectAdministrator(WebSdkEndpoint):
         def post(self, trustee: str):
             body = {
                 'Trustee': trustee
@@ -121,7 +112,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CountReferences(WebSdkEndpoint):
-        def post(self, application: Union[dict, codesign.Application] = None, 
+        def post(self, application: Union[dict, codesign.Application] = None,
                  application_collection: Union[dict, codesign.ApplicationCollection] = None):
             body = {
                 'Application'          : application,
@@ -162,13 +153,18 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _CreateEnvironment(WebSdkEndpoint):
-        def post(self, dn: str, environment_name: str, project: Dict[str, Union[str, int]],
-                 template: List[Dict[str, str]], template_dn: str = None):
+        def post(
+            self, project: Dict[str, Union[str, int]],
+            template_type: Union[CodeSignAttributeValues.TemplateTypeKey, str],
+            template: List[Dict[str, str]],
+            dn: str = None, environment_name: str = None,
+            template_dn: str = None,
+        ):
             body = {
                 'Dn'             : dn,
                 'EnvironmentName': environment_name,
                 'Project'        : project,
-                'Template'       : template,
+                template_type    : template,
                 'TemplateDn'     : template_dn
             }
 
@@ -333,7 +329,7 @@ class _Codesign(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _EnumerateReferences(WebSdkEndpoint):
-        def post(self, application: Union[dict, codesign.Application] = None, 
+        def post(self, application: Union[dict, codesign.Application] = None,
                  application_collection: Union[dict] = None,
                  application_dn: str = None, application_guid: str = None,
                  collection_dn: str = None, collection_guid: str = None):
@@ -562,18 +558,6 @@ class _Codesign(WebSdkEndpoint):
 
             return generate_output(response=self._post(data=body), output_cls=Output)
 
-    class _RemoveProjectAdministrator(WebSdkEndpoint):
-        def post(self, trustee: str):
-            body = {
-                'Trustee': trustee
-            }
-
-            class Output(WebSdkOutputModel):
-                result: codesign.ResultCode = ApiField(alias='Result', converter=lambda x: codesign.ResultCode(code=x))
-                success: bool = ApiField(alias='Success')
-
-            return generate_output(response=self._post(data=body), output_cls=Output)
-
     class _RemoveProjectApprover(WebSdkEndpoint):
         def post(self, trustee: str):
             body = {
@@ -641,6 +625,34 @@ class _Codesign(WebSdkEndpoint):
                 success: bool = ApiField(alias='Success')
 
             return generate_output(response=self._post(data=body), output_cls=Output)
+
+    class _RetrieveArchiveEntries(WebSdkEndpoint):
+        def post(
+            self,
+            archive_filter: Union[dict, codesign.ArchiveFilter],
+            page_size: int = None,
+            page: int = None
+        ):
+            body = {
+                'ArchiveFilter': archive_filter,
+                'PageSize'     : page_size,
+                'Page'         : page
+            }
+
+            class Output(WebSdkOutputModel):
+                archive_results: codesign.ArchiveResults = ApiField(alias='ArchiveResults')
+                page_number: int = ApiField(alias='PageNumber')
+                success: bool = ApiField(alias='Success')
+                total_count: int = ApiField(alias='TotalCount')
+
+            if not self._is_version_compatible(minimum='22.4'):
+                self._log_warning_message(
+                    'Cannot call endpoint POST Codesign/RetrieveArchiveEntries because the endpoint does '
+                    'not exist before version 22.4.'
+                )
+            else:
+                return generate_output(output_cls=Output, response=self._post(data=body))
+
 
     class _SetGlobalConfiguration(WebSdkEndpoint):
         def post(self, global_configuration: Union[dict, codesign.GlobalConfiguration]):

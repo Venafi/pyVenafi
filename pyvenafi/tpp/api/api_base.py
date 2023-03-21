@@ -1,32 +1,50 @@
+from __future__ import annotations
+
 import re
 import json
 import time
 import pydantic.main
 from datetime import datetime
+
+from packaging.version import Version
 from pydantic.fields import Undefined
 from pydantic import create_model
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
 from pyvenafi.logger import api_logger, json_pickler
-from typing import Any, Callable, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
+from typing import (
+    Any,
+    Callable,
+    get_args,
+    Optional,
+    Union,
+    Protocol,
+    TYPE_CHECKING,
+    Type,
+    TypeVar,
+    get_origin,
+)
+
+from pyvenafi.tpp.dn import DN
 
 if TYPE_CHECKING:
+    from pyvenafi.tpp.api import WebSDK
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
     from pyvenafi.tpp.api.session import Session
 
-T_ = TypeVar('T_')
+T = TypeVar('T')
 
 
 class ApiModelMetaclass(pydantic.main.ModelMetaclass):
     def __new__(mcs, name, bases, namespaces, **kwargs):
-        annotations = namespaces.get('__annotations__', {})
+        annotations_ = namespaces.get('__annotations__', {})
         # This seemed to have caused some issues, but commenting out seems to fix the problem...
         # for base in bases:
         #     annotations.update(getattr(base, '__annotations__', {}))
-        for field in annotations:
-            if not field.startswith('__') and get_origin(annotations[field]) is not Union:
-                annotations[field] = Union[annotations[field], Any]
-        namespaces['__annotations__'] = annotations
+        for field in annotations_:
+            if not field.startswith('__') and get_origin(annotations_[field]) is not Union:
+                annotations_[field] = Union[annotations_[field], Any]
+        namespaces['__annotations__'] = annotations_
         return super().__new__(mcs, name, bases, namespaces, **kwargs)
 
 
@@ -51,6 +69,8 @@ class ApiEndpoint(object):
     class MUST be inherited by all API definitions.
     """
 
+    api_obj: 'WebSDK'
+
     def __init__(self, api_obj, url: str):
         """
         Args:
@@ -61,7 +81,7 @@ class ApiEndpoint(object):
                 to TPP.
             url: This is the URL extension from the base URL.
         """
-        self._api_obj: 'ApiSource' = api_obj
+        self._api_obj = api_obj
         url = url.strip('/')
         if url.startswith(self._api_obj._base_url):
             self._url = url
@@ -262,9 +282,21 @@ class ApiEndpoint(object):
             stacklevel=2
         )
 
+    @staticmethod
+    def _log_warning_message(msg: str):
+        api_logger.warning(msg, stacklevel=2)
 
-class WebSdkEndpoint(ApiEndpoint):  ...
+    def _is_version_compatible(self, minimum: str = '', maximum: str = ''):
+        if minimum and self._api_obj.tpp_version <= Version(minimum):
+            return False
+        if maximum and self._api_obj.tpp_version >= Version(maximum):
+            return False
+        return True
 
+
+
+class WebSdkEndpoint(ApiEndpoint):
+    api_obj: 'WebSDK'
 
 # endregion Endpoint Definitions
 
@@ -289,7 +321,7 @@ def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable
 
 
 # region Output Models
-def generate_output(response: Response, output_cls: Type[T_], root_field: str = None) -> T_:
+def generate_output(response: Response, output_cls: Type[T], root_field: str = None) -> T:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
@@ -315,8 +347,8 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
     try:
         response.raise_for_status()
         if isinstance(result, dict) and (error_key := getattr(response_inst, 'error', 'Unknown')) in result.keys():
-            # There is an error message, but the status is a valid status, so just log the error instead.
-            api_logger.error('An error occurred: "%s"' % result[error_key], response=response)
+            # There is an error message, so raise an exception.
+            raise InvalidResponseError('An error occurred: "%s"' % result[error_key], response=response)
         return response_inst
     except HTTPError as error:
         if isinstance(result, dict) and (error_msg := getattr(response_inst, 'error', None)) is not None:
@@ -328,6 +360,9 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
     class Config:
         arbitrary_types_allowed = True
         allow_population_by_field_name = True
+        json_encoders = {
+            DN: lambda x: str(x)
+        }
 
     @root_validator(pre=True, allow_reuse=True)
     def _case_insensitive_validator(cls, values: dict):
@@ -340,8 +375,11 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
                 new_value = lowered_values[fv.alias.lower()]
             else:
                 continue
-            if fv.type_ is datetime and '\\Date' in new_value:
+            type_args = get_args(fv.type_)
+            if datetime in type_args and isinstance(new_value, str) and '\\Date' in new_value:
                 new_value = re.sub(r'\D', '', new_value)
+            elif DN in type_args:
+                new_value = DN(new_value)
             if (converter := fv.field_info.extra.get('converter')) is not None:
                 new_value = converter(new_value)
             new_values[fv.alias] = new_value
@@ -352,7 +390,7 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
         d.update(kwargs)
         return create_model(
             f'New{self.__class__.__name__}',
-            __base__=self.__class__,
+            __base__=self.__class__,  # noqa
             __module__=self.__module__,
             **d
         )()
