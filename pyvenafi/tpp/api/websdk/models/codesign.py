@@ -187,6 +187,12 @@ class CertificateEnvironment(ObjectModel):
     type: EnvironmentType = ApiField(alias='Type')
 
 
+class CertificateEnvironment_Pre22_4(CertificateEnvironment):
+    class Config:
+        fields = {
+            'country': {'alias': 'country'}
+        }
+
 class CSPTemplate(ObjectModel):
     allow_user_key_import: bool = ApiField(alias='AllowUserKeyImport')
     description: str = ApiField(alias='Description')

@@ -3,6 +3,7 @@ from typing import List, Dict, Union
 from pyvenafi.tpp.api.websdk.enums.config import CodeSignAttributeValues
 from pyvenafi.tpp.api.websdk.models import codesign
 from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from pyvenafi.tpp.api.websdk.models.codesign import CertificateEnvironment_Pre22_4
 
 
 class _Codesign(WebSdkEndpoint):
@@ -697,6 +698,9 @@ class _Codesign(WebSdkEndpoint):
                  dot_net_environment: Union[dict, codesign.DotNetEnvironment] = None,
                  gpg_environment: Union[dict, codesign.GPGEnvironment] = None,
                  key_pair_environment: Union[dict, codesign.KeyPairEnvironment] = None):
+            if isinstance(certificate_environment, codesign.CertificateEnvironment) \
+                    and not self._is_version_compatible(minimum='22.4'):
+                certificate_environment = codesign.CertificateEnvironment_Pre22_4(**certificate_environment.dict())
             body = {
                 'AppleEnvironment'      : apple_environment,
                 'CertificateEnvironment': certificate_environment,
@@ -720,6 +724,11 @@ class _Codesign(WebSdkEndpoint):
 
     class _UpdateProject(WebSdkEndpoint):
         def post(self, project: Union[dict, codesign.Project]):
+            if isinstance(project, codesign.Project) and project.certificate_environments \
+                    and not self._is_version_compatible(minimum='22.4'):
+                project.certificate_environments = [
+                    CertificateEnvironment_Pre22_4(**c.dict()) for c in project.certificate_environments
+                ]
             body = {
                 'Project': project
             }
