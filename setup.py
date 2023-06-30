@@ -16,7 +16,7 @@ PROD_REQUIREMENTS = [
     'requests>=2.24.0',
     'simplejson>=3.17.6',
     'jsonpickle>=2.1.0',
-    'pydantic>=1.9.1'
+    'pydantic>=1.9.1,<2.0.0'
 ]
 
 DEV_REQUIREMENTS = [

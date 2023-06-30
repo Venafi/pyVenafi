@@ -7,6 +7,8 @@ from pydantic.fields import Undefined
 from pydantic import create_model
 from requests import Response, HTTPError
 from pydantic import BaseModel, root_validator, Field
+
+from cloud.api.cloud_api import CloudApi
 from pyvenafi.logger import api_logger, json_pickler
 from typing import Any, Callable, Dict, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
 
@@ -34,7 +36,7 @@ class ApiSource(Protocol):
     _host: str
     _username: str
     _password: str
-    _token: str
+    _api_key: str
     _base_url: str
     _app_url: str
     _scheme: str
@@ -60,7 +62,7 @@ class ApiEndpoint(object):
                 to TPP.
             url: This is the URL extension from the base URL.
         """
-        self._api_obj: 'ApiSource' = api_obj
+        self._api_obj: 'CloudApi' = api_obj
         url = url.strip('/')
         if url.startswith(self._api_obj._base_url):
             self._url = url
@@ -77,24 +79,6 @@ class ApiEndpoint(object):
     def _session(self) -> 'Session':
         return self._api_obj._session
 
-    def _should_re_authenticate(self, response: 'Response'):
-        return response.status_code == 401 and self._api_obj._token is not None
-
-    @staticmethod
-    def _rerun_transaction_required(response: Response):
-        """
-        Uses a regular expression to search the response text for an indication that the transaction was deadlocked
-        and needs to be reran.
-
-        Args:
-            response: The raw response object.
-
-        Returns:
-            Returns ``True`` if the API key expired. Otherwise ``False``.
-        """
-        return response.status_code == 500 and bool(re.match('.*rerun the transaction.*', response.text,
-                                                             flags=re.IGNORECASE))
-
     def _delete(self, params: dict = None):
         """
         Performs a DELETE method request. If the response suggests the API Key is expired, then
@@ -109,13 +93,6 @@ class ApiEndpoint(object):
             try:
                 response = self._session.delete(url=self._url, params=params)
                 self._log_response(response=response)
-                if self._should_re_authenticate(response=response):
-                    self._re_authenticate()
-                    # Trigger the retry.
-                    continue
-                elif self._rerun_transaction_required(response=response):
-                    # Trigger the retry.
-                    continue
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -139,13 +116,6 @@ class ApiEndpoint(object):
             try:
                 response = self._session.get(url=self._url, params=params)
                 self._log_response(response=response)
-                if self._should_re_authenticate(response=response):
-                    self._re_authenticate()
-                    # Trigger the retry.
-                    continue
-                elif self._rerun_transaction_required(response=response):
-                    # Trigger the retry.
-                    continue
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -169,13 +139,6 @@ class ApiEndpoint(object):
             try:
                 response = self._session.patch(url=self._url, data=data)
                 self._log_response(response=response)
-                if self._should_re_authenticate(response=response):
-                    self._re_authenticate()
-                    # Trigger the retry.
-                    continue
-                elif self._rerun_transaction_required(response=response):
-                    # Trigger the retry.
-                    continue
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -199,13 +162,6 @@ class ApiEndpoint(object):
             try:
                 response = self._session.post(url=self._url, data=data)
                 self._log_response(response=response)
-                if self._should_re_authenticate(response=response):
-                    self._re_authenticate()
-                    # Trigger the retry.
-                    continue
-                elif self._rerun_transaction_required(response=response):
-                    # Trigger the retry.
-                    continue
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
@@ -229,28 +185,11 @@ class ApiEndpoint(object):
             try:
                 response = self._session.put(url=self._url, data=data)
                 self._log_response(response=response)
-                if self._should_re_authenticate(response=response):
-                    self._re_authenticate()
-                    # Trigger the retry.
-                    continue
-                elif self._rerun_transaction_required(response=response):
-                    # Trigger the retry.
-                    continue
                 return response
             except (ConnectionResetError, ConnectionError) as e:
                 exc = e
             time.sleep(self.retry_interval)
         raise exc
-
-    def _re_authenticate(self):
-        """
-        The current API token expired and the session needs to be re-authenticated.
-        """
-        api_logger.debug(
-            f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
-            stacklevel=2
-        )
-        self._api_obj.re_authenticate()
 
     def _log_api_deprecated_warning(self, alternate_api: str = None):
         msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
