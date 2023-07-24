@@ -1,12 +1,13 @@
+from typing import List, Union
 from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
+from pyvenafi.tpp.features.definitions.exceptions import (
+    FeatureException,
+    InvalidResultCode,
+)
 from pyvenafi.tpp.attributes.policy import PolicyAttributes
 from concurrent.futures.thread import ThreadPoolExecutor
-from typing import List, Union, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pyvenafi.tpp.api.websdk.models import config, identity as ident
-
+from pyvenafi.tpp.api.websdk.models import config, identity as ident
+from pyvenafi.tpp.dn import DN
 
 @feature('Folder')
 class Folder(FeatureBase):
@@ -95,7 +96,8 @@ class Folder(FeatureBase):
 
     def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
                contacts: 'List[Union[ident.Identity, str]]' = None, log_server: 'Union[config.Object, str]' = None,
-               engines: 'List[Union[config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True):
+               engines: 'List[Union[config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True,
+               create_path: bool = False):
         """
         Args:
             name: Name of the folder.
@@ -108,6 +110,7 @@ class Folder(FeatureBase):
                 In order to set engines on this folder, use :meth:`set_engines`. In order to set policyable
                 options on the folder, use :meth:`write_policy`.
             get_if_already_exists: If the objects already exists, just return it as is.
+            create_path: If ``True`` then the whole path is created if it doesn't exist.
 
         Returns:
             :ref:`config_object` of the folder object.
@@ -118,10 +121,25 @@ class Folder(FeatureBase):
         }
         if attributes:
             folder_attrs.update(attributes)
+        parent_folder_dn = DN(self._get_dn(parent_folder))
 
-        folder = self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder),
-                                     config_class=PolicyAttributes.__config_class__, attributes=folder_attrs,
-                                     get_if_already_exists=get_if_already_exists)
+        def create():
+            return self._config_create(
+                name=name,
+                parent_folder_dn=parent_folder_dn,
+                config_class=PolicyAttributes.__config_class__,
+                attributes=folder_attrs,
+                get_if_already_exists=get_if_already_exists
+            )
+
+        try:
+            folder = create()
+        except Exception as e:
+            if not create_path or not parent_folder_dn.startswith(r'\VED\Policy'):
+                raise FeatureException(f"Unable to create {parent_folder_dn}\\{name}.") from e
+            self.create(name=parent_folder_dn.name, parent_folder=parent_folder_dn.parent, create_path=True)
+            folder = create()
+
         if log_server:
             self._api.websdk.Config.WritePolicy.post(
                 object_dn=folder.dn,
