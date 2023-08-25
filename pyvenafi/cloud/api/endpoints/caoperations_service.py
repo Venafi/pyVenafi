@@ -322,7 +322,7 @@ class _caoperations_service:
             def ID(self, id: str):
                 return self._ID(api_obj=self._api_obj, url=f'{self._url}/{id}')
 
-            def get(self, certificateAuthorityAccountId: UUID):
+            def get(self, certificateAuthorityAccountId: UUID = None):
                 data = {
                     'certificateAuthorityAccountId': certificateAuthorityAccountId,
                 }

@@ -55,6 +55,12 @@ CertificateEnvironment
 .. _pyvenafi.tpp.api.websdk.models.codesign.certificateenvironment_model:
 .. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CertificateEnvironment
 
+CertificateEnvironment_Pre22_4
+------------------------------
+
+.. _pyvenafi.tpp.api.websdk.models.codesign.certificateenvironment_pre22_4_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.codesign.CertificateEnvironment_Pre22_4
+
 CertificateTemplate
 -------------------
 

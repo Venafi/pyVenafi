@@ -1,4 +1,7 @@
 from __future__ import annotations
+
+import json
+
 from pyvenafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
 from pyvenafi.cloud.api.models import outagedetection_service
 from datetime import datetime
@@ -57,7 +60,7 @@ class _outagedetection_service:
                     return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ApplicationResponse'})
 
                 def post(self, ApplicationRequest: outagedetection_service.ApplicationRequest):
-                    data = {**ApplicationRequest.dict()}
+                    data = json.loads(ApplicationRequest.json())
 
                     class Output(CloudApiOutputModel):
                         ApplicationResponse: outagedetection_service.ApplicationResponse
@@ -84,7 +87,7 @@ class _outagedetection_service:
                         return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'ApplicationInformation'})
 
                     def put(self, ApplicationRequest: outagedetection_service.ApplicationRequest):
-                        data = {**ApplicationRequest.dict()}
+                        data = json.loads(ApplicationRequest.json())
 
                         class Output(CloudApiOutputModel):
                             ApplicationInformation: outagedetection_service.ApplicationInformation
@@ -92,7 +95,7 @@ class _outagedetection_service:
 
                     class _invitations(CloudApiEndpoint):
                         def post(self, InvitationRequest: outagedetection_service.InvitationRequest):
-                            data = {**InvitationRequest.dict()}
+                            data = json.loads(InvitationRequest.json())
 
                             class Output(CloudApiOutputModel):
                                 InvitationResponse: outagedetection_service.InvitationResponse
@@ -125,7 +128,7 @@ class _outagedetection_service:
 
                 class _certificates(CloudApiEndpoint):
                     def patch(self, ApplicationsAssignRequest: outagedetection_service.ApplicationsAssignRequest):
-                        data = {**ApplicationsAssignRequest.dict()}
+                        data = json.loads(ApplicationsAssignRequest.json())
 
                         class Output(CloudApiOutputModel):
                             ApplicationsAssignResponse: outagedetection_service.ApplicationsAssignResponse
@@ -161,7 +164,7 @@ class _outagedetection_service:
                     return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'ApplicationServerTypeResponse'})
 
                 def post(self, BaseApplicationServerTypeRequest: outagedetection_service.BaseApplicationServerTypeRequest):
-                    data = {**BaseApplicationServerTypeRequest.dict()}
+                    data = json.loads(BaseApplicationServerTypeRequest.json())
 
                     class Output(CloudApiOutputModel):
                         ApplicationServerTypeInformation: outagedetection_service.ApplicationServerTypeInformation
@@ -189,7 +192,7 @@ class _outagedetection_service:
                     return self._NAME(api_obj=self._api_obj, url=f'{self._url}/{name}')
 
                 def post(self, CertificateAggregationsRequest: outagedetection_service.CertificateAggregationsRequest):
-                    data = {**CertificateAggregationsRequest.dict()}
+                    data = json.loads(CertificateAggregationsRequest.json())
 
                     class Output(CloudApiOutputModel):
                         FacetResponse: outagedetection_service.FacetResponse
@@ -247,7 +250,7 @@ class _outagedetection_service:
 
                 class _validation(CloudApiEndpoint):
                     def post(self, CertificateInstanceValidationRequest: outagedetection_service.CertificateInstanceValidationRequest):
-                        data = {**CertificateInstanceValidationRequest.dict()}
+                        data = json.loads(CertificateInstanceValidationRequest.json())
 
                         class Output(CloudApiOutputModel):
                             allowedMethodsList: List[str]
@@ -270,7 +273,7 @@ class _outagedetection_service:
 
             class _certificateinstancesearch(CloudApiEndpoint):
                 def post(self, CertificateInstanceSearchRequest: outagedetection_service.CertificateInstanceSearchRequest):
-                    data = {**CertificateInstanceSearchRequest.dict()}
+                    data = json.loads(CertificateInstanceSearchRequest.json())
 
                     class Output(CloudApiOutputModel):
                         pass
@@ -290,7 +293,7 @@ class _outagedetection_service:
                     return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateRequestResponse'})
 
                 def post(self, CertificateRequestRequest: outagedetection_service.CertificateRequestRequest):
-                    data = {**CertificateRequestRequest.dict()}
+                    data = json.loads(CertificateRequestRequest.json())
 
                     class Output(CloudApiOutputModel):
                         CertificateRequestResponse: outagedetection_service.CertificateRequestResponse
@@ -308,7 +311,7 @@ class _outagedetection_service:
 
                     class _resubmission(CloudApiEndpoint):
                         def post(self, CertificateRequestResubmissionRequest: outagedetection_service.CertificateRequestResubmissionRequest):
-                            data = {**CertificateRequestResubmissionRequest.dict()}
+                            data = json.loads(CertificateRequestResubmissionRequest.json())
 
                             class Output(CloudApiOutputModel):
                                 CertificateRequestResponse: outagedetection_service.CertificateRequestResponse
@@ -316,7 +319,7 @@ class _outagedetection_service:
 
                 class _validation(CloudApiEndpoint):
                     def post(self, CertificateRequestRequest: outagedetection_service.CertificateRequestRequest):
-                        data = {**CertificateRequestRequest.dict()}
+                        data = json.loads(CertificateRequestRequest.json())
 
                         class Output(CloudApiOutputModel):
                             CertificationRequestInformation: outagedetection_service.CertificationRequestInformation
@@ -324,7 +327,7 @@ class _outagedetection_service:
 
             class _certificaterequestssearch(CloudApiEndpoint):
                 def post(self, CertificateRequestsSearchRequest: outagedetection_service.CertificateRequestsSearchRequest):
-                    data = {**CertificateRequestsSearchRequest.dict()}
+                    data = json.loads(CertificateRequestsSearchRequest.json())
 
                     class Output(CloudApiOutputModel):
                         CertificateRequestDocumentResponse: outagedetection_service.CertificateRequestDocumentResponse
@@ -353,7 +356,7 @@ class _outagedetection_service:
                     return generate_output(output_cls=Output, response=self._get(params=data))
 
                 def post(self, CertificateImportRequest: outagedetection_service.CertificateImportRequest):
-                    data = {**CertificateImportRequest.dict()}
+                    data = json.loads(CertificateImportRequest.json())
 
                     class Output(CloudApiOutputModel):
                         CertificateImportResponse: outagedetection_service.CertificateImportResponse
@@ -388,7 +391,7 @@ class _outagedetection_service:
 
                     class _keystore(CloudApiEndpoint):
                         def post(self, CertificateKeystoreRequest: outagedetection_service.CertificateKeystoreRequest):
-                            data = {**CertificateKeystoreRequest.dict()}
+                            data = json.loads(CertificateKeystoreRequest.json())
 
                             class Output(CloudApiOutputModel):
                                 str: str
@@ -396,7 +399,7 @@ class _outagedetection_service:
 
                 class _deletion(CloudApiEndpoint):
                     def post(self, CertificateDeletionRequest: outagedetection_service.CertificateDeletionRequest):
-                        data = {**CertificateDeletionRequest.dict()}
+                        data = json.loads(CertificateDeletionRequest.json())
 
                         class Output(CloudApiOutputModel):
                             pass
@@ -422,7 +425,7 @@ class _outagedetection_service:
 
                 class _recovery(CloudApiEndpoint):
                     def post(self, CertificateRecoveryRequest: outagedetection_service.CertificateRecoveryRequest):
-                        data = {**CertificateRecoveryRequest.dict()}
+                        data = json.loads(CertificateRecoveryRequest.json())
 
                         class Output(CloudApiOutputModel):
                             CertificateResponse: outagedetection_service.CertificateResponse
@@ -430,7 +433,7 @@ class _outagedetection_service:
 
                 class _retirement(CloudApiEndpoint):
                     def post(self, CertificateRetirementRequest: outagedetection_service.CertificateRetirementRequest):
-                        data = {**CertificateRetirementRequest.dict()}
+                        data = json.loads(CertificateRetirementRequest.json())
 
                         class Output(CloudApiOutputModel):
                             CertificateResponse: outagedetection_service.CertificateResponse
@@ -438,7 +441,7 @@ class _outagedetection_service:
 
                 class _validation(CloudApiEndpoint):
                     def post(self, CertificateValidationRequest: outagedetection_service.CertificateValidationRequest):
-                        data = {**CertificateValidationRequest.dict()}
+                        data = json.loads(CertificateValidationRequest.json())
 
                         class Output(CloudApiOutputModel):
                             allowedMethodsList: List[str]
@@ -461,7 +464,7 @@ class _outagedetection_service:
 
             class _certificatesearch(CloudApiEndpoint):
                 def post(self, CertificateSearchRequest: outagedetection_service.CertificateSearchRequest):
-                    data = {**CertificateSearchRequest.dict()}
+                    data = json.loads(CertificateSearchRequest.json())
 
                     class Output(CloudApiOutputModel):
                         pass
@@ -493,7 +496,7 @@ class _outagedetection_service:
                     return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'SavedSearchResponse'})
 
                 def post(self, SavedSearchRequest: outagedetection_service.SavedSearchRequest):
-                    data = {**SavedSearchRequest.dict()}
+                    data = json.loads(SavedSearchRequest.json())
 
                     class Output(CloudApiOutputModel):
                         SavedSearchResponse: outagedetection_service.SavedSearchResponse
@@ -511,7 +514,7 @@ class _outagedetection_service:
                         return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'SavedSearchInfo'})
 
                     def put(self, SavedSearchRequest: outagedetection_service.SavedSearchRequest):
-                        data = {**SavedSearchRequest.dict()}
+                        data = json.loads(SavedSearchRequest.json())
 
                         class Output(CloudApiOutputModel):
                             SavedSearchInfo: outagedetection_service.SavedSearchInfo

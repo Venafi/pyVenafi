@@ -387,7 +387,7 @@ class _account_service:
             def USERID(self, userid: str):
                 return self._USERID(api_obj=self._api_obj, url=f'{self._url}/{userid}')
 
-            def get(self, userStatus: List[Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION']], username: str):
+            def get(self, userStatus: List[Literal['ACTIVE', 'INACTIVE', 'PENDING_ACTIVATION']] = None, username: str = None):
                 data = {
                     'userStatus': userStatus,
                     'username': username,

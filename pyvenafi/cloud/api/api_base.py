@@ -1,20 +1,21 @@
-import re
 import json
+import re
 import time
-import pydantic.main
 from datetime import datetime
-from pydantic.fields import Undefined
-from pydantic import create_model
-from requests import Response, HTTPError
+from typing import Any, Callable, Dict, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
+
+import pydantic.main
 from pydantic import BaseModel, root_validator, Field
+from pydantic import create_model
+from pydantic.fields import Undefined
+from requests import Response, HTTPError
 
 from pyvenafi.logger import api_logger, json_pickler
-from typing import Any, Callable, Dict, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
 
 if TYPE_CHECKING:
     from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
-    from pyvenafi.cloud.api.cloud_api import CloudApi
     from pyvenafi.cloud.api.session import Session
+    from pyvenafi.cloud.api.cloud_api import CloudApi
 
 T_ = TypeVar('T_')
 
@@ -238,7 +239,8 @@ class CloudApiEndpoint(ApiEndpoint):  ...
 
 
 # region Model And Field Definitions
-def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable]' = None, alias: str = None, title: str = None,
+def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable]' = None, alias: str = None,
+             title: str = None,
              description: str = None, exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
              include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None, const: bool = None, gt: float = None,
              ge: float = None, lt: float = None, le: float = None, multiple_of: float = None, max_digits: int = None,
@@ -257,7 +259,8 @@ def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable
 
 
 # region Output Models
-def generate_output(response: Response, output_cls: Type[T_], root_field: str = None, rc_mapping: Dict[int, str] = None) -> T_:
+def generate_output(response: Response, output_cls: Type[T_], root_field: str = None,
+                    rc_mapping: Dict[int, str] = None) -> T_:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
