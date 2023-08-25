@@ -499,7 +499,9 @@ class Certificate(FeatureBase):
             offset=offset,
             optional_fields=optional_fields
         )
-        if return_limit is True or limit >= response.total_count:
+        if return_limit is True or limit >= (response.total_count or 0):
+            if cap and len(response.certificates) >= cap:
+                return response.certificates[:cap]
             return response.certificates
         if cap and len(response.certificates) >= cap:
             return response.certificates[:cap]
