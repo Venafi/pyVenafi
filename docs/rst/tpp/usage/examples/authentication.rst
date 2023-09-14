@@ -79,7 +79,7 @@ Reusing An OAuth Token
     from pyvenafi.tpp import Authenticate
 
     api = Authenticate(
-        host='tppserver.mycompany.com', token='IpGB3icCfMn6YeyIvWu9tB==', **my_oauth_application
+        host='tppserver.mycompany.com', token='Bearer IpGB3icCfMn6YeyIvWu9tB==', **my_oauth_application
     )
 
 .. _proxy_auth:
