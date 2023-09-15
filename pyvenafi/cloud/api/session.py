@@ -17,8 +17,10 @@ class Session:
     def __init__(self, headers: dict, proxies: dict = None, certificate_path: str = None,
                  key_file_path: str = None, verify_ssl: bool = False, version: 'Version' = None,
                  connection_timeout: float = None, read_timeout: float = None):
-        self.requests = requests
-        self.requests.packages.urllib3.disable_warnings()  # noqa
+        self.session = requests.Session()
+        if not verify_ssl:
+            # noinspection PyUnresolvedReferences
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.request_kwargs = {
             'headers': headers,
             'verify' : verify_ssl,
@@ -47,7 +49,7 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.delete(url, params=self._sanitize(obj=params), **self.request_kwargs)
+        return self.session.delete(url, params=self._sanitize(obj=params), **self.request_kwargs)
 
     def get(self, url: str, params: dict = None):
         """
@@ -60,7 +62,7 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.get(url=url, params=self._sanitize(obj=params), **self.request_kwargs)
+        return self.session.get(url=url, params=self._sanitize(obj=params), **self.request_kwargs)
 
     def patch(self, url: str, data: dict):
         """
@@ -73,7 +75,7 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.patch(url=url, data=self._to_json(obj=data), **self.request_kwargs)
+        return self.session.patch(url=url, data=self._to_json(obj=data), **self.request_kwargs)
 
     def post(self, url: str, data: dict):
         """
@@ -86,7 +88,7 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.post(url=url, data=self._to_json(obj=data), **self.request_kwargs)
+        return self.session.post(url=url, data=self._to_json(obj=data), **self.request_kwargs)
 
     def put(self, url: str, data: dict):
         """
@@ -99,7 +101,7 @@ class Session:
         Returns:
             Returns the raw response returned by the server.
         """
-        return self.requests.put(url=url, data=self._to_json(obj=data), **self.request_kwargs)
+        return self.session.put(url=url, data=self._to_json(obj=data), **self.request_kwargs)
 
     def _to_json(self, obj):
         sanitized_obj = self._sanitize(obj)
