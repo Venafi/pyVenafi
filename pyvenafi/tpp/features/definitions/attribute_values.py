@@ -1,9 +1,20 @@
-from pyvenafi.tpp.api.websdk.enums.config import (
-    ApplicationAttributeValues, ClientGroupsAttributeValues, CertificateAttributeValues, CertificateAuthorityAttributeValues,
-    DeviceAttributeValues, DiscoveryAttributeValues, CustomFieldAttributeValues, IdentityAttributeValues, WorkflowAttributeValues,
-    PlacementRulesAttributeValues, ClientWorkAttributeValues, JumpServerAttributeValues, CodeSignAttributeValues
-)
+from __future__ import annotations
 
+from pyvenafi.tpp.api.websdk.enums.config import (
+    ApplicationAttributeValues,
+    CertificateAttributeValues,
+    CertificateAuthorityAttributeValues,
+    ClientGroupsAttributeValues,
+    ClientWorkAttributeValues,
+    CodeSignAttributeValues,
+    CustomFieldAttributeValues,
+    DeviceAttributeValues,
+    DiscoveryAttributeValues,
+    IdentityAttributeValues,
+    JumpServerAttributeValues,
+    PlacementRulesAttributeValues,
+    WorkflowAttributeValues,
+)
 
 class AttributeValues:
     Application = ApplicationAttributeValues

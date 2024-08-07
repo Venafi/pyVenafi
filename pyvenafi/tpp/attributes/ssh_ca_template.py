@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.top import TopAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 class SSHCATemplateAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "SSH CA Template"
@@ -18,7 +22,9 @@ class SSHCATemplateAttributes(TopAttributes, metaclass=IterableMeta):
     allowed_source_address = Attribute('Allowed Source Address')
     certificate_container = Attribute('Certificate Container')
     certificate_identifier = Attribute('Certificate Identifier')
-    certificate_issuance_timeout_before_returning_pending_response = Attribute('Certificate Issuance Timeout Before Returning Pending Response')
+    certificate_issuance_timeout_before_returning_pending_response = Attribute(
+        'Certificate Issuance Timeout Before Returning Pending Response'
+    )
     certificate_object_naming_pattern = Attribute('Certificate Object Naming Pattern')
     certificate_type = Attribute('Certificate Type')
     extension = Attribute('Extension')
@@ -26,6 +32,7 @@ class SSHCATemplateAttributes(TopAttributes, metaclass=IterableMeta):
     force_command = Attribute('Force Command')
     hash_algorithm = Attribute('Hash Algorithm')
     include_issued_certificate_in_request = Attribute('Include Issued Certificate In Request')
+    include_requester_identity_to_contacts = Attribute('Include Requester Identity to Contacts')
     key_algorithm = Attribute('Key Algorithm')
     key_id_format = Attribute('Key ID Format')
     maximum_age = Attribute('Maximum Age')

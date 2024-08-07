@@ -1,9 +1,16 @@
+from __future__ import annotations
+
 import logging
 import warnings
 from datetime import datetime
-from pyvenafi.logger import api_logger
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
+from pyvenafi.logger import api_logger
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
 
 class _Authorize(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -13,6 +20,8 @@ class _Authorize(WebSdkEndpoint):
         self.Certificate = self._Certificate(api_obj=api_obj, url=f'{vedauth_url}/Certificate')
         self.Device = self._Device(api_obj=api_obj, url=f'{vedauth_url}/Device')
         self.Integrated = self._Integrated(api_obj=api_obj, url=f'{vedauth_url}/Integrated')
+        self.IsAuthServer = self._IsAuthServer(api_obj=api_obj, url=f'{vedauth_url}/IsAuthServer')
+        self.Jwt = self._Jwt(api_obj=api_obj, url=f'{vedauth_url}/Jwt')
         self.OAuth = self._OAuth(api_obj=api_obj, url=f'{vedauth_url}/OAuth')
         self.Token = self._Token(api_obj=api_obj, url=f'{vedauth_url}/Token')
         self.Verify = self._Verify(api_obj=api_obj, url=f'{vedauth_url}/Verify')
@@ -21,8 +30,10 @@ class _Authorize(WebSdkEndpoint):
         """
         This POST method is written differently in order to effectively omit the password from being logged.
         """
-        warnings.warn('Authorizing to TPP with only a username and password is being deprecated. '
-                      'Refer to product documentation on using OAuth authentication.')
+        warnings.warn(
+            'Authorizing to TPP with only a username and password is being deprecated. '
+            'Refer to product documentation on using OAuth authentication.'
+        )
         body = {
             "Username": username,
             "Password": password
@@ -55,8 +66,10 @@ class _Authorize(WebSdkEndpoint):
                 scope: str = ApiField(alias='scope')
                 token_type: str = ApiField(alias='token_type')
 
-            api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
-                             f'with scope "{scope}" using a certificate file...')
+            api_logger.debug(
+                f'Authenticating to TPP OAuth Application "{client_id}" '
+                f'with scope "{scope}" using a certificate file...'
+            )
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
@@ -78,8 +91,10 @@ class _Authorize(WebSdkEndpoint):
                 expires_in: int = ApiField(alias='expires_in')
                 expires: datetime = ApiField(alias='expires')
 
-            api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
-                             f'with scope "{scope}" using a certificate file...')
+            api_logger.debug(
+                f'Authenticating to TPP OAuth Application "{client_id}" '
+                f'with scope "{scope}" using a certificate file...'
+            )
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated!')
@@ -105,6 +120,29 @@ class _Authorize(WebSdkEndpoint):
 
             return generate_output(response=self._post(data=body), output_cls=Output)
 
+    class _IsAuthServer(WebSdkEndpoint):
+        def get(self):
+            class Output(WebSdkOutputModel):
+                pass
+
+            return generate_output(output_cls=Output, response=self._get())
+
+    class _Jwt(WebSdkEndpoint):
+        def post(self, client_id: str, jwt: str, scope: str):
+            body = {
+                "client_id": client_id,
+                "jwt"      : jwt,
+                "scope"    : scope,
+            }
+
+            class Output(WebSdkOutputModel):
+                access_token: str = ApiField(alias='access_token')
+                refresh_token: str = ApiField(alias='refresh_token')
+                scope: str = ApiField(alias='scope')
+                identity: str = ApiField(alias='identity')
+
+            return generate_output(output_cls=Output, response=self._post(data=body))
+
     class _OAuth(WebSdkEndpoint):
         def post(self, client_id: str, password: str, scope: str, username: str, state: str = None):
             body = {
@@ -125,8 +163,10 @@ class _Authorize(WebSdkEndpoint):
                 scope: str = ApiField(alias='scope')
                 token_type: str = ApiField(alias='token_type')
 
-            api_logger.debug(f'Authenticating to TPP OAuth Application "{client_id}" '
-                             f'with scope "{scope}" as "{username}"...')
+            api_logger.debug(
+                f'Authenticating to TPP OAuth Application "{client_id}" '
+                f'with scope "{scope}" as "{username}"...'
+            )
             with api_logger.suppressed(logging.WARNING):
                 response = self._post(data=body)
             api_logger.debug(f'Authenticated as {username}!')

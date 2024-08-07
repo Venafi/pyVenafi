@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import (
-    List,
     Union,
 )
 
@@ -42,7 +43,7 @@ class CodeSignTemplate(FeatureBase):
         name: str,
         template_type: Union[str, CodeSignAttributeValues.TemplateType],
         per_user: bool = False,
-        parent_folder: Union[Object, str]= r'\VED\Code Signing\Environment Templates',
+        parent_folder: Union[Object, str] = r'\VED\Code Signing\Environment Templates',
         raise_if_already_exists: bool = True
     ) -> TemplateTypes:
         """
@@ -162,12 +163,12 @@ class CodeSignTemplate(FeatureBase):
 
         @dataclass
         class EnumeratedTemplates:
-            apple_templates: List[AppleTemplate] = output.apple_templates
-            certificate_templates: List[CertificateTemplate] = output.certificate_templates
-            csp_templates: List[CSPTemplate] = output.csp_templates
-            dot_net_templates: List[DotNetTemplate] = output.dot_net_templates
-            gpg_templates: List[GPGTemplate] = output.gpg_templates
-            key_pair_templates: List[KeyPairTemplate] = output.key_pair_templates
+            apple_templates: list[AppleTemplate] = output.apple_templates
+            certificate_templates: list[CertificateTemplate] = output.certificate_templates
+            csp_templates: list[CSPTemplate] = output.csp_templates
+            dot_net_templates: list[DotNetTemplate] = output.dot_net_templates
+            gpg_templates: list[GPGTemplate] = output.gpg_templates
+            key_pair_templates: list[KeyPairTemplate] = output.key_pair_templates
 
         return EnumeratedTemplates()
 

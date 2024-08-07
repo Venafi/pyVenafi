@@ -1,7 +1,16 @@
-from typing import List, Union
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pyvenafi.tpp.api.websdk.models import identity as ident
+from __future__ import annotations
 
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import identity as ident
 
 class _Teams(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -12,8 +21,10 @@ class _Teams(WebSdkEndpoint):
         self.RemoveTeamMembers = self._RemoveTeamMembers(api_obj=self._api_obj, url=f'{self._url}/RemoveTeamMembers')
         self.RenameTeam = self._RenameTeam(api_obj=self._api_obj, url=f'{self._url}/RenameTeam')
 
-    def post(self, name: str, owners: List[Union[dict, ident.Identity]], assets: List[str] = None, description: str = None,
-             members: List[Union[dict, ident.Identity]] = None, products: List[str] = None):
+    def post(
+        self, name: str, owners: list[Union[dict, ident.Identity]], assets: list[str] = None, description: str = None,
+        members: list[Union[dict, ident.Identity]] = None, products: list[str] = None
+    ):
         body = {
             'Assets'     : assets,
             'Description': description,
@@ -25,15 +36,17 @@ class _Teams(WebSdkEndpoint):
 
         class Output(WebSdkOutputModel):
             identity: ident.Identity = ApiField(default_factory=list, alias='ID')
-            invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
-            invalid_owners: List[ident.InvalidIdentity] = ApiField(alias='InvalidOwners', default_factory=list)
+            invalid_members: list[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
+            invalid_owners: list[ident.InvalidIdentity] = ApiField(alias='InvalidOwners', default_factory=list)
             message: str = ApiField(alias='Message')
 
         return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddTeamMembers(WebSdkEndpoint):
-        def put(self, members: List[Union[dict, ident.Identity]], team: Union[dict, ident.Identity] = None,
-                show_members: bool = None):
+        def put(
+            self, members: list[Union[dict, ident.Identity]], team: Union[dict, ident.Identity] = None,
+            show_members: bool = None
+        ):
             body = {
                 'Members'    : members,
                 'Team'       : team,
@@ -41,14 +54,19 @@ class _Teams(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
-                members: List[ident.Identity] = ApiField(default_factory=list, alias='Members')
+                invalid_members: list[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
+                members: list[ident.Identity] = ApiField(default_factory=list, alias='Members')
                 message: str = ApiField(alias='Message')
 
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _AddTeamOwners(WebSdkEndpoint):
-        def put(self, owners: List[Union[dict, ident.Identity]] = None, team: Union[dict, ident.Identity] = None, show_members: bool = None):
+        def put(
+            self,
+            owners: list[Union[dict, ident.Identity]] = None,
+            team: Union[dict, ident.Identity] = None,
+            show_members: bool = None
+        ):
             body = {
                 'Owners'     : owners,
                 'Team'       : team,
@@ -56,15 +74,17 @@ class _Teams(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                members: List[ident.Identity] = ApiField(default_factory=list, alias='Members')
+                members: list[ident.Identity] = ApiField(default_factory=list, alias='Members')
                 message: str = ApiField(alias='Message')
-                owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
+                owners: list[ident.Identity] = ApiField(default_factory=list, alias='Owners')
 
             return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _DemoteTeamOwners(WebSdkEndpoint):
-        def put(self, owners: List[Union[dict, ident.Identity]] = None, team: Union[dict, ident.Identity] = None,
-                show_members: bool = None):
+        def put(
+            self, owners: list[Union[dict, ident.Identity]] = None, team: Union[dict, ident.Identity] = None,
+            show_members: bool = None
+        ):
             body = {
                 'Owners'     : owners,
                 'Team'       : team,
@@ -72,10 +92,10 @@ class _Teams(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
-                members: List[ident.Identity] = ApiField(default_factory=list, alias='Members')
+                invalid_members: list[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
+                members: list[ident.Identity] = ApiField(default_factory=list, alias='Members')
                 message: str = ApiField(alias='Message')
-                owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
+                owners: list[ident.Identity] = ApiField(default_factory=list, alias='Owners')
 
             return generate_output(output_cls=Output, response=self._put(data=body))
 
@@ -95,18 +115,20 @@ class _Teams(WebSdkEndpoint):
 
             def get(self):
                 class Output(WebSdkOutputModel):
-                    assets: List[str] = ApiField(default_factory=list, alias='Assets')
+                    assets: list[str] = ApiField(default_factory=list, alias='Assets')
                     description: str = ApiField(alias='Description')
                     identity: ident.Identity = ApiField(alias='ID')
-                    members: List[ident.Identity] = ApiField(default_factory=list, alias='Members')
+                    members: list[ident.Identity] = ApiField(default_factory=list, alias='Members')
                     message: str = ApiField(alias='Message')
-                    owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
-                    products: List[str] = ApiField(default_factory=list, alias='Products')
+                    owners: list[ident.Identity] = ApiField(default_factory=list, alias='Owners')
+                    products: list[str] = ApiField(default_factory=list, alias='Products')
 
                 return generate_output(output_cls=Output, response=self._get())
 
-            def put(self, assets: List[str], description: str, name: str, owners: List[Union[dict, ident.Identity]],
-                    members: List[Union[dict, ident.Identity]], products: List[str]):
+            def put(
+                self, assets: list[str], description: str, name: str, owners: list[Union[dict, ident.Identity]],
+                members: list[Union[dict, ident.Identity]], products: list[str]
+            ):
                 body = {
                     'Assets'     : assets,
                     'Description': description,
@@ -118,14 +140,22 @@ class _Teams(WebSdkEndpoint):
 
                 class Output(WebSdkOutputModel):
                     identity: ident.Identity = ApiField(alias='ID')
-                    invalid_owners: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidOwners')
-                    invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
+                    invalid_owners: list[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidOwners')
+                    invalid_members: list[ident.InvalidIdentity] = ApiField(
+                        default_factory=list,
+                        alias='InvalidMembers'
+                    )
                     message: str = ApiField(alias='Message')
 
                 return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _RemoveTeamMembers(WebSdkEndpoint):
-        def put(self, team: Union[dict, ident.Identity], members: List[Union[dict, ident.Identity]] = None, show_members: bool = None):
+        def put(
+            self,
+            team: Union[dict, ident.Identity],
+            members: list[Union[dict, ident.Identity]] = None,
+            show_members: bool = None
+        ):
             body = {
                 'Team'       : team,
                 'Members'    : members,
@@ -133,10 +163,10 @@ class _Teams(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                invalid_members: List[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
-                members: List[ident.Identity] = ApiField(default_factory=list, alias='Members')
+                invalid_members: list[ident.InvalidIdentity] = ApiField(default_factory=list, alias='InvalidMembers')
+                members: list[ident.Identity] = ApiField(default_factory=list, alias='Members')
                 message: str = ApiField(alias='Message')
-                owners: List[ident.Identity] = ApiField(default_factory=list, alias='Owners')
+                owners: list[ident.Identity] = ApiField(default_factory=list, alias='Owners')
 
             return generate_output(output_cls=Output, response=self._put(data=body))
 

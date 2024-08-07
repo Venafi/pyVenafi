@@ -1,8 +1,12 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.report_base import ReportBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.report_base import ReportBaseAttributes
 
 class ReportEntitlementAttributes(ReportBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Report:Entitlement"
-    options = Attribute('Options')
-    policydn = Attribute('PolicyDN', min_version='16.1')
+    options = Attribute('Options', min_version='21.4')
+    policydn = Attribute('PolicyDN', min_version='21.4')

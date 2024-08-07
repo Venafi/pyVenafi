@@ -1,12 +1,13 @@
 import json
 import requests
 from datetime import datetime
+
+import urllib3
 from pydantic import BaseModel
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from packaging.version import Version
-
 
 class Session:
     """
@@ -14,9 +15,11 @@ class Session:
     request. It also removes all null values from all data sent to TPP.
     """
 
-    def __init__(self, headers: dict, proxies: dict = None, certificate_path: str = None,
-                 key_file_path: str = None, verify_ssl: bool = False, version: 'Version' = None,
-                 connection_timeout: float = None, read_timeout: float = None):
+    def __init__(
+        self, headers: dict, proxies: dict = None, certificate_path: str = None,
+        key_file_path: str = None, verify_ssl: bool = False, version: 'Version' = None,
+        connection_timeout: float = None, read_timeout: float = None
+    ):
         self.session = requests.Session()
         if not verify_ssl:
             # noinspection PyUnresolvedReferences
@@ -29,8 +32,10 @@ class Session:
         if proxies:
             self.request_kwargs['proxies'] = proxies
         if bool(certificate_path) != bool(key_file_path):
-            raise ValueError('The path to both the certificate file and the key file must be '
-                             'given for certificate authentication.')
+            raise ValueError(
+                'The path to both the certificate file and the key file must be '
+                'given for certificate authentication.'
+            )
         if certificate_path and key_file_path:
             self.request_kwargs['cert'] = (certificate_path, key_file_path)
         self.version = version

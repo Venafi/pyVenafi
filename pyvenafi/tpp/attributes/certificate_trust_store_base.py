@@ -1,7 +1,11 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
-
 
 class CertificateTrustStoreBaseAttributes(ConnectionBaseAttributes, DriverBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Certificate Trust Store Base"

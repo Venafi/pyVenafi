@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class SSHKeydataObject:
     active_from = 'ActiveFrom'
     algorithm = 'Algorithm'

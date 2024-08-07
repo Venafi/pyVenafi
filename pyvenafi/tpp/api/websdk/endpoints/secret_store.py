@@ -1,7 +1,12 @@
-from typing import List
-from pyvenafi.tpp.api.websdk.models import secret_store
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import secret_store
 
 class _SecretStore(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -9,11 +14,23 @@ class _SecretStore(WebSdkEndpoint):
         self.Add = self._Add(api_obj=self._api_obj, url=f'{self._url}/Add')
         self.Associate = self._Associate(api_obj=self._api_obj, url=f'{self._url}/Associate')
         self.Dissociate = self._Dissociate(api_obj=self._api_obj, url=f'{self._url}/Dissociate')
-        self.EncryptionKeysInUse = self._EncryptionKeysInUse(api_obj=self._api_obj, url=f'{self._url}/EncryptionKeysInUse')
+        self.EncryptionKeysInUse = self._EncryptionKeysInUse(
+            api_obj=self._api_obj,
+            url=f'{self._url}/EncryptionKeysInUse'
+        )
         self.Lookup = self._Lookup(api_obj=self._api_obj, url=f'{self._url}/Lookup')
-        self.LookupAllAssociationsbyVaultid = self._LookupAllAssociationsbyVaultid(api_obj=self._api_obj, url=f'{self._url}/LookupAllAssociationsbyVaultid')
-        self.LookupByAssociation = self._LookupByAssociation(api_obj=self._api_obj, url=f'{self._url}/LookupByAssociation')
-        self.LookupAssociationbyVaultID = self._LookupAssociationbyVaultID(api_obj=self._api_obj, url=f'{self._url}/LookupAssociationbyVaultID')
+        self.LookupAllAssociationsbyVaultid = self._LookupAllAssociationsbyVaultid(
+            api_obj=self._api_obj,
+            url=f'{self._url}/LookupAllAssociationsbyVaultid'
+        )
+        self.LookupByAssociation = self._LookupByAssociation(
+            api_obj=self._api_obj,
+            url=f'{self._url}/LookupByAssociation'
+        )
+        self.LookupAssociationbyVaultID = self._LookupAssociationbyVaultID(
+            api_obj=self._api_obj,
+            url=f'{self._url}/LookupAssociationbyVaultID'
+        )
         self.LookupByOwner = self._LookupByOwner(api_obj=self._api_obj, url=f'{self._url}/LookupByOwner')
         self.LookupByVaultType = self._LookupByVaultType(api_obj=self._api_obj, url=f'{self._url}/LookupByVaultType')
         self.Mutate = self._Mutate(api_obj=self._api_obj, url=f'{self._url}/Mutate')
@@ -22,6 +39,12 @@ class _SecretStore(WebSdkEndpoint):
         self.OwnerDelete = self._OwnerDelete(api_obj=self._api_obj, url=f'{self._url}/OwnerDelete')
         self.OwnerLookup = self._OwnerLookup(api_obj=self._api_obj, url=f'{self._url}/OwnerLookup')
         self.Retrieve = self._Retrieve(api_obj=self._api_obj, url=f'{self._url}/Retrieve')
+
+        self.AvailableNamespaces = self._AvailableNamespaces(
+            api_obj=self._api_obj,
+            url=f'{self._url}/AvailableNamespaces'
+        )
+        self.RotateKey = self._RotateKey(api_obj=self._api_obj, url=f'{self._url}/RotateKey')
 
     class _Add(WebSdkEndpoint):
         def post(self, base_64_data: str, keyname: str, namespace: str, owner: str, vault_type: int):
@@ -40,7 +63,14 @@ class _SecretStore(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Associate(WebSdkEndpoint):
-        def post(self, name: str, vault_id: int, date_value: str = None, int_value: int = None, string_value: str = None):
+        def post(
+            self,
+            name: str,
+            vault_id: int,
+            date_value: str = None,
+            int_value: int = None,
+            string_value: str = None
+        ):
             body = {
                 'Name'       : name,
                 'VaultID'    : vault_id,
@@ -54,8 +84,32 @@ class _SecretStore(WebSdkEndpoint):
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
+    class _AvailableNamespaces(WebSdkEndpoint):
+        def get(self):
+            class Output(WebSdkOutputModel):
+                namespaces: list[str] = ApiField(alias='Namespaces')
+                encryption_keys: list[str] = ApiField(alias='EncryptionKeys')
+                vault_id: int = ApiField(alias='VaultId')
+                vault_ids: list[int] = ApiField(alias='VaultIds')
+                vault_type: int = ApiField(alias='VaultType')
+                owners: list[str] = ApiField(alias='Owners')
+                result: int = ApiField(alias='Result')
+                base_64_data: str = ApiField(alias='Base64Data')
+                name: str = ApiField(alias='Name')
+                value: str = ApiField(alias='Value')
+                typed_name_values: list[secret_store.TypedNameValues] = ApiField(alias='TypedNameValues')
+
+            return generate_output(output_cls=Output, response=self._get())
+
     class _Dissociate(WebSdkEndpoint):
-        def post(self, vault_id: int, int_value: int = None, name: str = None, string_value: str = None, date_value: int = None):
+        def post(
+            self,
+            vault_id: int,
+            int_value: int = None,
+            name: str = None,
+            string_value: str = None,
+            date_value: int = None
+        ):
             body = {
                 'VaultID'    : vault_id,
                 'IntValue'   : int_value,
@@ -72,7 +126,7 @@ class _SecretStore(WebSdkEndpoint):
     class _EncryptionKeysInUse(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
-                encryption_keys: List[str] = ApiField(default_factory=list, alias='EncryptionKeys')
+                encryption_keys: list[str] = ApiField(default_factory=list, alias='EncryptionKeys')
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return generate_output(output_cls=Output, response=self._get())
@@ -81,7 +135,7 @@ class _SecretStore(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_ids: List[int] = ApiField(default_factory=list, alias='VaultIDs')
+                vault_ids: list[int] = ApiField(default_factory=list, alias='VaultIDs')
 
             return generate_output(output_cls=Output, response=self._get())
 
@@ -93,7 +147,10 @@ class _SecretStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                typed_name_values: List[secret_store.TypedNameValues] = ApiField(default_factory=list, alias='TypedNameValues')
+                typed_name_values: list[secret_store.TypedNameValues] = ApiField(
+                    default_factory=list,
+                    alias='TypedNameValues'
+                )
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -108,7 +165,7 @@ class _SecretStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_ids: List[int] = ApiField(default_factory=list, alias='VaultIDs')
+                vault_ids: list[int] = ApiField(default_factory=list, alias='VaultIDs')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -135,7 +192,7 @@ class _SecretStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_ids: List[int] = ApiField(default_factory=list, alias='VaultIDs')
+                vault_ids: list[int] = ApiField(default_factory=list, alias='VaultIDs')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -147,7 +204,7 @@ class _SecretStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_ids: List[int] = ApiField(default_factory=list, alias='VaultIDs')
+                vault_ids: list[int] = ApiField(default_factory=list, alias='VaultIDs')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -171,7 +228,7 @@ class _SecretStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                vault_ids: List[int] = ApiField(default_factory=list, alias='VaultIDs')
+                vault_ids: list[int] = ApiField(default_factory=list, alias='VaultIDs')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -210,7 +267,7 @@ class _SecretStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
-                owners: List[str] = ApiField(default_factory=list, alias='Owners')
+                owners: list[str] = ApiField(default_factory=list, alias='Owners')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -226,3 +283,28 @@ class _SecretStore(WebSdkEndpoint):
                 vault_type: str = ApiField(alias='VaultType')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
+
+    class _RotateKey(WebSdkEndpoint):
+        def Guid(self, guid: str):
+            return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
+
+        class _Guid(WebSdkEndpoint):
+            def get(self, new_key_name: str):
+                params = {
+                    "newkeyname": new_key_name,
+                }
+
+                class Output(WebSdkOutputModel):
+                    namespaces: list[str] = ApiField(alias='Namespaces')
+                    encryption_keys: list[str] = ApiField(alias='EncryptionKeys')
+                    vault_id: int = ApiField(alias='VaultId')
+                    vault_ids: list[int] = ApiField(alias='VaultIds')
+                    vault_type: int = ApiField(alias='VaultType')
+                    owners: list[str] = ApiField(alias='Owners')
+                    result: int = ApiField(alias='Result')
+                    base_64_data: str = ApiField(alias='Base64Data')
+                    name: str = ApiField(alias='Name')
+                    value: str = ApiField(alias='Value')
+                    typed_name_values: list[secret_store.TypedNameValues] = ApiField(alias='TypedNameValues')
+
+                return generate_output(output_cls=Output, response=self._get(params=params))

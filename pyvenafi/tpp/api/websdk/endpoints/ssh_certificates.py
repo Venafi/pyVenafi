@@ -1,8 +1,16 @@
-from datetime import datetime
-from typing import List
-from pyvenafi.tpp.api.websdk.models import ssh_certificates
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from datetime import datetime
+
+from pydantic import BaseModel
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import ssh_certificates
 
 class _SSHCertificates(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -18,9 +26,11 @@ class _SSHCertificates(WebSdkEndpoint):
             self.Create = self._Create(api_obj=self._api_obj, url=f'{self._url}/Create')
 
         class _Create(WebSdkEndpoint):
-            def post(self, name: str, parent_dn: str = None, key_algorithm: str = None,
-                     key_storage: str = None, private_key_data: str = None,
-                     private_key_passphrase: str = None):
+            def post(
+                self, name: str, parent_dn: str = None, key_algorithm: str = None,
+                key_storage: str = None, private_key_data: str = None,
+                private_key_passphrase: str = None
+            ):
                 body = {
                     'Name'                : name,
                     'ParentDN'            : parent_dn,
@@ -45,11 +55,25 @@ class _SSHCertificates(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Request(WebSdkEndpoint):
-        def post(self, ca_dn: str, key_id: str, destination_address: str = None, extensions: str = None, force_command: str = None,
-                 object_name: str = None, origin: str = None, policy_dn: str = None, principals: List[str] = None,
-                 public_key_data: str = None, source_addresses: List[str] = None, validity_period: str = None,
-                 include_certificate_details: bool = False, include_private_key_data: bool = False,
-                 private_key_passphrase: str = None, processing_timeout: int = None):
+        def post(
+            self,
+            ca_dn: str,
+            key_id: str,
+            destination_address: str = None,
+            extensions: str = None,
+            force_command: str = None,
+            object_name: str = None,
+            origin: str = None,
+            policy_dn: str = None,
+            principals: list[str] = None,
+            public_key_data: str = None,
+            source_addresses: list[str] = None,
+            validity_period: str = None,
+            include_certificate_details: bool = False,
+            include_private_key_data: bool = False,
+            private_key_passphrase: str = None,
+            processing_timeout: int = None
+        ):
             body = {
                 'CADN'                     : ca_dn,
                 'KeyId'                    : key_id,
@@ -78,8 +102,10 @@ class _SSHCertificates(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Retrieve(WebSdkEndpoint):
-        def post(self, dn: str = None, guid: str = None, include_certificate_details: bool = None,
-                 include_private_key_data: bool = None, private_key_passphrase: str = None):
+        def post(
+            self, dn: str = None, guid: str = None, include_certificate_details: bool = None,
+            include_private_key_data: bool = None, private_key_passphrase: str = None
+        ):
             body = {
                 'DN'                       : dn,
                 'Guid'                     : guid,
@@ -107,7 +133,15 @@ class _SSHCertificates(WebSdkEndpoint):
     class _Template(WebSdkEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+            self.Available = self._Available(api_obj=self._api_obj, url=f'{self._url}/Available')
             self.Retrieve = self._Retrieve(api_obj=self._api_obj, url=f'{self._url}/Retrieve')
+
+        class _Available(WebSdkEndpoint):
+            def get(self):
+                class Output(BaseModel):
+                    __root__: list[ssh_certificates.AvailableTemplate]
+
+                return generate_output(output_cls=Output, response=self._get())
 
         class _Retrieve(WebSdkEndpoint):
             def __init__(self, *args, **kwargs):
@@ -128,7 +162,7 @@ class _SSHCertificates(WebSdkEndpoint):
                     ca_keypair_dn: str = ApiField(alias='CAKeyPairDN')
                     ca_keypair: ssh_certificates.CAKeyPair = ApiField(alias='CAKeyPair')
                     certificate: ssh_certificates.Certificate = ApiField(alias='Certificate')
-                    contacts: List[str] = ApiField(default_factory=list, alias='Contacts')
+                    contacts: list[str] = ApiField(default_factory=list, alias='Contacts')
                     created_on: datetime = ApiField(alias='CreatedOn')
                     dn: str = ApiField(alias='DN')
                     guid: str = ApiField(alias='Guid')

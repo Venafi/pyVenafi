@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    Attribute,
+    IterableMeta,
+)
+from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
 
 class Layer7SSGAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Layer 7 SSG"

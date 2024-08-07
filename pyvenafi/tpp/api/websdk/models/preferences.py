@@ -1,6 +1,11 @@
 from __future__ import annotations
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
+
 from typing import Literal
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 ProductType = Literal[
     'CodeSign Protect',
@@ -9,7 +14,6 @@ ProductType = Literal[
     'SSH Protect',
     'TLS Protect',
 ]
-
 
 class Preference(ObjectModel):
     id: int = ApiField(alias='Id')

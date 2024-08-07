@@ -1,19 +1,19 @@
 from __future__ import annotations
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
-from typing import List
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 class SANS(ObjectModel):
     name: str = ApiField(alias='Name')
     type_name: str = ApiField(alias='TypeName')
-
 
 class PKI(ObjectModel):
     certificate_dn: str = ApiField(alias='CertificateDn')
     certificate_guid: str = ApiField(alias='CertificateGuid')
     pki_dn: str = ApiField(alias='PkiDn')
     pki_guid: str = ApiField(alias='PkiGuid')
-
 
 class Certificate(ObjectModel):
     city: str = ApiField(alias='City')
@@ -22,10 +22,9 @@ class Certificate(ObjectModel):
     key_algorithm: str = ApiField(alias='KeyAlgorithm')
     key_bit_size: str = ApiField(alias='KeyBitSize')
     organization: str = ApiField(alias='Organization')
-    organizational_units: List[str] = ApiField(alias='OrganizationalUnits', default_factory=list)
-    sans: List[SANS] = ApiField(alias='Sans', default_factory=list)
+    organizational_units: list[str] = ApiField(alias='OrganizationalUnits', default_factory=list)
+    sans: list[SANS] = ApiField(alias='Sans', default_factory=list)
     state: str = ApiField(alias='State')
-
 
 class Installation(ObjectModel):
     credential_dn: str = ApiField(alias='CredentialDn')

@@ -1,10 +1,19 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
 
-
-class BulkApplicationBaseAttributes(ConnectionBaseAttributes, DriverBaseAttributes, ScheduleBaseAttributes, metaclass=IterableMeta):
+class BulkApplicationBaseAttributes(
+    ConnectionBaseAttributes,
+    DriverBaseAttributes,
+    ScheduleBaseAttributes,
+    metaclass=IterableMeta
+):
     __config_class__ = "Bulk Application Base"
     batch_size = Attribute('Batch Size')
     certificate_thumbprint = Attribute('Certificate Thumbprint')
@@ -15,6 +24,7 @@ class BulkApplicationBaseAttributes(ConnectionBaseAttributes, DriverBaseAttribut
     grouping_id = Attribute('Grouping Id')
     in_error = Attribute('In Error')
     in_progress = Attribute('In Progress')
+    include_certificates_without_private_key = Attribute('Include Certificates Without Private Key')
     last_run = Attribute('Last Run')
     last_update = Attribute('Last Update')
     light_run = Attribute('Light Run')

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union
 
 from pyvenafi.tpp.api.websdk.enums.config import CodeSignAttributeValues
@@ -65,9 +67,6 @@ class CodeSignEnvironment(FeatureBase):
         project_dn = self._get_dn(project)
         project = self._api.websdk.Codesign.GetProject.post(dn=project_dn).project
 
-        project_dn = project_dn.replace("\\", "\\\\")
-        dn = rf'{project_dn}\\{name}'
-
         template_dn = self._get_dn(template)
         template_output = self._api.websdk.Codesign.GetTemplate.post(dn=template_dn)
         template_types = {
@@ -82,9 +81,15 @@ class CodeSignEnvironment(FeatureBase):
             template_type, template = next((k, v) for k, v in template_types.items() if v)
         except:
             raise ValueError('The template provided does not exist.')
+        if self._is_version_compatible(minimum='24.3'):
+            dn = rf'{project_dn}\{name}'
+        else:
+            template_dn = template_dn.replace("\\", "\\\\")
+            project_dn = project_dn.replace("\\", "\\\\")
+            dn = rf'{project_dn}\\{name}'
 
         try:
-            self._api.websdk.Codesign.CreateEnvironment.post(
+            create_output = self._api.websdk.Codesign.CreateEnvironment.post(
                 dn=dn,
                 project={
                     'Dn'  : project_dn,
@@ -92,13 +97,14 @@ class CodeSignEnvironment(FeatureBase):
                     'Id'  : project.id
                 },
                 environment_name=name,
-                template_dn=template_dn.replace("\\", "\\\\"),
+                template_dn=template_dn,
                 template_type=template_type,
                 template=template
             )
-        except:
+            create_output.assert_valid_response()
+        except Exception as e:
             if raise_if_already_exists:
-                raise
+                raise e
 
         environment = self.get(dn=dn)
         return environment
@@ -130,7 +136,8 @@ class CodeSignEnvironment(FeatureBase):
         kwargs = {
             key: environment
         }
-        self._api.websdk.Codesign.UpdateEnvironment.post(**kwargs)
+        output = self._api.websdk.Codesign.UpdateEnvironment.post(**kwargs)
+        output.assert_valid_response()
 
     def get(
         self,

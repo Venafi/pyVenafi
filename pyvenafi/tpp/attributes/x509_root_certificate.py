@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.top import TopAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 class X509RootCertificateAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "X509 Root Certificate"
@@ -37,18 +41,18 @@ class X509RootCertificateAttributes(TopAttributes, metaclass=IterableMeta):
     crl_number = Attribute('CRL Number')
     crl_this_update = Attribute('CRL This Update')
     certificate_vault_id = Attribute('Certificate Vault Id')
-    discovered_on = Attribute('Discovered On', min_version='15.4')
-    escalation_notice_interval = Attribute('Escalation Notice Interval', min_version='20.4')
-    escalation_notice_start = Attribute('Escalation Notice Start', min_version='20.4')
-    expiration_notice_interval = Attribute('Expiration Notice Interval', min_version='20.4')
-    expiration_notice_start = Attribute('Expiration Notice Start', min_version='20.4')
+    discovered_on = Attribute('Discovered On')
+    escalation_notice_interval = Attribute('Escalation Notice Interval')
+    escalation_notice_start = Attribute('Escalation Notice Start')
+    expiration_notice_interval = Attribute('Expiration Notice Interval')
+    expiration_notice_start = Attribute('Expiration Notice Start')
     monitored_uri_verification_engine_info = Attribute('Monitored URI Verification Engine Info')
     monitored_uri_verification_last_check = Attribute('Monitored URI Verification Last Check')
     monitored_uri_verification_last_notification = Attribute('Monitored URI Verification Last Notification')
     monitored_uri_verification_run_identifier = Attribute('Monitored URI Verification Run Identifier')
     monitored_uri_verification_uri_identifier = Attribute('Monitored URI Verification URI Identifier')
-    required_attribute_for_signing_certificate = Attribute('Required Attribute For Signing Certificate', min_version='22.2')
-    required_attribute_for_time_stamping_certificate = Attribute('Required Attribute For Time Stamping Certificate', min_version='22.2')
-    trust_for_signing = Attribute('Trust For Signing', min_version='22.2')
-    trust_for_time_stamping = Attribute('Trust For Time Stamping', min_version='22.2')
+    required_attribute_for_signing_certificate = Attribute('Required Attribute For Signing Certificate')
+    required_attribute_for_time_stamping_certificate = Attribute('Required Attribute For Time Stamping Certificate')
+    trust_for_signing = Attribute('Trust For Signing')
+    trust_for_time_stamping = Attribute('Trust For Time Stamping')
     trusted_status = Attribute('Trusted Status')

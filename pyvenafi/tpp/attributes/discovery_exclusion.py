@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.exclusion import ExclusionAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.exclusion import ExclusionAttributes
 
 class DiscoveryExclusionAttributes(ExclusionAttributes, metaclass=IterableMeta):
     __config_class__ = "Discovery Exclusion"

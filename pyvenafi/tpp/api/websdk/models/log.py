@@ -1,7 +1,11 @@
 from __future__ import annotations
-from datetime import datetime
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
 
+from datetime import datetime
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 class LogEvent(ObjectModel):
     client_timestamp: datetime = ApiField(alias='ClientTimestamp')
@@ -20,11 +24,9 @@ class LogEvent(ObjectModel):
     value1: int = ApiField(alias='Value1')
     value2: int = ApiField(alias='Value2')
 
-
 class LogEventApplicationDefinition(ObjectModel):
     application_name: str = ApiField(alias='ApplicationName')
     id: int = ApiField(alias='Id')
-
 
 class LogEventDefinition(ObjectModel):
     data_format: str = ApiField(alias='DataFormat')
@@ -40,3 +42,13 @@ class LogEventDefinition(ObjectModel):
     value1_type: str = ApiField(alias='Value1Type')
     value2_title: str = ApiField(alias='Value2Title')
     value2_type: str = ApiField(alias='Value2Type')
+
+class Field(ObjectModel):
+    name: str = ApiField(alias='Name')
+    label: str = ApiField(alias='Label')
+    required: bool = ApiField(alias='Required')
+
+class Script(ObjectModel):
+    name: str = ApiField(alias='Name')
+    hash: str = ApiField(alias='Hash')
+    fields: list[Field] = ApiField(alias='Fields')

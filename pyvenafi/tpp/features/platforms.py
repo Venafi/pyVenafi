@@ -1,6 +1,9 @@
-from typing import List, Dict
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
+from __future__ import annotations
 
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 
 # region Platform Components
 class _PlatformComponentBase(FeatureBase):
@@ -20,7 +23,7 @@ class _PlatformComponentBase(FeatureBase):
                     return True
         return False
 
-    def update_engines(self, attributes: Dict[str, List[str]], engine_names: List[str] = None):
+    def update_engines(self, attributes: dict[str, list[str]], engine_names: list[str] = None):
         """
         Updates a Platform's module attributes. Each engine in ``engine_names`` will be updated
         to have the given ``attributes``.
@@ -29,109 +32,93 @@ class _PlatformComponentBase(FeatureBase):
             attributes: Dictionary of attributes and attribute values to update.
             engine_names: List of engine names.
         """
-        engine_names = engine_names or [engine.engine_name for engine in self._api.websdk.ProcessingEngines.get().engines]
+        engine_names = engine_names or [engine.engine_name for engine in
+                                        self._api.websdk.ProcessingEngines.get().engines]
         for engine_name in engine_names:
             self._api.websdk.Config.Write.post(
                 object_dn=self._module_dn(engine_name=engine_name),
                 attribute_data=self._name_value_list(attributes)
             )
 
-
 @feature('Auto Layout Manager')
 class AutoLayoutManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Auto Layout Manager')
-
 
 @feature('Bulk Provisioning Manager')
 class BulkProvisioningManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Bulk Provisioning Manager')
 
-
 @feature('CA Import Manager')
 class CAImportManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='CA Import Manager')
-
 
 @feature('Certificate Manager')
 class CertificateManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Manager')
 
-
 @feature('Certificate Pre-Enrollment')
 class CertificatePreEnrollment(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Pre-Enrollment')
-
 
 @feature('Certificate Revocation')
 class CertificateRevocation(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Certificate Revocation')
 
-
 @feature('Cloud Instance Monitor')
 class CloudInstanceMonitor(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Cloud Instance Monitor')
-
 
 @feature('Discovery Manager')
 class DiscoveryManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Discovery')
 
-
 @feature('Key Manager')
 class KeyManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Key Manager')
-
 
 @feature('Monitor')
 class Monitor(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Monitor')
 
-
 @feature('Onboard Discovery Manager')
 class OnboardDiscoveryManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Onboard Discovery Manager')
-
 
 @feature('Reporting')
 class Reporting(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Reporting')
 
-
 @feature('SSH Certificate Manager')
 class SSHCertificateManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='SSH Certificate Manager')
-
 
 @feature('SSH Manager')
 class SSHManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='SSH Manager')
 
-
 @feature('TrustNet Manager')
 class TrustNetManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='TrustNet Manager')
 
-
 @feature('Validation Manager')
 class ValidationManager(_PlatformComponentBase):
     def __init__(self, api):
         super().__init__(api=api, module='Validation Manager')
-
 
 # endregion Platform Components
 

@@ -1,13 +1,24 @@
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
-from pyvenafi.tpp.features.definitions.classes import Classes
+from __future__ import annotations
+
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from pyvenafi.tpp.attributes.device import DeviceAttributes
 from pyvenafi.tpp.attributes.jump_server import JumpServerAttributes
-from typing import Union, List, TYPE_CHECKING
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
+from pyvenafi.tpp.features.definitions.classes import Classes
+from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
 
 if TYPE_CHECKING:
-    from pyvenafi.tpp.api.websdk.models import config, identity as ident
-
+    from pyvenafi.tpp.api.websdk.models import (
+        config,
+        identity as ident,
+    )
 
 class _DeviceBase(FeatureBase):
     def __init__(self, api):
@@ -23,18 +34,30 @@ class _DeviceBase(FeatureBase):
         dn = self._get_dn(device)
         self._config_delete(object_dn=dn)
 
-
 @feature('Device')
 class Device(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None, address: 'str' = None, agent_provisioning_mode: 'bool' = None,
-               concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
-               temp_directory: 'str' = None, os_type: 'str' = None, jump_server: 'Union[config.Object, str]' = None,
-               use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None, enforce_host_key: 'bool' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self,
+        name: str,
+        parent_folder: 'Union[config.Object, str]',
+        description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        address: 'str' = None,
+        agent_provisioning_mode: 'bool' = None,
+        concurrent_connection_limit: 'int' = None,
+        device_credential: 'Union[config.Object, str]' = None,
+        temp_directory: 'str' = None,
+        os_type: 'str' = None,
+        jump_server: 'Union[config.Object, str]' = None,
+        use_sudo: 'bool' = None,
+        sudo_credential: 'Union[config.Object, str]' = None,
+        enforce_host_key: 'bool' = None,
+        attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the device object .
@@ -59,13 +82,16 @@ class Device(_DeviceBase):
         """
         dev_attrs = {
             DeviceAttributes.description                : description,
-            DeviceAttributes.contact                    : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            DeviceAttributes.contact                    : [self._get_prefixed_universal(c) for c in
+                                                           contacts] if contacts else None,
             DeviceAttributes.host                       : address,
             DeviceAttributes.connection_method          : {
                 True: "Agent"
             }.get(agent_provisioning_mode),
             DeviceAttributes.concurrent_connection_limit: concurrent_connection_limit,
-            DeviceAttributes.credential                 : self._get_dn(device_credential) if device_credential else None,
+            DeviceAttributes.credential                 : self._get_dn(
+                device_credential
+            ) if device_credential else None,
             DeviceAttributes.temp_directory             : temp_directory,
             DeviceAttributes.remote_server_type         : os_type,
             DeviceAttributes.jump_server_dn             : self._get_dn(jump_server) if jump_server else None,
@@ -82,7 +108,13 @@ class Device(_DeviceBase):
         if attributes:
             dev_attrs.update(attributes)
 
-        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=Classes.device, attributes=dev_attrs, get_if_already_exists=get_if_already_exists)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(parent_folder),
+            config_class=Classes.device,
+            attributes=dev_attrs,
+            get_if_already_exists=get_if_already_exists
+        )
 
     def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
         """
@@ -109,26 +141,27 @@ class Device(_DeviceBase):
         result = self._api.websdk.Config.Write.post(
             object_dn=dn,
             attribute_data=[{
-                                "Name" : "Agentless Discovery To Do",
-                                "Value": "1"
-                            }]
+                "Name" : "Agentless Discovery To Do",
+                "Value": "1"
+            }]
         ).result
 
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
-
 
 @feature('Jump Server')
 class JumpServer(_DeviceBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None, address: 'str' = None, port: 'int' = None,
-               concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
-               temp_directory: 'str' = None, os_type: 'str' = None, ssh_version: 'str' = None, ssh_syntax: 'str' = None,
-               use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None,
-               enforce_host_key: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None, address: 'str' = None, port: 'int' = None,
+        concurrent_connection_limit: 'int' = None, device_credential: 'Union[config.Object, str]' = None,
+        temp_directory: 'str' = None, os_type: 'str' = None, ssh_version: 'str' = None, ssh_syntax: 'str' = None,
+        use_sudo: 'bool' = None, sudo_credential: 'Union[config.Object, str]' = None,
+        enforce_host_key: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the device object .
@@ -154,11 +187,14 @@ class JumpServer(_DeviceBase):
         """
         dev_attrs = {
             JumpServerAttributes.description                : description,
-            JumpServerAttributes.contact                    : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            JumpServerAttributes.contact                    : [self._get_prefixed_universal(c) for c in
+                                                               contacts] if contacts else None,
             JumpServerAttributes.host                       : address,
             JumpServerAttributes.port                       : port,
             JumpServerAttributes.concurrent_connection_limit: concurrent_connection_limit,
-            JumpServerAttributes.credential                 : self._get_dn(device_credential) if device_credential else None,
+            JumpServerAttributes.credential                 : self._get_dn(
+                device_credential
+            ) if device_credential else None,
             JumpServerAttributes.temp_directory             : temp_directory,
             JumpServerAttributes.remote_server_type         : os_type,
             JumpServerAttributes.ssh_version                : ssh_version,
@@ -167,7 +203,9 @@ class JumpServer(_DeviceBase):
                 True : "1",
                 False: "0"
             }.get(use_sudo),
-            JumpServerAttributes.secondary_credential       : self._get_dn(sudo_credential) if sudo_credential else None,
+            JumpServerAttributes.secondary_credential       : self._get_dn(
+                sudo_credential
+            ) if sudo_credential else None,
             JumpServerAttributes.enforce_known_host         : {
                 True : "1",
                 False: "0"
@@ -176,7 +214,13 @@ class JumpServer(_DeviceBase):
         if attributes:
             dev_attrs.update(attributes)
 
-        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=Classes.jump_server, attributes=dev_attrs, get_if_already_exists=get_if_already_exists)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(parent_folder),
+            config_class=Classes.jump_server,
+            attributes=dev_attrs,
+            get_if_already_exists=get_if_already_exists
+        )
 
     def get(self, device_dn: str, raise_error_if_not_exists: bool = True):
         """

@@ -2,12 +2,13 @@ import logging
 import time
 import os
 from typing import TYPE_CHECKING
-from pyvenafi.logger import logger, features_logger
-
+from pyvenafi.logger import (
+    logger,
+    features_logger,
+)
 
 if TYPE_CHECKING:
     from pyvenafi.cloud.api.authenticate import Authenticate
-
 
 def feature(name: str):
     def decorate(cls):
@@ -20,7 +21,6 @@ def feature(name: str):
         )(cls)
 
     return decorate
-
 
 class FeatureBase:
     def __init__(self, api: 'Authenticate'):

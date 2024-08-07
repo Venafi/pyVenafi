@@ -1,7 +1,12 @@
-from typing import List
-from pyvenafi.tpp.api.websdk.models import preferences as prefs
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import preferences as prefs
 
 class _Preferences(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -15,11 +20,11 @@ class _Preferences(WebSdkEndpoint):
         }
 
         class Output(WebSdkOutputModel):
-            preferences: List[prefs.Preference] = ApiField(alias='Preferences', default_factory=list)
+            preferences: list[prefs.Preference] = ApiField(alias='Preferences', default_factory=list)
 
         return generate_output(output_cls=Output, response=self._get(params=params))
 
-    def post(self, preferences: List[prefs.Preference]):
+    def post(self, preferences: list[prefs.Preference]):
         body = {
             'Preferences': preferences
         }

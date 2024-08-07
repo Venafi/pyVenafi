@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.flow_action_base import FlowActionBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.flow_action_base import FlowActionBaseAttributes
 
 class AdaptableFlowActionBaseAttributes(FlowActionBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Adaptable Flow Action Base"

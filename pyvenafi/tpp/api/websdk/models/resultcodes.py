@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 class ResultCodes:
     Client = {
         0 : 'Success, the operation succeeded, however, the client entry is untrusted',
@@ -504,9 +503,13 @@ class ResultCodes:
         8: 'WorkflowObjectDoesNotExist',
     }
 
-    RecycleBin.update({
-        int(k) + 20000: v for k, v in Config.items()
-    })
-    RecycleBin.update({
-        int(k) + 30000: v for k, v in SecretStore.items()
-    })
+    RecycleBin.update(
+        {
+            int(k) + 20000: v for k, v in Config.items()
+        }
+    )
+    RecycleBin.update(
+        {
+            int(k) + 30000: v for k, v in SecretStore.items()
+        }
+    )

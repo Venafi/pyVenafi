@@ -2,7 +2,6 @@ from uuid import UUID
 from typing import Union
 from pyvenafi.cloud.api.cloud_api import CloudApi
 
-
 class Authenticate:
     """
     Authenticates to Venafi Cloud API.

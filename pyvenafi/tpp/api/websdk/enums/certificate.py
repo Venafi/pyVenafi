@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class CertificateAttributes:
     country = 'C'
     certificate_type = 'CertificateType'
@@ -26,7 +28,6 @@ class CertificateAttributes:
     valid_to_greater = 'ValidToGreater'
     valid_to_less = 'ValidToLess'
 
-
 class CertificateStatus:
     chain_validation_failure = 'ChainValidationFailure'
     created_on = 'CreatedOn'
@@ -47,7 +48,6 @@ class CertificateStatus:
     tls_validation_failure = 'TlsValidationFailure'
     validation_disabled = 'ValidationDisabled'
     validation_state = 'ValidationState'
-
 
 class OptionalFields:
     issuer = 'Issuer'

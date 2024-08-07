@@ -1,12 +1,20 @@
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
+from __future__ import annotations
+
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from pyvenafi.tpp.api.websdk.enums.config import ClientGroupsAttributeValues
 from pyvenafi.tpp.attributes.client_group import ClientGroupAttributes
-from typing import Union, TYPE_CHECKING
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
+from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
 
 if TYPE_CHECKING:
     from pyvenafi.tpp.api.websdk.models import config
-
 
 class _ClientGroupBase(FeatureBase):
     def __init__(self, api):
@@ -27,9 +35,11 @@ class _ClientGroupBase(FeatureBase):
         work_dn = self._get_dn(work, parent_dn=self._work_base_dn)
         response = self._api.websdk.Config.Write.post(
             object_dn=group_dn,
-            attribute_data=self._name_value_list({
-                ClientGroupAttributes.assigned_work: [work_dn]
-            })
+            attribute_data=self._name_value_list(
+                {
+                    ClientGroupAttributes.assigned_work: [work_dn]
+                }
+            )
         )
 
         if response.result.code != 1:
@@ -99,7 +109,6 @@ class _ClientGroupBase(FeatureBase):
                 code_description=response.result.credential_result
             )
 
-
 @feature('Agentless Group')
 class Agentless(_ClientGroupBase):
     def create(self, name: str, get_if_already_exists: bool = True):
@@ -117,9 +126,13 @@ class Agentless(_ClientGroupBase):
             ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.agentless
         }
 
-        return self._config_create(name=name, parent_folder_dn=self._group_base_dn, config_class=ClientGroupAttributes.__config_class__, attributes=attributes,
-                                   get_if_already_exists=get_if_already_exists)
-
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._group_base_dn,
+            config_class=ClientGroupAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
 @feature('EST Certificate Enrollment Group')
 class EstCertificateEnrollment(_ClientGroupBase):
@@ -138,9 +151,13 @@ class EstCertificateEnrollment(_ClientGroupBase):
             ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.est
         }
 
-        return self._config_create(name=name, parent_folder_dn=self._group_base_dn, config_class=ClientGroupAttributes.__config_class__, attributes=attributes,
-                                   get_if_already_exists=get_if_already_exists)
-
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._group_base_dn,
+            config_class=ClientGroupAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
 @feature('Venafi Agent Group')
 class VenafiAgent(_ClientGroupBase):
@@ -159,5 +176,10 @@ class VenafiAgent(_ClientGroupBase):
             ClientGroupAttributes.rule      : ClientGroupsAttributeValues.DefaultRules.venafi_agent
         }
 
-        return self._config_create(name=name, parent_folder_dn=self._group_base_dn, config_class=ClientGroupAttributes.__config_class__, attributes=attributes,
-                                   get_if_already_exists=get_if_already_exists)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._group_base_dn,
+            config_class=ClientGroupAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )

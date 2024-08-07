@@ -7,15 +7,18 @@ import threading
 from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
-from typing import Any, List, Tuple, Set
-
+from typing import (
+    Any,
+    Tuple,
+    Set,
+)
 
 class Logger(logging.getLoggerClass()):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._suppressed: Set[Tuple[threading.Thread, int]] = set()
         self._json_pickle_dumps = lambda d: jsonpickle.dumps(d, max_depth=2, unpicklable=False, indent=2)
-        self._children: 'List[Logger]' = []
+        self._children: 'list[Logger]' = []
         self.manager.loggerClass = Logger
         self.msg_char_limit = 0
         self._suppressed_lock = threading.Lock()
@@ -42,41 +45,65 @@ class Logger(logging.getLoggerClass()):
             msg = msg[:self.msg_char_limit]
         return super()._log(level, msg, args=args, exc_info=exc_info, **kwargs)
 
-    def debug(self, *args, exc_info=None, stack_info=None, stacklevel=1,
-              extra=None, truncate=True, **kwargs: Any) -> None:
+    def debug(
+        self, *args, exc_info=None, stack_info=None, stacklevel=1,
+        extra=None, truncate=True, **kwargs: Any
+    ) -> None:
         kwargs['truncate'] = truncate
-        return super().debug(*args, exc_info=exc_info, stack_info=stack_info,
-                             stacklevel=stacklevel + 2, extra=extra, **kwargs)
+        return super().debug(
+            *args, exc_info=exc_info, stack_info=stack_info,
+            stacklevel=stacklevel + 2, extra=extra, **kwargs
+        )
 
-    def info(self, *args, exc_info=None, stack_info=None, stacklevel=1,
-             extra=None, truncate=True, **kwargs: Any) -> None:
+    def info(
+        self, *args, exc_info=None, stack_info=None, stacklevel=1,
+        extra=None, truncate=True, **kwargs: Any
+    ) -> None:
         kwargs['truncate'] = truncate
-        return super().info(*args, exc_info=exc_info, stack_info=stack_info,
-                            stacklevel=stacklevel + 2, extra=extra, **kwargs)
+        return super().info(
+            *args, exc_info=exc_info, stack_info=stack_info,
+            stacklevel=stacklevel + 2, extra=extra, **kwargs
+        )
 
-    def warning(self, *args, exc_info=None, stack_info=None, stacklevel=1,
-                extra=None, truncate=True, **kwargs: Any) -> None:
+    def warning(
+        self, *args, exc_info=None, stack_info=None, stacklevel=1,
+        extra=None, truncate=True, **kwargs: Any
+    ) -> None:
         kwargs['truncate'] = truncate
-        return super().warning(*args, exc_info=exc_info, stack_info=stack_info,
-                               stacklevel=stacklevel + 2, extra=extra, **kwargs)
+        return super().warning(
+            *args, exc_info=exc_info, stack_info=stack_info,
+            stacklevel=stacklevel + 2, extra=extra, **kwargs
+        )
 
-    def error(self, *args, exc_info=None, stack_info=None, stacklevel=1,
-              extra=None, truncate=True, **kwargs: Any) -> None:
+    def error(
+        self, *args, exc_info=None, stack_info=None, stacklevel=1,
+        extra=None, truncate=True, **kwargs: Any
+    ) -> None:
         kwargs['truncate'] = truncate
-        return super().error(*args, exc_info=exc_info, stack_info=stack_info,
-                             stacklevel=stacklevel + 2, extra=extra, **kwargs)
+        return super().error(
+            *args, exc_info=exc_info, stack_info=stack_info,
+            stacklevel=stacklevel + 2, extra=extra, **kwargs
+        )
 
-    def critical(self, *args, exc_info=None, stack_info=None, stacklevel=1,
-                 extra=None, truncate=True, **kwargs: Any) -> None:
+    def critical(
+        self, *args, exc_info=None, stack_info=None, stacklevel=1,
+        extra=None, truncate=True, **kwargs: Any
+    ) -> None:
         kwargs['truncate'] = truncate
-        return super().critical(*args, exc_info=exc_info, stack_info=stack_info,
-                                stacklevel=stacklevel + 2, extra=extra, **kwargs)
+        return super().critical(
+            *args, exc_info=exc_info, stack_info=stack_info,
+            stacklevel=stacklevel + 2, extra=extra, **kwargs
+        )
 
-    def exception(self, *args, exc_info=True, stack_info=None, stacklevel=1,
-                  extra=None, truncate=True, **kwargs: Any) -> None:
+    def exception(
+        self, *args, exc_info=True, stack_info=None, stacklevel=1,
+        extra=None, truncate=True, **kwargs: Any
+    ) -> None:
         kwargs['truncate'] = truncate
-        return super().exception(*args, exc_info=exc_info, stack_info=stack_info,
-                                 stacklevel=stacklevel + 2, extra=extra, **kwargs)
+        return super().exception(
+            *args, exc_info=exc_info, stack_info=stack_info,
+            stacklevel=stacklevel + 2, extra=extra, **kwargs
+        )
 
     @contextmanager
     def suppressed(self, level: int, include_child_loggers: bool = True):
@@ -106,8 +133,10 @@ class Logger(logging.getLoggerClass()):
 
         return dec
 
-    def wrap_class(self, level: int, include: str = '', exclude: str = '__.*',
-                   *logging_args, **logging_kwargs):
+    def wrap_class(
+        self, level: int, include: str = '', exclude: str = '__.*',
+        *logging_args, **logging_kwargs
+    ):
         def wrap(cls):
             for attr, fn in inspect.getmembers(cls, inspect.isroutine):
                 if callable(getattr(cls, attr)):
@@ -119,9 +148,11 @@ class Logger(logging.getLoggerClass()):
                         matches = re.findall(pattern=exclude, string=fn.__name__, flags=re.IGNORECASE)
                         if fn.__name__ in matches:
                             continue
-                    setattr(cls, attr, self.wrap_func(
-                        level=level, _class=cls, *logging_args, **logging_kwargs
-                    )(getattr(cls, attr)))
+                    setattr(
+                        cls, attr, self.wrap_func(
+                            level=level, _class=cls, *logging_args, **logging_kwargs
+                        )(getattr(cls, attr))
+                    )
             return cls
 
         return wrap
@@ -184,16 +215,17 @@ class Logger(logging.getLoggerClass()):
         self._children.append(child)
         return child
 
-
 def get_logger(name: str = None) -> Logger:
     _original_global_logging_class = logging.getLoggerClass()
     if not isinstance(_original_global_logging_class, type) or not issubclass(
-            _original_global_logging_class, logging.Logger):
+        _original_global_logging_class, logging.Logger
+    ):
         _original_global_logging_class = logging.Logger
 
     _original_root_manager_logging_class = logging.root.manager.loggerClass
     if not isinstance(_original_root_manager_logging_class, type) or not issubclass(
-            _original_root_manager_logging_class, logging.Logger):
+        _original_root_manager_logging_class, logging.Logger
+    ):
         _original_root_manager_logging_class = logging.Logger
     # noinspection PyUnresolvedReferences
     logging._acquireLock()
@@ -207,7 +239,6 @@ def get_logger(name: str = None) -> Logger:
     finally:
         # noinspection PyUnresolvedReferences
         logging._releaseLock()
-
 
 logger = get_logger('venafi')
 api_logger = logger.getChild('api')

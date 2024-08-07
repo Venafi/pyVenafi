@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.client_work_base import ClientWorkBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.client_work_base import ClientWorkBaseAttributes
 
 class ClientAgentConfigurationWorkAttributes(ClientWorkBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Client Agent Configuration Work"

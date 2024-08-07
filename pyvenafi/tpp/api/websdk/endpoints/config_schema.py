@@ -1,7 +1,12 @@
-from typing import List
-from pyvenafi.tpp.api.websdk.models import config_schema
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import config_schema
 
 class _ConfigSchema(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -12,10 +17,13 @@ class _ConfigSchema(WebSdkEndpoint):
     class _Attributes(WebSdkEndpoint):
         def post(self):
             class Output(WebSdkOutputModel):
-                attribute_definitions: List[config_schema.AttributeDefinition] = ApiField(
+                attribute_definitions: list[config_schema.AttributeDefinition] = ApiField(
                     default_factory=list, alias='AttributeDefinitions'
                 )
-                result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
+                result: config_schema.Result = ApiField(
+                    alias='Result',
+                    converter=lambda x: config_schema.Result(code=x)
+                )
 
             return generate_output(response=self._post(data={}), output_cls=Output)
 
@@ -27,6 +35,9 @@ class _ConfigSchema(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 class_definition: config_schema.ClassDefinition = ApiField(alias='ClassDefinition')
-                result: config_schema.Result = ApiField(alias='Result', converter=lambda x: config_schema.Result(code=x))
+                result: config_schema.Result = ApiField(
+                    alias='Result',
+                    converter=lambda x: config_schema.Result(code=x)
+                )
 
             return generate_output(response=self._post(data=body), output_cls=Output)

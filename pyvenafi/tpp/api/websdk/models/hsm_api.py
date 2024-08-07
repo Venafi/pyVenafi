@@ -1,7 +1,11 @@
 from __future__ import annotations
-from datetime import datetime
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
 
+from datetime import datetime
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 class Certificate(ObjectModel):
     authentication: str = ApiField(alias='Authentication')
@@ -23,7 +27,6 @@ class Certificate(ObjectModel):
     token: bool = ApiField(alias='Token')
     trusted: bool = ApiField(alias='Trusted')
     value: str = ApiField(alias='Value')
-
 
 class PrivateKey(ObjectModel):
     authentication: bool = ApiField(alias='Authentication')
@@ -47,7 +50,6 @@ class PrivateKey(ObjectModel):
     signing: bool = ApiField(alias='Signing')
     token: bool = ApiField(alias='Token')
     unwrap: bool = ApiField(alias='Unwrap')
-
 
 class PublicKey(ObjectModel):
     authentication: bool = ApiField(alias='Authentication')
@@ -73,11 +75,9 @@ class PublicKey(ObjectModel):
     verify: str = ApiField(alias='Verify')
     wrap: str = ApiField(alias='Wrap')
 
-
 class ClientInfo(ObjectModel):
     client_library_name: str = ApiField(alias='ClientLibraryName')
     client_library_version: str = ApiField(alias='ClientLibraryVersion')
-
 
 class ProcessInfo(ObjectModel):
     command_line: str = ApiField(alias='CommandLine')
@@ -88,7 +88,6 @@ class ProcessInfo(ObjectModel):
     executable_size: int = ApiField(alias='ExecutableSize')
     machine: str = ApiField(alias='Machine')
     username: str = ApiField(alias='Username')
-
 
 class Parameter(ObjectModel):
     hash_alg: str = ApiField(alias='HashAlg')

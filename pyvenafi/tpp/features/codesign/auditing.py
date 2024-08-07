@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union
 
 from pyvenafi.tpp.api.websdk.models.codesign import (

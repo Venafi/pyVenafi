@@ -1,7 +1,11 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes
-
 
 class OnboardDiscoveryAttributes(ScheduleBaseAttributes, TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Onboard Discovery"
@@ -17,6 +21,7 @@ class OnboardDiscoveryAttributes(ScheduleBaseAttributes, TopAttributes, metaclas
     disable_installations_not_in_use = Attribute('Disable Installations Not In Use')
     driver_name = Attribute('Driver Name')
     environment = Attribute('Environment')
+    exclude_binding_targets = Attribute('Exclude Binding Targets')
     extract_private_key = Attribute('Extract Private Key')
     in_progress = Attribute('In Progress')
     last_run = Attribute('Last Run')

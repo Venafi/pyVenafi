@@ -10,10 +10,11 @@ from pyvenafi.cloud.api.endpoints.outagedetection_service import _outagedetectio
 from pyvenafi.cloud.api.endpoints.provisioning_service import _provisioning_service
 from pyvenafi.cloud.api.endpoints.tagging_service import _tagging_service
 
-
 class CloudApi:
-    def __init__(self, server: str, api_key: str, proxies: dict = None, verify_ssl: bool = False,
-                 connection_timeout: float = None, read_timeout: float = None):
+    def __init__(
+        self, server: str, api_key: str, proxies: dict = None, verify_ssl: bool = False,
+        connection_timeout: float = None, read_timeout: float = None
+    ):
         self._api_key = api_key
         self._proxies = proxies
         self._verify_ssl = verify_ssl

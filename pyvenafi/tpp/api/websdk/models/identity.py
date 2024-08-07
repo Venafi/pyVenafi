@@ -1,6 +1,9 @@
 from __future__ import annotations
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 class Identity(ObjectModel):
     full_name: str = ApiField(alias='FullName')
@@ -10,6 +13,7 @@ class Identity(ObjectModel):
     prefix: str = ApiField(alias='Prefix')
     prefixed_name: str = ApiField(alias='PrefixedName')
     prefixed_universal: str = ApiField(alias='PrefixedUniversal')
+    state: int = ApiField(alias='State')
     type: int = ApiField(alias='Type')
     universal: str = ApiField(alias='Universal')
 
@@ -24,7 +28,6 @@ class Identity(ObjectModel):
     @property
     def is_distribution_group(self):
         return self.type & 8 == 8
-
 
 class InvalidIdentity(ObjectModel):
     prefix: str = ApiField(alias='Prefix')

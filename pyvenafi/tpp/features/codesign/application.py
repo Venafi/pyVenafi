@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import (
-    List,
     Union,
 )
 
@@ -50,7 +51,7 @@ class _CodeSignApplicationBase(FeatureBase):
         collection: ApplicationCollection = None,
         collection_dn: str = None,
         collection_guid: str = None
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Get the :ref:`dn`\s that references a :class:`~.models.codesign.Application`
         or a :class:`~.models.codesign.ApplicationCollection` using one parameter.
@@ -64,7 +65,7 @@ class _CodeSignApplicationBase(FeatureBase):
             collection_guid: :ref:`guid` of an application collection.
 
         Returns:
-            List[:ref:`dn`]
+            list[:ref:`dn`]
         """
         params = [
             application,
@@ -131,16 +132,16 @@ class CodeSignApplication(_CodeSignApplicationBase):
         application = self.get(dn=dn)
 
         if any(
-                [
-                    description,
-                    hash,
-                    location,
-                    permitted_argument_pattern,
-                    signatory_issuer,
-                    signatory_subject,
-                    size,
-                    version,
-                ]
+            [
+                description,
+                hash,
+                location,
+                permitted_argument_pattern,
+                signatory_issuer,
+                signatory_subject,
+                size,
+                version,
+            ]
         ):
             application.description = description
             application.hash = hash
@@ -210,7 +211,7 @@ class CodeSignApplication(_CodeSignApplicationBase):
     def enumerate(
         self,
         _filter: str = None
-    ) -> List[Application]:
+    ) -> list[Application]:
         """
         Enumerate the applications.
 
@@ -218,7 +219,7 @@ class CodeSignApplication(_CodeSignApplicationBase):
             _filter: The partial tool name and optional trailing asterisk (*) wild card.
 
         Returns:
-            List[:class:`~.models.codesign.Application`]
+            list[:class:`~.models.codesign.Application`]
         """
         output = self._api.websdk.Codesign.EnumerateApplications.post(filter=_filter)
         return output.applications
@@ -249,7 +250,7 @@ class CodeSignApplicationCollection(FeatureBase):
         self,
         name: str,
         parent_folder: Union[Object, str] = r'\VED\Code Signing\Signing Applications',
-        applications: List[Union[str, Object, Application]] = None,
+        applications: list[Union[str, Object, Application]] = None,
         raise_if_already_exists: bool = False,
     ) -> ApplicationCollection:
         """
@@ -348,7 +349,7 @@ class CodeSignApplicationCollection(FeatureBase):
             id: Identifier of the application collection object.
 
         Returns:
-            List[:ref:`dn`\s.]
+            list[:ref:`dn`\s.]
         """
         if any([dn, guid, id]):
             output = self._api.websdk.Codesign.GetApplicationCollectionMembers.post(dn=dn, guid=guid, id=id)
@@ -375,8 +376,8 @@ class CodeSignApplicationCollection(FeatureBase):
         Returns:
             Dataclass object containing:
             * :class:`~.models.codesign.ApplicationCollection`
-            * List[:ref:`dn`] of application collections.
-            * List[:ref:`dn`] of applications.
+            * list[:ref:`dn`] of application collections.
+            * list[:ref:`dn`] of applications.
         """
         if any([dn, guid, id]):
             output = self._api.websdk.Codesign.GetApplicationCollectionMemberDNs.post(dn=dn, guid=guid, id=id)
@@ -386,8 +387,8 @@ class CodeSignApplicationCollection(FeatureBase):
         @dataclass
         class ApplicationCollectionDns:
             application_collection: ApplicationCollection = output.application_collection
-            application_collection_dns: List[str] = output.application_collection_dns
-            application_dns: List[str] = output.application_dns
+            application_collection_dns: list[str] = output.application_collection_dns
+            application_dns: list[str] = output.application_dns
 
         return ApplicationCollectionDns(
             application_collection=output.application_collection,
@@ -398,7 +399,7 @@ class CodeSignApplicationCollection(FeatureBase):
     def enumerate(
         self,
         _filter: str = None
-    ) -> List[ApplicationCollection]:
+    ) -> list[ApplicationCollection]:
         """
         Enumerate the application collections.
 
@@ -406,7 +407,7 @@ class CodeSignApplicationCollection(FeatureBase):
             _filter: The partial tool name and optional trailing asterisk (*) wild card.
 
         Returns:
-            List[:class:`~.models.codesign.ApplicationCollection`]
+            list[:class:`~.models.codesign.ApplicationCollection`]
         """
         output = self._api.websdk.Codesign.EnumerateApplicationCollections.post(filter=_filter)
         return output.application_collections

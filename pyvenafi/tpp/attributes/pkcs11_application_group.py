@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.application_group import ApplicationGroupAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    Attribute,
+    IterableMeta,
+)
+from pyvenafi.tpp.attributes.application_group import ApplicationGroupAttributes
 
 class PKCS11ApplicationGroupAttributes(ApplicationGroupAttributes, metaclass=IterableMeta):
     __config_class__ = "PKCS11 Application Group"

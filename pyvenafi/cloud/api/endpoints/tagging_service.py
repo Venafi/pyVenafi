@@ -1,7 +1,10 @@
 from __future__ import annotations
-from pyvenafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
+from pyvenafi.cloud.api.api_base import (
+    CloudApiEndpoint,
+    CloudApiOutputModel,
+    generate_output,
+)
 from pyvenafi.cloud.api.models import tagging_service
-
 
 class _tagging_service:
     def __init__(self, api_obj):
@@ -16,6 +19,8 @@ class _tagging_service:
         class _tags(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
+                self.creation = self._creation(api_obj=self._api_obj, url=f'{self._url}/creation')
+                self.deletion = self._deletion(api_obj=self._api_obj, url=f'{self._url}/deletion')
                 self.values = self._values(api_obj=self._api_obj, url=f'{self._url}/values')
 
             def NAME(self, name: str):
@@ -24,14 +29,28 @@ class _tagging_service:
             def get(self):
                 class Output(CloudApiOutputModel):
                     TagResponse: tagging_service.TagResponse
-                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TagResponse'})
+
+                return generate_output(
+                    output_cls=Output,
+                    response=self._get(params={}),
+                    rc_mapping={
+                        200: 'TagResponse'
+                    }
+                )
 
             def post(self, TagRequest: tagging_service.TagRequest):
                 data = {**TagRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     TagInformation: tagging_service.TagInformation
-                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'TagInformation'})
+
+                return generate_output(
+                    output_cls=Output,
+                    response=self._post(data=data),
+                    rc_mapping={
+                        201: 'TagInformation'
+                    }
+                )
 
             class _NAME(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
@@ -41,12 +60,20 @@ class _tagging_service:
                 def delete(self):
                     class Output(CloudApiOutputModel):
                         pass
+
                     return generate_output(output_cls=Output, response=self._delete(params={}))
 
                 def get(self):
                     class Output(CloudApiOutputModel):
                         TagInformation: tagging_service.TagInformation
-                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TagInformation'})
+
+                    return generate_output(
+                        output_cls=Output,
+                        response=self._get(params={}),
+                        rc_mapping={
+                            200: 'TagInformation'
+                        }
+                    )
 
                 class _values(CloudApiEndpoint):
                     def __init__(self, *args, **kwargs):
@@ -58,31 +85,103 @@ class _tagging_service:
                     def get(self):
                         class Output(CloudApiOutputModel):
                             TagValuesResponse: tagging_service.TagValuesResponse
-                        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TagValuesResponse'})
+
+                        return generate_output(
+                            output_cls=Output,
+                            response=self._get(params={}),
+                            rc_mapping={
+                                200: 'TagValuesResponse'
+                            }
+                        )
 
                     def post(self, TagValuesRequest: tagging_service.TagValuesRequest):
                         data = {**TagValuesRequest.dict()}
 
                         class Output(CloudApiOutputModel):
                             TagValuesResponse: tagging_service.TagValuesResponse
-                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'TagValuesResponse'})
+
+                        return generate_output(
+                            output_cls=Output,
+                            response=self._post(data=data),
+                            rc_mapping={
+                                201: 'TagValuesResponse'
+                            }
+                        )
 
                     class _VALUE(CloudApiEndpoint):
                         def delete(self):
                             class Output(CloudApiOutputModel):
                                 pass
+
                             return generate_output(output_cls=Output, response=self._delete(params={}))
+
+            class _creation(CloudApiEndpoint):
+                def post(self, TagsBulkRequest: tagging_service.TagsBulkRequest):
+                    data = {**TagsBulkRequest.dict()}
+
+                    class Output(CloudApiOutputModel):
+                        TagsAndValuesResponse: tagging_service.TagsAndValuesResponse
+
+                    return generate_output(
+                        output_cls=Output,
+                        response=self._post(data=data),
+                        rc_mapping={
+                            201: 'TagsAndValuesResponse'
+                        }
+                    )
+
+            class _deletion(CloudApiEndpoint):
+                def post(self, TagsBulkRequest: tagging_service.TagsBulkRequest):
+                    data = {**TagsBulkRequest.dict()}
+
+                    class Output(CloudApiOutputModel):
+                        pass
+
+                    return generate_output(output_cls=Output, response=self._post(data=data))
 
             class _values(CloudApiEndpoint):
                 def get(self):
                     class Output(CloudApiOutputModel):
                         TagValuesResponse: tagging_service.TagValuesResponse
-                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TagValuesResponse'})
+
+                    return generate_output(
+                        output_cls=Output,
+                        response=self._get(params={}),
+                        rc_mapping={
+                            200: 'TagValuesResponse'
+                        }
+                    )
 
         class _tagsassignment(CloudApiEndpoint):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.aggregates = self._aggregates(api_obj=self._api_obj, url=f'{self._url}/aggregates')
+
             def patch(self, TagsAssignRequest: tagging_service.TagsAssignRequest):
                 data = {**TagsAssignRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     TagsAssignResponse: tagging_service.TagsAssignResponse
-                return generate_output(output_cls=Output, response=self._patch(data=data), rc_mapping={200: 'TagsAssignResponse'})
+
+                return generate_output(
+                    output_cls=Output,
+                    response=self._patch(data=data),
+                    rc_mapping={
+                        200: 'TagsAssignResponse'
+                    }
+                )
+
+            class _aggregates(CloudApiEndpoint):
+                def post(self, TagsAssignmentAggregatesRequest: tagging_service.TagsAssignmentAggregatesRequest):
+                    data = {**TagsAssignmentAggregatesRequest.dict()}
+
+                    class Output(CloudApiOutputModel):
+                        TagsAssignmentAggregatesResponse: tagging_service.TagsAssignmentAggregatesResponse
+
+                    return generate_output(
+                        output_cls=Output,
+                        response=self._post(data=data),
+                        rc_mapping={
+                            200: 'TagsAssignmentAggregatesResponse'
+                        }
+                    )

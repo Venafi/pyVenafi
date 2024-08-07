@@ -1,11 +1,22 @@
+from __future__ import annotations
+
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from pyvenafi.tpp.attributes.microsoft_ca import MicrosoftCAAttributes
 from pyvenafi.tpp.attributes.self_signed_ca import SelfSignedCAAttributes
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from typing import Union, List, TYPE_CHECKING
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 
 if TYPE_CHECKING:
-    from pyvenafi.tpp.api.websdk.models import config, identity as ident
-
+    from pyvenafi.tpp.api.websdk.models import (
+        config,
+        identity as ident,
+    )
 
 class _CertificateAuthorityBase(FeatureBase):
     def __init__(self, api):
@@ -38,18 +49,19 @@ class _CertificateAuthorityBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-
 @feature('Microsoft CA')
 class MSCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', hostname: str, service_name: str,
-               credential: 'Union[config.Object, str]', template: str, description: 'str' = None,
-               contacts: 'List[ident.Identity, str]' = None, manual_approvals: 'bool' = None,
-               subject_alt_name_enabled: 'bool' = None, automatically_include_cn_as_dns_san: 'bool' = None,
-               allow_users_to_specify_end_date: 'bool' = None, enrollment_agent: 'Union[config.Object, str]' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, parent_folder: 'Union[config.Object, str]', hostname: str, service_name: str,
+        credential: 'Union[config.Object, str]', template: str, description: 'str' = None,
+        contacts: 'list[ident.Identity, str]' = None, manual_approvals: 'bool' = None,
+        subject_alt_name_enabled: 'bool' = None, automatically_include_cn_as_dns_san: 'bool' = None,
+        allow_users_to_specify_end_date: 'bool' = None, enrollment_agent: 'Union[config.Object, str]' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the CA object.
@@ -71,7 +83,10 @@ class MSCA(_CertificateAuthorityBase):
         Returns:
             :ref:`config_object` of the certificate authority.
         """
-        bool_to_string = lambda x: {True: "1", False: "0"}.get(x)
+        bool_to_string = lambda x: {
+            True : "1",
+            False: "0"
+        }.get(x)
         ca_attrs = {
             MicrosoftCAAttributes.driver_name                 : 'camicrosoft',
             MicrosoftCAAttributes.host                        : hostname,
@@ -79,29 +94,39 @@ class MSCA(_CertificateAuthorityBase):
             MicrosoftCAAttributes.credential                  : self._get_dn(credential),
             MicrosoftCAAttributes.template                    : template,
             MicrosoftCAAttributes.description                 : description,
-            MicrosoftCAAttributes.contact                     : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            MicrosoftCAAttributes.contact                     : [self._get_prefixed_universal(c) for c in
+                                                                 contacts] if contacts else None,
             MicrosoftCAAttributes.manual_approval             : bool_to_string(manual_approvals),
             MicrosoftCAAttributes.san_enabled                 : bool_to_string(subject_alt_name_enabled),
             MicrosoftCAAttributes.include_cn_as_san           : bool_to_string(automatically_include_cn_as_dns_san),
             MicrosoftCAAttributes.specific_end_date_enabled   : bool_to_string(allow_users_to_specify_end_date),
-            MicrosoftCAAttributes.enrollment_agent_certificate: self._get_dn(enrollment_agent) if enrollment_agent else None
+            MicrosoftCAAttributes.enrollment_agent_certificate: self._get_dn(
+                enrollment_agent
+            ) if enrollment_agent else None
         }
         if attributes:
             ca_attrs.update(attributes)
 
-        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=MicrosoftCAAttributes.__config_class__, attributes=ca_attrs,
-                                   get_if_already_exists=get_if_already_exists)
-
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(parent_folder),
+            config_class=MicrosoftCAAttributes.__config_class__,
+            attributes=ca_attrs,
+            get_if_already_exists=get_if_already_exists
+        )
 
 @feature('Self-Signed CA')
 class SelfSignedCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[ident.Identity, str]' = None, key_usage: 'List[str]' = None, server_authentication: 'bool' = None,
-               client_authentication: 'bool' = None, code_signing: 'bool' = None, signature_algorithm: 'str' = None,
-               valid_years: 'int' = None, valid_days: 'int' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[ident.Identity, str]' = None, key_usage: 'list[str]' = None,
+        server_authentication: 'bool' = None, client_authentication: 'bool' = None, code_signing: 'bool' = None,
+        time_stamping: 'bool' = None, signature_algorithm: 'str' = None, valid_years: 'int' = None,
+        valid_days: 'int' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the CA object.
@@ -112,6 +137,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
             server_authentication: Allow server authentication.
             client_authentication: Allow client authentication.
             code_signing: Allow code signing.
+            time_stamping: Allow time stamping.
             signature_algorithm: Signing algorithm.
             valid_years: Validity period in years.
             valid_days: Validity period in days. Added to years.
@@ -124,27 +150,38 @@ class SelfSignedCA(_CertificateAuthorityBase):
         ca_attrs = {
             SelfSignedCAAttributes.driver_name: 'caselfsigned',
             SelfSignedCAAttributes.description: description,
-            SelfSignedCAAttributes.contact    : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
+            SelfSignedCAAttributes.contact    : [self._get_prefixed_universal(c) for c in
+                                                 contacts] if contacts else None,
             SelfSignedCAAttributes.key_usage  : ','.join(key_usage),
             SelfSignedCAAttributes.algorithm  : signature_algorithm,
         }
-        if server_authentication or client_authentication or code_signing:
+        if server_authentication or client_authentication or code_signing or time_stamping:
             enhanced_key_usage = {
                 '1.3.6.1.5.5.7.3.1': server_authentication,
                 '1.3.6.1.5.5.7.3.2': client_authentication,
-                '1.3.6.1.5.5.7.3.3': code_signing
+                '1.3.6.1.5.5.7.3.3': code_signing,
+                '1.3.6.1.5.5.7.3.8': time_stamping
             }
-            ca_attrs.update({
-                SelfSignedCAAttributes.enhanced_key_usage: [
-                    eku for eku, enabled in enhanced_key_usage.items() if enabled is True
-                ],
-            })
+            ca_attrs.update(
+                {
+                    SelfSignedCAAttributes.enhanced_key_usage: [
+                        eku for eku, enabled in enhanced_key_usage.items() if enabled is True
+                    ],
+                }
+            )
         if valid_years or valid_days:
             validity_period = (365 * (valid_years or 0)) + (valid_days or 0)
-            ca_attrs.update({
-                SelfSignedCAAttributes.validity_period: validity_period
-            })
+            ca_attrs.update(
+                {
+                    SelfSignedCAAttributes.validity_period: validity_period
+                }
+            )
         if attributes:
             ca_attrs.update(attributes)
-        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=SelfSignedCAAttributes.__config_class__, attributes=ca_attrs,
-                                   get_if_already_exists=get_if_already_exists)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(parent_folder),
+            config_class=SelfSignedCAAttributes.__config_class__,
+            attributes=ca_attrs,
+            get_if_already_exists=get_if_already_exists
+        )

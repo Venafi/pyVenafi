@@ -1,19 +1,24 @@
 from __future__ import annotations
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
+
 from datetime import datetime
-from typing import List, Literal
+from typing import (
+    Literal,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 CertificateFormat = Literal['Base64', 'Base64 (PKCS #8)', 'DER', 'JKS', 'PKCS #7', 'PKCS #12']
-
 
 class Link(ObjectModel):
     details: str = ApiField(alias='Details')
     next: str = ApiField(alias='Next')
     previous: str = ApiField(alias='Previous')
 
-
 class CertificateDetails(ObjectModel):
-    aia_ca_issuer_url: List[str] = ApiField(alias='AIACAIssuerURL', default_factory=list)
+    aia_ca_issuer_url: list[str] = ApiField(alias='AIACAIssuerURL', default_factory=list)
     aia_key_identifier: str = ApiField(alias='AIAKeyIdentifier')
     c: str = ApiField(alias='C')
     cdp_uri: str = ApiField(alias='CDPURI')
@@ -26,7 +31,7 @@ class CertificateDetails(ObjectModel):
     key_usage: str = ApiField(alias='KeyUsage')
     l: str = ApiField(alias='L')
     o: str = ApiField(alias='O')
-    ou: List[str] = ApiField(alias='OU', default_factory=list)
+    ou: list[str] = ApiField(alias='OU', default_factory=list)
     public_key_hash: str = ApiField(alias='PublicKeyHash')
     revocation_date: datetime = ApiField(alias='RevocationDate')
     revocation_status: str = ApiField(alias='RevocationStatus')
@@ -37,11 +42,11 @@ class CertificateDetails(ObjectModel):
     signature_algorithm_oid: str = ApiField(alias='SignatureAlgorithmOID')
     store_added: datetime = ApiField(alias='StoreAdded')
     subject: str = ApiField(alias='Subject')
-    subject_alt_name_dns: List[str] = ApiField(alias='SubjectAltNameDNS', default_factory=list)
-    subject_alt_name_email: List[str] = ApiField(alias='SubjectAltNameEmail', default_factory=list)
-    subject_alt_name_ip_address: List[str] = ApiField(alias='SubjectAltNameIPAddress', default_factory=list)
-    subject_alt_name_other_name_upn: List[str] = ApiField(alias='SubjectAltNameOtherNameUPN', default_factory=list)
-    subject_alt_name_uri: List[str] = ApiField(alias='SubjectAltNameUri', default_factory=list)
+    subject_alt_name_dns: list[str] = ApiField(alias='SubjectAltNameDNS', default_factory=list)
+    subject_alt_name_email: list[str] = ApiField(alias='SubjectAltNameEmail', default_factory=list)
+    subject_alt_name_ip_address: list[str] = ApiField(alias='SubjectAltNameIPAddress', default_factory=list)
+    subject_alt_name_other_name_upn: list[str] = ApiField(alias='SubjectAltNameOtherNameUPN', default_factory=list)
+    subject_alt_name_uri: list[str] = ApiField(alias='SubjectAltNameUri', default_factory=list)
     template_major_version: str = ApiField(alias='TemplateMajorVersion')
     template_minor_version: str = ApiField(alias='TemplateMajorVersion')
     template_name: str = ApiField(alias='TemplateName')
@@ -50,83 +55,68 @@ class CertificateDetails(ObjectModel):
     valid_from: datetime = ApiField(alias='ValidFrom')
     valid_to: datetime = ApiField(alias='ValidTo')
 
-
 class PreviousVersions(ObjectModel):
     certificate_details: CertificateDetails = ApiField(alias='CertificateDetails')
     vault_id: int = ApiField(alias='VaultId')
-
 
 class ProcessingDetails(ObjectModel):
     in_error: bool = ApiField(alias='InError')
     stage: int = ApiField(alias='Stage')
     status: str = ApiField(alias='Status')
 
-
 class RenewalDetails(ObjectModel):
     city: str = ApiField(alias='City')
     country: str = ApiField(alias='Country')
     organization: str = ApiField(alias='Organization')
-    organizational_unit: List[str] = ApiField(alias='OrganizationalUnit', default_factory=list)
+    organizational_unit: list[str] = ApiField(alias='OrganizationalUnit', default_factory=list)
     state: str = ApiField(alias='State')
     subject: str = ApiField(alias='Subject')
-    subject_alt_name_dns: List[str] = ApiField(alias='SubjectAltNameDns', default_factory=list)
-    subject_alt_name_email: List[str] = ApiField(alias='SubjectAltNameEmail', default_factory=list)
-    subject_alt_name_ip_address: List[str] = ApiField(alias='SubjectAltNameIpAddress', default_factory=list)
-    subject_alt_name_other_name_upn: List[str] = ApiField(alias='SubjectAltNameOtherNameUpn', default_factory=list)
-    subject_alt_name_uri: List[str] = ApiField(alias='SubjectAltNameUri', default_factory=list)
+    subject_alt_name_dns: list[str] = ApiField(alias='SubjectAltNameDns', default_factory=list)
+    subject_alt_name_email: list[str] = ApiField(alias='SubjectAltNameEmail', default_factory=list)
+    subject_alt_name_ip_address: list[str] = ApiField(alias='SubjectAltNameIpAddress', default_factory=list)
+    subject_alt_name_other_name_upn: list[str] = ApiField(alias='SubjectAltNameOtherNameUpn', default_factory=list)
+    subject_alt_name_uri: list[str] = ApiField(alias='SubjectAltNameUri', default_factory=list)
     valid_from: datetime = ApiField(alias='ValidFrom')
     valid_to: datetime = ApiField(alias='ValidTo')
-
 
 class ValidationDetails(ObjectModel):
     last_validation_state_update: str = ApiField(alias='LastValidationStateUpdate')
     validation_state: str = ApiField(alias='ValidationState')
 
-
 class File(ObjectModel):
     installation: str = ApiField(alias='Installation')
     performed_on: datetime = ApiField(alias='PerformedOn')
-    result: List[str] = ApiField(alias='Result', default_factory=list)
-
+    result: list[str] = ApiField(alias='Result', default_factory=list)
 
 class BitMaskValues(ObjectModel):
     bitmask: int = ApiField(alias='Bitmask')
-    values: List[str] = ApiField(alias='Values', default_factory=list)
-
+    values: list[str] = ApiField(alias='Values', default_factory=list)
 
 class SANS(ObjectModel):
-    dns: List[str] = ApiField(alias='Dns', default_factory=list)
-    ip: List[str] = ApiField(alias='Ip', default_factory=list)
-
+    dns: list[str] = ApiField(alias='Dns', default_factory=list)
+    ip: list[str] = ApiField(alias='Ip', default_factory=list)
 
 class Compliant(ObjectModel):
     compliant: bool = ApiField(alias='Compliant')
 
-
 class CompliantSingleValue(Compliant):
     value: str = ApiField(alias='Value')
 
-
 class CompliantMultiValue(Compliant):
-    values: List[str] = ApiField(alias='Values', default_factory=list)
-
+    values: list[str] = ApiField(alias='Values', default_factory=list)
 
 class Locked(ObjectModel):
     locked: bool = ApiField(alias='Locked')
 
-
 class LockedSingleValue(Locked):
     value: str = ApiField(alias='Value')
-
 
 class LockedMultiValue(Locked):
     values: list = ApiField(alias='Values')
 
-
 class LockedKeyPair(ObjectModel):
     key_algorithm: LockedSingleValue = ApiField(alias='KeyAlgorithm')
     key_size: LockedSingleValue = ApiField(alias='KeySize')
-
 
 class LockedSubject(ObjectModel):
     city: LockedSingleValue = ApiField(alias='City')
@@ -134,7 +124,6 @@ class LockedSubject(ObjectModel):
     organization: LockedSingleValue = ApiField(alias='Organization')
     organizational_units: LockedMultiValue = ApiField(alias='OrganizationalUnits')
     state: LockedSingleValue = ApiField(alias='State')
-
 
 class CSRDetails(ObjectModel):
     city: CompliantSingleValue = ApiField(alias='City')
@@ -152,17 +141,14 @@ class CSRDetails(ObjectModel):
     subj_alt_name_upn: CompliantMultiValue = ApiField(alias='SubjAltNameUpn')
     subj_alt_name_uri: CompliantMultiValue = ApiField(alias='SubjAltNameUri')
 
-
 class NameValue(ObjectModel):
     name: str = ApiField(alias='Name')
     value: str = ApiField(alias='Value')
-
 
 class NameTypeValue(ObjectModel):
     type: str = ApiField(alias='Type')
     name: str = ApiField(alias='Name')
     value: str = ApiField(alias='Value')
-
 
 class SslTlsResult(ObjectModel):
     chain: BitMaskValues = ApiField(alias='Chain')
@@ -170,14 +156,12 @@ class SslTlsResult(ObjectModel):
     id: int = ApiField(alias='Id')
     protocols: BitMaskValues = ApiField(alias='Protocols')
 
-
 class SslTls(ObjectModel):
     host: str = ApiField(alias='Host')
     ip_address: str = ApiField(alias='IpAddress')
     port: int = ApiField(alias='Port')
     result: SslTlsResult = ApiField(alias='Result')
-    sources: List[str] = ApiField(alias='Sources', default_factory=list)
-
+    sources: list[str] = ApiField(alias='Sources', default_factory=list)
 
 class Policy(ObjectModel):
     certificate_authority: LockedSingleValue = ApiField(alias='CertificateAuthority')
@@ -193,14 +177,12 @@ class Policy(ObjectModel):
     subj_alt_name_uri_allowed: bool = ApiField(alias='SubjAltNameUriAllowed')
     subject: LockedSubject = ApiField(alias='Subject')
     unique_subject_enforced: bool = ApiField(alias='UniqueSubjectEnforced')
-    whitelisted_domains: List[str] = ApiField(alias='WhitelistedDomains', default_factory=list)
+    whitelisted_domains: list[str] = ApiField(alias='WhitelistedDomains', default_factory=list)
     wildcards_allowed: bool = ApiField(alias='WildcardsAllowed')
-
 
 class CSR(ObjectModel):
     details: CSRDetails = ApiField(alias='Details')
     enrollable: bool = ApiField(alias='Enrollable')
-
 
 class X509(ObjectModel):
     cn: str = ApiField(alias='Cn')
@@ -214,7 +196,6 @@ class X509(ObjectModel):
     valid_from: datetime = ApiField(alias='ValidFrom')
     valid_to: datetime = ApiField(alias='ValidTo')
 
-
 class Certificate(ObjectModel):
     created_on: datetime = ApiField(alias='CreatedOn')
     dn: str = ApiField(alias='DN')
@@ -223,8 +204,7 @@ class Certificate(ObjectModel):
     parent_dn: str = ApiField(alias='ParentDn')
     schema_class: str = ApiField(alias='SchemaClass')
     x509: X509 = ApiField(alias='X509')
-    links: List[Link] = ApiField(alias='_links', default_factory=list)
-
+    links: list[Link] = ApiField(alias='_links', default_factory=list)
 
 class CertificateFilter(ObjectModel):
     certificate_type: str = ApiField(alias='CertificateType')

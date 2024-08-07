@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.branch_base import BranchBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.branch_base import BranchBaseAttributes
 
 class RecycleBinRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Recycle Bin Root"

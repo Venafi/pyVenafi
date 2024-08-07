@@ -1,24 +1,34 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode, InvalidFormat
-from typing import List, Union, TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
+from pyvenafi.tpp.features.definitions.exceptions import (
+    InvalidFormat,
+    InvalidResultCode,
+)
 
 if TYPE_CHECKING:
     from pyvenafi.tpp.api.websdk.models import config
 
-
 @dataclass
 class AttributeValue:
-    values: List[str]
+    values: list[str]
     locked: bool
-
 
 @feature('Objects')
 class Objects(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def clear(self, obj: 'Union[config.Object, str]', attributes: Union[dict, List[str]]):
+    def clear(self, obj: 'Union[config.Object, str]', attributes: Union[dict, list[str]]):
         """
         Clears attributes from an object.
         
@@ -83,7 +93,7 @@ class Objects(FeatureBase):
             attribute_name: Name of the attribute.
 
         Returns:
-            Tuple[str, List[str], bool]: A ``tuple`` of
+            Tuple[str, list[str], bool]: A ``tuple`` of
 
                 * A :ref:`dn` of the folder implementing the policy.
                 * A list of attribute values.
@@ -125,7 +135,13 @@ class Objects(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def read(self, obj: 'Union[config.Object, str]', attribute_name: str, include_policy_values: bool = False, timeout: int = 10):
+    def read(
+        self,
+        obj: 'Union[config.Object, str]',
+        attribute_name: str,
+        include_policy_values: bool = False,
+        timeout: int = 10
+    ):
         """
         Args:
             obj: :ref:`config_object` or :ref:`dn` of the object.
@@ -137,7 +153,7 @@ class Objects(FeatureBase):
         Returns:
             An ``AttributeValue`` object with these properties
 
-            * **values** *(List[str])* - List of attribute values.
+            * **values** *(list[str])* - List of attribute values.
             * **locked** *(bool)* - ``True`` if the value is locked by policy.
         """
         with self._Timeout(timeout=timeout) as to:
@@ -154,8 +170,10 @@ class Objects(FeatureBase):
 
         obj_dn = self._get_dn(obj)
         InvalidResultCode(code=result.code, code_description=result.config_result).log()
-        raise TimeoutError(f'Could not read {attribute_name} on {obj_dn} because it did not exist '
-                           f'after {timeout} seconds.')
+        raise TimeoutError(
+            f'Could not read {attribute_name} on {obj_dn} because it did not exist '
+            f'after {timeout} seconds.'
+        )
 
     def read_all(self, obj: 'Union[config.Object, str]'):
         """
@@ -218,8 +236,14 @@ class Objects(FeatureBase):
             if result.code != 1:
                 raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def wait_for(self, obj: 'Union[config.Object, str]', attribute_name: str, attribute_value: str, include_policy_values: bool = False,
-                 timeout: int = 10):
+    def wait_for(
+        self,
+        obj: 'Union[config.Object, str]',
+        attribute_name: str,
+        attribute_value: str,
+        include_policy_values: bool = False,
+        timeout: int = 10
+    ):
         """
         Waits for the ``attribute_name`` to have the ``attribute_value`` on the object within the timeout period. A
         ``TimeoutError`` is raised if the ``attribute_name`` does not have the ``attribute_value``.
@@ -235,7 +259,7 @@ class Objects(FeatureBase):
         Returns:
             An ``AttributeValue`` object with these properties
 
-            * **values** *(List[str])* - List of attribute values.
+            * **values** *(list[str])* - List of attribute values.
             * **locked** *(bool)* - ``True`` if the value is locked by policy.
         """
         obj_dn = self._get_dn(obj)

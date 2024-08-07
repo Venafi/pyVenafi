@@ -1,9 +1,13 @@
 from __future__ import annotations
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
 
 class Permissions(ObjectModel):
     is_associate_allowed: bool = ApiField(alias='IsAssociateAllowed')
+    is_auditor: bool = ApiField(alias='IsAuditor')
     is_create_allowed: bool = ApiField(alias='IsCreateAllowed')
     is_delete_allowed: bool = ApiField(alias='IsDeleteAllowed')
     is_manage_permissions_allowed: bool = ApiField(alias='IsManagePermissionsAllowed')

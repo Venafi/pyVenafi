@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.certificate_authority_base import CertificateAuthorityBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    Attribute,
+    IterableMeta,
+)
+from pyvenafi.tpp.attributes.certificate_authority_base import CertificateAuthorityBaseAttributes
 
 class UniCERTCAAttributes(CertificateAuthorityBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "UniCERT CA"

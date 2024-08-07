@@ -1,5 +1,10 @@
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
 
 class _Revoke(WebSdkEndpoint):
     def __init__(self, api_obj):

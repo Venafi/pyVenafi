@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class DN(str):
     def __init__(self, dn: str):
         super().__init__()

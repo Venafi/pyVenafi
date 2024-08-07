@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.device import DeviceAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.device import DeviceAttributes
 
 class SSHManualInstallKeyDeviceAttributes(DeviceAttributes, metaclass=IterableMeta):
     __config_class__ = "SSH Manual Install Key Device"

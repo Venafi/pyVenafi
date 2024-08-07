@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import (
-    Dict,
     List,
     Literal,
     TYPE_CHECKING,
@@ -32,20 +31,20 @@ class NetworkDiscovery(FeatureBase):
     def create(
         self,
         name: str,
-        hosts: List[str],
+        hosts: list[str],
         default_certificate_location: 'Union[config.Object, str]',
         attributes: dict = None,
         automatically_import: bool = False,
-        blackout: Dict[str, List] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        blackout: dict[str, List] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         exclusion_locations: 'Union[config.Object, str]' = None,
         hour: int = None,
-        placement_rules: 'List[Union[config.Object, str]]' = None,
-        ports: List[Union[str, int]] = None,
+        placement_rules: 'list[Union[config.Object, str]]' = None,
+        ports: list[Union[str, int]] = None,
         priority: int = None,
         reschedule: bool = True,
         resolve_host: bool = True,
@@ -187,8 +186,8 @@ class NetworkDiscovery(FeatureBase):
             return False
 
     def schedule(
-        self, job: 'Union[config.Object, str]', hour: Union[str, int], days_of_week: List[Union[int, str]] = None,
-        days_of_month: List[Union[int, str]] = None, days_of_year: List[str] = None
+        self, job: 'Union[config.Object, str]', hour: Union[str, int], days_of_week: list[Union[int, str]] = None,
+        days_of_month: list[Union[int, str]] = None, days_of_year: list[str] = None
     ):
         """
         Schedules an existing job.
@@ -242,10 +241,10 @@ class NetworkDiscovery(FeatureBase):
             )
 
     def blackout_schedule(
-        self, job: 'Union[config.Object, str]', sunday: List[Union[str, int]] = None,
-        monday: List[Union[str, int]] = None, tuesday: List[Union[str, int]] = None,
-        wednesday: List[Union[str, int]] = None, thursday: List[Union[str, int]] = None,
-        friday: List[Union[str, int]] = None, saturday: List[Union[str, int]] = None
+        self, job: 'Union[config.Object, str]', sunday: list[Union[str, int]] = None,
+        monday: list[Union[str, int]] = None, tuesday: list[Union[str, int]] = None,
+        wednesday: list[Union[str, int]] = None, thursday: list[Union[str, int]] = None,
+        friday: list[Union[str, int]] = None, saturday: list[Union[str, int]] = None
     ):
         """
         Times of the week to restrict a discovery job from processing.
@@ -416,12 +415,12 @@ class OnboardDiscoveryBase(FeatureBase):
         installation_type: str,
         driver_name: str,
         attributes: dict,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -511,8 +510,8 @@ class OnboardDiscoveryBase(FeatureBase):
             return False
 
     def schedule(
-        self, job: 'Union[config.Object, str]', hour: Union[str, int], days_of_week: List[Union[int, str]] = None,
-        days_of_month: List[Union[int, str]] = None, days_of_year: List[str] = None
+        self, job: 'Union[config.Object, str]', hour: Union[str, int], days_of_week: list[Union[int, str]] = None,
+        days_of_month: list[Union[int, str]] = None, days_of_year: list[str] = None
     ):
         """
         Schedules an existing job.
@@ -564,10 +563,10 @@ class OnboardDiscoveryBase(FeatureBase):
             )
 
     def blackout_schedule(
-        self, job: 'Union[config.Object, str]', sunday: List[Union[str, int]] = None,
-        monday: List[Union[str, int]] = None, tuesday: List[Union[str, int]] = None,
-        wednesday: List[Union[str, int]] = None, thursday: List[Union[str, int]] = None,
-        friday: List[Union[str, int]] = None, saturday: List[Union[str, int]] = None
+        self, job: 'Union[config.Object, str]', sunday: list[Union[str, int]] = None,
+        monday: list[Union[str, int]] = None, tuesday: list[Union[str, int]] = None,
+        wednesday: list[Union[str, int]] = None, thursday: list[Union[str, int]] = None,
+        friday: list[Union[str, int]] = None, saturday: list[Union[str, int]] = None
     ):
         """
         Times of the week to restrict a discovery job from processing.
@@ -712,15 +711,15 @@ class AdaptableOnboardDiscovery(OnboardDiscoveryBase):
     def create(
         self,
         name: str,
-        devices_to_scan: List[Union[str, config.Object]] = None,
+        devices_to_scan: list[Union[str, config.Object]] = None,
         folder_with_devices_to_scan: Union[str, config.Object] = None,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -792,14 +791,14 @@ class AmazonOnboardDiscovery(OnboardDiscoveryBase):
         self,
         name: str,
         amazon_credential: Union[str, config.Object],
-        amazon_account_ids: List[str] = None,
+        amazon_account_ids: list[str] = None,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -875,12 +874,12 @@ class AzureOnboardDiscovery(OnboardDiscoveryBase):
         azure_application_id: str,
         azure_tenant_id: str,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -954,17 +953,17 @@ class CapiOnboardDiscovery(OnboardDiscoveryBase):
     def create(
         self,
         name: str,
-        devices_to_scan: List[Union[str, config.Object]] = None,
+        devices_to_scan: list[Union[str, config.Object]] = None,
         extract_private_key_if_possible: bool = False,
         folder_with_devices_to_scan: Union[str, config.Object] = None,
         winrm_port: int = 5986,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -1042,16 +1041,16 @@ class NetScalerOnboardDiscovery(OnboardDiscoveryBase):
         name: str,
         certificates_to_import: Union[Literal['virtual', 'gateway', 'services', 'all'], int],
         keystore_and_private_key_credential: Union[str, config.Object] = None,
-        devices_to_scan: List[Union[str, config.Object]] = None,
+        devices_to_scan: list[Union[str, config.Object]] = None,
         extract_private_key_if_possible: bool = False,
         folder_with_devices_to_scan: Union[str, config.Object] = None,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -1145,16 +1144,16 @@ class F5LtmAdvancedOnboardDiscovery(OnboardDiscoveryBase):
         name: str,
         certificates_to_import: Union[Literal['server', 'client', 'both'], int],
         port: int = 443,
-        devices_to_scan: List[Union[str, config.Object]] = None,
+        devices_to_scan: list[Union[str, config.Object]] = None,
         extract_private_key_if_possible: bool = False,
         folder_with_devices_to_scan: Union[str, config.Object] = None,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,
@@ -1246,16 +1245,16 @@ class IbmDataPowerOnboardDiscovery(OnboardDiscoveryBase):
         name: str,
         certificates_to_import: Union[Literal['server', 'client', 'proxy', 'all'], int],
         port: int = 443,
-        devices_to_scan: List[Union[str, config.Object]] = None,
+        devices_to_scan: list[Union[str, config.Object]] = None,
         extract_private_key_if_possible: bool = False,
         folder_with_devices_to_scan: Union[str, config.Object] = None,
         attributes: dict = None,
-        blackout: Dict[str, List] = None,
+        blackout: dict[str, List] = None,
         certificate_placement_folder: Union[str, config.Object] = None,
-        contacts: 'List[Union[ident.Identity, str]]' = None,
-        days_of_week: List[str] = None,
-        days_of_month: List[str] = None,
-        days_of_year: List[str] = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        days_of_week: list[str] = None,
+        days_of_month: list[str] = None,
+        days_of_year: list[str] = None,
         description: str = None,
         hour: int = None,
         priority: int = None,

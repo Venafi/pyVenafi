@@ -1,8 +1,10 @@
 from __future__ import annotations
-from pyvenafi.tpp.api.websdk.models.resultcodes import ResultCodes
-from pyvenafi.tpp.api.api_base import ObjectModel, ApiField
-from typing import List
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    ObjectModel,
+)
+from pyvenafi.tpp.api.websdk.models.resultcodes import ResultCodes
 
 class Result(ObjectModel):
     code: int = ApiField()
@@ -10,7 +12,6 @@ class Result(ObjectModel):
     @property
     def metadata_result(self) -> str:
         return ResultCodes.Metadata.get(self.code, 'Unknown')
-
 
 class Item(ObjectModel):
     allowed_characters: str = ApiField(alias='AllowedCharacters')
@@ -43,27 +44,22 @@ class Item(ObjectModel):
     time_only: bool = ApiField(alias='TimeOnly')
     type: int = ApiField(alias='Type')
 
-
 class Data(ObjectModel):
     key: Item = ApiField(alias='Key')
-    value: List[str] = ApiField(alias='Value', default_factory=list)
-
+    value: list[str] = ApiField(alias='Value', default_factory=list)
 
 class PolicyItem(ObjectModel):
     key: str = ApiField(alias='Key')
-    value: List[Item] = ApiField(alias='Value', default_factory=list)
-
+    value: list[Item] = ApiField(alias='Value', default_factory=list)
 
 class NameValue(ObjectModel):
     name: str = ApiField(alias='Name')
     value: str = ApiField(alias='Value')
 
-
 class Update(ObjectModel):
     dn: str = ApiField(alias='DN')
-    data: List[NameValue] = ApiField(alias='Data')
-
+    data: list[NameValue] = ApiField(alias='Data')
 
 class GuidData(ObjectModel):
     item_guid: str = ApiField(alias='ItemGuid')
-    list: List[str] = ApiField(alias='List')
+    list: list[str] = ApiField(alias='List')

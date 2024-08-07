@@ -1,9 +1,18 @@
+from __future__ import annotations
+
 import time
 from datetime import datetime
-from typing import List, Dict
-from pyvenafi.tpp.api.websdk.models import credential, identity
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import (
+    credential,
+    identity,
+)
 
 class _Credentials(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -25,8 +34,10 @@ class _Credentials(WebSdkEndpoint):
             self.Update = self._Update(api_obj=self._api_obj, url=f'{self._url}/Update')
 
         class _Create(WebSdkEndpoint):
-            def post(self, credential_path: str, credential_type: credential.CredentialType, connector_name: str,
-                     custom_fields: List[Dict[str, str]]):
+            def post(
+                self, credential_path: str, credential_type: credential.CredentialType, connector_name: str,
+                custom_fields: list[dict[str, str]]
+            ):
                 body = {
                     'CredentialPath': credential_path,
                     'CredentialType': credential_type,
@@ -40,8 +51,10 @@ class _Credentials(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
-            def post(self, credential_path: str, credential_type: str, connector_name: str,
-                     custom_fields: List[Dict[str, str]]):
+            def post(
+                self, credential_path: str, credential_type: str, connector_name: str,
+                custom_fields: list[dict[str, str]]
+            ):
                 body = {
                     'CredentialPath': credential_path,
                     'CredentialType': credential_type,
@@ -60,9 +73,11 @@ class _Credentials(WebSdkEndpoint):
             self.Adaptable = self._Adaptable(api_obj=self._api_obj, url=f'{self._url}/Adaptable')
 
         class _Adaptable(WebSdkEndpoint):
-            def post(self, connector_name: str, powershell_script: str, service_address: str,
-                     service_credential: str, allowed_identities: List[str] = None,
-                     description: str = None):
+            def post(
+                self, connector_name: str, powershell_script: str, service_address: str,
+                service_credential: str, allowed_identities: list[str] = None,
+                description: str = None
+            ):
                 body = {
                     'AllowedIdentities': allowed_identities,
                     'ConnectorName'    : connector_name,
@@ -89,7 +104,7 @@ class _Credentials(WebSdkEndpoint):
 
                 def get(self):
                     class Output(WebSdkOutputModel):
-                        allowed_identities: List[str] = ApiField(default_factory=list, alias='AllowedIdentities')
+                        allowed_identities: list[str] = ApiField(default_factory=list, alias='AllowedIdentities')
                         powershell_script: str = ApiField(alias='PowershellScript')
                         service_address: str = ApiField(alias='ServiceAddress')
                         service_credential: str = ApiField(alias='ServiceCredential')
@@ -97,9 +112,11 @@ class _Credentials(WebSdkEndpoint):
 
                     return generate_output(output_cls=Output, response=self._get())
 
-                def put(self, connector_name: str = None, powershell_script: str = None,
-                        service_address: str = None, service_credential: str = None,
-                        allowed_identities: List[str] = None, description: str = None):
+                def put(
+                    self, connector_name: str = None, powershell_script: str = None,
+                    service_address: str = None, service_credential: str = None,
+                    allowed_identities: list[str] = None, description: str = None
+                ):
                     body = {
                         'AllowedIdentities': allowed_identities,
                         'ConnectorName'    : connector_name,
@@ -115,9 +132,18 @@ class _Credentials(WebSdkEndpoint):
                     return generate_output(output_cls=Output, response=self._put(data=body))
 
     class _Create(WebSdkEndpoint):
-        def post(self, credential_path: str, friendly_name: str, values: List[credential.NameTypeValue], password: str = None,
-                 description: str = None, encryption_key: str = None, shared: bool = False, expiration: int = None,
-                 contact: List[str] = None):
+        def post(
+            self,
+            credential_path: str,
+            friendly_name: str,
+            values: list[credential.NameTypeValue],
+            password: str = None,
+            description: str = None,
+            encryption_key: str = None,
+            shared: bool = False,
+            expiration: int = None,
+            contact: list[str] = None
+        ):
             body = {
                 'CredentialPath': credential_path,
                 'Password'      : password,
@@ -156,7 +182,10 @@ class _Credentials(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
-                credential_infos: List[credential.CredentialInfo] = ApiField(default_factory=list, alias='CredentialInfos')
+                credential_infos: list[credential.CredentialInfo] = ApiField(
+                    default_factory=list,
+                    alias='CredentialInfos'
+                )
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -180,18 +209,27 @@ class _Credentials(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 classname: str = ApiField(alias='Classname')
-                contact: List[identity.Identity] = ApiField(alias='Contact', default_factory=list)
+                contact: list[identity.Identity] = ApiField(alias='Contact', default_factory=list)
                 description: str = ApiField(alias='Description')
                 expiration: datetime = ApiField(alias='Expiration')
                 friendly_name: str = ApiField(alias='FriendlyName')
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
-                values: List[credential.NameTypeValue] = ApiField(default_factory=list, alias='Values')
+                values: list[credential.NameTypeValue] = ApiField(default_factory=list, alias='Values')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Update(WebSdkEndpoint):
-        def post(self, credential_path: str, friendly_name: str, values: List[credential.NameTypeValue], description: str = None,
-                 encryption_key: str = None, shared: bool = False, expiration: int = None, contact: List[str] = None):
+        def post(
+            self,
+            credential_path: str,
+            friendly_name: str,
+            values: list[credential.NameTypeValue],
+            description: str = None,
+            encryption_key: str = None,
+            shared: bool = False,
+            expiration: int = None,
+            contact: list[str] = None
+        ):
             body = {
                 'CredentialPath': credential_path,
                 'FriendlyName'  : friendly_name,
@@ -208,9 +246,11 @@ class _Credentials(WebSdkEndpoint):
                 # Expire in 10 years.
                 exp_date = int((time.time() + (60 * 60 * 24 * 365 * 10)) * 1000)
 
-            body.update({
-                'Expiration': r'/Date(%s)/' % exp_date
-            })
+            body.update(
+                {
+                    'Expiration': r'/Date(%s)/' % exp_date
+                }
+            )
 
             class Output(WebSdkOutputModel):
                 result: credential.Result = ApiField(alias='Result', converter=lambda x: credential.Result(code=x))
@@ -224,8 +264,10 @@ class _Credentials(WebSdkEndpoint):
             self.Update = self._Update(api_obj=self._api_obj, url=f'{self._url}/Update')
 
         class _Create(WebSdkEndpoint):
-            def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
-                     folder_name: str, account_name: str, credential_path: str):
+            def post(
+                self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
+                folder_name: str, account_name: str, credential_path: str
+            ):
                 body = {
                     'CyberArkUsername': cyber_ark_username,
                     'CyberArkPassword': cyber_ark_password,
@@ -243,8 +285,10 @@ class _Credentials(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
-            def post(self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
-                     folder_name: str, account_name: str, credential_path: str):
+            def post(
+                self, cyber_ark_username: str, cyber_ark_password: str, username: str, app_id: str, safe_name: str,
+                folder_name: str, account_name: str, credential_path: str
+            ):
                 body = {
                     'CyberArkUsername': cyber_ark_username,
                     'CyberArkPassword': cyber_ark_password,

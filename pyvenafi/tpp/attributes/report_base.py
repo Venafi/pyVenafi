@@ -1,7 +1,11 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
-
 
 class ReportBaseAttributes(DriverBaseAttributes, ScheduleBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Report Base"

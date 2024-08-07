@@ -1,8 +1,18 @@
-from datetime import datetime
-from typing import List, Union
-from pyvenafi.tpp.api.websdk.models import certificate
-from pyvenafi.tpp.api.api_base import ObjectModel, WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from datetime import datetime
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    ObjectModel,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import certificate
 
 class _Certificates(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -23,8 +33,10 @@ class _Certificates(WebSdkEndpoint):
     def Guid(self, guid):
         return self._Guid(api_obj=self._api_obj, url=f'{self._url}/{guid}')
 
-    def get(self, limit: int = None, offset: int = None, optional_fields: List[str] = None,
-            filters: Union[dict, certificate.CertificateFilter] = None):
+    def get(
+        self, limit: int = None, offset: int = None, optional_fields: list[str] = None,
+        filters: Union[dict, certificate.CertificateFilter] = None
+    ):
         params = {
             'Limit'         : limit,
             'Offset'        : offset,
@@ -36,9 +48,9 @@ class _Certificates(WebSdkEndpoint):
             params.update(filters.dict(by_alias=True, exclude_none=True))
 
         class Output(WebSdkOutputModel):
-            links: List[certificate.Link] = ApiField(default_factory=list, alias='_links')
+            links: list[certificate.Link] = ApiField(default_factory=list, alias='_links')
             x_record_count: int = ApiField(alias='X-Record-Count')
-            certificates: List[certificate.Certificate] = ApiField(default_factory=list, alias='Certificates')
+            certificates: list[certificate.Certificate] = ApiField(default_factory=list, alias='Certificates')
             data_range: str = ApiField(alias='DataRange')
             total_count: int = ApiField(alias='TotalCount')
 
@@ -82,7 +94,7 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Dissociate(WebSdkEndpoint):
-        def post(self, certificate_dn: str, application_dn: List[str], delete_orphans: bool = False):
+        def post(self, certificate_dn: str, application_dn: list[str], delete_orphans: bool = False):
             body = {
                 'CertificateDN': certificate_dn,
                 'ApplicationDN': application_dn,
@@ -98,7 +110,10 @@ class _Certificates(WebSdkEndpoint):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.PreviousVersions = self._PreviousVersions(api_obj=self._api_obj, url=f'{self._url}/PreviousVersions')
-            self.ValidationResults = self._ValidationResults(api_obj=self._api_obj, url=f'{self._url}/ValidationResults')
+            self.ValidationResults = self._ValidationResults(
+                api_obj=self._api_obj,
+                url=f'{self._url}/ValidationResults'
+            )
 
         def delete(self):
             class Output(WebSdkOutputModel):
@@ -108,14 +123,14 @@ class _Certificates(WebSdkEndpoint):
 
         def get(self):
             class Output(WebSdkOutputModel):
-                approver: List[str] = ApiField(default_factory=list, alias='Approver')
+                approver: list[str] = ApiField(default_factory=list, alias='Approver')
                 certificate_authority_dn: datetime = ApiField(alias='CertificateAuthorityDN')
                 certificate_details: certificate.CertificateDetails = ApiField(alias='CertificateDetails')
-                consumers: List[str] = ApiField(alias='Consumers', default_factory=list)
-                contact: List[str] = ApiField(default_factory=list, alias='Contact')
+                consumers: list[str] = ApiField(alias='Consumers', default_factory=list)
+                contact: list[str] = ApiField(default_factory=list, alias='Contact')
                 created_by: str = ApiField(alias='CreatedBy')
                 created_on: datetime = ApiField(alias='CreatedOn')
-                custom_fields: List[certificate.NameTypeValue] = ApiField(default_factory=list, alias='CustomFields')
+                custom_fields: list[certificate.NameTypeValue] = ApiField(default_factory=list, alias='CustomFields')
                 disabled: bool = ApiField(alias='Disabled')
                 dn: str = ApiField(alias='DN')
                 guid: str = ApiField(alias='Guid')
@@ -130,7 +145,7 @@ class _Certificates(WebSdkEndpoint):
 
             return generate_output(response=self._get(), output_cls=Output)
 
-        def put(self, attribute_data: List[dict]):
+        def put(self, attribute_data: list[dict]):
             body = {
                 "AttributeData": attribute_data
             }
@@ -149,7 +164,7 @@ class _Certificates(WebSdkEndpoint):
 
                 class Output(WebSdkOutputModel):
                     success: str = ApiField(default='', alias='Success')
-                    previous_versions: List[certificate.PreviousVersions] = ApiField(
+                    previous_versions: list[certificate.PreviousVersions] = ApiField(
                         default_factory=list, alias='PreviousVersions'
                     )
 
@@ -158,15 +173,17 @@ class _Certificates(WebSdkEndpoint):
         class _ValidationResults(WebSdkEndpoint):
             def get(self):
                 class Output(WebSdkOutputModel):
-                    file: List[certificate.File] = ApiField(default_factory=list, alias='File')
-                    ssl_tls: List[certificate.SslTls] = ApiField(default_factory=list, alias='SslTls')
+                    file: list[certificate.File] = ApiField(default_factory=list, alias='File')
+                    ssl_tls: list[certificate.SslTls] = ApiField(default_factory=list, alias='SslTls')
 
                 return generate_output(response=self._get(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
-        def post(self, certificate_data: str, policy_dn: str, ca_specific_attributes: List[certificate.NameValue] = None,
-                 object_name: str = None,
-                 password: str = None, private_key_data: str = None, reconcile: bool = False):
+        def post(
+            self, certificate_data: str, policy_dn: str, ca_specific_attributes: list[certificate.NameValue] = None,
+            object_name: str = None,
+            password: str = None, private_key_data: str = None, reconcile: bool = False
+        ):
             body = {
                 'CertificateData'     : certificate_data,
                 'PolicyDN'            : policy_dn,
@@ -186,7 +203,7 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Push(WebSdkEndpoint):
-        def post(self, certificate_dn: str, application_dn: List[str] = None, push_to_all: bool = False):
+        def post(self, certificate_dn: str, application_dn: list[str] = None, push_to_all: bool = False):
             body = {
                 'ApplicationDN': application_dn,
                 'CertificateDN': certificate_dn,
@@ -200,10 +217,20 @@ class _Certificates(WebSdkEndpoint):
 
     class _Renew(WebSdkEndpoint):
         # noinspection ALL
-        def post(self, certificate_dn: str, pkcs10: str = None, reenable: bool = False, format: certificate.CertificateFormat = None,
-                 password: str = None, include_private_key: bool = None, include_chain: bool = None,
-                 friendly_name: str = None, root_first_order: bool = None, keystore_password: str = None,
-                 work_to_do_timeout: int = None):
+        def post(
+            self,
+            certificate_dn: str,
+            pkcs10: str = None,
+            reenable: bool = False,
+            format: certificate.CertificateFormat = None,
+            password: str = None,
+            include_private_key: bool = None,
+            include_chain: bool = None,
+            friendly_name: str = None,
+            root_first_order: bool = None,
+            keystore_password: str = None,
+            work_to_do_timeout: int = None
+        ):
             body = {
                 'CertificateDN'    : certificate_dn,
                 'PKCS10'           : pkcs10,
@@ -228,16 +255,43 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Request(WebSdkEndpoint):
-        def post(self, policy_dn: str, approvers: List[dict] = None, cadn: str = None,
-                 ca_specific_attributes: List[dict] = None, certificate_type: str = None, city: str = None,
-                 contacts: List[dict] = None, country: str = None, custom_fields: List[dict] = None, created_by: str = None,
-                 devices: List[dict] = None, disable_automatic_renewal: bool = False, elliptic_curve: str = None,
-                 format: certificate.CertificateFormat = None, friendly_name: str = None, include_private_key: bool = False,
-                 include_chain: bool = None, key_algorithm: str = None, key_bit_size: int = None, keystore_password: str = None,
-                 management_type: str = None, password: str = None, object_name: str = None,
-                 organization: str = None, organizational_unit: str = None, origin: str = None, pkcs10: str = None,
-                 reenable: bool = False, root_first_order: bool = None, set_work_todo: bool = True, state: str = None,
-                 subject: str = None, subject_alt_names: List[dict] = None, work_to_do_timeout: int = None):
+        def post(
+            self,
+            policy_dn: str,
+            approvers: list[dict] = None,
+            cadn: str = None,
+            ca_specific_attributes: list[dict] = None,
+            certificate_type: str = None,
+            city: str = None,
+            contacts: list[dict] = None,
+            country: str = None,
+            custom_fields: list[dict] = None,
+            created_by: str = None,
+            devices: list[dict] = None,
+            disable_automatic_renewal: bool = False,
+            elliptic_curve: str = None,
+            format: certificate.CertificateFormat = None,
+            friendly_name: str = None,
+            include_private_key: bool = False,
+            include_chain: bool = None,
+            key_algorithm: str = None,
+            key_bit_size: int = None,
+            keystore_password: str = None,
+            management_type: str = None,
+            password: str = None,
+            object_name: str = None,
+            organization: str = None,
+            organizational_unit: str = None,
+            origin: str = None,
+            pkcs10: str = None,
+            reenable: bool = False,
+            root_first_order: bool = None,
+            set_work_todo: bool = True,
+            state: str = None,
+            subject: str = None,
+            subject_alt_names: list[dict] = None,
+            work_to_do_timeout: int = None
+        ):
             body = {
                 'Approvers'              : approvers,
                 'CADN'                   : cadn,
@@ -302,9 +356,18 @@ class _Certificates(WebSdkEndpoint):
 
     class _Retrieve(WebSdkEndpoint):
         # noinspection ALL
-        def get(self, certificate_dn: str, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
-                include_private_key: bool = False, keystore_password: str = None, password: str = None,
-                root_first_order: bool = False, work_to_do_timeout: int = None):
+        def get(
+            self,
+            certificate_dn: str,
+            format: certificate.CertificateFormat,
+            friendly_name: str,
+            include_chain: bool = False,
+            include_private_key: bool = False,
+            keystore_password: str = None,
+            password: str = None,
+            root_first_order: bool = False,
+            work_to_do_timeout: int = None
+        ):
             params = {
                 'CertificateDN'    : certificate_dn,
                 'Format'           : format,
@@ -319,9 +382,18 @@ class _Certificates(WebSdkEndpoint):
 
             return generate_output(response=self._get(params=params), output_cls=WebSdkOutputModel)
 
-        def post(self, certificate_dn: str, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
-                 include_private_key: bool = False, keystore_password: str = None, password: str = None,
-                 root_first_order: bool = False, work_to_do_timeout: int = None):
+        def post(
+            self,
+            certificate_dn: str,
+            format: certificate.CertificateFormat,
+            friendly_name: str,
+            include_chain: bool = False,
+            include_private_key: bool = False,
+            keystore_password: str = None,
+            password: str = None,
+            root_first_order: bool = False,
+            work_to_do_timeout: int = None
+        ):
             body = {
                 'CertificateDN'    : certificate_dn,
                 'Format'           : format,
@@ -346,9 +418,11 @@ class _Certificates(WebSdkEndpoint):
 
         class _VaultId(WebSdkEndpoint):
             # noinspection ALL
-            def get(self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
-                    include_private_key: bool = False, keystore_password: str = None, password: str = None,
-                    root_first_order: bool = False):
+            def get(
+                self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
+                include_private_key: bool = False, keystore_password: str = None, password: str = None,
+                root_first_order: bool = False
+            ):
                 params = {
                     'Format'           : format,
                     'FriendlyName'     : friendly_name,
@@ -362,9 +436,11 @@ class _Certificates(WebSdkEndpoint):
                 return generate_output(response=self._get(params=params), output_cls=WebSdkOutputModel)
 
             # noinspection ALL
-            def post(self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
-                     include_private_key: bool = False, keystore_password: str = None, password: str = None,
-                     root_first_order: bool = False):
+            def post(
+                self, format: certificate.CertificateFormat, friendly_name: str, include_chain: bool = False,
+                include_private_key: bool = False, keystore_password: str = None, password: str = None,
+                root_first_order: bool = False
+            ):
                 body = {
                     'Format'           : format,
                     'FriendlyName'     : friendly_name,
@@ -395,8 +471,10 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Revoke(WebSdkEndpoint):
-        def post(self, certificate_dn: str = None, thumbprint: str = None, reason: int = None, comments: str = None,
-                 disable: bool = None, work_to_do_timeout: int = None):
+        def post(
+            self, certificate_dn: str = None, thumbprint: str = None, reason: int = None, comments: str = None,
+            disable: bool = None, work_to_do_timeout: int = None
+        ):
             body = {
                 'CertificateDN'  : certificate_dn,
                 'Thumbprint'     : thumbprint,
@@ -413,7 +491,7 @@ class _Certificates(WebSdkEndpoint):
             return generate_output(response=self._post(data=body), output_cls=Output)
 
     class _Validate(WebSdkEndpoint):
-        def post(self, certificate_dns: List[str] = None, certificate_guids: List[str] = None):
+        def post(self, certificate_dns: list[str] = None, certificate_guids: list[str] = None):
             body = {
                 'CertificateDNs'  : certificate_dns,
                 'CertificateGUIDs': certificate_guids
@@ -421,8 +499,11 @@ class _Certificates(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 success: bool = ApiField(alias='Success')
-                validated_certificate_dns: List[str] = ApiField(default_factory=list, alias='ValidatedCertificateDNs')
-                validated_certificate_guids: List[str] = ApiField(default_factory=list, alias='ValidatedCertificateGUIDs')
-                warnings: List[str] = ApiField(default_factory=list, alias='Warnings')
+                validated_certificate_dns: list[str] = ApiField(default_factory=list, alias='ValidatedCertificateDNs')
+                validated_certificate_guids: list[str] = ApiField(
+                    default_factory=list,
+                    alias='ValidatedCertificateGUIDs'
+                )
+                warnings: list[str] = ApiField(default_factory=list, alias='Warnings')
 
             return generate_output(response=self._post(data=body), output_cls=Output)

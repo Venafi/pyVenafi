@@ -1,7 +1,16 @@
-from pyvenafi.tpp.api.websdk.models import recycle_bin
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from typing import List, Union
+from __future__ import annotations
 
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import recycle_bin
 
 class _RecycleBin(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -11,6 +20,7 @@ class _RecycleBin(WebSdkEndpoint):
         self.GetConfiguration = self._GetConfiguration(api_obj=self._api_obj, url=f'{self._url}/GetConfiguration')
         self.GetContents = self._GetContents(api_obj=self._api_obj, url=f'{self._url}/GetContents')
         self.GetItem = self._GetItem(api_obj=self._api_obj, url=f'{self._url}/GetItem')
+        self.GetItemDetails = self._GetItemDetails(api_obj=api_obj, url=f'{self._url}/GetItemDetails')
         self.Purge = self._Purge(api_obj=self._api_obj, url=f'{self._url}/Purge')
         self.PurgeTask = self._PurgeTask(api_obj=self._api_obj, url=f'{self._url}/PurgeTask')
         self.Restore = self._Restore(api_obj=self._api_obj, url=f'{self._url}/Restore')
@@ -51,7 +61,7 @@ class _RecycleBin(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                items: List[recycle_bin.Item] = ApiField(alias='Items', default_factory=list)
+                items: list[recycle_bin.Item] = ApiField(alias='Items', default_factory=list)
                 result: recycle_bin.Result = ApiField(alias='Result', converter=lambda x: recycle_bin.Result(code=x))
                 total: int = ApiField(alias='Total')
 
@@ -66,6 +76,18 @@ class _RecycleBin(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 item: recycle_bin.Item = ApiField(alias='Item')
                 result: recycle_bin.Result = ApiField(alias='Result', converter=lambda x: recycle_bin.Result(code=x))
+
+            return generate_output(output_cls=Output, response=self._post(data=body))
+
+    class _GetItemDetails(WebSdkEndpoint):
+        def post(self, guid: str):
+            body = {
+                'Guid': guid
+            }
+
+            class Output(WebSdkOutputModel):
+                result: recycle_bin.Result = ApiField(alias='Result', converter=lambda x: recycle_bin.Result(code=x))
+                details: list[recycle_bin.Detail] = ApiField(alias='Details')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 

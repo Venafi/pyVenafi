@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.top import TopAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 class CodeSigningProjectAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Code Signing Project"
@@ -19,3 +23,4 @@ class CodeSigningProjectAttributes(TopAttributes, metaclass=IterableMeta):
     purpose = Attribute('Purpose')
     risk_level = Attribute('Risk Level')
     status = Attribute('Status')
+    status_message = Attribute('Status Message')

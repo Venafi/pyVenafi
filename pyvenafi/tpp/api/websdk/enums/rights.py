@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class SubSystemTypes:
     aperture = 'Aperture'
     client = 'Client'

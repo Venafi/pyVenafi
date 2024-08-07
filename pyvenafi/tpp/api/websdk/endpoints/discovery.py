@@ -1,7 +1,12 @@
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pyvenafi.tpp.api.websdk.models import discovery
-from typing import List
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import discovery
 
 class _Discovery(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -19,7 +24,7 @@ class _Discovery(WebSdkEndpoint):
             return generate_output(response=self._delete(), output_cls=Output)
 
     class _Import(WebSdkEndpoint):
-        def post(self, endpoints: List[discovery.Endpoint], zone_name: str):
+        def post(self, endpoints: list[discovery.Endpoint], zone_name: str):
             body = {
                 'zoneName' : zone_name,
                 'endpoints': endpoints
@@ -30,7 +35,7 @@ class _Discovery(WebSdkEndpoint):
                 created_instances: int = ApiField(alias='createdInstances')
                 updated_certificates: int = ApiField(alias='updatedCertificates')
                 updated_instances: int = ApiField(alias='updatedInstances')
-                warnings: List[str] = ApiField(alias='warnings', default_factory=list)
+                warnings: list[str] = ApiField(alias='warnings', default_factory=list)
                 zone_name: str = ApiField(alias='zoneName')
 
             return generate_output(response=self._post(data=body), output_cls=Output)

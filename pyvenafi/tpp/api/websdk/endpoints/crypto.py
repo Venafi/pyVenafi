@@ -1,6 +1,11 @@
-from typing import List
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
 
 class _Crypto:
     def __init__(self, api_obj):
@@ -10,7 +15,7 @@ class _Crypto:
     class _AvailableKeys(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
-                keynames: List[str] = ApiField(alias='Keynames', default_factory=list)
+                keynames: list[str] = ApiField(alias='Keynames', default_factory=list)
 
             return generate_output(response=self._get(), output_cls=Output)
 

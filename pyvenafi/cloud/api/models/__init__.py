@@ -6,5 +6,5 @@ from pyvenafi.cloud.api.models import (
     edgemanagement_service,
     integrations_service,
     outagedetection_service,
-    provisioning_service
+    provisioning_service,
 )

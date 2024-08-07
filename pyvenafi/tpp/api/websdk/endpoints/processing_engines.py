@@ -1,7 +1,12 @@
-from typing import List
-from pyvenafi.tpp.api.websdk.models import processing_engines
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import processing_engines
 
 class _ProcessingEngines(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -11,7 +16,7 @@ class _ProcessingEngines(WebSdkEndpoint):
 
     def get(self):
         class Output(WebSdkOutputModel):
-            engines: List[processing_engines.Engine] = ApiField(alias='Engines', default_factory=list)
+            engines: list[processing_engines.Engine] = ApiField(alias='Engines', default_factory=list)
 
         return generate_output(output_cls=Output, response=self._get())
 
@@ -23,18 +28,18 @@ class _ProcessingEngines(WebSdkEndpoint):
             def get(self):
                 class Output(WebSdkOutputModel):
                     links: processing_engines.Link = ApiField(alias='_links')
-                    folders: List[processing_engines.Folder] = ApiField(alias='Folders', default_factory=list)
+                    folders: list[processing_engines.Folder] = ApiField(alias='Folders', default_factory=list)
 
                 return generate_output(output_cls=Output, response=self._get())
 
-            def post(self, folder_guids: List[str]):
+            def post(self, folder_guids: list[str]):
                 body = {
                     'FolderGuids': folder_guids
                 }
 
                 class Output(WebSdkOutputModel):
                     added_count: int = ApiField(alias='AddedCount')
-                    errors: List[str] = ApiField(alias='Errors', default_factory=list)
+                    errors: list[str] = ApiField(alias='Errors', default_factory=list)
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -49,11 +54,11 @@ class _ProcessingEngines(WebSdkEndpoint):
             def get(self):
                 class Output(WebSdkOutputModel):
                     links: processing_engines.Link = ApiField(alias='_links')
-                    engines: List[processing_engines.Engine] = ApiField(alias='Engines', default_factory=list)
+                    engines: list[processing_engines.Engine] = ApiField(alias='Engines', default_factory=list)
 
                 return generate_output(output_cls=Output, response=self._get())
 
-            def put(self, engine_guids: List[str]):
+            def put(self, engine_guids: list[str]):
                 body = {
                     'EngineGuids': engine_guids
                 }

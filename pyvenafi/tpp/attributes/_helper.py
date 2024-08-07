@@ -1,6 +1,10 @@
-from packaging.version import Version
-from typing import List, Generator
+from __future__ import annotations
 
+from typing import (
+    Generator,
+)
+
+from packaging.version import Version
 
 class Attribute(str):
     def __init__(self, name: str, min_version: str = None):
@@ -12,7 +16,6 @@ class Attribute(str):
     def __new__(cls, name: str, *args, **kwargs):
         return str().__new__(cls, name)
 
-
 class IterableMeta(type):
     __config_class__ = None
 
@@ -23,8 +26,8 @@ class IterableMeta(type):
                 if not callable(attr):
                     yield attr
 
-    def list(cls) -> List[Attribute]:
-        return list(iter(cls))  # type: List[Attribute]
+    def list(cls) -> list[Attribute]:
+        return list(iter(cls))  # type: list[Attribute]
 
     def __repr__(self):
         return self.__config_class__

@@ -1,7 +1,16 @@
-from typing import List, Union
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pyvenafi.tpp.api.websdk.models import identity as ident
+from __future__ import annotations
 
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import identity as ident
 
 class _Identity(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -9,7 +18,10 @@ class _Identity(WebSdkEndpoint):
         self.AddGroup = self._AddGroup(api_obj=self._api_obj, url=f'{self._url}/AddGroup')
         self.AddGroupMembers = self._AddGroupMembers(api_obj=self._api_obj, url=f'{self._url}/AddGroupMembers')
         self.Browse = self._Browse(api_obj=self._api_obj, url=f'{self._url}/Browse')
-        self.GetAssociatedEntries = self._GetAssociatedEntries(api_obj=self._api_obj, url=f'{self._url}/GetAssociatedEntries')
+        self.GetAssociatedEntries = self._GetAssociatedEntries(
+            api_obj=self._api_obj,
+            url=f'{self._url}/GetAssociatedEntries'
+        )
         self.GetMembers = self._GetMembers(api_obj=self._api_obj, url=f'{self._url}/GetMembers')
         self.GetMemberships = self._GetMemberships(api_obj=self._api_obj, url=f'{self._url}/GetMemberships')
         self.Group = self._Group(api_obj=self._api_obj, url=f'{self._url}/Group')
@@ -21,7 +33,7 @@ class _Identity(WebSdkEndpoint):
         self.Validate = self._Validate(api_obj=self._api_obj, url=f'{self._url}/Validate')
 
     class _AddGroup(WebSdkEndpoint):
-        def post(self, name: str, members: List[Union[dict, ident.Identity]] = None, products: List[str] = None):
+        def post(self, name: str, members: list[Union[dict, ident.Identity]] = None, products: list[str] = None):
             body = {
                 'Name'    : name,
                 'Members' : members,
@@ -30,14 +42,19 @@ class _Identity(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 identity: ident.Identity = ApiField(alias='ID')
-                invalid_members: List[ident.InvalidIdentity] = ApiField('InvalidMembers', default_factory=list)
-                invalid_owners: List[ident.InvalidIdentity] = ApiField('InvalidOwners', default_factory=list)
+                invalid_members: list[ident.InvalidIdentity] = ApiField('InvalidMembers', default_factory=list)
+                invalid_owners: list[ident.InvalidIdentity] = ApiField('InvalidOwners', default_factory=list)
                 message: str = ApiField(alias='Message')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _AddGroupMembers(WebSdkEndpoint):
-        def put(self, group: Union[dict, ident.Identity], members: List[Union[dict, ident.Identity]], show_members: bool = False):
+        def put(
+            self,
+            group: Union[dict, ident.Identity],
+            members: list[Union[dict, ident.Identity]],
+            show_members: bool = False
+        ):
             body = {
                 'Group'      : group,
                 'Members'    : members,
@@ -45,8 +62,8 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                invalid_members: List[ident.InvalidIdentity] = ApiField(alias='InvalidMembers', default_factory=list)
-                members: List[ident.Identity] = ApiField(alias='Members', default_factory=list)
+                invalid_members: list[ident.InvalidIdentity] = ApiField(alias='InvalidMembers', default_factory=list)
+                members: list[ident.Identity] = ApiField(alias='Members', default_factory=list)
                 message: str = ApiField(alias='Message')
 
             return generate_output(output_cls=Output, response=self._put(data=body))
@@ -61,7 +78,7 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                identities: List[ident.Identity] = ApiField('Identities', default_factory=list)
+                identities: list[ident.Identity] = ApiField('Identities', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -72,7 +89,7 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                identities: List[ident.Identity] = ApiField('Identities', default_factory=list)
+                identities: list[ident.Identity] = ApiField('Identities', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -84,7 +101,7 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
+                identities: list[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -95,7 +112,7 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
+                identities: list[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -122,12 +139,17 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                attributes: List[str] = ApiField(alias='Attributes', default_factory=list)
+                attributes: list[str] = ApiField(alias='Attributes', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _RemoveGroupMembers(WebSdkEndpoint):
-        def put(self, group: Union[dict, ident.Identity], members: List[Union[dict, ident.Identity]], show_members: bool = False):
+        def put(
+            self,
+            group: Union[dict, ident.Identity],
+            members: list[Union[dict, ident.Identity]],
+            show_members: bool = False
+        ):
             body = {
                 'Group'      : group,
                 'Members'    : members,
@@ -135,8 +157,8 @@ class _Identity(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                invalid_members: List[ident.InvalidIdentity] = ApiField(alias='InvalidMembers', default_factory=list)
-                members: List[ident.Identity] = ApiField(alias='Members', default_factory=list)
+                invalid_members: list[ident.InvalidIdentity] = ApiField(alias='InvalidMembers', default_factory=list)
+                members: list[ident.Identity] = ApiField(alias='Members', default_factory=list)
                 message: str = ApiField(alias='Message')
 
             return generate_output(output_cls=Output, response=self._put(data=body))
@@ -156,7 +178,7 @@ class _Identity(WebSdkEndpoint):
     class _Self(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
-                identities: List[ident.Identity] = ApiField(alias='Identities', default_factory=list)
+                identities: list[ident.Identity] = ApiField(alias='Identities', default_factory=list)
 
             return generate_output(output_cls=Output, response=self._get())
 

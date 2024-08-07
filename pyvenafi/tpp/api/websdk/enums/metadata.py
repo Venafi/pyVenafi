@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 class MetadataFieldType:
     text_string = 1
     list = 2
     date_time = 4
     identity = 5
-
 
 class MetadataItem:
     allowed_characters = 'AllowedCharacters'

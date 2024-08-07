@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class ConfigAttributeDataTypes:
     data_types = {
         0 : 'None',

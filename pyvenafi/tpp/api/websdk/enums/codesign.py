@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 class KeyContext:
     authentication = 'authentication'
     encryption = 'encryption'
     null = 'null'
     signing = 'signing'
-
 
 class Mechanism:
     ec_dsa = 4161  # EcDsa

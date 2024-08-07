@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.credential_base import CredentialBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.credential_base import CredentialBaseAttributes
 
 class AmazonCredentialAttributes(CredentialBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Amazon Credential"

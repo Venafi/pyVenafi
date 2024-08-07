@@ -2,23 +2,47 @@ import json
 import re
 import time
 from datetime import datetime
-from typing import Any, Callable, Dict, Optional, Union, Protocol, TYPE_CHECKING, Type, TypeVar, get_origin
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Optional,
+    Union,
+    Protocol,
+    TYPE_CHECKING,
+    Type,
+    TypeVar,
+    get_origin,
+)
 
 import pydantic.main
-from pydantic import BaseModel, root_validator, Field
+from pydantic import (
+    BaseModel,
+    root_validator,
+    Field,
+)
 from pydantic import create_model
 from pydantic.fields import Undefined
-from requests import Response, HTTPError
+from requests import (
+    Response,
+    HTTPError,
+)
 
-from pyvenafi.logger import api_logger, json_pickler
+from pyvenafi.logger import (
+    api_logger,
+    json_pickler,
+)
 
 if TYPE_CHECKING:
-    from pydantic.typing import AbstractSetIntStr, MappingIntStrAny, NoArgAnyCallable
+    from pydantic.typing import (
+        AbstractSetIntStr,
+        MappingIntStrAny,
+        NoArgAnyCallable,
+    )
     from pyvenafi.cloud.api.session import Session
     from pyvenafi.cloud.api.cloud_api import CloudApi
 
 T_ = TypeVar('T_')
-
 
 class ApiModelMetaclass(pydantic.main.ModelMetaclass):
     def __new__(mcs, name, bases, namespaces, **kwargs):
@@ -30,7 +54,6 @@ class ApiModelMetaclass(pydantic.main.ModelMetaclass):
                 annotations[field] = Union[annotations[field], Any]
         namespaces['__annotations__'] = annotations
         return super().__new__(mcs, name, bases, namespaces, **kwargs)
-
 
 # region Endpoint Definitions
 class ApiSource(Protocol):
@@ -44,7 +67,6 @@ class ApiSource(Protocol):
     _session: 'Session'
 
     def re_authenticate(self): ...
-
 
 class ApiEndpoint(object):
     """
@@ -231,36 +253,40 @@ class ApiEndpoint(object):
             stacklevel=2
         )
 
-
-class CloudApiEndpoint(ApiEndpoint):  ...
-
+class CloudApiEndpoint(ApiEndpoint):
+    ...
 
 # endregion Endpoint Definitions
 
 
 # region Model And Field Definitions
-def ApiField(default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable]' = None, alias: str = None,
-             title: str = None,
-             description: str = None, exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
-             include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None, const: bool = None, gt: float = None,
-             ge: float = None, lt: float = None, le: float = None, multiple_of: float = None, max_digits: int = None,
-             decimal_places: int = None, min_items: int = None, max_items: int = None, unique_items: bool = None,
-             min_length: int = None, max_length: int = None, allow_mutation: bool = True, regex: str = None,
-             discriminator: str = None, repr: bool = True, converter: Callable[[Any], Any] = None, **extra: Any) -> Any:
+def ApiField(
+    default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable]' = None, alias: str = None,
+    title: str = None,
+    description: str = None, exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
+    include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None, const: bool = None, gt: float = None,
+    ge: float = None, lt: float = None, le: float = None, multiple_of: float = None, max_digits: int = None,
+    decimal_places: int = None, min_items: int = None, max_items: int = None, unique_items: bool = None,
+    min_length: int = None, max_length: int = None, allow_mutation: bool = True, regex: str = None,
+    discriminator: str = None, repr: bool = True, converter: Callable[[Any], Any] = None, **extra: Any
+) -> Any:
     if callable(default_factory):
         default = Undefined
     if converter is not None and callable(converter):
         extra['converter'] = converter
-    return Field(default=default, default_factory=default_factory, alias=alias, title=title, description=description,
-                 exclude=exclude, include=include, const=const, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of,
-                 max_digits=max_digits, decimal_places=decimal_places, min_items=min_items, max_items=max_items,
-                 unique_items=unique_items, min_length=min_length, max_length=max_length, allow_mutation=allow_mutation,
-                 regex=regex, discriminator=discriminator, repr=repr, **extra)
-
+    return Field(
+        default=default, default_factory=default_factory, alias=alias, title=title, description=description,
+        exclude=exclude, include=include, const=const, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of,
+        max_digits=max_digits, decimal_places=decimal_places, min_items=min_items, max_items=max_items,
+        unique_items=unique_items, min_length=min_length, max_length=max_length, allow_mutation=allow_mutation,
+        regex=regex, discriminator=discriminator, repr=repr, **extra
+    )
 
 # region Output Models
-def generate_output(response: Response, output_cls: Type[T_], root_field: str = None,
-                    rc_mapping: Dict[int, str] = None) -> T_:
+def generate_output(
+    response: Response, output_cls: Type[T_], root_field: str = None,
+    rc_mapping: Dict[int, str] = None
+) -> T_:
     """
     Args:
         response: Response instance returned by the ``requests`` call to the server.
@@ -277,7 +303,9 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
     except:
         result = {}
     if not isinstance(result, dict):
-        result = {str(root_field): result} if root_field else {}
+        result = {
+            str(root_field): result
+        } if root_field else {}
     elif root_field:
         result = {
             str(root_field): result,
@@ -299,7 +327,6 @@ def generate_output(response: Response, output_cls: Type[T_], root_field: str = 
         if isinstance(result, dict) and (error_msg := getattr(response_inst, 'error', None)) is not None:
             raise InvalidResponseError(f'An error occurred: "{error_msg}"', response=response) from error
         raise InvalidResponseError(str(error), response=response)
-
 
 class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
     class Config:
@@ -334,12 +361,15 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
             **d
         )()
 
-
 class RootOutputModel(ObjectModel):
     api_response: Response = ApiField(alias='api_response', exclude=True)
 
     class Config(ObjectModel.Config):
-        fields = {'api_response': {'exclude': True}}
+        fields = {
+            'api_response': {
+                'exclude': True
+            }
+        }
 
     def assert_valid_response(self):
         """
@@ -360,10 +390,8 @@ class RootOutputModel(ObjectModel):
         except:
             return False
 
-
 class CloudApiOutputModel(RootOutputModel):
     error: str = ApiField(alias='Error')
-
 
 # endregion Output Models
 

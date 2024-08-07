@@ -1,7 +1,15 @@
-from pyvenafi.tpp.api.websdk.models import codesign, flow
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from typing import List
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import (
+    codesign,
+    flow,
+)
 
 class _Flow(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -25,8 +33,10 @@ class _Flow(WebSdkEndpoint):
                     self.Create = self._Create(api_obj=self._api_obj, url=f'{self._url}/Create')
 
                 class _Create(WebSdkEndpoint):
-                    def post(self, comment: str, data: str, dn: str, user: str, hours: int = None,
-                             single_use: bool = None):
+                    def post(
+                        self, comment: str, data: str, dn: str, user: str, hours: int = None,
+                        single_use: bool = None
+                    ):
                         body = {
                             'Comment'  : comment,
                             'Data'     : data,
@@ -51,14 +61,19 @@ class _Flow(WebSdkEndpoint):
             self.Count = self._Count(api_obj=self._api_obj, url=f'{self._url}/Count')
             self.CountApproved = self._CountApproved(api_obj=self._api_obj, url=f'{self._url}/CountApproved')
             self.Enumerate = self._Enumerate(api_obj=self._api_obj, url=f'{self._url}/Enumerate')
-            self.EnumerateApproved = self._EnumerateApproved(api_obj=self._api_obj, url=f'{self._url}/EnumerateApproved')
+            self.EnumerateApproved = self._EnumerateApproved(
+                api_obj=self._api_obj,
+                url=f'{self._url}/EnumerateApproved'
+            )
             self.Load = self._Load(api_obj=self._api_obj, url=f'{self._url}/Load')
             self.Reject = self._Reject(api_obj=self._api_obj, url=f'{self._url}/Reject')
             self.Update = self._Update(api_obj=self._api_obj, url=f'{self._url}/Update')
 
         class _Approve(WebSdkEndpoint):
-            def post(self, ticket_id: int = None, ticket_ids: List[int] = None, expires: str = None,
-                     comment: str = None, not_before: str = None, use_count: int = None):
+            def post(
+                self, ticket_id: int = None, ticket_ids: list[int] = None, expires: str = None,
+                comment: str = None, not_before: str = None, use_count: int = None
+            ):
                 body = {
                     'Expires'  : expires,
                     'Comment'  : comment,
@@ -103,7 +118,7 @@ class _Flow(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
-                    tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
+                    tickets: list[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -118,12 +133,12 @@ class _Flow(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
-                    tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
+                    tickets: list[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Load(WebSdkEndpoint):
-            def post(self, ticket_id: int = None, ticket_ids: List[int] = None):
+            def post(self, ticket_id: int = None, ticket_ids: list[int] = None):
                 body = {
                     'TicketId' : ticket_id,
                     'TicketIds': ticket_ids
@@ -132,13 +147,15 @@ class _Flow(WebSdkEndpoint):
                 class Output(WebSdkOutputModel):
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
                     message: str = ApiField(alias='Message')
-                    tickets: List[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
+                    tickets: list[flow.Ticket] = ApiField(alias='Tickets', default_factory=list)
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Reject(WebSdkEndpoint):
-            def post(self, comment: str, rejection_level: int, ticket_id: int = None,
-                     ticket_ids: List[int] = None):
+            def post(
+                self, comment: str, rejection_level: int, ticket_id: int = None,
+                ticket_ids: list[int] = None
+            ):
                 body = {
                     'Comment'       : comment,
                     'RejectionLevel': rejection_level,
@@ -147,15 +164,17 @@ class _Flow(WebSdkEndpoint):
                 }
 
                 class Output(WebSdkOutputModel):
-                    invalid_ticket_ids: List[int] = ApiField(default_factory=list, alias='InvalidTicketIds')
+                    invalid_ticket_ids: list[int] = ApiField(default_factory=list, alias='InvalidTicketIds')
                     message: str = ApiField(alias='Message')
                     result: flow.Result = ApiField(alias='Result', converter=lambda x: flow.Result(code=x))
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _Update(WebSdkEndpoint):
-            def post(self, ticket_id: int = None, ticket_ids: List[int] = None, expires: str = None,
-                     comment: str = None, not_before: str = None, use_count: int = None):
+            def post(
+                self, ticket_id: int = None, ticket_ids: list[int] = None, expires: str = None,
+                comment: str = None, not_before: str = None, use_count: int = None
+            ):
                 body = {
                     'Expires'  : expires,
                     'Comment'  : comment,

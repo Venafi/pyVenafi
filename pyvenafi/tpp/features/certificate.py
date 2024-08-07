@@ -1,26 +1,40 @@
+from __future__ import annotations
+
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
+from typing import (
+    Tuple,
+    TYPE_CHECKING,
+    Union,
+)
+
+from pyvenafi.logger import features_logger
 from pyvenafi.tpp.api.api_base import InvalidResponseError
 from pyvenafi.tpp.attributes.x509_certificate import X509CertificateAttributes
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import FeatureException, UnexpectedValue
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 from pyvenafi.tpp.features.definitions.classes import Classes
-from pyvenafi.logger import features_logger
-from typing import List, Union, TYPE_CHECKING, Tuple, Dict
+from pyvenafi.tpp.features.definitions.exceptions import (
+    FeatureException,
+    UnexpectedValue,
+)
 
 if TYPE_CHECKING:
-    from pyvenafi.tpp.api.websdk.models import config, identity as ident
+    from pyvenafi.tpp.api.websdk.models import (
+        config,
+        identity as ident,
+    )
 
-StringParam = Union[str, List[str], List[Tuple[str, ...]]]
-
+StringParam = Union[str, list[str], list[Tuple[str, ...]]]
 
 @dataclass
 class DownloadedCertificate:
     certificate_data: str
     filename: str
     format: str
-
 
 @feature('Certificate')
 class Certificate(FeatureBase):
@@ -45,8 +59,10 @@ class Certificate(FeatureBase):
             retries -= 1
         return self._api.websdk.Certificates.Guid(certificate_guid).get()
 
-    def associate_application(self, certificate: 'Union[config.Object, str]', applications: 'List[Union[config.Object, str]]',
-                              push_to_new: bool = False):
+    def associate_application(
+        self, certificate: 'Union[config.Object, str]', applications: 'list[Union[config.Object, str]]',
+        push_to_new: bool = False
+    ):
         """
         Associates an application object to a certificate object.
 
@@ -64,15 +80,38 @@ class Certificate(FeatureBase):
         if not result.success:
             raise FeatureException(f'Unable to associate the given applications to the certificate "{certificate_dn}".')
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None, approvers: 'List[Union[ident.Identity, str]]' = None,
-               management_type: 'str' = None, service_generated_csr: 'bool' = None, generate_key_on_application: 'bool' = None,
-               hash_algorithm: 'str' = None, common_name: 'str' = None, organization: 'str' = None, organization_unit: 'List[str]' = None,
-               city: 'str' = None, state: 'str' = None, country: 'str' = None, san_dns: 'List[str]' = None, san_email: 'List[str]' = None,
-               san_upn: 'List[str]' = None, san_ip: 'List[str]' = None, san_uri: 'List[str]' = None, key_algorithm: 'str' = None,
-               key_strength: 'int' = None, elliptic_curve: 'str' = None, ca_template: 'Union[config.Object, str]' = None,
-               disable_automatic_renewal: 'bool' = None, renewal_window: 'int' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self,
+        name: str,
+        parent_folder: 'Union[config.Object, str]',
+        description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        config_class: 'str' = Classes.x509_certificate,
+        management_type: 'str' = None,
+        service_generated_csr: 'bool' = None,
+        generate_key_on_application: 'bool' = None,
+        hash_algorithm: 'str' = None,
+        common_name: 'str' = None,
+        organization: 'str' = None,
+        organization_unit: 'list[str]' = None,
+        city: 'str' = None,
+        state: 'str' = None,
+        country: 'str' = None,
+        san_dns: 'list[str]' = None,
+        san_email: 'list[str]' = None,
+        san_upn: 'list[str]' = None,
+        san_ip: 'list[str]' = None,
+        san_uri: 'list[str]' = None,
+        key_algorithm: 'str' = None,
+        key_strength: 'int' = None,
+        elliptic_curve: 'str' = None,
+        ca_template: 'Union[config.Object, str]' = None,
+        disable_automatic_renewal: 'bool' = None,
+        renewal_window: 'int' = None,
+        attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         .. note::
             The certificate is not automatically requested. Use :meth:`renew` to obtain a certificate.
@@ -112,8 +151,10 @@ class Certificate(FeatureBase):
         """
         cert_attrs = {
             X509CertificateAttributes.description                      : description,
-            X509CertificateAttributes.contact                          : [self._get_prefixed_universal(c) for c in contacts] if contacts else None,
-            X509CertificateAttributes.approver                         : [self._get_prefixed_universal(a) for a in approvers] if approvers else None,
+            X509CertificateAttributes.contact                          : [self._get_prefixed_universal(c) for c in
+                                                                          contacts] if contacts else None,
+            X509CertificateAttributes.approver                         : [self._get_prefixed_universal(a) for a in
+                                                                          approvers] if approvers else None,
             X509CertificateAttributes.management_type                  : management_type,
             X509CertificateAttributes.manual_csr                       : {
                 True : "0",
@@ -139,7 +180,9 @@ class Certificate(FeatureBase):
             X509CertificateAttributes.key_algorithm                    : key_algorithm,
             X509CertificateAttributes.key_bit_strength                 : key_strength,
             X509CertificateAttributes.elliptic_curve                   : elliptic_curve,
-            X509CertificateAttributes.certificate_authority            : self._get_dn(ca_template) if ca_template else None,
+            X509CertificateAttributes.certificate_authority            : self._get_dn(
+                ca_template
+            ) if ca_template else None,
             X509CertificateAttributes.disable_automatic_renewal        : {
                 True : "1",
                 False: "0"
@@ -148,7 +191,13 @@ class Certificate(FeatureBase):
         }
         if attributes:
             cert_attrs.update(attributes)
-        return self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder), config_class=Classes.x509_certificate, attributes=cert_attrs, get_if_already_exists=get_if_already_exists)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(parent_folder),
+            config_class=config_class,
+            attributes=cert_attrs,
+            get_if_already_exists=get_if_already_exists
+        )
 
     def delete(self, certificate: 'Union[config.Object, str]'):
         """
@@ -173,8 +222,10 @@ class Certificate(FeatureBase):
         """
         return self._get(certificate=certificate).certificate_details
 
-    def dissociate_application(self, certificate: 'Union[config.Object, str]', applications: 'List[Union[config.Object, str]]',
-                               delete_orphans: bool = False):
+    def dissociate_application(
+        self, certificate: 'Union[config.Object, str]', applications: 'list[Union[config.Object, str]]',
+        delete_orphans: bool = False
+    ):
         """
         Dissociate an application object from a certificate.
 
@@ -193,10 +244,12 @@ class Certificate(FeatureBase):
         )
 
     # noinspection ALL
-    def download(self, format: str, certificate: 'Union[config.Object, str]' = None, friendly_name: str = None,
-                 include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
-                 password: str = None, root_first_order: bool = False, vault_id: int = None, timeout: int = 60,
-                 poll_interval: float = 0.5):
+    def download(
+        self, format: str, certificate: 'Union[config.Object, str]' = None, friendly_name: str = None,
+        include_chain: bool = False, include_private_key: bool = False, keystore_password: str = None,
+        password: str = None, root_first_order: bool = False, vault_id: int = None, timeout: int = 60,
+        poll_interval: float = 0.5
+    ):
         """
         Downloads a certificate and returns the encoded content, filename, and format as a single object. If ``vault_id``
         is provided, then that specific version of a certificate is downloaded, which is particularly useful when
@@ -284,8 +337,10 @@ class Certificate(FeatureBase):
         """
         return self._get_config_object(object_dn=certificate_dn, raise_error_if_not_exists=raise_error_if_not_exists)
 
-    def get_previous_versions(self, certificate: 'Union[config.Object, str]', exclude_expired: bool = False,
-                              exclude_revoked: bool = False):
+    def get_previous_versions(
+        self, certificate: 'Union[config.Object, str]', exclude_expired: bool = False,
+        exclude_revoked: bool = False
+    ):
         """
         Args:
             certificate: :ref:`config_object` or :ref:`dn` of the certificate object.
@@ -293,7 +348,7 @@ class Certificate(FeatureBase):
             exclude_revoked: If ``True``, do not include revoked certificates.
 
         Returns:
-            List[:class:`~.models.certificate.PreviousVersions`]
+            list[:class:`~.models.certificate.PreviousVersions`]
         """
         certificate_guid = self._get_guid(certificate)
         result = self._api.websdk.Certificates.Guid(certificate_guid).PreviousVersions.get(
@@ -314,26 +369,66 @@ class Certificate(FeatureBase):
         result = self._api.websdk.Certificates.Guid(certificate_guid).ValidationResults.get()
         return result.file, result.ssl_tls
 
-    def list(self, country: StringParam = None, certificate_type: StringParam = None, common_name: StringParam = None,
-             issuer: StringParam = None, is_self_signed: bool = None, is_wild_card: bool = None,
-             key_algorithm: StringParam = None, key_size: StringParam = None, key_size_greater: StringParam = None,
-             key_size_less: StringParam = None, city: StringParam = None, organization: StringParam = None,
-             organization_unit: StringParam = None, state: StringParam = None, san_dns: StringParam = None,
-             san_email: StringParam = None, san_ip: StringParam = None, san_upn: StringParam = None, san_uri: StringParam = None,
-             serial: StringParam = None, signature_algorithm: StringParam = None, thumbprint: StringParam = None,
-             valid_from: Union[datetime, str] = None, valid_from_greater: Union[datetime, str] = None,
-             valid_from_less: Union[datetime, str] = None, valid_to: Union[datetime, str] = None,
-             valid_to_greater: Union[datetime, str] = None, chain_validation_error: StringParam = None,
-             created_on: Union[datetime, str] = None, created_on_greater: Union[datetime, str] = None,
-             created_on_less: Union[datetime, str] = None, disabled: bool = None, in_error: bool = None,
-             management_type: StringParam = None, name: StringParam = None, network_validation_disabled: bool = None,
-             parent_folder: 'Union[config.Object, str]' = None, recursive: bool = True, pending_workflow: bool = None,
-             ssl_tls_protocol: StringParam = None, stage: StringParam = None, stage_greater: str = None,
-             stage_less: str = None, tls_validation_failure: StringParam = None, validation_disabled: bool = None,
-             validation_state: StringParam = None, valid_to_less: Union[datetime, str] = None,
-             additional_filters: Dict[str, str] = None, limit: int = 1000, offset: int = None, return_limit: bool = False,
-             include_issuer: bool = None, include_key_algorithm: bool = None, include_key_size: bool = None,
-             include_subject: bool = None, concurrency: int = 16, cap: int = None):
+    def list(
+        self,
+        country: StringParam = None,
+        certificate_type: StringParam = None,
+        common_name: StringParam = None,
+        issuer: StringParam = None,
+        is_self_signed: bool = None,
+        is_wild_card: bool = None,
+        key_algorithm: StringParam = None,
+        key_size: StringParam = None,
+        key_size_greater: StringParam = None,
+        key_size_less: StringParam = None,
+        city: StringParam = None,
+        organization: StringParam = None,
+        organization_unit: StringParam = None,
+        state: StringParam = None,
+        san_dns: StringParam = None,
+        san_email: StringParam = None,
+        san_ip: StringParam = None,
+        san_upn: StringParam = None,
+        san_uri: StringParam = None,
+        serial: StringParam = None,
+        signature_algorithm: StringParam = None,
+        thumbprint: StringParam = None,
+        valid_from: Union[datetime, str] = None,
+        valid_from_greater: Union[datetime, str] = None,
+        valid_from_less: Union[datetime, str] = None,
+        valid_to: Union[datetime, str] = None,
+        valid_to_greater: Union[datetime, str] = None,
+        chain_validation_error: StringParam = None,
+        created_on: Union[datetime, str] = None,
+        created_on_greater: Union[datetime, str] = None,
+        created_on_less: Union[datetime, str] = None,
+        disabled: bool = None,
+        in_error: bool = None,
+        management_type: StringParam = None,
+        name: StringParam = None,
+        network_validation_disabled: bool = None,
+        parent_folder: 'Union[config.Object, str]' = None,
+        recursive: bool = True,
+        pending_workflow: bool = None,
+        ssl_tls_protocol: StringParam = None,
+        stage: StringParam = None,
+        stage_greater: str = None,
+        stage_less: str = None,
+        tls_validation_failure: StringParam = None,
+        validation_disabled: bool = None,
+        validation_state: StringParam = None,
+        valid_to_less: Union[datetime, str] = None,
+        additional_filters: dict[str, str] = None,
+        limit: int = 1000,
+        offset: int = None,
+        return_limit: bool = False,
+        include_issuer: bool = None,
+        include_key_algorithm: bool = None,
+        include_key_size: bool = None,
+        include_subject: bool = None,
+        concurrency: int = 16,
+        cap: int = None
+    ):
         """
         Lists all certificates with the given parameters. Some parameters allow a union of values:
 
@@ -411,7 +506,7 @@ class Certificate(FeatureBase):
                 certificates 10 thru 410 will be returned at a rate of 200 retrievals.
 
         Returns:
-            List[:class:`~.models.certificate.Certificate`]
+            list[:class:`~.models.certificate.Certificate`]
         """
         # region Filters
         filters = {
@@ -511,15 +606,17 @@ class Certificate(FeatureBase):
         offsets = list(range(limit, total_count, limit))
 
         with ThreadPoolExecutor(max_workers=concurrency) as pool:
-            results = list(pool.map(
-                lambda o: self._api.websdk.Certificates.get(
-                    filters=filters,
-                    limit=limit,
-                    offset=o,
-                    optional_fields=optional_fields
-                ),
-                offsets
-            ))
+            results = list(
+                pool.map(
+                    lambda o: self._api.websdk.Certificates.get(
+                        filters=filters,
+                        limit=limit,
+                        offset=o,
+                        optional_fields=optional_fields
+                    ),
+                    offsets
+                )
+            )
         for result in results:
             certificates += result.certificates
 
@@ -557,7 +654,11 @@ class Certificate(FeatureBase):
 
         return certificates
 
-    def push_to_applications(self, certificate: 'Union[config.Object, str]', applications: 'List[Union[config.Object, str]]' = None):
+    def push_to_applications(
+        self,
+        certificate: 'Union[config.Object, str]',
+        applications: 'list[Union[config.Object, str]]' = None
+    ):
         """
         Pushes the active ``certificate`` to the ``applications``.
 
@@ -633,8 +734,10 @@ class Certificate(FeatureBase):
         if not result.restart_completed:
             raise UnexpectedValue(f'Restart renewal from stage 0 was not triggered on {certificate_dn}.')
 
-    def revoke(self, certificate: 'Union[config.Object, str]', comments: str = None, disable: bool = None,
-               reason: int = None, thumbprint: str = None):
+    def revoke(
+        self, certificate: 'Union[config.Object, str]', comments: str = None, disable: bool = None,
+        reason: int = None, thumbprint: str = None
+    ):
         """
         Revokes the ``certificate``. If a thumbprint is provided, then the particular historical certificate
         associated to the certificate having that thumbprint will be revoked.
@@ -659,8 +762,16 @@ class Certificate(FeatureBase):
                 f'Cannot revoke {certificate_dn} due to this error:\n{result.error}.'
             )
 
-    def upload(self, certificate_data: str, parent_folder: 'Union[config.Object, str]', certificate_authority_attributes: dict = None,
-               name: str = None, password: str = None, private_key_data: str = None, reconcile: bool = False):
+    def upload(
+        self,
+        certificate_data: str,
+        parent_folder: 'Union[config.Object, str]',
+        certificate_authority_attributes: dict = None,
+        name: str = None,
+        password: str = None,
+        private_key_data: str = None,
+        reconcile: bool = False
+    ):
         """
         Uploads the certificate data to TPP to create a certificate object under the given parent folder DN. If the BEGIN/END
         header or footer is missing, the data is assumed to be Base 64 encoded in the PKCS#12 format. For Base 64 encoded
@@ -696,7 +807,7 @@ class Certificate(FeatureBase):
         )
         return self._api.websdk.Config.IsValid.post(object_dn=result.certificate_dn).object
 
-    def validate(self, certificates: 'List[Union[config.Object, str]]'):
+    def validate(self, certificates: 'list[Union[config.Object, str]]'):
         """
         Performs SSL/TLS network validation of certificate on all applications associated to certificate that are not disabled.
 
@@ -704,7 +815,7 @@ class Certificate(FeatureBase):
             certificates: List of :ref:`config_object` or :ref:`dn` to validate.
 
         Returns:
-            Tuple[str, List[str]]: Tuple of :ref:`dn` and validation warnings
+            Tuple[str, list[str]]: Tuple of :ref:`dn` and validation warnings
         """
         certificate_dns = [self._get_dn(certificate) for certificate in certificates]
         result = self._api.websdk.Certificates.Validate.post(certificate_dns=certificate_dns)
@@ -714,8 +825,10 @@ class Certificate(FeatureBase):
             )
         return result.validated_certificate_dns, result.warnings
 
-    def wait_for_enrollment_to_complete(self, certificate: 'Union[config.Object, str]', current_thumbprint: str,
-                                        timeout: int = 60, poll_interval: float = 0.5):
+    def wait_for_enrollment_to_complete(
+        self, certificate: 'Union[config.Object, str]', current_thumbprint: str,
+        timeout: int = 60, poll_interval: float = 0.5
+    ):
         """
         Waits for the certificate renewal to complete over a period of ``timeout`` seconds. The ``current_thumbprint``
         is returned by :meth:`renew`. Renewal is complete when the ``current_thumbprint`` does not match the new
@@ -747,8 +860,10 @@ class Certificate(FeatureBase):
             f'status "{cert.processing_details.status}".'
         )
 
-    def wait_for_stage(self, certificate: 'Union[config.Object, str]', stage: int, expect_workflow: bool = True,
-                       timeout: int = 60, poll_interval: int = 1):
+    def wait_for_stage(
+        self, certificate: 'Union[config.Object, str]', stage: int, expect_workflow: bool = True,
+        timeout: int = 60, poll_interval: int = 1
+    ):
         """
         Waits for the current processing of the certificate to reach the given ``stage`` over a period of
         ``timeout`` seconds. If the timeout is reached, an error is raised.
@@ -763,11 +878,11 @@ class Certificate(FeatureBase):
         Returns:
             The values returned by the |Websdk|, namely
 
-            * **approver** *(List[str])* - List of approvers on the certificate object.
+            * **approver** *(list[str])* - List of approvers on the certificate object.
             * **certificate_details** (:class:`~.models.certificate.CertificateDetails`) - Certificate details.
-            * **contact** *(List[str])* - List of contacts on the certificate object.
+            * **contact** *(list[str])* - List of contacts on the certificate object.
             * **created_on** *(datetime)* - Date on which the certificate object was created.
-            * **custom_fields** *(List[dict])* - Custom fields on the certificate object.
+            * **custom_fields** *(list[dict])* - Custom fields on the certificate object.
             * **dn** *(str)* - :ref:`dn` of the certificate object.
             * **guid** *(str)* - :ref:`guid` of the certificate object.
             * **name** *(str)* - Name of the certificate object.

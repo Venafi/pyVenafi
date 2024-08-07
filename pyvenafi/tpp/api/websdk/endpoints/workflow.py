@@ -1,8 +1,17 @@
-from datetime import datetime
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
-from pyvenafi.tpp.api.websdk.models import workflow, identity as ident
-from typing import List
+from __future__ import annotations
 
+from datetime import datetime
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import (
+    identity as ident,
+    workflow,
+)
 
 class _Workflow(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -21,7 +30,14 @@ class _Workflow(WebSdkEndpoint):
             self.UpdateStatus = self._UpdateStatus(api_obj=self._api_obj, url=f'{self._url}/UpdateStatus')
 
         class _Create(WebSdkEndpoint):
-            def post(self, object_dn: str, approvers: List[ident.Identity], reason: str, workflow_dn: str, user_data: str = None):
+            def post(
+                self,
+                object_dn: str,
+                approvers: list[ident.Identity],
+                reason: str,
+                workflow_dn: str,
+                user_data: str = None
+            ):
                 body = {
                     'ObjectDN'  : object_dn,
                     'Approvers' : approvers,
@@ -57,7 +73,7 @@ class _Workflow(WebSdkEndpoint):
                     approval_explanation: str = ApiField(alias='ApprovalExplanation')
                     approval_from: str = ApiField(alias='ApprovalFrom')
                     approval_reason: str = ApiField(alias='ApprovalReason')
-                    approvers: List[str] = ApiField(alias='Approvers', default_factory=list)
+                    approvers: list[str] = ApiField(alias='Approvers', default_factory=list)
                     blocking: str = ApiField(alias='Blocking')
                     created: datetime = ApiField(alias='Created')
                     issued_due_to: str = ApiField(alias='IssuedDueTo')
@@ -75,7 +91,7 @@ class _Workflow(WebSdkEndpoint):
                 }
 
                 class Output(WebSdkOutputModel):
-                    guids: List[str] = ApiField(default_factory=list, alias='GUIDS')
+                    guids: list[str] = ApiField(default_factory=list, alias='GUIDS')
                     result: workflow.Result = ApiField(alias='Result')
 
                 return generate_output(output_cls=Output, response=self._post(data=body))
@@ -104,9 +120,11 @@ class _Workflow(WebSdkEndpoint):
                 return generate_output(output_cls=Output, response=self._post(data=body))
 
         class _UpdateStatus(WebSdkEndpoint):
-            def post(self, guid: str, status: str, explanation: str = None, scheduled_start: str = None,
-                     scheduled_stop: str = None, approvers: List[str] = None, object_dn: str = None,
-                     reason: str = None, user_data=None):
+            def post(
+                self, guid: str, status: str, explanation: str = None, scheduled_start: str = None,
+                scheduled_stop: str = None, approvers: list[str] = None, object_dn: str = None,
+                reason: str = None, user_data=None
+            ):
                 body = {
                     'GUID'          : guid,
                     'Status'        : status,

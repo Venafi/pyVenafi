@@ -1,18 +1,32 @@
+from __future__ import annotations
+
 import logging
-import time
 import os
 import re
-from typing import TYPE_CHECKING
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode, ObjectDoesNotExist
-from pyvenafi.tpp.api.websdk.models import config, identity as ident
-from pyvenafi.logger import logger, features_logger
-from pyvenafi.tpp.api.websdk.enums.secret_store import Namespaces
-from typing import List, Dict, Union
+import time
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from packaging.version import Version
+
+from pyvenafi.logger import (
+    features_logger,
+    logger,
+)
+from pyvenafi.tpp.api.websdk.enums.secret_store import Namespaces
+from pyvenafi.tpp.api.websdk.models import (
+    config,
+    identity as ident,
+)
+from pyvenafi.tpp.features.definitions.exceptions import (
+    InvalidResultCode,
+    ObjectDoesNotExist,
+)
 
 if TYPE_CHECKING:
     from pyvenafi.tpp.api.authenticate import Authenticate
-
 
 def feature(name: str):
     def decorate(cls):
@@ -26,13 +40,14 @@ def feature(name: str):
 
     return decorate
 
-
 class FeatureBase:
     def __init__(self, api: 'Authenticate'):
         self._api = api
 
-    def _config_create(self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None,
-                       get_if_already_exists: bool = True):
+    def _config_create(
+        self, name: str, parent_folder_dn: str, config_class: str, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         if attributes:
             attributes = self._name_value_list(attributes=attributes)
 
@@ -54,8 +69,10 @@ class FeatureBase:
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.config_result)
 
-    def _get_config_object(self, object_dn: str = None, object_guid: str = None,
-                           raise_error_if_not_exists: bool = True, valid_class_names: List[str] = None):
+    def _get_config_object(
+        self, object_dn: str = None, object_guid: str = None,
+        raise_error_if_not_exists: bool = True, valid_class_names: list[str] = None
+    ):
         if not (object_dn or object_guid):
             raise ValueError(
                 'Must supply either an Object DN or Object GUID, but neither was provided.'
@@ -80,8 +97,10 @@ class FeatureBase:
             )
         return obj
 
-    def _get_identity_object(self, prefixed_name: str = None, prefixed_universal: str = None,
-                             raise_error_if_not_exists: bool = True):
+    def _get_identity_object(
+        self, prefixed_name: str = None, prefixed_universal: str = None,
+        raise_error_if_not_exists: bool = True
+    ):
         if not (prefixed_name or prefixed_universal):
             raise ValueError(
                 'Must supply either an prefixed_name or prefixed_universal, but neither was provided.'
@@ -123,13 +142,17 @@ class FeatureBase:
         """
         d = {}
         if prefixed_name:
-            d.update({
-                         'PrefixedName': prefixed_name
-                     })
+            d.update(
+                {
+                    'PrefixedName': prefixed_name
+                }
+            )
         if prefixed_universal:
-            d.update({
-                         'PrefixedUniversal': prefixed_universal
-                     })
+            d.update(
+                {
+                    'PrefixedUniversal': prefixed_universal
+                }
+            )
         return d
 
     @staticmethod
@@ -196,13 +219,13 @@ class FeatureBase:
     @staticmethod
     def _name_type_value(name: str, type: str, value):
         return {
-            'Name': str(name),
-            'Type': str(type),
+            'Name' : str(name),
+            'Type' : str(type),
             'Value': str(value)
         }
 
     @staticmethod
-    def _name_value_list(attributes: Dict[str, List[str]]):
+    def _name_value_list(attributes: dict[str, list[str]]):
         nvl = []
         for n, v in attributes.items():
             if v is None:

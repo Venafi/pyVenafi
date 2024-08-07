@@ -1,44 +1,60 @@
+from __future__ import annotations
+
 from base64 import b64encode
 from datetime import datetime
 from hashlib import sha256
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from pyvenafi.tpp.api.websdk.enums.config import ApplicationAttributeValues
+from pyvenafi.tpp.api.websdk.enums.secret_store import (
+    KeyNames,
+    Namespaces,
+    VaultTypes,
+)
+from pyvenafi.tpp.api.websdk.models import config
 from pyvenafi.tpp.attributes.adaptable_app import AdaptableAppAttributes
 from pyvenafi.tpp.attributes.amazon_app import AmazonAppAttributes
 from pyvenafi.tpp.attributes.apache import ApacheAttributes
+from pyvenafi.tpp.attributes.apache_application_group import ApacheApplicationGroupAttributes
+from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
+from pyvenafi.tpp.attributes.application_group import ApplicationGroupAttributes
 from pyvenafi.tpp.attributes.azure_key_vault import AzureKeyVaultAttributes
 from pyvenafi.tpp.attributes.bluecoat_sslva import BlueCoatSSLVAAttributes
 from pyvenafi.tpp.attributes.capi import CAPIAttributes
-from pyvenafi.tpp.attributes.netscaler import NetScalerAttributes
 from pyvenafi.tpp.attributes.connectdirect import ConnectDirectAttributes
+from pyvenafi.tpp.attributes.datapower import DataPowerAttributes
 from pyvenafi.tpp.attributes.f5_authentication_bundle import F5AuthenticationBundleAttributes
 from pyvenafi.tpp.attributes.f5_ltm_advanced import F5LTMAdvancedAttributes
 from pyvenafi.tpp.attributes.google_cloud_app import GoogleCloudAppAttributes
-from pyvenafi.tpp.attributes.datapower import DataPowerAttributes
 from pyvenafi.tpp.attributes.gsk import GSKAttributes
 from pyvenafi.tpp.attributes.imperva_mx import ImpervaMXAttributes
-from pyvenafi.tpp.attributes.jks import JKSAttributes
 from pyvenafi.tpp.attributes.iplanet import iPlanetAttributes
+from pyvenafi.tpp.attributes.jks import JKSAttributes
+from pyvenafi.tpp.attributes.netscaler import NetScalerAttributes
 from pyvenafi.tpp.attributes.palo_alto_network_fw import PaloAltoNetworkFWAttributes
-from pyvenafi.tpp.attributes.pkcs_12 import PKCS12Attributes
 from pyvenafi.tpp.attributes.pkcs11 import PKCS11Attributes
+from pyvenafi.tpp.attributes.pkcs11_application_group import PKCS11ApplicationGroupAttributes
+from pyvenafi.tpp.attributes.pkcs_12 import PKCS12Attributes
 from pyvenafi.tpp.attributes.riverbed_steelhead import RiverbedSteelHeadAttributes
 from pyvenafi.tpp.attributes.tealeaf_pca import TealeafPCAAttributes
 from pyvenafi.tpp.attributes.vam_nshield import VAMnShieldAttributes
-from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
-from pyvenafi.tpp.attributes.application_group import ApplicationGroupAttributes
-from pyvenafi.tpp.attributes.apache_application_group import ApacheApplicationGroupAttributes
-from pyvenafi.tpp.attributes.pkcs11_application_group import PKCS11ApplicationGroupAttributes
 from pyvenafi.tpp.attributes.x509_certificate import X509CertificateAttributes
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode, UnexpectedValue, FeatureException
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 from pyvenafi.tpp.features.definitions.classes import Classes
-from pyvenafi.tpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
-from pyvenafi.tpp.api.websdk.models import config
-from typing import Union, List, TYPE_CHECKING
+from pyvenafi.tpp.features.definitions.exceptions import (
+    FeatureException,
+    InvalidResultCode,
+    UnexpectedValue,
+)
 
 if TYPE_CHECKING:
     from pyvenafi.tpp.api.websdk.models import identity as ident
-
 
 # region Applications
 class _ApplicationBase(FeatureBase):
@@ -67,9 +83,11 @@ class _ApplicationBase(FeatureBase):
         application_dn = self._get_dn(application)
         result = self._api.websdk.Config.Write.post(
             object_dn=application_dn,
-            attribute_data=self._name_value_list({
-                ApplicationBaseAttributes.disabled: ["1"]
-            })
+            attribute_data=self._name_value_list(
+                {
+                    ApplicationBaseAttributes.disabled: ["1"]
+                }
+            )
         ).result
 
         if result.code != 1:
@@ -125,25 +143,39 @@ class _ApplicationBase(FeatureBase):
         certificate_dn = response.values[0]
         return self._api.websdk.Config.IsValid.post(object_dn=certificate_dn).object
 
-    def _create(self, name: 'str', device: 'Union[config.Object, str]', description: 'str' = None,
-                contacts: 'List[Union[ident.Identity, str]]' = None,
-                approvers: 'List[Union[ident.Identity, str]]' = None,
-                attributes: dict = None, get_if_already_exists: bool = True):
+    def _create(
+        self, name: 'str', device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         device_dn = self._get_dn(obj=device)
         if approvers is not None:
-            attributes.update({
-                ApplicationBaseAttributes.approver: [self._get_prefixed_universal(a) for a in approvers]
-            })
+            attributes.update(
+                {
+                    ApplicationBaseAttributes.approver: [self._get_prefixed_universal(a) for a in approvers]
+                }
+            )
         if contacts is not None:
-            attributes.update({
-                ApplicationBaseAttributes.contact: [self._get_prefixed_universal(c) for c in contacts]
-            })
+            attributes.update(
+                {
+                    ApplicationBaseAttributes.contact: [self._get_prefixed_universal(c) for c in contacts]
+                }
+            )
         if description is not None:
-            attributes.update({
-                ApplicationBaseAttributes.description: description
-            })
+            attributes.update(
+                {
+                    ApplicationBaseAttributes.description: description
+                }
+            )
 
-        return self._config_create(name=name, parent_folder_dn=device_dn, config_class=self._class_name, attributes=attributes, get_if_already_exists=get_if_already_exists)
+        return self._config_create(
+            name=name,
+            parent_folder_dn=device_dn,
+            config_class=self._class_name,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
     def _get_stage(self, application: 'Union[config.Object, str]'):
         application_dn = self._get_dn(application)
@@ -241,10 +273,12 @@ class _ApplicationBase(FeatureBase):
                     break
                 elif not stage:
                     if not _certificate_is_installed():
-                        raise UnexpectedValue(
-                            f'Expected a certificate to be installed on "{application_dn}", '
-                            f'but the application is not in a processing status.'
-                        )
+                        continue
+                        # This causes a premature exception. It could be made to wait a little longer.
+                        # raise UnexpectedValue(
+                        #     f'Expected a certificate to be installed on "{application_dn}", '
+                        #     f'but the application is not in a processing status.'
+                        # )
                     return
                 stage = self._get_stage(application=application)
 
@@ -254,7 +288,6 @@ class _ApplicationBase(FeatureBase):
             f'Status: {self.get_status(application=application)}'
         )
 
-
 @feature('Adaptable Application')
 class Adaptable(_ApplicationBase):
     def __init__(self, api):
@@ -262,19 +295,23 @@ class Adaptable(_ApplicationBase):
 
     @staticmethod
     def _calculate_hash(script_content: bytes):
-        return b64encode(sha256(
-            script_content.decode().encode('utf-32-le')
-        ).hexdigest().encode()).decode()
+        return b64encode(
+            sha256(
+                script_content.decode().encode('utf-32-le')
+            ).hexdigest().encode()
+        ).decode()
 
-    def create(self, name: 'str', device: 'Union[config.Object, str]', policy_folder: 'Union[config.Object, str]',
-               powershell_script_name: 'str', powershell_script_content: 'bytes', locked: 'bool' = False,
-               retry_after_script_hash_mismatch: 'bool' = None, description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None,
-               secondary_credential: 'Union[config.Object, str]' = None,
-               port: 'int' = None, private_key_credential: 'str' = None, log_debug: 'bool' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: 'str', device: 'Union[config.Object, str]', policy_folder: 'Union[config.Object, str]',
+        powershell_script_name: 'str', powershell_script_content: 'bytes', locked: 'bool' = False,
+        retry_after_script_hash_mismatch: 'bool' = None, description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None,
+        secondary_credential: 'Union[config.Object, str]' = None,
+        port: 'int' = None, private_key_credential: 'str' = None, log_debug: 'bool' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -336,13 +373,16 @@ class Adaptable(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name      : 'appadaptable',
             AdaptableAppAttributes.credential          : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             AdaptableAppAttributes.log_debug           : int(log_debug),
             AdaptableAppAttributes.pk_credential       : self._get_dn(
-                private_key_credential) if private_key_credential else None,
+                private_key_credential
+            ) if private_key_credential else None,
             AdaptableAppAttributes.port                : port,
             AdaptableAppAttributes.secondary_credential: self._get_dn(
-                secondary_credential) if secondary_credential else None,
+                secondary_credential
+            ) if secondary_credential else None,
         }
         if attributes:
             app_attrs.update(attributes)
@@ -352,21 +392,22 @@ class Adaptable(_ApplicationBase):
             attributes=app_attrs, get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Amazon AWS')
 class AmazonAWS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.amazon_app)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', aws_credential: 'Union[config.Object, str]',
-               description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               issued_by_aws: 'bool' = None, provision_to: 'int' = None, region: 'str' = None,
-               iam_install_path: 'str' = None, replace_existing: 'bool' = None, binding_target: 'Union[str, int]' = None,
-               load_balancer_name: 'str' = None, load_balancer_port: 'int' = None, target_group: 'str' = None,
-               create_listener: 'bool' = None, cloudfront_distribution_id: 'str' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', aws_credential: 'Union[config.Object, str]',
+        description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        issued_by_aws: 'bool' = None, provision_to: 'int' = None, region: 'str' = None,
+        iam_install_path: 'str' = None, replace_existing: 'bool' = None, binding_target: 'Union[str, int]' = None,
+        load_balancer_name: 'str' = None, load_balancer_port: 'int' = None, target_group: 'str' = None,
+        create_listener: 'bool' = None, cloudfront_distribution_id: 'str' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -429,23 +470,24 @@ class AmazonAWS(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Apache')
 class Apache(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', private_key_file: 'str', certificate_file: 'str',
-               description: 'str' = None, contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               private_key_location: 'str' = None, client_tools_path: 'str' = None,
-               protection_type: 'str' = None, softcard_identifier: 'str' = None, ocs_identifier: 'str' = None,
-               partition_password_credential: 'Union[config.Object, str]' = None,
-               private_key_credential: 'Union[config.Object, str]' = None,
-               certificate_chain_file: 'str' = None, overwrite_existing_chain: 'bool' = None, owner: 'str' = None,
-               owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', private_key_file: 'str', certificate_file: 'str',
+        description: 'str' = None, contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        private_key_location: 'str' = None, client_tools_path: 'str' = None,
+        protection_type: 'str' = None, softcard_identifier: 'str' = None, ocs_identifier: 'str' = None,
+        partition_password_credential: 'Union[config.Object, str]' = None,
+        private_key_credential: 'Union[config.Object, str]' = None,
+        certificate_chain_file: 'str' = None, overwrite_existing_chain: 'bool' = None, owner: 'str' = None,
+        owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -479,7 +521,8 @@ class Apache(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appapache',
             ApacheAttributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             ApacheAttributes.port                           : port,
             ApacheAttributes.private_key_location           : private_key_location,
             ApacheAttributes.client_tools_path              : client_tools_path,
@@ -487,10 +530,12 @@ class Apache(_ApplicationBase):
             ApacheAttributes.softcard_identifier            : softcard_identifier,
             ApacheAttributes.ocs_identifier                 : ocs_identifier,
             ApacheAttributes.partition_password_credential  : self._get_dn(
-                partition_password_credential) if partition_password_credential else None,
+                partition_password_credential
+            ) if partition_password_credential else None,
             ApacheAttributes.private_key_file               : private_key_file,
             ApacheAttributes.private_key_password_credential: self._get_dn(
-                private_key_credential) if private_key_credential else None,
+                private_key_credential
+            ) if private_key_credential else None,
             ApacheAttributes.certificate_file               : certificate_file,
             ApacheAttributes.certificate_chain_file         : certificate_chain_file,
             ApacheAttributes.overwrite_existing_chain       : {
@@ -499,13 +544,15 @@ class Apache(_ApplicationBase):
             }.get(overwrite_existing_chain),
         }
         if owner or group:
-            app_attrs.update({
-                ApacheAttributes.file_permissions_enabled: "1",
-                ApacheAttributes.file_owner_user         : owner,
-                ApacheAttributes.file_permissions_user   : owner_permissions,
-                ApacheAttributes.file_owner_group        : group,
-                ApacheAttributes.file_permissions_group  : group_permissions,
-            })
+            app_attrs.update(
+                {
+                    ApacheAttributes.file_permissions_enabled: "1",
+                    ApacheAttributes.file_owner_user         : owner,
+                    ApacheAttributes.file_permissions_user   : owner_permissions,
+                    ApacheAttributes.file_owner_group        : group,
+                    ApacheAttributes.file_permissions_group  : group_permissions,
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -520,19 +567,20 @@ class Apache(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Azure Key Vault')
 class AzureKeyVault(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.azure_key_vault)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', application_id: 'str',
-               certificate_credential: 'Union[config.Object, str]', azure_key_vault_name: 'str',
-               description: 'str' = None, contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None, certificate_name: 'str' = None,
-               private_key_exportable: 'bool' = None, web_application_name: 'str' = None,
-               create_new_binding: 'bool' = None, create_san_dns_bindings: 'bool' = None, ssl_type: 'int' = None,
-               binding_hostnames: 'List[str]' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', application_id: 'str',
+        certificate_credential: 'Union[config.Object, str]', azure_key_vault_name: 'str',
+        description: 'str' = None, contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None, certificate_name: 'str' = None,
+        private_key_exportable: 'bool' = None, web_application_name: 'str' = None,
+        create_new_binding: 'bool' = None, create_san_dns_bindings: 'bool' = None, ssl_type: 'int' = None,
+        binding_hostnames: 'list[str]' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -568,24 +616,28 @@ class AzureKeyVault(_ApplicationBase):
             }.get(private_key_exportable)
         }
         if web_application_name:
-            app_attrs.update({
-                AzureKeyVaultAttributes.update_web_app         : "0",
-                AzureKeyVaultAttributes.web_app_name           : web_application_name,
-                AzureKeyVaultAttributes.create_binding         : {
-                    True : "0",
-                    False: "1"
-                }.get(create_new_binding),
-                AzureKeyVaultAttributes.create_san_dns_bindings: {
-                    True : "0",
-                    False: "1"
-                }.get(create_san_dns_bindings),
-                AzureKeyVaultAttributes.binding_ssl_type       : ssl_type,
-                AzureKeyVaultAttributes.binding_hostnames      : binding_hostnames
-            })
+            app_attrs.update(
+                {
+                    AzureKeyVaultAttributes.update_web_app         : "0",
+                    AzureKeyVaultAttributes.web_app_name           : web_application_name,
+                    AzureKeyVaultAttributes.create_binding         : {
+                        True : "0",
+                        False: "1"
+                    }.get(create_new_binding),
+                    AzureKeyVaultAttributes.create_san_dns_bindings: {
+                        True : "0",
+                        False: "1"
+                    }.get(create_san_dns_bindings),
+                    AzureKeyVaultAttributes.binding_ssl_type       : ssl_type,
+                    AzureKeyVaultAttributes.binding_hostnames      : binding_hostnames
+                }
+            )
         else:
-            app_attrs.update({
-                AzureKeyVaultAttributes.update_web_app: "1"
-            })
+            app_attrs.update(
+                {
+                    AzureKeyVaultAttributes.update_web_app: "1"
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -600,16 +652,17 @@ class AzureKeyVault(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Basic Application')
 class Basic(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.basic)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -673,21 +726,22 @@ class Basic(_ApplicationBase):
             )
         return new_object
 
-
 @feature('Blue Coat SSLVA')
 class BlueCoatSSLVA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.bluecoat_sslva)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None,
-               port: 'int' = None, device_certificate: 'bool' = None, replace_existing: 'bool' = None,
-               install_chain: 'bool' = None,
-               create_lists: 'bool' = None, known_certificates_with_keys_lists: 'List[str]' = None,
-               attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None,
+        port: 'int' = None, device_certificate: 'bool' = None, replace_existing: 'bool' = None,
+        install_chain: 'bool' = None,
+        create_lists: 'bool' = None, known_certificates_with_keys_lists: 'list[str]' = None,
+        attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -710,7 +764,9 @@ class BlueCoatSSLVA(_ApplicationBase):
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'appBlueCoat',
-            BlueCoatSSLVAAttributes.credential        : self._get_dn(application_credential) if application_credential else None,
+            BlueCoatSSLVAAttributes.credential        : self._get_dn(
+                application_credential
+            ) if application_credential else None,
             BlueCoatSSLVAAttributes.port              : port,
             BlueCoatSSLVAAttributes.device_certificate: {
                 True : "1",
@@ -743,22 +799,23 @@ class BlueCoatSSLVA(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('CAPI')
 class CAPI(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.capi)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, winrm_port: 'int' = None,
-               private_key_location: 'str' = None, key_label: 'str' = None, friendly_name: 'str' = None,
-               exportable: 'bool' = None,
-               private_key_trustee: 'str' = None, web_site_name: 'str' = None, binding_ip_address: 'str' = None,
-               binding_port: 'int' = None,
-               binding_hostname: 'str' = None, create_binding: 'bool' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, winrm_port: 'int' = None,
+        private_key_location: 'str' = None, key_label: 'str' = None, friendly_name: 'str' = None,
+        exportable: 'bool' = None,
+        private_key_trustee: 'str' = None, web_site_name: 'str' = None, binding_ip_address: 'str' = None,
+        binding_port: 'int' = None,
+        binding_hostname: 'str' = None, create_binding: 'bool' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -786,7 +843,9 @@ class CAPI(_ApplicationBase):
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appcapi',
-            CAPIAttributes.credential            : self._get_dn(application_credential) if application_credential else None,
+            CAPIAttributes.credential            : self._get_dn(
+                application_credential
+            ) if application_credential else None,
             CAPIAttributes.port                  : winrm_port,
             CAPIAttributes.private_key_location  : private_key_location,
             CAPIAttributes.private_key_label     : key_label,
@@ -798,21 +857,25 @@ class CAPI(_ApplicationBase):
             CAPIAttributes.private_key_trustee   : private_key_trustee,
         }
         if web_site_name:
-            app_attrs.update({
-                CAPIAttributes.update_iis        : "1",
-                CAPIAttributes.web_site_name     : web_site_name,
-                CAPIAttributes.binding_ip_address: binding_ip_address,
-                CAPIAttributes.binding_port      : binding_port,
-                CAPIAttributes.hostname          : binding_hostname,
-                CAPIAttributes.create_binding    : {
-                    True : "1",
-                    False: "0"
-                }.get(create_binding),
-            })
+            app_attrs.update(
+                {
+                    CAPIAttributes.update_iis        : "1",
+                    CAPIAttributes.web_site_name     : web_site_name,
+                    CAPIAttributes.binding_ip_address: binding_ip_address,
+                    CAPIAttributes.binding_port      : binding_port,
+                    CAPIAttributes.hostname          : binding_hostname,
+                    CAPIAttributes.create_binding    : {
+                        True : "1",
+                        False: "0"
+                    }.get(create_binding),
+                }
+            )
         else:
-            app_attrs.update({
-                CAPIAttributes.update_iis: "0"
-            })
+            app_attrs.update(
+                {
+                    CAPIAttributes.update_iis: "0"
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -827,22 +890,23 @@ class CAPI(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Citrix NetScaler')
 class CitrixNetScaler(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.netscaler)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               install_certificate_chain: 'bool' = None,
-               use_fips: 'bool' = None, private_key_credential: 'Union[config.Object, str]' = None,
-               import_only: 'bool' = None,
-               subfolder_relative_path: 'str' = None, certificate_binding: 'str' = None,
-               virtual_server_name: 'str' = None,
-               sni_certificate: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        install_certificate_chain: 'bool' = None,
+        use_fips: 'bool' = None, private_key_credential: 'Union[config.Object, str]' = None,
+        import_only: 'bool' = None,
+        subfolder_relative_path: 'str' = None, certificate_binding: 'str' = None,
+        virtual_server_name: 'str' = None,
+        sni_certificate: 'bool' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -868,7 +932,9 @@ class CitrixNetScaler(_ApplicationBase):
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appnetscaler',
-            NetScalerAttributes.credential                     : self._get_dn(application_credential) if application_credential else None,
+            NetScalerAttributes.credential                     : self._get_dn(
+                application_credential
+            ) if application_credential else None,
             NetScalerAttributes.port                           : port,
             NetScalerAttributes.chain_cert                     : {
                 True : "1",
@@ -878,7 +944,9 @@ class CitrixNetScaler(_ApplicationBase):
                 True : "1",
                 False: "0"
             }.get(use_fips),
-            NetScalerAttributes.private_key_password_credential: self._get_dn(private_key_credential) if private_key_credential else None,
+            NetScalerAttributes.private_key_password_credential: self._get_dn(
+                private_key_credential
+            ) if private_key_credential else None,
             NetScalerAttributes.import_only                    : {
                 True : "1",
                 False: "0"
@@ -905,18 +973,19 @@ class CitrixNetScaler(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Connect:Direct')
 class ConnectDirect(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.connectdirect)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, api_protocol: 'str' = None,
-               port: 'int' = None, node_name: 'str' = None, install_chain: 'bool' = None,
-               key_certificate_alias: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, api_protocol: 'str' = None,
+        port: 'int' = None, node_name: 'str' = None, install_chain: 'bool' = None,
+        key_certificate_alias: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -938,7 +1007,9 @@ class ConnectDirect(_ApplicationBase):
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name    : 'appConnectDirect',
-            ConnectDirectAttributes.credential       : self._get_dn(application_credential) if application_credential else None,
+            ConnectDirectAttributes.credential       : self._get_dn(
+                application_credential
+            ) if application_credential else None,
             ConnectDirectAttributes.protocol         : api_protocol,
             ConnectDirectAttributes.port             : port,
             ConnectDirectAttributes.node_name        : node_name,
@@ -962,15 +1033,16 @@ class ConnectDirect(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('F5 Authentication Bundle')
 class F5AuthenticationBundle(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.f5_authentication_bundle)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', bundle_file_name: str, description: 'str' = None,
-               certificates_to_use: 'List[Union[config.Object, str]]' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', bundle_file_name: str, description: 'str' = None,
+        certificates_to_use: 'list[Union[config.Object, str]]' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -994,35 +1066,42 @@ class F5AuthenticationBundle(_ApplicationBase):
         if attributes:
             app_attrs.update(attributes)
 
-        return self._config_create(name=name, parent_folder_dn=self._get_dn(device), config_class=Classes.f5_authentication_bundle, attributes=app_attrs, get_if_already_exists=get_if_already_exists)
-
+        return self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(device),
+            config_class=Classes.f5_authentication_bundle,
+            attributes=app_attrs,
+            get_if_already_exists=get_if_already_exists
+        )
 
 @feature('F5 LTM Advanced')
 class F5LTMAdvanced(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.f5_ltm_advanced)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, https_port: 'int' = None,
-               ssh_port: 'int' = None,
-               device_certificate: 'bool' = None, provisioning_mode: 'int' = None,
-               certificate_and_key_file: 'str' = None,
-               private_key_credential: 'Union[config.Object, str]' = None, force_profile_update: 'bool' = None,
-               install_chain: 'bool' = None, bundle_certificate: 'bool' = None, overwrite_chain_file: 'bool' = None,
-               ca_chain_file: 'str' = None, use_fips: 'bool' = None, overwrite_certificate_and_key: 'bool' = None,
-               delete_previous_cert_and_key: 'bool' = None, provisioning_target: 'str' = None,
-               config_sync: 'bool' = None,
-               ssl_profile: 'str' = None, ssl_profile_type: 'str' = None, parent_ssl_profile: 'str' = None,
-               ssl_partition: 'str' = None, sni_server_name: 'str' = None, sni_default: 'bool' = None,
-               virtual_server: 'str' = None,
-               virtual_server_partition: 'str' = None, use_advanced_settings: 'bool' = None,
-               client_certificate_requirement: 'str' = None,
-               server_certificate_requirement: 'str' = None, frequency: 'str' = None,
-               chain_traversal_depth: 'int' = None,
-               certificate_bundle: 'Union[config.Object, str]' = None, authentication_name: 'str' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, https_port: 'int' = None,
+        ssh_port: 'int' = None,
+        device_certificate: 'bool' = None, provisioning_mode: 'int' = None,
+        certificate_and_key_file: 'str' = None,
+        private_key_credential: 'Union[config.Object, str]' = None, force_profile_update: 'bool' = None,
+        install_chain: 'bool' = None, bundle_certificate: 'bool' = None, overwrite_chain_file: 'bool' = None,
+        ca_chain_file: 'str' = None, use_fips: 'bool' = None, overwrite_certificate_and_key: 'bool' = None,
+        delete_previous_cert_and_key: 'bool' = None, provisioning_target: 'str' = None,
+        config_sync: 'bool' = None,
+        ssl_profile: 'str' = None, ssl_profile_type: 'str' = None, parent_ssl_profile: 'str' = None,
+        ssl_partition: 'str' = None, sni_server_name: 'str' = None, sni_default: 'bool' = None,
+        virtual_server: 'str' = None,
+        virtual_server_partition: 'str' = None, use_advanced_settings: 'bool' = None,
+        client_certificate_requirement: 'str' = None,
+        server_certificate_requirement: 'str' = None, frequency: 'str' = None,
+        chain_traversal_depth: 'int' = None,
+        certificate_bundle: 'Union[config.Object, str]' = None, authentication_name: 'str' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Creates a F5 LTM Advanced application object.
 
@@ -1072,7 +1151,9 @@ class F5LTMAdvanced(_ApplicationBase):
         """
         app_attrs = {
             ApplicationBaseAttributes.driver_name                    : 'appf5ltmadvanced',
-            F5LTMAdvancedAttributes.credential                       : self._get_dn(application_credential) if application_credential else None,
+            F5LTMAdvancedAttributes.credential                       : self._get_dn(
+                application_credential
+            ) if application_credential else None,
             F5LTMAdvancedAttributes.port                             : https_port,
             F5LTMAdvancedAttributes.ssh_port                         : ssh_port,
             F5LTMAdvancedAttributes.device_certificate               : {
@@ -1081,7 +1162,9 @@ class F5LTMAdvanced(_ApplicationBase):
             }.get(device_certificate),
             F5LTMAdvancedAttributes.use_basic_provisioning           : provisioning_mode,
             F5LTMAdvancedAttributes.certificate_name                 : certificate_and_key_file,
-            F5LTMAdvancedAttributes.private_key_password_credential  : self._get_dn(private_key_credential) if private_key_credential else None,
+            F5LTMAdvancedAttributes.private_key_password_credential  : self._get_dn(
+                private_key_credential
+            ) if private_key_credential else None,
             F5LTMAdvancedAttributes.force_profile_update             : {
                 True : "1",
                 False: "0"
@@ -1135,7 +1218,9 @@ class F5LTMAdvanced(_ApplicationBase):
             F5LTMAdvancedAttributes.server_authentication_certificate: server_certificate_requirement,
             F5LTMAdvancedAttributes.authentication_frequency         : frequency,
             F5LTMAdvancedAttributes.chain_traversal_depth            : chain_traversal_depth,
-            F5LTMAdvancedAttributes.bundle_certificate_collection    : self._get_dn(certificate_bundle) if certificate_bundle else None,
+            F5LTMAdvancedAttributes.bundle_certificate_collection    : self._get_dn(
+                certificate_bundle
+            ) if certificate_bundle else None,
             F5LTMAdvancedAttributes.server_authentication_name       : authentication_name,
         }
 
@@ -1152,18 +1237,19 @@ class F5LTMAdvanced(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Google Cloud Load Balancer')
 class GoogleCloudLoadBalancer(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.google_cloud_app)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               google_credential: 'Union[config.Object, str]' = None, target_proxy_type: 'str' = None,
-               target_proxy_name: 'str' = None, target_resource: 'str' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        google_credential: 'Union[config.Object, str]' = None, target_proxy_type: 'str' = None,
+        target_proxy_name: 'str' = None, target_resource: 'str' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1202,22 +1288,23 @@ class GoogleCloudLoadBalancer(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('IBM DataPower')
 class IBMDataPower(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.datapower)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None, xml_port: 'int' = None,
-               basic_provisioning_mode: 'bool' = None, crypto_certificate: 'str' = None, crypto_key: 'str' = None,
-               application_domain: 'str' = None, associate_to_profile: 'bool' = None, credential_type: 'str' = None,
-               profile_type: 'str' = None, crypto_profile_name: 'str' = None, ssl_profile_name: 'str' = None,
-               certificate_folder: 'str' = None, install_certificate_chain: 'bool' = None,
-               private_key_password_credential: 'Union[config.Object, str]' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None, xml_port: 'int' = None,
+        basic_provisioning_mode: 'bool' = None, crypto_certificate: 'str' = None, crypto_key: 'str' = None,
+        application_domain: 'str' = None, associate_to_profile: 'bool' = None, credential_type: 'str' = None,
+        profile_type: 'str' = None, crypto_profile_name: 'str' = None, ssl_profile_name: 'str' = None,
+        certificate_folder: 'str' = None, install_certificate_chain: 'bool' = None,
+        private_key_password_credential: 'Union[config.Object, str]' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1249,7 +1336,8 @@ class IBMDataPower(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name              : 'appdatapower',
             DataPowerAttributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             DataPowerAttributes.port                           : port,
             DataPowerAttributes.xml_port                       : xml_port,
             DataPowerAttributes.use_basic_provisioning         : {
@@ -1273,7 +1361,8 @@ class IBMDataPower(_ApplicationBase):
                 False: "0"
             }.get(install_certificate_chain),
             DataPowerAttributes.private_key_password_credential: self._get_dn(
-                private_key_password_credential) if private_key_password_credential else None,
+                private_key_password_credential
+            ) if private_key_password_credential else None,
         }
 
         if attributes:
@@ -1289,24 +1378,25 @@ class IBMDataPower(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('IBM GSK')
 class IBMGSK(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.gsk)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None, version: 'str' = None,
-               gsk_utility_path: 'str' = None, java_home_path: 'str' = None, key_store_path: 'str' = None,
-               key_store_credential: 'Union[config.Object, str]' = None, create: 'bool' = None,
-               replace_existing: 'bool' = None,
-               certificate_label: 'str' = None, reuse_label: 'bool' = None, use_fips: 'bool' = None,
-               password_validity: 'int' = None,
-               stash_password: 'bool' = None, default_certificate: 'bool' = None, owner: 'str' = None,
-               owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None, version: 'str' = None,
+        gsk_utility_path: 'str' = None, java_home_path: 'str' = None, key_store_path: 'str' = None,
+        key_store_credential: 'Union[config.Object, str]' = None, create: 'bool' = None,
+        replace_existing: 'bool' = None,
+        certificate_label: 'str' = None, reuse_label: 'bool' = None, use_fips: 'bool' = None,
+        password_validity: 'int' = None,
+        stash_password: 'bool' = None, default_certificate: 'bool' = None, owner: 'str' = None,
+        owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1342,7 +1432,8 @@ class IBMGSK(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'appgsk',
             GSKAttributes.credential             : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             GSKAttributes.port                   : port,
             GSKAttributes.version                : version,
             GSKAttributes.utility_path           : gsk_utility_path,
@@ -1377,17 +1468,21 @@ class IBMGSK(_ApplicationBase):
             }.get(default_certificate),
         }
         if owner or group:
-            app_attrs.update({
-                GSKAttributes.file_permissions_enabled: "1",
-                GSKAttributes.file_owner_user         : owner,
-                GSKAttributes.file_permissions_user   : owner_permissions,
-                GSKAttributes.file_owner_group        : group,
-                GSKAttributes.file_permissions_group  : group_permissions
-            })
+            app_attrs.update(
+                {
+                    GSKAttributes.file_permissions_enabled: "1",
+                    GSKAttributes.file_owner_user         : owner,
+                    GSKAttributes.file_permissions_user   : owner_permissions,
+                    GSKAttributes.file_owner_group        : group,
+                    GSKAttributes.file_permissions_group  : group_permissions
+                }
+            )
         else:
-            app_attrs.update({
-                GSKAttributes.file_permissions_enabled: "0"
-            })
+            app_attrs.update(
+                {
+                    GSKAttributes.file_permissions_enabled: "0"
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -1402,19 +1497,20 @@ class IBMGSK(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Imperva MX')
 class ImpervaMX(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.imperva_mx)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               user_credential: 'Union[config.Object, str]' = None, ssl_key_tool_path: 'str' = None, site: 'str' = None,
-               server_group: 'str' = None, service: 'str' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        user_credential: 'Union[config.Object, str]' = None, ssl_key_tool_path: 'str' = None, site: 'str' = None,
+        server_group: 'str' = None, service: 'str' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1438,7 +1534,8 @@ class ImpervaMX(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name  : 'appimpervamx',
             ImpervaMXAttributes.credential         : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             ImpervaMXAttributes.port               : port,
             ImpervaMXAttributes.username_credential: self._get_dn(user_credential) if user_credential else None,
             ImpervaMXAttributes.utility_path       : ssl_key_tool_path,
@@ -1460,27 +1557,28 @@ class ImpervaMX(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('JKS')
 class JKS(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.jks)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               private_key_location: 'str' = None,
-               slot_number: 'int' = None, java_vendor: 'str' = None, protection_type: 'str' = None,
-               softcard_identifier: 'str' = None,
-               keytool_path: 'str' = None, version: 'str' = None, store_type: 'str' = None, keystore_path: 'str' = None,
-               keystore_credential: 'Union[config.Object, str]' = None,
-               private_key_credential: 'Union[config.Object, str]' = None,
-               create: 'bool' = None, replace_existing: 'bool' = None, certificate_alias: 'str' = None,
-               reuse_alias: 'bool' = None,
-               owner: 'str' = None, owner_permissions: 'str' = None, group: 'str' = None,
-               group_permissions: 'str' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        private_key_location: 'str' = None,
+        slot_number: 'int' = None, java_vendor: 'str' = None, protection_type: 'str' = None,
+        softcard_identifier: 'str' = None,
+        keytool_path: 'str' = None, version: 'str' = None, store_type: 'str' = None, keystore_path: 'str' = None,
+        keystore_credential: 'Union[config.Object, str]' = None,
+        private_key_credential: 'Union[config.Object, str]' = None,
+        create: 'bool' = None, replace_existing: 'bool' = None, certificate_alias: 'str' = None,
+        reuse_alias: 'bool' = None,
+        owner: 'str' = None, owner_permissions: 'str' = None, group: 'str' = None,
+        group_permissions: 'str' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1518,7 +1616,8 @@ class JKS(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name        : 'appjks',
             JKSAttributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             JKSAttributes.port                           : port,
             JKSAttributes.private_key_location           : private_key_location,
             JKSAttributes.slot_number                    : slot_number,
@@ -1530,9 +1629,11 @@ class JKS(_ApplicationBase):
             JKSAttributes.store_type                     : store_type,
             JKSAttributes.key_store                      : keystore_path,
             JKSAttributes.key_store_credential           : self._get_dn(
-                keystore_credential) if keystore_credential else None,
+                keystore_credential
+            ) if keystore_credential else None,
             JKSAttributes.private_key_password_credential: self._get_dn(
-                private_key_credential) if private_key_credential else None,
+                private_key_credential
+            ) if private_key_credential else None,
             JKSAttributes.create_store                   : {
                 True : "1",
                 False: "0"
@@ -1548,17 +1649,21 @@ class JKS(_ApplicationBase):
             }.get(reuse_alias)
         }
         if owner or group:
-            app_attrs.update({
-                JKSAttributes.file_permissions_enabled: "1",
-                JKSAttributes.file_owner_user         : owner,
-                JKSAttributes.file_permissions_user   : owner_permissions,
-                JKSAttributes.file_owner_group        : group,
-                JKSAttributes.file_permissions_group  : group_permissions
-            })
+            app_attrs.update(
+                {
+                    JKSAttributes.file_permissions_enabled: "1",
+                    JKSAttributes.file_owner_user         : owner,
+                    JKSAttributes.file_permissions_user   : owner_permissions,
+                    JKSAttributes.file_owner_group        : group,
+                    JKSAttributes.file_permissions_group  : group_permissions
+                }
+            )
         else:
-            app_attrs.update({
-                JKSAttributes.file_permissions_enabled: "0"
-            })
+            app_attrs.update(
+                {
+                    JKSAttributes.file_permissions_enabled: "0"
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -1573,24 +1678,25 @@ class JKS(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Oracle iPlanet')
 class OracleIPlanet(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.iplanet)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               certificate_database_type: 'str' = None, certificate_database_path: 'str' = None,
-               certificate_database_credential: 'Union[config.Object, str]' = None,
-               certificate_database_prefix: 'str' = None,
-               create: 'bool' = None, replace_existing: 'bool' = None, certutil_path: 'str' = None,
-               pk12util_path: 'str' = None,
-               certificate_alias: 'str' = None, owner: 'str' = None, owner_permissions: 'str' = None,
-               group: 'str' = None,
-               group_permissions: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        certificate_database_type: 'str' = None, certificate_database_path: 'str' = None,
+        certificate_database_credential: 'Union[config.Object, str]' = None,
+        certificate_database_prefix: 'str' = None,
+        create: 'bool' = None, replace_existing: 'bool' = None, certutil_path: 'str' = None,
+        pk12util_path: 'str' = None,
+        certificate_alias: 'str' = None, owner: 'str' = None, owner_permissions: 'str' = None,
+        group: 'str' = None,
+        group_permissions: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1622,12 +1728,14 @@ class OracleIPlanet(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name : 'appiplanet',
             iPlanetAttributes.credential          : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             iPlanetAttributes.port                : port,
             iPlanetAttributes.database_type       : certificate_database_type,
             iPlanetAttributes.key_store           : certificate_database_path,
             iPlanetAttributes.key_store_credential: self._get_dn(
-                certificate_database_credential) if certificate_database_credential else None,
+                certificate_database_credential
+            ) if certificate_database_credential else None,
             iPlanetAttributes.database_prefix     : certificate_database_prefix,
             iPlanetAttributes.create_store        : {
                 True : "1",
@@ -1642,17 +1750,21 @@ class OracleIPlanet(_ApplicationBase):
             iPlanetAttributes.alias               : certificate_alias,
         }
         if owner or group:
-            app_attrs.update({
-                iPlanetAttributes.file_permissions_enabled: "1",
-                iPlanetAttributes.file_owner_user         : owner,
-                iPlanetAttributes.file_permissions_user   : owner_permissions,
-                iPlanetAttributes.file_owner_group        : group,
-                iPlanetAttributes.file_permissions_group  : group_permissions
-            })
+            app_attrs.update(
+                {
+                    iPlanetAttributes.file_permissions_enabled: "1",
+                    iPlanetAttributes.file_owner_user         : owner,
+                    iPlanetAttributes.file_permissions_user   : owner_permissions,
+                    iPlanetAttributes.file_owner_group        : group,
+                    iPlanetAttributes.file_permissions_group  : group_permissions
+                }
+            )
         else:
-            app_attrs.update({
-                iPlanetAttributes.file_permissions_enabled: "0"
-            })
+            app_attrs.update(
+                {
+                    iPlanetAttributes.file_permissions_enabled: "0"
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -1667,22 +1779,23 @@ class OracleIPlanet(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Palo Alto Network FW')
 class PaloAltoNetworkFW(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.palo_alto_network_fw)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               provision_certificate_only: 'bool' = None, private_key_password: 'Union[config.Object, str]' = None,
-               install_chain: 'bool' = None, replace_certificate: 'bool' = None,
-               decryption_policy_rule_name: 'str' = None,
-               create_decryption_policy_rule: 'bool' = None, decryption_profile_name: 'str' = None,
-               destination_addresses: 'List[str]' = None, lock_config: 'bool' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        provision_certificate_only: 'bool' = None, private_key_password: 'Union[config.Object, str]' = None,
+        install_chain: 'bool' = None, replace_certificate: 'bool' = None,
+        decryption_policy_rule_name: 'str' = None,
+        create_decryption_policy_rule: 'bool' = None, decryption_profile_name: 'str' = None,
+        destination_addresses: 'list[str]' = None, lock_config: 'bool' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1710,15 +1823,18 @@ class PaloAltoNetworkFW(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name                      : 'appPaloAlto',
             PaloAltoNetworkFWAttributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             PaloAltoNetworkFWAttributes.port                           : port,
             PaloAltoNetworkFWAttributes.certificate_only               : {
                 True : "1",
                 False: "2"
             }.get(
-                provision_certificate_only),
+                provision_certificate_only
+            ),
             PaloAltoNetworkFWAttributes.private_key_password_credential: self._get_dn(
-                private_key_password) if private_key_password else None,
+                private_key_password
+            ) if private_key_password else None,
             PaloAltoNetworkFWAttributes.chain_cert                     : {
                 True : "1",
                 False: "0"
@@ -1727,13 +1843,15 @@ class PaloAltoNetworkFW(_ApplicationBase):
                 True : "1",
                 False: "0"
             }.get(
-                replace_certificate),
+                replace_certificate
+            ),
             PaloAltoNetworkFWAttributes.decryption_policy              : decryption_policy_rule_name,
             PaloAltoNetworkFWAttributes.create_decryption_policy       : {
                 True : "1",
                 False: "0"
             }.get(
-                create_decryption_policy_rule),
+                create_decryption_policy_rule
+            ),
             PaloAltoNetworkFWAttributes.decryption_profile             : decryption_profile_name,
             PaloAltoNetworkFWAttributes.decryption_destinations        : destination_addresses,
             PaloAltoNetworkFWAttributes.lock_config                    : {
@@ -1755,20 +1873,21 @@ class PaloAltoNetworkFW(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('PEM')
 class PEM(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pem)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', private_key_file: 'str', certificate_file: 'str',
-               description: 'str' = None, contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               private_key_credential: 'Union[config.Object, str]' = None, certificate_chain_file: 'str' = None,
-               overwrite_existing_chain: 'bool' = None, owner: 'str' = None, owner_permissions: 'str' = None,
-               group: 'str' = None, group_permissions: 'str' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', private_key_file: 'str', certificate_file: 'str',
+        description: 'str' = None, contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        private_key_credential: 'Union[config.Object, str]' = None, certificate_chain_file: 'str' = None,
+        overwrite_existing_chain: 'bool' = None, owner: 'str' = None, owner_permissions: 'str' = None,
+        group: 'str' = None, group_permissions: 'str' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1796,11 +1915,13 @@ class PEM(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'appPem',
             ApacheAttributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             ApacheAttributes.port                           : port,
             ApacheAttributes.private_key_file               : private_key_file,
             ApacheAttributes.private_key_password_credential: self._get_dn(
-                private_key_credential) if private_key_credential else None,
+                private_key_credential
+            ) if private_key_credential else None,
             ApacheAttributes.certificate_file               : certificate_file,
             ApacheAttributes.certificate_chain_file         : certificate_chain_file,
             ApacheAttributes.overwrite_existing_chain       : {
@@ -1809,13 +1930,15 @@ class PEM(_ApplicationBase):
             }.get(overwrite_existing_chain),
         }
         if owner or group:
-            app_attrs.update({
-                ApacheAttributes.file_permissions_enabled: "1",
-                ApacheAttributes.file_owner_user         : owner,
-                ApacheAttributes.file_permissions_user   : owner_permissions,
-                ApacheAttributes.file_owner_group        : group,
-                ApacheAttributes.file_permissions_group  : group_permissions,
-            })
+            app_attrs.update(
+                {
+                    ApacheAttributes.file_permissions_enabled: "1",
+                    ApacheAttributes.file_owner_user         : owner,
+                    ApacheAttributes.file_permissions_user   : owner_permissions,
+                    ApacheAttributes.file_owner_group        : group,
+                    ApacheAttributes.file_permissions_group  : group_permissions,
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -1830,7 +1953,6 @@ class PEM(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('PKCS11')
 class PKCS11(_ApplicationBase):
     """
@@ -1841,17 +1963,19 @@ class PKCS11(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', connection_method: 'str', port: 'int',
-               protection_type: 'str', token_identifier: 'str', token_pin: 'Union[config.Object, str]',
-               label_format: 'str',
-               use_case: 'str', import_certificate_into_hsm: 'str', distribution_directory: 'str', cryptoki_file: 'str',
-               openssl_config_file: 'str', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None,
-               reverse_subject_dn: 'bool' = None, embed_sans_in_csr: 'bool' = None, requested_label: 'str' = None,
-               client_tools_directory: 'str' = None, openssl_directory: 'str' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', connection_method: 'str', port: 'int',
+        protection_type: 'str', token_identifier: 'str', token_pin: 'Union[config.Object, str]',
+        label_format: 'str',
+        use_case: 'str', import_certificate_into_hsm: 'str', distribution_directory: 'str', cryptoki_file: 'str',
+        openssl_config_file: 'str', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None,
+        reverse_subject_dn: 'bool' = None, embed_sans_in_csr: 'bool' = None, requested_label: 'str' = None,
+        client_tools_directory: 'str' = None, openssl_directory: 'str' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1885,7 +2009,8 @@ class PKCS11(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name     : 'apppkcs11',
             PKCS11Attributes.credential               : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             PKCS11Attributes.connection_method        : connection_method,
             PKCS11Attributes.port                     : port,
             PKCS11Attributes.hsm_protection_type      : protection_type,
@@ -1909,10 +2034,12 @@ class PKCS11(_ApplicationBase):
             }.get(embed_sans_in_csr),
         }
         if openssl_directory:
-            app_attrs.update({
-                PKCS11Attributes.hsm_openssl_type: "Custom OpenSSL Directory",
-                PKCS11Attributes.hsm_openssl_path: openssl_directory
-            })
+            app_attrs.update(
+                {
+                    PKCS11Attributes.hsm_openssl_type: "Custom OpenSSL Directory",
+                    PKCS11Attributes.hsm_openssl_path: openssl_directory
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -1927,21 +2054,22 @@ class PKCS11(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('PKCS #12')
 class PKCS12(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs_12)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', pkcs12_file: 'str', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               private_key_credential: 'Union[config.Object, str]' = None, friendly_name: 'str' = None,
-               certificate_chain_file: 'str' = None, create: 'bool' = None, replace_existing: 'bool' = None,
-               reuse_friendly_name: 'bool' = None, owner: 'str' = None,
-               owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', pkcs12_file: 'str', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        private_key_credential: 'Union[config.Object, str]' = None, friendly_name: 'str' = None,
+        certificate_chain_file: 'str' = None, create: 'bool' = None, replace_existing: 'bool' = None,
+        reuse_friendly_name: 'bool' = None, owner: 'str' = None,
+        owner_permissions: 'str' = None, group: 'str' = None, group_permissions: 'str' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -1971,11 +2099,13 @@ class PKCS12(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name           : 'apppkcs12',
             PKCS12Attributes.credential                     : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             PKCS12Attributes.port                           : port,
             PKCS12Attributes.certificate_file               : pkcs12_file,
             PKCS12Attributes.private_key_password_credential: self._get_dn(
-                private_key_credential) if private_key_credential else None,
+                private_key_credential
+            ) if private_key_credential else None,
             PKCS12Attributes.friendly_name                  : friendly_name,
             PKCS12Attributes.create_store                   : {
                 True : "1",
@@ -1992,23 +2122,29 @@ class PKCS12(_ApplicationBase):
         }
 
         if certificate_chain_file:
-            app_attrs.update({
-                PKCS12Attributes.bundle_certificate    : "0",
-                PKCS12Attributes.certificate_chain_file: certificate_chain_file
-            })
+            app_attrs.update(
+                {
+                    PKCS12Attributes.bundle_certificate    : "0",
+                    PKCS12Attributes.certificate_chain_file: certificate_chain_file
+                }
+            )
         else:
-            app_attrs.update({
-                PKCS12Attributes.bundle_certificate: "1"
-            })
+            app_attrs.update(
+                {
+                    PKCS12Attributes.bundle_certificate: "1"
+                }
+            )
 
         if owner or group:
-            app_attrs.update({
-                ApacheAttributes.file_permissions_enabled: "1",
-                ApacheAttributes.file_owner_user         : owner,
-                ApacheAttributes.file_permissions_user   : owner_permissions,
-                ApacheAttributes.file_owner_group        : group,
-                ApacheAttributes.file_permissions_group  : group_permissions,
-            })
+            app_attrs.update(
+                {
+                    ApacheAttributes.file_permissions_enabled: "1",
+                    ApacheAttributes.file_owner_user         : owner,
+                    ApacheAttributes.file_permissions_user   : owner_permissions,
+                    ApacheAttributes.file_owner_group        : group,
+                    ApacheAttributes.file_permissions_group  : group_permissions,
+                }
+            )
 
         if attributes:
             app_attrs.update(attributes)
@@ -2023,18 +2159,19 @@ class PKCS12(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Riverbed Steelhead')
 class RiverbedSteelHead(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.riverbed_steelhead)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               certificate_type: 'str' = None, replace_existing: 'bool' = None,
-               install_chain_certificates: 'bool' = None,
-               attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        certificate_type: 'str' = None, replace_existing: 'bool' = None,
+        install_chain_certificates: 'bool' = None,
+        attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -2077,17 +2214,18 @@ class RiverbedSteelHead(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('Tealeaf PCA')
 class TealeafPCA(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.tealeaf_pca)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               passive_capture_setup_path: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        passive_capture_setup_path: 'str' = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -2107,7 +2245,8 @@ class TealeafPCA(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name: 'apptealeafpca',
             TealeafPCAAttributes.credential      : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             TealeafPCAAttributes.port            : port,
             TealeafPCAAttributes.install_path    : passive_capture_setup_path
         }
@@ -2125,19 +2264,20 @@ class TealeafPCA(_ApplicationBase):
             get_if_already_exists=get_if_already_exists
         )
 
-
 @feature('VAM nShield')
 class VAMnShield(_ApplicationBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.vam_nshield)
 
-    def create(self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None,
-               approvers: 'List[Union[ident.Identity, str]]' = None,
-               application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
-               nshield_setup_path: 'str' = None,
-               module_id: 'int' = None, restart_device: 'bool' = None, attributes: dict = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, device: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None,
+        approvers: 'list[Union[ident.Identity, str]]' = None,
+        application_credential: 'Union[config.Object, str]' = None, port: 'int' = None,
+        nshield_setup_path: 'str' = None,
+        module_id: 'int' = None, restart_device: 'bool' = None, attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the application object.
@@ -2159,7 +2299,8 @@ class VAMnShield(_ApplicationBase):
         app_attrs = {
             ApplicationBaseAttributes.driver_name   : 'appvamnshield',
             VAMnShieldAttributes.credential         : self._get_dn(
-                application_credential) if application_credential else None,
+                application_credential
+            ) if application_credential else None,
             VAMnShieldAttributes.port               : port,
             VAMnShieldAttributes.install_path       : nshield_setup_path,
             VAMnShieldAttributes.module_id          : module_id,
@@ -2178,7 +2319,6 @@ class VAMnShield(_ApplicationBase):
             attributes=app_attrs,
             get_if_already_exists=get_if_already_exists
         )
-
 
 # endregion Applications
 
@@ -2239,9 +2379,14 @@ class _ApplicationGroupBase(FeatureBase):
         consumer_dns, certificate_dn = self._get_applications_in_group(application_group=application_group)
         return consumer_dns
 
-    def _create(self, application_dns: List[str], certificate: 'config.Object', attributes: dict = None):
+    def _create(self, application_dns: list[str], certificate: 'config.Object', attributes: dict = None):
         # Create the Application Group.
-        app_group = self._config_create(name=f'{certificate.name} - {self.certificate_suffix}', parent_folder_dn=certificate.parent, config_class=self.class_name, attributes=attributes)
+        app_group = self._config_create(
+            name=f'{certificate.name} - {self.certificate_suffix}',
+            parent_folder_dn=certificate.parent,
+            config_class=self.class_name,
+            attributes=attributes
+        )
         # Associate the Application Group :ref:`dn`.
         result = self._api.websdk.Config.WriteDn.post(
             object_dn=certificate.dn,
@@ -2274,14 +2419,15 @@ class _ApplicationGroupBase(FeatureBase):
         ).values
         return consumer_dns, certificate_dn
 
-
 @feature('Apache Group')
 class ApacheApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.apache_application_group)
 
-    def create(self, applications: 'List[Union[config.Object, str]]', certificate: 'Union[config.Object, str]',
-               common_data_location: str = None, attributes: dict = None):
+    def create(
+        self, applications: 'list[Union[config.Object, str]]', certificate: 'Union[config.Object, str]',
+        common_data_location: str = None, attributes: dict = None
+    ):
         """
         Args:
             applications: List of :ref:`config_object` or :ref:`dn` that will belong to the application group.
@@ -2299,8 +2445,10 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
         default_attrs = self._api.websdk.Config.ReadAll.post(object_dn=application_dns[0]).name_values
         if not common_data_location:
             try:
-                hsm = next(attr.values[0] for attr in default_attrs if
-                           attr.name == ApacheApplicationGroupAttributes.private_key_location)
+                hsm = next(
+                    attr.values[0] for attr in default_attrs if
+                    attr.name == ApacheApplicationGroupAttributes.private_key_location
+                )
             except StopIteration:
                 hsm = None
             if hsm == ApplicationAttributeValues.Apache.PrivateKeyLocation.thales_nshield_hsm:
@@ -2327,7 +2475,6 @@ class ApacheApplicationGroup(_ApplicationGroupBase):
 
         return self._create(application_dns=application_dns, certificate=certificate, attributes=group_attributes)
 
-
 @feature('PKCS11 Group')
 class PKCS11ApplicationGroup(_ApplicationGroupBase):
     """
@@ -2338,8 +2485,10 @@ class PKCS11ApplicationGroup(_ApplicationGroupBase):
     def __init__(self, api):
         super().__init__(api=api, class_name=Classes.pkcs11_application_group)
 
-    def create(self, applications: 'List[Union[config.Object, str]]', certificate: 'Union[config.Object, str]',
-               attributes: dict = None):
+    def create(
+        self, applications: 'list[Union[config.Object, str]]', certificate: 'Union[config.Object, str]',
+        attributes: dict = None
+    ):
         """
         Args:
             applications: List of :ref:`config_object` or :ref:`dn` that will belong to the application group.

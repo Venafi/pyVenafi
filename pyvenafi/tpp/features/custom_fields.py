@@ -1,11 +1,22 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
-from typing import List, Dict, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pyvenafi.tpp.api.websdk.models import config, metadata
-
+    from pyvenafi.tpp.api.websdk.models import (
+        config,
+        metadata,
+    )
 
 @dataclass
 class EffectiveValues:
@@ -13,12 +24,10 @@ class EffectiveValues:
     policy_dn: str
     values: list
 
-
 @dataclass
 class PolicyValues:
     locked: bool
     values: list
-
 
 @feature('Custom Field')
 class CustomField(FeatureBase):
@@ -41,14 +50,16 @@ class CustomField(FeatureBase):
         if result.code != 0:
             raise InvalidResultCode(code=result.code, code_description=result.metadata_result)
 
-    def create(self, label: str, name: str, classes: list, data_type: int, allowed_characters: List[str] = None,
-               allowed_values: List[str] = None, category: str = None, date_only: bool = None, default_values: List = None,
-               display_after: str = None, error_message: str = None, help_text: str = None, localization_table: str = None,
-               localized_help: Union[List[str], Dict] = None, localized_label: str = None, localized_set: str = None,
-               mandatory: bool = None, mask: str = None, maximum_length: int = None, minimum_length: int = None,
-               policyable: bool = None, regular_expression: str = None, render_hidden: bool = None,
-               render_read_only: bool = None, single: bool = None, time_only: bool = None,
-               get_if_already_exists: bool = True):
+    def create(
+        self, label: str, name: str, classes: list, data_type: int, allowed_characters: list[str] = None,
+        allowed_values: list[str] = None, category: str = None, date_only: bool = None, default_values: list = None,
+        display_after: str = None, error_message: str = None, help_text: str = None, localization_table: str = None,
+        localized_help: Union[list[str], dict] = None, localized_label: str = None, localized_set: str = None,
+        mandatory: bool = None, mask: str = None, maximum_length: int = None, minimum_length: int = None,
+        policyable: bool = None, regular_expression: str = None, render_hidden: bool = None,
+        render_read_only: bool = None, single: bool = None, time_only: bool = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Creates a Custom Field (or Metadata Item). Custom fields appear in the UI unless ``render_hidden = True``. If
         the custom field should be implemented on a folder policy, then set ``policyable=True``, otherwise the custom
@@ -180,7 +191,11 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return response.items
 
-    def read(self, obj: 'Union[config.Object, str]', custom_field: Union['config.Object', 'metadata.Item', str]) -> EffectiveValues:
+    def read(
+        self,
+        obj: 'Union[config.Object, str]',
+        custom_field: Union['config.Object', 'metadata.Item', str]
+    ) -> EffectiveValues:
         """
         Reads the effective value(s) of a custom field (which includes for policy values). Value(s) may be None.
 
@@ -193,7 +208,7 @@ class CustomField(FeatureBase):
 
             * **locked** *bool* - If ``True``, the ``values`` are locked by the policy.
             * **policy_dn** *str* - :ref:`dn` of the policy folder locking the values.
-            * **values** *List[str]* - List of values.
+            * **values** *list[str]* - List of values.
         """
         obj_dn = self._get_dn(obj)
         custom_field_guid = self._get_guid(custom_field, parent_dn=self._metadata_root_dn)
@@ -204,8 +219,10 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return EffectiveValues(locked=response.locked, values=response.values, policy_dn=response.policy_dn)
 
-    def read_policy(self, folder: 'Union[config.Object, str]', custom_field: Union['config.Object', 'metadata.Item', str],
-                    class_name: str) -> PolicyValues:
+    def read_policy(
+        self, folder: 'Union[config.Object, str]', custom_field: Union['config.Object', 'metadata.Item', str],
+        class_name: str
+    ) -> PolicyValues:
         """
         Reads the effective value(s) of a custom field set on a policy. Value(s) may be None.
 
@@ -218,7 +235,7 @@ class CustomField(FeatureBase):
             A *PolicyValues* object with these properties
 
             * **locked** *bool* - If ``True``, the ``values`` are locked by the policy.
-            * **values** *List[str]* - List of values.
+            * **values** *list[str]* - List of values.
         """
         folder_dn = self._get_dn(folder)
         custom_field_guid = self._get_guid(custom_field, parent_dn=self._metadata_root_dn)
@@ -230,14 +247,16 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return PolicyValues(locked=response.locked, values=response.values)
 
-    def update(self, custom_field: Union['config.Object', 'metadata.Item', str], allowed_characters: List[str] = None,
-               allowed_values: List[str] = None, category: str = None, classes: list = None, data_type: int = None,
-               date_only: bool = None, default_values: str = None, display_after: str = None, error_message: str = None,
-               help_text: str = None, label: str = None, localization_table: str = None, localized_help: str = None,
-               localized_label: str = None, localized_set: str = None, mandatory: bool = None, mask: str = None,
-               maximum_length: int = None, minimum_length: int = None, name: str = None, policyable: bool = None,
-               regular_expression: str = None, render_hidden: bool = None, render_read_only: bool = None, single: bool = None,
-               time_only: bool = None):
+    def update(
+        self, custom_field: Union['config.Object', 'metadata.Item', str], allowed_characters: list = None,
+        allowed_values: list = None, category: str = None, classes: list = None, data_type: int = None,
+        date_only: bool = None, default_values: str = None, display_after: str = None, error_message: str = None,
+        help_text: str = None, label: str = None, localization_table: str = None, localized_help: str = None,
+        localized_label: str = None, localized_set: str = None, mandatory: bool = None, mask: str = None,
+        maximum_length: int = None, minimum_length: int = None, name: str = None, policyable: bool = None,
+        regular_expression: str = None, render_hidden: bool = None, render_read_only: bool = None, single: bool = None,
+        time_only: bool = None
+    ):
         """
         Updates a custom field's properties. If a parameter is ``None`` it does not affect the current setting of that
         property. Property values are not reset to their defaults.
@@ -314,8 +333,13 @@ class CustomField(FeatureBase):
         self._validate_result_code(response.result)
         return self.get_item_details(custom_field=custom_field)
 
-    def write(self, obj: 'Union[config.Object, str]', custom_field: Union['config.Object', 'metadata.Item', str], values: List,
-              keep_existing: bool = True):
+    def write(
+        self,
+        obj: 'Union[config.Object, str]',
+        custom_field: Union['config.Object', 'metadata.Item', str],
+        values: list,
+        keep_existing: bool = True
+    ):
         """
         Writes a set of values to a custom field on the specified ``obj``. If ``keep_existing = False``,
         then all custom fields related to the ``obj`` are reset to their default values.
@@ -330,15 +354,23 @@ class CustomField(FeatureBase):
         custom_field_guid = self._get_guid(custom_field)
         response = self._api.websdk.Metadata.Set.post(
             dn=obj_dn,
-            guid_data=self._guid_data_list({
-                custom_field_guid: values
-            }),
+            guid_data=self._guid_data_list(
+                {
+                    custom_field_guid: values
+                }
+            ),
             keep_existing=keep_existing
         )
         self._validate_result_code(result=response.result)
 
-    def write_policy(self, folder: 'Union[config.Object, str]', custom_field: Union['config.Object', 'metadata.Item', str], class_name: str,
-                     values: List, locked: bool = False):
+    def write_policy(
+        self,
+        folder: 'Union[config.Object, str]',
+        custom_field: Union['config.Object', 'metadata.Item', str],
+        class_name: str,
+        values: list,
+        locked: bool = False
+    ):
         """
         Writes a set of values to a custom field on the specified ``folder``. The custom field MUST be policyable.
         To ensure, use :meth:``get`` to get the current settings and verify that ``policyable=True``. If not, use
@@ -356,9 +388,11 @@ class CustomField(FeatureBase):
         response = self._api.websdk.Metadata.SetPolicy.post(
             dn=folder_dn,
             config_class=str(class_name),
-            guid_data=self._guid_data_list({
-                custom_field_guid: values
-            }),
+            guid_data=self._guid_data_list(
+                {
+                    custom_field_guid: values
+                }
+            ),
             locked=locked
         )
         self._validate_result_code(result=response.result)

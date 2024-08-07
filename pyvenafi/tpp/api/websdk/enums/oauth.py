@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
+from packaging.version import Version
 
 @dataclass
 class Permissions:
@@ -10,21 +13,22 @@ class Permissions:
     manage: bool = None
     read: bool = None
     revoke: bool = None
+    recyclebin: bool = None
 
     def to_dict(self):
         return {
-            'approve' : self.approve,
-            'delete'  : self.delete,
-            'discover': self.discover,
-            'manage'  : self.manage,
-            'read'    : self.read,
-            'revoke'  : self.revoke
+            'approve'   : self.approve,
+            'delete'    : self.delete,
+            'discover'  : self.discover,
+            'manage'    : self.manage,
+            'read'      : self.read,
+            'revoke'    : self.revoke,
+            'recyclebin': self.recyclebin,
         }
 
     def effective(self):
         # "read" is implied when specifying the access permission, so it must be omitted.
         return [k for k, v in self.to_dict().items() if v and k != 'read']
-
 
 @dataclass
 class Scope:
@@ -76,9 +80,10 @@ class Scope:
                 scopes.append(f'{p.name}:{",".join(effective)}')
         return ';'.join(scopes)
 
-    def admin(self, delete: bool = False, read: bool = False):
+    def admin(self, delete: bool = False, read: bool = False, recyclebin: bool = False):
         self._admin.delete = delete
         self._admin.read = read
+        self._admin.recyclebin = recyclebin
         return self
 
     def agent(self, delete: bool = False, read: bool = False):
@@ -87,11 +92,25 @@ class Scope:
         return self
 
     @classmethod
-    def _all(cls, admin: bool = True, agent: bool = True, certificate: bool = True, configuration: bool = True, codesign: bool = True,
-             codesignclient: bool = True, restricted: bool = True, security: bool = True, ssh: bool = True, statistics: bool = True):
+    def _all(
+        cls,
+        version: str = "22.1.0",
+        admin: bool = True,
+        agent: bool = True,
+        certificate: bool = True,
+        configuration: bool = True,
+        codesign: bool = True,
+        codesignclient: bool = True,
+        restricted: bool = True,
+        security: bool = True,
+        ssh: bool = True,
+        statistics: bool = True
+    ):
         self = cls()
         if admin:
-            self.admin(delete=True, read=True)
+            self.admin(delete=True, read=True, recyclebin=False)
+            if Version(version=version) >= Version(version="22.2.0"):
+                self._admin.recyclebin = True
         if agent:
             self.agent(delete=True, read=True)
         if certificate:
@@ -116,8 +135,10 @@ class Scope:
         self._codesignclient.read = read
         return self
 
-    def certificate(self, approve: bool = False, delete: bool = False, discover: bool = False,
-                    manage: bool = False, read: bool = False, revoke: bool = False):
+    def certificate(
+        self, approve: bool = False, delete: bool = False, discover: bool = False,
+        manage: bool = False, read: bool = False, revoke: bool = False
+    ):
         self._certificate.approve = approve
         self._certificate.delete = delete
         self._certificate.discover = discover
@@ -150,8 +171,10 @@ class Scope:
         self._security.read = read
         return self
 
-    def ssh(self, approve: bool = False, delete: bool = False, discover: bool = False,
-            manage: bool = False, read: bool = False):
+    def ssh(
+        self, approve: bool = False, delete: bool = False, discover: bool = False,
+        manage: bool = False, read: bool = False
+    ):
         self._ssh.approve = approve
         self._ssh.delete = delete
         self._ssh.discover = discover
@@ -163,13 +186,11 @@ class Scope:
         self._statistics.read = read
         return self
 
-
 def main():
     scope = Scope(). \
         certificate(approve=True). \
         statistics(read=True)
     print(scope.to_string())
-
 
 if __name__ == '__main__':
     main()

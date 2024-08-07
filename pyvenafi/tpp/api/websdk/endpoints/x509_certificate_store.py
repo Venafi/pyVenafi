@@ -1,7 +1,15 @@
-from typing import List
-from pyvenafi.tpp.api.websdk.models import secret_store, certificate as cert
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import (
+    certificate as cert,
+    secret_store,
+)
 
 class _X509CertificateStore(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -13,8 +21,10 @@ class _X509CertificateStore(WebSdkEndpoint):
         self.Retrieve = self._Retrieve(api_obj=self._api_obj, url=f'{self._url}/Retrieve')
 
     class _Add(WebSdkEndpoint):
-        def post(self, owner_dn: str, certificate_collection_strings: List[str] = None, certificate_string: str = None,
-                 protection_key: str = None, typed_name_values: List[cert.NameTypeValue] = None):
+        def post(
+            self, owner_dn: str, certificate_collection_strings: list[str] = None, certificate_string: str = None,
+            protection_key: str = None, typed_name_values: list[cert.NameTypeValue] = None
+        ):
             body = {
                 'CertificateCollectionStrings': certificate_collection_strings,
                 'CertificateString'           : certificate_string,
@@ -42,8 +52,11 @@ class _X509CertificateStore(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
                 vault_id: int = ApiField(alias='VaultId')
-                vault_ids: List[int] = ApiField(alias='VaultIds', default_factory=list)
-                certificate_collection_strings: List[str] = ApiField(alias='CertificateCollectionStrings', default_factory=list)
+                vault_ids: list[int] = ApiField(alias='VaultIds', default_factory=list)
+                certificate_collection_strings: list[str] = ApiField(
+                    alias='CertificateCollectionStrings',
+                    default_factory=list
+                )
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -55,7 +68,7 @@ class _X509CertificateStore(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                vault_ids: List[int] = ApiField(alias='VaultIds', default_factory=list)
+                vault_ids: list[int] = ApiField(alias='VaultIds', default_factory=list)
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return generate_output(output_cls=Output, response=self._post(data=body))
@@ -81,7 +94,10 @@ class _X509CertificateStore(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 certificate_string: str = ApiField(alias='CertificateString')
-                typed_name_values: List[secret_store.TypedNameValues] = ApiField(alias='TypedNameValues', default_factory=list)
+                typed_name_values: list[secret_store.TypedNameValues] = ApiField(
+                    alias='TypedNameValues',
+                    default_factory=list
+                )
                 result: secret_store.Result = ApiField(alias='Result', converter=lambda x: secret_store.Result(code=x))
 
             return generate_output(output_cls=Output, response=self._post(data=body))

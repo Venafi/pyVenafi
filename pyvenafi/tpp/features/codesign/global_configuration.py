@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from typing import (
-    List,
     Literal,
 )
 
@@ -40,8 +41,8 @@ class CodeSignGlobalConfiguration(FeatureBase):
 
     def set_values(
         self,
-        approved_key_storage_locations: List[Literal['Software', 'HSM']] = None,
-        available_key_storage_locations: List[Literal['Software', 'HSM']] = None,
+        approved_key_storage_locations: list[Literal['Software', 'HSM']] = None,
+        available_key_storage_locations: list[Literal['Software', 'HSM']] = None,
         default_ca_container: str = None,
         default_certificate_container: str = None,
         default_credential_container: str = None,
@@ -65,16 +66,16 @@ class CodeSignGlobalConfiguration(FeatureBase):
 
         global_configuration = self.get()
         if any(
-                [
-                    approved_key_storage_locations,
-                    available_key_storage_locations,
-                    default_ca_container,
-                    default_certificate_container,
-                    default_credential_container,
-                    key_use_timeout,
-                    project_description_tooltip,
-                    request_in_progress_message,
-                ]
+            [
+                approved_key_storage_locations,
+                available_key_storage_locations,
+                default_ca_container,
+                default_certificate_container,
+                default_credential_container,
+                key_use_timeout,
+                project_description_tooltip,
+                request_in_progress_message,
+            ]
         ):
             if approved_key_storage_locations:
                 global_configuration.approved_key_storage_locations = Items(items=approved_key_storage_locations)

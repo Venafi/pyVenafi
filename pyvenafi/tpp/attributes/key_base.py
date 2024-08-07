@@ -1,7 +1,11 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.monitoring_base import MonitoringBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes
-
 
 class KeyBaseAttributes(MonitoringBaseAttributes, TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Key Base"
@@ -19,6 +23,7 @@ class KeyBaseAttributes(MonitoringBaseAttributes, TopAttributes, metaclass=Itera
     last_renewed_on = Attribute('Last Renewed On')
     management_type = Attribute('Management Type')
     max_uses = Attribute('Max Uses')
+    notified_on = Attribute('Notified On')
     origin = Attribute('Origin')
     private_key_vault_id = Attribute('Private Key Vault Id')
     real_name = Attribute('Real Name')

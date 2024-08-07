@@ -1,8 +1,18 @@
-from typing import Optional, Union
-from packaging.version import Version, parse as parse_version
+from __future__ import annotations
+
+from typing import (
+    Optional,
+    Union,
+)
+
+from packaging.version import (
+    parse as parse_version,
+    Version,
+)
+
 from pyvenafi.tpp.api.session import Session
-from pyvenafi.tpp.api.websdk.enums.oauth import Scope
 from pyvenafi.tpp.api.websdk.endpoints.authorize import _Authorize
+from pyvenafi.tpp.api.websdk.endpoints.bus_status import _BusStatus
 from pyvenafi.tpp.api.websdk.endpoints.certificates import _Certificates
 from pyvenafi.tpp.api.websdk.endpoints.client import _Client
 from pyvenafi.tpp.api.websdk.endpoints.codesign import _Codesign
@@ -16,6 +26,7 @@ from pyvenafi.tpp.api.websdk.endpoints.hsm_api import _HSMAPI
 from pyvenafi.tpp.api.websdk.endpoints.identity import _Identity
 from pyvenafi.tpp.api.websdk.endpoints.log import _Log
 from pyvenafi.tpp.api.websdk.endpoints.metadata import _Metadata
+from pyvenafi.tpp.api.websdk.endpoints.oauth import _Oauth
 from pyvenafi.tpp.api.websdk.endpoints.permissions import _Permissions
 from pyvenafi.tpp.api.websdk.endpoints.pki import _PKI
 from pyvenafi.tpp.api.websdk.endpoints.platform import _Platform
@@ -24,6 +35,7 @@ from pyvenafi.tpp.api.websdk.endpoints.processing_engines import _ProcessingEngi
 from pyvenafi.tpp.api.websdk.endpoints.recycle_bin import _RecycleBin
 from pyvenafi.tpp.api.websdk.endpoints.revoke import _Revoke
 from pyvenafi.tpp.api.websdk.endpoints.secret_store import _SecretStore
+from pyvenafi.tpp.api.websdk.endpoints.server_status import _ServerStatus
 from pyvenafi.tpp.api.websdk.endpoints.ssh import _SSH
 from pyvenafi.tpp.api.websdk.endpoints.ssh_certificates import _SSHCertificates
 from pyvenafi.tpp.api.websdk.endpoints.stats import _Stats
@@ -31,9 +43,9 @@ from pyvenafi.tpp.api.websdk.endpoints.system_status import _SystemStatus
 from pyvenafi.tpp.api.websdk.endpoints.teams import _Teams
 from pyvenafi.tpp.api.websdk.endpoints.workflow import _Workflow
 from pyvenafi.tpp.api.websdk.endpoints.x509_certificate_store import _X509CertificateStore
+from pyvenafi.tpp.api.websdk.enums.oauth import Scope
 
 _TPP_VERSION: Optional[Version] = None
-
 
 class WebSDK:
     """
@@ -42,10 +54,12 @@ class WebSDK:
     becomes invalidated. When initialized, all endpoints are also initialized.
     """
 
-    def __init__(self, host: str, username: str, password: str, token: str = None, application_id: str = None,
-                 scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
-                 certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
-                 connection_timeout: float = None, read_timeout: float = None):
+    def __init__(
+        self, host: str, username: str, password: str, token: str = None, application_id: str = None,
+        scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
+        certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
+        connection_timeout: float = None, read_timeout: float = None
+    ):
         """
         Authenticates the given user to WebSDK. The only supported method for authentication at this time
         is with a username and password. Either an OAuth bearer token can be obtained, which requires
@@ -113,6 +127,7 @@ class WebSDK:
         # region Initialize All WebSDK Endpoints
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
+        self.BusStatus = _BusStatus(self)
         self.Certificates = _Certificates(self)
         self.Client = _Client(self)
         self.Codesign = _Codesign(self)
@@ -126,6 +141,7 @@ class WebSDK:
         self.Identity = _Identity(self)
         self.Log = _Log(self)
         self.Metadata = _Metadata(self)
+        self.Oauth = _Oauth(self)
         self.Permissions = _Permissions(self)
         self.PKI = _PKI(self)
         self.Platform = _Platform(self)
@@ -134,6 +150,7 @@ class WebSDK:
         self.RecycleBin = _RecycleBin(self)
         self.Revoke = _Revoke(self)
         self.SecretStore = _SecretStore(self)
+        self.ServerStatus = _ServerStatus(self)
         self.SSH = _SSH(self)
         self.SSHCertificates = _SSHCertificates(self)
         self.Stats = _Stats(self)
@@ -166,8 +183,10 @@ class WebSDK:
         elif not self._token:
             if self._application_id:
                 if not self._scope:
-                    raise ValueError(f'OAuth authentication requires both an Application ID and a scope. '
-                                     f'The scope was not defined.')
+                    raise ValueError(
+                        f'OAuth authentication requires both an Application ID and a scope. '
+                        f'The scope was not defined.'
+                    )
                 if self._certificate_path and self._key_file_path:
                     oauth = self.Authorize.Certificate.post(
                         client_id=self._application_id,

@@ -1,10 +1,19 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.client_portal_base import ClientPortalBaseAttributes
 from pyvenafi.tpp.attributes.client_work_base import ClientWorkBaseAttributes
 from pyvenafi.tpp.attributes.x509_certificate_base import X509CertificateBaseAttributes
 
-
-class ClientUserCertificateWorkAttributes(ClientPortalBaseAttributes, ClientWorkBaseAttributes, X509CertificateBaseAttributes, metaclass=IterableMeta):
+class ClientUserCertificateWorkAttributes(
+    ClientPortalBaseAttributes,
+    ClientWorkBaseAttributes,
+    X509CertificateBaseAttributes,
+    metaclass=IterableMeta
+):
     __config_class__ = "Client User Certificate Work"
     certificate_bundle_capacity = Attribute('Certificate Bundle Capacity')
     certificate_bundle_capacity_mobile_config = Attribute('Certificate Bundle Capacity Mobile Config')

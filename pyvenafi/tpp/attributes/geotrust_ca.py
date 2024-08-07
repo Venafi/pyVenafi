@@ -1,6 +1,10 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.http_ca_base import HTTPCABaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    Attribute,
+    IterableMeta,
+)
+from pyvenafi.tpp.attributes.http_ca_base import HTTPCABaseAttributes
 
 class GeotrustCAAttributes(HTTPCABaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Geotrust CA"

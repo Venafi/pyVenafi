@@ -1,17 +1,21 @@
+from __future__ import annotations
+
 from typing import Union
+
 from pyvenafi.tpp.api.websdk.enums.oauth import Scope
 from pyvenafi.tpp.api.websdk.websdk import WebSDK
-
 
 class Authenticate:
     """
     Authenticates to TPP WebSDK.
     """
 
-    def __init__(self, host: str, username: str = None, password: str = None, application_id: str = None,
-                 scope: Union[Scope, str] = None, websdk_token: str = None, proxies: dict = None,
-                 certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
-                 connection_timeout: float = None, read_timeout: float = None, **kwargs):
+    def __init__(
+        self, host: str, username: str = None, password: str = None, application_id: str = None,
+        scope: Union[Scope, str] = None, websdk_token: str = None, proxies: dict = None,
+        certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
+        connection_timeout: float = None, read_timeout: float = None, **kwargs
+    ):
         """
         For WebSDK, either an OAuth bearer token can be obtained, which requires both an Application ID and scope
         to be supplied, or the X-Venafi-API-Key can be obtained, which has been deprecated since TPP version 20.1.
@@ -34,11 +38,13 @@ class Authenticate:
             connection_timeout: Timeout in seconds to establish a connection to the API service.
             read_timeout: Timeout in seconds between each byte received from the server.
         """
-        self.websdk = WebSDK(host=host, username=username, password=password, token=websdk_token,
-                             application_id=application_id, scope=scope, proxies=proxies,
-                             certificate_path=certificate_path, key_file_path=key_file_path,
-                             verify_ssl=verify_ssl, connection_timeout=connection_timeout,
-                             read_timeout=read_timeout)
+        self.websdk = WebSDK(
+            host=host, username=username, password=password, token=websdk_token,
+            application_id=application_id, scope=scope, proxies=proxies,
+            certificate_path=certificate_path, key_file_path=key_file_path,
+            verify_ssl=verify_ssl, connection_timeout=connection_timeout,
+            read_timeout=read_timeout
+        )
         self._tpp_version = self.websdk.tpp_version
         self._host = host
         self._username = username

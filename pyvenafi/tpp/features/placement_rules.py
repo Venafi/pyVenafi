@@ -1,11 +1,19 @@
+from __future__ import annotations
+
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from pyvenafi.tpp.api.websdk.enums.config import PlacementRulesAttributeValues
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
 from pyvenafi.tpp.attributes.layout_rule_base import LayoutRuleBaseAttributes
-from typing import List, Union, TYPE_CHECKING
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 
 if TYPE_CHECKING:
     from pyvenafi.tpp.api.websdk.models import config
-
 
 @feature('Placement Rule Condition')
 class PlacementRuleCondition:
@@ -113,7 +121,7 @@ class PlacementRuleCondition:
             """
             return f'{self._field} == "{value}"'
 
-        def in_list(self, values: List[str]):
+        def in_list(self, values: list[str]):
             """
             Args:
                 values: List of strings to match.
@@ -174,16 +182,17 @@ class PlacementRuleCondition:
                 return f"{self._field} != {self._forced_value}"
             return f"{self._field} == 0"
 
-
 @feature('Placement Rules')
 class PlacementRules(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
         self._layout_rules_dn = r'\VED\Layout Root\Rules'
 
-    def _format_rule_attribute(self, conditions: List[str], device_location: 'Union[config.Object, str]',
-                               certificate_location: 'Union[config.Object, str]' = None,
-                               rule_type: str = 'X509 Certificate'):
+    def _format_rule_attribute(
+        self, conditions: list[str], device_location: 'Union[config.Object, str]',
+        certificate_location: 'Union[config.Object, str]' = None,
+        rule_type: str = 'X509 Certificate'
+    ):
         """
         Formats the rule attribute on the Placement Rule object.
         """
@@ -197,9 +206,11 @@ class PlacementRules(FeatureBase):
 
         return f"{context}\n{rule_types}\n{conditions}\n{locations}\nEND"
 
-    def create(self, name: str, conditions: List[str], device_location: 'Union[config.Object, str]',
-               certificate_location: 'Union[config.Object, str]' = None, rule_type: str = 'X509 Certificate',
-               get_if_already_exists: bool = True):
+    def create(
+        self, name: str, conditions: list[str], device_location: 'Union[config.Object, str]',
+        certificate_location: 'Union[config.Object, str]' = None, rule_type: str = 'X509 Certificate',
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the placement rule.
@@ -219,9 +230,15 @@ class PlacementRules(FeatureBase):
             certificate_location=certificate_location,
             rule_type=rule_type
         )
-        rule = self._config_create(name=name, parent_folder_dn=self._layout_rules_dn, config_class=LayoutRuleBaseAttributes.__config_class__, attributes={
-            LayoutRuleBaseAttributes.rule: rule_attr
-        }, get_if_already_exists=get_if_already_exists)
+        rule = self._config_create(
+            name=name,
+            parent_folder_dn=self._layout_rules_dn,
+            config_class=LayoutRuleBaseAttributes.__config_class__,
+            attributes={
+                LayoutRuleBaseAttributes.rule: rule_attr
+            },
+            get_if_already_exists=get_if_already_exists
+        )
         return rule
 
     def delete(self, rule: 'Union[config.Object, str]'):
@@ -234,8 +251,10 @@ class PlacementRules(FeatureBase):
         rule_dn = self._get_dn(rule, parent_dn=self._layout_rules_dn)
         self._config_delete(object_dn=rule_dn)
 
-    def update(self, rule: 'Union[config.Object, str]', conditions: List[str] = None, device_location: str = None,
-               certificate_location: str = None, rule_type: str = 'X509 Certificate'):
+    def update(
+        self, rule: 'Union[config.Object, str]', conditions: list[str] = None, device_location: str = None,
+        certificate_location: str = None, rule_type: str = 'X509 Certificate'
+    ):
         """
         Updates a placement rule. If certain parameters are not provided, the current parameters will be rewritten
         to the object. In other words, only the parameters given are updated.

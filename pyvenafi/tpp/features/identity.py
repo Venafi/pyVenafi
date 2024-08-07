@@ -1,21 +1,31 @@
-from pyvenafi.tpp.attributes.user import UserAttributes
+from __future__ import annotations
+
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
 from pyvenafi.tpp.api.websdk.enums.config import IdentityAttributeValues
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import UnexpectedValue
+from pyvenafi.tpp.attributes.user import UserAttributes
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 from pyvenafi.tpp.features.definitions.classes import Classes
-from typing import List, Union, TYPE_CHECKING
+from pyvenafi.tpp.features.definitions.exceptions import UnexpectedValue
 
 if TYPE_CHECKING:
     from pyvenafi.tpp.api.websdk.models import identity as ident
-
 
 class _IdentityBase(FeatureBase):
     def __init__(self, api):
         super().__init__(api=api)
         self._identity_dn = r'\VED\Identity'
 
-    def _find(self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = False,
-              is_user: bool = False):
+    def _find(
+        self, name: str, limit: int = 100, is_distribution_group: bool = False, is_security_group: bool = False,
+        is_user: bool = False
+    ):
         identity_type = 0
         if is_user:
             identity_type += IdentityAttributeValues.Types.user
@@ -93,7 +103,7 @@ class _IdentityBase(FeatureBase):
             attribute_name: The name of the attribute.
 
         Returns:
-            List[str]: List of attribute values.
+            list[str]: List of attribute values.
         """
         prefixed_name = self._get_prefixed_name(identity)
         result = self._api.websdk.Identity.ReadAttribute.post(
@@ -102,14 +112,15 @@ class _IdentityBase(FeatureBase):
         )
         return result.attributes
 
-
 @feature('User')
 class User(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, password: str, email_address: str, first_name: str = None, last_name: str = None,
-               add_to_everyone_group: bool = True, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, password: str, email_address: str, first_name: str = None, last_name: str = None,
+        add_to_everyone_group: bool = True, get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the user. The *local:* prefix is not required.
@@ -128,7 +139,13 @@ class User(_IdentityBase):
             UserAttributes.given_name            : first_name,
             UserAttributes.surname               : last_name
         }
-        user = self._config_create(name=name, parent_folder_dn=self._identity_dn, config_class=Classes.user, attributes=attributes, get_if_already_exists=get_if_already_exists)
+        user = self._config_create(
+            name=name,
+            parent_folder_dn=self._identity_dn,
+            config_class=Classes.user,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
         user = self.set_password(user=f'local:{user.name}', new_password=password)
 
         if add_to_everyone_group:
@@ -195,13 +212,12 @@ class User(_IdentityBase):
         )
         return response.identity
 
-
 @feature('Group')
 class Group(_IdentityBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def add_members(self, group: 'Union[ident.Identity, str]', members: 'List[Union[ident.Identity, str]]'):
+    def add_members(self, group: 'Union[ident.Identity, str]', members: 'list[Union[ident.Identity, str]]'):
         """
         Args:
             group: :ref:`identity_object` or :ref:`prefixed_name` of the group.
@@ -229,7 +245,12 @@ class Group(_IdentityBase):
 
         return result.members
 
-    def create(self, name: str, members: 'List[Union[ident.Identity, ident.Identity, str]]' = None, get_if_already_exists: bool = True):
+    def create(
+        self,
+        name: str,
+        members: 'list[Union[ident.Identity, ident.Identity, str]]' = None,
+        get_if_already_exists: bool = True
+    ):
         """
         Args:
             name: Name of the user. The *local:* prefix is not required.
@@ -312,7 +333,7 @@ class Group(_IdentityBase):
 
         return result.identities
 
-    def remove_members(self, group: 'Union[ident.Identity, str]', members: 'List[Union[ident.Identity, str]]'):
+    def remove_members(self, group: 'Union[ident.Identity, str]', members: 'list[Union[ident.Identity, str]]'):
         """
         Removes members from a local group.
 

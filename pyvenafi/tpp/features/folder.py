@@ -1,13 +1,24 @@
-from typing import List, Union
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
+from __future__ import annotations
+
+from concurrent.futures.thread import ThreadPoolExecutor
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.websdk.models import (
+    config,
+    identity as ident,
+)
+from pyvenafi.tpp.attributes.policy import PolicyAttributes
+from pyvenafi.tpp.dn import DN
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
 from pyvenafi.tpp.features.definitions.exceptions import (
     FeatureException,
     InvalidResultCode,
 )
-from pyvenafi.tpp.attributes.policy import PolicyAttributes
-from concurrent.futures.thread import ThreadPoolExecutor
-from pyvenafi.tpp.api.websdk.models import config, identity as ident
-from pyvenafi.tpp.dn import DN
 
 @feature('Folder')
 class Folder(FeatureBase):
@@ -48,7 +59,7 @@ class Folder(FeatureBase):
             value=workflow_dn
         )
 
-    def clear_policy(self, folder: 'Union[config.Object, str]', class_name: str, attributes: Union[dict, List[str]]):
+    def clear_policy(self, folder: 'Union[config.Object, str]', class_name: str, attributes: Union[dict, list[str]]):
         """
         If ``attributes`` are not provided, clears the policy attribute name along with all of its values
         on a folder. If ``attributes`` are provided, then only the corresponding policy attribute values
@@ -92,12 +103,14 @@ class Folder(FeatureBase):
                     if result.code != 1:
                         raise InvalidResultCode(code=result.code, code_description=result.config_result)
         else:
-            raise TypeError(f'Expected attributes to be of type List[str] or Dict, but got {type(attributes)} instead.')
+            raise TypeError(f'Expected attributes to be of type list[str] or Dict, but got {type(attributes)} instead.')
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
-               contacts: 'List[Union[ident.Identity, str]]' = None, log_server: 'Union[config.Object, str]' = None,
-               engines: 'List[Union[config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True,
-               create_path: bool = False):
+    def create(
+        self, name: str, parent_folder: 'Union[config.Object, str]', description: 'str' = None,
+        contacts: 'list[Union[ident.Identity, str]]' = None, log_server: 'Union[config.Object, str]' = None,
+        engines: 'list[Union[config.Object, str]]' = None, attributes: dict = None, get_if_already_exists: bool = True,
+        create_path: bool = False
+    ):
         """
         Args:
             name: Name of the folder.
@@ -151,7 +164,13 @@ class Folder(FeatureBase):
             self.set_engines(folder=folder, engines=engines, append_engines=True)
         return folder
 
-    def delete(self, folder: 'Union[config.Object, str]', recursive: bool = True, delete_owners_from_secrets: bool = True, concurrency: int = 1):
+    def delete(
+        self,
+        folder: 'Union[config.Object, str]',
+        recursive: bool = True,
+        delete_owners_from_secrets: bool = True,
+        concurrency: int = 1
+    ):
         """
         Deletes the folder. The folder is, by default, deleted recursively. All deleted objects will also be removed from their
         secret associations. If the secret association is then orphaned, then it is deleted.
@@ -210,8 +229,10 @@ class Folder(FeatureBase):
         folder_guid = self._get_guid(folder)
         return self._api.websdk.ProcessingEngines.Folder.Guid(folder_guid).get().engines
 
-    def search(self, object_name_pattern: str = '*', object_types: List[str] = None, recursive: bool = True,
-               starting_dn: str = None):
+    def search(
+        self, object_name_pattern: str = '*', object_types: list[str] = None, recursive: bool = True,
+        starting_dn: str = None
+    ):
         """
         Searches for an object with the given object name pattern. The pattern is a regular expression. An object type
         can be supplied to specify the TPP object type, such as 'X509 Certificate'. If a starting :ref:`dn` is given without
@@ -248,8 +269,10 @@ class Folder(FeatureBase):
 
         return objects
 
-    def set_engines(self, folder: 'Union[config.Object, str]', engines: 'List[Union[config.Object, str]]',
-                    append_engines: bool = False):
+    def set_engines(
+        self, folder: 'Union[config.Object, str]', engines: 'list[Union[config.Object, str]]',
+        append_engines: bool = False
+    ):
         """
         Sets ``engines`` as processing engines for the folder.
 
@@ -276,7 +299,7 @@ class Folder(FeatureBase):
             attribute_name: The attribute name.
 
         Returns:
-            Tuple[List[str], bool]: A tuple of
+            Tuple[list[str], bool]: A tuple of
 
                 * List of values
                 * Locked boolean

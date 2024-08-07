@@ -1,6 +1,8 @@
+from __future__ import annotations
+
+import time
 from typing import (
     Iterable,
-    List,
     Union,
 )
 
@@ -88,15 +90,15 @@ class CodeSignProject(FeatureBase):
 
         # Update project attributes
         if any(
-                [
-                    applications,
-                    auditors,
-                    description,
-                    key_use_approvers,
-                    key_users,
-                    owners,
-                    environments,
-                ]
+            [
+                applications,
+                auditors,
+                description,
+                key_use_approvers,
+                key_users,
+                owners,
+                environments,
+            ]
         ):
             project.description = description
             project.application_dns = Items(items=applications)
@@ -206,7 +208,7 @@ class CodeSignProject(FeatureBase):
         self,
         _filter: str = None,
         rights: Union[int, Rights] = None
-    ) -> List[Project]:
+    ) -> list[Project]:
         """
         Enumerate the projects.
 
@@ -215,7 +217,7 @@ class CodeSignProject(FeatureBase):
             rights: Show only projects for which you have a minimum set of permissions. See :class:`~.models.codesign.Rights`.
 
         Returns:
-            List[:class:`~.models.codesign.Project`]
+            list[:class:`~.models.codesign.Project`]
         """
         if isinstance(rights, Rights):
             rights = rights.value
@@ -253,7 +255,7 @@ class CodeSignProject(FeatureBase):
         Args:
             project: :class:`~.models.codesign.Project` to disable.
         """
-        self.update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.disabled)
+        self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.disabled)
 
     def submit_for_approval(
         self,
@@ -297,10 +299,13 @@ class CodeSignProject(FeatureBase):
         """
         dn = self._get_dn(project)
         project = self.get(dn=dn)
+        if project.status == int(CodeSignAttributeValues.ProjectStatus.enabled):
+            return
         if project.status == int(CodeSignAttributeValues.ProjectStatus.draft):
             self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.pending)
+            time.sleep(5)
             self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
-        if project.status == int(CodeSignAttributeValues.ProjectStatus.pending):
+        else:
             self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
 
     def _update_status(
@@ -310,5 +315,6 @@ class CodeSignProject(FeatureBase):
     ):
         project_status = int(project_status)
         dn = self._get_dn(project)
-        self._api.websdk.Codesign.UpdateProjectStatus.post(project_status=project_status, dn=dn)
+        output = self._api.websdk.Codesign.UpdateProjectStatus.post(project_status=project_status, dn=dn)
+        output.assert_valid_response()
     # endregion Update Project Status

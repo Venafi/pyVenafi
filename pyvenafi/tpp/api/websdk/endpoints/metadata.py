@@ -1,7 +1,19 @@
-from typing import List, Union
-from pyvenafi.tpp.api.websdk.models import config, metadata
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import (
+    config,
+    metadata,
+)
 
 class _Metadata(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -17,7 +29,10 @@ class _Metadata(WebSdkEndpoint):
         self.Items = self._Items(api_obj=self._api_obj, url=f'{self._url}/Items')
         self.LoadItem = self._LoadItem(api_obj=self._api_obj, url=f'{self._url}/LoadItem')
         self.LoadItemGuid = self._LoadItemGuid(api_obj=self._api_obj, url=f'{self._url}/LoadItemGuid')
-        self.ReadEffectiveValues = self._ReadEffectiveValues(api_obj=self._api_obj, url=f'{self._url}/ReadEffectiveValues')
+        self.ReadEffectiveValues = self._ReadEffectiveValues(
+            api_obj=self._api_obj,
+            url=f'{self._url}/ReadEffectiveValues'
+        )
         self.ReadPolicy = self._ReadPolicy(api_obj=self._api_obj, url=f'{self._url}/ReadPolicy')
         self.Set = self._Set(api_obj=self._api_obj, url=f'{self._url}/Set')
         self.SetPolicy = self._SetPolicy(api_obj=self._api_obj, url=f'{self._url}/SetPolicy')
@@ -48,7 +63,7 @@ class _Metadata(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 locked: bool = ApiField(alias='Locked')
-                objects: List[config.Object] = ApiField(default_factory=list, alias='Objects')
+                objects: list[config.Object] = ApiField(default_factory=list, alias='Objects')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return generate_output(output_cls=Output, response=self._post(data=body))
@@ -87,7 +102,7 @@ class _Metadata(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                item_guids: List[str] = ApiField(default_factory=list, alias='ItemGuids')
+                item_guids: list[str] = ApiField(default_factory=list, alias='ItemGuids')
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
@@ -100,7 +115,7 @@ class _Metadata(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                items: List[metadata.Item] = ApiField(default_factory=list, alias='Items')
+                items: list[metadata.Item] = ApiField(default_factory=list, alias='Items')
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
@@ -113,7 +128,7 @@ class _Metadata(WebSdkEndpoint):
             }
 
             class Output(WebSdkOutputModel):
-                items: List[metadata.Item] = ApiField(default_factory=list, alias='Items')
+                items: list[metadata.Item] = ApiField(default_factory=list, alias='Items')
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
@@ -127,7 +142,7 @@ class _Metadata(WebSdkEndpoint):
 
             class Output(WebSdkOutputModel):
                 locked: bool = ApiField(alias='Locked')
-                policy_items: List[metadata.PolicyItem] = ApiField(default_factory=list, alias='PolicyItems')
+                policy_items: list[metadata.PolicyItem] = ApiField(default_factory=list, alias='PolicyItems')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
             return generate_output(output_cls=Output, response=self._post(data=body))
@@ -135,7 +150,7 @@ class _Metadata(WebSdkEndpoint):
     class _Items(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
-                items: List[metadata.Item] = ApiField(default_factory=list, alias='Items')
+                items: list[metadata.Item] = ApiField(default_factory=list, alias='Items')
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
 
@@ -178,7 +193,7 @@ class _Metadata(WebSdkEndpoint):
                 locked: bool = ApiField(alias='Locked')
                 policy_dn: str = ApiField(alias='PolicyDn')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
-                values: List[str] = ApiField(default_factory=list, alias='Values')
+                values: list[str] = ApiField(default_factory=list, alias='Values')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
@@ -193,12 +208,12 @@ class _Metadata(WebSdkEndpoint):
             class Output(WebSdkOutputModel):
                 locked: bool = ApiField(alias='Locked')
                 result: metadata.Result = ApiField(alias='Result', converter=lambda x: metadata.Result(code=x))
-                values: List[str] = ApiField(default_factory=list, alias='Values')
+                values: list[str] = ApiField(default_factory=list, alias='Values')
 
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Set(WebSdkEndpoint):
-        def post(self, dn: str, guid_data: List[metadata.GuidData], keep_existing: bool = False):
+        def post(self, dn: str, guid_data: list[metadata.GuidData], keep_existing: bool = False):
             body = {
                 'DN'          : dn,
                 'GuidData'    : guid_data,
@@ -212,7 +227,7 @@ class _Metadata(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _SetPolicy(WebSdkEndpoint):
-        def post(self, dn: str, config_class: str, guid_data: List[metadata.GuidData], locked: bool = False):
+        def post(self, dn: str, config_class: str, guid_data: list[metadata.GuidData], locked: bool = False):
             body = {
                 'DN'         : dn,
                 'ConfigClass': config_class,

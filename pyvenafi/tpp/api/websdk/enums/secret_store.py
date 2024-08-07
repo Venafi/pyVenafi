@@ -1,11 +1,11 @@
+from __future__ import annotations
+
 class Namespaces:
     config = 'config'
-
 
 class KeyNames:
     software_default = 'Software:Default'
     null_null = 'Null:Null'
-
 
 class VaultTypes:
     none = 0

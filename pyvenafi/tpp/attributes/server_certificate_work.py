@@ -1,10 +1,19 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
 from pyvenafi.tpp.attributes.client_work_base import ClientWorkBaseAttributes
 from pyvenafi.tpp.attributes.x509_certificate_base import X509CertificateBaseAttributes
 
-
-class ServerCertificateWorkAttributes(ApplicationBaseAttributes, ClientWorkBaseAttributes, X509CertificateBaseAttributes, metaclass=IterableMeta):
+class ServerCertificateWorkAttributes(
+    ApplicationBaseAttributes,
+    ClientWorkBaseAttributes,
+    X509CertificateBaseAttributes,
+    metaclass=IterableMeta
+):
     __config_class__ = "Server Certificate Work"
     application_attribute = Attribute('Application Attribute')
     application_type = Attribute('Application Type')

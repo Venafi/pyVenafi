@@ -1,7 +1,11 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
-from pyvenafi.tpp.attributes.metadata_base import MetadataBaseAttributes
+from __future__ import annotations
 
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
+from pyvenafi.tpp.attributes.metadata_base import MetadataBaseAttributes
 
 class MetadataChoiceAttributes(MetadataBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Metadata Choice"
-    single = Attribute('Single')
+    single = Attribute('Single', min_version='21.4')

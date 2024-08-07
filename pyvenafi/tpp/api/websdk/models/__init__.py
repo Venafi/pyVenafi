@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyvenafi.tpp.api.websdk.models import (
     certificate,
     client,

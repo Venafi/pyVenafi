@@ -1,11 +1,21 @@
-from pyvenafi.tpp.attributes._helper import IterableMeta, Attribute
+from __future__ import annotations
+
+from pyvenafi.tpp.attributes._helper import (
+    IterableMeta,
+    Attribute,
+)
 from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.ssh_device_base import SshDeviceBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes
 from pyvenafi.tpp.attributes.validation_base import ValidationBaseAttributes
 
-
-class DeviceAttributes(ConnectionBaseAttributes, SshDeviceBaseAttributes, TopAttributes, ValidationBaseAttributes, metaclass=IterableMeta):
+class DeviceAttributes(
+    ConnectionBaseAttributes,
+    SshDeviceBaseAttributes,
+    TopAttributes,
+    ValidationBaseAttributes,
+    metaclass=IterableMeta
+):
     __config_class__ = "Device"
     adaptable_script_max_file_size = Attribute('Adaptable Script Max File Size')
     agentless_discovery_stage = Attribute('Agentless Discovery Stage')
@@ -42,13 +52,17 @@ class DeviceAttributes(ConnectionBaseAttributes, SshDeviceBaseAttributes, TopAtt
     onboard_discovery_stage = Attribute('Onboard Discovery Stage')
     onboard_discovery_status = Attribute('Onboard Discovery Status')
     onboard_discovery_to_do = Attribute('Onboard Discovery To Do')
+    pbes2_algorithm = Attribute('PBES2 Algorithm')
+    placement_id = Attribute('Placement Id')
     placement_job_dn = Attribute('Placement Job Dn')
     powershell_script = Attribute('PowerShell Script')
     powershell_script_hash_vault_id = Attribute('PowerShell Script Hash Vault Id')
     previous_connection_credential_hash = Attribute('Previous Connection Credential Hash')
     privilege_elevation_command = Attribute('Privilege Elevation Command')
+    progress = Attribute('Progress')
     protection_key = Attribute('Protection Key')
     required_sync_confirmation = Attribute('Required Sync Confirmation')
+    restricted_pbes2_algorithms = Attribute('Restricted PBES2 Algorithms')
     ssh_key_encryption = Attribute('SSH Key Encryption')
     script_execution_timeout = Attribute('Script Execution Timeout')
     status = Attribute('Status')

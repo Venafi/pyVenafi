@@ -1,8 +1,14 @@
-from datetime import datetime
-from typing import List
-from pyvenafi.tpp.api.websdk.models import system_status
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from datetime import datetime
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import system_status
 
 class _SystemStatus(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -12,7 +18,7 @@ class _SystemStatus(WebSdkEndpoint):
 
     def get(self):
         class Output(WebSdkOutputModel):
-            engines: List[system_status.SystemStatus] = ApiField(default_factory=list)
+            engines: list[system_status.SystemStatus] = ApiField(default_factory=list)
 
         return generate_output(output_cls=Output, response=self._get(), root_field='engines')
 
@@ -38,9 +44,9 @@ class _SystemStatus(WebSdkEndpoint):
                     status: str = ApiField(alias='Status')
                     upgrade_start_time: datetime = ApiField(alias='UpgradeStartTime')
                     upgrade_stop_time: datetime = ApiField(alias='UpgradeStopTime')
-                    tasks_completed: List[system_status.Task] = ApiField(default_factory=list, alias='TasksCompleted')
-                    tasks_pending: List[system_status.Task] = ApiField(default_factory=list, alias='TasksPending')
-                    tasks_running: List[system_status.Task] = ApiField(default_factory=list, alias='TasksRunning')
+                    tasks_completed: list[system_status.Task] = ApiField(default_factory=list, alias='TasksCompleted')
+                    tasks_pending: list[system_status.Task] = ApiField(default_factory=list, alias='TasksPending')
+                    tasks_running: list[system_status.Task] = ApiField(default_factory=list, alias='TasksRunning')
 
                 return generate_output(output_cls=Output, response=self._get(params=params))
 
@@ -51,14 +57,17 @@ class _SystemStatus(WebSdkEndpoint):
                 }
 
                 class Output(WebSdkOutputModel):
-                    engines: List[system_status.UpgradeStatus] = ApiField(default_factory=list, alias='Engines')
+                    engines: list[system_status.UpgradeStatus] = ApiField(default_factory=list, alias='Engines')
 
                 return generate_output(output_cls=Output, response=self._get(params=params))
 
         class _History(WebSdkEndpoint):
             def get(self):
                 class Output(WebSdkOutputModel):
-                    upgrade_history: List[system_status.UpgradeInfo] = ApiField(default_factory=list, alias='UpgradeHistory')
+                    upgrade_history: list[system_status.UpgradeInfo] = ApiField(
+                        default_factory=list,
+                        alias='UpgradeHistory'
+                    )
 
                 return generate_output(output_cls=Output, response=self._get())
 

@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from typing import (
-    List,
     Union,
 )
 
@@ -138,7 +139,7 @@ class CodeSignRights(FeatureBase):
     def get_trustee_rights(
         self,
         trustee: Union[str, Identity]
-    ) -> List[Rights]:
+    ) -> list[Rights]:
         """
         Returns all CodeSign Protect code signing rights for a user.
 
@@ -156,7 +157,7 @@ class CodeSignRights(FeatureBase):
     def get_object_rights(
         self,
         obj: Union[str, Object]
-    ) -> List[Rights]:
+    ) -> list[Rights]:
         """
         Returns all identities that have rights to a CodeSign Protect object.
 

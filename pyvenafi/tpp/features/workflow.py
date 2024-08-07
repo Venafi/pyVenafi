@@ -1,18 +1,33 @@
+from __future__ import annotations
+
 import base64
 import hashlib
 from dataclasses import dataclass
 from datetime import datetime
-from pyvenafi.tpp.features.bases.feature_base import FeatureBase, feature
-from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
-from pyvenafi.tpp.api.websdk.enums.secret_store import KeyNames, Namespaces, VaultTypes
-from pyvenafi.tpp.attributes.workflow import WorkflowAttributes
+from typing import (
+    TYPE_CHECKING,
+    Union,
+)
+
+from pyvenafi.tpp.api.websdk.enums.secret_store import (
+    KeyNames,
+    Namespaces,
+    VaultTypes,
+)
 from pyvenafi.tpp.attributes.adaptable_workflow import AdaptableWorkflowAttributes
+from pyvenafi.tpp.attributes.workflow import WorkflowAttributes
 from pyvenafi.tpp.attributes.workflow_ticket import WorkflowTicketAttributes
-from typing import List, Union, TYPE_CHECKING
+from pyvenafi.tpp.features.bases.feature_base import (
+    feature,
+    FeatureBase,
+)
+from pyvenafi.tpp.features.definitions.exceptions import InvalidResultCode
 
 if TYPE_CHECKING:
-    from pyvenafi.tpp.api.websdk.models import config, identity as ident
-
+    from pyvenafi.tpp.api.websdk.models import (
+        config,
+        identity as ident,
+    )
 
 class _WorkflowBase(FeatureBase):
     def __init__(self, api):
@@ -45,12 +60,26 @@ class _WorkflowBase(FeatureBase):
             raise_error_if_not_exists=raise_error_if_not_exists
         )
 
-    def _create(self, name: str, parent_folder: 'Union[config.Object, str]', is_adaptable: bool, stage: int, injection_command: str = None,
-                application_class_name: str = None, approvers: str = None, reason_code: int = None, attributes: dict = None,
-                get_if_already_exists: bool = True):
-        workflow = self._config_create(name=name, parent_folder_dn=self._get_dn(parent_folder),
-                                       config_class=WorkflowAttributes.__config_class__ if not is_adaptable else AdaptableWorkflowAttributes.__config_class__, attributes=attributes,
-                                       get_if_already_exists=get_if_already_exists)
+    def _create(
+        self,
+        name: str,
+        parent_folder: 'Union[config.Object, str]',
+        is_adaptable: bool,
+        stage: int,
+        injection_command: str = None,
+        application_class_name: str = None,
+        approvers: str = None,
+        reason_code: int = None,
+        attributes: dict = None,
+        get_if_already_exists: bool = True
+    ):
+        workflow = self._config_create(
+            name=name,
+            parent_folder_dn=self._get_dn(parent_folder),
+            config_class=WorkflowAttributes.__config_class__ if not is_adaptable else AdaptableWorkflowAttributes.__config_class__,
+            attributes=attributes,
+            get_if_already_exists=get_if_already_exists
+        )
 
         if is_adaptable:
             driver_str = '037Venafi.Drivers.AdaptableWFApplication'
@@ -85,15 +114,16 @@ class _WorkflowBase(FeatureBase):
 
         return workflow
 
-
 @feature('Adaptable Workflow')
 class AdaptableWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, powershell_script_name: str,
-               powershell_script_content: bytes, approvers: 'List[Union[ident.Identity, str]]' = None, reason_code: int = None,
-               use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, powershell_script_name: str,
+        powershell_script_content: bytes, approvers: 'list[Union[ident.Identity, str]]' = None, reason_code: int = None,
+        use_approvers_from_powershell_script: bool = False, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         .. note::
             If a list of approver identity objects is provided, they will be added directly to the workflow as approvers of the
@@ -165,13 +195,11 @@ class AdaptableWorkflow(_WorkflowBase):
             ).hexdigest().encode()
         ).decode()
 
-
 @dataclass
 class RC:
     code: int
     name: str
     description: str
-
 
 @feature('Reason Code')
 class ReasonCode(FeatureBase):
@@ -229,15 +257,16 @@ class ReasonCode(FeatureBase):
                     value=rc
                 )
 
-
 @feature('Standard Workflow')
 class StandardWorkflow(_WorkflowBase):
     def __init__(self, api):
         super().__init__(api=api)
 
-    def create(self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, injection_command: str = None,
-               application_class_name: str = None, approvers: 'List[Union[ident.Identity, str]]' = None, macro: str = None,
-               reason_code: int = None, attributes: dict = None, get_if_already_exists: bool = True):
+    def create(
+        self, name: str, parent_folder: 'Union[config.Object, str]', stage: int, injection_command: str = None,
+        application_class_name: str = None, approvers: 'list[Union[ident.Identity, str]]' = None, macro: str = None,
+        reason_code: int = None, attributes: dict = None, get_if_already_exists: bool = True
+    ):
         """
         One of ``injection_command`` or ``approvers`` must be given.
 
@@ -283,7 +312,6 @@ class StandardWorkflow(_WorkflowBase):
 
         return workflow
 
-
 @feature('Ticket')
 class Ticket(FeatureBase):
     def __init__(self, api):
@@ -295,9 +323,11 @@ class Ticket(FeatureBase):
         if result.code != 1:
             raise InvalidResultCode(code=result.code, code_description=result.workflow_result)
 
-    def create(self, obj: 'Union[config.Object, str]', workflow: 'Union[config.Object, str]',
-               approvers: Union['List[ident.Identity]', List[str]], reason: Union[RC, int, str],
-               user_data: str = None):
+    def create(
+        self, obj: 'Union[config.Object, str]', workflow: 'Union[config.Object, str]',
+        approvers: Union['list[ident.Identity]', list[str]], reason: Union[RC, int, str],
+        user_data: str = None
+    ):
         """
         Creates a workflow ticket on ``obj`` only if the object is in a state to received a workflow ticket.
 
@@ -365,7 +395,13 @@ class Ticket(FeatureBase):
         result = self._api.websdk.Workflow.Ticket.Exists.post(guid=ticket_name).result
         return result.code == 1
 
-    def get(self, obj: 'Union[config.Object, str]' = None, user_data: str = None, expected_num_tickets: int = 1, timeout: int = 10):
+    def get(
+        self,
+        obj: 'Union[config.Object, str]' = None,
+        user_data: str = None,
+        expected_num_tickets: int = 1,
+        timeout: int = 10
+    ):
         """
         Gets all tickets associated to ``obj``. If the minimum expected number of tickets do not
         appear on the ``obj``, then a warning is logged and whatever was found is returned and no
@@ -430,8 +466,10 @@ class Ticket(FeatureBase):
         self._validate_result_code(result=response.result)
         return response.status
 
-    def update_status(self, ticket_name: str, status: str, explanation: str = None, scheduled_start: datetime = None,
-                      scheduled_stop: datetime = None):
+    def update_status(
+        self, ticket_name: str, status: str, explanation: str = None, scheduled_start: datetime = None,
+        scheduled_stop: datetime = None
+    ):
         """
         Updates the status of a workflow ticket with the optional explanations and scheduled approvals. Marking a
         ticket as "Approved" will automatically delete the ticket.

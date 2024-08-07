@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class _Application:
     def __init__(self):
         self._adaptable = None
@@ -201,7 +203,6 @@ class _Application:
             self._vamnshield = VAMnShieldAttributes
         return self._vamnshield
 
-
 class _ApplicationGroup:
     def __init__(self):
         self._apache = None
@@ -220,7 +221,6 @@ class _ApplicationGroup:
             from pyvenafi.tpp.attributes.pkcs11_application_group import PKCS11ApplicationGroupAttributes
             self._pkcs11 = PKCS11ApplicationGroupAttributes
         return self._pkcs11
-
 
 class _CertificateAuthority:
     def __init__(self):
@@ -248,7 +248,6 @@ class _CertificateAuthority:
             from pyvenafi.tpp.attributes.self_signed_ca import SelfSignedCAAttributes
             self._self_signed = SelfSignedCAAttributes
         return self._self_signed
-
 
 class _ClientWork:
     def __init__(self):
@@ -350,7 +349,6 @@ class _ClientWork:
             self._user_certificate_creation = ClientUserCertificateWorkAttributes
         return self._user_certificate_creation
 
-
 class _Credential:
     def __init__(self):
         self._amazon = None
@@ -402,7 +400,6 @@ class _Credential:
             self._upcred = UsernamePasswordCredentialAttributes
         return self._upcred
 
-
 class _Discovery:
     def __init__(self):
         self._network = None
@@ -413,7 +410,6 @@ class _Discovery:
             from pyvenafi.tpp.attributes.discovery import DiscoveryAttributes
             self._network = DiscoveryAttributes
         return self._network
-
 
 class _Identity:
     def __init__(self):
@@ -433,7 +429,6 @@ class _Identity:
             from pyvenafi.tpp.attributes.user import UserAttributes
             self._user = UserAttributes
         return self._user
-
 
 class _Platforms:
     def __init__(self):
@@ -551,7 +546,6 @@ class _Platforms:
             self._validation_manager = ValidationManagerAttributes
         return self._validation_manager
 
-
 class _Workflow:
     def __init__(self):
         self._adaptable = None
@@ -578,7 +572,6 @@ class _Workflow:
             from pyvenafi.tpp.attributes.workflow_ticket import WorkflowTicketAttributes
             self._ticket = WorkflowTicketAttributes
         return self._ticket
-
 
 class _Attributes:
     def __init__(self):
@@ -700,6 +693,5 @@ class _Attributes:
     def workflow(self) -> _Workflow:
         self._workflow = self._workflow or _Workflow()
         return self._workflow
-
 
 Attributes = _Attributes()

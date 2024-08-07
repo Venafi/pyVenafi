@@ -1,6 +1,8 @@
 from packaging.version import Version
-from typing import List, Generator
-
+from typing import (
+    List,
+    Generator,
+)
 
 class Attribute(str):
     def __init__(self, name: str, min_version: str = None):
@@ -11,7 +13,6 @@ class Attribute(str):
 
     def __new__(cls, name: str, *args, **kwargs):
         return str().__new__(cls, name)
-
 
 class IterableMeta(type):
     __config_class__ = None

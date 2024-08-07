@@ -1,7 +1,16 @@
-from typing import List, Union
-from pyvenafi.tpp.api.websdk.models import pki
-from pyvenafi.tpp.api.api_base import WebSdkEndpoint, WebSdkOutputModel, generate_output, ApiField
+from __future__ import annotations
 
+from typing import (
+    Union,
+)
+
+from pyvenafi.tpp.api.api_base import (
+    ApiField,
+    generate_output,
+    WebSdkEndpoint,
+    WebSdkOutputModel,
+)
+from pyvenafi.tpp.api.websdk.models import pki
 
 class _PKI(WebSdkEndpoint):
     def __init__(self, api_obj):
@@ -20,14 +29,16 @@ class _PKI(WebSdkEndpoint):
 
             def get(self):
                 class Output(WebSdkOutputModel):
-                    pkis: List[pki.PKI] = ApiField(default_factory=list, alias='pkis')
+                    pkis: list[pki.PKI] = ApiField(default_factory=list, alias='pkis')
 
                 return generate_output(output_cls=Output, response=self._get())
 
-            def post(self, certificate: Union[dict, pki.Certificate], folder_dn: str, pki_path: str, roles: List[str],
-                     create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
-                     installation: Union[dict, pki.Installation] = None, key_algorithm: str = None, key_bit_size: str = None,
-                     ocsp_address: str = None):
+            def post(
+                self, certificate: Union[dict, pki.Certificate], folder_dn: str, pki_path: str, roles: list[str],
+                create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
+                installation: Union[dict, pki.Installation] = None, key_algorithm: str = None, key_bit_size: str = None,
+                ocsp_address: str = None
+            ):
                 body = {
                     'Certificate'               : certificate,
                     'CreateCertificateAuthority': create_certificate_authority,
@@ -70,7 +81,7 @@ class _PKI(WebSdkEndpoint):
                         folder_dn: str = ApiField(alias='FolderDn')
                         installation: pki.Installation = ApiField(alias='Installation')
                         pki_path: str = ApiField(alias='PkiPath')
-                        roles: List[str] = ApiField(alias='Roles', default_factory=list)
+                        roles: list[str] = ApiField(alias='Roles', default_factory=list)
 
                     return generate_output(output_cls=Output, response=self._get())
 
@@ -82,10 +93,20 @@ class _PKI(WebSdkEndpoint):
 
                     return generate_output(output_cls=Output, response=self._post(data={}))
 
-                def put(self, folder_dn: str, pki_path: str, roles: List[str], certificate: Union[dict, pki.Certificate] = None,
-                        create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
-                        installation: Union[dict, pki.Installation] = None, key_algorithm: str = None,
-                        key_bit_size: str = None, ocsp_address: str = None):
+                def put(
+                    self,
+                    folder_dn: str,
+                    pki_path: str,
+                    roles: list[str],
+                    certificate: Union[dict, pki.Certificate] = None,
+                    create_certificate_authority: bool = True,
+                    create_pki_role: bool = False,
+                    crl_address: str = None,
+                    installation: Union[dict, pki.Installation] = None,
+                    key_algorithm: str = None,
+                    key_bit_size: str = None,
+                    ocsp_address: str = None
+                ):
                     body = {
                         'Certificate'               : certificate,
                         'CreateCertificateAuthority': create_certificate_authority,
@@ -117,10 +138,12 @@ class _PKI(WebSdkEndpoint):
                         return generate_output(output_cls=Output, response=self._post(data={}))
 
         class _Role(WebSdkEndpoint):
-            def post(self, folder_dn: str, role_name: str, city: str = None, country: str = None,
-                     enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
-                     organization: str = None, organizational_units: List[str] = None, state: str = None,
-                     whitelisted_domains: List[str] = None):
+            def post(
+                self, folder_dn: str, role_name: str, city: str = None, country: str = None,
+                enhanced_key_usage: list[str] = None, key_algorithm: str = None, key_bit_size: str = None,
+                organization: str = None, organizational_units: list[str] = None, state: str = None,
+                whitelisted_domains: list[str] = None
+            ):
                 body = {
                     'City'               : city,
                     'Country'            : country,
@@ -160,17 +183,19 @@ class _PKI(WebSdkEndpoint):
                         key_algorithm: str = ApiField(alias='KeyAlgorithm')
                         key_bit_size: str = ApiField(alias='KeyBitSize')
                         organization: str = ApiField(alias='Organization')
-                        organizational_units: List[str] = ApiField(default_factory=list, alias='OrganizationalUnits')
+                        organizational_units: list[str] = ApiField(default_factory=list, alias='OrganizationalUnits')
                         role_name: str = ApiField(alias='RoleName')
                         state: str = ApiField(alias='State')
-                        whitelisted_domains: List[str] = ApiField(default_factory=list, alias='WhitelistedDomains')
+                        whitelisted_domains: list[str] = ApiField(default_factory=list, alias='WhitelistedDomains')
 
                     return generate_output(output_cls=Output, response=self._get())
 
-                def put(self, city: str = None, country: str = None,
-                        enhanced_key_usage: List[str] = None, key_algorithm: str = None, key_bit_size: str = None,
-                        organization: str = None, organizational_units: List[str] = None, state: str = None,
-                        whitelisted_domains: List[str] = None):
+                def put(
+                    self, city: str = None, country: str = None,
+                    enhanced_key_usage: list[str] = None, key_algorithm: str = None, key_bit_size: str = None,
+                    organization: str = None, organizational_units: list[str] = None, state: str = None,
+                    whitelisted_domains: list[str] = None
+                ):
                     body = {
                         'City'               : city,
                         'Country'            : country,

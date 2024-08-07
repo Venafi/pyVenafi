@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyvenafi.tpp.features.application import (
     Adaptable as AdaptableApplication,
     AmazonAWS,
@@ -253,7 +255,6 @@ class _Application:
         self._vamnshield = self._vamnshield or VAMnShield(self._api)
         return self._vamnshield
 
-
 class _ApplicationGroup:
     def __init__(self, api):
         self._api = api
@@ -270,7 +271,6 @@ class _ApplicationGroup:
     def pkcs11(self) -> PKCS11ApplicationGroup:
         self._pkcs11 = self._pkcs11 or PKCS11ApplicationGroup(self._api)
         return self._pkcs11
-
 
 class _CertificateAuthority:
     def __init__(self, api):
@@ -365,7 +365,6 @@ class _ClientGroup:
         self._venafi_agent = self._venafi_agent or VenafiAgent(self._api)
         return self._venafi_agent
 
-
 class _ClientWork:
     def __init__(self, api):
         self._api = api
@@ -406,51 +405,58 @@ class _ClientWork:
     @property
     def certificate_enrollment_via_est_protocol(self) -> CertificateEnrollmentViaESTProtocol:
         self._certificate_enrollment_via_est_protocol = self._certificate_enrollment_via_est_protocol or CertificateEnrollmentViaESTProtocol(
-            self._api)
+            self._api
+        )
         return self._certificate_enrollment_via_est_protocol
 
     @property
     def certificate_installation(self) -> CertificateInstallation:
         self._certificate_installation = self._certificate_installation or CertificateInstallation(
-            self._api)
+            self._api
+        )
         return self._certificate_installation
 
     @property
     def dynamic_provisioning(self) -> DynamicProvisioning:
         self._dynamic_provisioning = self._dynamic_provisioning or DynamicProvisioning(
-            self._api)
+            self._api
+        )
         return self._dynamic_provisioning
 
     @property
     def ssh_device_placement(self) -> SSHDevicePlacement:
         self._ssh_device_placement = self._ssh_device_placement or SSHDevicePlacement(
-            self._api)
+            self._api
+        )
         return self._ssh_device_placement
 
     @property
     def ssh_discovery(self) -> SSHDiscovery:
         self._ssh_discovery = self._ssh_discovery or SSHDiscovery(
-            self._api)
+            self._api
+        )
         return self._ssh_discovery
 
     @property
     def ssh_key_usage(self) -> SSHKeyUsage:
         self._ssh_key_usage = self._ssh_key_usage or SSHKeyUsage(
-            self._api)
+            self._api
+        )
         return self._ssh_key_usage
 
     @property
     def ssh_remediation(self) -> SSHRemediation:
         self._ssh_remediation = self._ssh_remediation or SSHRemediation(
-            self._api)
+            self._api
+        )
         return self._ssh_remediation
 
     @property
     def user_certificate_creation(self) -> UserCertificateCreation:
         self._user_certificate_creation = self._user_certificate_creation or UserCertificateCreation(
-            self._api)
+            self._api
+        )
         return self._user_certificate_creation
-
 
 class _Credential:
     def __init__(self, api):
@@ -499,7 +505,6 @@ class _Credential:
         self._upcred = self._upcred or UsernamePasswordCredential(self._api)
         return self._upcred
 
-
 class _OnboardDiscovery:
     def __init__(self, api):
         self._api = api
@@ -547,7 +552,6 @@ class _OnboardDiscovery:
         self._netscaler = self._netscaler or NetScalerOnboardDiscovery(self._api)
         return self._netscaler
 
-
 class _Discovery:
     def __init__(self, api):
         self._api = api
@@ -564,7 +568,7 @@ class _Discovery:
     def onboard(self) -> _OnboardDiscovery:
         self._onboard = self._onboard or _OnboardDiscovery(api=self._api)
         return self._onboard
-    
+
 class _Identity:
     def __init__(self, api):
         self._api = api
@@ -610,7 +614,6 @@ class _Workflow:
     def ticket(self) -> Ticket:
         self._ticket = self._ticket or Ticket(self._api)
         return self._ticket
-
 
 class Features:
     def __init__(self, api):

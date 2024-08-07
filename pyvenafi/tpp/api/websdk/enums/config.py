@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class _PropertyMeta(type):
     def __iter__(self):
         for item in dir(self):
@@ -8,7 +10,6 @@ class _PropertyMeta(type):
 
     def list(cls):
         return list(iter(cls))
-
 
 # region Application
 class _ApplicationAttributesBase(metaclass=_PropertyMeta):
@@ -83,7 +84,6 @@ class _ApplicationAttributesBase(metaclass=_PropertyMeta):
     validation_results = "Validation Results"
     workflow = "Workflow"
     workflow_block = "Workflow Block"
-
 
 class ApplicationAttributes(_ApplicationAttributesBase, metaclass=_PropertyMeta):
     class Adaptable(metaclass=_PropertyMeta):
@@ -481,7 +481,6 @@ class ApplicationAttributes(_ApplicationAttributesBase, metaclass=_PropertyMeta)
         km_local_path = "KM Local Path"
         module_id = "Module Id"
 
-
 class _ApplicationAttributeValuesBase(metaclass=_PropertyMeta):
     class ConnectionMethod(metaclass=_PropertyMeta):
         https = 'HTTPS'
@@ -506,7 +505,6 @@ class _ApplicationAttributeValuesBase(metaclass=_PropertyMeta):
         module = 'Module'
         ocs = 'Operator Card Set'
         softcard = 'Softcard'
-
 
 class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_PropertyMeta):
     class AmazonAWS(metaclass=_PropertyMeta):
@@ -708,7 +706,6 @@ class ApplicationAttributeValues(_ApplicationAttributeValuesBase, metaclass=_Pro
             secure_peering = 1
             web = 2
 
-
 class ApplicationClassNames(metaclass=_PropertyMeta):
     adaptable_app = "Adaptable App"
     amazon_app = "Amazon App"
@@ -746,11 +743,9 @@ class ApplicationClassNames(metaclass=_PropertyMeta):
     vam_nshield = "VAM nShield"
     vam_cavium = "VamCavium"
 
-
 class ApplicationGroupClassNames(metaclass=_PropertyMeta):
     apache_application_group = 'Apache Application Group'
     pkcs11_application_group = 'PKCS11 Application Group'
-
 
 class _ApplicationGroupAttributesBase(metaclass=_PropertyMeta):
     certificate = "Certificate"
@@ -759,7 +754,6 @@ class _ApplicationGroupAttributesBase(metaclass=_PropertyMeta):
     enrollment_application_dn = "Enrollment Application DN"
     primary_application_dn = "Primary Application DN"
     private_key_stub_vault_id = "Private Key Stub Vault Id"
-
 
 class ApplicationGroupAttributes(_ApplicationGroupAttributesBase, metaclass=_PropertyMeta):
     class Apache(metaclass=_PropertyMeta):
@@ -795,7 +789,6 @@ class ApplicationGroupAttributes(_ApplicationGroupAttributesBase, metaclass=_Pro
         hsm_tmp_issued_kpblob = "HSM:TMP Issued KPBlob"
         hsm_token_label = "HSM:Token Label"
         hsm_token_password = "HSM:Token Password"
-
 
 # endregion
 
@@ -1069,7 +1062,6 @@ class CertificateAttributes(metaclass=_PropertyMeta):
     xolphin_ca_reference_number = "Xolphin CA:Reference Number"
     xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
-
 class CertificateAttributeValues(metaclass=_PropertyMeta):
     class EllipticCurve(metaclass=_PropertyMeta):
         p256 = 'P256'
@@ -1110,7 +1102,6 @@ class CertificateAttributeValues(metaclass=_PropertyMeta):
         certificate_superceded = 4
         original_use_no_longer_valid = 5
 
-
 class CertificateClassNames(metaclass=_PropertyMeta):
     client_certificate_work = "Client Certificate Work"
     client_user_certificate_work = "Client User Certificate Work"
@@ -1122,7 +1113,6 @@ class CertificateClassNames(metaclass=_PropertyMeta):
     x509_root_certificate = "X509 Root Certificate"
     x509_server_certificate = "X509 Server Certificate"
     x509_user_certificate = "X509 User Certificate"
-
 
 # endregion
 
@@ -1164,7 +1154,6 @@ class _CertificateAuthorityAttributesBase(metaclass=_PropertyMeta):
     vault_id = "Vault Id"
     workflow = "Workflow"
     workflow_block = "Workflow Block"
-
 
 class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase, metaclass=_PropertyMeta):
     class Adaptable(metaclass=_PropertyMeta):
@@ -1337,7 +1326,6 @@ class CertificateAuthorityAttributes(_CertificateAuthorityAttributesBase, metacl
         secure = "Secure"
         web_instance = "Web Instance"
 
-
 class CertificateAuthorityAttributeValues(metaclass=_PropertyMeta):
     class SelfSigned:
         class KeyUsage:
@@ -1354,7 +1342,6 @@ class CertificateAuthorityAttributeValues(metaclass=_PropertyMeta):
             sha_256 = 'SHA256'
             sha_384 = 'SHA384'
             sha_512 = 'SHA512'
-
 
 class CertificateAuthorityClassNames(metaclass=_PropertyMeta):
     adaptable_ca = "Adaptable CA"
@@ -1375,7 +1362,6 @@ class CertificateAuthorityClassNames(metaclass=_PropertyMeta):
     xolphin_ca = "Xolphin CA"
     zos_ca = "zOS CA"
 
-
 # endregion
 
 # region Certificate Trust Store
@@ -1389,7 +1375,6 @@ class CertificateTrustStoreClassNames(metaclass=_PropertyMeta):
     palo_alto_network_fw_trust_store = "Palo Alto Network FW Trust Store"
     pem_trust_store = "PEM Trust Store"
     pkcs_12_trust_store = "PKCS#12 Trust Store"
-
 
 # endregion
 
@@ -1415,7 +1400,6 @@ class ClientGroupsAttributes(metaclass=_PropertyMeta):
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-
 class ClientGroupsAttributeValues(metaclass=_PropertyMeta):
     class CreatedBy(metaclass=_PropertyMeta):
         websdk = 'Web SDK'
@@ -1430,10 +1414,8 @@ class ClientGroupsAttributeValues(metaclass=_PropertyMeta):
         est = 'ClientType == Est'
         venafi_agent = 'ClientType == VenafiAgent'
 
-
 class ClientGroupsClassNames(metaclass=_PropertyMeta):
     group = "Client Group"
-
 
 # endregion
 
@@ -2762,7 +2744,6 @@ class ClientWorkAttributes(metaclass=_PropertyMeta):
         xolphin_ca_reference_number = "Xolphin CA:Reference Number"
         xolphin_ca_zip_code = "Xolphin CA:Zip Code"
 
-
 class ClientWorkAttributeValues(metaclass=_PropertyMeta):
     class AgentConnectivity(metaclass=_PropertyMeta):
         class ScheduleType(metaclass=_PropertyMeta):
@@ -2987,7 +2968,6 @@ class ClientWorkAttributeValues(metaclass=_PropertyMeta):
             subject_alt_names_email = '$IdentityEmail[$Client.Identity$]$'
             subject_alt_names_upn = '$Identity[$Client.Identity$,"userPrincipalName"]$'
 
-
 class ClientWorkClassNames(metaclass=_PropertyMeta):
     agent_connectivity = 'Client Agent Configuration Work'
     agent_upgrade = 'Client Agent Automatic Upgrade Work'
@@ -3003,13 +2983,11 @@ class ClientWorkClassNames(metaclass=_PropertyMeta):
     ssh_remediation = 'Client Agent SSH Provisioning Work'
     user_certificate_creation = 'Client User Certificate Work'
 
-
 # endregion
 
 # region Cloud Instance Monitoring
 class CloudInstanceMonitoringClassNames(metaclass=_PropertyMeta):
     aws_ec2_instance_monitor = 'AWS EC2 Instance Monitor'
-
 
 # endregion
 
@@ -3075,7 +3053,6 @@ class _CredentialAttributesBase(metaclass=_PropertyMeta):
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-
 class CredentialAttributes(_CredentialAttributesBase, metaclass=_PropertyMeta):
     class Amazon(metaclass=_PropertyMeta):
         authentication_credential = "Authentication Credential"
@@ -3113,7 +3090,6 @@ class CredentialAttributes(_CredentialAttributesBase, metaclass=_PropertyMeta):
     class UsernamePassword(_CredentialAttributesBase, metaclass=_PropertyMeta):
         username = 'Username'
 
-
 class CredentialClassNames(metaclass=_PropertyMeta):
     amazon_credential = "Amazon Credential"
     automatic_password_credential = "Automatic Password Credential"
@@ -3123,7 +3099,6 @@ class CredentialClassNames(metaclass=_PropertyMeta):
     password_credential = "Password Credential"
     private_key_credential = "Private Key Credential"
     username_password_credential = "Username Password Credential"
-
 
 # endregion
 
@@ -3153,7 +3128,6 @@ class _CustomFieldAttributes(metaclass=_PropertyMeta):
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-
 class CustomFieldAttributes(_CustomFieldAttributes, metaclass=_PropertyMeta):
     class Choice(metaclass=_PropertyMeta):
         single = "Single"
@@ -3175,14 +3149,12 @@ class CustomFieldAttributes(_CustomFieldAttributes, metaclass=_PropertyMeta):
         minimum_length = "Minimum Length"
         regular_expression = "Regular Expression"
 
-
 class CustomFieldAttributeValues(metaclass=_PropertyMeta):
     class Type(metaclass=_PropertyMeta):
         text_string = 1
         list = 2
         date_time = 4
         identity = 5
-
 
 # endregion
 
@@ -3293,7 +3265,6 @@ class _DeviceAttributesBase(metaclass=_PropertyMeta):
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-
 class DeviceAttributes(_DeviceAttributesBase, metaclass=_PropertyMeta):
     class DeviceBase(metaclass=_PropertyMeta):
         pass
@@ -3303,7 +3274,6 @@ class DeviceAttributes(_DeviceAttributesBase, metaclass=_PropertyMeta):
         location = "Location"
         ssh_connection_string = "SSH Connection String"
         ssh_version = "SSH Version"
-
 
 class DeviceAttributeValues(metaclass=_PropertyMeta):
     class OSType(metaclass=_PropertyMeta):
@@ -3320,18 +3290,15 @@ class DeviceAttributeValues(metaclass=_PropertyMeta):
         agent = 'Agent'
         agentless = 'Agentless'
 
-
 class JumpServerAttributeValues(metaclass=_PropertyMeta):
     class SSHVersion:
         open_ssh = 'OpenSSH'
         tectia_4 = 'Tectia 4'
         tectia_6 = 'Tectia 6'
 
-
 class DevicesClassNames(metaclass=_PropertyMeta):
     device = 'Device'
     jump_server = 'Jump Server'
-
 
 # endregion
 
@@ -3413,7 +3380,6 @@ class DiscoveryAttributes(metaclass=_PropertyMeta):
         window_start = "Window Start"
         work_units = "Work Units"
 
-
 class DiscoveryAttributeValues(metaclass=_PropertyMeta):
     class Onboard:
         class NetScaler:
@@ -3436,17 +3402,14 @@ class DiscoveryAttributeValues(metaclass=_PropertyMeta):
                 proxy = 2
                 server = 3
 
-
 class DiscoveryClassNames(metaclass=_PropertyMeta):
     network_discovery = 'Discovery'
-
 
 # endregion
 
 # region Folder
 class FolderClassNames(metaclass=_PropertyMeta):
     policy = 'Policy'
-
 
 class FolderAttributes(metaclass=_PropertyMeta):
     certificate_origin = "Certificate Origin"
@@ -3474,7 +3437,6 @@ class FolderAttributes(metaclass=_PropertyMeta):
     workflow = "Workflow"
     workflow_block = "Workflow Block"
 
-
 # endregion
 
 # region Identity
@@ -3482,13 +3444,11 @@ class IdentityClassNames(metaclass=_PropertyMeta):
     user = 'USER'
     security_group = 'GROUP'
 
-
 class IdentityAttributeValues(metaclass=_PropertyMeta):
     class Types(metaclass=_PropertyMeta):
         user = 1
         security_group = 2
         distribution_group = 8
-
 
 # endregion
 
@@ -3496,10 +3456,8 @@ class IdentityAttributeValues(metaclass=_PropertyMeta):
 class PlacementRulesClassNames(metaclass=_PropertyMeta):
     layout_rule_base = 'Layout Rule Base'
 
-
 class PlacementRulesAttributeNames(metaclass=_PropertyMeta):
     rule = 'Rule'
-
 
 class PlacementRulesAttributeValues(metaclass=_PropertyMeta):
     class Field(metaclass=_PropertyMeta):
@@ -3536,7 +3494,6 @@ class PlacementRulesAttributeValues(metaclass=_PropertyMeta):
         certificate = 'X509 Certificate'
         ssh = 'SSH'
 
-
 # endregion Placement Rules
 
 # region Platforms
@@ -3556,7 +3513,6 @@ class PlatformsClassNames(metaclass=_PropertyMeta):
     ssh_manager = "SSH Manager"
     trust_net_manager = "TrustNet Manager"
     validation_manager = "Validation Manager"
-
 
 class _PlatformsAttributes(metaclass=_PropertyMeta):
     acme_fqdn = "ACME FQDN"
@@ -3649,7 +3605,6 @@ class _PlatformsAttributes(metaclass=_PropertyMeta):
     workflow_block = "Workflow Block"
     zone_contact = "Zone Contact"
     zone_description = "Zone Description"
-
 
 class PlatformsAttributes(_PlatformsAttributes, metaclass=_PropertyMeta):
     class BulkProvisioningManager(metaclass=_PropertyMeta):
@@ -3851,7 +3806,6 @@ class PlatformsAttributes(_PlatformsAttributes, metaclass=_PropertyMeta):
         websdk_fqdn = "WebSDK FQDN"
         zone_base = "Zone Base"
 
-
 # endregion Platforms
 
 # region Workflow
@@ -3869,7 +3823,6 @@ class _WorkflowAttributes(metaclass=_PropertyMeta):
     rule_vault_id = "Rule Vault Id"
     workflow = "Workflow"
     workflow_block = "Workflow Block"
-
 
 class WorkflowAttributes(_WorkflowAttributes, metaclass=_PropertyMeta):
     class Adaptable(metaclass=_PropertyMeta):
@@ -3908,7 +3861,6 @@ class WorkflowAttributes(_WorkflowAttributes, metaclass=_PropertyMeta):
         updated_by = "Updated By"
         user_data = "User Data"
 
-
 class WorkflowAttributeValues(metaclass=_PropertyMeta):
     class Status(metaclass=_PropertyMeta):
         approved = 'Approved'
@@ -3917,7 +3869,6 @@ class WorkflowAttributeValues(metaclass=_PropertyMeta):
         approved_between = 'Approved Between'
         pending = 'Pending'
         rejected = 'Rejected'
-
 
 class WorkflowClassNames(metaclass=_PropertyMeta):
     adaptable_workflow = 'Adaptable Workflow'
