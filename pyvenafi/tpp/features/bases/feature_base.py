@@ -170,21 +170,27 @@ class FeatureBase:
         regex = '^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$'
         return isinstance(obj, str) and bool(re.match(pattern=regex, string=obj))
 
-    def _get_prefixed_name(self, identity: 'Union[ident.Identity, str]'):
+    def _get_prefixed_name(self, identity: 'Union[ident.Identity, str, None]'):
+        if identity is None:
+            return None
         if hasattr(identity, 'prefixed_name'):
             return identity.prefixed_name
         if self._is_prefixed_universal(identity):
             return self._get_identity_object(prefixed_universal=identity).prefixed_name
         return identity
 
-    def _get_prefixed_universal(self, identity: 'Union[ident.Identity, str]'):
+    def _get_prefixed_universal(self, identity: 'Union[ident.Identity, str, None]'):
+        if identity is None:
+            return None
         if hasattr(identity, 'prefixed_universal'):
             return identity.prefixed_universal
         if self._is_prefixed_universal(identity):
             return identity
         return self._get_identity_object(prefixed_name=identity).prefixed_universal
 
-    def _get_dn(self, obj: 'Union[config.Object, str]', parent_dn: str = None):
+    def _get_dn(self, obj: 'Union[config.Object, str, None]', parent_dn: str = None):
+        if obj is None:
+            return None
         if hasattr(obj, 'dn'):
             return obj.dn
         if self._is_obj_guid(obj):
@@ -196,7 +202,9 @@ class FeatureBase:
         else:
             return obj
 
-    def _get_guid(self, obj: 'Union[config.Object, str]', parent_dn: str = None):
+    def _get_guid(self, obj: 'Union[config.Object, str, None]', parent_dn: str = None):
+        if obj is None:
+            return None
         if hasattr(obj, 'guid'):
             return obj.guid
         if self._is_obj_guid(obj):

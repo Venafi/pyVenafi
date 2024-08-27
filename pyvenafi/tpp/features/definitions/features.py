@@ -30,6 +30,7 @@ from pyvenafi.tpp.features.application import (
 )
 from pyvenafi.tpp.features.certificate import Certificate
 from pyvenafi.tpp.features.certificate_authorities import (
+    AdaptableCA,
     MSCA,
     SelfSignedCA,
 )
@@ -278,6 +279,7 @@ class _CertificateAuthority:
 
         self._msca = None
         self._self_signed = None
+        self._adaptable = None
 
     @property
     def msca(self) -> MSCA:
@@ -288,6 +290,11 @@ class _CertificateAuthority:
     def self_signed(self) -> SelfSignedCA:
         self._self_signed = self._self_signed or SelfSignedCA(self._api)
         return self._self_signed
+
+    @property
+    def adaptable(self) -> AdaptableCA:
+        self._adaptable = self._adaptable or AdaptableCA(self._api)
+        return self._adaptable
 
 class _CodeSign:
     def __init__(self, api):
