@@ -13,6 +13,12 @@ AccessControl
 .. _pyvenafi.tpp.api.websdk.models.ssh_certificates.accesscontrol_model:
 .. autopydantic_model:: pyvenafi.tpp.api.websdk.models.ssh_certificates.AccessControl
 
+AvailableTemplate
+-----------------
+
+.. _pyvenafi.tpp.api.websdk.models.ssh_certificates.availabletemplate_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.ssh_certificates.AvailableTemplate
+
 CAKeyPair
 ---------
 

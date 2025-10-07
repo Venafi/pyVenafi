@@ -159,7 +159,7 @@ class CodeSignTemplate(FeatureBase):
         Returns:
             List of environment templates.
         """
-        output = self._api.websdk.Codesign.EnumerateTemplates.post(fiter=_filter)
+        output = self._api.websdk.Codesign.EnumerateTemplates.post(filter=_filter)
 
         @dataclass
         class EnumeratedTemplates:

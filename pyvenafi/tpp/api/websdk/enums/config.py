@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pyvenafi.tpp.api.websdk.enums import certificate
+
 class _PropertyMeta(type):
     def __iter__(self):
         for item in dir(self):
@@ -941,6 +943,7 @@ class CertificateAttributes(metaclass=_PropertyMeta):
     organizational_unit = "Organizational Unit"
     origin = "Origin"
     pkcs10_hash_algorithm = "PKCS10 Hash Algorithm"
+    pkix_parameter_set = "Pkix Parameter Set"
     portal_download_count = "Portal Download Count"
     postal_code = "Postal Code"
     private_key_vault_id = "Private Key Vault Id"
@@ -1101,6 +1104,8 @@ class CertificateAttributeValues(metaclass=_PropertyMeta):
         user_changed_affiliation = 3
         certificate_superceded = 4
         original_use_no_longer_valid = 5
+
+    class KeyAlgorithmOids(certificate.KeyAlgorithmOids, metaclass=_PropertyMeta): ...
 
 class CertificateClassNames(metaclass=_PropertyMeta):
     client_certificate_work = "Client Certificate Work"
@@ -1678,6 +1683,7 @@ class ClientWorkAttributes(metaclass=_PropertyMeta):
         organizational_unit = "Organizational Unit"
         origin = "Origin"
         pkcs10_hash_algorithm = "PKCS10 Hash Algorithm"
+        pkix_parameter_set = "Pkix Parameter Set"
         pop_mode = "PoP Mode"
         postal_code = "Postal Code"
         private_key_vault_id = "Private Key Vault Id"
@@ -1962,6 +1968,7 @@ class ClientWorkAttributes(metaclass=_PropertyMeta):
         organizational_unit = "Organizational Unit"
         origin = "Origin"
         pkcs10_hash_algorithm = "PKCS10 Hash Algorithm"
+        pkix_parameter_set = "Pkix Parameter Set"
         postal_code = "Postal Code"
         private_key_vault_id = "Private Key Vault Id"
         prohibit_wildcard = "Prohibit Wildcard"
@@ -2249,6 +2256,7 @@ class ClientWorkAttributes(metaclass=_PropertyMeta):
         origin = "Origin"
         path_type = "Path Type"
         pkcs10_hash_algorithm = "PKCS10 Hash Algorithm"
+        pkix_parameter_set = "Pkix Parameter Set"
         port = "Port"
         postal_code = "Postal Code"
         private_key_password_credential = "Private Key Password Credential"
@@ -2629,6 +2637,7 @@ class ClientWorkAttributes(metaclass=_PropertyMeta):
         outlook_profile_name = "Outlook Profile Name"
         outlook_profile_options = "Outlook Profile Options"
         pkcs10_hash_algorithm = "PKCS10 Hash Algorithm"
+        pkix_parameter_set = "Pkix Parameter Set"
         portal_friendly_name = "Portal Friendly Name"
         postal_code = "Postal Code"
         private_key_vault_id = "Private Key Vault Id"
@@ -3023,6 +3032,8 @@ class CodeSignAttributeValues(metaclass=_PropertyMeta):
         enabled = 1
         draft = 2
         pending = 3
+        deleted = 4
+        disabled_by_parent = 5
 
     class KeyStorageLocation(metaclass=_PropertyMeta):
         software = 'Software'

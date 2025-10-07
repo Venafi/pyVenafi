@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
-from pyvenafi.tpp.attributes.top import TopAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
+from pyvenafi.tpp.attributes.top import TopAttributes
 
 class JSSDiscoveryAttributes(TopAttributes, ScheduleBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "JSS Discovery"

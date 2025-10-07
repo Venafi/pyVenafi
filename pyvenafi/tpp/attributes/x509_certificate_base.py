@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
 from pyvenafi.tpp.attributes.monitoring_base import MonitoringBaseAttributes
@@ -34,6 +34,7 @@ class X509CertificateBaseAttributes(DriverBaseAttributes, MonitoringBaseAttribut
     csr_vault_id = Attribute('CSR Vault Id')
     certificate_authority = Attribute('Certificate Authority')
     certificate_download_pbes2_algorithm = Attribute('Certificate Download: PBES2 Algorithm')
+    certificate_download_pkcs12_algorithm = Attribute('Certificate Download: Pkcs12 Algorithm')
     certificate_process_validator = Attribute('Certificate Process Validator')
     certificate_vault_id = Attribute('Certificate Vault Id')
     city = Attribute('City')

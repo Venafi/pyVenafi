@@ -10,6 +10,7 @@ from pyvenafi.tpp.api.api_base import (
     WebSdkEndpoint,
     WebSdkOutputModel,
 )
+from pyvenafi.tpp.api.websdk.enums.certificate import KeyAlgorithmOids
 from pyvenafi.tpp.api.websdk.models import pki
 
 class _PKI(WebSdkEndpoint):
@@ -37,7 +38,7 @@ class _PKI(WebSdkEndpoint):
                 self, certificate: Union[dict, pki.Certificate], folder_dn: str, pki_path: str, roles: list[str],
                 create_certificate_authority: bool = True, create_pki_role: bool = False, crl_address: str = None,
                 installation: Union[dict, pki.Installation] = None, key_algorithm: str = None, key_bit_size: str = None,
-                ocsp_address: str = None
+                pkix_parameter_set: str = None, ocsp_address: str = None,
             ):
                 body = {
                     'Certificate'               : certificate,
@@ -50,8 +51,38 @@ class _PKI(WebSdkEndpoint):
                     'KeyBitSize'                : key_bit_size,
                     'OCSPAddress'               : ocsp_address,
                     'PkiPath'                   : pki_path,
+                    'PkixParameterSet'          : pkix_parameter_set,
                     'Roles'                     : roles
                 }
+
+                if (
+                    self._is_version_compatible(minimum='25.1')
+                    and pkix_parameter_set is None
+                    and key_algorithm is not None
+                    and key_bit_size is not None
+                ):
+                    oid = {
+                        'rsa': {
+                            "1024": KeyAlgorithmOids.rsa_1024,
+                            "2048": KeyAlgorithmOids.rsa_2048,
+                            "3072": KeyAlgorithmOids.rsa_3072,
+                            "4096": KeyAlgorithmOids.rsa_4096,
+                        },
+                        'ecc': {
+                            "p256": KeyAlgorithmOids.ec_nist_p256,
+                            "p384": KeyAlgorithmOids.ec_nist_p384,
+                            "p521": KeyAlgorithmOids.ec_nist_p521,
+                        },
+                    }.get(key_algorithm.lower(), {}).get(key_bit_size, None)
+
+                    if oid:
+                        del body["KeyAlgorithm"]
+                        del body["KeyBitSize"]
+
+                        body["PkixParameterSet"] = oid
+
+                elif self._is_version_compatible(maximum="24.3"):
+                    del body["PkixParameterSet"]
 
                 class Output(WebSdkOutputModel):
                     certificate_dn: str = ApiField(alias='CertificateDN')
@@ -105,7 +136,8 @@ class _PKI(WebSdkEndpoint):
                     installation: Union[dict, pki.Installation] = None,
                     key_algorithm: str = None,
                     key_bit_size: str = None,
-                    ocsp_address: str = None
+                    ocsp_address: str = None,
+                    pkix_parameter_set: str = None,
                 ):
                     body = {
                         'Certificate'               : certificate,
@@ -118,8 +150,37 @@ class _PKI(WebSdkEndpoint):
                         'KeyBitSize'                : key_bit_size,
                         'OCSPAddress'               : ocsp_address,
                         'PkiPath'                   : pki_path,
+                        'PkixParameterSet'          : pkix_parameter_set,
                         'Roles'                     : roles
                     }
+                    if (
+                        self._is_version_compatible(minimum='25.1')
+                        and pkix_parameter_set is None
+                        and key_algorithm is not None
+                        and key_bit_size is not None
+                    ):
+                        oid = {
+                            'rsa': {
+                                "1024": KeyAlgorithmOids.rsa_1024,
+                                "2048": KeyAlgorithmOids.rsa_2048,
+                                "3072": KeyAlgorithmOids.rsa_3072,
+                                "4096": KeyAlgorithmOids.rsa_4096,
+                            },
+                            'ecc': {
+                                "p256": KeyAlgorithmOids.ec_nist_p256,
+                                "p384": KeyAlgorithmOids.ec_nist_p384,
+                                "p521": KeyAlgorithmOids.ec_nist_p521,
+                            },
+                        }.get(key_algorithm.lower(), {}).get(key_bit_size, None)
+
+                        if oid:
+                            del body["KeyAlgorithm"]
+                            del body["KeyBitSize"]
+
+                            body["PkixParameterSet"] = oid
+
+                    elif self._is_version_compatible(maximum="24.3"):
+                        del body["PkixParameterSet"]
 
                     class Output(WebSdkOutputModel):
                         certificate_dn: str = ApiField(alias='CertificateDN')
@@ -141,8 +202,8 @@ class _PKI(WebSdkEndpoint):
             def post(
                 self, folder_dn: str, role_name: str, city: str = None, country: str = None,
                 enhanced_key_usage: list[str] = None, key_algorithm: str = None, key_bit_size: str = None,
-                organization: str = None, organizational_units: list[str] = None, state: str = None,
-                whitelisted_domains: list[str] = None
+                organization: str = None, organizational_units: list[str] = None, pkix_parameter_set: str = None,
+                state: str = None, whitelisted_domains: list[str] = None
             ):
                 body = {
                     'City'               : city,
@@ -154,9 +215,38 @@ class _PKI(WebSdkEndpoint):
                     'Organization'       : organization,
                     'OrganizationalUnits': organizational_units,
                     'RoleName'           : role_name,
+                    'PkixParameterSet'   : pkix_parameter_set,
                     'State'              : state,
                     'WhitelistedDomains' : whitelisted_domains
                 }
+                if (
+                    self._is_version_compatible(minimum='25.1')
+                    and pkix_parameter_set is None
+                    and key_algorithm is not None
+                    and key_bit_size is not None
+                ):
+                    oid = {
+                        'rsa': {
+                            "1024": KeyAlgorithmOids.rsa_1024,
+                            "2048": KeyAlgorithmOids.rsa_2048,
+                            "3072": KeyAlgorithmOids.rsa_3072,
+                            "4096": KeyAlgorithmOids.rsa_4096,
+                        },
+                        'ecc': {
+                            "p256": KeyAlgorithmOids.ec_nist_p256,
+                            "p384": KeyAlgorithmOids.ec_nist_p384,
+                            "p521": KeyAlgorithmOids.ec_nist_p521,
+                        },
+                    }.get(key_algorithm.lower(), {}).get(key_bit_size, None)
+
+                    if oid:
+                        del body["KeyAlgorithm"]
+                        del body["KeyBitSize"]
+
+                        body["PkixParameterSet"] = oid
+
+                elif self._is_version_compatible(maximum="24.3"):
+                    del body["PkixParameterSet"]
 
                 class Output(WebSdkOutputModel):
                     guid: str = ApiField(alias='Guid')
@@ -184,6 +274,7 @@ class _PKI(WebSdkEndpoint):
                         key_bit_size: str = ApiField(alias='KeyBitSize')
                         organization: str = ApiField(alias='Organization')
                         organizational_units: list[str] = ApiField(default_factory=list, alias='OrganizationalUnits')
+                        pkix_parameter_set: str = ApiField(alias='PkixParameterSet')
                         role_name: str = ApiField(alias='RoleName')
                         state: str = ApiField(alias='State')
                         whitelisted_domains: list[str] = ApiField(default_factory=list, alias='WhitelistedDomains')
@@ -193,8 +284,8 @@ class _PKI(WebSdkEndpoint):
                 def put(
                     self, city: str = None, country: str = None,
                     enhanced_key_usage: list[str] = None, key_algorithm: str = None, key_bit_size: str = None,
-                    organization: str = None, organizational_units: list[str] = None, state: str = None,
-                    whitelisted_domains: list[str] = None
+                    organization: str = None, organizational_units: list[str] = None, pkix_parameter_set: str = None,
+                    state: str = None, whitelisted_domains: list[str] = None
                 ):
                     body = {
                         'City'               : city,
@@ -204,9 +295,38 @@ class _PKI(WebSdkEndpoint):
                         'KeyBitSize'         : key_bit_size,
                         'Organization'       : organization,
                         'OrganizationalUnits': organizational_units,
+                        'PkixParameterSet'   : pkix_parameter_set,
                         'State'              : state,
                         'WhitelistedDomains' : whitelisted_domains
                     }
+                    if (
+                        self._is_version_compatible(minimum='25.1')
+                        and pkix_parameter_set is None
+                        and key_algorithm is not None
+                        and key_bit_size is not None
+                    ):
+                        oid = {
+                            'rsa': {
+                                "1024": KeyAlgorithmOids.rsa_1024,
+                                "2048": KeyAlgorithmOids.rsa_2048,
+                                "3072": KeyAlgorithmOids.rsa_3072,
+                                "4096": KeyAlgorithmOids.rsa_4096,
+                            },
+                            'ecc': {
+                                "p256": KeyAlgorithmOids.ec_nist_p256,
+                                "p384": KeyAlgorithmOids.ec_nist_p384,
+                                "p521": KeyAlgorithmOids.ec_nist_p521,
+                            },
+                        }.get(key_algorithm.lower(), {}).get(key_bit_size, None)
+
+                        if oid:
+                            del body["KeyAlgorithm"]
+                            del body["KeyBitSize"]
+
+                            body["PkixParameterSet"] = oid
+
+                    elif self._is_version_compatible(maximum="24.3"):
+                        del body["PkixParameterSet"]
 
                     class Output(WebSdkOutputModel):
                         guid: str = ApiField(alias='Guid')

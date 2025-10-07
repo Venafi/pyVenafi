@@ -1,14 +1,7 @@
 from __future__ import annotations
-from pyvenafi.cloud.api.api_base import (
-    ApiField,
-    ObjectModel,
-)
+from pyvenafi.cloud.api.api_base import ApiField, ObjectModel
 from datetime import datetime
-from typing import (
-    Any,
-    List,
-    Literal,
-)
+from typing import (Any, List, Literal)
 from uuid import UUID
 
 AnyValue = Any
@@ -48,13 +41,17 @@ WorkerStatus = Literal[
     "INACTIVE"
 ]
 
+
 class BillOfMaterialResponse(ObjectModel):
     billsOfMaterials: List[BillOfMaterialsInformation] = ApiField(alias='billsOfMaterials', default_factory=list)
+
 
 class BillOfMaterialsInformation(ObjectModel):
     charts: List[Chart] = ApiField(alias='charts', default_factory=list)
     name: str = ApiField(alias='name')
+    satelliteVersion: str = ApiField(alias='satelliteVersion')
     version: str = ApiField(alias='version')
+
 
 class Chart(ObjectModel):
     name: str = ApiField(alias='name')
@@ -62,12 +59,15 @@ class Chart(ObjectModel):
     url: str = ApiField(alias='url')
     version: str = ApiField(alias='version')
 
+
 class ChartDetails(ObjectModel):
     name: str = ApiField(alias='name')
     version: str = ApiField(alias='version')
 
+
 class EdgeInstanceConnectionDetails(ObjectModel):
     activeMessageCount: int = ApiField(alias='activeMessageCount')
+    companyId: UUID = ApiField(alias='companyId')
     edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
     expiredMessageCount: int = ApiField(alias='expiredMessageCount')
     failedMessageCount: int = ApiField(alias='failedMessageCount')
@@ -75,15 +75,20 @@ class EdgeInstanceConnectionDetails(ObjectModel):
     lastDisconnectedDate: datetime = ApiField(alias='lastDisconnectedDate')
     timestamp: datetime = ApiField(alias='timestamp')
 
+
 class EdgeInstanceDeleteResponse(ObjectModel):
     name: str = ApiField(alias='name')
 
+
 class EdgeInstanceHealthDetails(ObjectModel):
+    companyId: UUID = ApiField(alias='companyId')
     edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
     installedCharts: List[NamespaceChartDetails] = ApiField(alias='installedCharts', default_factory=list)
     nodeStatus: List[NodeStatusDetails] = ApiField(alias='nodeStatus', default_factory=list)
     systemstatus: List[NamespaceStatusDetails] = ApiField(alias='systemstatus', default_factory=list)
     timestamp: datetime = ApiField(alias='timestamp')
+    version: str = ApiField(alias='version')
+
 
 class EdgeInstanceInformation(ObjectModel):
     address: str = ApiField(alias='address')
@@ -104,29 +109,34 @@ class EdgeInstanceInformation(ObjectModel):
     pairingCodeId: UUID = ApiField(alias='pairingCodeId')
     productEntitlements: List[ProductEntitlement] = ApiField(alias='productEntitlements', default_factory=list)
     reconciliationFailed: bool = ApiField(alias='reconciliationFailed')
+    satelliteVersion: str = ApiField(alias='satelliteVersion')
+    serviceAccountId: UUID = ApiField(alias='serviceAccountId')
     statusDetails: EdgeInstanceStatusDetailsInformation = ApiField(alias='statusDetails')
     version: int = ApiField(alias='version')
-    workerStatusDetails: List[EdgeWorkerStatusDetailsInformation] = ApiField(
-        alias='workerStatusDetails',
-        default_factory=list
-    )
+    workerStatusDetails: List[EdgeWorkerStatusDetailsInformation] = ApiField(alias='workerStatusDetails', default_factory=list)
+
 
 class EdgeInstanceRequest(ObjectModel):
     name: str = ApiField(alias='name')
 
+
 class EdgeInstanceResponse(ObjectModel):
     edgeInstances: List[EdgeInstanceInformation] = ApiField(alias='edgeInstances', default_factory=list)
+
 
 class EdgeInstanceStatusDetailsInformation(ObjectModel):
     connectionDetails: List[EdgeInstanceConnectionDetails] = ApiField(alias='connectionDetails', default_factory=list)
     healthDetails: List[EdgeInstanceHealthDetails] = ApiField(alias='healthDetails', default_factory=list)
 
+
 class EdgeWorkerDeleteResponse(ObjectModel):
     id: UUID = ApiField(alias='id')
     pairingCode: str = ApiField(alias='pairingCode')
 
+
 class EdgeWorkerHealthDetails(ObjectModel):
     age: int = ApiField(alias='age')
+    companyId: UUID = ApiField(alias='companyId')
     cpuUsage: int = ApiField(alias='cpuUsage')
     edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
     edgeWorkerId: UUID = ApiField(alias='edgeWorkerId')
@@ -136,6 +146,7 @@ class EdgeWorkerHealthDetails(ObjectModel):
     services: List[WorkerServiceStatusDetails] = ApiField(alias='services', default_factory=list)
     status: str = ApiField(alias='status')
     timestamp: datetime = ApiField(alias='timestamp')
+
 
 class EdgeWorkerInformation(ObjectModel):
     companyId: UUID = ApiField(alias='companyId')
@@ -149,17 +160,21 @@ class EdgeWorkerInformation(ObjectModel):
     port: int = ApiField(alias='port')
     status: WorkerStatus = ApiField(alias='status')
 
+
 class EdgeWorkerRequest(ObjectModel):
     edgeInstanceId: UUID = ApiField(alias='edgeInstanceId')
     host: str = ApiField(alias='host')
     port: int = ApiField(alias='port')
 
+
 class EdgeWorkerStatusDetailsInformation(ObjectModel):
     edgeWorkerId: UUID = ApiField(alias='edgeWorkerId')
     healthDetails: List[EdgeWorkerHealthDetails] = ApiField(alias='healthDetails', default_factory=list)
 
+
 class EdgeWorkersResponse(ObjectModel):
     edgeWorkers: List[EdgeWorkerInformation] = ApiField(alias='edgeWorkers', default_factory=list)
+
 
 class EncryptionKeyInformation(ObjectModel):
     companyId: UUID = ApiField(alias='companyId')
@@ -168,25 +183,31 @@ class EncryptionKeyInformation(ObjectModel):
     keyAlgorithm: KeyAlgorithm = ApiField(alias='keyAlgorithm')
     lastBackupDate: datetime = ApiField(alias='lastBackupDate')
 
+
 class EncryptionKeysResponse(ObjectModel):
     encryptionKeys: List[EncryptionKeyInformation] = ApiField(alias='encryptionKeys', default_factory=list)
+
 
 class ErrorInformation(ObjectModel):
     args: List[AnyValue] = ApiField(alias='args', default_factory=list)
     code: int = ApiField(alias='code')
     message: str = ApiField(alias='message')
 
+
 class ErrorResponse(ObjectModel):
     errors: List[ErrorInformation] = ApiField(alias='errors', default_factory=list)
+
 
 class NamespaceChartDetails(ObjectModel):
     charts: List[ChartDetails] = ApiField(alias='charts', default_factory=list)
     name: str = ApiField(alias='name')
 
+
 class NamespaceStatusDetails(ObjectModel):
     name: str = ApiField(alias='name')
     pods: List[PodStatusDetails] = ApiField(alias='pods', default_factory=list)
     timestamp: datetime = ApiField(alias='timestamp')
+
 
 class NodeCondition(ObjectModel):
     Status: str = ApiField(alias='Status')
@@ -194,12 +215,15 @@ class NodeCondition(ObjectModel):
     status: str = ApiField(alias='status')
     type: str = ApiField(alias='type')
 
+
 class NodeInfo(ObjectModel):
     kubelet_version: str = ApiField(alias='kubelet_version')
+
 
 class NodeStatusDetails(ObjectModel):
     conditions: List[NodeCondition] = ApiField(alias='conditions', default_factory=list)
     info: NodeInfo = ApiField(alias='info')
+
 
 class PairingCodeInformation(ObjectModel):
     companyId: UUID = ApiField(alias='companyId')
@@ -210,22 +234,26 @@ class PairingCodeInformation(ObjectModel):
     productEntitlements: List[ProductEntitlement] = ApiField(alias='productEntitlements', default_factory=list)
     reuseCount: int = ApiField(alias='reuseCount')
 
+
 class PairingCodeRequest(ObjectModel):
     environmentId: UUID = ApiField(alias='environmentId')
-    expirationDate: datetime = ApiField(alias='expirationDate')
     reuseCount: int = ApiField(alias='reuseCount')
+
 
 class PodStatusDetails(ObjectModel):
     age: int = ApiField(alias='age')
     cpuUsage: int = ApiField(alias='cpuUsage')
+    image: str = ApiField(alias='image')
     memoryUsage: int = ApiField(alias='memoryUsage')
     name: str = ApiField(alias='name')
     restartCount: int = ApiField(alias='restartCount')
     status: str = ApiField(alias='status')
 
+
 class WorkerServiceStatusDetails(ObjectModel):
     name: str = ApiField(alias='name')
     status: str = ApiField(alias='status')
+
 
 BillOfMaterialResponse.update_forward_refs()
 BillOfMaterialsInformation.update_forward_refs()

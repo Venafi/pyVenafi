@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.top import TopAttributes
 
@@ -22,9 +22,7 @@ class SSHCATemplateAttributes(TopAttributes, metaclass=IterableMeta):
     allowed_source_address = Attribute('Allowed Source Address')
     certificate_container = Attribute('Certificate Container')
     certificate_identifier = Attribute('Certificate Identifier')
-    certificate_issuance_timeout_before_returning_pending_response = Attribute(
-        'Certificate Issuance Timeout Before Returning Pending Response'
-    )
+    certificate_issuance_timeout_before_returning_pending_response = Attribute('Certificate Issuance Timeout Before Returning Pending Response')
     certificate_object_naming_pattern = Attribute('Certificate Object Naming Pattern')
     certificate_type = Attribute('Certificate Type')
     extension = Attribute('Extension')

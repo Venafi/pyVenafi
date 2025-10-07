@@ -53,7 +53,7 @@ class _CodeSignApplicationBase(FeatureBase):
         collection_guid: str = None
     ) -> list[str]:
         """
-        Get the :ref:`dn`\s that references a :class:`~.models.codesign.Application`
+        Get the :ref:`dn` that references a :class:`~.models.codesign.Application`
         or a :class:`~.models.codesign.ApplicationCollection` using one parameter.
 
         Args:
@@ -341,7 +341,7 @@ class CodeSignApplicationCollection(FeatureBase):
         id: str = None
     ) -> ApplicationCollection:
         """
-        Get :ref:`dn`\s of applications and application collections that are members of an application collection.
+        Get :ref:`dn` of applications and application collections that are members of an application collection.
 
         Args:
             dn: :ref:`dn` of the application collection object.
@@ -349,7 +349,7 @@ class CodeSignApplicationCollection(FeatureBase):
             id: Identifier of the application collection object.
 
         Returns:
-            list[:ref:`dn`\s.]
+            list[:ref:`dn`.]
         """
         if any([dn, guid, id]):
             output = self._api.websdk.Codesign.GetApplicationCollectionMembers.post(dn=dn, guid=guid, id=id)
@@ -366,7 +366,7 @@ class CodeSignApplicationCollection(FeatureBase):
         id: str = None
     ):
         """
-        Get :ref:`dn`\s of applications and application collections that are members of an application collection.
+        Get :ref:`dn` of applications and application collections that are members of an application collection.
 
         Args:
             dn: :ref:`dn` of the application collection object.

@@ -1,8 +1,6 @@
-import logging
 import inspect
-import jsonpickle
+import logging
 import re
-import simplejson
 import threading
 from contextlib import contextmanager
 from functools import wraps
@@ -12,6 +10,12 @@ from typing import (
     Tuple,
     Set,
 )
+
+import jsonpickle
+import simplejson
+
+logging_lock = threading.Lock()
+
 
 class Logger(logging.getLoggerClass()):
     def __init__(self, *args, **kwargs):
@@ -215,6 +219,7 @@ class Logger(logging.getLoggerClass()):
         self._children.append(child)
         return child
 
+
 def get_logger(name: str = None) -> Logger:
     _original_global_logging_class = logging.getLoggerClass()
     if not isinstance(_original_global_logging_class, type) or not issubclass(
@@ -227,18 +232,15 @@ def get_logger(name: str = None) -> Logger:
         _original_root_manager_logging_class, logging.Logger
     ):
         _original_root_manager_logging_class = logging.Logger
-    # noinspection PyUnresolvedReferences
-    logging._acquireLock()
-    try:
+
+    with logging_lock:
         logging.setLoggerClass(Logger)
         logging.root.manager.setLoggerClass(Logger)
         new_logger = logging.getLogger(name=name)
         logging.setLoggerClass(_original_global_logging_class)
         logging.root.manager.setLoggerClass(_original_root_manager_logging_class)
         return new_logger
-    finally:
-        # noinspection PyUnresolvedReferences
-        logging._releaseLock()
+
 
 logger = get_logger('venafi')
 api_logger = logger.getChild('api')

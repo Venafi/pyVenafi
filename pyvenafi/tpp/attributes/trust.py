@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.top import TopAttributes
 
 class TrustAttributes(TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Trust"
     allow_from = Attribute('Allow From', min_version='21.4')
+    allow_symbolic_links = Attribute('Allow Symbolic Links', min_version='24.3')
     allowed_algorithm = Attribute('Allowed Algorithm', min_version='21.4')
     allowed_command = Attribute('Allowed Command', min_version='21.4')
     allowed_vendor_types = Attribute('Allowed Vendor Types', min_version='21.4')
@@ -17,6 +18,9 @@ class TrustAttributes(TopAttributes, metaclass=IterableMeta):
     automatic_rotation_lead_time = Attribute('Automatic Rotation Lead Time', min_version='23.3')
     contact = Attribute('Contact', min_version='21.4')
     deny_from = Attribute('Deny From', min_version='21.4')
+    disable_insecure_permissions_warning = Attribute('Disable Insecure Permissions Warning', min_version='24.3')
+    disable_symbolic_links_warning = Attribute('Disable Symbolic Links Warning', min_version='24.3')
+    disallowed_private_key_formats = Attribute('Disallowed Private Key Formats', min_version='24.3')
     key_bit_strength = Attribute('Key Bit Strength', min_version='21.4')
     management_type = Attribute('Management Type', min_version='23.3')
     maximum_authorizations_per_keyset = Attribute('Maximum Authorizations Per Keyset', min_version='21.4')
@@ -24,4 +28,6 @@ class TrustAttributes(TopAttributes, metaclass=IterableMeta):
     pbes2_algorithm = Attribute('PBES2 Algorithm', min_version='24.1')
     required_options = Attribute('Required Options', min_version='21.4')
     restricted_pbes2_algorithms = Attribute('Restricted PBES2 Algorithms', min_version='24.1')
+    ssh_pkix_parameter_set = Attribute('SSH PKIX Parameter Set')
+    ssh_pkix_parameter_set_policy = Attribute('SSH PKIX Parameter Set Policy')
     trust_id = Attribute('Trust Id', min_version='21.4')

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.flow_action_approver_base import FlowActionApproverBaseAttributes
 

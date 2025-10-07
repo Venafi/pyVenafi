@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.application_base import ApplicationBaseAttributes
 
@@ -32,6 +32,7 @@ class DataPowerAttributes(ApplicationBaseAttributes, metaclass=IterableMeta):
     ssh_prompt = Attribute('SSH Prompt', min_version='21.4')
     ssl_profile_type = Attribute('SSL Profile Type', min_version='21.4')
     ssl_proxy_profile = Attribute('SSL Proxy Profile', min_version='21.4')
+    tls_proxy_direction = Attribute('TLS Proxy Direction', min_version='25.1')
     temp_certificate_label = Attribute('Temp Certificate Label', min_version='21.4')
     use_basic_provisioning = Attribute('Use Basic Provisioning', min_version='21.4')
     xml_port = Attribute('XML Port', min_version='21.4')

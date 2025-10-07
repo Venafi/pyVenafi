@@ -7,6 +7,12 @@ Counter
 .. _pyvenafi.tpp.api.websdk.models.stats.counter_model:
 .. autopydantic_model:: pyvenafi.tpp.api.websdk.models.stats.Counter
 
+CounterContainer
+----------------
+
+.. _pyvenafi.tpp.api.websdk.models.stats.countercontainer_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.stats.CounterContainer
+
 Key
 ---
 

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.driver_base import DriverBaseAttributes
 
@@ -16,6 +16,7 @@ class CertificateAuthorityBaseAttributes(DriverBaseAttributes, metaclass=Iterabl
     credits_used = Attribute('Credits Used')
     enhanced_key_usage = Attribute('Enhanced Key Usage')
     host = Attribute('Host')
+    issuing_certificate = Attribute('Issuing Certificate')
     manual_approval = Attribute('Manual Approval')
     port = Attribute('Port')
     protection_key = Attribute('Protection Key')

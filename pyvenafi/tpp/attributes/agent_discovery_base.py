@@ -1,19 +1,14 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.discovery_statistics import DiscoveryStatisticsAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes
 
-class AgentDiscoveryBaseAttributes(
-    DiscoveryStatisticsAttributes,
-    ScheduleBaseAttributes,
-    TopAttributes,
-    metaclass=IterableMeta
-):
+class AgentDiscoveryBaseAttributes(DiscoveryStatisticsAttributes, ScheduleBaseAttributes, TopAttributes, metaclass=IterableMeta):
     __config_class__ = "Agent Discovery Base"
     configuration = Attribute('Configuration')
     discovery_exclusion_dn = Attribute('Discovery Exclusion DN')

@@ -449,9 +449,9 @@ class _SSH(WebSdkEndpoint):
             return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _KeyDetails(WebSdkEndpoint):
-        def post(self, key_id: int):
+        def post(self, key_ids: list[int]):
             body = {
-                'KeyId': key_id
+                'KeyId': key_ids
             }
 
             class Output(WebSdkOutputModel):

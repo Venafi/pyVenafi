@@ -16,6 +16,7 @@ class _HSMAPI(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/API')
         self._url = self._url.replace('vedsdk', 'vedhsm')
+        self.Decrypt = self._Decrypt(api_obj=api_obj, url=f'{self._url}/decrypt')
         self.Derive = self._Derive(api_obj=api_obj, url=f'{self._url}/derive')
         self.GetChain = self._GetChain(api_obj=api_obj, url=f'{self._url}/getchain')
         self.GetGPGPublicKey = self._GetGPGPublicKey(api_obj=self._api_obj, url=f'{self._url}/GetGPGPublicKey')
@@ -34,6 +35,21 @@ class _HSMAPI(WebSdkEndpoint):
                 csc: str = ApiField(alias='csc')
 
             return generate_output(output_cls=Output, response=self._get())
+
+    class _Decrypt(WebSdkEndpoint):
+        def post(self, key_id: str, data: str):
+            body = {
+                "KeyId": key_id,
+                "Data": data,
+            }
+
+            class Output(WebSdkOutputModel):
+                success: bool = ApiField(alias='Success')
+                error: str = ApiField(alias='Error')
+                try_later: bool = ApiField(alias='TryLater')
+                result_data: str = ApiField(alias='ResultData')
+
+            return generate_output(output_cls=Output, response=self._post(data=body))
 
     class _Derive(WebSdkEndpoint):
         def post(self):

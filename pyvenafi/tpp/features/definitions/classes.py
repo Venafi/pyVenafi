@@ -1,13 +1,11 @@
 from pyvenafi.tpp.attributes._helper import IterableMeta
 
-
 class Classes(metaclass=IterableMeta):
     acme_account = "ACME Account"
     acme_authorization = "ACME Authorization"
     acme_challenge = "ACME Challenge"
     acme_order = "ACME Order"
     acme_root = "ACME Root"
-    aws_ec2_instance_monitor = "AWS EC2 Instance Monitor"
     activedirectory_identity_driver = "ActiveDirectory Identity Driver"
     adaptable_app = "Adaptable App"
     adaptable_bulk_app = "Adaptable Bulk App"
@@ -85,8 +83,6 @@ class Classes(metaclass=IterableMeta):
     client_work_container = "Client Work Container"
     client_work_root = "Client Work Root"
     clientgroup_monitor = "ClientGroup Monitor"
-    cloud_instance_monitor = "Cloud Instance Monitor"
-    cloud_instance_monitor_driver_base = "Cloud Instance Monitor Driver Base"
     code_sign_manager = "Code Sign Manager"
     code_sign_preapproval_action = "Code Sign PreApproval Action"
     code_signing_action = "Code Signing Action"

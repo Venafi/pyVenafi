@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.code_signing_environment_template_base import CodeSigningEnvironmentTemplateBaseAttributes
 
-class CodeSigningAppleEnvironmentTemplateAttributes(
-    CodeSigningEnvironmentTemplateBaseAttributes,
-    metaclass=IterableMeta
-):
+class CodeSigningAppleEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplateBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Code Signing Apple Environment Template"
     cn_pattern = Attribute('CN Pattern', min_version='21.4')
     certificate_authority = Attribute('Certificate Authority', min_version='22.1')

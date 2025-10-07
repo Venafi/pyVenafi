@@ -7,6 +7,12 @@ Deletion
 .. _pyvenafi.tpp.api.websdk.models.recycle_bin.deletion_model:
 .. autopydantic_model:: pyvenafi.tpp.api.websdk.models.recycle_bin.Deletion
 
+Detail
+------
+
+.. _pyvenafi.tpp.api.websdk.models.recycle_bin.detail_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.recycle_bin.Detail
+
 Identity
 --------
 

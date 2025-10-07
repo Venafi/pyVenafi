@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from packaging.version import Version
 
 @dataclass
 class Permissions:
@@ -94,7 +93,6 @@ class Scope:
     @classmethod
     def _all(
         cls,
-        version: str = "22.1.0",
         admin: bool = True,
         agent: bool = True,
         certificate: bool = True,
@@ -108,9 +106,7 @@ class Scope:
     ):
         self = cls()
         if admin:
-            self.admin(delete=True, read=True, recyclebin=False)
-            if Version(version=version) >= Version(version="22.2.0"):
-                self._admin.recyclebin = True
+            self.admin(delete=True, read=True, recyclebin=True)
         if agent:
             self.agent(delete=True, read=True)
         if certificate:

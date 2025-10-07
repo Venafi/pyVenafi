@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.code_signing_environment_template_base import CodeSigningEnvironmentTemplateBaseAttributes
 
-class CodeSigningKeyPairEnvironmentTemplateAttributes(
-    CodeSigningEnvironmentTemplateBaseAttributes,
-    metaclass=IterableMeta
-):
+class CodeSigningKeyPairEnvironmentTemplateAttributes(CodeSigningEnvironmentTemplateBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Code Signing Key Pair Environment Template"
     key_algorithm = Attribute('Key Algorithm', min_version='21.4')
     key_container_dn = Attribute('Key Container DN', min_version='21.4')

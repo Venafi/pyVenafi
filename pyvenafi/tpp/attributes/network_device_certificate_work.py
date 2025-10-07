@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.client_certificate_work import ClientCertificateWorkAttributes
 
@@ -17,20 +17,11 @@ class NetworkDeviceCertificateWorkAttributes(ClientCertificateWorkAttributes, me
     http_basic_auth_disabled = Attribute('Http Basic Auth Disabled', min_version='21.4')
     http_digest_auth_disabled = Attribute('Http Digest Auth Disabled', min_version='21.4')
     pop_mode = Attribute('PoP Mode', min_version='21.4')
-    reenrollment_subset_subject_matching_disabled = Attribute(
-        'ReEnrollment Subset Subject Matching Disabled',
-        min_version='21.4'
-    )
+    reenrollment_subset_subject_matching_disabled = Attribute('ReEnrollment Subset Subject Matching Disabled', min_version='21.4')
     require_additional_http_auth = Attribute('Require Additional Http Auth', min_version='21.4')
     retryafter_disabled = Attribute('RetryAfter Disabled', min_version='21.4')
     revocation_check_timeout = Attribute('Revocation Check Timeout', min_version='21.4')
     revocation_mode = Attribute('Revocation Mode', min_version='21.4')
-    revoke_existing_certificate_on_reenrollment = Attribute(
-        'Revoke Existing Certificate On ReEnrollment',
-        min_version='21.4'
-    )
-    revoke_existing_certificate_on_reenrollment_delay = Attribute(
-        'Revoke Existing Certificate On ReEnrollment Delay',
-        min_version='21.4'
-    )
+    revoke_existing_certificate_on_reenrollment = Attribute('Revoke Existing Certificate On ReEnrollment', min_version='21.4')
+    revoke_existing_certificate_on_reenrollment_delay = Attribute('Revoke Existing Certificate On ReEnrollment Delay', min_version='21.4')
     use_implicit_trust_anchors = Attribute('Use Implicit Trust Anchors', min_version='21.4')

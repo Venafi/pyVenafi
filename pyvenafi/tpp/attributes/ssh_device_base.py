@@ -32,6 +32,8 @@ class SshDeviceBaseAttributes(metaclass=IterableMeta):
     minimum_key_bit_strength = Attribute('Minimum Key Bit Strength', min_version='21.4')
     required_options = Attribute('Required Options', min_version='21.4')
     root_server_access = Attribute('Root Server Access', min_version='21.4')
+    ssh_pkix_parameter_set = Attribute('SSH PKIX Parameter Set')
+    ssh_pkix_parameter_set_policy = Attribute('SSH PKIX Parameter Set Policy')
     server_access = Attribute('Server Access', min_version='21.4')
     ssh_device_status = Attribute('Ssh Device Status', min_version='21.4')
     ssh_device_type = Attribute('Ssh Device Type', min_version='21.4')

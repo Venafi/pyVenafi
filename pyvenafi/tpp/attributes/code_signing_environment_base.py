@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.top import TopAttributes
 
@@ -17,6 +17,12 @@ class CodeSigningEnvironmentBaseAttributes(TopAttributes, metaclass=IterableMeta
     key_time_constraint = Attribute('Key Time Constraint')
     key_use_authentication = Attribute('Key Use Authentication')
     key_use_flow_dn = Attribute('Key Use Flow DN')
+    pkix_parameter_set = Attribute('PKIX Parameter Set')
+    pkix_parameter_set_authentication = Attribute('PKIX Parameter Set Authentication')
+    pkix_parameter_set_authentication_policy = Attribute('PKIX Parameter Set Authentication Policy')
+    pkix_parameter_set_encryption = Attribute('PKIX Parameter Set Encryption')
+    pkix_parameter_set_encryption_policy = Attribute('PKIX Parameter Set Encryption Policy')
+    pkix_parameter_set_policy = Attribute('PKIX Parameter Set Policy')
     per_user = Attribute('Per User')
     prevent_use_of_expired_environment = Attribute('Prevent Use Of Expired Environment')
     related_items_deleted_along_with_this_environment = Attribute('Related Items Deleted Along With This Environment')

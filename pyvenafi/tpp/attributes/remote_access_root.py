@@ -1,32 +1,27 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.branch_base import BranchBaseAttributes
 
 class RemoteAccessRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Remote Access Root"
     approved_issuer = Attribute('Approved Issuer', min_version='21.4')
-    attempt_sid_extension_before_source_field = Attribute(
-        'Attempt SID Extension Before Source Field',
-        min_version='23.3'
-    )
+    attempt_sid_extension_before_source_field = Attribute('Attempt SID Extension Before Source Field', min_version='23.3')
     authentication_methods = Attribute('Authentication Methods', min_version='21.4')
     certificate_auth_lookup_field = Attribute('Certificate Auth Lookup Field', min_version='21.4')
     certificate_auth_source_field = Attribute('Certificate Auth Source Field', min_version='21.4')
     certificate_auth_source_regex = Attribute('Certificate Auth Source Regex', min_version='21.4')
     certificate_pinning_options = Attribute('Certificate Pinning Options', min_version='21.4')
     certificate_pinning_work_dn = Attribute('Certificate Pinning Work DN', min_version='21.4')
+    clock_skew = Attribute('Clock Skew', min_version='24.3')
     expiration = Attribute('Expiration', min_version='21.4')
     grant_validity = Attribute('Grant Validity', min_version='21.4')
     jwt_auth_source_field = Attribute('Jwt Auth Source Field', min_version='22.4')
     mapping_table = Attribute('Mapping Table', min_version='21.4')
-    oauth_device_authorization_verification_uri = Attribute(
-        'OAuth Device Authorization Verification URI',
-        min_version='22.1'
-    )
+    oauth_device_authorization_verification_uri = Attribute('OAuth Device Authorization Verification URI', min_version='22.1')
     oauth_device_authorization_verification_uri_complete_format = Attribute(
         'OAuth Device Authorization Verification URI Complete Format',
         min_version='22.1'

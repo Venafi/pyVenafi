@@ -1,6 +1,18 @@
 Config
 ======
 
+AttributeDefinition
+-------------------
+
+.. _pyvenafi.tpp.api.websdk.models.config.attributedefinition_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.config.AttributeDefinition
+
+ClassDefinition
+---------------
+
+.. _pyvenafi.tpp.api.websdk.models.config.classdefinition_model:
+.. autopydantic_model:: pyvenafi.tpp.api.websdk.models.config.ClassDefinition
+
 NameAttribute
 -------------
 

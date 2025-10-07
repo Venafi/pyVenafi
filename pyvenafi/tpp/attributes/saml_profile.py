@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.top import TopAttributes
 
@@ -18,10 +18,7 @@ class SAMLProfileAttributes(TopAttributes, metaclass=IterableMeta):
     idp_metadata_filename = Attribute('IdP Metadata Filename', min_version='21.4')
     idp_metadata_import_date = Attribute('IdP Metadata Import Date', min_version='21.4')
     idp_response_signing_certificate_dn = Attribute('IdP Response Signing Certificate DN', min_version='21.4')
-    idp_response_signing_certificate_vault_id = Attribute(
-        'IdP Response Signing Certificate Vault Id',
-        min_version='21.4'
-    )
+    idp_response_signing_certificate_vault_id = Attribute('IdP Response Signing Certificate Vault Id', min_version='21.4')
     idp_signin_url = Attribute('IdP SignIn Url', min_version='21.4')
     idp_vendor = Attribute('IdP Vendor', min_version='21.4')
     min_incoming_signing_algorithm = Attribute('Min Incoming Signing Algorithm', min_version='21.4')

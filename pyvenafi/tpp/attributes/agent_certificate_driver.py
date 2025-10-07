@@ -5,10 +5,5 @@ from pyvenafi.tpp.attributes.agent_certificate_base import AgentCertificateBaseA
 from pyvenafi.tpp.attributes.agent_driver_base import AgentDriverBaseAttributes
 from pyvenafi.tpp.attributes.schedule_base import ScheduleBaseAttributes
 
-class AgentCertificateDriverAttributes(
-    AgentCertificateBaseAttributes,
-    AgentDriverBaseAttributes,
-    ScheduleBaseAttributes,
-    metaclass=IterableMeta
-):
+class AgentCertificateDriverAttributes(AgentCertificateBaseAttributes, AgentDriverBaseAttributes, ScheduleBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Agent Certificate Driver"

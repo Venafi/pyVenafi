@@ -36,6 +36,7 @@ EnvironmentTypes = Union[
     KeyPairEnvironment,
 ]
 
+
 @feature('Project')
 class CodeSignProject(FeatureBase):
     def create(
@@ -57,12 +58,12 @@ class CodeSignProject(FeatureBase):
         Args:
             name: Name of the project.
             parent_folder: :ref:`config_object` or :ref:`dn` of the parent folder.
-            applications: List of :class:`~.models.codesign.Application`\s, :class:`~.models.codesign.ApplicationCollection`\s, :ref:`config_object`\s, or :ref:`dn`\s of application or application collections.
-            auditors: List of :ref:`identity_object`\s, :ref:`config_object`\s, or prefixed universal of identities to be project auditors.
+            applications: List of :class:`~.models.codesign.Application`, :class:`~.models.codesign.ApplicationCollection`, :ref:`config_object`, or :ref:`dn` of application or application collections.
+            auditors: List of :ref:`identity_object`, :ref:`config_object`, or prefixed universal of identities to be project auditors.
             description: Description of the project.
-            key_use_approvers: List of :ref:`identity_object`\s, :ref:`config_object`\s, or prefixed universal of identities who can approve environment usage.
-            key_users: List of :ref:`identity_object`\s, :ref:`config_object`\s, or prefixed universal of identities who can sign with environments.
-            owners: List of :ref:`identity_object`\s, :ref:`config_object`\s, or prefixed universal of identities to be project owners.
+            key_use_approvers: List of :ref:`identity_object`, :ref:`config_object`, or prefixed universal of identities who can approve environment usage.
+            key_users: List of :ref:`identity_object`, :ref:`config_object`, or prefixed universal of identities who can sign with environments.
+            owners: List of :ref:`identity_object`, :ref:`config_object`, or prefixed universal of identities to be project owners.
             environments: List of signing environments for the project.
             raise_if_already_exists: If the object already exists, raise an error.
 
@@ -86,6 +87,8 @@ class CodeSignProject(FeatureBase):
             if raise_if_already_exists:
                 raise
 
+        self.enable(project=dn)
+        time.sleep(5)
         project = self.get(dn=dn)
 
         # Update project attributes
@@ -97,7 +100,6 @@ class CodeSignProject(FeatureBase):
                 key_use_approvers,
                 key_users,
                 owners,
-                environments,
             ]
         ):
             project.description = description
@@ -106,49 +108,52 @@ class CodeSignProject(FeatureBase):
             project.key_use_approvers = Items(items=key_use_approvers)
             project.key_users = Items(items=key_users)
             project.owners = Items(items=owners)
+            project.status = CodeSignAttributeValues.ProjectStatus.enabled
 
             self.update(project=project)
 
-        templates = self._api.websdk.Codesign.EnumerateTemplates.post()
+        # Add environments
+        if environments:
+            templates = self._api.websdk.Codesign.EnumerateTemplates.post()
 
-        def get_env_template_and_update_kwargs(
-            _e: EnvironmentTypes
-        ):
-            try:
-                if isinstance(_e, AppleEnvironment):
-                    _key, _templates = 'apple_environment', templates.apple_templates
-                elif isinstance(_e, CertificateEnvironment):
-                    _key, _templates = 'certificate_environment', templates.certificate_templates
-                elif isinstance(_e, CSPEnvironment):
-                    _key, _templates = 'csp_environment', templates.csp_templates
-                elif isinstance(_e, DotNetEnvironment):
-                    _key, _templates = 'dot_net_environment', templates.dot_net_templates
-                elif isinstance(_e, GPGEnvironment):
-                    _key, _templates = 'gpg_environment', templates.gpg_templates
-                elif isinstance(_e, KeyPairEnvironment):
-                    _key, _templates = 'key_pair_environment', templates.key_pair_templates
-                else:
-                    raise ValueError(f'Invalid type {type(_e)}')
-                _template = next(t for t in _templates if t.dn == _e.template_dn)
-                return _template, {
-                    _key: _e
-                }
-            except:
-                raise ValueError(f'Unable to find template "{_e.template_dn}" for environment "{_e.dn}".')
+            def get_env_template_and_update_kwargs(
+                _e: EnvironmentTypes
+            ):
+                try:
+                    if isinstance(_e, AppleEnvironment):
+                        _key, _templates = 'apple_environment', templates.apple_templates
+                    elif isinstance(_e, CertificateEnvironment):
+                        _key, _templates = 'certificate_environment', templates.certificate_templates
+                    elif isinstance(_e, CSPEnvironment):
+                        _key, _templates = 'csp_environment', templates.csp_templates
+                    elif isinstance(_e, DotNetEnvironment):
+                        _key, _templates = 'dot_net_environment', templates.dot_net_templates
+                    elif isinstance(_e, GPGEnvironment):
+                        _key, _templates = 'gpg_environment', templates.gpg_templates
+                    elif isinstance(_e, KeyPairEnvironment):
+                        _key, _templates = 'key_pair_environment', templates.key_pair_templates
+                    else:
+                        raise ValueError(f'Invalid type {type(_e)}')
+                    _template = next(t for t in _templates if t.dn == _e.template_dn)
+                    return _template, {
+                        _key: _e
+                    }
+                except:
+                    raise ValueError(f'Unable to find template "{_e.template_dn}" for environment "{_e.dn}".')
 
-        for e in environments:
-            template, update_kwargs = get_env_template_and_update_kwargs(e)
-            self._api.websdk.Codesign.CreateEnvironment.post(
-                dn=e.dn,
-                project={
-                    'Dn'  : project.dn,
-                    'Guid': project.guid,
-                    'Id'  : project.id
-                },
-                template=template,
-                template_dn=template.dn
-            )
-            self._api.websdk.Codesign.UpdateEnvironment.post(**update_kwargs)
+            for e in environments:
+                template, update_kwargs = get_env_template_and_update_kwargs(e)
+                self._api.websdk.Codesign.CreateEnvironment.post(
+                    dn=e.dn,
+                    project={
+                        'Dn'  : project.dn,
+                        'Guid': project.guid,
+                        'Id'  : project.id
+                    },
+                    template=template,
+                    template_dn=template.dn
+                )
+                self._api.websdk.Codesign.UpdateEnvironment.post(**update_kwargs)
 
         return self.get(guid=project.guid)
 
@@ -162,7 +167,10 @@ class CodeSignProject(FeatureBase):
         Args:
             project: The updated :class:`~.models.codesign.Project`.
         """
-        self._api.websdk.Codesign.UpdateProject.post(project=project)
+        response = self._api.websdk.Codesign.UpdateProject.post(project=project)
+        response.assert_valid_response()
+        if response.error:
+            raise Exception(response.error)
 
     def rename(
         self,
@@ -247,7 +255,7 @@ class CodeSignProject(FeatureBase):
     # region Update Project Status
     def disable(
         self,
-        project: Union[Object, Project]
+        project: Union[Object, Project, str]
     ):
         """
         Disable a project. Changes project status to "disabled".
@@ -257,56 +265,45 @@ class CodeSignProject(FeatureBase):
         """
         self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.disabled)
 
-    def submit_for_approval(
+    def enable(
         self,
-        project: Union[Object, Project]
+        project: Union[Object, Project, str]
     ):
         """
-        Submit a "draft" project to be approved. Changes project status to "pending".
+        Enable a project.
 
         Args:
-            project: :class:`~.models.codesign.Project` to submit.
+            project: :class:`~.models.codesign.Project` to enable.
         """
         dn = self._get_dn(project)
         project = self.get(dn=dn)
-        if project.status == int(CodeSignAttributeValues.ProjectStatus.draft):
-            self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.pending)
+        match project.status:
+            case CodeSignAttributeValues.ProjectStatus.enabled:
+                return  # project is already enabled
+            case CodeSignAttributeValues.ProjectStatus.disabled:
+                # re-enable the project
+                self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
+            case CodeSignAttributeValues.ProjectStatus.draft | CodeSignAttributeValues.ProjectStatus.pending:
+                # make sure project has pending status to create a flow ticket
+                if project.status == CodeSignAttributeValues.ProjectStatus.draft:
+                    self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.pending)
 
-    def approve(
-        self,
-        project: Union[Object, Project]
-    ):
-        """
-        Approve a "pending" project. Changes project status to "enabled".
-
-        Args:
-            project: :class:`~.models.codesign.Project` to approve.
-        """
-        dn = self._get_dn(project)
-        project = self.get(dn=dn)
-        if project.status == int(CodeSignAttributeValues.ProjectStatus.pending):
-            self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
-
-    def submit_and_approve(
-        self,
-        project: Union[Object, Project]
-    ):
-        """
-        Approves a "draft" or "pending" project. Changes project status to "enabled".
-
-        Args:
-            project: :class:`~.models.codesign.Project` to submit and approve.
-        """
-        dn = self._get_dn(project)
-        project = self.get(dn=dn)
-        if project.status == int(CodeSignAttributeValues.ProjectStatus.enabled):
-            return
-        if project.status == int(CodeSignAttributeValues.ProjectStatus.draft):
-            self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.pending)
-            time.sleep(5)
-            self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
-        else:
-            self._update_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
+                # approve the flow ticket to enable the project
+                try:
+                    self._approve_flow_ticket(project=project)
+                    self._wait_for_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
+                except:
+                    self._api.websdk.Config.Write.post(
+                        object_dn=dn,
+                        attribute_data=[{'Status': [1]}]
+                    )
+                    self._api.websdk.Config.ClearAttribute.post(object_dn=dn, attribute_name='Disabled')
+            case CodeSignAttributeValues.ProjectStatus.disabled_by_parent:
+                raise ValueError(f'Project is disabled by parent. Enable the parent first and try again.')
+            case CodeSignAttributeValues.ProjectStatus.deleted:
+                raise ValueError(f'Project is marked for deletion.')
+            case _:
+                raise ValueError(f'Invalid project status {project.status}.')
 
     def _update_status(
         self,
@@ -317,4 +314,47 @@ class CodeSignProject(FeatureBase):
         dn = self._get_dn(project)
         output = self._api.websdk.Codesign.UpdateProjectStatus.post(project_status=project_status, dn=dn)
         output.assert_valid_response()
+        if output.error:
+            raise Exception(output.error)
+        self._wait_for_status(project=project, project_status=project_status)
+
+    def _wait_for_status(
+        self,
+        project: Union[Object, Project],
+        project_status: Union[int, CodeSignAttributeValues.ProjectStatus],
+        timeout: float = 120.0,
+        interval: float = 1.0
+    ):
+        project_status = int(project_status)
+        current_status = None
+        dn = self._get_dn(project)
+
+        start = time.time()
+        while time.time() < start + timeout:
+            project = self.get(dn=dn)
+            if project.status == project_status:
+                return
+            current_status = int(project.status)
+            time.sleep(interval)
+        raise TimeoutError(
+            f'Timed out waiting for project status {project_status}. '
+            f'Current status is {current_status}.'
+        )
+
+    def _approve_flow_ticket(
+        self,
+        project: Union[Project, Object, str],
+        attempts: int = 5,
+        interval: float = 5.0
+    ):
+        dn = self._get_dn(project)
+        for i in range(attempts):
+            tickets = self._api.websdk.Flow.Tickets.Enumerate.post().tickets
+            for ticket in tickets:
+                for key_value in ticket.environment:
+                    if key_value.key == 'ObjectDn' and key_value.value == dn:
+                        self._api.websdk.Flow.Tickets.Approve.post(ticket_id=ticket.id)
+                        return
+            time.sleep(interval)
+        raise ValueError(f'No flow ticket found for {dn} after {attempts} attempts.')
     # endregion Update Project Status

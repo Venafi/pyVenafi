@@ -10,3 +10,5 @@ testfile.py
 *logfile*.*
 */temp
 /package_pypi.sh
+/sandbox/
+poetry.lock

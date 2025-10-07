@@ -11,6 +11,7 @@ from typing import (
 
 from pyvenafi.logger import features_logger
 from pyvenafi.tpp.api.api_base import InvalidResponseError
+from pyvenafi.tpp.api.websdk.enums.certificate import KeyAlgorithmOids
 from pyvenafi.tpp.attributes.x509_certificate import X509CertificateAttributes
 from pyvenafi.tpp.features.bases.feature_base import (
     feature,
@@ -106,6 +107,7 @@ class Certificate(FeatureBase):
         key_algorithm: 'str' = None,
         key_strength: 'int' = None,
         elliptic_curve: 'str' = None,
+        pkix_parameter_set: 'str' = None,
         ca_template: 'Union[config.Object, str]' = None,
         disable_automatic_renewal: 'bool' = None,
         renewal_window: 'int' = None,
@@ -122,6 +124,7 @@ class Certificate(FeatureBase):
             description: Description of the certificate object.
             contacts: List of :ref:`identity_object` or :ref:`prefixed_name` of the contacts for this certificate.
             approvers: List of :ref:`identity_object` or :ref:`prefixed_name` of the approvers for this certificate.
+            config_class: Config class of the certificate object.
             management_type: Certificate management type.
             service_generated_csr: If ``True``, TPP generates the CSR.
             generate_key_on_application: If ``True``, the key/CSR are generated on the target application.
@@ -140,6 +143,7 @@ class Certificate(FeatureBase):
             key_algorithm: Signing key algorithm.
             key_strength: Key strength in bits.
             elliptic_curve: Elliptic curve.
+            pkix_parameter_set: PKIX parameter set, or key alogrithm.
             ca_template: :ref:`config_object` or :ref:`dn` of the Certificate Authority template.
             disable_automatic_renewal: If ``True``, disables automatic renewal.
             renewal_window: Number of days that make the renewal window.
@@ -180,6 +184,7 @@ class Certificate(FeatureBase):
             X509CertificateAttributes.key_algorithm                    : key_algorithm,
             X509CertificateAttributes.key_bit_strength                 : key_strength,
             X509CertificateAttributes.elliptic_curve                   : elliptic_curve,
+            X509CertificateAttributes.pkix_parameter_set               : pkix_parameter_set,
             X509CertificateAttributes.certificate_authority            : self._get_dn(
                 ca_template
             ) if ca_template else None,
@@ -191,6 +196,37 @@ class Certificate(FeatureBase):
         }
         if attributes:
             cert_attrs.update(attributes)
+
+        if (
+            self._is_version_compatible(minimum='25.1')
+            and pkix_parameter_set is None
+            and key_algorithm is not None
+            and (key_strength is not None or elliptic_curve is not None)
+        ):
+            oid = {
+                'rsa': {
+                    "1024": KeyAlgorithmOids.rsa_1024,
+                    "2048": KeyAlgorithmOids.rsa_2048,
+                    "3072": KeyAlgorithmOids.rsa_3072,
+                    "4096": KeyAlgorithmOids.rsa_4096,
+                },
+                'ecc': {
+                    "p256": KeyAlgorithmOids.ec_nist_p256,
+                    "p384": KeyAlgorithmOids.ec_nist_p384,
+                    "p521": KeyAlgorithmOids.ec_nist_p521,
+                },
+            }.get(key_algorithm.lower(), {}).get(str(key_strength) if key_strength else elliptic_curve.lower(), None)
+
+            if oid:
+                del cert_attrs[X509CertificateAttributes.key_algorithm]
+                del cert_attrs[X509CertificateAttributes.key_bit_strength]
+                del cert_attrs[X509CertificateAttributes.elliptic_curve]
+
+                cert_attrs[X509CertificateAttributes.pkix_parameter_set] = oid
+
+        elif self._is_version_compatible(maximum="24.3"):
+            del cert_attrs[X509CertificateAttributes.pkix_parameter_set]
+
         return self._config_create(
             name=name,
             parent_folder_dn=self._get_dn(parent_folder),

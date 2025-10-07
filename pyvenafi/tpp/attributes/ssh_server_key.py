@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.ssh_key import SSHKeyAttributes
 from pyvenafi.tpp.attributes.validation_base import ValidationBaseAttributes

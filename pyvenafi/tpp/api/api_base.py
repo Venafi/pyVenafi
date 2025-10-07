@@ -80,7 +80,7 @@ class ApiEndpoint(object):
     class MUST be inherited by all API definitions.
     """
 
-    api_obj: 'WebSDK'
+    _api_obj: 'WebSDK'
 
     def __init__(self, api_obj, url: str):
         """
@@ -269,7 +269,7 @@ class ApiEndpoint(object):
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
         if data:
-            payload = json_pickler.dumps(data)
+            payload = json_pickler.dumps(self._session._sanitize(data))
             api_logger.debug(
                 f'{method}\nURL: {self._url}\nBODY: {payload}',
                 stacklevel=2

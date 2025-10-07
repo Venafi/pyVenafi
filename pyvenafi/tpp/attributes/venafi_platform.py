@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.proxy_base import ProxyBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes
@@ -24,10 +24,7 @@ class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttri
     certificate_verification = Attribute('Certificate Verification', min_version='21.4')
     certificate_verification_log_warnings = Attribute('Certificate Verification Log Warnings', min_version='21.4')
     check_crl = Attribute('Check CRL', min_version='21.4')
-    client_enrollment_require_windows_authentication = Attribute(
-        'Client Enrollment Require Windows Authentication',
-        min_version='21.4'
-    )
+    client_enrollment_require_windows_authentication = Attribute('Client Enrollment Require Windows Authentication', min_version='21.4')
     client_id = Attribute('Client ID', min_version='21.4')
     current_upgrade_task = Attribute('Current Upgrade Task', min_version='21.4')
     disable_triggers = Attribute('Disable Triggers', min_version='21.4')
@@ -63,10 +60,7 @@ class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttri
     processing_enabled = Attribute('Processing Enabled', min_version='21.4')
     scep_fqdn = Attribute('SCEP FQDN', min_version='21.4')
     scep_allowed_identities = Attribute('Scep Allowed Identities', min_version='21.4')
-    scep_allowed_identities_for_http_authentication = Attribute(
-        'Scep Allowed Identities For Http Authentication',
-        min_version='21.4'
-    )
+    scep_allowed_identities_for_http_authentication = Attribute('Scep Allowed Identities For Http Authentication', min_version='21.4')
     scep_certificate_authority = Attribute('Scep Certificate Authority', min_version='21.4')
     scep_challenge_password = Attribute('Scep Challenge Password', min_version='21.4')
     scep_encryption_certificate_authority = Attribute('Scep Encryption Certificate Authority', min_version='21.4')
@@ -74,19 +68,10 @@ class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttri
     scep_instant_retries_client_user_agent = Attribute('Scep Instant Retries Client User Agent', min_version='21.4')
     scep_intune_application_id = Attribute('Scep Intune Application Id', min_version='21.4')
     scep_intune_application_secret = Attribute('Scep Intune Application Secret', min_version='21.4')
-    scep_intune_authentication_authority_resource_url = Attribute(
-        'Scep Intune Authentication Authority Resource URL',
-        min_version='21.4'
-    )
-    scep_intune_challenge_password_sanity_check_disabled = Attribute(
-        'Scep Intune Challenge Password Sanity Check Disabled',
-        min_version='21.4'
-    )
+    scep_intune_authentication_authority_resource_url = Attribute('Scep Intune Authentication Authority Resource URL', min_version='21.4')
+    scep_intune_challenge_password_sanity_check_disabled = Attribute('Scep Intune Challenge Password Sanity Check Disabled', min_version='21.4')
     scep_intune_graph_resource_url = Attribute('Scep Intune Graph Resource URL', min_version='21.4')
-    scep_intune_http_connection_lease_timeout = Attribute(
-        'Scep Intune Http Connection Lease Timeout',
-        min_version='21.4'
-    )
+    scep_intune_http_connection_lease_timeout = Attribute('Scep Intune Http Connection Lease Timeout', min_version='21.4')
     scep_intune_http_connection_limit = Attribute('Scep Intune Http Connection Limit', min_version='21.4')
     scep_intune_http_timeout = Attribute('Scep Intune Http Timeout', min_version='21.4')
     scep_intune_ms_graph_resource_url = Attribute('Scep Intune MS Graph Resource URL', min_version='22.2')
@@ -109,10 +94,7 @@ class VenafiPlatformAttributes(ProxyBaseAttributes, TopAttributes, ZoneBaseAttri
     timestampserver_fqdn = Attribute('TimeStampServer FQDN', min_version='21.4')
     upgrade_details = Attribute('Upgrade Details', min_version='21.4')
     upgrade_status = Attribute('Upgrade Status', min_version='21.4')
-    user_agent_windows_authentication_enabled = Attribute(
-        'User Agent Windows Authentication Enabled',
-        min_version='21.4'
-    )
+    user_agent_windows_authentication_enabled = Attribute('User Agent Windows Authentication Enabled', min_version='21.4')
     vedclient_fqdn = Attribute('VEDClient FQDN', min_version='21.4')
     webadmin_fqdn = Attribute('WebAdmin FQDN', min_version='21.4')
     websdk_fqdn = Attribute('WebSDK FQDN', min_version='21.4')

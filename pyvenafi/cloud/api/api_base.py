@@ -225,7 +225,7 @@ class ApiEndpoint(object):
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
         if data:
-            payload = json_pickler.dumps(data)
+            payload = json_pickler.dumps(self._session._sanitize(data))
             api_logger.debug(
                 f'{method}\nURL: {self._url}\nBODY: {payload}',
                 stacklevel=2

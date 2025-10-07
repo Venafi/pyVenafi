@@ -1,27 +1,22 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.ssh_device_base import SshDeviceBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes
 from pyvenafi.tpp.attributes.validation_base import ValidationBaseAttributes
 
-class DeviceAttributes(
-    ConnectionBaseAttributes,
-    SshDeviceBaseAttributes,
-    TopAttributes,
-    ValidationBaseAttributes,
-    metaclass=IterableMeta
-):
+class DeviceAttributes(ConnectionBaseAttributes, SshDeviceBaseAttributes, TopAttributes, ValidationBaseAttributes, metaclass=IterableMeta):
     __config_class__ = "Device"
     adaptable_script_max_file_size = Attribute('Adaptable Script Max File Size')
     agentless_discovery_stage = Attribute('Agentless Discovery Stage')
     agentless_discovery_status = Attribute('Agentless Discovery Status')
     allow_adaptable_discovery = Attribute('Allow Adaptable Discovery')
     allow_agentless_discovery_and_remediation = Attribute('Allow Agentless Discovery and Remediation')
+    allow_symbolic_links = Attribute('Allow Symbolic Links')
     approver = Attribute('Approver')
     bulk_provisioning_dn = Attribute('Bulk Provisioning Dn')
     bulk_provisioning_stage = Attribute('Bulk Provisioning Stage')
@@ -33,7 +28,10 @@ class DeviceAttributes(
     cloud_service = Attribute('Cloud Service')
     created_by = Attribute('Created By')
     deny_multiple_authentication_failures = Attribute('Deny Multiple Authentication Failures')
+    disable_insecure_permissions_warning = Attribute('Disable Insecure Permissions Warning')
+    disable_symbolic_links_warning = Attribute('Disable Symbolic Links Warning')
     disabled_on = Attribute('Disabled On')
+    disallowed_private_key_formats = Attribute('Disallowed Private Key Formats')
     discovered_by_dn = Attribute('Discovered By DN')
     jump_server_dn = Attribute('Jump Server DN')
     last_attempt_to_get_client_subsystem_record = Attribute('Last Attempt To Get Client Subsystem Record')

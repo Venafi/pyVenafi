@@ -1,11 +1,8 @@
 from __future__ import annotations
-from pyvenafi.cloud.api.api_base import (
-    CloudApiEndpoint,
-    CloudApiOutputModel,
-    generate_output,
-)
+from pyvenafi.cloud.api.api_base import CloudApiEndpoint, CloudApiOutputModel, generate_output
 from pyvenafi.cloud.api.models import certificate_service
 from typing import Literal
+
 
 class _certificate_service:
     def __init__(self, api_obj):
@@ -40,27 +37,13 @@ class _certificate_service:
 
                         class Output(CloudApiOutputModel):
                             CertificateImportResponse: certificate_service.CertificateImportResponse
-
-                        return generate_output(
-                            output_cls=Output,
-                            response=self._post(data=data),
-                            rc_mapping={
-                                201: 'CertificateImportResponse'
-                            }
-                        )
+                        return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CertificateImportResponse'})
 
                     class _ID(CloudApiEndpoint):
                         def get(self):
                             class Output(CloudApiOutputModel):
                                 CertificateImportStatusDetailResponse: certificate_service.CertificateImportStatusDetailResponse
-
-                            return generate_output(
-                                output_cls=Output,
-                                response=self._get(params={}),
-                                rc_mapping={
-                                    200: 'CertificateImportStatusDetailResponse'
-                                }
-                            )
+                            return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CertificateImportStatusDetailResponse'})
 
             class _companydomains(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
@@ -76,29 +59,14 @@ class _certificate_service:
 
                     class Output(CloudApiOutputModel):
                         CompanyDomainResponse: certificate_service.CompanyDomainResponse
-
-                    return generate_output(
-                        output_cls=Output,
-                        response=self._get(params=data),
-                        rc_mapping={
-                            200: 'CompanyDomainResponse'
-                        }
-                    )
+                    return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CompanyDomainResponse'})
 
                 def post(self, CompanyDomainRequest: certificate_service.CompanyDomainRequest):
                     data = {**CompanyDomainRequest.dict()}
 
                     class Output(CloudApiOutputModel):
                         CompanyDomainResponse: certificate_service.CompanyDomainResponse
-
-                    return generate_output(
-                        output_cls=Output,
-                        response=self._post(data=data),
-                        rc_mapping={
-                            201: 'CompanyDomainResponse',
-                            202: 'CompanyDomainResponse'
-                        }
-                    )
+                    return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={201: 'CompanyDomainResponse', 202: 'CompanyDomainResponse'})
 
                 class _ID(CloudApiEndpoint):
                     def delete(self, retireCertificates: bool):
@@ -108,37 +76,20 @@ class _certificate_service:
 
                         class Output(CloudApiOutputModel):
                             pass
-
                         return generate_output(output_cls=Output, response=self._delete(params=data))
 
                     def get(self):
                         class Output(CloudApiOutputModel):
                             CompanyDomainInformation: certificate_service.CompanyDomainInformation
-
-                        return generate_output(
-                            output_cls=Output,
-                            response=self._get(params={}),
-                            rc_mapping={
-                                200: 'CompanyDomainInformation'
-                            }
-                        )
+                        return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CompanyDomainInformation'})
 
     class _v1(CloudApiEndpoint):
         def __init__(self, api_obj):
             super().__init__(api_obj=api_obj, url='v1')
-            self.certificateblocklist = self._certificateblocklist(
-                api_obj=self._api_obj,
-                url=f'{self._url}/certificateblocklist'
-            )
+            self.certificateblocklist = self._certificateblocklist(api_obj=self._api_obj, url=f'{self._url}/certificateblocklist')
             self.certificates = self._certificates(api_obj=self._api_obj, url=f'{self._url}/certificates')
-            self.companyproperties = self._companyproperties(
-                api_obj=self._api_obj,
-                url=f'{self._url}/companyproperties'
-            )
-            self.trustedcacertificates = self._trustedcacertificates(
-                api_obj=self._api_obj,
-                url=f'{self._url}/trustedcacertificates'
-            )
+            self.companyproperties = self._companyproperties(api_obj=self._api_obj, url=f'{self._url}/companyproperties')
+            self.trustedcacertificates = self._trustedcacertificates(api_obj=self._api_obj, url=f'{self._url}/trustedcacertificates')
 
         class _certificateblocklist(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
@@ -150,59 +101,35 @@ class _certificate_service:
             def delete(self):
                 class Output(CloudApiOutputModel):
                     pass
-
                 return generate_output(output_cls=Output, response=self._delete(params={}))
 
             def get(self, limit: int, page: str):
                 data = {
                     'limit': limit,
-                    'page' : page,
+                    'page': page,
                 }
 
                 class Output(CloudApiOutputModel):
                     CertificateBlockListPageResponse: certificate_service.CertificateBlockListPageResponse
-
-                return generate_output(
-                    output_cls=Output,
-                    response=self._get(params=data),
-                    rc_mapping={
-                        200: 'CertificateBlockListPageResponse'
-                    }
-                )
+                return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'CertificateBlockListPageResponse'})
 
             def post(self, CertificateBlockListRequest: certificate_service.CertificateBlockListRequest):
                 data = {**CertificateBlockListRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     CertificateBlockListResponse: certificate_service.CertificateBlockListResponse
-
-                return generate_output(
-                    output_cls=Output,
-                    response=self._post(data=data),
-                    rc_mapping={
-                        200: 'CertificateBlockListResponse',
-                        201: 'CertificateBlockListResponse'
-                    }
-                )
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CertificateBlockListResponse', 201: 'CertificateBlockListResponse'})
 
             class _FINGERPRINT(CloudApiEndpoint):
                 def delete(self):
                     class Output(CloudApiOutputModel):
                         pass
-
                     return generate_output(output_cls=Output, response=self._delete(params={}))
 
                 def get(self):
                     class Output(CloudApiOutputModel):
                         str: str
-
-                    return generate_output(
-                        output_cls=Output,
-                        response=self._get(params={}),
-                        rc_mapping={
-                            200: 'str'
-                        }
-                    )
+                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'str'})
 
         class _certificates(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
@@ -217,26 +144,15 @@ class _certificate_service:
                     self.encoded = self._encoded(api_obj=self._api_obj, url=f'{self._url}/encoded')
 
                 class _encoded(CloudApiEndpoint):
-                    def get(
-                        self,
-                        chainOrder: Literal['EE_FIRST', 'EE_ONLY', 'ROOT_FIRST'],
-                        format: Literal['DER', 'PEM']
-                    ):
+                    def get(self, chainOrder: Literal['EE_FIRST', 'EE_ONLY', 'ROOT_FIRST'], format: Literal['DER', 'PEM']):
                         data = {
                             'chainOrder': chainOrder,
-                            'format'    : format,
+                            'format': format,
                         }
 
                         class Output(CloudApiOutputModel):
                             str: str
-
-                        return generate_output(
-                            output_cls=Output,
-                            response=self._get(params=data),
-                            rc_mapping={
-                                200: 'str'
-                            }
-                        )
+                        return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'str'})
 
         class _companyproperties(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
@@ -251,28 +167,14 @@ class _certificate_service:
             def get(self):
                 class Output(CloudApiOutputModel):
                     CompanyPropertyResponse: certificate_service.CompanyPropertyResponse
-
-                return generate_output(
-                    output_cls=Output,
-                    response=self._get(params={}),
-                    rc_mapping={
-                        200: 'CompanyPropertyResponse'
-                    }
-                )
+                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CompanyPropertyResponse'})
 
             def post(self, CompanyPropertyRequest: certificate_service.CompanyPropertyRequest):
                 data = {**CompanyPropertyRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     CompanyPropertyInformation: certificate_service.CompanyPropertyInformation
-
-                return generate_output(
-                    output_cls=Output,
-                    response=self._post(data=data),
-                    rc_mapping={
-                        200: 'CompanyPropertyInformation'
-                    }
-                )
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'CompanyPropertyInformation'})
 
             class _ID(CloudApiEndpoint):
                 def put(self, CompanyPropertyRequest: certificate_service.CompanyPropertyRequest):
@@ -280,27 +182,13 @@ class _certificate_service:
 
                     class Output(CloudApiOutputModel):
                         CompanyPropertyInformation: certificate_service.CompanyPropertyInformation
-
-                    return generate_output(
-                        output_cls=Output,
-                        response=self._put(data=data),
-                        rc_mapping={
-                            200: 'CompanyPropertyInformation'
-                        }
-                    )
+                    return generate_output(output_cls=Output, response=self._put(data=data), rc_mapping={200: 'CompanyPropertyInformation'})
 
             class _TYPE(CloudApiEndpoint):
                 def get(self):
                     class Output(CloudApiOutputModel):
                         CompanyPropertyInformation: certificate_service.CompanyPropertyInformation
-
-                    return generate_output(
-                        output_cls=Output,
-                        response=self._get(params={}),
-                        rc_mapping={
-                            200: 'CompanyPropertyInformation'
-                        }
-                    )
+                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'CompanyPropertyInformation'})
 
         class _trustedcacertificates(CloudApiEndpoint):
             def __init__(self, *args, **kwargs):
@@ -313,29 +201,14 @@ class _certificate_service:
             def get(self):
                 class Output(CloudApiOutputModel):
                     TrustedCACertificateResponse: certificate_service.TrustedCACertificateResponse
-
-                return generate_output(
-                    output_cls=Output,
-                    response=self._get(params={}),
-                    rc_mapping={
-                        200: 'TrustedCACertificateResponse'
-                    }
-                )
+                return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'TrustedCACertificateResponse'})
 
             def post(self, TrustedCACertificatesRequest: certificate_service.TrustedCACertificatesRequest):
                 data = {**TrustedCACertificatesRequest.dict()}
 
                 class Output(CloudApiOutputModel):
                     TrustedCACertificateResponse: certificate_service.TrustedCACertificateResponse
-
-                return generate_output(
-                    output_cls=Output,
-                    response=self._post(data=data),
-                    rc_mapping={
-                        200: 'TrustedCACertificateResponse',
-                        201: 'TrustedCACertificateResponse'
-                    }
-                )
+                return generate_output(output_cls=Output, response=self._post(data=data), rc_mapping={200: 'TrustedCACertificateResponse', 201: 'TrustedCACertificateResponse'})
 
             class _FINGERPRINT(CloudApiEndpoint):
                 def __init__(self, *args, **kwargs):
@@ -345,45 +218,23 @@ class _certificate_service:
                 def get(self):
                     class Output(CloudApiOutputModel):
                         ExtendedTrustedCACertificateInformation: certificate_service.ExtendedTrustedCACertificateInformation
-
-                    return generate_output(
-                        output_cls=Output,
-                        response=self._get(params={}),
-                        rc_mapping={
-                            200: 'ExtendedTrustedCACertificateInformation'
-                        }
-                    )
+                    return generate_output(output_cls=Output, response=self._get(params={}), rc_mapping={200: 'ExtendedTrustedCACertificateInformation'})
 
                 class _contents(CloudApiEndpoint):
-                    def get(
-                        self,
-                        chainOrder: Literal['EE_FIRST', 'EE_ONLY', 'ROOT_FIRST'],
-                        format: Literal['DER', 'PEM']
-                    ):
+                    def get(self, chainOrder: Literal['EE_FIRST', 'EE_ONLY', 'ROOT_FIRST'], format: Literal['DER', 'PEM']):
                         data = {
                             'chainOrder': chainOrder,
-                            'format'    : format,
+                            'format': format,
                         }
 
                         class Output(CloudApiOutputModel):
                             str: str
-
-                        return generate_output(
-                            output_cls=Output,
-                            response=self._get(params=data),
-                            rc_mapping={
-                                200: 'str'
-                            }
-                        )
+                        return generate_output(output_cls=Output, response=self._get(params=data), rc_mapping={200: 'str'})
 
             class _deletion(CloudApiEndpoint):
-                def post(
-                    self,
-                    TrustedCACertificateDeletionRequest: certificate_service.TrustedCACertificateDeletionRequest
-                ):
+                def post(self, TrustedCACertificateDeletionRequest: certificate_service.TrustedCACertificateDeletionRequest):
                     data = {**TrustedCACertificateDeletionRequest.dict()}
 
                     class Output(CloudApiOutputModel):
                         pass
-
                     return generate_output(output_cls=Output, response=self._post(data=data))

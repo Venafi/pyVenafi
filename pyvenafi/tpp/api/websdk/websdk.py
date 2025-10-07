@@ -11,6 +11,7 @@ from packaging.version import (
 )
 
 from pyvenafi.tpp.api.session import Session
+from pyvenafi.tpp.api.websdk.endpoints.actions import _Actions
 from pyvenafi.tpp.api.websdk.endpoints.authorize import _Authorize
 from pyvenafi.tpp.api.websdk.endpoints.bus_status import _BusStatus
 from pyvenafi.tpp.api.websdk.endpoints.certificates import _Certificates
@@ -127,6 +128,7 @@ class WebSDK:
         # region Initialize All WebSDK Endpoints
         # Initialize the rest of the endpoints with self, which contains the base url,
         # the authorization token, and the re-authentication method.
+        self.Actions = _Actions(self)
         self.BusStatus = _BusStatus(self)
         self.Certificates = _Certificates(self)
         self.Client = _Client(self)

@@ -194,7 +194,7 @@ class SelfSignedCA(_CertificateAuthorityBase):
             get_if_already_exists=get_if_already_exists
         )
 
-@feature('Self-Signed CA')
+@feature('Adaptable CA')
 class AdaptableCA(_CertificateAuthorityBase):
     def __init__(self, api):
         super().__init__(api=api)

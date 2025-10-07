@@ -2,15 +2,15 @@ import os
 import sys
 sys.path += [os.path.abspath('..'), os.path.abspath('../..')]
 import re
-from pyvenafi import __version__, __author__
 import time
+from importlib.metadata import  metadata
 
 # -- Project information -----------------------------------------------------
 
 project = 'pyVenafi'
 copyright = time.strftime('%Y, Venafi')
-author = __author__
-version = __version__
+author = metadata('pyvenafi')['author']
+version = metadata('pyvenafi')['version']
 
 
 # -- General configuration ---------------------------------------------------

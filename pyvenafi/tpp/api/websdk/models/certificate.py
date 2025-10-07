@@ -32,6 +32,7 @@ class CertificateDetails(ObjectModel):
     l: str = ApiField(alias='L')
     o: str = ApiField(alias='O')
     ou: list[str] = ApiField(alias='OU', default_factory=list)
+    pkix_parameter_set: str = ApiField(alias='PkixParameterSet')
     public_key_hash: str = ApiField(alias='PublicKeyHash')
     revocation_date: datetime = ApiField(alias='RevocationDate')
     revocation_status: str = ApiField(alias='RevocationStatus')
@@ -115,8 +116,11 @@ class LockedMultiValue(Locked):
     values: list = ApiField(alias='Values')
 
 class LockedKeyPair(ObjectModel):
+    default_pkix_parameter_set: str = ApiField(alias='DefaultPkixParameterSet')
+    elliptic_curve: str = ApiField(alias='EllipticCurve')
     key_algorithm: LockedSingleValue = ApiField(alias='KeyAlgorithm')
     key_size: LockedSingleValue = ApiField(alias='KeySize')
+    pkix_parameter_set: str = ApiField(alias='PkixParameterSet')
 
 class LockedSubject(ObjectModel):
     city: LockedSingleValue = ApiField(alias='City')
@@ -133,6 +137,7 @@ class CSRDetails(ObjectModel):
     key_size: CompliantSingleValue = ApiField(alias='KeySize')
     organization: CompliantSingleValue = ApiField(alias='Organization')
     organizational_unit: CompliantMultiValue = ApiField(alias='OrganizationalUnit')
+    pkix_parameter_set: str = ApiField(alias='PkixParameterSet')
     private_key_reused: CompliantSingleValue = ApiField(alias='PrivateKeyReused')
     state: CompliantSingleValue = ApiField(alias='State')
     subj_alt_name_dns: CompliantMultiValue = ApiField(alias='SubjAltNameDns')
@@ -188,7 +193,10 @@ class X509(ObjectModel):
     cn: str = ApiField(alias='Cn')
     issuer: str = ApiField(alias='Issuer')
     key_algorithm: str = ApiField(alias='KeyAlgorithm')
+    key_algorithm_oid: str = ApiField(alias='KeyAlgorithmOid')
+    key_algorithm_name: str = ApiField(alias='KeyAlgorithmName')
     key_size: int = ApiField(alias='KeySize')
+    pkix_parameter_set: str = ApiField(alias='PkixParameterSet')
     sans: SANS = ApiField(alias='Sans')
     serial: str = ApiField(alias='Serial')
     subject: str = ApiField(alias='Subject')

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.connection_base import ConnectionBaseAttributes
 from pyvenafi.tpp.attributes.top import TopAttributes

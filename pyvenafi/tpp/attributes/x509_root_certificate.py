@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.top import TopAttributes
 
@@ -51,6 +51,7 @@ class X509RootCertificateAttributes(TopAttributes, metaclass=IterableMeta):
     monitored_uri_verification_last_notification = Attribute('Monitored URI Verification Last Notification')
     monitored_uri_verification_run_identifier = Attribute('Monitored URI Verification Run Identifier')
     monitored_uri_verification_uri_identifier = Attribute('Monitored URI Verification URI Identifier')
+    notified_on = Attribute('Notified On')
     required_attribute_for_signing_certificate = Attribute('Required Attribute For Signing Certificate')
     required_attribute_for_time_stamping_certificate = Attribute('Required Attribute For Time Stamping Certificate')
     trust_for_signing = Attribute('Trust For Signing')

@@ -1,5 +1,0 @@
-__author__ = 'Venafi SPI Team'
-__author_email__ = 'spi@venafi.com'
-__project_name__ = 'pyvenafi'
-__project_url__ = 'https://github.com/Venafi/pyVenafi'
-__version__ = '1.0.10'

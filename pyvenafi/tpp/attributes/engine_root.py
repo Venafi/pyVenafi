@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.branch_base import BranchBaseAttributes
 
@@ -32,14 +32,8 @@ class EngineRootAttributes(BranchBaseAttributes, metaclass=IterableMeta):
     monitored_uri_verification_engine_info = Attribute('Monitored URI Verification Engine Info', min_version='21.4')
     monitored_uri_verification_identifier = Attribute('Monitored URI Verification Identifier', min_version='21.4')
     monitored_uri_verification_last_check = Attribute('Monitored URI Verification Last Check', min_version='21.4')
-    monitored_uri_verification_last_notification = Attribute(
-        'Monitored URI Verification Last Notification',
-        min_version='21.4'
-    )
-    monitored_uri_verification_uri_identifier = Attribute(
-        'Monitored URI Verification URI Identifier',
-        min_version='21.4'
-    )
+    monitored_uri_verification_last_notification = Attribute('Monitored URI Verification Last Notification', min_version='21.4')
+    monitored_uri_verification_uri_identifier = Attribute('Monitored URI Verification URI Identifier', min_version='21.4')
     oam_enabled = Attribute('OAM Enabled', min_version='21.4')
     oam_headervar = Attribute('OAM HeaderVar', min_version='21.4')
     oam_logout_url = Attribute('OAM Logout Url', min_version='21.4')

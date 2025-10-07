@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.client_portal_base import ClientPortalBaseAttributes
 from pyvenafi.tpp.attributes.client_work_base import ClientWorkBaseAttributes
@@ -28,6 +28,7 @@ class ClientUserCertificateWorkAttributes(
     outlook_profile_generation = Attribute('Outlook Profile Generation')
     outlook_profile_name = Attribute('Outlook Profile Name')
     outlook_profile_options = Attribute('Outlook Profile Options')
+    pkix_parameter_set = Attribute('PKIX Parameter Set')
     portal_friendly_name = Attribute('Portal Friendly Name')
     publish_to_identity = Attribute('Publish To Identity')
     publish_to_identity_on_pre_enroll = Attribute('Publish To Identity on Pre-Enroll')

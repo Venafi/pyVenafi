@@ -12,6 +12,7 @@ from pyvenafi.tpp.api.api_base import (
     WebSdkEndpoint,
     WebSdkOutputModel,
 )
+from pyvenafi.tpp.api.websdk.enums.certificate import KeyAlgorithmOids
 from pyvenafi.tpp.api.websdk.models import certificate
 
 class _Certificates(WebSdkEndpoint):
@@ -279,6 +280,7 @@ class _Certificates(WebSdkEndpoint):
             keystore_password: str = None,
             management_type: str = None,
             password: str = None,
+            pkix_parameter_set: str = None,
             object_name: str = None,
             organization: str = None,
             organizational_unit: str = None,
@@ -319,6 +321,7 @@ class _Certificates(WebSdkEndpoint):
                 'OrganizationalUnit'     : organizational_unit,
                 'Password'               : password,
                 'PKCS10'                 : pkcs10,
+                'PkixParameterSet'       : pkix_parameter_set,
                 'PolicyDN'               : policy_dn,
                 'Reenable'               : reenable,
                 'RootFirstOrder'         : root_first_order,
@@ -328,6 +331,36 @@ class _Certificates(WebSdkEndpoint):
                 'SubjectAltNames'        : subject_alt_names,
                 'WorkToDoTimeout'        : work_to_do_timeout
             }
+
+            if (
+                self._is_version_compatible(minimum='25.1')
+                and pkix_parameter_set is None
+                and key_algorithm is not None
+                and (key_bit_size is not None or elliptic_curve is not None)
+            ):
+                oid = {
+                    'rsa': {
+                        "1024": KeyAlgorithmOids.rsa_1024,
+                        "2048": KeyAlgorithmOids.rsa_2048,
+                        "3072": KeyAlgorithmOids.rsa_3072,
+                        "4096": KeyAlgorithmOids.rsa_4096,
+                    },
+                    'ecc': {
+                        "p256": KeyAlgorithmOids.ec_nist_p256,
+                        "p384": KeyAlgorithmOids.ec_nist_p384,
+                        "p521": KeyAlgorithmOids.ec_nist_p521,
+                    },
+                }.get(key_algorithm.lower(), {}).get(str(key_bit_size) if key_bit_size else elliptic_curve.lower(), None)
+
+                if oid:
+                    del body["KeyAlgorithm"]
+                    del body["KeyBitSize"]
+                    del body["EllipticCurve"]
+
+                    body["PkixParameterSet"] = oid
+
+            elif self._is_version_compatible(maximum="24.3"):
+                del body["PkixParameterSet"]
 
             class Output(WebSdkOutputModel):
                 certificate_data: str = ApiField(alias='CertificateData')
@@ -366,19 +399,24 @@ class _Certificates(WebSdkEndpoint):
             keystore_password: str = None,
             password: str = None,
             root_first_order: bool = False,
-            work_to_do_timeout: int = None
+            encryption_algorithm: str = None,
+            work_to_do_timeout: int = None,
+            **_,
         ):
             params = {
-                'CertificateDN'    : certificate_dn,
-                'Format'           : format,
-                'FriendlyName'     : friendly_name,
-                'IncludeChain'     : include_chain,
-                'IncludePrivateKey': include_private_key,
-                'KeystorePassword' : keystore_password,
-                'Password'         : password,
-                'RootFirstOrder'   : root_first_order,
-                'WorkToDoTimeout'  : work_to_do_timeout
+                'CertificateDN'      : certificate_dn,
+                'Format'             : format,
+                'FriendlyName'       : friendly_name,
+                'IncludeChain'       : include_chain,
+                'IncludePrivateKey'  : include_private_key,
+                'KeystorePassword'   : keystore_password,
+                'Password'           : password,
+                'RootFirstOrder'     : root_first_order,
             }
+            if self._is_version_compatible(minimum="23.3"):
+                body['WorkToDoTimeout'] = work_to_do_timeout
+            if self._is_version_compatible(minimum="25.1"):
+                params['EncryptionAlgorithm'] = encryption_algorithm
 
             return generate_output(response=self._get(params=params), output_cls=WebSdkOutputModel)
 
@@ -392,7 +430,9 @@ class _Certificates(WebSdkEndpoint):
             keystore_password: str = None,
             password: str = None,
             root_first_order: bool = False,
-            work_to_do_timeout: int = None
+            encryption_algorithm: str = None,
+            work_to_do_timeout: int = None,
+            **_,
         ):
             body = {
                 'CertificateDN'    : certificate_dn,
@@ -403,8 +443,11 @@ class _Certificates(WebSdkEndpoint):
                 'KeystorePassword' : keystore_password,
                 'Password'         : password,
                 'RootFirstOrder'   : root_first_order,
-                'WorkToDoTimeout'  : work_to_do_timeout
             }
+            if self._is_version_compatible(minimum="23.3"):
+                body['WorkToDoTimeout'] = work_to_do_timeout
+            if self._is_version_compatible(minimum="25.1"):
+                body['EncryptionAlgorithm'] = encryption_algorithm
 
             class Output(WebSdkOutputModel):
                 certificate_data: str = ApiField(alias='CertificateData')

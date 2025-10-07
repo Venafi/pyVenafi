@@ -11,8 +11,8 @@ from pyvenafi.tpp.api.websdk.models import bus_status
 class _BusStatus(WebSdkEndpoint):
     def __init__(self, api_obj):
         super().__init__(api_obj=api_obj, url='/BusStatus')
-        self.GetStatus = self._GetStatus(api_obj=self._api_obj, url=f'{self._url}/GetStatus')
         self.GetMeshDnsName = self._GetMeshDnsName(api_obj=self._api_obj, url=f'{self._url}/GetMeshDnsName')
+        self.GetStatus = self._GetStatus(api_obj=self._api_obj, url=f'{self._url}/GetStatus')
         self.SetMeshDnsName = self._SetMeshDnsName(api_obj=self._api_obj, url=f'{self._url}/SetMeshDnsName')
 
     class _GetStatus(WebSdkEndpoint):

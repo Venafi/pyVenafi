@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pyvenafi.tpp.attributes._helper import (
-    IterableMeta,
     Attribute,
+    IterableMeta,
 )
 from pyvenafi.tpp.attributes.legacy_key_base import LegacyKeyBaseAttributes
 from pyvenafi.tpp.attributes.monitoring_base import MonitoringBaseAttributes

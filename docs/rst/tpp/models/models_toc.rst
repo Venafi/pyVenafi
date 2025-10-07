@@ -31,3 +31,4 @@ Models
     stats
     system_status
     workflow
+    bus_status

@@ -6,5 +6,6 @@ Certificate Authorities
 .. toctree::
     :maxdepth: 1
 
+    self_signed_ca
     microsoft_ca
     self_signed_ca
