@@ -1,5 +1,5 @@
 [project]
-version = "1.0.11"
+version = "1.1.0"
 name = "pyvenafi"
 description = "Venafi TPP & Cloud API In Python"
 authors = [{ name = "SPI Team", email = "spi@venafi.com" }]
@@ -22,7 +22,7 @@ python-dateutil = ">=2.8.2"
 requests = ">=2.24.0"
 simplejson = ">=3.17.6"
 jsonpickle = ">=2.1.0"
-pydantic = ">=1.9.1,<2.0.0"
+pydantic = "^2.11"
 
 [tool.poetry.group.docs]
 optional = true

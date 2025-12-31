@@ -13,16 +13,17 @@ from typing import (
     Type,
     TypeVar,
     get_origin,
+    get_args,
+    Literal,
 )
 
-import pydantic.main
 from pydantic import (
     BaseModel,
-    root_validator,
-    Field,
+    Field, model_validator, ConfigDict, types,
 )
 from pydantic import create_model
-from pydantic.fields import Undefined
+from pydantic._internal._model_construction import ModelMetaclass
+from pydantic.fields import PydanticUndefined, FieldInfo
 from requests import (
     Response,
     HTTPError,
@@ -32,6 +33,7 @@ from pyvenafi.logger import (
     api_logger,
     json_pickler,
 )
+from pyvenafi.tpp import DN
 
 if TYPE_CHECKING:
     from pydantic.typing import (
@@ -39,12 +41,10 @@ if TYPE_CHECKING:
         MappingIntStrAny,
         NoArgAnyCallable,
     )
-    from pyvenafi.cloud.api.session import Session
-    from pyvenafi.cloud.api.cloud_api import CloudApi
 
 T_ = TypeVar('T_')
 
-class ApiModelMetaclass(pydantic.main.ModelMetaclass):
+class ApiModelMetaclass(ModelMetaclass):
     def __new__(mcs, name, bases, namespaces, **kwargs):
         annotations = namespaces.get('__annotations__', {})
         for base in bases:
@@ -261,26 +261,92 @@ class CloudApiEndpoint(ApiEndpoint):
 
 # region Model And Field Definitions
 def ApiField(
-    default: Any = None, *, default_factory: 'Optional[NoArgAnyCallable]' = None, alias: str = None,
+    default: Any = None,
+    *,
+    default_factory: 'Optional[NoArgAnyCallable]' = None,
+    alias: str = None,
+    alias_priority: int = None,
+    allow_inf_nan: bool = None,
+    coerce_numbers_to_str: bool = None,
+    decimal_places: int = None,
+    deprecated: bool = None,
+    description: str = None,
+    discriminator: str | types.Discriminator = None,
+    examples: list[Any] = None,
+    exclude: bool = None,
+    fail_fast: bool = None,
+    field_title_generator: Callable[[str, FieldInfo], str] = None,
+    frozen: bool = None,
+    ge: float = None,
+    gt: float = None,
+    init: bool = None,
+    init_var: bool = None,
+    kw_only: bool = None,
+    le: float = None,
+    lt: float = None,
+    max_digits: int = None,
+    max_length: int = None,
+    min_length: int = None,
+    multiple_of: float = None,
+    pattern: str = None,
+    repr: bool = None,
+    serialization_alias: str = None,
+    strict: bool = None,
     title: str = None,
-    description: str = None, exclude: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None,
-    include: 'Union[AbstractSetIntStr, MappingIntStrAny, Any]' = None, const: bool = None, gt: float = None,
-    ge: float = None, lt: float = None, le: float = None, multiple_of: float = None, max_digits: int = None,
-    decimal_places: int = None, min_items: int = None, max_items: int = None, unique_items: bool = None,
-    min_length: int = None, max_length: int = None, allow_mutation: bool = True, regex: str = None,
-    discriminator: str = None, repr: bool = True, converter: Callable[[Any], Any] = None, **extra: Any
+    union_mode: Literal['smart', 'left_to_right'] = PydanticUndefined,
+    validate_default: bool = None,
+    validation_alias: str = None,
+    converter: Callable[[Any], Any] = None,
+    **json_schema_extra: Any
 ) -> Any:
-    if callable(default_factory):
-        default = Undefined
     if converter is not None and callable(converter):
-        extra['converter'] = converter
-    return Field(
-        default=default, default_factory=default_factory, alias=alias, title=title, description=description,
-        exclude=exclude, include=include, const=const, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of,
-        max_digits=max_digits, decimal_places=decimal_places, min_items=min_items, max_items=max_items,
-        unique_items=unique_items, min_length=min_length, max_length=max_length, allow_mutation=allow_mutation,
-        regex=regex, discriminator=discriminator, repr=repr, **extra
+        json_schema_extra['converter'] = converter
+    kwargs = dict(
+        alias=alias,
+        alias_priority=alias_priority,
+        allow_inf_nan=allow_inf_nan,
+        coerce_numbers_to_str=coerce_numbers_to_str,
+        decimal_places=decimal_places,
+        deprecated=deprecated,
+        description=description,
+        discriminator=discriminator,
+        examples=examples,
+        exclude=exclude,
+        fail_fast=fail_fast,
+        field_title_generator=field_title_generator,
+        frozen=frozen,
+        ge=ge,
+        gt=gt,
+        init=init,
+        init_var=init_var,
+        kw_only=kw_only,
+        le=le,
+        lt=lt,
+        max_digits=max_digits,
+        max_length=max_length,
+        min_length=min_length,
+        multiple_of=multiple_of,
+        pattern=pattern,
+        repr=repr,
+        serialization_alias=serialization_alias,
+        strict=strict,
+        title=title,
+        union_mode=union_mode,
+        validate_default=validate_default,
+        validation_alias=validation_alias,
+        json_schema_extra=json_schema_extra,
     )
+    if callable(default_factory):
+        return Field(
+            default_factory=default_factory,
+            **kwargs,
+        )
+    else:
+        return Field(
+            default=default,
+            **kwargs,
+        )
+
 
 # region Output Models
 def generate_output(
@@ -329,26 +395,38 @@ def generate_output(
         raise InvalidResponseError(str(error), response=response)
 
 class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
-    class Config:
-        arbitrary_types_allowed = True
-        allow_population_by_field_name = True
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        validate_by_name=True,
+        json_encoders={
+            DN: lambda x: str(x)
+        }
+    )
 
-    @root_validator(pre=True, allow_reuse=True)
+    @model_validator(mode='before')
+    @classmethod
     def _case_insensitive_validator(cls, values: dict):
         new_values = {}
         lowered_values = {k.lower(): v for k, v in values.items()}
-        for fk, fv in cls.__fields__.items():
-            if fv.name in values:
-                new_value = values[fv.name]
-            elif fv.alias.lower() in lowered_values:
+        for fk, fv in cls.model_fields.items():
+            new_key = fk
+            if fk in values:
+                new_value = values[fk]
+            elif fv.alias is not None and fv.alias.lower() in lowered_values:
+                new_key = fv.alias
                 new_value = lowered_values[fv.alias.lower()]
             else:
                 continue
-            if fv.type_ is datetime and '\\Date' in new_value:
+            type_args = get_args(fv.annotation)
+            if not type_args:
+                type_args = (fv.annotation,)
+            if datetime in type_args and isinstance(new_value, str) and '/Date' in new_value:
                 new_value = re.sub(r'\D', '', new_value)
-            if (converter := fv.field_info.extra.get('converter')) is not None:
+            elif DN in type_args:
+                new_value = DN(new_value)
+            if (converter := fv.json_schema_extra.get('converter')) is not None:
                 new_value = converter(new_value)
-            new_values[fv.alias] = new_value
+            new_values[new_key] = new_value
         return new_values
 
     def with_extra_properties(self, **kwargs) -> 'ObjectModel':
@@ -363,13 +441,6 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
 
 class RootOutputModel(ObjectModel):
     api_response: Response = ApiField(alias='api_response', exclude=True)
-
-    class Config(ObjectModel.Config):
-        fields = {
-            'api_response': {
-                'exclude': True
-            }
-        }
 
     def assert_valid_response(self):
         """

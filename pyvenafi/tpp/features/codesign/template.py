@@ -92,7 +92,7 @@ class CodeSignTemplate(FeatureBase):
             object_naming_pattern: Only valid if the template PerUser attribute is already set to true.
                 The pattern that stores signing Certificate objects in the Policy Tree
                 by a user's identity. Each signer has a unique Policy folder.
-                The default is $Sign.Project$\$Sign.Environment$\$Sign.User$.
+                The default is $Sign.Project$\\$Sign.Environment$\\$Sign.User$.
 
         Returns:
 
@@ -163,14 +163,21 @@ class CodeSignTemplate(FeatureBase):
 
         @dataclass
         class EnumeratedTemplates:
-            apple_templates: list[AppleTemplate] = output.apple_templates
-            certificate_templates: list[CertificateTemplate] = output.certificate_templates
-            csp_templates: list[CSPTemplate] = output.csp_templates
-            dot_net_templates: list[DotNetTemplate] = output.dot_net_templates
-            gpg_templates: list[GPGTemplate] = output.gpg_templates
-            key_pair_templates: list[KeyPairTemplate] = output.key_pair_templates
+            apple_templates: list[AppleTemplate]
+            certificate_templates: list[CertificateTemplate]
+            csp_templates: list[CSPTemplate]
+            dot_net_templates: list[DotNetTemplate]
+            gpg_templates: list[GPGTemplate]
+            key_pair_templates: list[KeyPairTemplate]
 
-        return EnumeratedTemplates()
+        return EnumeratedTemplates(
+            apple_templates=output.apple_templates,
+            certificate_templates=output.certificate_templates,
+            csp_templates=output.csp_templates,
+            dot_net_templates=output.dot_net_templates,
+            gpg_templates=output.gpg_templates,
+            key_pair_templates=output.key_pair_templates
+        )
 
     def delete(
         self,

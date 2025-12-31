@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import List
+
 from pyvenafi.tpp.api.api_base import (
     ApiField,
     ObjectModel,
@@ -62,4 +64,4 @@ class Update(ObjectModel):
 
 class GuidData(ObjectModel):
     item_guid: str = ApiField(alias='ItemGuid')
-    list: list[str] = ApiField(alias='List')
+    list: List[str] = ApiField(alias='List')
