@@ -860,14 +860,22 @@ class _Codesign(WebSdkEndpoint):
 
     class _UpdateTemplate(WebSdkEndpoint):
         def post(
-            self, dn: str, certificate_template: Union[dict, codesign.CertificateTemplate, codesign.CSPTemplate,
-            codesign.DotNetTemplate, codesign.AppleTemplate, codesign.GPGTemplate, codesign.KeyPairTemplate],
-            object_naming_pattern: str = None
+            self, dn: str,
+            apple_environment: Union[dict, codesign.AppleTemplate] = None,
+            certificate_template: Union[dict, codesign.CertificateTemplate] = None,
+            csp_template: Union[dict, codesign.CSPTemplate] = None,
+            dot_net_template: Union[dict, codesign.DotNetTemplate] = None,
+            gpg_template: Union[dict, codesign.GPGTemplate] = None,
+            key_pair_template: Union[dict, codesign.KeyPairTemplate] = None,
         ):
             body = {
                 'Dn'                 : dn,
+                'AppleTemplate'      : apple_environment,
                 'CertificateTemplate': certificate_template,
-                'ObjectNamingPattern': object_naming_pattern
+                'CSPTemplate'        : csp_template,
+                'DotNetTemplate'     : dot_net_template,
+                'GPGTemplate'        : gpg_template,
+                'KeyPairTemplate'    : key_pair_template,
             }
 
             class Output(WebSdkOutputModel):

@@ -2,7 +2,6 @@ import json
 import requests
 from datetime import datetime
 
-import urllib3
 from pydantic import BaseModel
 from typing import TYPE_CHECKING
 
@@ -17,13 +16,10 @@ class Session:
 
     def __init__(
         self, headers: dict, proxies: dict = None, certificate_path: str = None,
-        key_file_path: str = None, verify_ssl: bool = False, version: 'Version' = None,
+        key_file_path: str = None, verify_ssl: bool = True, version: 'Version' = None,
         connection_timeout: float = None, read_timeout: float = None
     ):
         self.session = requests.Session()
-        if not verify_ssl:
-            # noinspection PyUnresolvedReferences
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.request_kwargs = {
             'headers': headers,
             'verify' : verify_ssl,

@@ -58,7 +58,7 @@ class WebSDK:
     def __init__(
         self, host: str, username: str, password: str, token: str = None, application_id: str = None,
         scope: Union[Scope, str] = None, refresh_token: str = None, proxies: dict = None,
-        certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = False,
+        certificate_path: str = None, key_file_path: str = None, verify_ssl: bool = True,
         connection_timeout: float = None, read_timeout: float = None
     ):
         """
@@ -219,7 +219,38 @@ class WebSDK:
 
     def re_authenticate(self):
         """
-        Performs a re-authentication using the same parameters used to authorize initially.
+        Explicit, operator-initiated re-authentication. Replays the same
+        credentials used at construction time, over whatever channel the
+        operator chose (``verify_ssl``).
+
+        Use this when you want to deliberately refresh the session — for
+        example, before a long-running operation, or after a known idle
+        period. For the auto-retry-on-401 path used internally by the
+        endpoint classes, see :meth:`_auto_re_authenticate`.
         """
         self._token = None
         self._authenticate()
+
+    def _auto_re_authenticate(self):
+        """
+        Called by ``ApiEndpoint._re_authenticate`` when a request returns
+        HTTP 401 — i.e., on an attacker-controllable trigger.
+
+        CWE-295 #4 hardening: refuse to silently re-send the password
+        grant over an unverified TLS channel. An attacker on-path could
+        inject a 401 to force credential replay. Refresh-token and
+        certificate-based re-auth paths do not replay the password, so
+        they are allowed even when ``verify_ssl=False``.
+        """
+        if not self._verify_ssl and not self._refresh_token and not (
+            self._certificate_path and self._key_file_path
+        ):
+            raise PermissionError(
+                'Refusing automatic re-authentication over an unverified '
+                'TLS connection (verify_ssl=False) using the stored '
+                'username/password. An attacker on-path could inject a '
+                '401 to force credential replay. Re-instantiate the '
+                'client with verify_ssl=True, or use certificate- or '
+                'refresh-token-based authentication.'
+            )
+        self.re_authenticate()

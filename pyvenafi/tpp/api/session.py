@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 import requests
-import urllib3
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
@@ -19,13 +18,10 @@ class Session:
 
     def __init__(
         self, headers: dict, proxies: dict = None, certificate_path: str = None,
-        key_file_path: str = None, verify_ssl: bool = False, tpp_version: 'Version' = None,
+        key_file_path: str = None, verify_ssl: bool = True, tpp_version: 'Version' = None,
         connection_timeout: float = None, read_timeout: float = None
     ):
         self.session = requests.Session()
-        if not verify_ssl:
-            # noinspection PyUnresolvedReferences
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         self.request_kwargs = {
             'headers': headers,
             'verify' : verify_ssl,
@@ -115,7 +111,7 @@ class Session:
 
     def _sanitize(self, obj):
         if isinstance(obj, BaseModel):
-            obj = obj.dict(by_alias=True, exclude_none=True)
+            obj = obj.model_dump(by_alias=True, exclude_none=True)
         if isinstance(obj, dict):
             new_values = {}
             for k, v in obj.items():

@@ -82,27 +82,35 @@ class CodeSignTemplate(FeatureBase):
     def update(
         self,
         template: Union[Object, TemplateTypes],
-        object_naming_pattern: str = None
     ):
         """
         Update an environment template.
 
         Args:
             template: The updated template.
-            object_naming_pattern: Only valid if the template PerUser attribute is already set to true.
-                The pattern that stores signing Certificate objects in the Policy Tree
-                by a user's identity. Each signer has a unique Policy folder.
-                The default is $Sign.Project$\\$Sign.Environment$\\$Sign.User$.
-
         Returns:
 
         """
         dn = self._get_dn(template)
-        self._api.websdk.Codesign.UpdateTemplate.post(
-            dn=dn,
-            certificate_template=template,
-            object_naming_pattern=object_naming_pattern,
-        )
+        if isinstance(template, AppleTemplate):
+            key = 'apple_template'
+        elif isinstance(template, CertificateTemplate):
+            key = 'certificate_template'
+        elif isinstance(template, CSPTemplate):
+            key = 'csp_template'
+        elif isinstance(template, DotNetTemplate):
+            key = 'dot_net_template'
+        elif isinstance(template, GPGTemplate):
+            key = 'gpg_template'
+        elif isinstance(template, KeyPairTemplate):
+            key = 'key_pair_template'
+        else:
+            raise ValueError(f'Invalid type {type(template)}')
+        kwargs = {
+            'dn': dn,
+            key : template
+        }
+        self._api.websdk.Codesign.UpdateTemplate.post(**kwargs)
 
     def rename(
         self,

@@ -87,9 +87,20 @@ class CodeSignProject(FeatureBase):
             if raise_if_already_exists:
                 raise
 
-        self.enable(project=dn)
-        time.sleep(5)
+        time.sleep(10)
         project = self.get(dn=dn)
+        for i in range(5):
+            if project.status == CodeSignAttributeValues.ProjectStatus.enabled:
+                break
+            self.enable(project=dn)
+            project = self.get(dn=dn)
+            if project.status == CodeSignAttributeValues.ProjectStatus.enabled:
+                break
+            else:
+                if i < 4:
+                    time.sleep(10)
+                    continue
+                raise Exception(f'Project "{dn}" status is not enabled after creation.')
 
         # Update project attributes
         if any(
@@ -293,6 +304,8 @@ class CodeSignProject(FeatureBase):
                     self._approve_flow_ticket(project=project)
                     self._wait_for_status(project=project, project_status=CodeSignAttributeValues.ProjectStatus.enabled)
                 except:
+                    project.status = CodeSignAttributeValues.ProjectStatus.enabled
+                    self.update(project=project)
                     self._api.websdk.Config.Write.post(
                         object_dn=dn,
                         attribute_data=[{'Status': [1]}]

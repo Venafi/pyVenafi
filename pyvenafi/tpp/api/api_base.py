@@ -4,6 +4,10 @@ import json
 import re
 import time
 from datetime import datetime
+from urllib.parse import (
+    unquote,
+    urlsplit,
+)
 from typing import (
     Any,
     Callable,
@@ -37,15 +41,15 @@ from requests import (
 from pyvenafi.logger import (
     api_logger,
     json_pickler,
+    redact,
 )
 from pyvenafi.tpp.dn import DN
+if TYPE_CHECKING:
+    from pyvenafi.tpp.api import WebSDK
+    from pyvenafi.tpp.api.session import Session
 
 if TYPE_CHECKING:
-    from pydantic.typing import (
-        AbstractSetIntStr,
-        MappingIntStrAny,
-        NoArgAnyCallable,
-    )
+    from pydantic.v1.typing import NoArgAnyCallable
 
 T = TypeVar('T')
 
@@ -73,6 +77,7 @@ class ApiSource(Protocol):
     _session: 'Session'
 
     def re_authenticate(self): ...
+    def _auto_re_authenticate(self): ...
 
 class ApiEndpoint(object):
     """
@@ -99,6 +104,12 @@ class ApiEndpoint(object):
             self._url = url
         else:
             self._url = f'{self._api_obj._app_url}/{url}'
+        # CWE-22: reject path-injection payloads in caller-supplied URL segments.
+        # Character-level checks for `?`/`#` to catch even empty-query/fragment
+        # probes; path is unquoted before the `..` check so percent-encoded
+        # variants such as %2e%2e%2f are also caught.
+        if '?' in self._url or '#' in self._url or '..' in unquote(urlsplit(self._url).path).split('/'):
+            raise ValueError(f'Unsafe URL path: {self._url!r}')
         self._retries = 3
         self.retry_interval = 0.5
 
@@ -257,7 +268,11 @@ class ApiEndpoint(object):
             f'{self._api_obj.__class__.__name__} API authentication token expired. Re-authenticating...',
             stacklevel=2
         )
-        self._api_obj.re_authenticate()
+        # Use the auto-path explicitly — the explicit ``re_authenticate``
+        # is reserved for operator-initiated refreshes. The auto-path
+        # contains the CWE-295 #4 guard against attacker-triggered
+        # password replay over unverified TLS.
+        self._api_obj._auto_re_authenticate()
 
     def _log_api_deprecated_warning(self, alternate_api: str = None):
         msg = f'API DEPRECATION WARNING: {self._url} is no longer supported by Venafi.'
@@ -270,7 +285,7 @@ class ApiEndpoint(object):
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
         if data:
-            payload = json_pickler.dumps(self._session._sanitize(data))
+            payload = json_pickler.dumps(redact(self._session._sanitize(data)))
             api_logger.debug(
                 f'{method}\nURL: {self._url}\nBODY: {payload}',
                 stacklevel=2
@@ -287,7 +302,7 @@ class ApiEndpoint(object):
         This enforces consistency in logging across all API calls.
         """
         try:
-            pretty_json = json_pickler.dumps(response.json())
+            pretty_json = json_pickler.dumps(redact(response.json()))
         except json.JSONDecodeError:
             pretty_json = response.text or response.reason or 'No Content'
         except:
@@ -453,6 +468,8 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
     @model_validator(mode='before')
     @classmethod
     def _case_insensitive_validator(cls, values: dict):
+        if not isinstance(values, dict):
+            return values
         new_values = {}
         lowered_values = {k.lower(): v for k, v in values.items()}
         for fk, fv in cls.model_fields.items():
@@ -467,11 +484,14 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
             type_args = get_args(fv.annotation)
             if not type_args:
                 type_args = (fv.annotation,)
-            if datetime in type_args and isinstance(new_value, str) and '/Date' in new_value:
-                new_value = re.sub(r'\D', '', new_value)
+            if datetime in type_args and isinstance(new_value, str):
+                if '/Date' in new_value:
+                    new_value = re.sub(r'\D', '', new_value)
+                else:
+                    new_value = datetime.fromisoformat(new_value)
             elif DN in type_args:
                 new_value = DN(new_value)
-            if (converter := fv.json_schema_extra.get('converter')) is not None:
+            if (converter := (fv.json_schema_extra or {}).get('converter')) is not None:
                 new_value = converter(new_value)
             new_values[new_key] = new_value
         return new_values

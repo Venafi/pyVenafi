@@ -12,7 +12,7 @@ from pyvenafi.cloud.api.endpoints.tagging_service import _tagging_service
 
 class CloudApi:
     def __init__(
-        self, server: str, api_key: str, proxies: dict = None, verify_ssl: bool = False,
+        self, server: str, api_key: str, proxies: dict = None, verify_ssl: bool = True,
         connection_timeout: float = None, read_timeout: float = None
     ):
         self._api_key = api_key

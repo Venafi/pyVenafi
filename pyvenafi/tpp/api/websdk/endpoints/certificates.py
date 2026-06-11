@@ -46,7 +46,7 @@ class _Certificates(WebSdkEndpoint):
         if isinstance(filters, dict):
             params.update(filters)
         elif isinstance(filters, ObjectModel):
-            params.update(filters.dict(by_alias=True, exclude_none=True))
+            params.update(filters.model_dump(by_alias=True, exclude_none=True))
 
         class Output(WebSdkOutputModel):
             links: list[certificate.Link] = ApiField(default_factory=list, alias='_links')
@@ -125,7 +125,7 @@ class _Certificates(WebSdkEndpoint):
         def get(self):
             class Output(WebSdkOutputModel):
                 approver: list[str] = ApiField(default_factory=list, alias='Approver')
-                certificate_authority_dn: datetime = ApiField(alias='CertificateAuthorityDN')
+                certificate_authority_dn: str = ApiField(alias='CertificateAuthorityDN')
                 certificate_details: certificate.CertificateDetails = ApiField(alias='CertificateDetails')
                 consumers: list[str] = ApiField(alias='Consumers', default_factory=list)
                 contact: list[str] = ApiField(default_factory=list, alias='Contact')

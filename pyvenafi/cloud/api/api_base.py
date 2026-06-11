@@ -2,6 +2,10 @@ import json
 import re
 import time
 from datetime import datetime
+from urllib.parse import (
+    unquote,
+    urlsplit,
+)
 from typing import (
     Any,
     Callable,
@@ -32,6 +36,7 @@ from requests import (
 from pyvenafi.logger import (
     api_logger,
     json_pickler,
+    redact,
 )
 from pyvenafi.tpp import DN
 
@@ -91,6 +96,12 @@ class ApiEndpoint(object):
             self._url = url
         else:
             self._url = f'{self._api_obj._app_url}/{url}'
+        # CWE-22: reject path-injection payloads in caller-supplied URL segments.
+        # Character-level checks for `?`/`#` to catch even empty-query/fragment
+        # probes; path is unquoted before the `..` check so percent-encoded
+        # variants such as %2e%2e%2f are also caught.
+        if '?' in self._url or '#' in self._url or '..' in unquote(urlsplit(self._url).path).split('/'):
+            raise ValueError(f'Unsafe URL path: {self._url!r}')
         self._retries = 3
         self.retry_interval = 0.5
 
@@ -225,7 +236,7 @@ class ApiEndpoint(object):
         Logs the URL and any additional data. This enforces consistency in logging across all API calls.
         """
         if data:
-            payload = json_pickler.dumps(self._session._sanitize(data))
+            payload = json_pickler.dumps(redact(self._session._sanitize(data)))
             api_logger.debug(
                 f'{method}\nURL: {self._url}\nBODY: {payload}',
                 stacklevel=2
@@ -242,7 +253,7 @@ class ApiEndpoint(object):
         This enforces consistency in logging across all API calls.
         """
         try:
-            pretty_json = json_pickler.dumps(response.json())
+            pretty_json = json_pickler.dumps(redact(response.json()))
         except json.JSONDecodeError:
             pretty_json = response.text or response.reason or 'No Content'
         except:
@@ -406,6 +417,8 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
     @model_validator(mode='before')
     @classmethod
     def _case_insensitive_validator(cls, values: dict):
+        if not isinstance(values, dict):
+            return values
         new_values = {}
         lowered_values = {k.lower(): v for k, v in values.items()}
         for fk, fv in cls.model_fields.items():
@@ -424,7 +437,7 @@ class ObjectModel(BaseModel, metaclass=ApiModelMetaclass):
                 new_value = re.sub(r'\D', '', new_value)
             elif DN in type_args:
                 new_value = DN(new_value)
-            if (converter := fv.json_schema_extra.get('converter')) is not None:
+            if (converter := (fv.json_schema_extra or {}).get('converter')) is not None:
                 new_value = converter(new_value)
             new_values[new_key] = new_value
         return new_values

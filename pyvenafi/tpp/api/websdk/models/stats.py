@@ -35,7 +35,7 @@ class Value(ObjectModel):
     type: int = ApiField(alias='Type')
 
 class Result(ObjectModel):
-    key: Key = ApiField(alias='Key')
+    key: Key | str = ApiField(alias='Key')
     value: list[Value] = ApiField(alias='Value', default_factory=list)
 
 class CounterContainer(ObjectModel):
